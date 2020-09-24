@@ -27,7 +27,8 @@ class PaymentSelectView extends StatefulWidget {
       this.onTapApprove,
       this.onTapPay,
       this.channelSetFlow,
-      this.onTapChangePayment, this.subtitle});
+      this.onTapChangePayment,
+      this.subtitle});
 
   @override
   _PaymentSelectViewState createState() => _PaymentSelectViewState();
@@ -101,7 +102,7 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
           onTap: () => widget.onTapApprove,
         ),
         Visibility(
-          visible: widget.expanded,
+          visible: true/*widget.expanded*/,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -223,7 +224,11 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
     } else if (paymentMethod == GlobalUtils.PAYMENT_STRIPE_DIRECT) {
       paymentDetails = {'iban': channelSetFlow.businessIban};
     } else if (paymentMethod == GlobalUtils.PAYMENT_STRIPE) {
-      paymentDetails = {'iban': channelSetFlow.businessIban};
+      paymentDetails = {
+        'postbackUrl':
+            '${Env.wrapper}/pay/${channelSetFlow.id}/stripe-postback',
+        'tokenId': ''
+      };
     } else {
       paymentDetails = {
         'adsAgreement': paymentOption.isCheckedAds ?? false,

@@ -38,9 +38,9 @@ class _InstantPaymentViewState extends State<InstantPaymentView> {
 
   @override
   Widget build(BuildContext context) {
-    if (!widget.isSelected) {
-      return Container();
-    }
+    // if (!widget.isSelected) {
+    //   return Container();
+    // }
 
     return Column(
       children: [
@@ -51,15 +51,16 @@ class _InstantPaymentViewState extends State<InstantPaymentView> {
   }
 
   get _inputFieldsWidget {
-    if (widget.paymentMethod == GlobalUtils.PAYMENT_INSTANT) {
+    if (widget.paymentMethod == GlobalUtils.PAYMENT_INSTANT)
       return _instantInputWidget;
-    } else if (widget.paymentMethod == GlobalUtils.PAYMENT_STRIPE_DIRECT) {
+
+    if (widget.paymentMethod == GlobalUtils.PAYMENT_STRIPE_DIRECT)
       return _stripeDirectDebitWidget;
-    } else if (widget.paymentMethod.contains('santander')) {
+
+    if (widget.paymentMethod.contains('santander'))
       return _santanderInputWidget;
-    } else  {
-      return _instantInputWidget;
-    }
+
+    return Container();
   }
 
   get _santanderInputWidget {

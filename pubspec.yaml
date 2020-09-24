@@ -71,6 +71,7 @@ dependencies:
   the_validator: ^1.0.1
   super_rich_text: ^0.2.1+1
   json_annotation: ^3.0.0
+  credit_card_field: ^1.0.2
   meta: ^1.1.8
 
 dev_dependencies:

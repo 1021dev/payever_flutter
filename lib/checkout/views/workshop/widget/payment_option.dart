@@ -5,23 +5,46 @@ import 'package:payever/checkout/views/workshop/subview/instant_payment_view.dar
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/app_style.dart';
 import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:payever/theme.dart';
+import 'package:credit_card_field/credit_card_field.dart';
 
 class PaymentOptionCell extends StatefulWidget {
   final CheckoutPaymentOption paymentOption;
   final bool isSelected;
   final ChannelSetFlow channelSetFlow;
   final Function onTapChangePayment;
+  final Function onChangeCredit;
 
   const PaymentOptionCell(
-      {this.paymentOption, this.isSelected = false, this.onTapChangePayment, this.channelSetFlow});
+      {this.paymentOption,
+      this.isSelected = false,
+      this.onTapChangePayment,
+      this.channelSetFlow,
+      this.onChangeCredit
+      });
 
   @override
   _PaymentOptionCellState createState() => _PaymentOptionCellState();
 }
 
 class _PaymentOptionCellState extends State<PaymentOptionCell> {
+
+  TextEditingController creditCardController = TextEditingController();
+  TextEditingController cvvController = TextEditingController();
+  TextEditingController expirationController = TextEditingController();
+
+
+  void _submit() {
+    Map<String, dynamic> cardJson = {
+      'number': creditCardController.text,
+      'cvv': cvvController.text,
+      'exp_month': int.tryParse(expirationController.text.substring(0, 2)),
+      'exp_year': int.tryParse(expirationController.text.substring(3, 5)),
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -77,9 +100,13 @@ class _PaymentOptionCellState extends State<PaymentOptionCell> {
       '${billingAddress.firstName ?? ''} ${billingAddress.lastName ?? ''}';
       if (name == ' ') name = '';
     }
-    if (widget.paymentOption.paymentMethod == GlobalUtils.PAYMENT_CASH) {
+    if (widget.paymentOption.paymentMethod == GlobalUtils.PAYMENT_CASH
+        || widget.paymentOption.paymentMethod == GlobalUtils.PAYMENT_PAYPAL)
       return Container();
-    }
+
+    if (widget.paymentOption.paymentMethod == GlobalUtils.PAYMENT_STRIPE)
+      return _stripeWidget;
+
     return InstantPaymentView(
       isSelected: widget.isSelected,
       paymentMethod: widget.paymentOption.paymentMethod,
@@ -96,6 +123,112 @@ class _PaymentOptionCellState extends State<PaymentOptionCell> {
       },
     );
 
+  }
+
+  get _stripeWidget {
+    return Container(
+      margin: EdgeInsets.only(left: 10, right: 10, bottom: 20),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey),
+        borderRadius: BorderRadius.all(Radius.circular(4)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          BlurEffectView(
+            color: overlayColor(),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(4),
+              topRight: Radius.circular(4),
+            ),
+            child: Container(
+              height: 55,
+              alignment: Alignment.center,
+              child: TextFormField(
+                style: textFieldStyle,
+                onChanged: (val) {
+
+                },
+
+                validator: (text) {
+                  if (text.isEmpty) {
+                    return 'Card number required';
+                  }
+                  return null;
+                },
+                decoration: textFieldDecoration('Card number'),
+                keyboardType: TextInputType.text,
+              ),
+            ),
+          ),
+          SizedBox(height: 2,),
+          Container(
+            width: double.infinity,
+            child: Row(
+              children: [
+                Expanded(
+                  child: BlurEffectView(
+                    color: overlayColor(),
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(4),
+                    ),
+                    child: Container(
+                      height: 55,
+                      alignment: Alignment.center,
+                      child: CreditCardFormField(
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: "Credit Card Number",
+                        ),
+                        controller: creditCardController,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 2,),
+                Expanded(
+                  child: BlurEffectView(
+                    color: overlayColor(),
+                    radius: 0,
+                    child: Container(
+                      height: 55,
+                      alignment: Alignment.center,
+                      child:ExpirationFormField(
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: "Card Expiration",
+                          hintText: "MM/YY",
+                        ),
+                        controller: expirationController,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 2,),
+                Expanded(
+                  child: BlurEffectView(
+                    color: overlayColor(),
+                    borderRadius: BorderRadius.only(
+                      bottomRight: Radius.circular(4),
+                    ),
+                    child: Container(
+                      height: 55,
+                      alignment: Alignment.center,
+                      child: CVVFormField(
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: "CVV",
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
   }
 
   Widget paymentType(String type) {
