@@ -222,6 +222,17 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
       };
     } else if (paymentMethod == 'stripe_directdebit') {
       paymentDetails = {'iban': channelSetFlow.businessIban};
+    } else if (paymentMethod == 'stripe') {
+      paymentDetails = {'iban': channelSetFlow.businessIban};
+    } else {
+      paymentDetails = {
+        'adsAgreement': paymentOption.isCheckedAds ?? false,
+        'recipientHolder': channelSetFlow.businessName,
+        'recipientIban': channelSetFlow.businessIban,
+        'senderHolder':
+        '${billingAddress.firstName} ${billingAddress.lastName}',
+        'senderIban': channelSetFlow.businessIban,
+      };
     }
 
     // List<dynamic>paymentItems = [];

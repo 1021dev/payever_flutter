@@ -1294,11 +1294,40 @@ class ApiService {
     }
   }
 
-  Future<dynamic> checkoutPayInstantPayment(String token, String connectionId ,Map body) async {
+  Future<dynamic> payByThirdParty(String token, String connectionId ,Map body) async {
     try {
       print('$TAG - updatePaymentOption()');
       dynamic response = await _client.postTypeLess(
         '${Env.thirdPartyPayment}/api/connection/$connectionId/action/pay',
+        body: body,
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> payMarkAsFinished(String token, String payFlowId, String local) async {
+    try {
+      print('$TAG - payMarkAsFinished()');
+      var rand = randomString(8);
+      print(rand);
+      dynamic response = await _client.patchTypeless(
+        '$checkoutV3/$payFlowId/mark-as-finished?_locale=$local&rand=$rand',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> payUpdateStatus(String token, String connectionId ,Map body) async {
+    try {
+      print('$TAG - payUpdateStatus()');
+      dynamic response = await _client.postTypeLess(
+        '${Env.thirdPartyPayment}/api/connection/$connectionId/action/update-status',
         body: body,
         headers: _getHeaders(token),
       );

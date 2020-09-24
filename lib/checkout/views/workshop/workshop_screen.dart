@@ -1079,13 +1079,12 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
               return;
             } else {
               String paymentMethod = payments.first.paymentMethod;
-              if (paymentMethod == null) {
-                return;
-              } else if (paymentMethod.contains('santander')) {
-              } else if (paymentMethod.contains('cash')) {
+              if (paymentMethod == null) return;
+
+              if (paymentMethod.contains('cash')) {
                 screenBloc.add(PayWireTransferEvent());
-              } else if (paymentMethod.contains('instant')) {
-                screenBloc.add(PayInstantPaymentEvent(body: body));
+              } else {
+                screenBloc.add(PayInstantPaymentEvent(paymentMethod: paymentMethod, body: body));
               }
             }
           }

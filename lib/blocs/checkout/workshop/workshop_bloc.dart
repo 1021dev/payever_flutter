@@ -40,9 +40,9 @@ class WorkshopScreenBloc
     } else if (event is PatchCheckoutFlowAddressEvent) {
       yield* patchCheckoutFlowAddress(event.body);
     } else if (event is PayWireTransferEvent) {
-      yield* checkoutPayWireTransfer();
+      yield* payWireTransfer();
     } else if (event is PayInstantPaymentEvent) {
-      yield* checkoutPayInstantPayment(event.body);
+      yield* payByThirdParty(event.paymentMethod, event.body);
     } else if (event is EmailValidationEvent) {
       yield* emailValidate(event.email);
     } else if (event is GetPrefilledLinkEvent) {
@@ -148,7 +148,7 @@ class WorkshopScreenBloc
     }
   }
 
-  Stream<WorkshopScreenState> checkoutPayWireTransfer() async* {
+  Stream<WorkshopScreenState> payWireTransfer() async* {
     yield state.copyWith(
       isUpdating: true,
       updatePayflowIndex: 3,
@@ -182,18 +182,17 @@ class WorkshopScreenBloc
     }
   }
 
-  Stream<WorkshopScreenState> checkoutPayInstantPayment(
-      Map<String, dynamic> body) async* {
+  Stream<WorkshopScreenState> payByThirdParty(String paymentMethod, Map<String, dynamic> body) async* {
     yield state.copyWith(
       isUpdating: true,
       updatePayflowIndex: 3,
     );
-    ChannelSetFlow channelSetFlow = state.channelSetFlow;
+
     Map<String, dynamic> paymentVariants =
         checkoutScreenBloc.state.paymentVariants;
-    String connectId = paymentVariants['instant_payment'].variants.first.uuid;
-    dynamic response =
-        await api.checkoutPayInstantPayment(token, connectId, body);
+    String connectId = paymentVariants[paymentMethod].variants.first.uuid;
+    dynamic response = await api.payByThirdParty(token, connectId, body);
+
     if (response is DioError) {
       yield WorkshopScreenStateFailure(
           error: response.error);
@@ -202,13 +201,20 @@ class WorkshopScreenBloc
         updatePayflowIndex: -1,
       );
     } else if (response is Map) {
-      yield WorkshopScreenPaySuccess();
-      channelSetFlow.payment = Payment.fromJson(response);
+      PayResult payResult = PayResult.fromJson(response);
+
+      dynamic response1 = await api.payMarkAsFinished(token, state.channelSetFlow.id, 'en');
+      ChannelSetFlow channelSetFlow = ChannelSetFlow.fromJson(response1);
+      dynamic updateResponse = await api.payUpdateStatus(token, connectId, {'paymentId': payResult.id});
+      payResult = PayResult.fromJson(updateResponse);
+      channelSetFlow.payment = payResult.payment;
       yield state.copyWith(
         isUpdating: false,
-        updatePayflowIndex: -1,
         channelSetFlow: channelSetFlow,
+        payResult: payResult,
+        updatePayflowIndex: -1,
       );
+      yield WorkshopScreenPaySuccess();
       checkoutScreenBloc.add(UpdateChannelSetFlowEvent(channelSetFlow));
     }
   }

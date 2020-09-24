@@ -19,6 +19,7 @@ class WorkshopScreenState {
   final dynamic qrImage;
   final String prefilledLink;
   final User user;
+  final PayResult payResult;
 
   WorkshopScreenState({
     this.isLoadingQrcode = false,
@@ -36,6 +37,7 @@ class WorkshopScreenState {
     this.qrImage,
     this.prefilledLink,
     this.user,
+    this.payResult,
   });
 
   List<Object> get props => [
@@ -54,6 +56,7 @@ class WorkshopScreenState {
         this.qrImage,
         this.prefilledLink,
         this.user,
+        this.payResult,
   ];
 
   WorkshopScreenState copyWith({
@@ -72,6 +75,7 @@ class WorkshopScreenState {
     dynamic qrImage,
     String prefilledLink,
     User user,
+    PayResult payResult,
   }) {
     return WorkshopScreenState(
       isLoadingQrcode: isLoadingQrcode ?? this.isLoadingQrcode,
@@ -89,6 +93,7 @@ class WorkshopScreenState {
       qrImage: qrImage,
       prefilledLink: prefilledLink ?? this.prefilledLink,
       user: user ?? this.user,
+      payResult: payResult ?? this.payResult,
     );
   }
 }

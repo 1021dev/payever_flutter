@@ -93,13 +93,15 @@ class PayflowLoginEvent extends WorkshopScreenEvent {
 }
 
 class PayInstantPaymentEvent extends WorkshopScreenEvent {
+  final String paymentMethod;
   final Map<String, dynamic> body;
 
-  PayInstantPaymentEvent({this.body});
+  PayInstantPaymentEvent({this.paymentMethod, this.body});
 
   @override
   List<Object> get props => [
-        this.body,
+    this.paymentMethod,
+    this.body,
       ];
 }
 
