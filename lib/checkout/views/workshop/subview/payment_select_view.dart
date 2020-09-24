@@ -158,25 +158,25 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
                           'currency': channelSetFlow.currency,
                           'customerEmail': billingAddress.email,
                           'customerName': '${billingAddress.firstName} ${billingAddress.lastName}',
-                          'deliveryFee': channelSetFlow.shippingFee,
+                          'deliveryFee': channelSetFlow.shippingFee ?? 0,
                           'flowId': channelSetFlow.id,
                           'reference': channelSetFlow.reference,
-                          'shippingAddress': channelSetFlow.shippingAddresses,
+                          'shippingAddress': null/*channelSetFlow.shippingAddresses*/,
                           'total': channelSetFlow.total
                         };
 
                         Map<String, dynamic> paymentDetails = {
-                          'adsAgreement': paymentOption.isCheckedAds,
+                          'adsAgreement': paymentOption.isCheckedAds ?? false,
                           'recipientHolder': channelSetFlow.businessName,
                           'recipientIban': channelSetFlow.businessIban,
                           'senderHolder': '${billingAddress.firstName} ${billingAddress.lastName}',
                           'senderIban': channelSetFlow.businessIban,
                         };
-                        List<dynamic>paymentItems = [];
+                        // List<dynamic>paymentItems = [];
 
                         body['payment'] = payment;
                         body['paymentDetails'] = paymentDetails;
-                        body['paymentItems'] = paymentItems;
+                        body['paymentItems'] = [];
                       }
                       widget.onTapPay(body);
                     },

@@ -1045,7 +1045,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                   child: SizedBox.expand(
                     child: MaterialButton(
                       onPressed: () {
-                        bool testMode = true;
+                        bool testMode = false;
                         if (testMode) {
                           Map<String, dynamic> body = {
                             'city': 'Berlin',
@@ -1063,9 +1063,9 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                             'social_security_number': '',
                             'street': 'Germaniastraße, 12099',
                             'street_name': 'Germaniastraße',
-                            'street_number': '12099',
+                            'street_number': '12',
                             'type': 'billing',
-                            'zip_code': 'billing',
+                            'zip_code': '12099',
                           };
                           screenBloc
                               .add(PatchCheckoutFlowAddressEvent(body: body));
