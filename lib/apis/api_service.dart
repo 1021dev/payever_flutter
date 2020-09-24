@@ -1339,7 +1339,7 @@ class ApiService {
 
   Future<dynamic> getStripKey(String token, String payFlowId) async {
     try {
-      print('$TAG - payUpdateStatus()');
+      print('$TAG - getStripKey()');
       dynamic response = await _client.getTypeless(
         '$checkoutV1/$payFlowId/stripe-key',
         headers: _getHeaders(token),
@@ -1350,13 +1350,14 @@ class ApiService {
     }
   }
 
-  Future<dynamic> getStripToken(Map<String, dynamic> body) async {
+  Future<dynamic> getStripToken(Map<String, dynamic> body, String key) async {
     try {
-      print('$TAG - payUpdateStatus()');
+      print('$TAG - getStripToken()');
       dynamic response = await _client.postTypeLess(
         'https://api.stripe.com/v1/tokens',
         body: body,
           headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $key',
             HttpHeaders.contentTypeHeader: 'application/json',
             HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
           },

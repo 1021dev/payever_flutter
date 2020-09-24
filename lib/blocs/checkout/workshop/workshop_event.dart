@@ -58,6 +58,17 @@ class PatchCheckoutFlowAddressEvent extends WorkshopScreenEvent {
 
 class PayWireTransferEvent extends WorkshopScreenEvent {}
 
+class PayCreditPaymentEvent extends WorkshopScreenEvent {
+  final Map<String, dynamic> body;
+
+  PayCreditPaymentEvent(this.body);
+
+  @override
+  List<Object> get props => [
+    this.body,
+  ];
+}
+
 class GetPrefilledLinkEvent extends WorkshopScreenEvent {
   final bool isCopyLink;
 

@@ -87,6 +87,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
     'Choose payment option',
     'Your payment option'
   ];
+  Map<String, dynamic>cardJson = {};
 
   WorkshopScreenBloc screenBloc;
 
@@ -1081,8 +1082,10 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
               String paymentMethod = payments.first.paymentMethod;
               if (paymentMethod == null) return;
 
-              if (paymentMethod.contains('cash')) {
+              if (paymentMethod == GlobalUtils.PAYMENT_CASH) {
                 screenBloc.add(PayWireTransferEvent());
+              } else if (paymentMethod == GlobalUtils.PAYMENT_STRIPE) {
+                screenBloc.add(PayCreditPaymentEvent(cardJson));
               } else {
                 screenBloc.add(PayInstantPaymentEvent(paymentMethod: paymentMethod, body: body));
               }
@@ -1093,6 +1096,10 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
           print(id);
           screenBloc.add(
               PatchCheckoutFlowOrderEvent(body: {'payment_option_id': '$id'}));
+        },
+        onChangeCredit: (val) {
+          print('Card Json : ' + val.toString());
+          cardJson = val;
         },
       ),
     );

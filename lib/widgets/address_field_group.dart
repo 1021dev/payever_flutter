@@ -169,7 +169,7 @@ class _AddressFieldGroupState extends State<AddressFieldGroup> {
                 style: textFieldStyle,
                 initialValue: widget.street ?? '',
                 textInputAction: TextInputAction.done,
-                keyboardType: TextInputType.url,
+                keyboardType: TextInputType.text,
                 onChanged: (val) {
                   widget.onChangedStreet(val);
                 },
@@ -225,7 +225,7 @@ class _AddressFieldGroupState extends State<AddressFieldGroup> {
                 style: textFieldStyle,
                 initialValue: widget.zipCode ?? '',
                 textInputAction: TextInputAction.done,
-                keyboardType: TextInputType.url,
+                keyboardType: TextInputType.number,
                 onChanged: (val) {
                   widget.onChangedZipCode(val);
                 },

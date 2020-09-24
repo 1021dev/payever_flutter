@@ -38,9 +38,9 @@ class _InstantPaymentViewState extends State<InstantPaymentView> {
 
   @override
   Widget build(BuildContext context) {
-    // if (!widget.isSelected) {
-    //   return Container();
-    // }
+    if (!widget.isSelected) {
+      return Container();
+    }
 
     return Column(
       children: [

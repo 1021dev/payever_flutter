@@ -18,6 +18,7 @@ class PaymentSelectView extends StatefulWidget {
   final Function onTapPay;
   final ChannelSetFlow channelSetFlow;
   final String subtitle;
+  final Function onChangeCredit;
 
   const PaymentSelectView(
       {this.enable,
@@ -28,7 +29,8 @@ class PaymentSelectView extends StatefulWidget {
       this.onTapPay,
       this.channelSetFlow,
       this.onTapChangePayment,
-      this.subtitle});
+      this.subtitle,
+      this.onChangeCredit});
 
   @override
   _PaymentSelectViewState createState() => _PaymentSelectViewState();
@@ -102,7 +104,7 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
           onTap: () => widget.onTapApprove,
         ),
         Visibility(
-          visible: true/*widget.expanded*/,
+          visible: widget.expanded,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -116,6 +118,9 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
                       paymentOption: paymentOption,
                       isSelected: paymentOptionId == paymentOption.id,
                       onTapChangePayment: (id) => widget.onTapChangePayment(id),
+                      onChangeCredit: (Map cardJson){
+                        widget.onChangeCredit(cardJson);
+                      },
                     );
                   },
                   separatorBuilder: (context, index) {

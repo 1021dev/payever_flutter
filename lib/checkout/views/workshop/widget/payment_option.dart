@@ -7,8 +7,8 @@ import 'package:payever/commons/utils/app_style.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/connect/models/connect.dart';
+import 'package:payever/libraries/credit_card_field.dart';
 import 'package:payever/theme.dart';
-import 'package:credit_card_field/credit_card_field.dart';
 
 class PaymentOptionCell extends StatefulWidget {
   final CheckoutPaymentOption paymentOption;
@@ -35,14 +35,15 @@ class _PaymentOptionCellState extends State<PaymentOptionCell> {
   TextEditingController cvvController = TextEditingController();
   TextEditingController expirationController = TextEditingController();
 
-
   void _submit() {
+    if (widget.onChangeCredit == null) return;
     Map<String, dynamic> cardJson = {
       'number': creditCardController.text,
-      'cvv': cvvController.text,
+      'cvc': cvvController.text,
       'exp_month': int.tryParse(expirationController.text.substring(0, 2)),
       'exp_year': int.tryParse(expirationController.text.substring(3, 5)),
     };
+    widget.onChangeCredit(cardJson);
   }
 
   @override
@@ -122,10 +123,12 @@ class _PaymentOptionCellState extends State<PaymentOptionCell> {
         widget.channelSetFlow.billingAddress.firstName = value;
       },
     );
-
   }
 
   get _stripeWidget {
+    if (!widget.isSelected) {
+      return Container();
+    }
     return Container(
       margin: EdgeInsets.only(left: 10, right: 10, bottom: 20),
       decoration: BoxDecoration(
@@ -144,20 +147,22 @@ class _PaymentOptionCellState extends State<PaymentOptionCell> {
             child: Container(
               height: 55,
               alignment: Alignment.center,
-              child: TextFormField(
-                style: textFieldStyle,
-                onChanged: (val) {
-
-                },
-
-                validator: (text) {
-                  if (text.isEmpty) {
-                    return 'Card number required';
+              child: CreditCardFormField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: "Credit Card Number",
+                ),
+                controller: creditCardController,
+                obscureText: true,
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Credit Card Number required';
                   }
                   return null;
                 },
-                decoration: textFieldDecoration('Card number'),
-                keyboardType: TextInputType.text,
+                onChanged: (){
+                  _submit();
+                },
               ),
             ),
           ),
@@ -166,26 +171,37 @@ class _PaymentOptionCellState extends State<PaymentOptionCell> {
             width: double.infinity,
             child: Row(
               children: [
-                Expanded(
-                  child: BlurEffectView(
-                    color: overlayColor(),
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(4),
-                    ),
-                    child: Container(
-                      height: 55,
-                      alignment: Alignment.center,
-                      child: CreditCardFormField(
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: "Credit Card Number",
-                        ),
-                        controller: creditCardController,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 2,),
+                // Expanded(
+                //   child: BlurEffectView(
+                //     color: overlayColor(),
+                //     borderRadius: BorderRadius.only(
+                //       bottomLeft: Radius.circular(4),
+                //     ),
+                //     child: Container(
+                //       height: 55,
+                //       alignment: Alignment.center,
+                //       child: TextFormField(
+                //         style: textFieldStyle,
+                //         onChanged: (val) {
+                //
+                //         },
+                //         initialValue: widget.channelSetFlow.businessName,
+                //         validator: (text) {
+                //           if (text.isEmpty) {
+                //             return 'iban required';
+                //           }
+                //           return null;
+                //         },
+                //         decoration: InputDecoration(
+                //           border: OutlineInputBorder(),
+                //           labelText: 'Account holder',
+                //         ),
+                //         keyboardType: TextInputType.text,
+                //       ),
+                //     ),
+                //   ),
+                // ),
+                // SizedBox(width: 2,),
                 Expanded(
                   child: BlurEffectView(
                     color: overlayColor(),
@@ -200,6 +216,15 @@ class _PaymentOptionCellState extends State<PaymentOptionCell> {
                           hintText: "MM/YY",
                         ),
                         controller: expirationController,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Card Expiration required';
+                          }
+                          return null;
+                        },
+                        onChanged: (){
+                          _submit();
+                        },
                       ),
                     ),
                   ),
@@ -217,8 +242,18 @@ class _PaymentOptionCellState extends State<PaymentOptionCell> {
                       child: CVVFormField(
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: "CVV",
+                          labelText: "CVC",
                         ),
+                        controller: cvvController,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'CVC required';
+                          }
+                          return null;
+                        },
+                        onChanged: (){
+                          _submit();
+                        },
                       ),
                     ),
                   ),

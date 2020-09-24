@@ -53,6 +53,8 @@ class WorkshopScreenBloc
       checkoutScreenBloc.add(CheckoutScreenInitEvent());
     } else if (event is PayflowLoginEvent) {
       yield* login(event.email, event.password);
+    } else if (event is PayCreditPaymentEvent) {
+      yield* payByCreditCard(event.body);
     }
   }
 
@@ -181,33 +183,38 @@ class WorkshopScreenBloc
           .then((value) => state.copyWith(isPaid: false));
     }
   }
-  Stream<WorkshopScreenState> payByCreditCard(String paymentMethod, String number, String expMonth, String expYear, String cvc) async* {
+  Stream<WorkshopScreenState> payByCreditCard(Map<String, dynamic>cardJson) async* {
+    yield state.copyWith(
+      isUpdating: true,
+      updatePayflowIndex: 3,
+    );
     dynamic response = await api.getStripKey(token, state.channelSetFlow.id);
     if (response is DioError) {
       Fluttertoast.showToast(msg: 'Failed getting Stripe key.');
       return;
     }
     String key = response['key'];
-    Map<String, dynamic> card = {
-      'number': number,
-      'exp_month': expMonth,
-      'exp_year': expYear,
-      'cvc': cvc,
-    };
     Map<String, dynamic> body = {
-      'card': card,
+      'card': cardJson,
       'key': key,
     };
-
-    dynamic response1 = await api.getStripToken(body);
+    dynamic response1 = await api.getStripToken(body, key);
     if (response1 is DioError) {
       Fluttertoast.showToast(msg: 'Failed getting Stripe token.');
+      yield state.copyWith(
+        isUpdating: false,
+        updatePayflowIndex: -1,
+      );
       return;
     }
     String tokenId = response1['id'];
     Map<String, dynamic> paymentDetails = body['paymentDetails'];
     paymentDetails['tokenId'] = tokenId;
     body['paymentDetails'] = paymentDetails;
+    yield state.copyWith(
+      isUpdating: false,
+      updatePayflowIndex: -1,
+    );
     add(PayInstantPaymentEvent(paymentMethod: GlobalUtils.PAYMENT_STRIPE, body: body));
   }
 
