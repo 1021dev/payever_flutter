@@ -598,6 +598,9 @@ Payment _$PaymentFromJson(Map<String, dynamic> json) {
   return Payment()
     ..amount = json['amount'] as num
     ..apiCall = json['api_call'] as String
+    ..address = json['address'] == null
+        ? null
+        : PayAddress.fromJson(json['address'] as Map<String, dynamic>)
     ..bankAccount = json['bank_account'] == null
         ? null
         : BankAccount.fromJson(json['bank_account'] as Map<String, dynamic>)
@@ -623,12 +626,24 @@ Payment _$PaymentFromJson(Map<String, dynamic> json) {
     ..specificStatus = json['specific_status'] as String
     ..status = json['status'] as String
     ..storeName = json['store_name'] as String
-    ..total = json['total'] as num;
+    ..total = json['total'] as num
+    ..businessId = json['businessId'] as String
+    ..businessName = json['businessName'] as String
+    ..channel = json['channel'] as String
+    ..channelSetId = json['channelSetId'] as String
+    ..currency = json['currency'] as String
+    ..customerEmail = json['customerEmail'] as String
+    ..customerName = json['customerName'] as String
+    ..deliveryFee = json['deliveryFee'] as num
+    ..flowId = json['flowId'] as String
+    ..paymentFee = json['paymentFee'] as num
+    ..paymentType = json['paymentType'] as String;
 }
 
 Map<String, dynamic> _$PaymentToJson(Payment instance) => <String, dynamic>{
       'amount': instance.amount,
       'api_call': instance.apiCall,
+      'address': instance.address,
       'bank_account': instance.bankAccount,
       'callback_url': instance.callbackUrl,
       'created_at': instance.createdAt,
@@ -650,6 +665,17 @@ Map<String, dynamic> _$PaymentToJson(Payment instance) => <String, dynamic>{
       'status': instance.status,
       'store_name': instance.storeName,
       'total': instance.total,
+      'businessId': instance.businessId,
+      'businessName': instance.businessName,
+      'channel': instance.channel,
+      'channelSetId': instance.channelSetId,
+      'currency': instance.currency,
+      'customerEmail': instance.customerEmail,
+      'customerName': instance.customerName,
+      'deliveryFee': instance.deliveryFee,
+      'flowId': instance.flowId,
+      'paymentFee': instance.paymentFee,
+      'paymentType': instance.paymentType,
     };
 
 BankAccount _$BankAccountFromJson(Map<String, dynamic> json) {
@@ -682,4 +708,89 @@ Map<String, dynamic> _$PaymentDetailsToJson(PaymentDetails instance) =>
       'merchant_bank_code': instance.merchantBankCode,
       'merchant_bank_name': instance.merchantBankName,
       'merchant_company_name': instance.merchantCompanyName,
+    };
+
+PayResult _$PayResultFromJson(Map<String, dynamic> json) {
+  return PayResult()
+    ..createdAt = json['created_at'] as String
+    ..id = json['id'] as String
+    ..options = json['options'] == null
+        ? null
+        : Options.fromJson(json['options'] as Map<String, dynamic>)
+    ..payment = json['payment'] == null
+        ? null
+        : Payment.fromJson(json['payment'] as Map<String, dynamic>)
+    ..paymentDetails = json['paymentDetails'] == null
+        ? null
+        : PayResultDetails.fromJson(
+            json['paymentDetails'] as Map<String, dynamic>)
+    ..paymentItems = json['paymentItems'];
+}
+
+Map<String, dynamic> _$PayResultToJson(PayResult instance) => <String, dynamic>{
+      'created_at': instance.createdAt,
+      'id': instance.id,
+      'options': instance.options,
+      'payment': instance.payment,
+      'paymentDetails': instance.paymentDetails,
+      'paymentItems': instance.paymentItems,
+    };
+
+PayAddress _$PayAddressFromJson(Map<String, dynamic> json) {
+  return PayAddress()
+    ..city = json['city'] as String
+    ..country = json['country'] as String
+    ..email = json['email'] as String
+    ..firstName = json['firstName'] as String
+    ..lastName = json['lastName'] as String
+    ..phone = json['phone'] as String
+    ..salutation = json['salutation'] as String
+    ..street = json['street'] as String
+    ..streetName = json['streetName'] as String
+    ..streetNumber = json['streetNumber'] as String
+    ..zipCode = json['zipCode'] as String;
+}
+
+Map<String, dynamic> _$PayAddressToJson(PayAddress instance) =>
+    <String, dynamic>{
+      'city': instance.city,
+      'country': instance.country,
+      'email': instance.email,
+      'firstName': instance.firstName,
+      'lastName': instance.lastName,
+      'phone': instance.phone,
+      'salutation': instance.salutation,
+      'street': instance.street,
+      'streetName': instance.streetName,
+      'streetNumber': instance.streetNumber,
+      'zipCode': instance.zipCode,
+    };
+
+Options _$OptionsFromJson(Map<String, dynamic> json) {
+  return Options()
+    ..merchantCoversFee = json['merchantCoversFee'] as bool ?? false
+    ..shopRedirectEnabled = json['shopRedirectEnabled'] as bool ?? false;
+}
+
+Map<String, dynamic> _$OptionsToJson(Options instance) => <String, dynamic>{
+      'merchantCoversFee': instance.merchantCoversFee,
+      'shopRedirectEnabled': instance.shopRedirectEnabled,
+    };
+
+PayResultDetails _$PayResultDetailsFromJson(Map<String, dynamic> json) {
+  return PayResultDetails()
+    ..chargeId = json['chargeId'] as String
+    ..iban = json['iban'] as String
+    ..mandateReference = json['mandateReference'] as String
+    ..mandateUrl = json['mandateUrl'] as String
+    ..sourceId = json['sourceId'] as String;
+}
+
+Map<String, dynamic> _$PayResultDetailsToJson(PayResultDetails instance) =>
+    <String, dynamic>{
+      'chargeId': instance.chargeId,
+      'iban': instance.iban,
+      'mandateReference': instance.mandateReference,
+      'mandateUrl': instance.mandateUrl,
+      'sourceId': instance.sourceId,
     };

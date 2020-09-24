@@ -240,142 +240,75 @@ class CheckoutFlow {
 
 @JsonSerializable()
 class ChannelSetFlow {
-  @JsonKey(name: 'accept_terms_payever')
-  String acceptTermsPayever;
-  @JsonKey(name: 'amount')
-  num amount;
-  @JsonKey(name: 'api_call')
-  String apiCall;
-  @JsonKey(name: 'api_call_cart')
-  String apiCallCart;
-  @JsonKey(name: 'api_call_id')
-  String apiCallId;
-  @JsonKey(name: 'billing_address')
-  BillingAddress billingAddress;
-  @JsonKey(name: 'business_address_line')
-  String businessAddressLine;
-  @JsonKey(name: 'business_iban')
-  String businessIban;
-  @JsonKey(name: 'business_id')
-  String businessId;
-  @JsonKey(name: 'business_logo')
-  String businessLogo;
-  @JsonKey(name: 'business_name')
-  String businessName;
-  @JsonKey(name: 'business_shipping_option_id')
-  String businessShippingOptionId;
-  @JsonKey(name: 'can_identify_by_ssn')
-  bool canIdentifyBySsn = false;
-  @JsonKey(name: 'cancel_url')
-  String cancelUrl;
-  @JsonKey(name: 'cart')
-  List cart = [];
-  @JsonKey(name: 'channel')
-  String channel;
-  @JsonKey(name: 'channel_set_id')
-  String channelSetId;
-  @JsonKey(name: 'client_id')
-  String clientId;
-  @JsonKey(name: 'comment')
-  String comment;
-  @JsonKey(name: 'connection_id')
-  String connectionId;
-  @JsonKey(name: 'countries')
-  Map<String, String> countries = {};
-  @JsonKey(name: 'currency')
-  String currency;
-  @JsonKey(name: 'different_address')
-  bool differentAddress = false;
-  @JsonKey(name: 'express')
-  bool express = false;
-  @JsonKey(name: 'extra')
-  dynamic extra;
-  @JsonKey(name: 'failure_url')
-  String failureUrl;
-  @JsonKey(name: 'finance_type')
-  String financeType;
-  @JsonKey(name: 'flash_bag')
-  List flashBag = [];
-  @JsonKey(name: 'flow_identifier')
-  String flowIdentifier;
-  @JsonKey(name: 'force_legacy_cart_step')
-  bool forceLegacyCartStep = false;
-  @JsonKey(name: 'force_legacy_use_inventory')
-  bool forceLegacyUseInventory = false;
-  @JsonKey(name: 'guest_token')
-  String guestToken;
-  @JsonKey(name: 'hide_salutation')
-  bool hideSalutation = false;
-  @JsonKey(name: 'id')
-  String id;
-  @JsonKey(name: 'ip_hash')
-  String ipHash;
-  @JsonKey(name: 'logged_in_id')
-  String loggedInId;
-  @JsonKey(name: 'merchant_reference')
-  String merchantReference;
-  @JsonKey(name: 'notice_url')
-  String noticeUrl;
-  @JsonKey(name: 'payment')
-  Payment payment;
-  @JsonKey(name: 'payment_method')
-  String paymentMethod;
-  @JsonKey(name: 'payment_option_id')
-  num paymentOptionId;
-  @JsonKey(name: 'payment_options')
-  List<CheckoutPaymentOption> paymentOptions = [];
-  @JsonKey(name: 'pending_url')
-  String pendingUrl;
-  @JsonKey(name: 'pos_merchant_mode')
-  String posMerchantMode;
-  @JsonKey(name: 'reference')
-  String reference;
-  @JsonKey(name: 'seller_email')
-  String sellerEmail;
-  @JsonKey(name: 'shipping_address_id')
-  String shippingAddressId;
-  @JsonKey(name: 'shipping_addresses')
-  List shippingAddresses = [];
-  @JsonKey(name: 'shipping_category')
-  String shippingCategory;
-  @JsonKey(name: 'shipping_fee')
-  num shippingFee = 0;
-  @JsonKey(name: 'shipping_method_code')
-  String shippingMethodCode;
-  @JsonKey(name: 'shipping_method_name')
-  String shippingMethodName;
-  @JsonKey(name: 'shipping_option_name')
-  String shippingOptionName;
-  @JsonKey(name: 'shipping_options')
-  List shippingOptions = [];
-  @JsonKey(name: 'shipping_order_id')
-  String shippingOrderId;
-  @JsonKey(name: 'shipping_type')
-  String shippingType;
-  @JsonKey(name: 'shop_url')
-  String shopUrl;
-  @JsonKey(name: 'single_address')
-  bool singleAddress = false;
-  @JsonKey(name: 'state')
-  String state;
-  @JsonKey(name: 'success_url')
-  String successUrl;
-  @JsonKey(name: 'tax_value')
-  num taxValue = 0;
-  @JsonKey(name: 'total')
-  num total = 0;
-  @JsonKey(name: 'user_account_id')
-  String userAccountId;
-  @JsonKey(name: 'values')
-  List values = [];
-  @JsonKey(name: 'variant_id')
-  String variantId;
-  @JsonKey(name: 'x_frame_host')
-  String xFrameHost;
+  @JsonKey(name: 'accept_terms_payever')          String acceptTermsPayever;
+  @JsonKey(name: 'amount')                        num amount;
+  @JsonKey(name: 'api_call')                      String apiCall;
+  @JsonKey(name: 'api_call_cart')                 String apiCallCart;
+  @JsonKey(name: 'api_call_id')                   String apiCallId;
+  @JsonKey(name: 'billing_address')               BillingAddress billingAddress;
+  @JsonKey(name: 'business_address_line')         String businessAddressLine;
+  @JsonKey(name: 'business_iban')                 String businessIban;
+  @JsonKey(name: 'business_id')                   String businessId;
+  @JsonKey(name: 'business_logo')                 String businessLogo;
+  @JsonKey(name: 'business_name')                 String businessName;
+  @JsonKey(name: 'business_shipping_option_id')   String businessShippingOptionId;
+  @JsonKey(name: 'can_identify_by_ssn')           bool canIdentifyBySsn = false;
+  @JsonKey(name: 'cancel_url')                    String cancelUrl;
+  @JsonKey(name: 'cart')                          List cart = [];
+  @JsonKey(name: 'channel')                       String channel;
+  @JsonKey(name: 'channel_set_id')                String channelSetId;
+  @JsonKey(name: 'client_id')                     String clientId;
+  @JsonKey(name: 'comment')                       String comment;
+  @JsonKey(name: 'connection_id')                 String connectionId;
+  @JsonKey(name: 'countries')                     Map<String, String> countries = {};
+  @JsonKey(name: 'currency')                      String currency;
+  @JsonKey(name: 'different_address')             bool differentAddress = false;
+  @JsonKey(name: 'express')                       bool express = false;
+  @JsonKey(name: 'extra')                         dynamic extra;
+  @JsonKey(name: 'failure_url')                   String failureUrl;
+  @JsonKey(name: 'finance_type')                  String financeType;
+  @JsonKey(name: 'flash_bag')                     List flashBag = [];
+  @JsonKey(name: 'flow_identifier')               String flowIdentifier;
+  @JsonKey(name: 'force_legacy_cart_step')        bool forceLegacyCartStep = false;
+  @JsonKey(name: 'force_legacy_use_inventory')    bool forceLegacyUseInventory = false;
+  @JsonKey(name: 'guest_token')                   String guestToken;
+  @JsonKey(name: 'hide_salutation')               bool hideSalutation = false;
+  @JsonKey(name: 'id')                            String id;
+  @JsonKey(name: 'ip_hash')                       String ipHash;
+  @JsonKey(name: 'logged_in_id')                  String loggedInId;
+  @JsonKey(name: 'merchant_reference')            String merchantReference;
+  @JsonKey(name: 'notice_url')                    String noticeUrl;
+  @JsonKey(name: 'payment')                       Payment payment;
+  @JsonKey(name: 'payment_method')                String paymentMethod;
+  @JsonKey(name: 'payment_option_id')             num paymentOptionId;
+  @JsonKey(name: 'payment_options')               List<CheckoutPaymentOption> paymentOptions = [];
+  @JsonKey(name: 'pending_url')                   String pendingUrl;
+  @JsonKey(name: 'pos_merchant_mode')             String posMerchantMode;
+  @JsonKey(name: 'reference')                     String reference;
+  @JsonKey(name: 'seller_email')                  String sellerEmail;
+  @JsonKey(name: 'shipping_address_id')           String shippingAddressId;
+  @JsonKey(name: 'shipping_addresses')            List shippingAddresses = [];
+  @JsonKey(name: 'shipping_category')             String shippingCategory;
+  @JsonKey(name: 'shipping_fee')                  num shippingFee = 0;
+  @JsonKey(name: 'shipping_method_code')          String shippingMethodCode;
+  @JsonKey(name: 'shipping_method_name')          String shippingMethodName;
+  @JsonKey(name: 'shipping_option_name')          String shippingOptionName;
+  @JsonKey(name: 'shipping_options')              List shippingOptions = [];
+  @JsonKey(name: 'shipping_order_id')             String shippingOrderId;
+  @JsonKey(name: 'shipping_type')                 String shippingType;
+  @JsonKey(name: 'shop_url')                      String shopUrl;
+  @JsonKey(name: 'single_address')                bool singleAddress = false;
+  @JsonKey(name: 'state')                         String state;
+  @JsonKey(name: 'success_url')                   String successUrl;
+  @JsonKey(name: 'tax_value')                     num taxValue = 0;
+  @JsonKey(name: 'total')                         num total = 0;
+  @JsonKey(name: 'user_account_id')               String userAccountId;
+  @JsonKey(name: 'values')                        List values = [];
+  @JsonKey(name: 'variant_id')                    String variantId;
+  @JsonKey(name: 'x_frame_host')                  String xFrameHost;
 
   ChannelSetFlow();
   factory ChannelSetFlow.fromJson(Map<String, dynamic> json) => _$ChannelSetFlowFromJson(json);
-
   Map<String, dynamic> toJson() => _$ChannelSetFlowToJson(this);
 }
 
@@ -505,6 +438,7 @@ class Payment {
 
   @JsonKey(name: 'amount')                      num amount;
   @JsonKey(name: 'api_call')                    String apiCall;
+  @JsonKey(name: 'address')                     PayAddress address;
   @JsonKey(name: 'bank_account')                BankAccount bankAccount;
   @JsonKey(name: 'callback_url')                String callbackUrl;
   @JsonKey(name: 'created_at')                  String createdAt;
@@ -526,6 +460,18 @@ class Payment {
   @JsonKey(name: 'status')                      String status;
   @JsonKey(name: 'store_name')                  String storeName;
   @JsonKey(name: 'total')                       num total;
+
+  @JsonKey(name: 'businessId')                  String businessId;
+  @JsonKey(name: 'businessName')                String businessName;
+  @JsonKey(name: 'channel')                     String channel;
+  @JsonKey(name: 'channelSetId')                String channelSetId;
+  @JsonKey(name: 'currency')                    String currency;
+  @JsonKey(name: 'customerEmail')               String customerEmail;
+  @JsonKey(name: 'customerName')                String customerName;
+  @JsonKey(name: 'deliveryFee')                 num deliveryFee;
+  @JsonKey(name: 'flowId')                      String flowId;
+  @JsonKey(name: 'paymentFee')                  num paymentFee;
+  @JsonKey(name: 'paymentType')                 String paymentType;
 
   factory Payment.fromJson(Map<String, dynamic> json) => _$PaymentFromJson(json);
   Map<String, dynamic> toJson() => _$PaymentToJson(this);
@@ -555,6 +501,67 @@ class PaymentDetails {
 
   factory PaymentDetails.fromJson(Map<String, dynamic> json) => _$PaymentDetailsFromJson(json);
   Map<String, dynamic> toJson() => _$PaymentDetailsToJson(this);
+}
+
+
+@JsonSerializable()
+class PayResult {
+  PayResult();
+
+  @JsonKey(name: 'created_at')          String createdAt;
+  @JsonKey(name: 'id')                  String id;
+  @JsonKey(name: 'options')             Options options;
+  @JsonKey(name: 'payment')             Payment payment;
+  @JsonKey(name: 'paymentDetails')      PayResultDetails paymentDetails;
+  @JsonKey(name: 'paymentItems')        dynamic paymentItems;
+
+  factory PayResult.fromJson(Map<String, dynamic> json) => _$PayResultFromJson(json);
+  Map<String, dynamic> toJson() => _$PayResultToJson(this);
+}
+
+@JsonSerializable()
+class PayAddress {
+  PayAddress();
+
+  @JsonKey(name: 'city')            String city;
+  @JsonKey(name: 'country')         String country;
+  @JsonKey(name: 'email')           String email;
+  @JsonKey(name: 'firstName')       String firstName;
+  @JsonKey(name: 'lastName')        String lastName;
+  @JsonKey(name: 'phone')           String phone;
+  @JsonKey(name: 'salutation')      String salutation;
+  @JsonKey(name: 'street')          String street;
+  @JsonKey(name: 'streetName')      String streetName;
+  @JsonKey(name: 'streetNumber')    String streetNumber;
+  @JsonKey(name: 'zipCode')         String zipCode;
+
+  factory PayAddress.fromJson(Map<String, dynamic> json) => _$PayAddressFromJson(json);
+  Map<String, dynamic> toJson() => _$PayAddressToJson(this);
+}
+
+@JsonSerializable()
+class Options {
+  Options();
+
+  @JsonKey(name: 'merchantCoversFee', defaultValue: false)      bool merchantCoversFee;
+  @JsonKey(name: 'shopRedirectEnabled', defaultValue: false)    bool shopRedirectEnabled;
+
+  factory Options.fromJson(Map<String, dynamic> json) => _$OptionsFromJson(json);
+  Map<String, dynamic> toJson() => _$OptionsToJson(this);
+}
+
+@JsonSerializable()
+class PayResultDetails {
+  PayResultDetails();
+
+  @JsonKey(name: 'chargeId')              String chargeId;
+  @JsonKey(name: 'iban')                  String iban;
+  @JsonKey(name: 'mandateReference')      String mandateReference;
+  @JsonKey(name: 'mandateUrl')            String mandateUrl;
+  @JsonKey(name: 'sourceId')              String sourceId;
+
+  factory PayResultDetails.fromJson(Map<String, dynamic> json) => _$PayResultDetailsFromJson(json);
+  Map<String, dynamic> toJson() => _$PayResultDetailsToJson(this);
 }
 
 String getTitleFromCode(String code) {

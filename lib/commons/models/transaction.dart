@@ -142,47 +142,28 @@ class Collection {
 
 @JsonSerializable()
 class BillingAddress {
-  @JsonKey(name: 'city')
-  String city;
-  @JsonKey(name: 'country')
-  String country;
-  @JsonKey(name: 'country_name')
-  String countryName;
-  @JsonKey(name: 'email')
-  String email;
-  @JsonKey(name: 'first_name')
-  String firstName;
-  @JsonKey(name: 'last_name')
-  String lastName;
-  @JsonKey(name: 'salutation')
-  String salutation;
-  @JsonKey(name: 'street')
-  String street;
-  @JsonKey(name: 'zip_code')
-  String zipCode;
-  @JsonKey(name: 'id')
-  String id;
-  @JsonKey(name: 'company')
-  String company;
-  @JsonKey(name: 'full_address')
-  String fullAddress;
-  @JsonKey(name: 'phone')
-  String phone;
-  @JsonKey(name: 'social_security_number')
-  String socialSecurityNumber;
-  @JsonKey(name: 'street_name')
-  String streetName;
-  @JsonKey(name: 'street_number')
-  String streetNumber;
-  @JsonKey(name: 'type')
-  String type;
-  @JsonKey(name: 'user_uuid')
-  String userUuid;
-
   BillingAddress();
 
-  factory BillingAddress.fromJson(Map<String, dynamic> json) => _$BillingAddressFromJson(json);
+  @JsonKey(name: 'city')                    String city;
+  @JsonKey(name: 'country')                 String country;
+  @JsonKey(name: 'country_name')            String countryName;
+  @JsonKey(name: 'email')                   String email;
+  @JsonKey(name: 'first_name')              String firstName;
+  @JsonKey(name: 'last_name')               String lastName;
+  @JsonKey(name: 'salutation')              String salutation;
+  @JsonKey(name: 'street')                  String street;
+  @JsonKey(name: 'zip_code')                String zipCode;
+  @JsonKey(name: 'id')                      String id;
+  @JsonKey(name: 'company')                 String company;
+  @JsonKey(name: 'full_address')            String fullAddress;
+  @JsonKey(name: 'phone')                   String phone;
+  @JsonKey(name: 'social_security_number')  String socialSecurityNumber;
+  @JsonKey(name: 'street_name')             String streetName;
+  @JsonKey(name: 'street_number')           String streetNumber;
+  @JsonKey(name: 'type')                    String type;
+  @JsonKey(name: 'user_uuid')               String userUuid;
 
+  factory BillingAddress.fromJson(Map<String, dynamic> json) => _$BillingAddressFromJson(json);
   Map<String, dynamic> toJson() => _$BillingAddressToJson(this);
 }
 

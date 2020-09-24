@@ -38,7 +38,6 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
   @override
   Widget build(BuildContext context) {
     ChannelSetFlow channelSetFlow = widget.channelSetFlow;
-    BillingAddress billingAddress = channelSetFlow.billingAddress;
 
     List<CheckoutPaymentOption> paymentOptions;
     num paymentOptionId;
