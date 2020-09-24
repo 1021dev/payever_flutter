@@ -1515,9 +1515,9 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
   }
 
   showPaySuccessDialog(WorkshopScreenState state) {
-    if (state.channelSetFlow.payment == null ||
-        state.channelSetFlow.payment.paymentDetails == null) return;
-
+    // if (state.channelSetFlow.payment == null ||
+    //     state.channelSetFlow.payment.paymentDetails == null) return;
+    // if (state.payResult == null) return;
     showCupertinoDialog(
       context: context,
       builder: (builder) {

@@ -1337,6 +1337,36 @@ class ApiService {
     }
   }
 
+  Future<dynamic> getStripKey(String token, String payFlowId) async {
+    try {
+      print('$TAG - payUpdateStatus()');
+      dynamic response = await _client.getTypeless(
+        '$checkoutV1/$payFlowId/stripe-key',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getStripToken(Map<String, dynamic> body) async {
+    try {
+      print('$TAG - payUpdateStatus()');
+      dynamic response = await _client.postTypeLess(
+        'https://api.stripe.com/v1/tokens',
+        body: body,
+          headers: {
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          },
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> deletePaymentOption(String token, String id) async {
     try {
       print('$TAG - deletePaymentOption()');

@@ -181,6 +181,35 @@ class WorkshopScreenBloc
           .then((value) => state.copyWith(isPaid: false));
     }
   }
+  Stream<WorkshopScreenState> payByCreditCard(String paymentMethod, String number, String expMonth, String expYear, String cvc) async* {
+    dynamic response = await api.getStripKey(token, state.channelSetFlow.id);
+    if (response is DioError) {
+      Fluttertoast.showToast(msg: 'Failed getting Stripe key.');
+      return;
+    }
+    String key = response['key'];
+    Map<String, dynamic> card = {
+      'number': number,
+      'exp_month': expMonth,
+      'exp_year': expYear,
+      'cvc': cvc,
+    };
+    Map<String, dynamic> body = {
+      'card': card,
+      'key': key,
+    };
+
+    dynamic response1 = await api.getStripToken(body);
+    if (response1 is DioError) {
+      Fluttertoast.showToast(msg: 'Failed getting Stripe token.');
+      return;
+    }
+    String tokenId = response1['id'];
+    Map<String, dynamic> paymentDetails = body['paymentDetails'];
+    paymentDetails['tokenId'] = tokenId;
+    body['paymentDetails'] = paymentDetails;
+    add(PayInstantPaymentEvent(paymentMethod: GlobalUtils.PAYMENT_STRIPE, body: body));
+  }
 
   Stream<WorkshopScreenState> payByThirdParty(String paymentMethod, Map<String, dynamic> body) async* {
     yield state.copyWith(
@@ -202,13 +231,12 @@ class WorkshopScreenBloc
       );
     } else if (response is Map) {
       PayResult payResult = PayResult.fromJson(response);
-
       dynamic response1 = await api.payMarkAsFinished(token, state.channelSetFlow.id, 'en');
       ChannelSetFlow channelSetFlow = ChannelSetFlow.fromJson(response1);
       Map<String, dynamic>body = {'paymentId': payResult.id};
       dynamic updateResponse = await api.payUpdateStatus(token, connectId, body);
       payResult = PayResult.fromJson(updateResponse);
-      channelSetFlow.payment = payResult.payment;
+      // channelSetFlow.payment = payResult.payment;
       yield state.copyWith(
         isUpdating: false,
         isPaid: true,
@@ -321,7 +349,7 @@ class WorkshopScreenBloc
           updatePayflowIndex: -1,
         );
         print(onError.toString());
-        yield WorkshopScreenStateFailure(error: loginObj.toString());
+        Fluttertoast.showToast(msg: loginObj.toString());
       } else {
         Token tokenData = Token.map(loginObj);
         GlobalUtils.setCredentials(email: email, password: password, tokenData: tokenData);

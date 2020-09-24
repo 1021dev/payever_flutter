@@ -268,7 +268,9 @@ class _PaySuccessViewState extends State<PaySuccessView> {
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          SizedBox(height: 30,),
           Flexible(child: Text('You can view the SEPA direct debit mandate here:')),
+          SizedBox(height: 20,),
           Text(payResult.paymentDetails.mandateReference, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
         ],
       );
