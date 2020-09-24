@@ -97,8 +97,8 @@ class _AddressFieldGroupState extends State<AddressFieldGroup> {
               radius: 0,
               child: Container(
                 height:  widget.height,
+                padding: EdgeInsets.symmetric(vertical: 4, horizontal: 16),
                 alignment: Alignment.center,
-                padding: EdgeInsets.only(left: 12, right: 12),
                 child: DropdownButtonFormField(
                   items: List.generate(countryList.length,
                           (index) {
@@ -134,11 +134,10 @@ class _AddressFieldGroupState extends State<AddressFieldGroup> {
             height:  widget.height,
             child: BlurEffectView(
               color: overlayRow(),
+              padding: EdgeInsets.symmetric(vertical: 4),
               radius: 0,
               child: TextFormField(
-                style: TextStyle(
-                  fontSize: 16,
-                ),
+                style: textFieldStyle,
                 initialValue: widget.city ?? '',
                 textInputAction: TextInputAction.done,
                 keyboardType: TextInputType.url,
@@ -151,14 +150,7 @@ class _AddressFieldGroupState extends State<AddressFieldGroup> {
                   }
                   return null;
                 },
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  labelText: Language.getSettingsStrings('form.create_form.address.city.label'),
-                  labelStyle: TextStyle(
-                    fontSize: 12,
-                  ),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 12,  vertical: 4),
-                ),
+                decoration: textFieldDecoration(Language.getSettingsStrings('form.create_form.address.city.label')),
               ),
             ),
           ),
@@ -169,11 +161,10 @@ class _AddressFieldGroupState extends State<AddressFieldGroup> {
             height: widget.height,
             child: BlurEffectView(
               color: overlayRow(),
+              padding: EdgeInsets.symmetric(vertical: 4),
               radius: 0,
               child: TextFormField(
-                style: TextStyle(
-                  fontSize: 16,
-                ),
+                style: textFieldStyle,
                 initialValue: widget.street ?? '',
                 textInputAction: TextInputAction.done,
                 keyboardType: TextInputType.url,
@@ -216,27 +207,20 @@ class _AddressFieldGroupState extends State<AddressFieldGroup> {
                   }
                   return null;
                 },
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  labelText: Language.getSettingsStrings('form.create_form.address.street.label'),
-                  labelStyle: TextStyle(
-                    fontSize: 12,
-                  ),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 12,  vertical: 4),
-                ),
+                decoration: textFieldDecoration(Language.getSettingsStrings('form.create_form.address.street.label')),
               ),
             ),
           ),
           Container(
             margin: EdgeInsets.only(top: 2),
             height: widget.height,
+
             child: BlurEffectView(
               radius: 0,
               color: overlayRow(),
+              padding: EdgeInsets.symmetric(vertical: 4),
               child: TextFormField(
-                style: TextStyle(
-                  fontSize: 16,
-                ),
+                style: textFieldStyle,
                 initialValue: widget.zipCode ?? '',
                 textInputAction: TextInputAction.done,
                 keyboardType: TextInputType.url,
@@ -249,14 +233,7 @@ class _AddressFieldGroupState extends State<AddressFieldGroup> {
                   }
                   return null;
                 },
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  labelText: Language.getSettingsStrings('form.create_form.address.zip_code.label'),
-                  labelStyle: TextStyle(
-                    fontSize: 12,
-                  ),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 12,  vertical: 4),
-                ),
+                decoration:textFieldDecoration(Language.getSettingsStrings('form.create_form.address.zip_code.label')),
               ),
             ),
           ),

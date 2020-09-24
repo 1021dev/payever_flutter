@@ -87,6 +87,8 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
         payBtnTitle = 'Pay now';
       } else if (paymentMethod.contains('instant')) {
         payBtnTitle = 'Pay';
+      } else {
+        payBtnTitle = 'Pay';
       }
     }
 
@@ -193,10 +195,10 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
                                   strokeWidth: 2,
                                 )))
                         : Text(
-                            payBtnTitle,
+                            payBtnTitle ?? '',
                             style: TextStyle(
                               fontSize: 16,
-                              fontWeight: FontWeight.w400,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                   ),

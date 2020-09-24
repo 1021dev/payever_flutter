@@ -438,6 +438,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                               topRight: Radius.circular(4)),
                           child: Container(
                             height: 55,
+                            padding: EdgeInsets.symmetric(vertical: 4),
                             child: TextFormField(
                               style: textFieldStyle,
                               initialValue: amount > 0 ? '$amount' : '',
@@ -453,33 +454,19 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                                 }
                                 return null;
                               },
-                              decoration: InputDecoration(
-                                prefixIcon: Container(
-                                  width: 44,
-                                  child: Center(
-                                    child: Text(
-                                      currency,
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w400,
-                                      ),
+                              decoration: textFieldDecoration(Language.getCartStrings(
+                                  'checkout_cart_edit.form.label.amount'), prefixIcon: Container(
+                                width: 44,
+                                child: Center(
+                                  child: Text(
+                                    currency,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400,
                                     ),
                                   ),
                                 ),
-                                contentPadding: EdgeInsets.only(
-                                    left: 12, right: 12, top: 4, bottom: 4),
-                                labelText: Language.getCartStrings(
-                                    'checkout_cart_edit.form.label.amount'),
-                                labelStyle: TextStyle(
-                                  color: Colors.grey,
-                                ),
-                                border: InputBorder.none,
-                                focusedBorder: InputBorder.none,
-                                enabledBorder: InputBorder.none,
-                                errorBorder: InputBorder.none,
-                                disabledBorder: InputBorder.none,
-                                errorStyle: errorTextFieldColor,
-                                isDense: true,
+                              ),
                               ),
                               keyboardType: TextInputType.numberWithOptions(
                                   decimal: true),
@@ -496,7 +483,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                               bottomRight: Radius.circular(4)),
                           child: Container(
                             height: 55,
-                            padding: EdgeInsets.only(left: 4, right: 4),
+                            padding: EdgeInsets.symmetric(vertical: 4),
                             alignment: Alignment.center,
                             child: TextFormField(
                               style: textFieldStyle,
@@ -926,6 +913,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                         radius: 0,
                         child: Container(
                           height: 55,
+                          padding: EdgeInsets.symmetric(vertical: 4),
                           child: TextFormField(
                             style: textFieldStyle,
                             onChanged: (val) {
@@ -947,6 +935,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                             bottomRight: Radius.circular(4)),
                         child: Container(
                           height: 55,
+                          padding: EdgeInsets.symmetric(vertical: 4),
                           alignment: Alignment.center,
                           child: TextFormField(
                             style: textFieldStyle,
@@ -1047,7 +1036,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                                   'checkout_send_flow.action.continue'),
                               style: TextStyle(
                                 fontSize: 16,
-                                fontWeight: FontWeight.w400,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                     ),
@@ -1137,6 +1126,8 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                   child: Column(
                     children: <Widget>[
                       Container(
+                        height: 55,
+                        padding: EdgeInsets.symmetric(vertical: 4),
                         child: TextFormField(
                           style: textFieldStyle,
                           onChanged: (val) {},
@@ -1151,7 +1142,8 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                         color: Colors.black54,
                       ),
                       Container(
-                        padding: EdgeInsets.only(left: 4, right: 4),
+                        height: 55,
+                        padding: EdgeInsets.symmetric(vertical: 4),
                         child: TextFormField(
                           style: textFieldStyle,
                           onChanged: (val) {},
@@ -1265,6 +1257,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                     children: <Widget>[
                       Container(
                         height: 55,
+                        padding: EdgeInsets.symmetric(vertical: 4),
                         child: TextFormField(
                           style: textFieldStyle,
                           onChanged: (val) {},
@@ -1279,6 +1272,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                       ),
                       Container(
                         height: 55,
+                        padding: EdgeInsets.symmetric(vertical: 4),
                         child: TextFormField(
                           style: textFieldStyle,
                           onChanged: (val) {},
@@ -1382,6 +1376,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
   Widget _emailField(WorkshopScreenState state) {
     return Container(
       height: 55,
+      padding: EdgeInsets.symmetric(vertical: 4),
       alignment: Alignment.center,
       child: Row(
         children: [
@@ -1443,6 +1438,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
     return Container(
       height: 55,
       alignment: Alignment.center,
+      padding: EdgeInsets.symmetric(vertical: 4),
       child: TextFormField(
         style: TextStyle(
           fontSize: 13,

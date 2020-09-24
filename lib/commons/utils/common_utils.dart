@@ -340,8 +340,8 @@ class GlobalUtils {
   //static String  mail= 'service@payever.de';//staging 2
 
   //static const String COMMERCE_OS_URL = 'https://commerceos.test.devpayever.com';//test
-//  static const String COMMERCE_OS_URL = 'https://commerceos.staging.devpayever.com';//staging
-  static const String COMMERCE_OS_URL = 'https://commerceos.payever.org'; //live
+  static const String COMMERCE_OS_URL = 'https://commerceos.staging.devpayever.com';//staging
+//   static const String COMMERCE_OS_URL = 'https://commerceos.payever.org'; //live
 
   static const String POS_URL = 'https://getpayever.com/pos';
 
@@ -1035,3 +1035,43 @@ bool isNumeric(String s) {
   }
   return double.parse(s, (e) => null) != null;
 }
+
+// TextField Attributes
+TextStyle textFieldStyle = TextStyle(fontSize: 13,fontWeight: FontWeight.w500,);
+TextStyle errorTextFieldColor = TextStyle(color: Colors.redAccent);
+InputDecoration textFieldDecoration(String label, {Widget prefixIcon}) {
+  if (prefixIcon != null) {
+    return InputDecoration(
+      prefixIcon: prefixIcon,
+      contentPadding:
+      EdgeInsets.symmetric(horizontal: 16, vertical: 11),
+      labelText: label,
+      labelStyle: TextStyle(
+        color: Colors.grey,
+        fontSize: 12,
+      ),
+      border: InputBorder.none,
+      focusedBorder: InputBorder.none,
+      enabledBorder: InputBorder.none,
+      errorBorder: InputBorder.none,
+      disabledBorder: InputBorder.none,
+      errorStyle: errorTextFieldColor,
+    );
+  }
+  return InputDecoration(
+    contentPadding:
+    EdgeInsets.symmetric(horizontal: 16, vertical: 11),
+    labelText: label,
+    labelStyle: TextStyle(
+      color: Colors.grey,
+      fontSize: 12,
+    ),
+    border: InputBorder.none,
+    focusedBorder: InputBorder.none,
+    enabledBorder: InputBorder.none,
+    errorBorder: InputBorder.none,
+    disabledBorder: InputBorder.none,
+    errorStyle: errorTextFieldColor,
+  );
+}
+
