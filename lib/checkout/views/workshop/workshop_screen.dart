@@ -437,12 +437,9 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                               topLeft: Radius.circular(4),
                               topRight: Radius.circular(4)),
                           child: Container(
-                            height: 50,
+                            height: 55,
                             child: TextFormField(
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                              ),
+                              style: textFieldStyle,
                               initialValue: amount > 0 ? '$amount' : '',
                               onChanged: (val) {
                                 amount = double.parse(val);
@@ -469,25 +466,19 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                                     ),
                                   ),
                                 ),
-                                contentPadding:
-                                    EdgeInsets.symmetric(vertical: 4),
+                                contentPadding: EdgeInsets.only(
+                                    left: 12, right: 12, top: 4, bottom: 4),
                                 labelText: Language.getCartStrings(
                                     'checkout_cart_edit.form.label.amount'),
                                 labelStyle: TextStyle(
                                   color: Colors.grey,
                                 ),
-                                enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Colors.transparent,
-                                    width: 0.5,
-                                  ),
-                                ),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Colors.black,
-                                    width: 0.5,
-                                  ),
-                                ),
+                                border: InputBorder.none,
+                                focusedBorder: InputBorder.none,
+                                enabledBorder: InputBorder.none,
+                                errorBorder: InputBorder.none,
+                                disabledBorder: InputBorder.none,
+                                errorStyle: errorTextFieldColor,
                                 isDense: true,
                               ),
                               keyboardType: TextInputType.numberWithOptions(
@@ -504,14 +495,11 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                               bottomLeft: Radius.circular(4),
                               bottomRight: Radius.circular(4)),
                           child: Container(
-                            height: 50,
+                            height: 55,
                             padding: EdgeInsets.only(left: 4, right: 4),
                             alignment: Alignment.center,
                             child: TextFormField(
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                              ),
+                              style: textFieldStyle,
                               onChanged: (val) {
                                 reference = val;
                               },
@@ -522,27 +510,8 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                                 }
                                 return null;
                               },
-                              decoration: InputDecoration(
-                                labelText: Language.getCartStrings(
-                                    'checkout_cart_edit.form.label.reference'),
-                                labelStyle: TextStyle(
-                                  color: Colors.grey,
-                                ),
-                                enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Colors.transparent,
-                                    width: 0.5,
-                                  ),
-                                ),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Colors.black,
-                                    width: 0.5,
-                                  ),
-                                ),
-                                contentPadding: EdgeInsets.only(
-                                    left: 12, right: 12, top: 4, bottom: 4),
-                              ),
+                              decoration: textFieldDecoration(Language.getCartStrings(
+                                  'checkout_cart_edit.form.label.reference')),
                               keyboardType: TextInputType.text,
                             ),
                           ),
@@ -554,7 +523,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                     height: 20,
                   ),
                   Container(
-                    height: 50,
+                    height: 55,
                     child: SizedBox.expand(
                       child: MaterialButton(
                         onPressed: () {
@@ -577,7 +546,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                                 editOrder ? 'Save' : 'Next Step',
                                 style: TextStyle(
                                   fontSize: 16,
-                                  fontWeight: FontWeight.w400,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                       ),
@@ -786,7 +755,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                               ? _passwordField(state)
                               : GoogleMapAddressField(
                                   googleAutocomplete: googleAutocomplete,
-                                  height: 50,
+                                  height: 55,
                                   onChanged: (val) {
                                     googleAutocomplete = val;
                                   },
@@ -799,7 +768,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                     height: 20,
                   ),
                   Container(
-                    height: 50,
+                    height: 55,
                     child: SizedBox.expand(
                       child: MaterialButton(
                         onPressed: () {
@@ -896,7 +865,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                         salutation: salutation,
                         firstName: firstName,
                         lastName: lastName,
-                        height: 50,
+                        height: 55,
                         salutationChanged: (val) {
                           setState(() {
                             salutation = val;
@@ -922,7 +891,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                         countryCode: countryCode,
                         street: street,
                         zipCode: zipCode,
-                        height: 50,
+                        height: 55,
                         hasBorder: false,
                         onChangedGoogleAutocomplete: (val) {
                           googleAutocomplete = val;
@@ -956,36 +925,14 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                         color: overlayRow(),
                         radius: 0,
                         child: Container(
-                          height: 50,
+                          height: 55,
                           child: TextFormField(
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                            ),
+                            style: textFieldStyle,
                             onChanged: (val) {
                               company = val;
                             },
                             initialValue: company,
-                            decoration: InputDecoration(
-                              labelText: 'Company (optional)',
-                              labelStyle: TextStyle(
-                                color: Colors.grey,
-                              ),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.transparent,
-                                  width: 0.5,
-                                ),
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.black,
-                                  width: 0.5,
-                                ),
-                              ),
-                              contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 4),
-                            ),
+                            decoration: textFieldDecoration('Company (optional)'),
                             keyboardType: TextInputType.text,
                           ),
                         ),
@@ -999,37 +946,15 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                             bottomLeft: Radius.circular(4),
                             bottomRight: Radius.circular(4)),
                         child: Container(
-                          height: 50,
+                          height: 55,
                           alignment: Alignment.center,
                           child: TextFormField(
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                            ),
+                            style: textFieldStyle,
                             onChanged: (val) {
                               phone = val;
                             },
                             initialValue: phone,
-                            decoration: InputDecoration(
-                              labelText: 'Phone (optional)',
-                              labelStyle: TextStyle(
-                                color: Colors.grey,
-                              ),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.transparent,
-                                  width: 0.5,
-                                ),
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.black,
-                                  width: 0.5,
-                                ),
-                              ),
-                              contentPadding: EdgeInsets.only(
-                                  left: 12, right: 12, top: 4, bottom: 4),
-                            ),
+                            decoration: textFieldDecoration('Phone (optional)'),
                             keyboardType: TextInputType.text,
                           ),
                         ),
@@ -1041,7 +966,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                   height: 20,
                 ),
                 Container(
-                  height: 50,
+                  height: 55,
                   child: SizedBox.expand(
                     child: MaterialButton(
                       onPressed: () {
@@ -1213,34 +1138,11 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                     children: <Widget>[
                       Container(
                         child: TextFormField(
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black87,
-                            fontWeight: FontWeight.w400,
-                          ),
+                          style: textFieldStyle,
                           onChanged: (val) {},
                           initialValue: '',
-                          decoration: InputDecoration(
-                            labelText: Language.getCheckoutStrings(
-                                'checkout_send_flow.form.phoneTo.placeholder'),
-                            labelStyle: TextStyle(
-                              color: Colors.grey,
-                            ),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.transparent,
-                                width: 0.5,
-                              ),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.black,
-                                width: 0.5,
-                              ),
-                            ),
-                            contentPadding: EdgeInsets.only(
-                                left: 16, right: 16, top: 0, bottom: 0),
-                          ),
+                          decoration: textFieldDecoration(Language.getCheckoutStrings(
+                              'checkout_send_flow.form.phoneTo.placeholder')),
                           keyboardType: TextInputType.phone,
                         ),
                       ),
@@ -1251,34 +1153,11 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                       Container(
                         padding: EdgeInsets.only(left: 4, right: 4),
                         child: TextFormField(
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black87,
-                            fontWeight: FontWeight.w400,
-                          ),
+                          style: textFieldStyle,
                           onChanged: (val) {},
                           initialValue: '',
-                          decoration: InputDecoration(
-                            labelText: Language.getCheckoutStrings(
-                                'checkout_send_flow.form.email.placeholder'),
-                            labelStyle: TextStyle(
-                              color: Colors.grey,
-                            ),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.transparent,
-                                width: 0.5,
-                              ),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.black,
-                                width: 0.5,
-                              ),
-                            ),
-                            contentPadding: EdgeInsets.only(
-                                left: 16, right: 16, top: 0, bottom: 0),
-                          ),
+                          decoration: textFieldDecoration(Language.getCheckoutStrings(
+                              'checkout_send_flow.form.email.placeholder')),
                           keyboardType: TextInputType.emailAddress,
                         ),
                       ),
@@ -1289,7 +1168,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                   height: 20,
                 ),
                 Container(
-                  height: 50,
+                  height: 55,
                   child: Row(
                     children: <Widget>[
                       Flexible(
@@ -1385,24 +1264,12 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                   child: Column(
                     children: <Widget>[
                       Container(
-                        height: 50,
+                        height: 55,
                         child: TextFormField(
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black54,
-                            fontWeight: FontWeight.w400,
-                          ),
+                          style: textFieldStyle,
                           onChanged: (val) {},
                           initialValue: '',
-                          decoration: InputDecoration(
-                            contentPadding:
-                                EdgeInsets.only(left: 16, right: 16),
-                            labelText: 'Mobile number',
-                            labelStyle: TextStyle(
-                              color: Colors.grey,
-                            ),
-                            enabledBorder: InputBorder.none,
-                          ),
+                          decoration: textFieldDecoration('Mobile number'),
                           keyboardType: TextInputType.text,
                         ),
                       ),
@@ -1411,24 +1278,12 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                         color: Colors.black54,
                       ),
                       Container(
-                        height: 50,
+                        height: 55,
                         child: TextFormField(
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black54,
-                            fontWeight: FontWeight.w400,
-                          ),
+                          style: textFieldStyle,
                           onChanged: (val) {},
                           initialValue: '',
-                          decoration: InputDecoration(
-                            contentPadding:
-                                EdgeInsets.only(left: 16, right: 16),
-                            labelText: 'E-Mail Address',
-                            labelStyle: TextStyle(
-                              color: Colors.grey,
-                            ),
-                            enabledBorder: InputBorder.none,
-                          ),
+                          decoration: textFieldDecoration('E-Mail Address'),
                           keyboardType: TextInputType.text,
                         ),
                       ),
@@ -1439,7 +1294,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                   height: 20,
                 ),
                 Container(
-                  height: 50,
+                  height: 55,
                   child: Row(
                     children: <Widget>[
                       Flexible(
@@ -1526,31 +1381,20 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
 
   Widget _emailField(WorkshopScreenState state) {
     return Container(
-      height: 50,
+      height: 55,
       alignment: Alignment.center,
       child: Row(
         children: [
           Expanded(
             child: TextFormField(
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w400,
-              ),
+              style: textFieldStyle,
               onChanged: (val) {
                 email = val;
                 if (validEmail())
                   screenBloc.add(EmailValidationEvent(email: email));
               },
               initialValue: isAccountApproved ? email : '',
-              decoration: InputDecoration(
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                labelText: 'E-Mail Address',
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                ),
-                enabledBorder: InputBorder.none,
-              ),
+              decoration: textFieldDecoration('E-Mail Address'),
               validator: FieldValidator.email(),
               keyboardType: TextInputType.emailAddress,
             ),
@@ -1597,25 +1441,17 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
 
   Widget _passwordField(WorkshopScreenState state) {
     return Container(
-      height: 50,
+      height: 55,
       alignment: Alignment.center,
       child: TextFormField(
         style: TextStyle(
-          fontSize: 16,
+          fontSize: 13,
           fontWeight: FontWeight.w400,
         ),
         onChanged: (val) {
           password = val;
         },
-        decoration: InputDecoration(
-          contentPadding:
-          EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-          labelText: 'Password',
-          labelStyle: TextStyle(
-            color: Colors.grey,
-          ),
-          enabledBorder: InputBorder.none,
-        ),
+        decoration: textFieldDecoration('Password'),
         validator: (value) {
           if (value.isEmpty) {
             return 'Password required';
