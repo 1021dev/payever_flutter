@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/pos/models/models.dart';
+import 'package:payever/products/models/models.dart';
 
 class PosScreenState {
   final bool isLoading;
@@ -9,6 +10,8 @@ class PosScreenState {
   final Terminal activeTerminal;
   final bool businessCopied;
   final bool terminalCopied;
+  final List<ProductsModel> products;
+  final List<ProductListModel> productLists;
   final List<Communication> integrations;
   final List<Communication> communications;
   final DevicePaymentSettings devicePaymentSettings;
@@ -25,6 +28,7 @@ class PosScreenState {
   final List<CountryDropdownItem> dropdownItems;
   final dynamic fieldSetData;
   final dynamic qrImage;
+  final List<ProductFilterOption> filterOptions;
 
   PosScreenState({
     this.isLoading = false,
@@ -49,6 +53,9 @@ class PosScreenState {
     this.dropdownItems = const [],
     this.fieldSetData,
     this.qrImage,
+    this.products,
+    this.productLists,
+    this.filterOptions = const [],
   });
 
   List<Object> get props => [
@@ -73,7 +80,10 @@ class PosScreenState {
     this.settingsModel,
     this.dropdownItems,
     this.fieldSetData,
-    this.qrImage
+    this.qrImage,
+    this.products,
+    this.productLists,
+    this.filterOptions,
   ];
 
   PosScreenState copyWith({
@@ -97,6 +107,9 @@ class PosScreenState {
     List twilioAddPhoneForm,
     AddPhoneNumberSettingsModel settingsModel,
     List<CountryDropdownItem> dropdownItems,
+    List<ProductsModel> products,
+    List<ProductListModel> productLists,
+    List<ProductFilterOption> filterOptions,
     dynamic fieldSetData,
     dynamic qrImage,
   }) {
@@ -123,6 +136,9 @@ class PosScreenState {
       dropdownItems: dropdownItems ?? this.dropdownItems,
       fieldSetData: fieldSetData ?? this.fieldSetData,
       qrImage: qrImage ?? this.qrImage,
+      products: products ?? this.products,
+      productLists: productLists ?? this.productLists,
+      filterOptions: filterOptions ?? this.filterOptions,
     );
   }
 }

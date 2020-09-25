@@ -69,6 +69,17 @@ class Product {
   Map<String, dynamic> toJson() => _$ProductToJson(this);
 }
 
+@JsonSerializable()
+class ProductFilterOption {
+  ProductFilterOption();
+
+  @JsonKey(name: 'name')      String name;
+  @JsonKey(name: 'values')    List<String>values = [];
+
+  factory ProductFilterOption.fromJson(Map<String, dynamic> json) => _$ProductFilterOptionFromJson(json);
+  Map<String, dynamic> toJson() => _$ProductFilterOptionToJson(this);
+}
+
 // add items to complete the flow object
 class Cart {
   Cart();

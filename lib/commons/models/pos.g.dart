@@ -81,6 +81,19 @@ Map<String, dynamic> _$ProductToJson(Product instance) => <String, dynamic>{
       'quantity': instance.quantity,
     };
 
+ProductFilterOption _$ProductFilterOptionFromJson(Map<String, dynamic> json) {
+  return ProductFilterOption()
+    ..name = json['name'] as String
+    ..values = (json['values'] as List)?.map((e) => e as String)?.toList();
+}
+
+Map<String, dynamic> _$ProductFilterOptionToJson(
+        ProductFilterOption instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'values': instance.values,
+    };
+
 CartItem _$CartItemFromJson(Map<String, dynamic> json) {
   return CartItem(
     id: json['id'] as String,

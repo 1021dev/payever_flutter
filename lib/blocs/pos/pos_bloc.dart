@@ -7,6 +7,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/models/pos.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/pos/models/models.dart';
+import 'package:payever/products/models/models.dart';
 
 import '../bloc.dart';
 
@@ -161,10 +162,47 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
 
     Terminal activeTerminal = terminals.where((element) => element.active).toList().first;
     if (state.activeTerminal == null) {
-      yield state.copyWith(activeTerminal: activeTerminal, terminals: terminals, isLoading: false, terminalCopied: false);
+      yield state.copyWith(activeTerminal: activeTerminal, terminals: terminals, terminalCopied: false);
     } else {
-      yield state.copyWith(terminals: terminals, isLoading: false, terminalCopied: false);
+      yield state.copyWith(terminals: terminals, terminalCopied: false);
     }
+
+    Map<String, dynamic> body = {
+      'operationName': null,
+      'variables': {},
+      'query': '{\n  getProducts(businessUuid: \"$activeBusinessId\", paginationLimit: 100, pageNumber: 1, orderBy: \"price\", orderDirection: \"asc\", filterById: [], search: \"\", filters: []) {\n    products {\n      images\n      id\n      title\n      description\n      onSales\n      price\n      salePrice\n      vatRate\n      sku\n      barcode\n      currency\n      type\n      active\n      categories {\n        title\n      }\n      collections {\n        _id\n        name\n        description\n      }\n      variants {\n        id\n        images\n        options {\n          name\n          value\n        }\n        description\n        onSales\n        price\n        salePrice\n        sku\n        barcode\n      }\n      channelSets {\n        id\n        type\n        name\n      }\n      shipping {\n        weight\n        width\n        length\n        height\n      }\n    }\n    info {\n      pagination {\n        page\n        page_count\n        per_page\n        item_count\n      }\n    }\n  }\n}\n'
+    };
+
+    dynamic response = await api.getProducts(token, body);
+    List<ProductsModel> products = [];
+    List<ProductListModel> productLists = [];
+
+    if (response is Map) {
+      dynamic data = response['data'];
+      if (data != null) {
+        dynamic getProducts = data['getProducts'];
+        if (getProducts != null) {
+          List productsObj = getProducts['products'];
+          if (productsObj != null) {
+            productsObj.forEach((element) {
+              products.add(ProductsModel.toMap(element));
+              productLists.add(ProductListModel(productsModel: ProductsModel.toMap(element), isChecked: false));
+            });
+          }
+        }
+      }
+    }
+    yield state.copyWith(products: products, productLists: productLists);
+    dynamic response1 = await api.productsFilterOption(token, dashboardScreenBloc.state.activeBusiness.id);
+    List<ProductFilterOption>filterOptions = [];
+    if (response1 is List) {
+      response1.forEach((element) {
+        ProductFilterOption filterOption = ProductFilterOption.fromJson(element);
+        filterOptions.add(filterOption);
+      });
+    }
+    yield state.copyWith(filterOptions: filterOptions, isLoading: false);
+    
     add(GetPosIntegrationsEvent(businessId: activeBusinessId));
   }
 
