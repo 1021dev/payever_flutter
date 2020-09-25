@@ -26,6 +26,7 @@ class DashboardCheckoutView extends StatefulWidget {
   final Function onTapGetStarted;
   final Function onTapContinueSetup;
   final Function onTapLearnMore;
+  final Function onTapLinkOrManage;
 
   DashboardCheckoutView({
     this.onOpen,
@@ -39,6 +40,7 @@ class DashboardCheckoutView extends StatefulWidget {
     this.onTapGetStarted,
     this.onTapContinueSetup,
     this.onTapLearnMore,
+    this.onTapLinkOrManage,
   });
 
   @override
@@ -169,7 +171,7 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                         child: Container(
                           child: InkWell(
                             onTap: () {
-
+                              widget.onTapLinkOrManage(true);
                             },
                             child: Container(
                               height: 58,
@@ -194,7 +196,7 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                         child: Container(
                           child: InkWell(
                             onTap: () {
-
+                              widget.onTapLinkOrManage(false);
                             },
                             child: Container(
                               height: 58,

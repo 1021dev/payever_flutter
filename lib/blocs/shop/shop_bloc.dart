@@ -68,7 +68,7 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
     dynamic templatesObj = await api.getTemplates(GlobalUtils.activeToken.accessToken);
     if (templatesObj != null) {
       templatesObj.forEach((element) {
-        templates.add(TemplateModel.fromMap(element));
+          templates.add(TemplateModel.fromMap(element));
       });
     }
     templates.forEach((template) {

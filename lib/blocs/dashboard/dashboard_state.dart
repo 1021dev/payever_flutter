@@ -171,6 +171,7 @@ class DashboardScreenState {
       notifications: notifications ?? this.notifications,
       checkouts: checkouts ?? this.checkouts,
       installBusinessAppId: installBusinessAppId ?? this.installBusinessAppId,
+      defaultCheckout: defaultCheckout ?? this.defaultCheckout,
     );
   }
 }

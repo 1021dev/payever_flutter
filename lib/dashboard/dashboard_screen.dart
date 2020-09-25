@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/checkout/views/checkout_screen.dart';
+import 'package:payever/checkout/views/workshop/create_edit_checkout_screen.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
@@ -664,6 +665,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   businessApps: app,
                 )
             );
+          },
+          onTapLinkOrManage: (bool isLink) {
+            if (isLink) {
+
+            } else {
+              _navigateAppsScreen(
+                state,
+                CreateEditCheckoutScreen(
+                  businessId: state.activeBusiness.id,
+                  checkout: state.defaultCheckout,
+                  fromDashBoard: true,
+                  screenBloc: CheckoutSwitchScreenBloc(),
+                ),
+              );
+            }
           },
         ));
       }
