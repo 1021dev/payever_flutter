@@ -201,7 +201,7 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                           child: InkWell(
                             onTap: widget.tapOpen,
                             child: Container(
-                              height: 50,
+                              height: 58,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(6),
                                 color: overlayDashboardButtonsBackground(),

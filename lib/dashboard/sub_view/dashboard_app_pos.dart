@@ -247,7 +247,7 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                         child: InkWell(
                           onTap: widget.onTapEditTerminal,
                           child: Container(
-                            height: 60,
+                            height: 58,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),

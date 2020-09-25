@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -195,8 +196,8 @@ class WorkshopScreenBloc
     }
     String key = response['key'];
     Map<String, dynamic> body = {
-      'card': cardJson,
-      'key': key,
+      'card': json.encode(cardJson),
+      // 'key': key,
     };
     dynamic response1 = await api.getStripToken(body, key);
     if (response1 is DioError) {

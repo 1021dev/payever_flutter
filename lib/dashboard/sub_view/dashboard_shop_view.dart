@@ -244,7 +244,7 @@ class _DashboardShopViewState extends State<DashboardShopView> {
                             child: InkWell(
                               onTap: widget.onTapEditShop,
                               child: Container(
-                                height: 60,
+                                height: 58,
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8),

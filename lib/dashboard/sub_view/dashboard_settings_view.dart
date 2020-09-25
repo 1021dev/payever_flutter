@@ -91,7 +91,7 @@ class _DashboardSettingsViewState extends State<DashboardSettingsView> {
                     child: InkWell(
                       onTap: widget.onTapOpenWallpaper,
                       child: Container(
-                        height: 50,
+                        height: 58,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(6),
@@ -116,7 +116,7 @@ class _DashboardSettingsViewState extends State<DashboardSettingsView> {
                     child: InkWell(
                       onTap: widget.onTapOpenLanguage,
                       child: Container(
-                        height: 50,
+                        height: 58,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(6),

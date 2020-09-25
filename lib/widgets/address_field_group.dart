@@ -106,7 +106,6 @@ class _AddressFieldGroupState extends State<AddressFieldGroup> {
                         return DropdownMenuItem(
                           child: Text(
                             countryList[index].name,
-                            style: TextStyle(color: Colors.white),
                           ),
                           value: countryList[index].name,
                         );
@@ -142,7 +141,7 @@ class _AddressFieldGroupState extends State<AddressFieldGroup> {
                 style: textFieldStyle,
                 initialValue: widget.city ?? '',
                 textInputAction: TextInputAction.done,
-                keyboardType: TextInputType.url,
+                keyboardType: TextInputType.text,
                 onChanged: (val) {
                   widget.onChangedCity(val);
                 },

@@ -35,7 +35,7 @@ class _GoogleMapAddressFieldState extends State<GoogleMapAddressField> {
               style: textFieldStyle,
               initialValue: widget.googleAutocomplete ?? '',
               textInputAction: TextInputAction.done,
-              keyboardType: TextInputType.url,
+              keyboardType: TextInputType.text,
               onChanged: (val) {
                 widget.onChanged(val);
               },

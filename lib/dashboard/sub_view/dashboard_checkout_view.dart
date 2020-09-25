@@ -172,7 +172,7 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
 
                             },
                             child: Container(
-                              height: 60,
+                              height: 58,
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(6),
@@ -197,7 +197,7 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
 
                             },
                             child: Container(
-                              height: 60,
+                              height: 58,
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(6),
