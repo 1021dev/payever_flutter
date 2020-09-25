@@ -1,68 +1,45 @@
 import 'transaction.dart';
 import '../utils/utils.dart';
+import 'package:json_annotation/json_annotation.dart';
+part 'pos.g.dart';
 
+@JsonSerializable()
 class Terminal {
-  bool active;
-  String business;
-  String channelSet;
-  String createdAt;
-  String defaultLocale;
-  List<String> subscription = List();
-  List<String> locales = List();
-  String logo;
-  String name;
-  String theme;
-  String updatedAt;
-  num __v;
-  String id;
-  List<String> paymentMethods = List();
-  List<Day> lastWeek = List();
-  List<Product> bestSales = List();
-  num lastWeekAmount = 0;
+  Terminal();
 
-  Terminal.toMap(dynamic obj) {
-    active = obj[GlobalUtils.DB_POS_TERMINAL_ACTIVE];
-    business = obj[GlobalUtils.DB_POS_TERMINAL_BUSINESS];
-    channelSet = obj[GlobalUtils.DB_POS_TERMINAL_CHANNEL_SET];
-    createdAt = obj[GlobalUtils.DB_POS_TERMINAL_CREATED_AT];
-    defaultLocale = obj[GlobalUtils.DB_POS_TERMINAL_DEFAULT_LOCALE];
-    logo = obj[GlobalUtils.DB_POS_TERMINAL_LOGO];
-    name = obj[GlobalUtils.DB_POS_TERMINAL_NAME];
-    theme = obj[GlobalUtils.DB_POS_TERMINAL_THEME];
-    updatedAt = obj[GlobalUtils.DB_POS_TERMINAL_UPDATED_AT];
-    __v = obj[GlobalUtils.DB_POS_TERMINAL_V];
-    id = obj[GlobalUtils.DB_POS_TERMINAL_ID];
+  @JsonKey(name: 'active')                    bool active;
+  @JsonKey(name: 'business')                  String business;
+  @JsonKey(name: 'channelSet')                String channelSet;
+  @JsonKey(name: 'createdAt')                 String createdAt;
+  @JsonKey(name: 'defaultLocale')             String defaultLocale;
+  @JsonKey(name: 'integrationSubscriptions')  List<String> subscription = List();
+  @JsonKey(name: 'locales')                   List<String> locales = List();
+  @JsonKey(name: 'logo')                      String logo;
+  @JsonKey(name: 'name')                      String name;
+  @JsonKey(name: 'theme')                     String theme;
+  @JsonKey(name: 'updatedAt')                 String updatedAt;
+  @JsonKey(name: '_id')                       String id;
 
-    dynamic subs = obj[GlobalUtils.DB_POS_TERMINAL_INTEGRATION_SUB];
-    subs.forEach((sub) {
-      subscription.add(sub);
-    });
+  @JsonKey(ignore:true) List<String> paymentMethods = List();
+  @JsonKey(ignore:true) List<Day> lastWeek = List();
+  @JsonKey(ignore:true) List<Product> bestSales = List();
+  @JsonKey(ignore:true) num lastWeekAmount = 0;
 
-    dynamic localesObj = obj[GlobalUtils.DB_POS_TERMINAL_LOCALES];
-    localesObj.forEach((locale) {
-      locales.add(locale);
-    });
-  }
+  factory Terminal.fromJson(Map<String, dynamic> json) => _$TerminalFromJson(json);
+  Map<String, dynamic> toJson() => _$TerminalToJson(this);
+
 }
 
+@JsonSerializable()
 class ChannelSet {
   ChannelSet(this.id, this.name, this.type);
 
-  String checkout;
-  bool customPolicy = false;
-  bool policyEnabled = false;
-  String id;
-  String name;
-  String type;
-
-  ChannelSet.toMap(dynamic obj) {
-    checkout = obj[GlobalUtils.DB_POS_CHANNEL_SET_CHECKOUT];
-    id = obj[GlobalUtils.DB_POS_CHANNEL_SET_ID];
-    name = obj[GlobalUtils.DB_POS_CHANNEL_SET_NAME];
-    type = obj[GlobalUtils.DB_POS_CHANNEL_SET_TYPE];
-    customPolicy = obj['customPolicy'];
-    policyEnabled = obj['policyEnabled'];
-  }
+  @JsonKey(name: 'checkout')      String checkout;
+  @JsonKey(name: 'customPolicy')  bool customPolicy = false;
+  @JsonKey(name: 'policyEnabled') bool policyEnabled = false;
+  @JsonKey(name: 'id')            String id;
+  @JsonKey(name: 'name')          String name;
+  @JsonKey(name: 'type')          String type;
 
   Map<String, dynamic> toDictionary() {
     Map<String, dynamic> map = {};
@@ -71,129 +48,49 @@ class ChannelSet {
     map['id'] = id;
     return map;
   }
+
+  factory ChannelSet.fromJson(Map<String, dynamic> json) => _$ChannelSetFromJson(json);
+  Map<String, dynamic> toJson() => _$ChannelSetToJson(this);
 }
 
-// class Checkout{
-
-//   String _businessid;
-//   String _createdAt;
-//   bool _default;
-//   String _logo;
-//   String _name;
-//   List<Section> _sections = List();
-//   List<Settings> _settings = List();
-//   List<Subscription> _subscriptions = List();
-//   String _updatedAt;
-//   String __v;
-//   String _id;
-
-//   Checkout.toMap(dynamic obj){
-
-//   }
-
-// }
-
-//class Section {}
-
-class Settings {}
-
-class Subscription {}
-
+@JsonSerializable()
 class Product {
-  String channelSet;
-  String id;
-  String lastSell;
-  String name;
-  String thumbnail;
-  String uuid;
-  String _id;
-  num quantity;
-  num __v;
+  Product();
 
-  Product.toMap(dynamic obj) {
-    channelSet = obj[GlobalUtils.DB_POS_TERM_PRODUCT_CHANNEL_SET];
-    id = obj[GlobalUtils.DB_POS_TERM_PRODUCT_ID];
-    lastSell = obj[GlobalUtils.DB_POS_TERM_PRODUCT_LAST_SELL];
-    name = obj[GlobalUtils.DB_POS_TERM_PRODUCT_NAME];
-    thumbnail = obj[GlobalUtils.DB_POS_TERM_PRODUCT_THUMBNAIL];
-    uuid = obj[GlobalUtils.DB_POS_TERM_PRODUCT_UUID];
-    _id = obj[GlobalUtils.DB_POS_TERM_PRODUCT__ID];
-    quantity = obj[GlobalUtils.DB_POS_TERM_PRODUCT_QUANTITY];
-    __v = obj[GlobalUtils.DB_POS_TERM_PRODUCT_V];
-  }
+  @JsonKey(name: 'channelSet')      String channelSet;
+  @JsonKey(name: 'id')              String id;
+  @JsonKey(name: 'lastSell')        String lastSell;
+  @JsonKey(name: 'name')            String name;
+  @JsonKey(name: 'thumbnail')       String thumbnail;
+  @JsonKey(name: 'uuid')            String uuid;
+  @JsonKey(name: 'quantity')        num quantity;
+
+  factory Product.fromJson(Map<String, dynamic> json) => _$ProductFromJson(json);
+  Map<String, dynamic> toJson() => _$ProductToJson(this);
 }
 
 // add items to complete the flow object
 class Cart {
   Cart();
-
   dynamic cart;
-  List<CartItem> items = List();
+  List<CartItem> items = [];
   num total = 0;
   String id;
-
-  Cart.toMap(dynamic obj) {
-    cart = obj;
-    print(cart);
-    if (obj[GlobalUtils.DB_POS_CART].isNotEmpty)
-      obj[GlobalUtils.DB_POS_CART].forEach((item) {
-        items.add(CartItem.toMap(item));
-      });
-    total = obj[GlobalUtils.DB_POS_CART_TOTAL];
-    id = obj[GlobalUtils.DB_POS_CART_CART_ID];
-  }
-
-  static items2Map(List<CartItem> items) {
-    List<Map<String, dynamic>> result = List();
-    items.forEach((f) {
-      result.add({
-        GlobalUtils.DB_POS_CART_CART_ID: f.id,
-        GlobalUtils.DB_POS_CART_CART_IMAGE: f.image,
-        GlobalUtils.DB_POS_CART_CART_NAME: f.name,
-        GlobalUtils.DB_POS_CART_CART_PRICE: f.price,
-        GlobalUtils.DB_POS_CART_CART_QTY: f.quantity,
-        GlobalUtils.DB_POS_CART_CART_SKU: f.sku,
-        GlobalUtils.DB_POS_CART_CART_UUID: f.uuid
-      });
-    });
-    print(result);
-    return result;
-  }
-
-  static items2MapSimple(List<CartItem> items) {
-    List<Map<String, dynamic>> result = List();
-    items.forEach((f) {
-      print("SKU = ${f.sku}");
-      print("image = ${f.image}");
-      result.add({
-        GlobalUtils.DB_POS_CART_CART_UUID: f.uuid,
-        GlobalUtils.DB_POS_CART_CART_NAME: f.name,
-        GlobalUtils.DB_POS_CART_CART_SKU: f.sku,
-        GlobalUtils.DB_POS_CART_CART_IMAGE:
-            Env.storage + "/products/" + (f.image ?? ""),
-        GlobalUtils.DB_POS_CART_CART_ID: f.id,
-        GlobalUtils.DB_POS_CART_CART_PRICE: f.price,
-        GlobalUtils.DB_POS_CART_CART_QTY: f.quantity,
-      });
-    });
-    print(result);
-    return result;
-  }
-
-  static simplify({dynamic newItems}) {}
 }
 
+@JsonSerializable()
 class CartItem {
-  String id;
-  String identifier;
-  String image;
-  String name;
-  num price = 0;
-  num quantity = 0;
-  num vat;
-  String sku;
-  String uuid;
-  bool inStock = true;
+
+  @JsonKey(name: 'id')            String id;
+  @JsonKey(name: 'identifier')    String identifier;
+  @JsonKey(name: 'image')         String image;
+  @JsonKey(name: 'name')          String name;
+  @JsonKey(name: 'price')         num price = 0;
+  @JsonKey(name: 'quantity')      num quantity = 0;
+  @JsonKey(name: 'vat')           num vat;
+  @JsonKey(name: 'sku')           String sku;
+  @JsonKey(name: 'uuid')          String uuid;
+  @JsonKey(name: 'inStock')       bool inStock = true;
 
   CartItem(
       {this.id,
@@ -206,241 +103,135 @@ class CartItem {
       this.name,
       this.vat});
 
-  CartItem.toMap(dynamic obj) {
-    id = obj[GlobalUtils.DB_POS_CART_CART_ID];
-    identifier = obj[GlobalUtils.DB_POS_CART_CART_IDENTIFIER];
-    image = obj[GlobalUtils.DB_POS_CART_CART_IMAGE];
-    name = obj[GlobalUtils.DB_POS_CART_CART_NAME];
-    price = obj[GlobalUtils.DB_POS_CART_CART_PRICE];
-    quantity = obj[GlobalUtils.DB_POS_CART_CART_QTY];
-    vat = obj[GlobalUtils.DB_POS_CART_CART_VAT];
-    sku = obj[GlobalUtils.DB_POS_CART_CART_SKU];
-    uuid = obj[GlobalUtils.DB_POS_CART_CART_UUID];
-  }
+  factory CartItem.fromJson(Map<String, dynamic> json) => _$CartItemFromJson(json);
+  Map<String, dynamic> toJson() => _$CartItemToJson(this);
 }
 
+@JsonSerializable()
 class Communication {
-  String _createdAt;
-  bool _installed;
-  Integration _integration;
-  String _updatedAt;
-  int __v;
-  String _id;
+  Communication();
 
-  Communication.toMap(dynamic obj) {
-    _createdAt = obj['createdAt'];
-    _installed = obj['installed'];
-    if (obj['integration'] != null) {
-      _integration = Integration.toMap(obj['integration']);
-    }
-    _updatedAt = obj['updatedAt'];
-    _id = obj['_id'];
-    __v = obj['__v'];
-  }
+  @JsonKey(name: 'createdAt')       String createdAt;
+  @JsonKey(name: 'installed')       bool installed;
+  @JsonKey(name: 'integration')     Integration integration;
+  @JsonKey(name: 'updatedAt')       String updatedAt;
+  @JsonKey(name: '_id')             String id;
 
-  String get id => _id;
-  String get createdAt => _createdAt;
-  String get updatedAt => _updatedAt;
-  int get v => __v;
-  bool get installed => _installed;
-  Integration get integration => _integration;
+  factory Communication.fromJson(Map<String, dynamic> json) => _$CommunicationFromJson(json);
+  Map<String, dynamic> toJson() => _$CommunicationToJson(this);
 }
+
+@JsonSerializable()
 class Integration {
-  List<dynamic> _allowedBusinesses = [];
-  String _category;
-  DisplayOption _displayOptions;
-  String _createdAt;
-  bool _enabled;
-  InstallationOptions _installationOptions;
-  String _name;
-  int _order;
-  String _updatedAt;
-  num __v;
-  String _id;
-  List<dynamic> _reviews = [];
-  int _timesInstalled;
-  List<dynamic> _versions = [];
-  Connect _connect;
+  Integration();
 
-  Integration.toMap(dynamic obj) {
-    _allowedBusinesses = obj['allowedBusinesses'];
-    _category = obj['category'];
-    if (obj['displayOptions'] != null) {
-      _displayOptions = DisplayOption.toMap(obj['displayOptions']);
-    }
-    _createdAt = obj[GlobalUtils.DB_POS_TERMINAL_CREATED_AT];
-    _enabled = obj[GlobalUtils.DB_TRANS_DETAIL_ACT_ENABLED];
-    if (obj['installationOptions'] != null) {
-      _installationOptions = InstallationOptions.toMap(obj['installationOptions']);
-    }
-    _name = obj[GlobalUtils.DB_POS_TERMINAL_NAME];
-    _order = obj['order'];
-    _updatedAt = obj[GlobalUtils.DB_POS_TERMINAL_UPDATED_AT];
-    __v = obj[GlobalUtils.DB_POS_TERMINAL_V];
-    _id = obj[GlobalUtils.DB_POS_TERMINAL_ID];
-    _timesInstalled = obj['timesInstalled'];
-    if (obj['connect'] != null) {
-      _connect = Connect.toMap(obj['connect']);
-    }
+  @JsonKey(name: 'allowedBusinesses')     List<dynamic> allowedBusinesses = [];
+  @JsonKey(name: 'category')              String category;
+  @JsonKey(name: 'displayOptions')        DisplayOption displayOptions;
+  @JsonKey(name: 'createdAt')             String createdAt;
+  @JsonKey(name: 'enabled')               bool enabled;
+  @JsonKey(name: 'installationOptions')   InstallationOptions installationOptions;
+  @JsonKey(name: 'name')                  String name;
+  @JsonKey(name: 'order')                 int order;
+  @JsonKey(name: 'updatedAt')             String updatedAt;
+  @JsonKey(name: '_id')                   String id;
+  @JsonKey(name: 'reviews')               List<dynamic> reviews = [];
+  @JsonKey(name: 'timesInstalled')        int timesInstalled;
+  @JsonKey(name: 'versions')              List<dynamic> versions = [];
+  @JsonKey(name: 'connect')               Connect connect;
 
-    if (obj['allowedBusinesses'] != null) {
-      dynamic _allowedBusinessesObj = obj['allowedBusinesses'];
-      _allowedBusinessesObj.forEach((sub) {
-        _allowedBusinesses.add(sub);
-      });
-    }
-    if (obj['reviews'] != null) {
-      dynamic _reviewsObj = obj['reviews'];
-      _reviewsObj.forEach((sub) {
-        _reviews.add(sub);
-      });
-    }
-    if (obj['versions'] != null) {
-      dynamic _versionsObj = obj['versions'];
-      _versionsObj.forEach((sub) {
-        _versions.add(sub);
-      });
-    }
-  }
-
-  List<dynamic> get allowedBusinesses => _allowedBusinesses;
-
-  num get v => __v;
-
-  String get category => _category;
-
-  DisplayOption get displayOptions => _displayOptions;
-
-  String get createdAt => _createdAt;
-
-  bool get enabled => _enabled;
-
-  InstallationOptions get installationOptions => _installationOptions;
-
-  String get name => _name;
-
-  int get order => _order;
-
-  String get updatedAt => _updatedAt;
-
-  String get id => _id;
-
-  int get timesInstalled => _timesInstalled;
-
-  Connect get connect => _connect;
-
-  List<dynamic> get reviews => _reviews;
-
-  List<dynamic> get versions => _versions;
-
+  factory Integration.fromJson(Map<String, dynamic> json) => _$IntegrationFromJson(json);
+  Map<String, dynamic> toJson() => _$IntegrationToJson(this);
 }
 
+@JsonSerializable()
 class InstallationOptions {
-  String appSupport;
-  String category;
-  List<dynamic> countryList = [];
-  String description;
-  String developer;
-  String languages;
-  List<LinkObj> links = [];
-  String optionIcon;
-  String price;
-  String pricingLink;
-  String website;
-  String id;
+  InstallationOptions();
 
-  InstallationOptions.toMap(dynamic obj) {
-    appSupport = obj['appSupport'];
-    category = obj['category'];
-    description = obj['description'];
-    developer = obj['developer'];
-    languages = obj['languages'];
-    optionIcon = obj['optionIcon'];
-    price = obj['price'];
-    pricingLink = obj['pricingLink'];
-    website = obj['website'];
-    id = obj['_id'];
-    dynamic _countryListObj = obj['countryList'];
-    _countryListObj.forEach((sub) {
-      countryList.add(sub);
-    });
+  @JsonKey(name: 'appSupport') String appSupport;
+  @JsonKey(name: 'category') String category;
+  @JsonKey(name: 'countryList') List<dynamic> countryList = [];
+  @JsonKey(name: 'description') String description;
+  @JsonKey(name: 'developer') String developer;
+  @JsonKey(name: 'languages') String languages;
+  @JsonKey(name: 'links') List<LinkObj> links = [];
+  @JsonKey(name: 'optionIcon') String optionIcon;
+  @JsonKey(name: 'price') String price;
+  @JsonKey(name: 'pricingLink') String pricingLink;
+  @JsonKey(name: 'website') String website;
+  @JsonKey(name: '_id') String id;
 
-    dynamic _linksObj = obj['links'];
-    _linksObj.forEach((sub) {
-      links.add(LinkObj.toMap(sub));
-    });
-  }
+  factory InstallationOptions.fromJson(Map<String, dynamic> json) => _$InstallationOptionsFromJson(json);
+  Map<String, dynamic> toJson() => _$InstallationOptionsToJson(this);
 }
 
+@JsonSerializable()
 class LinkObj {
-  String type;
-  String url;
-  String id;
+  LinkObj();
 
-  LinkObj.toMap(dynamic obj) {
-    type = obj['type'];
-    url = obj['url'];
-    id = obj['_id'];
-  }
+  @JsonKey(name: 'type')  String type;
+  @JsonKey(name: 'url')   String url;
+  @JsonKey(name: '_id')   String id;
+
+  factory LinkObj.fromJson(Map<String, dynamic> json) => _$LinkObjFromJson(json);
+  Map<String, dynamic> toJson() => _$LinkObjToJson(this);
 }
 
+@JsonSerializable()
 class DisplayOption {
-  String icon;
-  String title;
-  String id;
+  DisplayOption();
 
-  DisplayOption.toMap(dynamic obj) {
-    icon = obj['icon'];
-    title = obj['title'];
-    id = obj['_id'];
-  }
+  @JsonKey(name: 'icon')  String icon;
+  @JsonKey(name: 'title') String title;
+  @JsonKey(name: '_id')   String id;
+
+  factory DisplayOption.fromJson(Map<String, dynamic> json) => _$DisplayOptionFromJson(json);
+  Map<String, dynamic> toJson() => _$DisplayOptionToJson(this);
 }
 
+@JsonSerializable()
 class Connect {
-  Action fromAction;
-  String url;
-  String url1;
+  Connect();
 
-  Connect.toMap(dynamic obj) {
-    if (obj['fromAction'] != null) {
-      fromAction = Action.toMap(obj['fromAction']);
-    }
-    url = obj['url'];
-    url1 = obj['url1'];
-  }
+  @JsonKey(name: 'fromAction')  Action fromAction;
+  @JsonKey(name: 'url')         String url;
+  @JsonKey(name: 'url1')        String url1;
+
+  factory Connect.fromJson(Map<String, dynamic> json) => _$ConnectFromJson(json);
+  Map<String, dynamic> toJson() => _$ConnectToJson(this);
 }
 
+@JsonSerializable()
 class Action {
-  String actionEndpoint;
-  String initEndpoint;
+  Action();
 
-  Action.toMap(dynamic obj) {
-    actionEndpoint = obj['actionEndpoint'];
-    initEndpoint = obj['initEndpoint'];
-  }
+  @JsonKey(name: 'actionEndpoint')  String actionEndpoint;
+  @JsonKey(name: 'initEndpoint')    String initEndpoint;
+
+  factory Action.fromJson(Map<String, dynamic> json) => _$ActionFromJson(json);
+  Map<String, dynamic> toJson() => _$ActionToJson(this);
 }
 
+@JsonSerializable()
 class DevicePaymentSettings {
-  bool autoresponderEnabled;
-  bool enabled;
-  bool secondFactor;
-  int verificationType;
+  DevicePaymentSettings();
 
-  DevicePaymentSettings.toMap(dynamic obj) {
-    if (obj != null) {
-      autoresponderEnabled = obj['autoresponderEnabled'];
-      enabled = obj['enabled'];
-      secondFactor = obj['secondFactor'];
-      verificationType = obj['verificationType'];
-    }
-  }
+  @JsonKey(name: 'autoresponderEnabled')  bool autoresponderEnabled;
+  @JsonKey(name: 'enabled')               bool enabled;
+  @JsonKey(name: 'secondFactor')          bool secondFactor;
+  @JsonKey(name: 'verificationType')      int verificationType;
+
+  factory DevicePaymentSettings.fromJson(Map<String, dynamic> json) => _$DevicePaymentSettingsFromJson(json);
+  Map<String, dynamic> toJson() => _$DevicePaymentSettingsToJson(this);
 }
 
+@JsonSerializable()
 class DevicePaymentInstall {
-  bool installed;
-  String name;
-  DevicePaymentInstall.toMap(dynamic obj) {
-    installed = obj['installed'];
-    name = obj['name'];
-  }
+  DevicePaymentInstall();
+
+  @JsonKey(name: 'installed')   bool installed;
+  @JsonKey(name: 'name')        String name;
+
+  factory DevicePaymentInstall.fromJson(Map<String, dynamic> json) => _$DevicePaymentInstallFromJson(json);
+  Map<String, dynamic> toJson() => _$DevicePaymentInstallToJson(this);
 }
