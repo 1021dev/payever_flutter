@@ -315,7 +315,11 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     if (terminals.length > 0) {
       activeTerminal = terminals.firstWhere((element) => element.active);
     }
-    yield state.copyWith(activeTerminal: activeTerminal, terminalList: terminals, isPosLoading: false);
+    yield state.copyWith(
+        activeTerminal: activeTerminal,
+        terminalList: terminals,
+        isPosLoading: false,
+        channelSets: channelSets);
     if (this.isBroadcast) {
       add(FetchProducts(business: activeBusiness));
     }

@@ -9,8 +9,12 @@ import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 class ChannelCheckoutFlowScreen extends StatefulWidget {
   final CheckoutScreenBloc checkoutScreenBloc;
   final String openUrl;
+  final bool fromDashboard;
+
   ChannelCheckoutFlowScreen({
-    this.checkoutScreenBloc, this.openUrl,
+    this.checkoutScreenBloc,
+    this.openUrl,
+    this.fromDashboard = false,
   });
 
   @override
@@ -27,6 +31,9 @@ class _ChannelCheckoutFlowScreenState extends State<ChannelCheckoutFlowScreen> {
 
   @override
   void dispose() {
+    if (widget.fromDashboard) {
+      widget.checkoutScreenBloc.close();
+    }
     super.dispose();
   }
 

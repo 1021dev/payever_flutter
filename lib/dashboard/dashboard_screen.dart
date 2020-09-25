@@ -6,6 +6,7 @@ import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/checkout/views/channels/channels_checkout_flow_screen.dart';
 import 'package:payever/checkout/views/checkout_screen.dart';
 import 'package:payever/checkout/views/workshop/create_edit_checkout_screen.dart';
 import 'package:payever/commons/utils/common_utils.dart';
@@ -668,7 +669,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
           },
           onTapLinkOrManage: (bool isLink) {
             if (isLink) {
-
+              List<ChannelSet> channelSets = state.channelSets;
+              if (channelSets == null && channelSets.isEmpty) {
+                return;
+              }
+              ChannelSet channelSet = state.channelSets.firstWhere((element) =>
+              (element.checkout == state.defaultCheckout.id && element.type == 'link'));
+              if (channelSet == null) {
+                return;
+              }
+              String openUrl =
+                  '${Env.wrapper}/pay/create-flow/channel-set-id/${channelSet.id}';
+              _navigateAppsScreen(
+                state,
+                ChannelCheckoutFlowScreen(
+                  checkoutScreenBloc: CheckoutScreenBloc(),
+                  openUrl: openUrl,
+                  fromDashboard: true,
+                ),
+              );
             } else {
               _navigateAppsScreen(
                 state,
@@ -1129,6 +1148,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       body: SafeArea(
         top: true,
         bottom: false,
+        left: false,
+        right: false,
         child: BackgroundBase(
           false,
           backgroundColor: Colors.transparent,
