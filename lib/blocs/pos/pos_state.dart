@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:payever/commons/commons.dart';
-import 'package:payever/pos/models/models.dart';
 import 'package:payever/products/models/models.dart';
 
 class PosScreenState {
   final bool isLoading;
   final bool searching;
+  final String businessId;
   final List<Terminal> terminals;
   final Terminal activeTerminal;
   final bool businessCopied;
@@ -29,7 +29,6 @@ class PosScreenState {
   final dynamic fieldSetData;
   final dynamic qrImage;
   final List<ProductFilterOption> filterOptions;
-  final String selectedCategory;
   final List<String>subCategories;
 
   PosScreenState({
@@ -38,6 +37,7 @@ class PosScreenState {
     this.searching = false,
     this.terminals = const [],
     this.activeTerminal,
+    this.businessId,
     this.businessCopied = false,
     this.terminalCopied = false,
     this.integrations = const [],
@@ -58,7 +58,6 @@ class PosScreenState {
     this.products,
     this.productLists,
     this.filterOptions = const [],
-    this.selectedCategory,
     this.subCategories = const [],
   });
 
@@ -67,6 +66,7 @@ class PosScreenState {
     this.isUpdating,
     this.searching,
     this.terminals,
+    this.businessId,
     this.activeTerminal,
     this.businessCopied,
     this.terminalCopied,
@@ -88,7 +88,6 @@ class PosScreenState {
     this.products,
     this.productLists,
     this.filterOptions,
-    this.selectedCategory,
     this.subCategories,
   ];
 
@@ -96,6 +95,7 @@ class PosScreenState {
     bool isLoading,
     bool isUpdating,
     bool searching,
+    String businessId,
     List<Terminal> terminals,
     Terminal activeTerminal,
     bool businessCopied,
@@ -126,6 +126,7 @@ class PosScreenState {
       isUpdating: isUpdating ?? this.isUpdating,
       searching: searching ?? this.searching,
       terminals: terminals ?? this.terminals,
+      businessId: businessId ?? this.businessId,
       activeTerminal: activeTerminal ?? this.activeTerminal,
       businessCopied: businessCopied ?? this.businessCopied,
       terminalCopied: terminalCopied ?? this.terminalCopied,
@@ -147,7 +148,6 @@ class PosScreenState {
       products: products ?? this.products,
       productLists: productLists ?? this.productLists,
       filterOptions: filterOptions ?? this.filterOptions,
-      selectedCategory: selectedCategory ?? this.selectedCategory,
       subCategories: subCategories ?? this.subCategories,
     );
   }

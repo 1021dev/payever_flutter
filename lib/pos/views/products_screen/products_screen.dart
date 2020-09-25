@@ -98,9 +98,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   Widget _body(PosScreenState state) {
-    return state.productLists == null || state.productLists.isEmpty
-        ? Container()
-        : Column(
+    return Column(
             children: <Widget>[
               _toolBar(state),
               Expanded(
@@ -113,12 +111,12 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   Widget _toolBar(PosScreenState state) {
     int selectedCount = 0;
-    if (state.productLists.length > 0) {
-      selectedCount = state.productLists
-          .where((element) => element.isChecked)
-          .toList()
-          .length;
-    }
+    // if (state.productLists.length > 0) {
+    //   selectedCount = state.productLists
+    //       .where((element) => element.isChecked)
+    //       .toList()
+    //       .length;
+    // }
     return Stack(
       children: <Widget>[
         Container(
@@ -363,6 +361,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   Widget gridBody(PosScreenState state) {
+    if (state.productLists == null || state.productLists.isEmpty)
+        return Container();
+
     List<Widget> productsItems = [];
     state.productLists.forEach((product) {
       productsItems.add(ProductGridItem(
@@ -441,6 +442,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
   // }
 
   Widget _listBody(PosScreenState state) {
+    if (state.productLists == null || state.productLists.isEmpty)
+      return Container();
     return ListView.builder(
         itemCount: state.productLists.length,
         itemBuilder: (context, index) =>
