@@ -4,7 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/commons/commons.dart';
-import 'package:payever/commons/models/pos.dart';
+import 'package:payever/pos/models/pos.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/pos/models/models.dart';
 import 'package:payever/products/models/models.dart';
@@ -114,6 +114,9 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       yield* removePhoneNumber(event.businessId, event.action, event.id, event.sid);
     } else if (event is UpdateAddPhoneNumberSettings) {
       yield state.copyWith(settingsModel: event.settingsModel);
+    } else if (event is ProductsFilterEvent) {
+      yield state.copyWith(
+          selectedCategory: event.category, subCategories: event.subCategories);
     }
   }
 
@@ -166,17 +169,18 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     } else {
       yield state.copyWith(terminals: terminals, terminalCopied: false);
     }
-
+    String query = '{\n getProducts(\n businessUuid: \"$activeBusinessId\",\n  paginationLimit: 100,\n  pageNumber: 1,\n orderBy: \"price\",\n orderDirection: \"asc\",\n  search:\"\"\n  filters: [\n    \n   {\n  field:\"variant\",\n fieldType:\"child\",\n  fieldCondition: \"is\",\n  filters: {field:\"options\",fieldType:\"nested\",fieldCondition:\"is\",filters:[{field:\"value\",fieldType:\"string\",fieldCondition:\"is\",value:\"gold\"}]},\n   }\n   \n  ],\n  useNewFiltration: true,\n  ) {\n  products {\n  imagesUrl\n  _id\n  title\n   description\n   price\n  salePrice\n  currency\n   }\n   }\n  }\n ';
+    //"{  "getProducts"(  "businessUuid": "d0de55b4-5a2a-41a9-a0de-f38256f541ee",  "paginationLimit": 100,   "pageNumber": 1, "orderBy": "price", "orderDirection": "asc",  "search":""    "filters": [{ "field":"variant", "fieldType":"child",  "fieldCondition": "is",  "filters": {"field":"options","fieldType":"nested","fieldCondition":"is","filters":[{"field":"value","fieldType":"string","fieldCondition":"is","value":"gold"}]},} ], "useNewFiltration": true, ) { "products" { imagesUrl              _id              title              description              price              salePrice              currency } } }  "
     Map<String, dynamic> body = {
       'operationName': null,
       'variables': {},
       'query': '{\n  getProducts(businessUuid: \"$activeBusinessId\", paginationLimit: 100, pageNumber: 1, orderBy: \"price\", orderDirection: \"asc\", filterById: [], search: \"\", filters: []) {\n    products {\n      images\n      id\n      title\n      description\n      onSales\n      price\n      salePrice\n      vatRate\n      sku\n      barcode\n      currency\n      type\n      active\n      categories {\n        title\n      }\n      collections {\n        _id\n        name\n        description\n      }\n      variants {\n        id\n        images\n        options {\n          name\n          value\n        }\n        description\n        onSales\n        price\n        salePrice\n        sku\n        barcode\n      }\n      channelSets {\n        id\n        type\n        name\n      }\n      shipping {\n        weight\n        width\n        length\n        height\n      }\n    }\n    info {\n      pagination {\n        page\n        page_count\n        per_page\n        item_count\n      }\n    }\n  }\n}\n'
     };
-
+    body['query'] = query;
     dynamic response = await api.getProducts(token, body);
     List<ProductsModel> products = [];
     List<ProductListModel> productLists = [];
-
+    print('Products filter response: ' + response.toString());
     if (response is Map) {
       dynamic data = response['data'];
       if (data != null) {
@@ -192,6 +196,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
         }
       }
     }
+    print('Products filter response: ${productLists.length}');
     yield state.copyWith(products: products, productLists: productLists);
     dynamic response1 = await api.productsFilterOption(token, dashboardScreenBloc.state.activeBusiness.id);
     List<ProductFilterOption>filterOptions = [];

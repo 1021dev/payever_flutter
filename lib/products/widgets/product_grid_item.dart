@@ -13,6 +13,7 @@ class ProductGridItem extends StatelessWidget {
   final Function onTap;
   final Function onCheck;
   final Function onTapMenu;
+  final bool fromPos;
 
   final formatter = new NumberFormat('###,###,###.00', 'en_US');
 
@@ -21,6 +22,7 @@ class ProductGridItem extends StatelessWidget {
         this.onTap,
         this.onCheck,
         this.onTapMenu,
+        this.fromPos = false,
       });
 
   @override
@@ -54,40 +56,13 @@ class ProductGridItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-//            Row(
-//              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//              crossAxisAlignment: CrossAxisAlignment.center,
-//              children: <Widget>[
-//                Container(
-//                  padding: EdgeInsets.only(top: 16, left: 24),
-//                  alignment: Alignment.centerLeft,
-//                  child: InkWell(
-//                    onTap: () {
-//                      onCheck(product);
-//                    },
-//                    child: product.isChecked
-//                        ? Icon(Icons.check_circle, )
-//                        : Icon(Icons.radio_button_unchecked, ),
-//                  ) ,
-//                ),
-//                Padding(
-//                  padding: EdgeInsets.only(right: 24, top: 16),
-//                  child: Text(
-//                    category,
-//                    style: TextStyle(
-//                      fontSize: 16,
-//                      fontWeight: FontWeight.w400,
-//                    ),
-//                  ),
-//                ),
-//              ],
-//            ),
             Expanded(
               child: Stack(
                 children: <Widget>[
                   ProductItemImage(
                     product.productsModel.images.isEmpty ? null : product.productsModel.images.first,
                   ),
+                  fromPos ? Container() :
                   Container(
                     padding: EdgeInsets.only(top: 4, left: 4),
                     alignment: Alignment.topLeft,
@@ -131,6 +106,7 @@ class ProductGridItem extends StatelessWidget {
                           ),
                         ),
                       ),
+                      fromPos ? Container() :
                       Text(
                         product.productsModel.onSales
                             ? Language.getProductListStrings('filters.quantity.options.outStock')
@@ -148,9 +124,9 @@ class ProductGridItem extends StatelessWidget {
             Divider(
               height: 0,
               thickness: 0.5,
-              color: Colors.white54,
+              color: fromPos ? Colors.transparent :Colors.white54,
             ),
-            AspectRatio(
+            fromPos ? Container() : AspectRatio(
               aspectRatio: 6/1,
               child: Container(              
                 child: InkWell(

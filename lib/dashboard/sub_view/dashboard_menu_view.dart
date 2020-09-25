@@ -69,298 +69,303 @@ class DashboardMenuView extends StatelessWidget {
       colorTransitionScaffold: Colors.transparent,
       rightChild: Scaffold(
 //        backgroundColor: overlayBackground(),
-        body: SafeArea(
-          top: true,
-          child: Container(
-            child: Column(
-              children: [
-                Container(
-                  height: 44,
-                  alignment: Alignment.centerRight,
-                  padding: EdgeInsets.only(top: 8),
-                  child: MaterialButton(
-                    shape: CircleBorder(),
-                    minWidth: 0,
-                    padding: EdgeInsets.all(8),
-                    child: SvgPicture.asset('assets/images/closeicon.svg', color: iconColor(),),
-                    onPressed: onClose,
-                  ),
-                ),
-                isActive && dashboardScreenBloc.state.businesses.length > 1 ? InkWell(
-                  onTap: () async {
-                    //onSwitchBusiness,
-                    Navigator.pop(context);
-                    final result = await Navigator.push(
-                      context,
-                      PageTransition(
-                        child: SwitcherScreen(false),
-                        type: PageTransitionType.fade,
-                      ),
-                    );
-                    if (result == 'refresh') {
-                    }
-
-                  },
-                  child: Container(
-                    height: 50,
-                    child: Row(
-                      children: [
-                        SizedBox(width: 8,),
-                        Container(
-                          width: 25,
-                          child: Center(
-                            child: SvgPicture.asset(
-                              'assets/images/switch.svg',
-                              width: 20,
-                              color: iconColor(),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 8,),
-                        Flexible(
-                          child: Text(
-                            Language.getCommerceOSStrings('dashboard.profile_menu.switch_profile'),
-                            style: TextStyle(
-                                fontSize: 14,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ) : Container(),
-                Divider(
-                  height: 0,
-                  thickness: 0.5,
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                    Provider.of<GlobalStateModel>(context, listen: false)
-                        .setCurrentBusiness(dashboardScreenBloc.state.activeBusiness);
-                    Provider.of<GlobalStateModel>(context, listen: false)
-                        .setCurrentWallpaper(dashboardScreenBloc.state.curWall);
-                    Navigator.push(
-                      context,
-                      PageTransition(
-                        child: PersonalInitScreen(
-                          dashboardScreenBloc: dashboardScreenBloc,
-                        ),
-                        type: PageTransitionType.fade,
-                      ),
-                    );
-                  },
-                  child: Container(
-                    height: 50,
-                    child: Row(
-                      children: [
-                        SizedBox(width: 8,),
-                        Container(
-                          width: 25,
-                          child: Center(
-                            child: SvgPicture.asset(
-                              'assets/images/business_person.svg',
-                              width: 20,
-                              color: iconColor(),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 8,),
-                        Flexible(
-                          child: Text(
-                            Language.getSettingsStrings('info_boxes.panels.general.menu_list.personal_information.title'),
-                            style: TextStyle(
-                                fontSize: 14,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                Divider(
-                  height: 0,
-                  thickness: 0.5,
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.push(
-                      context,
-                      PageTransition(
-                        child: BusinessRegisterScreen(
-                          dashboardScreenBloc: dashboardScreenBloc,
-                        ),
-                        type: PageTransitionType.fade,
-                        duration: Duration(microseconds: 300),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    height: 50,
-                    child: Row(
-                      children: [
-                        SizedBox(width: 8,),
-                        Container(
-                          width: 25,
-                          child: Center(
-                            child: SvgPicture.asset(
-                              'assets/images/add.svg',
-                              width: 20,
-                              color: iconColor(),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 8,),
-                        Flexible(
-                          child: Text(
-                            Language.getCommerceOSStrings('dashboard.profile_menu.add_business'),
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Divider(
-                  height: 0,
-                  thickness: 0.5,
-                ),
-                InkWell(
-                  onTap: () async {
-                    Navigator.pop(context);
-                    SharedPreferences.getInstance().then((p) {
-                      p.setString(GlobalUtils.BUSINESS, '');
-                      p.setString(GlobalUtils.DEVICE_ID, '');
-                      p.setString(GlobalUtils.REFRESH_TOKEN, '');
-                      p.setString(GlobalUtils.TOKEN, '');
-                    });
-                    Navigator.pushReplacement(
-                      context,
-                      PageTransition(
-                        child: LoginInitScreen(), type: PageTransitionType.fade,
-                      ),
-                    );
-
-                  },
-                  child: Container(
-                    height: 50,
-                    child: Row(
-                      children: [
-                        SizedBox(width: 8,),
-                        Container(
-                          width: 25,
-                          child: Center(
-                            child: SvgPicture.asset(
-                              'assets/images/logout.svg',
-                              width: 16,
-                              color: iconColor(),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 8,),
-                        Flexible(
-                          child: Text(
-                            Language.getCommerceOSStrings('dashboard.profile_menu.log_out'),
-                            style: TextStyle(
-                                fontSize: 14,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                Divider(
-                  height: 0,
-                  thickness: 0.5,
-                ),
-                InkWell(
-                  onTap: () {
-                    _sendMail('service@payever.de', 'Contact payever', '');
-                  },
-                  child: Container(
-                    height: 50,
-                    child: Row(
-                      children: [
-                        SizedBox(width: 8,),
-                        Container(
-                          width: 25,
-                          child: Center(
-                            child: SvgPicture.asset(
-                              'assets/images/contact.svg',
-                              width: 16,
-                              color: iconColor(),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 8,),
-                        Flexible(
-                          child: Text(
-                            Language.getCommerceOSStrings('dashboard.profile_menu.contact'),
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 14,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                Divider(
-                  height: 0,
-                  thickness: 0.5,
-                ),
-                InkWell(
-                  onTap: () {
-                    _sendMail(
-                        'service@payever.de', 'Feedback for the payever-Team', '');
-                  },
-                  child: Container(
-                    height: 50,
-                    child: Row(
-                      children: [
-                        SizedBox(width: 8,),
-                        Container(
-                          width: 25,
-                          child: Center(
-                            child: SvgPicture.asset(
-                              'assets/images/feedback.svg',
-                              width: 16,
-                              color: iconColor(),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 8,),
-                        Flexible(
-                          child: Text(
-                            Language.getCommerceOSStrings('dashboard.profile_menu.feedback'),
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 14,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                Container(
-                  color: Colors.white10,
-                  height: 1,
-                ),
-              ],
-            ),
-          ),
-        ),
+        body: Container()/*_body(context,isActive)*/,
       ),
       scaffold: scaffold,
+    );
+  }
+
+
+  Widget _body(BuildContext context, bool isActive) {
+    return SafeArea(
+      top: true,
+      child: Container(
+        child: Column(
+          children: [
+            Container(
+              height: 44,
+              alignment: Alignment.centerRight,
+              padding: EdgeInsets.only(top: 8),
+              child: MaterialButton(
+                shape: CircleBorder(),
+                minWidth: 0,
+                padding: EdgeInsets.all(8),
+                child: SvgPicture.asset('assets/images/closeicon.svg', color: iconColor(),),
+                onPressed: onClose,
+              ),
+            ),
+            isActive && dashboardScreenBloc.state.businesses.length > 1 ? InkWell(
+              onTap: () async {
+                //onSwitchBusiness,
+                Navigator.pop(context);
+                final result = await Navigator.push(
+                  context,
+                  PageTransition(
+                    child: SwitcherScreen(false),
+                    type: PageTransitionType.fade,
+                  ),
+                );
+                if (result == 'refresh') {
+                }
+
+              },
+              child: Container(
+                height: 50,
+                child: Row(
+                  children: [
+                    SizedBox(width: 8,),
+                    Container(
+                      width: 25,
+                      child: Center(
+                        child: SvgPicture.asset(
+                          'assets/images/switch.svg',
+                          width: 20,
+                          color: iconColor(),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 8,),
+                    Flexible(
+                      child: Text(
+                        Language.getCommerceOSStrings('dashboard.profile_menu.switch_profile'),
+                        style: TextStyle(
+                          fontSize: 14,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ) : Container(),
+            Divider(
+              height: 0,
+              thickness: 0.5,
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.pop(context);
+                Provider.of<GlobalStateModel>(context, listen: false)
+                    .setCurrentBusiness(dashboardScreenBloc.state.activeBusiness);
+                Provider.of<GlobalStateModel>(context, listen: false)
+                    .setCurrentWallpaper(dashboardScreenBloc.state.curWall);
+                Navigator.push(
+                  context,
+                  PageTransition(
+                    child: PersonalInitScreen(
+                      dashboardScreenBloc: dashboardScreenBloc,
+                    ),
+                    type: PageTransitionType.fade,
+                  ),
+                );
+              },
+              child: Container(
+                height: 50,
+                child: Row(
+                  children: [
+                    SizedBox(width: 8,),
+                    Container(
+                      width: 25,
+                      child: Center(
+                        child: SvgPicture.asset(
+                          'assets/images/business_person.svg',
+                          width: 20,
+                          color: iconColor(),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 8,),
+                    Flexible(
+                      child: Text(
+                        Language.getSettingsStrings('info_boxes.panels.general.menu_list.personal_information.title'),
+                        style: TextStyle(
+                          fontSize: 14,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Divider(
+              height: 0,
+              thickness: 0.5,
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  PageTransition(
+                    child: BusinessRegisterScreen(
+                      dashboardScreenBloc: dashboardScreenBloc,
+                    ),
+                    type: PageTransitionType.fade,
+                    duration: Duration(microseconds: 300),
+                  ),
+                );
+              },
+              child: Container(
+                height: 50,
+                child: Row(
+                  children: [
+                    SizedBox(width: 8,),
+                    Container(
+                      width: 25,
+                      child: Center(
+                        child: SvgPicture.asset(
+                          'assets/images/add.svg',
+                          width: 20,
+                          color: iconColor(),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 8,),
+                    Flexible(
+                      child: Text(
+                        Language.getCommerceOSStrings('dashboard.profile_menu.add_business'),
+                        style: TextStyle(
+                          fontSize: 14,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Divider(
+              height: 0,
+              thickness: 0.5,
+            ),
+            InkWell(
+              onTap: () async {
+                Navigator.pop(context);
+                SharedPreferences.getInstance().then((p) {
+                  p.setString(GlobalUtils.BUSINESS, '');
+                  p.setString(GlobalUtils.DEVICE_ID, '');
+                  p.setString(GlobalUtils.REFRESH_TOKEN, '');
+                  p.setString(GlobalUtils.TOKEN, '');
+                });
+                Navigator.pushReplacement(
+                  context,
+                  PageTransition(
+                    child: LoginInitScreen(), type: PageTransitionType.fade,
+                  ),
+                );
+
+              },
+              child: Container(
+                height: 50,
+                child: Row(
+                  children: [
+                    SizedBox(width: 8,),
+                    Container(
+                      width: 25,
+                      child: Center(
+                        child: SvgPicture.asset(
+                          'assets/images/logout.svg',
+                          width: 16,
+                          color: iconColor(),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 8,),
+                    Flexible(
+                      child: Text(
+                        Language.getCommerceOSStrings('dashboard.profile_menu.log_out'),
+                        style: TextStyle(
+                          fontSize: 14,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Divider(
+              height: 0,
+              thickness: 0.5,
+            ),
+            InkWell(
+              onTap: () {
+                _sendMail('service@payever.de', 'Contact payever', '');
+              },
+              child: Container(
+                height: 50,
+                child: Row(
+                  children: [
+                    SizedBox(width: 8,),
+                    Container(
+                      width: 25,
+                      child: Center(
+                        child: SvgPicture.asset(
+                          'assets/images/contact.svg',
+                          width: 16,
+                          color: iconColor(),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 8,),
+                    Flexible(
+                      child: Text(
+                        Language.getCommerceOSStrings('dashboard.profile_menu.contact'),
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 14,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Divider(
+              height: 0,
+              thickness: 0.5,
+            ),
+            InkWell(
+              onTap: () {
+                _sendMail(
+                    'service@payever.de', 'Feedback for the payever-Team', '');
+              },
+              child: Container(
+                height: 50,
+                child: Row(
+                  children: [
+                    SizedBox(width: 8,),
+                    Container(
+                      width: 25,
+                      child: Center(
+                        child: SvgPicture.asset(
+                          'assets/images/feedback.svg',
+                          width: 16,
+                          color: iconColor(),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 8,),
+                    Flexible(
+                      child: Text(
+                        Language.getCommerceOSStrings('dashboard.profile_menu.feedback'),
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 14,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              color: Colors.white10,
+              height: 1,
+            ),
+          ],
+        ),
+      ),
     );
   }
   _sendMail(String toMailId, String subject, String body) async {

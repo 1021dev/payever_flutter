@@ -5,7 +5,7 @@ export 'business_employees_groups.dart';
 export 'buttons_data.dart';
 export 'expandable_header.dart';
 export 'group_acl.dart';
-export 'pos.dart';
+export '../../pos/models/pos.dart';
 export 'shop.dart';
 export 'token.dart';
 export 'tutorial.dart';

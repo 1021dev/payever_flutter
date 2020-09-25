@@ -1,35 +1,33 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:page_transition/page_transition.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
-import 'package:payever/products/models/models.dart';
-import 'package:payever/products/views/product_detail_screen.dart';
-import 'package:payever/products/widgets/product_filter_range_content_view.dart';
-import 'package:payever/transactions/models/enums.dart';
-
-import '../../../theme.dart';
+import 'package:payever/theme.dart';
 
 class ProductsFilterScreen extends StatefulWidget {
-  final ProductsScreenBloc screenBloc;
-  final GlobalStateModel globalStateModel;
+  final PosScreenBloc screenBloc;
+
   ProductsFilterScreen({
     this.screenBloc,
-    this.globalStateModel,
   });
 
   @override
-  _ProductsFilterScreenState createState() => _ProductsFilterScreenState();
+  _ProductsFilterScreenState createState() =>
+      _ProductsFilterScreenState();
 }
 
 class _ProductsFilterScreenState extends State<ProductsFilterScreen> {
   String selectedCategory = '';
-  int selectedIndex = -1;
-
+  List<String> subCategories = [];
+  bool _isPortrait;
+  bool _isTablet;
+  
   @override
   void initState() {
+//    selectedCategory = widget.screenBloc.state.selectedCategory;
     super.initState();
   }
 
@@ -40,332 +38,274 @@ class _ProductsFilterScreenState extends State<ProductsFilterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: overlayBackground(),
-      resizeToAvoidBottomPadding: true,
-      body: BlurEffectView(
-        radius: 0,
-        child: SafeArea(
-          bottom: false,
-          child: Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
+    Measurements.height = (_isPortrait
+        ? MediaQuery.of(context).size.height
+        : MediaQuery.of(context).size.width);
+    Measurements.width = (_isPortrait
+        ? MediaQuery.of(context).size.width
+        : MediaQuery.of(context).size.height);
+    _isTablet = Measurements.width < 600 ? false : true;
+
+    return BlocListener(
+      bloc: widget.screenBloc,
+      listener: (BuildContext context, PosScreenState state) async {
+        // if (state is PosScreenStateFailure) {
+        //   Fluttertoast.showToast(msg: state.error);
+        // }
+      },
+      child: BlocBuilder<PosScreenBloc, PosScreenState>(
+        bloc: widget.screenBloc,
+        builder: (BuildContext context, PosScreenState state) {
+          return new OrientationBuilder(builder: (context, orientation) {
+            return Scaffold(
+              backgroundColor: overlayBackground(),
+              resizeToAvoidBottomPadding: false,
+              body: BlurEffectView(
+                radius: 0,
+                child: SafeArea(
+                  bottom: false,
+                  child: state.isUpdating
+                      ? Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : _getBody(state),
+                ),
+              ),
+            );
+          });
+        },
+      ),
+    );
+  }
+
+  Widget _getBody(PosScreenState state) {
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Container(
+            height: 44,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Container(
-                  height: 44,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 16),
-                          child: Icon(Icons.close),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.only(right: 16),
-                          child: Text(
-                            'Reset',
-                          ),
-                        ),
-                      ),
-                    ],
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 16),
+                    child: Icon(Icons.close),
                   ),
                 ),
-                Container(
-                  margin: EdgeInsets.all(24),
-                  height: 44,
-                  constraints: BoxConstraints.expand(height: 44),
-                  child: SizedBox(
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: overlayFilterViewBackground(),
-                        ),
-                        child: Text(
-                          'Done',
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    padding: EdgeInsets.only(left: 24, right: 24),
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                          height: 50,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: <Widget>[
-                              Expanded(
-                                child: Container(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    'My products',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  InkWell(
-                                    onTap: ()=> goDetailProduct(),
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      height: 30,
-                                      padding: EdgeInsets.symmetric(horizontal: 16),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        color: overlayButtonBackground(),
-                                      ),
-                                      child: Text('Add'),
-                                    ),
-                                  ),
-                                  SizedBox(width: 10,),
-                                  InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        selectedIndex = (selectedIndex == 0) ? -1 : 0;
-                                      });
-                                    },
-                                    child: Icon(selectedIndex != 0 ? Icons.add : Icons.clear),
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                        Visibility(
-                          visible: selectedIndex == 0 ,
-                          child: InkWell(
-                            onTap: () {
-                              widget.screenBloc.add(SwitchProductCollectionMode(isProductMode: true));
-                            },
-                            child: Container(
-                              height: 44,
-                              padding: EdgeInsets.only(left: 16, right: 16),
-                              child: Row(
-                                children: <Widget>[
-                                  SvgPicture.asset('assets/images/collections-icon-filter.svg'),
-                                  SizedBox(width: 14,),
-                                  Text('All'),
-                                ],
-                              ),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: overlayButtonBackground()
-                              ),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 50,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: <Widget>[
-                              Expanded(
-                                child: Container(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    'Collections',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  InkWell(
-                                    onTap: () {},
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      height: 30,
-                                      padding: EdgeInsets.symmetric(horizontal: 16),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        color: overlayButtonBackground(),
-                                      ),
-                                      child: Text('Add'),
-                                    ),
-                                  ),
-                                  SizedBox(width: 10,),
-                                  InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        selectedIndex = (selectedIndex == 1) ? -1 : 1;
-                                      });
-                                    },
-                                    child: Icon(selectedIndex != 1 ? Icons.add : Icons.clear),
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                        Visibility(
-                          visible: selectedIndex == 1,
-                          child: ListView.separated(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            padding: EdgeInsets.only(top: 8, bottom: 8,),
-                            itemBuilder: (context, index) {
-                              CollectionListModel item = index == 0 ? null : widget.screenBloc.state.collectionLists[index];
-                              return InkWell(
-                                onTap: () {
-                                  widget.screenBloc.add(SwitchProductCollectionMode(isProductMode: false));
-                                },
-                                child: Container(
-                                  height: 44,
-                                  padding: EdgeInsets.only(left: 16, right: 16),
-                                  child: Row(
-                                    children: <Widget>[
-                                      SvgPicture.asset('assets/images/collections-icon-filter.svg'),
-                                      SizedBox(width: 14,),
-                                      Text(item == null ? 'All' : item.collectionModel.name),
-                                    ],
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: overlayButtonBackground()
-                                  ),
-                                ),
-                              );
-                            },
-                            separatorBuilder: (context, index) {
-                              return Container();
-                            },
-                            itemCount: widget.screenBloc.state.collectionLists.length + 1,
-                          ),
-                        ),
-                        ListView.separated(
-                          shrinkWrap: true,
-                          padding: EdgeInsets.symmetric(vertical: 8),
-                          physics: NeverScrollableScrollPhysics(),
-                          separatorBuilder: (context, index) {
-                            return Divider(
-                              height: 0,
-                              thickness: 0,
-                              color: Colors.transparent,
-                            );
-                          },
-                          itemCount: filterProducts.keys.toList().length,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              title: Text(
-                                filterProducts[
-                                    filterProducts.keys.toList()[index]],
-                              ),
-                              trailing: Icon(Icons.keyboard_arrow_right),
-                              onTap: () {
-                                showMeDialog(context,
-                                    filterProducts.keys.toList()[index],
-                                    (FilterItem val) {
-                                  List<FilterItem> filterTypes = [];
-                                  filterTypes.addAll(
-                                      widget.screenBloc.state.filterTypes);
-                                  if (val != null) {
-                                    if (filterTypes.length > 0) {
-                                      int isExist = filterTypes.indexWhere(
-                                          (element) =>
-                                              element.type == val.type);
-                                      if (isExist > -1) {
-                                        filterTypes[isExist] = val;
-                                      } else {
-                                        filterTypes.add(val);
-                                      }
-                                    } else {
-                                      filterTypes.add(val);
-                                    }
-                                  } else {
-                                    if (filterTypes.length > 0) {
-                                      int isExist = filterTypes.indexWhere(
-                                          (element) =>
-                                              element.type == val.type);
-                                      if (isExist != null) {
-                                        filterTypes.removeAt(isExist);
-                                      }
-                                    }
-                                  }
-                                  widget.screenBloc.add(
-                                      UpdateProductFilterTypes(
-                                          filterTypes: filterTypes));
-                                  Navigator.pop(context);
-                                });
-                              },
-                            );
-                          },
-                        ),
-                      ],
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.only(right: 16),
+                    child: Text(
+                      'Reset',
                     ),
                   ),
                 ),
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  void goDetailProduct() {
-    Navigator.push(
-      context,
-      PageTransition(
-        child: ProductDetailScreen(
-          businessId: widget.globalStateModel.currentBusiness.id,
-          screenBloc: widget.screenBloc,
-        ),
-        type: PageTransitionType.fade,
-        duration: Duration(milliseconds: 500),
-      ),
-    );
-  }
-
-  void showMeDialog(
-      BuildContext context, String filterType, Function callback) {
-    String filtername = filterProducts[filterType];
-    debugPrint('FilterTypeName => $filterType');
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(
-              'Filter by: $filtername',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-            ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-            ),
-            content: ProductFilterRangeContentView(
-                type: filterType,
-                onSelected: (value) {
+          Container(
+            margin: EdgeInsets.all(24),
+            height: 44,
+            constraints: BoxConstraints.expand(height: 44),
+            child: SizedBox(
+              child: MaterialButton(
+                onPressed: () {
+                  widget.screenBloc.add(ProductsFilterEvent(
+                      category: selectedCategory,
+                      subCategories: subCategories));
                   Navigator.pop(context);
-                  callback(value);
-                  // widget.onSelected(value);
-                }),
-          );
-        });
+                },
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                elevation: 0,
+                color: overlayFilterViewBackground(),
+                child: Text(
+                  'Done',
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedCategory = 'All';
+                        subCategories = [];
+                      });
+                    },
+                    child: Container(
+                      alignment: Alignment.centerLeft,
+                      padding: EdgeInsets.only(left: 24),
+                      height: 44,
+                      child: Text(
+                        'All Products',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      decoration: BoxDecoration(
+                        color: isSelected('All')
+                            ? overlayColor()
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: _divider(),
+                  ),
+                  ListView.separated(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    padding: EdgeInsets.symmetric(horizontal: 8),
+                    itemBuilder: (context, index) {
+                      String category = state.filterOptions[index].name;
+                      return Column(
+                        children: <Widget>[
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selectedCategory =
+                                    isSelected(category) ? '' : category;
+                                if (selectedCategory.isEmpty) {
+                                  subCategories = [];
+                                }
+                              });
+                            },
+                            child: Container(
+                              height: 44,
+                              padding: EdgeInsets.all(8),
+                              child: Row(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 8),
+                                  ),
+                                  Text(
+                                    getMainCategory(category),
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  Icon(
+                                    isSelected(category)
+                                        ? Icons.clear
+                                        : Icons.add,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          _subCategories(state.filterOptions[index]),
+                        ],
+                      );
+                    },
+                    separatorBuilder: (context, index) => _divider(),
+                    itemCount:state.filterOptions.length,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
+
+  Widget _subCategories(ProductFilterOption filterOption) {
+    return isSelected(filterOption.name)
+        ? ListView.separated(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            padding: EdgeInsets.symmetric(horizontal: 8),
+            itemBuilder: (context, index) {
+              String subCategory = filterOption.values[index];
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    if (isContainSubCategory(subCategory))
+                      subCategories.remove(subCategory);
+                    else
+                      subCategories.add(subCategory);
+                  });
+                },
+                child: Container(
+                  height: 44,
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: (isContainSubCategory(subCategory))
+                        ? overlayColor()
+                        : Colors.transparent,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(left: 8),
+                      ),
+                      Text(
+                        getSubCategory(subCategory),
+                        style: TextStyle(
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+            separatorBuilder: (context, index) {
+              return _divider();
+            },
+            itemCount: filterOption.values.length,
+          )
+        : Container();
+  }
+
+  bool isSelected(String category) {
+    if (selectedCategory == null) return false;
+    return selectedCategory == category;
+  }
+
+  bool isContainSubCategory(String subCategory) {
+    return subCategories.contains(subCategory);
+  }
+
+  Widget _divider() {
+    return Divider(
+      height: 0,
+      thickness: 0.5,
+    );
+  }
+
+  String getMainCategory(String code) {
+    code = code.replaceAll('BUSINESS_PRODUCT_', '');
+    code = code.replaceAll('_', ' ');
+    return code[0].toUpperCase() + code.substring(1).toLowerCase();
+  }
+
+  String getSubCategory(String code) {
+    String title = code.split('_').first;
+    code = code.replaceAll('${title}_', '');
+    code = code.replaceAll('_', ' ');
+    return code[0].toUpperCase() + code.substring(1).toLowerCase();
+  }
+
 }

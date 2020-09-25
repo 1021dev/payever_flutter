@@ -134,7 +134,7 @@ class _WallpaperCategoriesScreenState extends State<WallpaperCategoriesScreen> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 elevation: 0,
-                color: overlayColor(),
+                color: overlayFilterViewBackground(),
                 child: Text(
                   'Done',
                 ),

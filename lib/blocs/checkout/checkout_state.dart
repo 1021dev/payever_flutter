@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
-import 'package:payever/commons/models/pos.dart';
+import 'package:payever/pos/models/pos.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:payever/pos/models/models.dart';
 

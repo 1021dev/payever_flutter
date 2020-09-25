@@ -1,5 +1,5 @@
-import 'transaction.dart';
-import '../utils/utils.dart';
+import '../../commons/models/transaction.dart';
+import '../../commons/utils/utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'pos.g.dart';
 
@@ -245,4 +245,31 @@ class DevicePaymentInstall {
 
   factory DevicePaymentInstall.fromJson(Map<String, dynamic> json) => _$DevicePaymentInstallFromJson(json);
   Map<String, dynamic> toJson() => _$DevicePaymentInstallToJson(this);
+}
+
+
+class CountryDropdownItem {
+  final String label;
+  final dynamic value;
+  CountryDropdownItem({
+    this.label,
+    this.value,
+  });
+
+  factory CountryDropdownItem.fromMap(dynamic obj) {
+    return CountryDropdownItem(
+      label: obj['label'],
+      value: obj['value'],
+    );
+  }
+}
+
+
+class AddPhoneNumberSettingsModel{
+  String id = '';
+  CountryDropdownItem country;
+  String phoneNumber = '';
+  bool excludeAny = false;
+  bool excludeForeign = false;
+  bool excludeLocal = false;
 }

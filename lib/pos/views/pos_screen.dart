@@ -24,16 +24,13 @@ import 'package:payever/pos/views/pos_create_terminal_screen.dart';
 import 'package:payever/pos/views/pos_qr_app.dart';
 import 'package:payever/pos/views/pos_switch_terminals_screen.dart';
 import 'package:payever/pos/views/pos_twillo_settings.dart';
+import 'package:payever/pos/views/products_screen/products_screen.dart';
 import 'package:payever/pos/widgets/pos_top_button.dart';
 import 'package:payever/search/views/search_screen.dart';
 import 'package:payever/theme.dart';
 import 'package:provider/provider.dart';
 
 import 'pos_device_payment_settings.dart';
-
-bool _isPortrait;
-bool _isTablet;
-
 
 class PosInitScreen extends StatelessWidget {
 
@@ -79,6 +76,9 @@ class PosScreen extends StatefulWidget {
 }
 
 class _PosScreenState extends State<PosScreen> {
+  bool _isPortrait;
+  bool _isTablet;
+
   static const platform = const MethodChannel('payever.flutter.dev/tapthephone');
 
   final GlobalKey<InnerDrawerState> _innerDrawerKey = GlobalKey<InnerDrawerState>();
@@ -166,10 +166,6 @@ class _PosScreenState extends State<PosScreen> {
   void dispose() {
     screenBloc.close();
     super.dispose();
-  }
-
-  Future<Null> _showNativeView() async {
-    await platform.invokeMethod('showNativeView');
   }
 
   @override
@@ -428,16 +424,6 @@ class _PosScreenState extends State<PosScreen> {
               });
             },
           ),
-          PosTopButton(
-            title: 'Open',
-            selectedIndex: selectedIndex,
-            index: 3,
-            onTap: () {
-              if (Platform.isAndroid) {
-                _showNativeView();
-              }
-            },
-          ),
           PopupMenuButton<OverflowMenuItem>(
             icon: Icon(Icons.more_horiz, color: Colors.white,),
             offset: Offset(0, 100),
@@ -470,7 +456,7 @@ class _PosScreenState extends State<PosScreen> {
   Widget _getBody(PosScreenState state) {
     switch(selectedIndex) {
       case 0:
-        return _defaultTerminalWidget(state);
+        return ProductsScreen(posScreenBloc: screenBloc);
       case 1:
         return _connectWidget(state);
       case 2:
@@ -478,56 +464,6 @@ class _PosScreenState extends State<PosScreen> {
       default:
         return Container();
     }
-  }
-
-  Widget _defaultTerminalWidget(PosScreenState state) {
-    if (state.activeTerminal == null) {
-      return Center(
-        child: CircularProgressIndicator(),
-      );
-    }
-    return Container(
-      color: Colors.white,
-      child: Column(
-        children: <Widget>[
-          Container(
-              padding: EdgeInsets.all(0.0),
-              child: progress < 1.0
-                  ? LinearProgressIndicator(value: progress)
-                  : Container()
-          ),
-          Expanded(
-            child: InAppWebView(
-              initialUrl: "https://${state.activeTerminal.id}.payever.business",
-              initialHeaders: {},
-              initialOptions: InAppWebViewGroupOptions(
-                  crossPlatform: InAppWebViewOptions(
-                    debuggingEnabled: true,
-                  )
-              ),
-              onWebViewCreated: (InAppWebViewController controller) {
-                webView = controller;
-              },
-              onLoadStart: (InAppWebViewController controller, String url) {
-                setState(() {
-                  this.url = url;
-                });
-              },
-              onLoadStop: (InAppWebViewController controller, String url) async {
-                setState(() {
-                  this.url = url;
-                });
-              },
-              onProgressChanged: (InAppWebViewController controller, int progress) {
-                setState(() {
-                  this.progress = progress / 100;
-                });
-              },
-            ),
-          ),
-        ],
-      ),
-    );
   }
 
   Widget _connectWidget(PosScreenState state) {
