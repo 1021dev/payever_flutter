@@ -263,10 +263,10 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     dynamic channelSetResponse = await api.getChannelSet(state.business, token);
     if (channelSetResponse is List) {
       channelSetResponse.forEach((element) {
-        ChannelSet channelSet = ChannelSet.toMap(element);
+        ChannelSet channelSet = ChannelSet.fromJson(element);
         if (channelSet.checkout != null &&
             channelSet.checkout == state.defaultCheckout.id)
-          channelSets.add(ChannelSet.toMap(element));
+          channelSets.add(ChannelSet.fromJson(element));
       });
     }
 
@@ -890,7 +890,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
 
   Stream<CheckoutScreenState> getDevicePaymentSettings(String businessId) async* {
     dynamic devicePaymentSettingsObj = await api.getPosDevicePaymentSettings(businessId, GlobalUtils.activeToken.accessToken);
-    DevicePaymentSettings devicePayment = DevicePaymentSettings.toMap(devicePaymentSettingsObj);
+    DevicePaymentSettings devicePayment = DevicePaymentSettings.fromJson(devicePaymentSettingsObj);
     yield state.copyWith(devicePaymentSettings: devicePayment,);
   }
 
@@ -903,7 +903,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       state.devicePaymentSettings.secondFactor,
       state.devicePaymentSettings.verificationType,
     );
-    DevicePaymentSettings devicePayment = DevicePaymentSettings.toMap(devicePaymentSettingsObj);
+    DevicePaymentSettings devicePayment = DevicePaymentSettings.fromJson(devicePaymentSettingsObj);
     yield state.copyWith(devicePaymentSettings: devicePayment, isLoading: false, isUpdating: false);
   }
 

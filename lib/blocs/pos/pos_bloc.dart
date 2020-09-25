@@ -124,13 +124,13 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     dynamic terminalsObj = await api.getTerminal(activeBusinessId, token);
     if (terminalsObj != null) {
       terminalsObj.forEach((terminal) {
-        terminals.add(Terminal.toMap(terminal));
+        terminals.add(Terminal.fromJson(terminal));
       });
     }
     dynamic channelsObj = await api.getChannelSet(activeBusinessId, token);
     if (channelsObj != null) {
       channelsObj.forEach((channelSet) {
-        channelSets.add(ChannelSet.toMap(channelSet));
+        channelSets.add(ChannelSet.fromJson(channelSet));
       });
     }
 
@@ -153,7 +153,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
 
           dynamic productsObj = await api.getPopularWeek(activeBusinessId, channelSet.id, token);
           productsObj.forEach((product) {
-            terminal.bestSales.add(Product.toMap(product));
+            terminal.bestSales.add(Product.fromJson(product));
           });
         }
       });
@@ -172,7 +172,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     dynamic integrationObj = await api.getPosIntegrations(GlobalUtils.activeToken.accessToken, businessId);
     List<Communication> integrations = [];
     integrationObj.forEach((element) {
-      integrations.add(Communication.toMap(element));
+      integrations.add(Communication.fromJson(element));
     });
     yield state.copyWith(integrations: integrations);
     add(GetTerminalIntegrationsEvent(businessId: businessId, terminalId: state.activeTerminal.id));
@@ -191,14 +191,14 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     dynamic communicationsObj = await api.getPosCommunications(GlobalUtils.activeToken.accessToken, businessId);
     List<Communication> communications = [];
     communicationsObj.forEach((element) {
-      communications.add(Communication.toMap(element));
+      communications.add(Communication.fromJson(element));
     });
     yield state.copyWith(communications: communications);
   }
 
   Stream<PosScreenState> getDevicePaymentSettings(String businessId) async* {
     dynamic devicePaymentSettingsObj = await api.getPosDevicePaymentSettings(businessId, GlobalUtils.activeToken.accessToken);
-    DevicePaymentSettings devicePayment = DevicePaymentSettings.toMap(devicePaymentSettingsObj);
+    DevicePaymentSettings devicePayment = DevicePaymentSettings.fromJson(devicePaymentSettingsObj);
     yield state.copyWith(devicePaymentSettings: devicePayment, isLoading: false);
   }
 
@@ -273,7 +273,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       secondFactor,
       verificationType,
     );
-    DevicePaymentSettings devicePayment = DevicePaymentSettings.toMap(devicePaymentSettingsObj);
+    DevicePaymentSettings devicePayment = DevicePaymentSettings.fromJson(devicePaymentSettingsObj);
     yield state.copyWith(devicePaymentSettings: devicePayment, isLoading: false, isUpdating: false);
   }
 

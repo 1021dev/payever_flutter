@@ -124,7 +124,7 @@ class ProductsModel {
       });
     if (obj[GlobalUtils.DB_PROD_MODEL_CHANNEL_SET] != null)
       obj[GlobalUtils.DB_PROD_MODEL_CHANNEL_SET].forEach((ch) {
-        channels.add(ChannelSet.toMap(ch));
+        channels.add(ChannelSet.fromJson(ch));
       });
     if (obj[GlobalUtils.DB_PROD_MODEL_VARIANTS] != null)
       obj[GlobalUtils.DB_PROD_MODEL_VARIANTS].forEach((variant) {
@@ -458,7 +458,7 @@ class CollectionModel {
     List channelObj = obj['channelSets'];
     if (channelObj != null) {
       channelObj.forEach((element) {
-        channelSets.add(ChannelSet.toMap(element));
+        channelSets.add(ChannelSet.fromJson(element));
       });
     }
     if (obj['automaticFillConditions'] != null) {

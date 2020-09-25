@@ -827,7 +827,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     dynamic terminalsObj = await api.getTerminal(state.businessId, token);
     if (terminalsObj != null) {
       terminalsObj.forEach((terminal) {
-        terminals.add(Terminal.toMap(terminal));
+        terminals.add(Terminal.fromJson(terminal));
       });
     }
     yield state.copyWith(terminals: terminals);

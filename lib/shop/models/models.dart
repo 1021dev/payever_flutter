@@ -143,7 +143,7 @@ class ShopDetailModel {
       business = BusinessM.toMap(obj['business']);
     }
     if (obj['channelSet'] != null){
-      channelSet = ChannelSet.toMap(obj['channelSet']);
+      channelSet = ChannelSet.fromJson(obj['channelSet']);
     }
   }
 }

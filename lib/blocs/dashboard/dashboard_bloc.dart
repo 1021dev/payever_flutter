@@ -276,13 +276,13 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     dynamic terminalsObj = await api.getTerminal(activeBusiness.id, token);
     if (terminalsObj != null && terminalsObj is List){
       terminalsObj.forEach((terminal) {
-        terminals.add(Terminal.toMap(terminal));
+        terminals.add(Terminal.fromJson(terminal));
       });
     }
     dynamic channelsObj = await api.getChannelSet(activeBusiness.id, token);
     if (channelsObj != null && channelsObj is List){
       channelsObj.forEach((channelSet) {
-        channelSets.add(ChannelSet.toMap(channelSet));
+        channelSets.add(ChannelSet.fromJson(channelSet));
       });
     }
 
@@ -305,7 +305,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
 
           dynamic productsObj = await api.getPopularWeek(activeBusiness.id, channelSet.id, token);
           productsObj.forEach((product) {
-            terminal.bestSales.add(Product.toMap(product));
+            terminal.bestSales.add(Product.fromJson(product));
           });
         }
       });
