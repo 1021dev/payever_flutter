@@ -603,50 +603,6 @@ class GlobalUtils {
   static const String DB_TRANS_DETAIL_ITEM_OPTION_NAME = 'name';
   static const String DB_TRANS_DETAIL_ITEM_OPTION_VALUE = 'value';
 
-  //POS
-  static const String DB_POS_TERMINAL_ACTIVE = 'active';
-  static const String DB_POS_TERMINAL_BUSINESS = 'business';
-  static const String DB_POS_TERMINAL_CHANNEL_SET = 'channelSet';
-  static const String DB_POS_TERMINAL_CREATED_AT = 'createdAt';
-  static const String DB_POS_TERMINAL_DEFAULT_LOCALE = 'defaultLocale';
-  static const String DB_POS_TERMINAL_INTEGRATION_SUB =
-      'integrationSubscriptions';
-  static const String DB_POS_TERMINAL_LOCALES = 'locales';
-  static const String DB_POS_TERMINAL_LOGO = 'logo';
-  static const String DB_POS_TERMINAL_NAME = 'name';
-  static const String DB_POS_TERMINAL_THEME = 'theme';
-  static const String DB_POS_TERMINAL_UPDATED_AT = 'updatedAt';
-  static const String DB_POS_TERMINAL_V = '__v';
-  static const String DB_POS_TERMINAL_ID = '_id';
-
-  static const String DB_POS_CHANNEL_SET_CHECKOUT = 'checkout';
-  static const String DB_POS_CHANNEL_SET_ID = 'id';
-  static const String DB_POS_CHANNEL_SET_NAME = 'name';
-  static const String DB_POS_CHANNEL_SET_TYPE = 'type';
-
-  static const String DB_POS_TERM_PRODUCT_CHANNEL_SET = 'channelSet';
-  static const String DB_POS_TERM_PRODUCT_ID = 'id';
-  static const String DB_POS_TERM_PRODUCT_LAST_SELL = 'lastSell';
-  static const String DB_POS_TERM_PRODUCT_NAME = 'name';
-  static const String DB_POS_TERM_PRODUCT_QUANTITY = 'quantity';
-  static const String DB_POS_TERM_PRODUCT_THUMBNAIL = 'thumbnail';
-  static const String DB_POS_TERM_PRODUCT_UUID = 'uuid';
-  static const String DB_POS_TERM_PRODUCT_V = '__v';
-  static const String DB_POS_TERM_PRODUCT__ID = '_id';
-
-  static const String DB_POS_CART = 'cart';
-  static const String DB_POS_CART_CART_ID = 'id';
-  static const String DB_POS_CART_CART_IDENTIFIER = 'identifier';
-  static const String DB_POS_CART_CART_IMAGE = 'image';
-  static const String DB_POS_CART_CART_NAME = 'name';
-  static const String DB_POS_CART_CART_PRICE = 'price';
-  static const String DB_POS_CART_CART_QTY = 'quantity';
-  static const String DB_POS_CART_CART_SKU = 'sku';
-  static const String DB_POS_CART_CART_UUID = 'uuid';
-  static const String DB_POS_CART_CART_VAT = 'vat';
-  static const String DB_POS_CART_ID = 'id';
-  static const String DB_POS_CART_TOTAL = 'total';
-
   static const String DB_PROD_BUSINESS = 'business';
   static const String DB_PROD_ID = 'id';
   static const String DB_PROD_LAST_SELL = 'lastSell';
@@ -731,15 +687,6 @@ class GlobalUtils {
   static const String DB_SHOP_UPDATED_AT = 'updatedAt';
   static const String DB_SHOP__v = '__v';
   static const String DB_SHOP_ID = '_id';
-
-  static const String DB_CHECKOUT_SECTIONS = 'sections';
-  static const String DB_CHECKOUT_SECTIONS_CODE = 'code';
-  static const String DB_CHECKOUT_SECTIONS_ENABLED = 'enabled';
-  static const String DB_CHECKOUT_SECTIONS_DEFAULT_ENABLED = 'defaultEnabled';
-  static const String DB_CHECKOUT_SECTIONS_FIXED = 'fixed';
-  static const String DB_CHECKOUT_SECTIONS_ORDER = 'order';
-  static const String DB_CHECKOUT_SECTIONS_EXCLUDED = 'excluded_channels';
-  static const String DB_CHECKOUT_SECTIONS_SUB_SEC = 'subsections';
 
   static const String DB_TUTORIAL_INIT = '\$init';
   static const String DB_TUTORIAL_ICON = 'icon';
