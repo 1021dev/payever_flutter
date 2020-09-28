@@ -17,7 +17,6 @@ import 'package:payever/checkout/views/payments/checkout_payment_settings_screen
 import 'package:payever/checkout/views/payments/payment_options_screen.dart';
 import 'package:payever/checkout/views/sections/sections_screen.dart';
 import 'package:payever/checkout/views/settings/settings_screen.dart';
-import 'package:payever/checkout/views/workshop/workshop_screen1.dart';
 import 'package:payever/checkout/views/workshop/workshop_screen.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
@@ -98,12 +97,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   @override
   void initState() {
-    screenBloc = CheckoutScreenBloc(dashboardScreenBloc: widget.dashboardScreenBloc, globalStateModel: widget.globalStateModel);
-    screenBloc.add(CheckoutScreenInitEvent(
-      business: widget.globalStateModel.currentBusiness.id,
-      checkouts: widget.checkouts,
-      defaultCheckout: widget.defaultCheckout,
-    ));
+    screenBloc = CheckoutScreenBloc(
+        dashboardScreenBloc: widget.dashboardScreenBloc,
+        globalStateModel: widget.globalStateModel)
+      ..add(CheckoutScreenInitEvent(
+        business: widget.globalStateModel.currentBusiness.id,
+        checkouts: widget.checkouts,
+        defaultCheckout: widget.defaultCheckout,
+      ));
     super.initState();
   }
 

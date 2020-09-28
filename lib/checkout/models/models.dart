@@ -303,7 +303,7 @@ class ChannelSetFlow {
   @JsonKey(name: 'tax_value')                     num taxValue = 0;
   @JsonKey(name: 'total')                         num total = 0;
   @JsonKey(name: 'user_account_id')               String userAccountId;
-  @JsonKey(name: 'values')                        List values = [];
+  @JsonKey(name: 'values')                        dynamic values;
   @JsonKey(name: 'variant_id')                    String variantId;
   @JsonKey(name: 'x_frame_host')                  String xFrameHost;
 

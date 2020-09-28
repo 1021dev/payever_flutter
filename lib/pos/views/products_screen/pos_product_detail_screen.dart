@@ -181,7 +181,11 @@ class _PosProductDetailScreenState extends State<PosProductDetailScreen> {
                         borderRadius: BorderRadius.circular(4),
                         color: overlayBackground(),
                       ),
-                      child: Text('In the Cart'),
+                      child: Text(
+                        'In the Cart',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w500),
+                      ),
                     ),
                   ),
                   SizedBox(

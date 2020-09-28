@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/checkout/views/workshop/workshop_screen.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/pos/views/products_screen/pos_product_detail_screen.dart';
@@ -16,6 +17,8 @@ import 'package:payever/pos/widgets/pos_top_button.dart';
 import 'package:payever/products/models/models.dart';
 import 'package:payever/theme.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+
+import '../pos_qr_app.dart';
 
 class ProductsScreen extends StatefulWidget {
   final PosScreenBloc posScreenBloc;
@@ -32,7 +35,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   bool _isPortrait;
   bool _isTablet;
   bool isGridMode = true;
-  TextEditingController searchController;
+  TextEditingController searchController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -40,6 +43,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   @override
   void dispose() {
+    searchController.dispose();
     super.dispose();
   }
 
@@ -104,7 +108,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   Widget _toolBar(PosScreenState state) {
-    searchController = TextEditingController(text: state.searchText);
+    searchController.text = state.searchText;
     return Container(
       height: 50,
       color: overlaySecondAppBar(),
@@ -125,7 +129,24 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 ),
               ),
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      child: WorkshopScreen(
+                        checkoutScreenBloc: CheckoutScreenBloc(
+                            dashboardScreenBloc:
+                                widget.posScreenBloc.dashboardScreenBloc)
+                          ..add(CheckoutScreenInitEvent(
+                            business: state.businessId,
+                            checkouts: widget.posScreenBloc.dashboardScreenBloc.state.checkouts,
+                            defaultCheckout: widget.posScreenBloc.dashboardScreenBloc.state.defaultCheckout,
+                          )),
+                      ),
+                      type: PageTransitionType.fade,
+                    ),
+                  );
+                },
                 child: Text(
                   'Amount',
                   style: TextStyle(
@@ -135,7 +156,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(left: 8, right: 12),
+                padding: EdgeInsets.only(left: 12, right: 12),
                 child: Container(
                   width: 1,
                   color: Color(0xFF888888),
@@ -143,7 +164,20 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 ),
               ),
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      child: PosQRAppScreen(
+                        businessId: state.businessId,
+                        screenBloc: widget.posScreenBloc,
+                        fromProductsScreen: true,
+                      ),
+                      type: PageTransitionType.fade,
+                      duration: Duration(milliseconds: 500),
+                    ),
+                  );
+                },
                 child: Text(
                   'QR',
                   style: TextStyle(
@@ -157,15 +191,17 @@ class _ProductsScreenState extends State<ProductsScreen> {
           Expanded(
             child: Container(
               height: 35,
-              margin: EdgeInsets.symmetric(horizontal: 10),
+              margin: EdgeInsets.symmetric(horizontal: 12),
               padding: EdgeInsets.symmetric(horizontal: 4),
               decoration: BoxDecoration(
                 color: overlayBackground(),
                 borderRadius: BorderRadius.all(Radius.circular(4)),
               ),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.search, size: 20,),
+                  SizedBox(width: 4,),
                   Expanded(
                     child: TextFormField(
                       style: textFieldStyle,

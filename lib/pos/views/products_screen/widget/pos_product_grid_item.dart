@@ -51,7 +51,7 @@ class PosProductGridItem extends StatelessWidget {
                         AutoSizeText(
                           product.title,
                           style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 14,
                               fontWeight: FontWeight.w500
                           ),
                           maxLines: 1,
@@ -61,8 +61,8 @@ class PosProductGridItem extends StatelessWidget {
                           child: Text(
                             '${formatter.format(product.price)} ${Measurements.currency(product.currency)}',
                             style: TextStyle(
-                              fontSize: 8,
-                              fontWeight: FontWeight.w300,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
                             ),
                           ),
                         ),

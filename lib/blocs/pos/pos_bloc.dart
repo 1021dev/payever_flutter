@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:bloc/bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:payever/apis/api_service.dart';
@@ -8,7 +7,6 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/pos/models/pos.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/products/models/models.dart';
-
 import '../bloc.dart';
 
 class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
@@ -122,11 +120,11 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
           searchText: event.searchText,
           orderDirection: event.orderDirection);
       yield* filterProducts();
-    } else if (event is CardProductEvent) {
-      yield* cardProduct(event.body);
     } else if (event is ResetProductsFilterEvent) {
       yield state.copyWith(subCategories: [], searchText: '', orderDirection: true);
       yield* filterProducts();
+    } else if (event is CardProductEvent) {
+      yield* cardProduct(event.body);
     }
   }
 

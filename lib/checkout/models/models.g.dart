@@ -363,7 +363,7 @@ ChannelSetFlow _$ChannelSetFlowFromJson(Map<String, dynamic> json) {
     ..taxValue = json['tax_value'] as num
     ..total = json['total'] as num
     ..userAccountId = json['user_account_id'] as String
-    ..values = json['values'] as List
+    ..values = json['values']
     ..variantId = json['variant_id'] as String
     ..xFrameHost = json['x_frame_host'] as String;
 }
