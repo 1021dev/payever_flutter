@@ -10,9 +10,9 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/pos/views/products_screen/products_filter_screen.dart';
+import 'package:payever/pos/views/products_screen/widget/pos_product_grid_item.dart';
 import 'package:payever/pos/widgets/pos_top_button.dart';
 import 'package:payever/products/models/models.dart';
-import 'package:payever/products/widgets/product_grid_item.dart';
 import 'package:payever/theme.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 
@@ -365,39 +365,15 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   Widget gridBody(PosScreenState state) {
-    if (state.productLists == null || state.productLists.isEmpty)
+    if (state.products == null || state.products.isEmpty)
         return Container();
 
     List<Widget> productsItems = [];
-    state.productLists.forEach((product) {
-      productsItems.add(ProductGridItem(
+    state.products.forEach((product) {
+      productsItems.add(PosProductGridItem(
         product,
-        fromPos: true,
-        onTap: (ProductListModel model) {},
-        onCheck: (ProductListModel model) {
-          // screenBloc.add(CheckProductItem(model: model));
-        },
-        onTapMenu: (ProductListModel model) {
-          showCupertinoModalPopup(
-            context: context,
-            builder: (builder) {
-              return Container(
-                height: 64.0 * 2.0 + MediaQuery.of(context).padding.bottom,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  color: overlayFilterViewBackground(),
-                  borderRadius: BorderRadius.all(Radius.circular(15)),
-                ),
-                padding: EdgeInsets.only(top: 16),
-                child: Column(
-                  children: popupButtons(
-                    context,
-                    model,
-                  ),
-                ),
-              );
-            },
-          );
+        onTap: (ProductsModel model) {
+
         },
       ));
     });
@@ -425,15 +401,15 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   Widget _listBody(PosScreenState state) {
-    if (state.productLists == null || state.productLists.isEmpty)
+    if (state.products == null || state.products.isEmpty)
       return Container();
     return ListView.builder(
-        itemCount: state.productLists.length,
+        itemCount: state.products.length,
         itemBuilder: (context, index) =>
-            _productListBody(state, state.productLists[index]));
+            _productListBody(state, state.products[index]));
   }
 
-  Widget _productListBody(PosScreenState state, ProductListModel model) {
+  Widget _productListBody(PosScreenState state, ProductsModel model) {
     return Column(
       children: <Widget>[
         Container(
@@ -451,12 +427,12 @@ class _ProductsScreenState extends State<ProductsScreen> {
                       margin: EdgeInsets.only(left: 19, right: 17),
                       height: 40,
                       width: 40,
-                      child: model.productsModel.images != null &&
-                              model.productsModel.images.isNotEmpty &&
-                              model.productsModel.images.first != null
+                      child: model.images != null &&
+                              model.images.isNotEmpty &&
+                              model.images.first != null
                           ? CachedNetworkImage(
                               imageUrl:
-                                  '${Env.storage}/products/${model.productsModel.images.first}',
+                                  '${Env.storage}/products/${model.images.first}',
                               imageBuilder: (context, imageProvider) =>
                                   Container(
                                 decoration: BoxDecoration(
@@ -478,12 +454,12 @@ class _ProductsScreenState extends State<ProductsScreen> {
                             )
                           : SvgPicture.asset('assets/images/no_image.svg'),
                     ),
-                    Flexible(child: Text(model.productsModel.title)),
+                    Flexible(child: Text(model.title)),
                   ],
                 ),
               ),
               Text(
-                  '${Measurements.currency(model.productsModel.currency)}${model.productsModel.price}'),
+                  '${Measurements.currency(model.currency)}${model.price}'),
               IconButton(
                 icon: Icon(Icons.navigate_next),
                 onPressed: () {},
@@ -695,11 +671,11 @@ class _ProductsScreenState extends State<ProductsScreen> {
                               onPressed: () {
                                 Navigator.pop(context);
                                 List<ProductsModel> deletes = [];
-                                state.productLists.forEach((element) {
-                                  if (element.isChecked) {
-                                    deletes.add(element.productsModel);
-                                  }
-                                });
+                                // state.products.forEach((element) {
+                                //   if (element.isChecked) {
+                                //     deletes.add(element.productsModel);
+                                //   }
+                                // });
                                 // screenBloc
                                 //     .add(DeleteProductsEvent(models: deletes));
                               },

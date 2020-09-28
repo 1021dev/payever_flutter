@@ -11,7 +11,6 @@ class PosScreenState {
   final bool businessCopied;
   final bool terminalCopied;
   final List<ProductsModel> products;
-  final List<ProductListModel> productLists;
   final List<Communication> integrations;
   final List<Communication> communications;
   final DevicePaymentSettings devicePaymentSettings;
@@ -56,7 +55,6 @@ class PosScreenState {
     this.fieldSetData,
     this.qrImage,
     this.products,
-    this.productLists,
     this.filterOptions = const [],
     this.subCategories = const [],
   });
@@ -86,7 +84,6 @@ class PosScreenState {
     this.fieldSetData,
     this.qrImage,
     this.products,
-    this.productLists,
     this.filterOptions,
     this.subCategories,
   ];
@@ -114,7 +111,6 @@ class PosScreenState {
     AddPhoneNumberSettingsModel settingsModel,
     List<CountryDropdownItem> dropdownItems,
     List<ProductsModel> products,
-    List<ProductListModel> productLists,
     List<ProductFilterOption> filterOptions,
     dynamic fieldSetData,
     dynamic qrImage,
@@ -146,7 +142,6 @@ class PosScreenState {
       fieldSetData: fieldSetData ?? this.fieldSetData,
       qrImage: qrImage ?? this.qrImage,
       products: products ?? this.products,
-      productLists: productLists ?? this.productLists,
       filterOptions: filterOptions ?? this.filterOptions,
       subCategories: subCategories ?? this.subCategories,
     );

@@ -176,7 +176,6 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
 
     dynamic response = await api.getProducts(token, body);
     List<ProductsModel> products = [];
-    List<ProductListModel> productLists = [];
     print('Products filter response: ' + response.toString());
     if (response is Map) {
       dynamic data = response['data'];
@@ -187,14 +186,12 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
           if (productsObj != null) {
             productsObj.forEach((element) {
               products.add(ProductsModel.toMap(element));
-              productLists.add(ProductListModel(productsModel: ProductsModel.toMap(element), isChecked: false));
             });
           }
         }
       }
     }
-    print('Products filter response: ${productLists.length}');
-    yield state.copyWith(products: products, productLists: productLists);
+    yield state.copyWith(products: products);
     dynamic response1 = await api.productsFilterOption(token, dashboardScreenBloc.state.activeBusiness.id);
     List<ProductFilterOption>filterOptions = [];
     if (response1 is List) {
@@ -243,7 +240,6 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     body['query'] = query;
     dynamic response = await api.getProducts(GlobalUtils.activeToken.accessToken, body);
     List<ProductsModel> products = [];
-    List<ProductListModel> productLists = [];
     print('Products filter response: ' + response.toString());
     if (response is Map) {
       dynamic data = response['data'];
@@ -254,14 +250,12 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
           if (productsObj != null) {
             productsObj.forEach((element) {
               products.add(ProductsModel.toMap(element));
-              productLists.add(ProductListModel(productsModel: ProductsModel.toMap(element), isChecked: false));
             });
           }
         }
       }
     }
-    print('Products filter response: ${productLists.length}');
-    yield state.copyWith(products: products, productLists: productLists, searching: false);
+    yield state.copyWith(products: products, searching: false);
   }
 
   Stream<PosScreenState> getIntegrations(String businessId) async* {

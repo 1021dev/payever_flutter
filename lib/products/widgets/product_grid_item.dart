@@ -1,7 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/products/models/models.dart';
@@ -13,7 +12,6 @@ class ProductGridItem extends StatelessWidget {
   final Function onTap;
   final Function onCheck;
   final Function onTapMenu;
-  final bool fromPos;
 
   final formatter = new NumberFormat('###,###,###.00', 'en_US');
 
@@ -22,7 +20,6 @@ class ProductGridItem extends StatelessWidget {
         this.onTap,
         this.onCheck,
         this.onTapMenu,
-        this.fromPos = false,
       });
 
   @override
@@ -62,7 +59,6 @@ class ProductGridItem extends StatelessWidget {
                   ProductItemImage(
                     product.productsModel.images.isEmpty ? null : product.productsModel.images.first,
                   ),
-                  fromPos ? Container() :
                   Container(
                     padding: EdgeInsets.only(top: 4, left: 4),
                     alignment: Alignment.topLeft,
@@ -106,7 +102,6 @@ class ProductGridItem extends StatelessWidget {
                           ),
                         ),
                       ),
-                      fromPos ? Container() :
                       Text(
                         product.productsModel.onSales
                             ? Language.getProductListStrings('filters.quantity.options.outStock')
@@ -124,9 +119,9 @@ class ProductGridItem extends StatelessWidget {
             Divider(
               height: 0,
               thickness: 0.5,
-              color: fromPos ? Colors.transparent :Colors.white54,
+              color: Colors.white54,
             ),
-            fromPos ? Container() : AspectRatio(
+            AspectRatio(
               aspectRatio: 6/1,
               child: Container(              
                 child: InkWell(
