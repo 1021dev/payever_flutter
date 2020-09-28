@@ -6,7 +6,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_tags/flutter_tags.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
@@ -16,8 +15,6 @@ import 'package:payever/products/models/models.dart';
 import 'package:payever/products/widgets/product_grid_item.dart';
 import 'package:payever/theme.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
-
-final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
 
 class ProductsScreen extends StatefulWidget {
   final PosScreenBloc posScreenBloc;

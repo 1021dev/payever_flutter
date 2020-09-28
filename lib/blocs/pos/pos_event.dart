@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:equatable/equatable.dart';
 import 'package:payever/commons/commons.dart';
-import 'package:payever/pos/models/models.dart';
 
 abstract class PosScreenEvent extends Equatable {
   PosScreenEvent();

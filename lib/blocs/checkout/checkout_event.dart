@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
-import 'package:payever/pos/models/models.dart';
 
 abstract class CheckoutScreenEvent extends Equatable {
   CheckoutScreenEvent();

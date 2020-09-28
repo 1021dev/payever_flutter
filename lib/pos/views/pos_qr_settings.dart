@@ -7,13 +7,9 @@ import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
-import 'package:payever/pos/models/models.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/theme.dart';
-
-bool _isPortrait;
-bool _isTablet;
 
 class PosQRSettings extends StatefulWidget {
 
@@ -73,15 +69,6 @@ class _PosQRSettingsState extends State<PosQRSettings> {
 
   @override
   Widget build(BuildContext context) {
-    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
-    Measurements.height = (_isPortrait
-        ? MediaQuery.of(context).size.height
-        : MediaQuery.of(context).size.width);
-    Measurements.width = (_isPortrait
-        ? MediaQuery.of(context).size.width
-        : MediaQuery.of(context).size.height);
-    _isTablet = Measurements.width < 600 ? false : true;
-
     return BlocListener(
       bloc: widget.screenBloc,
       listener: (BuildContext context, PosScreenState state) async {

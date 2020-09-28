@@ -11,7 +11,6 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:http/http.dart' as http;
-import 'package:payever/pos/models/models.dart';
 import 'package:payever/theme.dart';
 
 import 'checkout.dart';
