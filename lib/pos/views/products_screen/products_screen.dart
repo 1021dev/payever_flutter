@@ -4,11 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
+import 'package:payever/pos/views/products_screen/pos_product_detail_screen.dart';
 import 'package:payever/pos/views/products_screen/products_filter_screen.dart';
 import 'package:payever/pos/views/products_screen/widget/pos_product_grid_item.dart';
 import 'package:payever/pos/widgets/pos_top_button.dart';
@@ -30,17 +31,6 @@ class ProductsScreen extends StatefulWidget {
 class _ProductsScreenState extends State<ProductsScreen> {
   bool _isPortrait;
   bool _isTablet;
-
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
-  InAppWebViewController webView;
-  double progress = 0;
-  String url = '';
-
-  String wallpaper;
-  int selectedIndex = 0;
-  List<FilterItem> filterTypes = [];
-  int selectedTypes = 0;
   bool isGridMode = true;
 
   @override
@@ -373,7 +363,13 @@ class _ProductsScreenState extends State<ProductsScreen> {
       productsItems.add(PosProductGridItem(
         product,
         onTap: (ProductsModel model) {
-
+          Navigator.push(
+            context,
+            PageTransition(
+              child: PosProductDetailScreen(),
+              type: PageTransitionType.fade,
+            ),
+          );
         },
       ));
     });

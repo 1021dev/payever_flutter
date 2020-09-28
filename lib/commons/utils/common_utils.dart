@@ -998,7 +998,9 @@ bool isNumeric(String s) {
 
 // TextField Attributes
 TextStyle textFieldStyle = TextStyle(fontSize: 13,fontWeight: FontWeight.w500,);
+
 TextStyle errorTextFieldColor = TextStyle(color: Colors.redAccent);
+
 InputDecoration textFieldDecoration(String label, {Widget prefixIcon}) {
   if (prefixIcon != null) {
     return InputDecoration(
@@ -1035,3 +1037,4 @@ InputDecoration textFieldDecoration(String label, {Widget prefixIcon}) {
   );
 }
 
+final formatter = new NumberFormat('###,###,###.00', 'en_US');

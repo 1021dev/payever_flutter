@@ -356,7 +356,6 @@ class _SettingScreenState extends State<SettingScreen> {
       PageTransition(
         child: _target,
         type: PageTransitionType.fade,
-        duration: Duration(milliseconds: 50),
       ),
     );
     debugPrint("You tapped on item $index");
