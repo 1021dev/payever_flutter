@@ -215,6 +215,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
 
 
   Stream<PosScreenState> filterProducts(List<String> keys) async* {
+    yield state.copyWith(searching: true);
     //'{↵          getProducts(↵            businessUuid: "d0de55b4-5a2a-41a9-a0de-f38256f541ee",↵            paginationLimit: 100,↵            pageNumber: 1,↵            orderBy: "price",↵            orderDirection: "asc",↵            search:""↵            filters: [↵              ↵              {↵                field:"variant",↵                fieldType:"child",↵                fieldCondition: "is",↵                filters: {field:"options",fieldType:"nested",fieldCondition:"is",filters:[{field:"value",fieldType:"string",fieldCondition:"is",value:"original bb droid by sphero"},{field:"value",fieldType:"string",fieldCondition:"is",value:"blue"},{field:"value",fieldType:"string",fieldCondition:"is",value:"green"},{field:"value",fieldType:"string",fieldCondition:"is",value:"coloroption"}]},↵              }↵              ↵            ],↵            useNewFiltration: true,↵          ) {↵            products {↵              imagesUrl↵              _id↵              title↵              description↵              price↵              salePrice↵              currency↵            }↵          }↵        }↵       ';
     String query = '{\n getProducts(\n businessUuid: \"${dashboardScreenBloc.state.activeBusiness.id}\",\n  paginationLimit: 100,\n  pageNumber: 1,\n orderBy: \"price\",\n orderDirection: \"asc\",\n  search:\"\"\n  filters: [\n    \n   {\n  field:\"variant\",\n fieldType:\"child\",\n  fieldCondition: \"is\",\n  filters: {field:\"options\",fieldType:\"nested\",fieldCondition:\"is\",filters:[{field:\"value\",fieldType:\"string\",fieldCondition:\"is\",value:\"gold\"}]},\n   }\n   \n  ],\n  useNewFiltration: true,\n  ) {\n  products {\n  imagesUrl\n  _id\n  title\n   description\n   price\n  salePrice\n  currency\n   }\n   }\n  }\n ';
 
@@ -260,7 +261,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       }
     }
     print('Products filter response: ${productLists.length}');
-    yield state.copyWith(products: products, productLists: productLists);
+    yield state.copyWith(products: products, productLists: productLists, searching: false);
   }
 
   Stream<PosScreenState> getIntegrations(String businessId) async* {

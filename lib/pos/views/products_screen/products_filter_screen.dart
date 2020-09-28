@@ -20,7 +20,7 @@ class ProductsFilterScreen extends StatefulWidget {
 }
 
 class _ProductsFilterScreenState extends State<ProductsFilterScreen> {
-  String selectedCategory = '';
+  List<String>  selectedCategories = [];
   List<String> subCategories = [];
   bool _isPortrait;
   bool _isTablet;
@@ -100,7 +100,13 @@ class _ProductsFilterScreenState extends State<ProductsFilterScreen> {
                 ),
                 InkWell(
                   onTap: () {
-                    Navigator.pop(context);
+                    // Navigator.pop(context);
+                    setState(() {
+                      subCategories = [];
+                      widget.screenBloc.add(ProductsFilterEvent(
+                          subCategories: subCategories));
+                      Navigator.pop(context);
+                    });
                   },
                   child: Padding(
                     padding: EdgeInsets.only(right: 16),
@@ -120,7 +126,6 @@ class _ProductsFilterScreenState extends State<ProductsFilterScreen> {
               child: MaterialButton(
                 onPressed: () {
                   widget.screenBloc.add(ProductsFilterEvent(
-                      category: selectedCategory,
                       subCategories: subCategories));
                   Navigator.pop(context);
                 },
@@ -143,7 +148,6 @@ class _ProductsFilterScreenState extends State<ProductsFilterScreen> {
                   GestureDetector(
                     onTap: () {
                       setState(() {
-                        selectedCategory = 'All';
                         subCategories = [];
                       });
                     },
@@ -178,13 +182,13 @@ class _ProductsFilterScreenState extends State<ProductsFilterScreen> {
                       String category = state.filterOptions[index].name;
                       return Column(
                         children: <Widget>[
-                          GestureDetector(
+                          InkWell(
                             onTap: () {
                               setState(() {
-                                selectedCategory =
-                                    isSelected(category) ? '' : category;
-                                if (selectedCategory.isEmpty) {
-                                  subCategories = [];
+                                if (selectedCategories.contains(category)) {
+                                  selectedCategories.remove(category);
+                                } else {
+                                  selectedCategories.add(category);
                                 }
                               });
                             },
@@ -196,14 +200,15 @@ class _ProductsFilterScreenState extends State<ProductsFilterScreen> {
                                   Padding(
                                     padding: EdgeInsets.only(left: 8),
                                   ),
-                                  Text(
-                                    getMainCategory(category),
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
+                                  Expanded(
+                                    child: Text(
+                                      getMainCategory(category),
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
-                                  Spacer(),
                                   Icon(
                                     isSelected(category)
                                         ? Icons.clear
@@ -280,8 +285,7 @@ class _ProductsFilterScreenState extends State<ProductsFilterScreen> {
   }
 
   bool isSelected(String category) {
-    if (selectedCategory == null) return false;
-    return selectedCategory == category;
+    return selectedCategories.contains(category);
   }
 
   bool isContainSubCategory(String subCategory) {

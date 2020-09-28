@@ -98,15 +98,22 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   Widget _body(PosScreenState state) {
-    return Column(
-            children: <Widget>[
-              _toolBar(state),
-              Expanded(
-                child: isGridMode ? gridBody(state) : _listBody(state),
-              ),
-              // _bottomBar(state),
-            ],
-          );
+    return Stack(
+      children: [
+        Column(
+          children: <Widget>[
+            _toolBar(state),
+            Expanded(
+              child: isGridMode ? gridBody(state) : _listBody(state),
+            ),
+            // _bottomBar(state),
+          ],
+        ),
+        state.searching
+            ? Center(child: CircularProgressIndicator())
+            : Container(),
+      ],
+    );
   }
 
   Widget _toolBar(PosScreenState state) {
@@ -420,27 +427,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
   }
 
-  // List<ProductListModel> _productListModels(PosScreenState state) {
-  //   String selectedCategory = state.selectedCategory;
-  //   List<String>subCategories = state.subCategories;
-  //   if (selectedCategory.isEmpty || selectedCategory == 'All')
-  //     return state.productLists;
-  //   else {
-  //     if (subCategories.isEmpty)
-  //       return state.productLists;
-  //     else {
-  //       List<ProductListModel> productModelLists = [];
-  //       WallpaperCategory wallpaperCategory = state.productLists.where((element) => element.productsModel.n == selectedCategory).toList().first;
-  //       subCategories.forEach((subCategory) {
-  //         wallpaperCategory.industries.where((industry) => industry.code == subCategory).toList().first.wallpapers.forEach((wallpaper) {
-  //           productModelLists.add(wallpaper);
-  //         });
-  //       });
-  //       return productModelLists;
-  //     }
-  //   }
-  // }
-
   Widget _listBody(PosScreenState state) {
     if (state.productLists == null || state.productLists.isEmpty)
       return Container();
@@ -464,21 +450,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Container(
-                      child: InkWell(
-                          onTap: () {
-                            // screenBloc.add(CheckProductItem(model: model));
-                          },
-                          child: model.isChecked
-                              ? Icon(
-                                  Icons.check_circle,
-                                  size: 20,
-                                )
-                              : Icon(
-                                  Icons.radio_button_unchecked,
-                                  size: 20,
-                                )),
-                    ),
                     Container(
                       margin: EdgeInsets.only(left: 19, right: 17),
                       height: 40,
