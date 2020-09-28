@@ -91,7 +91,7 @@ class _PosProductDetailScreenState extends State<PosProductDetailScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    padding: EdgeInsets.symmetric(vertical: 30),
+                    padding: EdgeInsets.symmetric(vertical: 10),
                     height: imageHeight,
                     alignment: Alignment.center,
                     child: CachedNetworkImage(
@@ -131,6 +131,9 @@ class _PosProductDetailScreenState extends State<PosProductDetailScreen> {
                       ),
                     ),
                   ),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Text(
                     '${formatter.format(product.price)} ${Measurements.currency(product.currency)}',
                     style: TextStyle(
@@ -142,11 +145,14 @@ class _PosProductDetailScreenState extends State<PosProductDetailScreen> {
                     height: 10,
                   ),
                   Flexible(
-                    child: Text(
-                      '${product.description}}',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Text(
+                        product.description,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                     ),
                   ),

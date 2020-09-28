@@ -624,14 +624,22 @@ class GetQRImage extends PosScreenEvent {
 }
 
 class ProductsFilterEvent extends PosScreenEvent {
-  final List<String> subCategories;
-
+  final List<String> categories;
+  final bool orderDirection;
+  final String searchText;
+  
   ProductsFilterEvent({
-    this.subCategories,
+    this.orderDirection,
+    this.searchText,
+    this.categories,
   });
 
   @override
   List<Object> get props => [
-    this.subCategories,
+    this.categories,
+    this.orderDirection,
+    this.searchText,
   ];
 }
+
+class ResetProductsFilterEvent extends PosScreenEvent{}

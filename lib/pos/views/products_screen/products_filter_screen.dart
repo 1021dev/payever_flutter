@@ -103,8 +103,7 @@ class _ProductsFilterScreenState extends State<ProductsFilterScreen> {
                     // Navigator.pop(context);
                     setState(() {
                       subCategories = [];
-                      widget.screenBloc.add(ProductsFilterEvent(
-                          subCategories: subCategories));
+                      widget.screenBloc.add(ResetProductsFilterEvent());
                       Navigator.pop(context);
                     });
                   },
@@ -126,7 +125,7 @@ class _ProductsFilterScreenState extends State<ProductsFilterScreen> {
               child: MaterialButton(
                 onPressed: () {
                   widget.screenBloc.add(ProductsFilterEvent(
-                      subCategories: subCategories));
+                      categories: subCategories));
                   Navigator.pop(context);
                 },
                 shape: RoundedRectangleBorder(
@@ -149,6 +148,8 @@ class _ProductsFilterScreenState extends State<ProductsFilterScreen> {
                     onTap: () {
                       setState(() {
                         subCategories = [];
+                        widget.screenBloc.add(ResetProductsFilterEvent());
+                        Navigator.pop(context);
                       });
                     },
                     child: Container(

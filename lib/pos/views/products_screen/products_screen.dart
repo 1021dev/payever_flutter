@@ -32,7 +32,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   bool _isPortrait;
   bool _isTablet;
   bool isGridMode = true;
-
+  TextEditingController searchController;
   @override
   void initState() {
     super.initState();
@@ -104,220 +104,148 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   Widget _toolBar(PosScreenState state) {
-    int selectedCount = 0;
-    // if (state.productLists.length > 0) {
-    //   selectedCount = state.productLists
-    //       .where((element) => element.isChecked)
-    //       .toList()
-    //       .length;
-    // }
-    return Stack(
-      children: <Widget>[
-        Container(
-          height: 50,
-          color: overlaySecondAppBar(),
-          child: Row(
+    searchController = TextEditingController(text: state.searchText);
+    return Container(
+      height: 50,
+      color: overlaySecondAppBar(),
+      child: Row(
+        children: <Widget>[
+          Row(
             children: <Widget>[
-              Flexible(
-                  flex: 1,
-                  child: Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(left: 8),
-                      ),
-                      _filterButton(),
-                      Padding(
-                        padding: EdgeInsets.only(left: 8, right: 12),
-                        child: Container(
-                          width: 1,
-                          color: Color(0xFF888888),
-                          height: 24,
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {},
-                        child: Text(
-                          'Amount',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 8, right: 12),
-                        child: Container(
-                          width: 1,
-                          color: Color(0xFF888888),
-                          height: 24,
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {},
-                        child: Text(
-                          'QR',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ],
-                  )),
-              Flexible(
-                  flex: 1,
-                  child: Container(
-                    alignment: Alignment.centerRight,
-                    padding: EdgeInsets.only(right: 8),
-                    child: InkWell(
-                      onTap: () {
-                        // showCupertinoModalPopup(
-                        //   context: context,
-                        //   builder: (BuildContext context) {
-                        //     return ProductSortContentView(
-                        //       selectedIndex: state.sortType,
-                        //       onSelected: (val) {
-                        //         Navigator.pop(context);
-                        //         screenBloc.add(
-                        //             UpdateProductSortType(sortType: val));
-                        //       },
-                        //     );
-                        //   },
-                        // );
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(8),
-                        child: SvgPicture.asset(
-                          'assets/images/sort-by-button.svg',
-                          width: 20,
-                        ),
-                      ),
-                    ),
-                  )),
-              Container(
-                alignment: Alignment.centerRight,
-                child: PopupMenuButton<MenuItem>(
-                  icon: SvgPicture.asset(
-                    isGridMode
-                        ? 'assets/images/grid.svg'
-                        : 'assets/images/list.svg',
+              Padding(
+                padding: EdgeInsets.only(left: 8),
+              ),
+              _filterButton(),
+              Padding(
+                padding: EdgeInsets.only(left: 8, right: 12),
+                child: Container(
+                  width: 1,
+                  color: Color(0xFF888888),
+                  height: 24,
+                ),
+              ),
+              InkWell(
+                onTap: () {},
+                child: Text(
+                  'Amount',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.white,
                   ),
-                  offset: Offset(0, 100),
-                  onSelected: (MenuItem item) => item.onTap(),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 8, right: 12),
+                child: Container(
+                  width: 1,
+                  color: Color(0xFF888888),
+                  height: 24,
+                ),
+              ),
+              InkWell(
+                onTap: () {},
+                child: Text(
+                  'QR',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.white,
                   ),
-                  color: overlayFilterViewBackground(),
-                  itemBuilder: (BuildContext context) {
-                    return gridListPopUpActions(
-                      (grid) => {
-                        setState(() {
-                          isGridMode = grid;
-                        })
-                      },
-                    ).map((MenuItem item) {
-                      return PopupMenuItem<MenuItem>(
-                        value: item,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                item.title,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w300,
-                                ),
-                              ),
-                            ),
-                            item.icon,
-                          ],
-                        ),
-                      );
-                    }).toList();
-                  },
                 ),
               ),
             ],
           ),
-        ),
-        selectedCount > 0
-            ? Container(
-                height: 50,
-                padding: EdgeInsets.only(
-                  left: 16,
-                  right: 16,
-                  top: 4,
-                  bottom: 4,
+          Expanded(
+            child: Container(
+              height: 35,
+              margin: EdgeInsets.symmetric(horizontal: 10),
+              padding: EdgeInsets.symmetric(horizontal: 4),
+              decoration: BoxDecoration(
+                color: overlayBackground(),
+                borderRadius: BorderRadius.all(Radius.circular(4)),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.search, size: 20,),
+                  Expanded(
+                    child: TextFormField(
+                      style: textFieldStyle,
+                      keyboardType: TextInputType.text,
+                      decoration: InputDecoration(
+                        hintText: 'Search products',
+                        border: InputBorder.none,
+                      ),
+                      controller: searchController,
+                      onChanged: (String value) {
+                        if (value.length > 2) {
+                          widget.posScreenBloc.add(ProductsFilterEvent(searchText: value));
+                        }
+                      },
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+          Container(
+            alignment: Alignment.centerRight,
+            child: InkWell(
+              onTap: () {
+                widget.posScreenBloc.add(ProductsFilterEvent(
+                    orderDirection: !state.orderDirection));
+              },
+              child: Container(
+                child: SvgPicture.asset(
+                  'assets/images/sort-by-button.svg',
+                  width: 20,
                 ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Color(0xFF888888),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(left: 12),
-                          ),
-                          InkWell(
-                            child: SvgPicture.asset(
-                                'assets/images/xsinacircle.svg'),
-                            onTap: () {
-                              // screenBloc.add(state.isProductMode
-                              //     ? UnSelectProductsEvent()
-                              //     : UnSelectCollectionsEvent());
-                            },
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(left: 8),
-                          ),
-                          Text(
-                            '$selectedCount ITEM${selectedCount > 1 ? 'S' : ''} SELECTED',
+              ),
+            ),
+          ),
+          Container(
+            alignment: Alignment.centerRight,
+            child: PopupMenuButton<MenuItem>(
+              icon: SvgPicture.asset(
+                isGridMode
+                    ? 'assets/images/grid.svg'
+                    : 'assets/images/list.svg',
+              ),
+              offset: Offset(0, 100),
+              onSelected: (MenuItem item) => item.onTap(),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              color: overlayFilterViewBackground(),
+              itemBuilder: (BuildContext context) {
+                return gridListPopUpActions(
+                  (grid) => {
+                    setState(() {
+                      isGridMode = grid;
+                    })
+                  },
+                ).map((MenuItem item) {
+                  return PopupMenuItem<MenuItem>(
+                    value: item,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            item.title,
                             style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w300,
                             ),
                           ),
-                        ],
-                      ),
-                      PopupMenuButton<OverflowMenuItem>(
-                        icon: Icon(Icons.more_horiz),
-                        offset: Offset(0, 100),
-                        onSelected: (OverflowMenuItem item) => item.onTap(),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
                         ),
-                        color: Colors.black87,
-                        itemBuilder: (BuildContext context) {
-                          return productsPopUpActions(context, state)
-                              .map((OverflowMenuItem item) {
-                            return PopupMenuItem<OverflowMenuItem>(
-                              value: item,
-                              child: Text(
-                                item.title,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w300,
-                                ),
-                              ),
-                            );
-                          }).toList();
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              )
-            : Container(
-                width: 0,
-                height: 0,
-              ),
-      ],
+                        item.icon,
+                      ],
+                    ),
+                  );
+                }).toList();
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 

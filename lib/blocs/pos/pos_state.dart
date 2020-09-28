@@ -28,7 +28,10 @@ class PosScreenState {
   final dynamic fieldSetData;
   final dynamic qrImage;
   final List<ProductFilterOption> filterOptions;
-  final List<String>subCategories;
+  // Product Filter
+  final List<String>categories;
+  final bool orderDirection;
+  final String searchText;
 
   PosScreenState({
     this.isLoading = false,
@@ -56,7 +59,9 @@ class PosScreenState {
     this.qrImage,
     this.products,
     this.filterOptions = const [],
-    this.subCategories = const [],
+    this.categories = const [],
+    this.orderDirection = true,
+    this.searchText = '',
   });
 
   List<Object> get props => [
@@ -85,7 +90,9 @@ class PosScreenState {
     this.qrImage,
     this.products,
     this.filterOptions,
-    this.subCategories,
+    this.categories,
+    this.orderDirection,
+    this.searchText,
   ];
 
   PosScreenState copyWith({
@@ -116,6 +123,8 @@ class PosScreenState {
     dynamic qrImage,
     String selectedCategory,
     List<String>subCategories,
+    bool orderDirection,
+    String searchText,
   }) {
     return PosScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -143,7 +152,9 @@ class PosScreenState {
       qrImage: qrImage ?? this.qrImage,
       products: products ?? this.products,
       filterOptions: filterOptions ?? this.filterOptions,
-      subCategories: subCategories ?? this.subCategories,
+      categories: subCategories ?? this.categories,
+      orderDirection: orderDirection ?? this.orderDirection,
+      searchText: searchText ?? this.searchText,
     );
   }
 }
