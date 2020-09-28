@@ -363,13 +363,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       productsItems.add(PosProductGridItem(
         product,
         onTap: (ProductsModel model) {
-          Navigator.push(
-            context,
-            PageTransition(
-              child: PosProductDetailScreen(),
-              type: PageTransitionType.fade,
-            ),
-          );
+          navigateProductDetail(model);
         },
       ));
     });
@@ -458,7 +452,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   '${Measurements.currency(model.currency)}${model.price}'),
               IconButton(
                 icon: Icon(Icons.navigate_next),
-                onPressed: () {},
+                onPressed: () {
+                  navigateProductDetail(model);
+                },
               ),
             ],
           ),
@@ -698,5 +694,18 @@ class _ProductsScreenState extends State<ProductsScreen> {
         },
       ),
     ];
+  }
+
+  void navigateProductDetail(ProductsModel model) {
+    Navigator.push(
+      context,
+      PageTransition(
+        child: PosProductDetailScreen(
+          posScreenBloc: widget.posScreenBloc,
+          productsModel: model,
+        ),
+        type: PageTransitionType.fade,
+      ),
+    );
   }
 }

@@ -26,8 +26,11 @@ class _PosProductDetailScreenState extends State<PosProductDetailScreen> {
   final ProductsModel product;
   bool _isPortrait;
   bool _isTablet;
+
   _PosProductDetailScreenState(this.product);
+
   double imageHeight = 0;
+
   @override
   void initState() {
     super.initState();
@@ -40,7 +43,6 @@ class _PosProductDetailScreenState extends State<PosProductDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
     Measurements.height = (_isPortrait
         ? MediaQuery.of(context).size.height
@@ -56,7 +58,11 @@ class _PosProductDetailScreenState extends State<PosProductDetailScreen> {
 
     return BlocListener(
       bloc: widget.posScreenBloc,
-      listener: (BuildContext context, PosScreenState state) async {},
+      listener: (BuildContext context, PosScreenState state) async {
+        if (state is PosScreenSuccess) {
+          Navigator.pop(context);
+        }
+      },
       child: BlocBuilder<PosScreenBloc, PosScreenState>(
         bloc: widget.posScreenBloc,
         builder: (BuildContext context, PosScreenState state) {
@@ -78,85 +84,106 @@ class _PosProductDetailScreenState extends State<PosProductDetailScreen> {
 
   Widget _getBody(PosScreenState state) {
     return Center(
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-              height: imageHeight,
-              alignment: Alignment.center,
-              child: CachedNetworkImage(
-                imageUrl:
-                    '${Env.storage}/products/${product.images.isEmpty ? null : product.images.first}',
-                imageBuilder: (context, imageProvider) => Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    image: DecorationImage(
-                      image: imageProvider,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
-                color: Colors.white,
-                placeholder: (context, url) => Container(
-                  child: Center(
-                    child: Container(
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
+      child: state.isLoading
+          ? CircularProgressIndicator()
+          : SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(vertical: 30),
+                    height: imageHeight,
+                    alignment: Alignment.center,
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          '${Env.storage}/products/${product.images.isEmpty ? null : product.images.first}',
+                      imageBuilder: (context, imageProvider) => Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
+                      color: Colors.white,
+                      placeholder: (context, url) => Container(
+                        child: Center(
+                          child: Container(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                            ),
+                          ),
+                        ),
+                      ),
+                      errorWidget: (context, url, error) => Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                        ),
+                        child: Center(
+                          child: SvgPicture.asset(
+                            'assets/images/no_image.svg',
+                            color: Colors.black54,
+                            width: 150,
+                            height: 150,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                errorWidget: (context, url, error) => Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                  ),
-                  child: Center(
-                    child: SvgPicture.asset(
-                      'assets/images/no_image.svg',
-                      color: Colors.black54,
-                      width: 150,
-                      height: 150,
+                  Text(
+                    '${formatter.format(product.price)} ${Measurements.currency(product.currency)}',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Flexible(
+                    child: Text(
+                      '${product.description}}',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Map<String, dynamic> card = {
+                        'id': product.id,
+                        'name': product.title,
+                        'quantity': 1,
+                        'uuid': product.id,
+                      };
+                      Map<String, dynamic> body = {
+                        'cart': [card]
+                      };
+                      widget.posScreenBloc.add(CardProductEvent(body: body));
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      height: 40,
+                      alignment: Alignment.center,
+                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(4),
+                        color: overlayBackground(),
+                      ),
+                      child: Text('In the Cart'),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 40,
+                  )
+                ],
               ),
             ),
-            Text(
-              '${formatter.format(product.price)} ${Measurements.currency(product.currency)}',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            SizedBox(height: 10,),
-            Flexible(
-              child: Text(
-                '${product.description}}',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ),
-            SizedBox(height: 20,),
-            InkWell(
-              onTap: () {
-
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4),
-                  color: overlayBackground(),
-                ),
-                child: Text('In the Cart'),
-              ),
-            ),
-            SizedBox(height: 40,)
-          ],
-        ),
-      ),
     );
   }
 }

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:payever/apis/api_service.dart';
+import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/pos/models/pos.dart';
 import 'package:payever/commons/utils/common_utils.dart';
@@ -33,6 +34,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
           return;
         }
       }
+      yield state.copyWith(businessId: event.currentBusiness.id);
       yield* fetchPos(event.currentBusiness.id);
     } else if (event is GetPosIntegrationsEvent) {
       yield* getIntegrations(event.businessId);
@@ -116,6 +118,8 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       yield state.copyWith(settingsModel: event.settingsModel);
     } else if (event is ProductsFilterEvent) {
       yield* filterProducts(event.subCategories);
+    } else if (event is CardProductEvent) {
+      yield* cardProduct(event.body);
     }
   }
 
@@ -760,4 +764,51 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
 
   }
 
+  Stream<PosScreenState> cardProduct(Map<String, dynamic> body) async* {
+    yield state.copyWith(isLoading: true);
+    List<ChannelSet> channelSets = dashboardScreenBloc.state.channelSets;
+    if (channelSets == null && channelSets.isEmpty) {
+      yield state.copyWith(isLoading: false);
+      return;
+    }
+    ChannelSet channelSet = channelSets.firstWhere((element) =>
+    (element.checkout == dashboardScreenBloc.state.defaultCheckout.id &&
+        element.type == 'link'));
+
+    if (channelSet == null) {
+      yield state.copyWith(isLoading: false);
+      return;
+    }
+
+    String token = GlobalUtils.activeToken.accessToken;
+    ChannelSetFlow channelSetFlow;
+    String langCode = getDefaultLanguage();
+
+    dynamic checkoutFlowResponse = await api.getCheckoutFlow(
+        token, langCode, channelSet.id);
+    if (checkoutFlowResponse is Map) {
+      channelSetFlow = ChannelSetFlow.fromJson(checkoutFlowResponse);
+    } else {
+      yield state.copyWith(isLoading: false);
+      return;
+    }
+
+    dynamic response = await api.patchCheckoutFlowOrder(
+        GlobalUtils.activeToken.accessToken, channelSetFlow.id, langCode, body);
+
+    if (response is Map) {
+      yield PosScreenSuccess();
+    }
+    yield state.copyWith(isLoading: false);
+  }
+
+  String getDefaultLanguage() {
+    Lang defaultLang;
+    List<Lang> langList = dashboardScreenBloc.state.defaultCheckout.settings.languages.where((
+        element) => element.active).toList();
+    if (langList.length > 0) {
+      defaultLang = langList.first;
+    }
+    return defaultLang != null ? defaultLang.code : 'en';
+  }
 }

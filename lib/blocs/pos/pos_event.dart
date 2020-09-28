@@ -144,6 +144,18 @@ class InstallTwilioEvent extends PosScreenEvent {
   ];
 }
 
+class CardProductEvent extends PosScreenEvent {
+  final Map body;
+
+  CardProductEvent({this.body});
+
+  @override
+  List<Object> get props => [
+    this.body,
+  ];
+}
+
+
 class UninstallTwilioEvent extends PosScreenEvent {
   final String businessId;
 

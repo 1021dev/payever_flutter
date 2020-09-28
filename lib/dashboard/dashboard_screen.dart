@@ -673,7 +673,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               if (channelSets == null && channelSets.isEmpty) {
                 return;
               }
-              ChannelSet channelSet = state.channelSets.firstWhere((element) =>
+              ChannelSet channelSet = channelSets.firstWhere((element) =>
               (element.checkout == state.defaultCheckout.id && element.type == 'link'));
               if (channelSet == null) {
                 return;
