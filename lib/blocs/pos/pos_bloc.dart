@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
@@ -92,7 +93,8 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     } else if (event is SaveQRCodeSettings) {
       yield* saveQRCodeSettings(event.businessId, event.settings);
     } else if (event is GenerateQRCodeEvent) {
-      yield* postGenerateQRCode(event.businessId, event.businessName, event.avatarUrl, event.id, event.url);
+      yield* postGenerateQRCode(event.businessId, event.businessName,
+          event.avatarUrl, event.id, event.url);
     } else if (event is GetTwilioSettings) {
       yield* getTwilioSettings(event.businessId);
     } else if (event is AddPhoneNumberSettings) {
@@ -125,6 +127,8 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       yield* filterProducts();
     } else if (event is CardProductEvent) {
       yield* cardProduct(event.body);
+    } else if (event is RestoreQrCodeEvent) {
+      yield* getPrefilledLink();
     }
   }
 
@@ -145,7 +149,6 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
         channelSets.add(ChannelSet.fromJson(channelSet));
       });
     }
-
     terminals.forEach((terminal) async {
       channelSets.forEach((channelSet) async {
         if (terminal.channelSet == channelSet.id) {
@@ -172,11 +175,26 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     });
 
     Terminal activeTerminal = terminals.where((element) => element.active).toList().first;
+
     if (state.activeTerminal == null) {
       yield state.copyWith(activeTerminal: activeTerminal, terminals: terminals, terminalCopied: false);
     } else {
       yield state.copyWith(terminals: terminals, terminalCopied: false);
     }
+    // Get Channel Set
+    if (activeTerminal != null) {
+      ChannelSetFlow channelSetFlow;
+      String langCode = getDefaultLanguage();
+      dynamic checkoutFlowResponse = await api.getCheckoutFlow(
+          token, langCode, activeTerminal.channelSet);
+      if (checkoutFlowResponse is Map) {
+        channelSetFlow = ChannelSetFlow.fromJson(checkoutFlowResponse);
+        print('channelSetFlow id:' + channelSetFlow.id);
+      }
+
+      yield state.copyWith(channelSetFlow: channelSetFlow);
+    }
+    // Get Product
     Map<String, dynamic> body = {
       'operationName': null,
       'variables': {},
@@ -472,6 +490,60 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     add(GetQRImage(url: imageData));
   }
 
+  Stream<PosScreenState> getPrefilledLink() async* {
+    if (state.channelSetFlow == null)
+      return;
+    yield state.copyWith(isLoading: true);
+    Map<String, dynamic> data = {
+      'flow': state.channelSetFlow.toJson(),
+      'force_no_header': false,
+      'force_no_order': true,
+      'generate_payment_code': true,
+      'source': 'qr'
+    };
+
+    dynamic qrcodelinkResponse = await api.getChannelSetQRcode(GlobalUtils.activeToken.accessToken, data);
+    if (qrcodelinkResponse is Map) {
+      String id = qrcodelinkResponse['id'];
+      String prefilledLink = '${Env.wrapper}/pay/restore-flow-from-code/$id';
+      print('prefilled link: $prefilledLink');
+      dynamic response = await api.postGenerateTerminalQRCode(
+        GlobalUtils.activeToken.accessToken,
+        state.businessId,
+        dashboardScreenBloc.state.activeBusiness.name,
+        '$imageBase${dashboardScreenBloc.state.activeTerminal.logo}',
+        dashboardScreenBloc.state.activeTerminal.id,
+        prefilledLink,
+      );
+
+      String imageData;
+      if (response is Map) {
+        dynamic form = response['form'];
+        String contentType =
+        form['contentType'] != null ? form['contentType'] : '';
+        dynamic content = form['content'] != null ? form['content'] : null;
+        if (content != null) {
+          List<dynamic> contentData = content[contentType];
+          for (int i = 0; i < contentData.length; i++) {
+            dynamic data = content[contentType][i];
+            if (data['data'] != null) {
+              List<dynamic> list = data['data'];
+              for (dynamic w in list) {
+                if (w[0]['type'] == 'image') {
+                  imageData = w[0]['value'];
+                }
+              }
+            }
+          }
+        }
+      }
+      yield state.copyWith(qrForm: response, isLoading: false);
+      add(GetQRImage(url: imageData));
+    } else {
+      yield state.copyWith(isLoadingQrcode: false);
+    }
+  }
+
   Stream<PosScreenState> postGenerateQRSettings(
       String businessId,
       String businessName,
@@ -734,71 +806,20 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
   }
 
   Stream<PosScreenState> getBlob(dynamic w, String url) async* {
-    var headers = {
-      HttpHeaders.authorizationHeader: 'Bearer ${GlobalUtils.activeToken.accessToken}',
-      HttpHeaders.contentTypeHeader: 'application/json',
-      HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-    };
-    if (url != null) {
-      print('url => $url');
-      http.Response response = await http.get(
-        url,
-        headers:  headers,
-      );
-      yield state.copyWith(qrImage: response.bodyBytes);
-    } else {
-      Map<String, String> queryParameters = {};
-      if (w is Map) {
-        w.forEach((key, value) {
-          if (value != null) {
-            queryParameters[key] = value.toString();
-          }
-        });
-        print(queryParameters);
-      }
-      var uri =
-      Uri.https(Env.qr.replaceAll('https://', ''), '/api/download/png', queryParameters);
-
-      http.Response response = await http.get(
-        uri,
-        headers:  headers,
-      );
+    http.Response  response =  await api.getQrcode(GlobalUtils.activeToken.accessToken, url, w);
+    if (response is Response) {
+      print('qrcode url: $url');
       yield state.copyWith(qrImage: response.bodyBytes);
     }
-
   }
 
   Stream<PosScreenState> cardProduct(Map<String, dynamic> body) async* {
     yield state.copyWith(isLoading: true);
-    List<ChannelSet> channelSets = dashboardScreenBloc.state.channelSets;
-    if (channelSets == null && channelSets.isEmpty) {
-      yield state.copyWith(isLoading: false);
-      return;
-    }
-    ChannelSet channelSet = channelSets.firstWhere((element) =>
-    (element.checkout == dashboardScreenBloc.state.defaultCheckout.id &&
-        element.type == 'link'));
-
-    if (channelSet == null) {
-      yield state.copyWith(isLoading: false);
-      return;
-    }
-
     String token = GlobalUtils.activeToken.accessToken;
-    ChannelSetFlow channelSetFlow;
     String langCode = getDefaultLanguage();
 
-    dynamic checkoutFlowResponse = await api.getCheckoutFlow(
-        token, langCode, channelSet.id);
-    if (checkoutFlowResponse is Map) {
-      channelSetFlow = ChannelSetFlow.fromJson(checkoutFlowResponse);
-    } else {
-      yield state.copyWith(isLoading: false);
-      return;
-    }
-
     dynamic response = await api.patchCheckoutFlowOrder(
-        GlobalUtils.activeToken.accessToken, channelSetFlow.id, langCode, body);
+        token, state.channelSetFlow.id, langCode, body);
 
     if (response is Map) {
       yield PosScreenSuccess();

@@ -8,6 +8,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/env.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:http/http.dart' as http;
 
 class ApiService {
   static final envUrl = GlobalUtils.COMMERCE_OS_URL + '/env.json';
@@ -2540,7 +2541,7 @@ class ApiService {
     try {
       print('$TAG - checkoutFlowStorage()');
       dynamic response = await _client.getTypeless(
-          'https://media.payever.org/api/storage/flow_$channelSetId',
+          '$storageUrl/flow_$channelSetId',
           headers: _getHeaders(token),
       );
       return response;
@@ -3279,6 +3280,41 @@ class ApiService {
       return response;
     } catch (e) {
       return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getQrcode(String token, String link, dynamic data) async {
+    if (link != null) {
+      try {
+        print('$TAG - updateLegalDocument() ');
+        http.Response response = await http.get(
+          '$link',
+          headers: _getHeaders(token),
+        );
+        return response;
+      } catch (e) {
+        return Future.error(e);
+      }
+    } else {
+      try {
+        Map<String, String> queryParameters = {};
+        if (data is Map) {
+          data.forEach((key, value) {
+            if (value != null) {
+              queryParameters[key] = value.toString();
+            }
+          });
+          print(queryParameters);
+        }
+        var uri = Uri.https(Env.qr.replaceAll('https://', ''), '/api/download/png', queryParameters);
+        http.Response response = await http.get(
+          uri,
+          headers: _getHeaders(token),
+        );
+        return response;
+      } catch (e) {
+        return Future.error(e);
+      }
     }
   }
 

@@ -1,13 +1,16 @@
 import 'package:flutter/cupertino.dart';
+import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/products/models/models.dart';
 
 class PosScreenState {
   final bool isLoading;
   final bool searching;
+  final bool isLoadingQrcode;
   final String businessId;
   final List<Terminal> terminals;
   final Terminal activeTerminal;
+  final ChannelSetFlow channelSetFlow;
   final bool businessCopied;
   final bool terminalCopied;
   final List<ProductsModel> products;
@@ -36,6 +39,8 @@ class PosScreenState {
   PosScreenState({
     this.isLoading = false,
     this.isUpdating = false,
+    this.isLoadingQrcode = false,
+    this.channelSetFlow,
     this.searching = false,
     this.terminals = const [],
     this.activeTerminal,
@@ -67,8 +72,10 @@ class PosScreenState {
   List<Object> get props => [
     this.isLoading,
     this.isUpdating,
+    this.isLoadingQrcode,
     this.searching,
     this.terminals,
+    this.channelSetFlow,
     this.businessId,
     this.activeTerminal,
     this.businessCopied,
@@ -98,6 +105,8 @@ class PosScreenState {
   PosScreenState copyWith({
     bool isLoading,
     bool isUpdating,
+    bool isLoadingQrcode,
+    ChannelSetFlow channelSetFlow,
     bool searching,
     String businessId,
     List<Terminal> terminals,
@@ -129,6 +138,8 @@ class PosScreenState {
     return PosScreenState(
       isLoading: isLoading ?? this.isLoading,
       isUpdating: isUpdating ?? this.isUpdating,
+      isLoadingQrcode: isLoadingQrcode ?? this.isLoadingQrcode,
+      channelSetFlow: channelSetFlow ?? this.channelSetFlow,
       searching: searching ?? this.searching,
       terminals: terminals ?? this.terminals,
       businessId: businessId ?? this.businessId,

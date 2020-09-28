@@ -12,9 +12,6 @@ import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/theme.dart';
 
-bool _isPortrait;
-bool _isTablet;
-
 List<String> dropdownItems = [
   'Verify by code',
   'Verify by ID',
@@ -24,11 +21,13 @@ class PosQRAppScreen extends StatefulWidget {
   final PosScreenBloc screenBloc;
   final String businessId;
   final String businessName;
+  final bool fromProductsScreen;
 
   PosQRAppScreen({
     this.screenBloc,
     this.businessId,
     this.businessName,
+    this.fromProductsScreen = false,
   });
 
   @override
@@ -45,15 +44,20 @@ class _PosQRAppScreenState extends State<PosQRAppScreen> {
 
   @override
   void initState() {
-    widget.screenBloc.add(
-      GenerateQRCodeEvent(
-        businessId: widget.businessId,
-        businessName: widget.businessName,
-        avatarUrl: '$imageBase${widget.screenBloc.state.activeTerminal.logo}',
-        id: widget.screenBloc.state.activeTerminal.id,
-        url: '${Env.checkout}/pay/create-flow-from-qr/channel-set-id/${widget.screenBloc.state.activeTerminal.channelSet}',
-      ),
-    );
+    if (widget.fromProductsScreen) {
+      widget.screenBloc.add(RestoreQrCodeEvent());
+    } else {
+      widget.screenBloc.add(
+        GenerateQRCodeEvent(
+          businessId: widget.businessId,
+          businessName: widget.businessName,
+          avatarUrl: '$imageBase${widget.screenBloc.state.activeTerminal.logo}',
+          id: widget.screenBloc.state.activeTerminal.id,
+          url: '${Env.checkout}/pay/create-flow-from-qr/channel-set-id/${widget.screenBloc.state.activeTerminal.channelSet}',
+        ),
+      );
+    }
+
     super.initState();
   }
 
@@ -64,14 +68,6 @@ class _PosQRAppScreenState extends State<PosQRAppScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
-    Measurements.height = (_isPortrait
-        ? MediaQuery.of(context).size.height
-        : MediaQuery.of(context).size.width);
-    Measurements.width = (_isPortrait
-        ? MediaQuery.of(context).size.width
-        : MediaQuery.of(context).size.height);
-    _isTablet = Measurements.width < 600 ? false : true;
 
     return BlocListener(
       bloc: widget.screenBloc,

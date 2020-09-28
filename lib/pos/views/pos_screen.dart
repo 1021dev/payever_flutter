@@ -532,7 +532,8 @@ class _PosScreenState extends State<PosScreen> {
                                             duration: Duration(milliseconds: 500),
                                           ),
                                         );
-                                      } else if (state.integrations[index].integration.name == 'qr') {
+                                      }
+                                      else if (state.integrations[index].integration.name == 'qr') {
                                         Navigator.push(
                                           context,
                                           PageTransition(
