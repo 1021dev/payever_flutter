@@ -167,7 +167,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
             width: 8,
           ),
           IconButton(
-              icon: Icon(Icons.filter_list),
+              icon: Icon(Icons.filter_list, color: Colors.white,),
               onPressed: () async {
                 await showGeneralDialog(
                   barrierColor: null,
@@ -190,21 +190,23 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
                   },
                 );
               }),
-          FlatButton(
-            onPressed: () {},
+          InkWell(
+            onTap: () {},
             child: Text(
               'Reset',
               style: TextStyle(
                 fontSize: 14,
+                color: Colors.white
               ),
             ),
           ),
+          SizedBox(width: 12,),
           Expanded(
             child: Container(
-              height: 40,
+              height: 35,
               decoration: BoxDecoration(
                 color: overlayBackground(),
-                borderRadius: BorderRadius.all(Radius.circular(8)),
+                borderRadius: BorderRadius.all(Radius.circular(4)),
               ),
               child: Row(
                 children: [
@@ -226,7 +228,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
           PopupMenuButton<OverflowMenuItem>(
             icon: SvgPicture.asset(isGridMode
                 ? 'assets/images/grid.svg'
-                : 'assets/images/list.svg', color: iconColor(),),
+                : 'assets/images/list.svg',),
             offset: Offset(0, 100),
             onSelected: (OverflowMenuItem item) => item.onTap(),
             shape: RoundedRectangleBorder(
