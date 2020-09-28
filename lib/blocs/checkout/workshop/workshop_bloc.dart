@@ -376,7 +376,6 @@ class WorkshopScreenBloc
           updatePayflowIndex: -1,
         );
         checkoutScreenBloc.token = token;
-        // checkoutScreenBloc.add(GetChannelSetFlowEvent());
       }
     } catch (error){
       print(onError.toString());

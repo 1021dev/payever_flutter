@@ -35,6 +35,7 @@ class PosTopButton extends StatelessWidget {
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
+            textAlign: TextAlign.center,
           ),
         ): Container(
           height: 50,

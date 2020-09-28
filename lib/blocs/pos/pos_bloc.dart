@@ -174,7 +174,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       });
     });
 
-    Terminal activeTerminal = terminals.where((element) => element.active).toList().first;
+    Terminal activeTerminal = terminals.firstWhere((element) => element.active);
 
     if (state.activeTerminal == null) {
       yield state.copyWith(activeTerminal: activeTerminal, terminals: terminals, terminalCopied: false);
@@ -494,12 +494,14 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     if (state.channelSetFlow == null)
       return;
     yield state.copyWith(isLoading: true);
+    Map<String, dynamic>flowBody = state.channelSetFlow.toJson();
+    flowBody.remove('amount');
     Map<String, dynamic> data = {
-      'flow': state.channelSetFlow.toJson(),
+      'flow': flowBody,
       'force_no_header': false,
       'force_no_order': true,
       'generate_payment_code': true,
-      'source': 'qr'
+      'source': 'qr',
     };
 
     dynamic qrcodelinkResponse = await api.getChannelSetQRcode(GlobalUtils.activeToken.accessToken, data);
