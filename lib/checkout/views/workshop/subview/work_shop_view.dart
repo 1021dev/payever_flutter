@@ -31,6 +31,7 @@ class WorkshopView extends StatefulWidget {
   final String channelSetId;
   final Checkout defaultCheckout;
   final ChannelSetFlow channelSetFlow;
+  final Function onTapClose;
 
   const WorkshopView(
       {this.workshopScreenBloc,
@@ -39,7 +40,8 @@ class WorkshopView extends StatefulWidget {
       this.terminal,
       this.channelSetId,
       this.defaultCheckout,
-      this.channelSetFlow});
+      this.channelSetFlow,
+      this.onTapClose});
 
   @override
   _WorkshopViewState createState() => _WorkshopViewState();
@@ -308,6 +310,33 @@ class _WorkshopViewState extends State<WorkshopView> {
                     ),
                   )
                       : Container(),
+                  Visibility(
+                    visible: widget.onTapClose != null,
+                    child: MaterialButton(
+                      child: Container(
+                        width: 60,
+                        height: 32,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(color: Colors.grey),
+                        ),
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                      onPressed: () {
+                        widget.onTapClose();
+                      },
+                      height: 32,
+                      minWidth: 0,
+                      padding: EdgeInsets.only(left: 4, right: 4),
+                    ),
+                  )
                 ],
               ),
             ),

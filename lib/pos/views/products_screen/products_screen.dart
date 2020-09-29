@@ -99,6 +99,11 @@ class _ProductsScreenState extends State<ProductsScreen> {
                       channelSetFlow: state.channelSetFlow,
                       channelSetId: state.activeTerminal.channelSet,
                       defaultCheckout: state.defaultCheckout,
+                      onTapClose: () {
+                        setState(() {
+                          orderStatus = false;
+                        });
+                      },
                     ),
                   ),
                 ],
@@ -241,7 +246,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
               InkWell(
                 onTap: () {
                   setState(() {
-                    orderStatus = !orderStatus;
+                    orderStatus = true;
                   });
                 },
                 child: Text(

@@ -49,48 +49,29 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
     if (!widget.enable) {
       return Container();
     }
-
-    if (paymentOptions == null || paymentOptions.isEmpty) {
-      return BlurEffectView(
-        borderRadius: BorderRadius.circular(4),
-        color: overlayColor(),
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey, width: 1),
-            borderRadius: BorderRadius.circular(4),
-          ),
-          padding: EdgeInsets.all(16),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(Icons.info_outline, color: Colors.red, size: 40,),
-              SizedBox(width: 20,),
-              Flexible(child: Text('Unfortunately no payment options available. It could be that the order amount is too low/high for the available payment options, or you entered an alternative shipping address (not allowed for some payment options).'))
-            ],
-          ),
-        ),
-      );
-    }
+    bool noPymentOption = paymentOptions == null || paymentOptions.isEmpty;
 
     String payBtnTitle, paymentMethod;
-    List<CheckoutPaymentOption>payments = paymentOptions.where((element) => element.id == paymentOptionId).toList();
     CheckoutPaymentOption paymentOption;
-    if (payments == null || payments.isEmpty) {
-      payBtnTitle = 'Continue';
-    } else {
-      paymentOption = payments.first;
-      paymentMethod = paymentOption.paymentMethod;
-      if (paymentMethod == null) {
+    if (!noPymentOption) {
+      List<CheckoutPaymentOption>payments = paymentOptions.where((element) => element.id == paymentOptionId).toList();
+      if (payments == null || payments.isEmpty) {
         payBtnTitle = 'Continue';
-      } else if (paymentMethod.contains('santander')) {
-        payBtnTitle =
-        'Buy now for ${Measurements.currency(channelSetFlow.currency)}${channelSetFlow.amount}';
-      } else if (paymentMethod == GlobalUtils.PAYMENT_CASH) {
-        payBtnTitle = 'Pay now';
-      } else if (paymentMethod == GlobalUtils.PAYMENT_INSTANT) {
-        payBtnTitle = 'Pay';
       } else {
-        payBtnTitle = 'Pay';
+        paymentOption = payments.first;
+        paymentMethod = paymentOption.paymentMethod;
+        if (paymentMethod == null) {
+          payBtnTitle = 'Continue';
+        } else if (paymentMethod.contains('santander')) {
+          payBtnTitle =
+          'Buy now for ${Measurements.currency(channelSetFlow.currency)}${channelSetFlow.amount}';
+        } else if (paymentMethod == GlobalUtils.PAYMENT_CASH) {
+          payBtnTitle = 'Pay now';
+        } else if (paymentMethod == GlobalUtils.PAYMENT_INSTANT) {
+          payBtnTitle = 'Pay';
+        } else {
+          payBtnTitle = 'Pay';
+        }
       }
     }
 
@@ -108,59 +89,65 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ListView.separated(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    CheckoutPaymentOption paymentOption = paymentOptions[index];
-                    return PaymentOptionCell(
-                      channelSetFlow: channelSetFlow,
-                      paymentOption: paymentOption,
-                      isSelected: paymentOptionId == paymentOption.id,
-                      onTapChangePayment: (id) => widget.onTapChangePayment(id),
-                      onChangeCredit: (Map cardJson){
-                        widget.onChangeCredit(cardJson);
+              noPaymentOptionError(noPymentOption),
+              noPymentOption ? Container() : Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListView.separated(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        CheckoutPaymentOption paymentOption = paymentOptions[index];
+                        return PaymentOptionCell(
+                          channelSetFlow: channelSetFlow,
+                          paymentOption: paymentOption,
+                          isSelected: paymentOptionId == paymentOption.id,
+                          onTapChangePayment: (id) => widget.onTapChangePayment(id),
+                          onChangeCredit: (Map cardJson){
+                            widget.onChangeCredit(cardJson);
+                          },
+                        );
                       },
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return Divider(
-                      thickness: 0,
-                      height: 10,
-                      color: Colors.transparent,
-                    );
-                  },
-                  itemCount: paymentOptions.length),
-              Container(
-                height: 50,
-                child: SizedBox.expand(
-                  child: MaterialButton(
-                    onPressed: () {
-                      if (paymentMethod == null || paymentMethod.isEmpty) return;
-                      Map<String, dynamic>body = _getPaymentRequestBody(paymentMethod, paymentOption);
-                      widget.onTapPay(body);
-                    },
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    color: overlayBackground(),
-                    child: widget.isUpdating
-                        ? Center(
+                      separatorBuilder: (context, index) {
+                        return Divider(
+                          thickness: 0,
+                          height: 10,
+                          color: Colors.transparent,
+                        );
+                      },
+                      itemCount: paymentOptions.length),
+                  Container(
+                    height: 50,
+                    child: SizedBox.expand(
+                      child: MaterialButton(
+                        onPressed: () {
+                          if (paymentMethod == null || paymentMethod.isEmpty) return;
+                          Map<String, dynamic>body = _getPaymentRequestBody(paymentMethod, paymentOption);
+                          widget.onTapPay(body);
+                        },
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        color: overlayBackground(),
+                        child: widget.isUpdating
+                            ? Center(
                             child: Container(
                                 width: 30,
                                 height: 30,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
                                 )))
-                        : Text(
-                            payBtnTitle ?? '',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
+                            : Text(
+                          payBtnTitle ?? '',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
                           ),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
               SizedBox(height: 20,)
             ],
@@ -169,6 +156,31 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
       ],
     );
 
+  }
+
+  Widget noPaymentOptionError(bool noPymentOption) {
+    return Visibility(
+      visible: noPymentOption,
+      child: BlurEffectView(
+        borderRadius: BorderRadius.circular(4),
+        color: overlayColor(),
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey, width: 1),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          padding: EdgeInsets.all(16),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(Icons.info_outline, color: Colors.red, size: 40,),
+              SizedBox(width: 20,),
+              Flexible(child: Text('Unfortunately no payment options available. It could be that the order amount is too low/high for the available payment options, or you entered an alternative shipping address (not allowed for some payment options).'))
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Map<String, dynamic> _getPaymentRequestBody(
