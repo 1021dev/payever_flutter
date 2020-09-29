@@ -347,6 +347,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             PageTransition(
               child: PosInitScreen(
                 dashboardScreenBloc: screenBloc,
+                defaultCheckout: state.defaultCheckout,
               ),
               type: PageTransitionType.fade,
               duration: Duration(milliseconds: 500),
@@ -566,6 +567,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               state,
               PosInitScreen(
                 dashboardScreenBloc: screenBloc,
+                defaultCheckout: state.defaultCheckout,
               ),
               isDuration: true
           );

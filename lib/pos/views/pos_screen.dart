@@ -10,6 +10,7 @@ import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
@@ -35,11 +36,13 @@ class PosInitScreen extends StatelessWidget {
   final List<Terminal> terminals;
   final Terminal activeTerminal;
   final DashboardScreenBloc dashboardScreenBloc;
+  final Checkout defaultCheckout;
 
   PosInitScreen({
     this.terminals,
     this.activeTerminal,
     this.dashboardScreenBloc,
+    this.defaultCheckout,
   });
 
   @override
@@ -51,6 +54,7 @@ class PosInitScreen extends StatelessWidget {
       globalStateModel: globalStateModel,
       terminals: terminals,
       activeTerminal: activeTerminal,
+      defaultCheckout: defaultCheckout,
     );
   }
 }
@@ -61,12 +65,14 @@ class PosScreen extends StatefulWidget {
   final List<Terminal> terminals;
   final Terminal activeTerminal;
   final DashboardScreenBloc dashboardScreenBloc;
+  final Checkout defaultCheckout;
 
   PosScreen({
     this.globalStateModel,
     this.terminals,
     this.activeTerminal,
     this.dashboardScreenBloc,
+    this.defaultCheckout,
   });
 
   @override
@@ -150,14 +156,12 @@ class _PosScreenState extends State<PosScreen> {
     super.initState();
     screenBloc = PosScreenBloc(
       dashboardScreenBloc: widget.dashboardScreenBloc,
-    );
-    screenBloc.add(
-        PosScreenInitEvent(
-          currentBusiness: widget.globalStateModel.currentBusiness,
-          terminals: widget.terminals,
-          activeTerminal: widget.activeTerminal,
-        )
-    );
+    )..add(PosScreenInitEvent(
+        currentBusiness: widget.globalStateModel.currentBusiness,
+        terminals: widget.terminals,
+        activeTerminal: widget.activeTerminal,
+        defaultCheckout: widget.defaultCheckout,
+      ));
   }
 
   @override

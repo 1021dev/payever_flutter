@@ -21,19 +21,22 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
   @override
   Stream<PosScreenState> mapEventToState(PosScreenEvent event) async* {
     if (event is PosScreenInitEvent) {
-      if (event.terminals != null) {
-        if (event.activeTerminal != null) {
-          state.copyWith(
-            isLoading: false,
-            terminals: event.terminals,
-            activeTerminal: event.activeTerminal,
-            businessId: event.currentBusiness.id
-          );
-          add(GetPosIntegrationsEvent(businessId: event.currentBusiness.id));
-          return;
-        }
-      }
-      yield state.copyWith(businessId: event.currentBusiness.id);
+      // if (event.terminals != null) {
+      //   if (event.activeTerminal != null) {
+      //     state.copyWith(
+      //       isLoading: false,
+      //       terminals: event.terminals,
+      //       activeTerminal: event.activeTerminal,
+      //       businessId: event.currentBusiness.id
+      //     );
+      //     add(GetPosIntegrationsEvent(businessId: event.currentBusiness.id));
+      //     return;
+      //   }
+      // }
+      yield state.copyWith(
+          businessId: event.currentBusiness.id,
+          activeBusiness: event.currentBusiness,
+          defaultCheckout: event.defaultCheckout);
       yield* fetchPos(event.currentBusiness.id);
     } else if (event is GetPosIntegrationsEvent) {
       yield* getIntegrations(event.businessId);

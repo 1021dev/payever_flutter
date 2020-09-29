@@ -9,6 +9,8 @@ class PosScreenState {
   final bool isLoadingQrcode;
   final String businessId;
   final List<Terminal> terminals;
+  final Business activeBusiness;
+  final Checkout defaultCheckout;
   final Terminal activeTerminal;
   final ChannelSetFlow channelSetFlow;
   final bool businessCopied;
@@ -40,6 +42,8 @@ class PosScreenState {
     this.isLoading = false,
     this.isUpdating = false,
     this.isLoadingQrcode = false,
+    this.activeBusiness,
+    this.defaultCheckout,
     this.channelSetFlow,
     this.searching = false,
     this.terminals = const [],
@@ -75,6 +79,8 @@ class PosScreenState {
     this.isLoadingQrcode,
     this.searching,
     this.terminals,
+    this.activeBusiness,
+    this.defaultCheckout,
     this.channelSetFlow,
     this.businessId,
     this.activeTerminal,
@@ -106,6 +112,8 @@ class PosScreenState {
     bool isLoading,
     bool isUpdating,
     bool isLoadingQrcode,
+    Business activeBusiness,
+    Checkout defaultCheckout,
     ChannelSetFlow channelSetFlow,
     bool searching,
     String businessId,
@@ -139,6 +147,8 @@ class PosScreenState {
       isLoading: isLoading ?? this.isLoading,
       isUpdating: isUpdating ?? this.isUpdating,
       isLoadingQrcode: isLoadingQrcode ?? this.isLoadingQrcode,
+      activeBusiness: activeBusiness ?? this.activeBusiness,
+      defaultCheckout: defaultCheckout ?? this.defaultCheckout,
       channelSetFlow: channelSetFlow ?? this.channelSetFlow,
       searching: searching ?? this.searching,
       terminals: terminals ?? this.terminals,

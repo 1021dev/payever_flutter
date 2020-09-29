@@ -113,6 +113,7 @@ class _WorkshopViewState extends State<WorkshopView> {
           activeBusiness: widget.business,
           activeTerminal: widget.terminal,
           channelSetId: widget.channelSetId,
+          channelSetFlow: widget.channelSetFlow,
           defaultCheckout: widget.defaultCheckout,
         ));
     }

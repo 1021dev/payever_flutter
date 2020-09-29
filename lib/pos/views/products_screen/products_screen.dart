@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/checkout/views/workshop/subview/work_shop_view.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/pos/views/products_screen/pos_product_detail_screen.dart';
 import 'package:payever/pos/views/products_screen/products_filter_screen.dart';
@@ -32,6 +33,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
   bool _isPortrait;
   bool _isTablet;
   bool isGridMode = true;
+  bool orderStatus = false;
+
   TextEditingController searchController = TextEditingController();
   @override
   void initState() {
@@ -58,15 +61,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     return BlocListener(
       bloc: widget.posScreenBloc,
       listener: (BuildContext context, PosScreenState state) async {
-        // if (state is PosScreenStateFailure) {
-        //   Navigator.pushReplacement(
-        //     context,
-        //     PageTransition(
-        //       child: LoginInitScreen(),
-        //       type: PageTransitionType.fade,
-        //     ),
-        //   );
-        // }
+
       },
       child: BlocBuilder<PosScreenBloc, PosScreenState>(
         bloc: widget.posScreenBloc,
@@ -93,7 +88,21 @@ class _ProductsScreenState extends State<ProductsScreen> {
             _toolBar(state),
             _secondToolBar(state),
             Expanded(
-              child: isGridMode ? gridBody(state) : _listBody(state),
+              child: Stack(
+                children: [
+                  isGridMode ? gridBody(state) : _listBody(state),
+                  Visibility(
+                    visible: orderStatus,
+                    child: WorkshopView(
+                      business: state.activeBusiness,
+                      terminal: state.activeTerminal,
+                      channelSetFlow: state.channelSetFlow,
+                      channelSetId: state.activeTerminal.channelSet,
+                      defaultCheckout: state.defaultCheckout,
+                    ),
+                  ),
+                ],
+              )
             ),
             // _bottomBar(state),
           ],
@@ -118,55 +127,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 padding: EdgeInsets.only(left: 8),
               ),
               _filterButton(),
-              // Padding(
-              //   padding: EdgeInsets.only(left: 8, right: 12),
-              //   child: Container(
-              //     width: 1,
-              //     color: Color(0xFF888888),
-              //     height: 24,
-              //   ),
-              // ),
-              // InkWell(
-              //   onTap: () {},
-              //   child: Text(
-              //     'Amount',
-              //     style: TextStyle(
-              //       fontSize: 14,
-              //       color: Colors.white,
-              //     ),
-              //   ),
-              // ),
-              // Padding(
-              //   padding: EdgeInsets.only(left: 12, right: 12),
-              //   child: Container(
-              //     width: 1,
-              //     color: Color(0xFF888888),
-              //     height: 24,
-              //   ),
-              // ),
-              // InkWell(
-              //   onTap: () {
-              //     Navigator.push(
-              //       context,
-              //       PageTransition(
-              //         child: PosQRAppScreen(
-              //           businessId: state.businessId,
-              //           screenBloc: widget.posScreenBloc,
-              //           fromProductsScreen: true,
-              //         ),
-              //         type: PageTransitionType.fade,
-              //         duration: Duration(milliseconds: 500),
-              //       ),
-              //     );
-              //   },
-              //   child: Text(
-              //     'QR',
-              //     style: TextStyle(
-              //       fontSize: 14,
-              //       color: Colors.white,
-              //     ),
-              //   ),
-              // ),
             ],
           ),
           Expanded(
@@ -280,22 +240,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
               ),
               InkWell(
                 onTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   PageTransition(
-                  //     child: WorkshopScreen(
-                  //       checkoutScreenBloc: CheckoutScreenBloc(
-                  //           dashboardScreenBloc:
-                  //               widget.posScreenBloc.dashboardScreenBloc)
-                  //         ..add(CheckoutScreenInitEvent(
-                  //           business: state.businessId,
-                  //           checkouts: widget.posScreenBloc.dashboardScreenBloc.state.checkouts,
-                  //           defaultCheckout: widget.posScreenBloc.dashboardScreenBloc.state.defaultCheckout,
-                  //         )),
-                  //     ),
-                  //     type: PageTransitionType.fade,
-                  //   ),
-                  // );
+                  setState(() {
+                    orderStatus = !orderStatus;
+                  });
                 },
                 child: Text(
                   'Amount',
