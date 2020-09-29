@@ -28,16 +28,18 @@ class WorkshopView extends StatefulWidget {
   final GlobalKey formKeyOrder;
   final Business business;
   final Terminal terminal;
-  final ChannelSet channelSet;
+  final String channelSetId;
   final Checkout defaultCheckout;
+  final ChannelSetFlow channelSetFlow;
 
   const WorkshopView(
       {this.workshopScreenBloc,
       this.formKeyOrder,
       this.business,
       this.terminal,
-      this.channelSet,
-      this.defaultCheckout});
+      this.channelSetId,
+      this.defaultCheckout,
+      this.channelSetFlow});
 
   @override
   _WorkshopViewState createState() => _WorkshopViewState();
@@ -110,7 +112,7 @@ class _WorkshopViewState extends State<WorkshopView> {
         ..add(WorkshopScreenInitEvent(
           activeBusiness: widget.business,
           activeTerminal: widget.terminal,
-          channelSet: widget.channelSet,
+          channelSetId: widget.channelSetId,
           defaultCheckout: widget.defaultCheckout,
         ));
     }

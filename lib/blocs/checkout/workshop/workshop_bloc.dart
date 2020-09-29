@@ -26,8 +26,8 @@ class WorkshopScreenBloc
   Stream<WorkshopScreenState> mapEventToState(
       WorkshopScreenEvent event) async* {
     if (event is WorkshopScreenInitEvent) {
-      yield* fetchInitData(
-          event.activeBusiness, event.activeTerminal, event.defaultCheckout, event.channelSet);
+      yield* fetchInitData(event.activeBusiness, event.activeTerminal,
+          event.defaultCheckout, event.channelSetId, event.channelSetFlow);
     } else if (event is PatchCheckoutFlowOrderEvent) {
       yield* patchCheckoutFlowOrder(event.body);
     } else if (event is PatchCheckoutFlowAddressEvent) {
@@ -46,7 +46,7 @@ class WorkshopScreenBloc
       yield state.copyWith(isLoading: true);
       ChannelSetFlow channelSetFlow;
       dynamic response =
-      await api.getCheckoutFlow(token, 'en', state.channelSet.id);
+      await api.getCheckoutFlow(token, 'en', state.channelSetId);
       if (response is Map) {
         channelSetFlow = ChannelSetFlow.fromJson(response);
       }
@@ -66,16 +66,19 @@ class WorkshopScreenBloc
   }
 
   Stream<WorkshopScreenState> fetchInitData(Business activeBusiness, Terminal terminal,
-      Checkout defaultCheckout, ChannelSet channelSet) async* {
+      Checkout defaultCheckout, String channelSetId, ChannelSetFlow channelSetFlow1) async* {
+    bool isReload = channelSetFlow1 == null;
     yield state.copyWith(
-      isLoading: true,
+      isLoading: isReload,
       activeBusiness: activeBusiness,
       activeTerminal: terminal,
-      channelSet: channelSet,
+      channelSetId: channelSetId,
       defaultCheckout: defaultCheckout,
+      channelSetFlow: channelSetFlow1,
     );
+    if (!isReload) return;
     dynamic response =
-        await api.getCheckoutFlow(token, 'en', channelSet.id);
+        await api.getCheckoutFlow(token, 'en', channelSetId);
     ChannelSetFlow channelSetFlow;
     if (response is Map) {
       channelSetFlow = ChannelSetFlow.fromJson(response);

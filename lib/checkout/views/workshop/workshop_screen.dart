@@ -97,7 +97,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
       ..add(WorkshopScreenInitEvent(
         activeBusiness: widget.checkoutScreenBloc.state.activeBusiness,
         activeTerminal: widget.checkoutScreenBloc.state.activeTerminal,
-        channelSet: widget.checkoutScreenBloc.state.channelSet,
+        channelSetId: widget.checkoutScreenBloc.state.channelSet.id,
         defaultCheckout: widget.checkoutScreenBloc.state.defaultCheckout,
       ));
     // initialize(widget.checkoutScreenBloc.state.channelSetFlow);

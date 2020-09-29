@@ -13,14 +13,16 @@ abstract class WorkshopScreenEvent extends Equatable {
 class WorkshopScreenInitEvent extends WorkshopScreenEvent {
   final Business activeBusiness;
   final Terminal activeTerminal;
-  final ChannelSet channelSet;
+  final String channelSetId;
   final Checkout defaultCheckout;
+  final ChannelSetFlow channelSetFlow;
 
   WorkshopScreenInitEvent({
+    this.channelSetFlow,
     this.activeBusiness,
     this.activeTerminal,
     this.defaultCheckout,
-    this.channelSet,
+    this.channelSetId,
   });
 
   @override
@@ -28,7 +30,8 @@ class WorkshopScreenInitEvent extends WorkshopScreenEvent {
         this.activeBusiness,
         this.activeTerminal,
         this.defaultCheckout,
-        this.channelSet,
+        this.channelSetId,
+        this.channelSetFlow,
       ];
 }
 

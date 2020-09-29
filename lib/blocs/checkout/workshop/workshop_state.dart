@@ -9,7 +9,7 @@ class WorkshopScreenState {
   final Business activeBusiness;
   final Checkout defaultCheckout;
   final Terminal activeTerminal;
-  final ChannelSet channelSet;
+  final String channelSetId;
 
   final bool isLoading;
   final bool isLoadingQrcode;
@@ -36,7 +36,7 @@ class WorkshopScreenState {
     this.updatePayflowIndex = -1,
     this.activeBusiness,
     this.activeTerminal,
-    this.channelSet,
+    this.channelSetId,
     this.channelSetFlow,
     this.defaultCheckout,
     this.isAvailable = false,
@@ -58,7 +58,7 @@ class WorkshopScreenState {
         this.activeBusiness,
         this.activeTerminal,
         this.defaultCheckout,
-        this.channelSet,
+        this.channelSetId,
         this.channelSetFlow,
         this.isAvailable,
         this.isValid,
@@ -74,7 +74,7 @@ class WorkshopScreenState {
     bool isLoadingQrcode,
     bool isUpdating,
     bool isReset,
-    ChannelSet channelSet,
+    String channelSetId,
     bool isCheckingEmail,
     int updatePayflowIndex,
     Business activeBusiness,
@@ -100,7 +100,7 @@ class WorkshopScreenState {
       updatePayflowIndex: updatePayflowIndex ?? this.updatePayflowIndex,
       activeBusiness: activeBusiness ?? this.activeBusiness,
       activeTerminal: activeTerminal ?? this.activeTerminal,
-      channelSet: channelSet ?? this.channelSet,
+      channelSetId: channelSetId ?? this.channelSetId,
       channelSetFlow: channelSetFlow ?? this.channelSetFlow,
       defaultCheckout: defaultCheckout ?? this.defaultCheckout,
       qrForm: qrForm,

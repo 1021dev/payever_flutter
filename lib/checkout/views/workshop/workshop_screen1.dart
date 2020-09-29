@@ -36,7 +36,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
           ..add(WorkshopScreenInitEvent(
             activeBusiness: widget.checkoutScreenBloc.state.activeBusiness,
             activeTerminal: widget.checkoutScreenBloc.state.activeTerminal,
-            channelSet: widget.checkoutScreenBloc.state.channelSet,
+            channelSetId: widget.checkoutScreenBloc.state.channelSet.id,
             defaultCheckout: widget.checkoutScreenBloc.state.defaultCheckout,
           ));
     super.initState();
@@ -88,14 +88,14 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
         },
       );
     }
-    if (state.channelSet == null) {
+    if (state.channelSetId == null) {
       print('channelSet is null');
       print('${state.runtimeType} is null');
       return Container();
     }
 
     String openUrl =
-        '${Env.wrapper}/pay/create-flow/channel-set-id/${state.channelSet.id}';
+        '${Env.wrapper}/pay/create-flow/channel-set-id/${state.channelSetId}';
     return Container(
       child: Column(
         children: <Widget>[
