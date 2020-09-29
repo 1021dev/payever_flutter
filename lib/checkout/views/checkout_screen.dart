@@ -97,7 +97,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         dashboardScreenBloc: widget.dashboardScreenBloc,
         globalStateModel: widget.globalStateModel)
       ..add(CheckoutScreenInitEvent(
-        business: widget.globalStateModel.currentBusiness.id,
+        business: widget.globalStateModel.currentBusiness,
         checkouts: widget.checkouts,
         defaultCheckout: widget.defaultCheckout,
       ));
@@ -285,7 +285,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               PageTransition(
                 child: CheckoutConnectScreen(
                   checkoutScreenBloc: screenBloc,
-                  business: state.business,
+                  business: state.activeBusiness.id,
                   category: 'payments',
                 ),
                 type: PageTransitionType.fade,
@@ -299,7 +299,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               PageTransition(
                 child: CheckoutPaymentSettingsScreen(
                   checkoutScreenBloc: screenBloc,
-                  business: state.business,
+                  business: state.activeBusiness.id,
                   connectModel: connectModel,
                 ),
                 type: PageTransitionType.fade,
@@ -327,7 +327,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               PageTransition(
                 child: CheckoutConnectScreen(
                   checkoutScreenBloc: screenBloc,
-                  business: state.business,
+                  business: state.activeBusiness.id,
                   category: 'shopsystems',
                 ),
                 type: PageTransitionType.fade,
@@ -355,7 +355,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 PageTransition(
                   child: CheckoutChannelSetScreen(
                     checkoutScreenBloc: screenBloc,
-                    business: state.business,
+                    business: state.activeBusiness.id,
                     category: 'pos',
                   ),
                   type: PageTransitionType.fade,
@@ -369,7 +369,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 PageTransition(
                   child: CheckoutChannelSetScreen(
                     checkoutScreenBloc: screenBloc,
-                    business: state.business,
+                    business: state.activeBusiness.id,
                     category: 'shop',
                   ),
                   type: PageTransitionType.fade,
@@ -383,7 +383,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 PageTransition(
                   child: CheckoutChannelSetScreen(
                     checkoutScreenBloc: screenBloc,
-                    business: state.business,
+                    business: state.activeBusiness.id,
                     category: 'marketing',
                   ),
                   type: PageTransitionType.fade,
@@ -410,7 +410,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 PageTransition(
                   child: CheckoutChannelShopSystemScreen(
                     checkoutScreenBloc: screenBloc,
-                    business: state.business,
+                    business: state.activeBusiness.id,
                     connectModel: model.model,
                   ),
                   type: PageTransitionType.fade,
@@ -433,7 +433,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               PageTransition(
                 child: CheckoutConnectScreen(
                   checkoutScreenBloc: screenBloc,
-                  business: state.business,
+                  business: state.activeBusiness.id,
                   category: 'communications',
                 ),
                 type: PageTransitionType.fade,
@@ -486,7 +486,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       case 5:
         return CheckoutSettingsScreen(
           checkoutScreenBloc: screenBloc,
-          businessId: state.business,
+          businessId: state.activeBusiness.id,
           checkout: screenBloc.state.defaultCheckout,
         );
     }

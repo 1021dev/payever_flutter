@@ -33,14 +33,14 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     if (event is CheckoutScreenInitEvent) {
       if (event.business != null) {
         yield state.copyWith(
-          business: event.business,
+          activeBusiness: event.business,
           checkouts: event.checkouts,
           defaultCheckout: event.defaultCheckout,
         );
       } else {
 
       }
-      yield* fetchConnectInstallations(state.business, isLoading: true);
+      yield* fetchConnectInstallations(state.activeBusiness.id, isLoading: true);
     } else if (event is GetPaymentConfig) {
       yield* getPaymentData();
     } else if (event is GetChannelConfig) {
@@ -75,7 +75,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     } else if (event is ClearQrIntegration) {
       yield state.copyWith(qrForm: null, qrImage: null, qrIntegration: null);
     } else if (event is GetDevicePaymentSettings) {
-      yield* getDevicePaymentSettings(state.business);
+      yield* getDevicePaymentSettings(state.activeBusiness.id);
     } else if (event is UpdateCheckoutDevicePaymentSettings) {
       yield state.copyWith(devicePaymentSettings: event.settings);
     } else if (event is SaveCheckoutDevicePaymentSettings) {
@@ -153,7 +153,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
 
     await api.toggleSetUpStatus(token, business, 'checkout');
     dynamic response = await api.getAvailableSections(
-        token, state.business, defaultCheckout.id);
+        token, state.activeBusiness.id, defaultCheckout.id);
     List<Section> availableSections = [];
     if (response is List) {
       response.forEach((element) {
@@ -188,7 +188,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
 
   Stream<CheckoutScreenState> getCheckoutFlow() async* {
     List<ChannelSet> channelSets = [];
-    dynamic channelSetResponse = await api.getChannelSet(state.business, token);
+    dynamic channelSetResponse = await api.getChannelSet(state.activeBusiness.id, token);
     if (channelSetResponse is List) {
       channelSetResponse.forEach((element) {
         ChannelSet channelSet = ChannelSet.fromJson(element);
@@ -219,7 +219,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     yield state.copyWith(loadingPaymentOption: true);
     List<ConnectModel> integrations = [];
     dynamic integrationsResponse = await api.getCheckoutIntegrations(
-        state.business, token);
+        state.activeBusiness.id, token);
     if (integrationsResponse is List) {
       integrationsResponse.forEach((element) {
         integrations.add(ConnectModel.toMap(element));
@@ -230,7 +230,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     List<IntegrationModel> checkoutConnections = [];
 
     dynamic connectionResponse = await api.getConnections(
-        state.business, token);
+        state.activeBusiness.id, token);
     if (connectionResponse is List) {
       connectionResponse.forEach((element) {
         connections.add(IntegrationModel.fromJson(element));
@@ -238,7 +238,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     }
 
     dynamic checkoutConnectionResponse = await api.getCheckoutConnections(
-        state.business, token, state.defaultCheckout.id);
+        state.activeBusiness.id, token, state.defaultCheckout.id);
     if (checkoutConnectionResponse is List) {
       checkoutConnectionResponse.forEach((element) {
         checkoutConnections.add(IntegrationModel.fromJson(element));
@@ -261,7 +261,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     }
     List<ConnectModel> connectInstallations = [];
     dynamic categoryResponse = await api.getConnectIntegrationByCategory(
-        token, state.business, 'shopsystems');
+        token, state.activeBusiness.id, 'shopsystems');
     if (categoryResponse is List) {
       categoryResponse.forEach((element) {
         connectInstallations.add(ConnectModel.toMap(element));
@@ -376,7 +376,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     );
     List<ConnectModel> connectInstallations = [];
     dynamic accountingResponse = await api.getConnectIntegrationByCategory(
-        token, state.business, 'accounting');
+        token, state.activeBusiness.id, 'accounting');
     if (accountingResponse is List) {
       accountingResponse.forEach((element) {
         connectInstallations.add(ConnectModel.toMap(element));
@@ -384,7 +384,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     }
 
     dynamic categoryResponse = await api.getConnectIntegrationByCategory(
-        token, state.business, 'communications');
+        token, state.activeBusiness.id, 'communications');
     if (categoryResponse is List) {
       categoryResponse.forEach((element) {
         connectInstallations.add(ConnectModel.toMap(element));
@@ -469,7 +469,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
 
     body['sections'] = sectionMapList;
     dynamic sectionsResponse = await api.patchCheckout(
-        token, state.business, state.defaultCheckout.id, body);
+        token, state.activeBusiness.id, state.defaultCheckout.id, body);
 
     ChannelSet channelSet = state.channelSets.firstWhere((element) =>
     (element.checkout == state.defaultCheckout.id && element.type == 'link'));
@@ -746,7 +746,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
 
     dynamic response = await api.postGenerateTerminalQRCode(
       GlobalUtils.activeToken.accessToken,
-      state.business,
+      state.activeBusiness.id,
       dashboardScreenBloc.state.activeBusiness.name,
       '$imageBase${dashboardScreenBloc.state.activeTerminal.logo}',
       dashboardScreenBloc.state.activeTerminal.id,
@@ -801,7 +801,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
   Stream<CheckoutScreenState> saveDevicePaymentSettings() async* {
     yield state.copyWith(isUpdating: true);
     dynamic devicePaymentSettingsObj = await api.putDevicePaymentSettings(
-      state.business,
+      state.activeBusiness.id,
       GlobalUtils.activeToken.accessToken,
       state.devicePaymentSettings.autoresponderEnabled,
       state.devicePaymentSettings.secondFactor,
@@ -816,7 +816,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     yield state.copyWith(isLoading: true);
     dynamic response = await api.getTwilioSettings(
       GlobalUtils.activeToken.accessToken,
-      state.business,
+      state.activeBusiness.id,
     );
     yield state.copyWith(twilioForm: response, isLoading: false);
   }
@@ -828,7 +828,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     yield state.copyWith(isLoading: true);
     dynamic response = await api.addPhoneNumberSettings(
       GlobalUtils.activeToken.accessToken,
-      state.business,
+      state.activeBusiness.id,
       action,
       id,
     );
@@ -896,7 +896,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     yield state.copyWith(isPhoneSearch: true);
     dynamic response = await api.searchPhoneNumberSettings(
       GlobalUtils.activeToken.accessToken,
-      state.business,
+      state.activeBusiness.id,
       action,
       country,
       excludeAny,
@@ -966,7 +966,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     yield state.copyWith(isLoading: true);
     dynamic response = await api.purchasePhoneNumberSettings(
       GlobalUtils.activeToken.accessToken,
-      state.business,
+      state.activeBusiness.id,
       action,
       phone,
       id,
@@ -984,7 +984,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     yield state.copyWith(isLoading: true);
     dynamic response = await api.removePhoneNumberSettings(
       GlobalUtils.activeToken.accessToken,
-      state.business,
+      state.activeBusiness.id,
       action,
       id,
       sid,
@@ -993,10 +993,10 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
   }
 
   Stream<CheckoutScreenState> installPayment(IntegrationModel integrationModel) async* {
-    dynamic response = await api.installCheckoutPayment(token, state.business, state.defaultCheckout.id, integrationModel.id);
+    dynamic response = await api.installCheckoutPayment(token, state.activeBusiness.id, state.defaultCheckout.id, integrationModel.id);
     List<IntegrationModel> connections = [];
     dynamic checkoutConnectionResponse = await api.getCheckoutConnections(
-        state.business, token, state.defaultCheckout.id);
+        state.activeBusiness.id, token, state.defaultCheckout.id);
     if (checkoutConnectionResponse is List) {
       checkoutConnectionResponse.forEach((element) {
         connections.add(IntegrationModel.fromJson(element));
@@ -1006,10 +1006,10 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
   }
 
   Stream<CheckoutScreenState> uninstallPayment(IntegrationModel integrationModel) async* {
-    dynamic response = await api.uninstallCheckoutPayment(token, state.business, state.defaultCheckout.id, integrationModel.id);
+    dynamic response = await api.uninstallCheckoutPayment(token, state.activeBusiness.id, state.defaultCheckout.id, integrationModel.id);
     List<IntegrationModel> connections = [];
     dynamic checkoutConnectionResponse = await api.getCheckoutConnections(
-        state.business, token, state.defaultCheckout.id);
+        state.activeBusiness.id, token, state.defaultCheckout.id);
     if (checkoutConnectionResponse is List) {
       checkoutConnectionResponse.forEach((element) {
         connections.add(IntegrationModel.fromJson(element));
@@ -1021,7 +1021,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
   Stream<CheckoutScreenState> installIntegration(String integrationId) async* {
     List<String> integrations = state.integrations;
     bool install = !integrations.contains(integrationId);
-    dynamic response = await api.installCheckoutConnectIntegration(token, state.business, state.defaultCheckout.id, integrationId, install);
+    dynamic response = await api.installCheckoutConnectIntegration(token, state.activeBusiness.id, state.defaultCheckout.id, integrationId, install);
     if (response is DioError) {
       yield CheckoutScreenConnectInstallStateFailure(error: response.message);
     } else {
@@ -1038,7 +1038,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
   Stream<CheckoutScreenState> uploadBusiness(Map body) async* {
     yield state.copyWith(isUpdating: true);
     print(body);
-    dynamic response = await api.patchUpdateBusiness(token, state.business, body);
+    dynamic response = await api.patchUpdateBusiness(token, state.activeBusiness.id, body);
     if (response is DioError) {
       yield CheckoutScreenConnectInstallStateFailure(error: response.error);
     } else if (response is Map){
@@ -1046,9 +1046,6 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       globalStateModel.setCurrentBusiness(Business.map(response),
           notify: true);
       yield state.copyWith(isUpdating: false);
-//      yield SettingScreenUpdateSuccess(
-//        business: state.business,
-//      );
     } else {
       yield CheckoutScreenConnectInstallStateFailure(error: 'Update Business name failed');
       yield state.copyWith(isUpdating: false);
