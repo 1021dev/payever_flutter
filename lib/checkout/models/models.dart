@@ -254,7 +254,7 @@ class ChannelSetFlow {
   @JsonKey(name: 'business_shipping_option_id')   String businessShippingOptionId;
   @JsonKey(name: 'can_identify_by_ssn')           bool canIdentifyBySsn = false;
   @JsonKey(name: 'cancel_url')                    String cancelUrl;
-  @JsonKey(name: 'cart')                          List cart = [];
+  @JsonKey(name: 'cart')                          List<CartItem> cart = [];
   @JsonKey(name: 'channel')                       String channel;
   @JsonKey(name: 'channel_set_id')                String channelSetId;
   @JsonKey(name: 'client_id')                     String clientId;

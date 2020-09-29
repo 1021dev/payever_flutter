@@ -168,7 +168,10 @@ class _PosProductDetailScreenState extends State<PosProductDetailScreen> {
                         'quantity': 1,
                         'uuid': product.id,
                       };
-                      List<dynamic>cards = state.channelSetFlow.cart;
+                      List<dynamic> cards = [];
+                      state.channelSetFlow.cart.forEach((element) {
+                        cards.add(element.toJson());
+                      });
                       if(cards == null) cards = [];
                       cards.add(card);
                       Map<String, dynamic> body = {

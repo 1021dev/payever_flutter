@@ -122,3 +122,14 @@ class PayInstantPaymentEvent extends WorkshopScreenEvent {
 }
 
 class RefreshWorkShopEvent extends WorkshopScreenEvent {}
+
+class CartUpdateEvent extends WorkshopScreenEvent {
+  final Map body;
+
+  CartUpdateEvent({this.body});
+
+  @override
+  List<Object> get props => [
+    this.body,
+  ];
+}

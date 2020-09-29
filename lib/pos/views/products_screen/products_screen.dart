@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/checkout/views/workshop/subview/work_shop_view.dart';
@@ -34,7 +35,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   bool _isTablet;
   bool isGridMode = true;
   bool orderStatus = false;
-
+  bool cartStatus = false;
   TextEditingController searchController = TextEditingController();
   @override
   void initState() {
@@ -99,6 +100,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                       channelSetFlow: state.channelSetFlow,
                       channelSetId: state.activeTerminal.channelSet,
                       defaultCheckout: state.defaultCheckout,
+                      fromCart: cartStatus,
                       onTapClose: () {
                         setState(() {
                           orderStatus = false;
@@ -298,7 +300,17 @@ class _ProductsScreenState extends State<ProductsScreen> {
             itemColor: Colors.white,
             hideZero: true,
             onTap: () {
-              print('test');
+              if (state.channelSetFlow.cart == null || state.channelSetFlow.cart.isEmpty) {
+                Fluttertoast.showToast(msg: 'Cart is empty');
+              } else {
+                state.channelSetFlow.cart.forEach((element) {
+                  print('CartItems: ${element.toJson().toString()}');
+                });
+                setState(() {
+                  // cartStatus = true;
+                  orderStatus = true;
+                });
+              }
             },
           ),
           SizedBox(width: 10,),

@@ -306,7 +306,10 @@ ChannelSetFlow _$ChannelSetFlowFromJson(Map<String, dynamic> json) {
     ..businessShippingOptionId = json['business_shipping_option_id'] as String
     ..canIdentifyBySsn = json['can_identify_by_ssn'] as bool
     ..cancelUrl = json['cancel_url'] as String
-    ..cart = json['cart'] as List
+    ..cart = (json['cart'] as List)
+        ?.map((e) =>
+            e == null ? null : CartItem.fromJson(e as Map<String, dynamic>))
+        ?.toList()
     ..channel = json['channel'] as String
     ..channelSetId = json['channel_set_id'] as String
     ..clientId = json['client_id'] as String

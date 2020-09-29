@@ -11,6 +11,7 @@ import 'package:payever/checkout/models/models.dart';
 import 'package:payever/checkout/views/workshop/prefilled_qr_screen.dart';
 import 'package:payever/checkout/views/workshop/subview/pay_success_view.dart';
 import 'package:payever/checkout/views/workshop/subview/payment_select_view.dart';
+import 'package:payever/checkout/views/workshop/widget/cart_order_view.dart';
 import 'package:payever/checkout/widgets/workshop_header_item.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
@@ -32,7 +33,7 @@ class WorkshopView extends StatefulWidget {
   final Checkout defaultCheckout;
   final ChannelSetFlow channelSetFlow;
   final Function onTapClose;
-
+  final bool fromCart;
   const WorkshopView(
       {this.workshopScreenBloc,
       this.formKeyOrder,
@@ -41,7 +42,8 @@ class WorkshopView extends StatefulWidget {
       this.channelSetId,
       this.defaultCheckout,
       this.channelSetFlow,
-      this.onTapClose});
+      this.onTapClose,
+      this.fromCart = false});
 
   @override
   _WorkshopViewState createState() => _WorkshopViewState();
@@ -314,7 +316,7 @@ class _WorkshopViewState extends State<WorkshopView> {
                     visible: widget.onTapClose != null,
                     child: MaterialButton(
                       child: Container(
-                        width: 60,
+                        width: 70,
                         height: 32,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
@@ -410,7 +412,9 @@ class _WorkshopViewState extends State<WorkshopView> {
     if (state.channelSetFlow == null) {
       return Container();
     }
-    return Form(
+    List<CartItem>cart = state.channelSetFlow.cart;
+    return !widget.fromCart
+        ? Form(
       key: _formKeyOrder,
       child: Visibility(
         visible: isVisible(state, 'order'),
@@ -557,7 +561,8 @@ class _WorkshopViewState extends State<WorkshopView> {
           ],
         ),
       ),
-    );
+    )
+        : CartOrderView(cart, state.channelSetFlow.currency, screenBloc);
   }
 
   Widget _orderDetailView(WorkshopScreenState state) {
