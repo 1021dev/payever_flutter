@@ -1,25 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/checkout/checkout_bloc.dart';
-import 'package:payever/blocs/checkout/checkout_state.dart';
-import 'package:payever/checkout/models/models.dart';
-import 'package:payever/checkout/widgets/checkout_flow.dart';
+import 'package:payever/checkout/views/channels/channels_checkout_flow_screen.dart';
+import 'package:payever/checkout/views/workshop/prefilled_qr_screen.dart';
+import 'package:payever/checkout/views/workshop/subview/pay_success_view.dart';
+import 'package:payever/checkout/views/workshop/subview/work_shop_view.dart';
 import 'package:payever/checkout/widgets/workshop_top_bar.dart';
-
-import '../channels/channels_checkout_flow_screen.dart';
-import 'checkout_switch_screen.dart';
+import 'package:payever/commons/commons.dart';
 
 class WorkshopScreen1 extends StatefulWidget {
   final CheckoutScreenBloc checkoutScreenBloc;
-  final Function onOpen;
+  final bool fromCheckOutScreen;
 
-  WorkshopScreen1({
-    this.checkoutScreenBloc,
-    this.onOpen,
-  });
+  const WorkshopScreen1(
+      {this.checkoutScreenBloc, this.fromCheckOutScreen = true});
 
   @override
   _WorkshopScreen1State createState() => _WorkshopScreen1State();
@@ -27,80 +25,147 @@ class WorkshopScreen1 extends StatefulWidget {
 
 class _WorkshopScreen1State extends State<WorkshopScreen1> {
 
-  bool switchCheckout = false;
+  final _formKeyOrder = GlobalKey<FormState>();
+  WorkshopScreenBloc screenBloc;
 
   @override
   void initState() {
+    screenBloc =
+        WorkshopScreenBloc(checkoutScreenBloc: widget.checkoutScreenBloc)
+          ..add(WorkshopScreenInitEvent(
+            business: widget.checkoutScreenBloc.state.business,
+            checkoutFlow: widget.checkoutScreenBloc.state.checkoutFlow,
+            channelSetFlow: widget.checkoutScreenBloc.state.channelSetFlow,
+            defaultCheckout: widget.checkoutScreenBloc.state.defaultCheckout,
+          ));
     super.initState();
   }
 
   @override
   void dispose() {
+    screenBloc.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CheckoutScreenBloc, CheckoutScreenState>(
-      bloc: widget.checkoutScreenBloc,
-      builder: (BuildContext context, state) {
-        return Container(
-          child: Column(
-            children: <Widget>[
-              WorkshopTopBar(
-                title: 'Your checkout',
-                onOpenTap: () {
-//                  widget.onOpen(state.openUrl);
-                  Navigator.push(
-                    context,
-                    PageTransition(
-                      child: ChannelCheckoutFlowScreen(
-                        checkoutScreenBloc: widget.checkoutScreenBloc,
-                        openUrl: 'https://checkout.payever.org/pay/create-flow/channel-set-id/${widget.checkoutScreenBloc.state.channelSet.id}',
-                      ),
-                      type: PageTransitionType.fade,
-                    ),
-                  );
-                },
-                // onSwitchTap: () {
-                //   setState(() {
-                //     switchCheckout = true;
-                //   });
-                // },
-                onPrefilledQrcode: () {
-                  
-                },
+    return BlocListener(
+      bloc: screenBloc,
+      listener: (BuildContext context, WorkshopScreenState state) async {
+        if (state is WorkshopScreenPayflowStateSuccess) {
+
+        } else if (state.isPaid == true) {
+          showPaySuccessDialog(state);
+        } else if (state is WorkshopScreenStateFailure) {
+          Fluttertoast.showToast(msg: state.error);
+        } else if (state.qrImage != null) {
+          Navigator.push(
+            context,
+            PageTransition(
+              child: PrefilledQRCodeScreen(
+                qrForm: state.qrForm,
+                qrImage: state.qrImage,
+                title: 'QR',
               ),
-              Flexible(
-                child: state.channelSet == null
-                    ? Container()
-                    : _body(state),
-              ),
-            ],
+              type: PageTransitionType.fade,
+            ),
+          );
+        }
+      },
+      child: BlocBuilder<WorkshopScreenBloc, WorkshopScreenState>(
+        bloc: screenBloc,
+        builder: (BuildContext context, state) {
+          return state.defaultCheckout == null ? Container() : _body(state);
+        },
+      ),
+    );
+  }
+
+  Widget _body(WorkshopScreenState state) {
+    // if (switchCheckout) {
+    //   return CheckoutSwitchScreen(
+    //     businessId: state.business,
+    //     checkoutScreenBloc: widget.checkoutScreenBloc,
+    //     onOpen: (Checkout checkout) {
+    //       setState(() {
+    //         switchCheckout = false;
+    //       });
+    //     },
+    //   );
+    // }
+    if (widget.checkoutScreenBloc.state.channelSet == null) {
+      return Container();
+    }
+
+    String openUrl =
+        '${Env.wrapper}/pay/create-flow/channel-set-id/${widget.checkoutScreenBloc.state.channelSet.id}';
+    return Container(
+      child: Column(
+        children: <Widget>[
+          WorkshopTopBar(
+            title: 'Your checkout',
+            businessName: widget.checkoutScreenBloc.dashboardScreenBloc.state
+                .activeBusiness.name,
+            openUrl: state.channelSetFlow.id,
+            isLoadingQrcode: state.isLoadingQrcode,
+            onOpenTap: () {
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: ChannelCheckoutFlowScreen(
+                    checkoutScreenBloc: widget.checkoutScreenBloc,
+                    openUrl: openUrl,
+                  ),
+                  type: PageTransitionType.fade,
+                ),
+              );
+            },
+            onCopyPrefilledLink: () {
+              getPrefilledLink(state, true);
+            },
+            onPrefilledQrcode: () {
+              getPrefilledLink(state, false);
+            },
+          ),
+          Flexible(
+            child: WorkshopView(
+              checkoutScreenBloc: widget.checkoutScreenBloc,
+              workshopScreenBloc: screenBloc,
+              formKeyOrder: _formKeyOrder,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void getPrefilledLink(WorkshopScreenState state, bool isCopyLink) {
+    if (_formKeyOrder.currentState.validate()) {
+      num _amount = state.channelSetFlow.amount;
+      String _reference = state.channelSetFlow.reference;
+      if (_amount >= 0 && _reference != null) {
+        screenBloc.add(GetPrefilledLinkEvent(isCopyLink: isCopyLink));
+      } else {
+        Fluttertoast.showToast(msg: 'Please set amount and reference.');
+      }
+    }
+  }
+
+  showPaySuccessDialog(WorkshopScreenState state) {
+    // if (state.channelSetFlow.payment == null ||
+    //     state.channelSetFlow.payment.paymentDetails == null) return;
+    // if (state.payResult == null) return;
+    showCupertinoDialog(
+      context: context,
+      builder: (builder) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: PaySuccessView(
+            screenBloc: screenBloc,
+            channelSetFlow: state.channelSetFlow,
           ),
         );
       },
     );
-  }
-
-  Widget _body(CheckoutScreenState state) {
-    if (switchCheckout) {
-      return CheckoutSwitchScreen(
-        businessId: state.business,
-        checkoutScreenBloc: widget.checkoutScreenBloc,
-        onOpen: (Checkout checkout) {
-          setState(() {
-            switchCheckout = false;
-          });
-        },
-      );
-    } else {
-      return CheckoutFlowWebView(
-        checkoutScreenBloc: widget.checkoutScreenBloc,
-        checkoutUrl:
-          // 'https://checkout-backend.test.devpayever.com/api/flow/channel-set/${state.channelSetFlow.id}'
-        'https://checkout.payever.org/pay/create-flow/channel-set-id/${state.channelSet.id}',
-      );
-    }
   }
 }

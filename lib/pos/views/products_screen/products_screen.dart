@@ -130,22 +130,22 @@ class _ProductsScreenState extends State<ProductsScreen> {
               ),
               InkWell(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    PageTransition(
-                      child: WorkshopScreen(
-                        checkoutScreenBloc: CheckoutScreenBloc(
-                            dashboardScreenBloc:
-                                widget.posScreenBloc.dashboardScreenBloc)
-                          ..add(CheckoutScreenInitEvent(
-                            business: state.businessId,
-                            checkouts: widget.posScreenBloc.dashboardScreenBloc.state.checkouts,
-                            defaultCheckout: widget.posScreenBloc.dashboardScreenBloc.state.defaultCheckout,
-                          )),
-                      ),
-                      type: PageTransitionType.fade,
-                    ),
-                  );
+                  // Navigator.push(
+                  //   context,
+                  //   PageTransition(
+                  //     child: WorkshopScreen(
+                  //       checkoutScreenBloc: CheckoutScreenBloc(
+                  //           dashboardScreenBloc:
+                  //               widget.posScreenBloc.dashboardScreenBloc)
+                  //         ..add(CheckoutScreenInitEvent(
+                  //           business: state.businessId,
+                  //           checkouts: widget.posScreenBloc.dashboardScreenBloc.state.checkouts,
+                  //           defaultCheckout: widget.posScreenBloc.dashboardScreenBloc.state.defaultCheckout,
+                  //         )),
+                  //     ),
+                  //     type: PageTransitionType.fade,
+                  //   ),
+                  // );
                 },
                 child: Text(
                   'Amount',
