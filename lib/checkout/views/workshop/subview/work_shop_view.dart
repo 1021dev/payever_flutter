@@ -136,6 +136,37 @@ class _WorkshopViewState extends State<WorkshopView> {
     return BlocListener(
       bloc: screenBloc,
       listener: (BuildContext context, WorkshopScreenState state) async {
+        print('Reset: ${state.isReset}');
+        if (state is WorkshopScreenState && state.isReset) {
+          _selectedSectionIndex = 0;
+          isOrderApproved = false;
+          isAccountApproved = false;
+          isBillingApproved = false;
+          isSendDeviceApproved = false;
+          isSelectPaymentApproved = false;
+
+          currency = '';
+          editOrder = false;
+
+          amount = 0;
+          reference = '';
+
+          email = '';
+          password = '';
+          countryCode = '';
+          city = '';
+          street = '';
+          zipCode = '';
+          googleAutocomplete = '';
+
+          salutation = '';
+          firstName = '';
+          lastName = '';
+
+          company = '';
+          phone = '';
+          payflowLogin = false;
+        }
         if (state is WorkshopScreenPayflowStateSuccess) {
           setState(() {
             switch (_selectedSectionIndex) {
@@ -155,8 +186,8 @@ class _WorkshopViewState extends State<WorkshopView> {
             }
             _selectedSectionIndex++;
           });
-        } else if (state.isPaid == true) {
-          showPaySuccessDialog(state);
+        } else if (state is WorkshopScreenPaySuccess) {
+          showPaySuccessDialog();
         } else if (state is WorkshopScreenStateFailure) {
           Fluttertoast.showToast(msg: state.error);
         } else if (state.qrImage != null) {
@@ -176,15 +207,15 @@ class _WorkshopViewState extends State<WorkshopView> {
       child: BlocBuilder<WorkshopScreenBloc, WorkshopScreenState>(
         bloc: screenBloc,
         builder: (BuildContext context, state) {
-          return state.defaultCheckout == null ? Container() : _body(state);
+          return _body(state);
         },
       ),
     );
   }
 
   Widget _body(WorkshopScreenState state) {
-    if (state.channelSetFlow == null) {
-      return Container();
+    if (state.isLoading || state.channelSetFlow == null) {
+      return Center(child: CircularProgressIndicator());
     }
     return _workshop(state);
   }
@@ -459,6 +490,7 @@ class _WorkshopViewState extends State<WorkshopView> {
                     child: SizedBox.expand(
                       child: MaterialButton(
                         onPressed: () {
+                          // screenBloc.add(RefreshWorkShopEvent());
                           if (_formKeyOrder.currentState.validate() &&
                               !state.isUpdating) {
                             _selectedSectionIndex = 0;
@@ -1465,10 +1497,11 @@ class _WorkshopViewState extends State<WorkshopView> {
     }
   }
 
-  showPaySuccessDialog(WorkshopScreenState state) {
+  showPaySuccessDialog() {
     // if (state.channelSetFlow.payment == null ||
     //     state.channelSetFlow.payment.paymentDetails == null) return;
     // if (state.payResult == null) return;
+
     showCupertinoDialog(
       context: context,
       builder: (builder) {
@@ -1476,7 +1509,7 @@ class _WorkshopViewState extends State<WorkshopView> {
           backgroundColor: Colors.transparent,
           child: PaySuccessView(
             screenBloc: screenBloc,
-            channelSetFlow: state.channelSetFlow,
+            channelSetFlow: screenBloc.state.channelSetFlow,
           ),
         );
       },

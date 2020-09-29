@@ -134,7 +134,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
             }
             _selectedSectionIndex++;
           });
-        } else if (state.isPaid == true) {
+        } else if (state.isReset == true) {
           showPaySuccessDialog(state);
         } else if (state is WorkshopScreenStateFailure) {
           Fluttertoast.showToast(msg: state.error);

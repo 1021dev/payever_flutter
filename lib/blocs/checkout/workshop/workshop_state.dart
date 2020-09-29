@@ -14,7 +14,7 @@ class WorkshopScreenState {
   final bool isLoading;
   final bool isLoadingQrcode;
   final bool isUpdating;
-  final bool isPaid;
+  final bool isReset;
   final bool isCheckingEmail;
   final bool isAvailable;
   final bool isValid;
@@ -31,7 +31,7 @@ class WorkshopScreenState {
     this.isLoading = false,
     this.isLoadingQrcode = false,
     this.isUpdating = false,
-    this.isPaid = false,
+    this.isReset = false,
     this.isCheckingEmail = false,
     this.updatePayflowIndex = -1,
     this.activeBusiness,
@@ -52,7 +52,7 @@ class WorkshopScreenState {
         this.isLoading,
         this.isLoadingQrcode,
         this.isUpdating,
-        this.isPaid,
+        this.isReset,
         this.isCheckingEmail,
         this.updatePayflowIndex,
         this.activeBusiness,
@@ -73,7 +73,7 @@ class WorkshopScreenState {
     bool isLoading,
     bool isLoadingQrcode,
     bool isUpdating,
-    bool isPaid,
+    bool isReset,
     ChannelSet channelSet,
     bool isCheckingEmail,
     int updatePayflowIndex,
@@ -93,7 +93,7 @@ class WorkshopScreenState {
       isLoading: isLoading ?? this.isLoading,
       isLoadingQrcode: isLoadingQrcode ?? this.isLoadingQrcode,
       isUpdating: isUpdating ?? this.isUpdating,
-      isPaid: isPaid ?? this.isPaid,
+      isReset: isReset ?? this.isReset,
       isCheckingEmail: isCheckingEmail ?? this.isCheckingEmail,
       isAvailable: isAvailable ?? this.isAvailable,
       isValid: isValid ?? this.isValid,

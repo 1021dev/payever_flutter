@@ -8,7 +8,6 @@ import 'package:payever/blocs/checkout/checkout_bloc.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/checkout/views/channels/channels_checkout_flow_screen.dart';
 import 'package:payever/checkout/views/workshop/prefilled_qr_screen.dart';
-import 'package:payever/checkout/views/workshop/subview/pay_success_view.dart';
 import 'package:payever/checkout/views/workshop/subview/work_shop_view.dart';
 import 'package:payever/checkout/widgets/workshop_top_bar.dart';
 import 'package:payever/commons/commons.dart';
@@ -54,13 +53,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
     return BlocListener(
       bloc: screenBloc,
       listener: (BuildContext context, WorkshopScreenState state) async {
-        if (state is WorkshopScreenPayflowStateSuccess) {
-
-        } else if (state.isPaid == true) {
-          showPaySuccessDialog(state);
-        } else if (state is WorkshopScreenStateFailure) {
-          Fluttertoast.showToast(msg: state.error);
-        } else if (state.qrImage != null) {
+         if (state.qrImage != null) {
           Navigator.push(
             context,
             PageTransition(
@@ -77,7 +70,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
       child: BlocBuilder<WorkshopScreenBloc, WorkshopScreenState>(
         bloc: screenBloc,
         builder: (BuildContext context, state) {
-          return state.defaultCheckout == null ? Container() : _body(state);
+          return _body(state);
         },
       ),
     );
@@ -95,19 +88,20 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
         },
       );
     }
-    if (widget.checkoutScreenBloc.state.channelSet == null) {
+    if (state.channelSet == null) {
+      print('channelSet is null');
+      print('${state.runtimeType} is null');
       return Container();
     }
 
     String openUrl =
-        '${Env.wrapper}/pay/create-flow/channel-set-id/${widget.checkoutScreenBloc.state.channelSet.id}';
+        '${Env.wrapper}/pay/create-flow/channel-set-id/${state.channelSet.id}';
     return Container(
       child: Column(
         children: <Widget>[
           WorkshopTopBar(
             title: 'Your checkout',
-            businessName: widget.checkoutScreenBloc.dashboardScreenBloc.state
-                .activeBusiness.name,
+            businessName: state.activeBusiness.name,
             openUrl: openUrl,
             isLoadingQrcode: state.isLoadingQrcode,
             onTapSwitchCheckout: () {
@@ -159,18 +153,4 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
     }
   }
 
-  showPaySuccessDialog(WorkshopScreenState state) {
-    showCupertinoDialog(
-      context: context,
-      builder: (builder) {
-        return Dialog(
-          backgroundColor: Colors.transparent,
-          child: PaySuccessView(
-            screenBloc: screenBloc,
-            channelSetFlow: state.channelSetFlow,
-          ),
-        );
-      },
-    );
-  }
 }

@@ -54,7 +54,10 @@ class WorkshopScreenBloc
       yield state.copyWith(
         channelSetFlow: channelSetFlow,
         isLoading: false,
+        isReset:true,
       );
+      await Future.delayed(Duration(milliseconds: 100));
+      yield state.copyWith(isReset: false);
     } else if (event is PayflowLoginEvent) {
       yield* login(event.email, event.password);
     } else if (event is PayCreditPaymentEvent) {
@@ -204,16 +207,16 @@ class WorkshopScreenBloc
         updatePayflowIndex: -1,
       );
     } else if (response is Map) {
-      // yield WorkshopScreenPaySuccess();
+      yield WorkshopScreenPaySuccess();
       channelSetFlow.payment = Payment.fromJson(response['payment']);
       yield state.copyWith(
         isUpdating: false,
-        isPaid: true,
+        // isPaid: true,
         updatePayflowIndex: -1,
         channelSetFlow: channelSetFlow,
       );
-      Future.delayed(const Duration(milliseconds: 500))
-          .then((value) => state.copyWith(isPaid: false));
+      // Future.delayed(const Duration(milliseconds: 500))
+      //     .then((value) => state.copyWith(isPaid: false));
     }
   }
   Stream<WorkshopScreenState> payByCreditCard(Map<String, dynamic>cardJson) async* {
@@ -293,13 +296,10 @@ class WorkshopScreenBloc
       // channelSetFlow.payment = payResult.payment;
       yield state.copyWith(
         isUpdating: false,
-        isPaid: true,
         channelSetFlow: channelSetFlow,
         payResult: payResult,
         updatePayflowIndex: -1,
       );
-      Future.delayed(const Duration(milliseconds: 500))
-          .then((value) => state.copyWith(isPaid: false));
     }
   }
 
