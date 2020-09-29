@@ -7,17 +7,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
-import 'package:payever/checkout/views/workshop/workshop_screen.dart';
 import 'package:payever/commons/commons.dart';
-import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/pos/views/products_screen/pos_product_detail_screen.dart';
 import 'package:payever/pos/views/products_screen/products_filter_screen.dart';
 import 'package:payever/pos/views/products_screen/widget/pos_product_grid_item.dart';
-import 'package:payever/pos/widgets/pos_top_button.dart';
 import 'package:payever/products/models/models.dart';
 import 'package:payever/theme.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
-
+import 'package:icon_badge/icon_badge.dart';
 import '../pos_qr_app.dart';
 
 class ProductsScreen extends StatefulWidget {
@@ -94,6 +91,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
         Column(
           children: <Widget>[
             _toolBar(state),
+            _secondToolBar(state),
             Expanded(
               child: isGridMode ? gridBody(state) : _listBody(state),
             ),
@@ -111,7 +109,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     searchController.text = state.searchText;
     return Container(
       height: 50,
-      color: overlaySecondAppBar(),
+      color: overlaySecondAppBar().withOpacity(0.9),
       child: Row(
         children: <Widget>[
           Row(
@@ -120,78 +118,61 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 padding: EdgeInsets.only(left: 8),
               ),
               _filterButton(),
-              Padding(
-                padding: EdgeInsets.only(left: 8, right: 12),
-                child: Container(
-                  width: 1,
-                  color: Color(0xFF888888),
-                  height: 24,
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   PageTransition(
-                  //     child: WorkshopScreen(
-                  //       checkoutScreenBloc: CheckoutScreenBloc(
-                  //           dashboardScreenBloc:
-                  //               widget.posScreenBloc.dashboardScreenBloc)
-                  //         ..add(CheckoutScreenInitEvent(
-                  //           business: state.businessId,
-                  //           checkouts: widget.posScreenBloc.dashboardScreenBloc.state.checkouts,
-                  //           defaultCheckout: widget.posScreenBloc.dashboardScreenBloc.state.defaultCheckout,
-                  //         )),
-                  //     ),
-                  //     type: PageTransitionType.fade,
-                  //   ),
-                  // );
-                },
-                child: Text(
-                  'Amount',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 12, right: 12),
-                child: Container(
-                  width: 1,
-                  color: Color(0xFF888888),
-                  height: 24,
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    PageTransition(
-                      child: PosQRAppScreen(
-                        businessId: state.businessId,
-                        screenBloc: widget.posScreenBloc,
-                        fromProductsScreen: true,
-                      ),
-                      type: PageTransitionType.fade,
-                      duration: Duration(milliseconds: 500),
-                    ),
-                  );
-                },
-                child: Text(
-                  'QR',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
+              // Padding(
+              //   padding: EdgeInsets.only(left: 8, right: 12),
+              //   child: Container(
+              //     width: 1,
+              //     color: Color(0xFF888888),
+              //     height: 24,
+              //   ),
+              // ),
+              // InkWell(
+              //   onTap: () {},
+              //   child: Text(
+              //     'Amount',
+              //     style: TextStyle(
+              //       fontSize: 14,
+              //       color: Colors.white,
+              //     ),
+              //   ),
+              // ),
+              // Padding(
+              //   padding: EdgeInsets.only(left: 12, right: 12),
+              //   child: Container(
+              //     width: 1,
+              //     color: Color(0xFF888888),
+              //     height: 24,
+              //   ),
+              // ),
+              // InkWell(
+              //   onTap: () {
+              //     Navigator.push(
+              //       context,
+              //       PageTransition(
+              //         child: PosQRAppScreen(
+              //           businessId: state.businessId,
+              //           screenBloc: widget.posScreenBloc,
+              //           fromProductsScreen: true,
+              //         ),
+              //         type: PageTransitionType.fade,
+              //         duration: Duration(milliseconds: 500),
+              //       ),
+              //     );
+              //   },
+              //   child: Text(
+              //     'QR',
+              //     style: TextStyle(
+              //       fontSize: 14,
+              //       color: Colors.white,
+              //     ),
+              //   ),
+              // ),
             ],
           ),
           Expanded(
             child: Container(
               height: 35,
-              margin: EdgeInsets.symmetric(horizontal: 12),
+              margin: EdgeInsets.symmetric(horizontal: 16),
               padding: EdgeInsets.symmetric(horizontal: 4),
               decoration: BoxDecoration(
                 color: overlayBackground(),
@@ -280,6 +261,95 @@ class _ProductsScreenState extends State<ProductsScreen> {
               },
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _secondToolBar(PosScreenState state) {
+    searchController.text = state.searchText;
+    return Container(
+      height: 50,
+      color: overlaySecondAppBar().withOpacity(0.8),
+      child: Row(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(left: 12),
+              ),
+              InkWell(
+                onTap: () {
+                  // Navigator.push(
+                  //   context,
+                  //   PageTransition(
+                  //     child: WorkshopScreen(
+                  //       checkoutScreenBloc: CheckoutScreenBloc(
+                  //           dashboardScreenBloc:
+                  //               widget.posScreenBloc.dashboardScreenBloc)
+                  //         ..add(CheckoutScreenInitEvent(
+                  //           business: state.businessId,
+                  //           checkouts: widget.posScreenBloc.dashboardScreenBloc.state.checkouts,
+                  //           defaultCheckout: widget.posScreenBloc.dashboardScreenBloc.state.defaultCheckout,
+                  //         )),
+                  //     ),
+                  //     type: PageTransitionType.fade,
+                  //   ),
+                  // );
+                },
+                child: Text(
+                  'Amount',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 12, right: 12),
+                child: Container(
+                  width: 1,
+                  color: Color(0xFF888888),
+                  height: 24,
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      child: PosQRAppScreen(
+                        businessId: state.businessId,
+                        screenBloc: widget.posScreenBloc,
+                        fromProductsScreen: true,
+                      ),
+                      type: PageTransitionType.fade,
+                      duration: Duration(milliseconds: 500),
+                    ),
+                  );
+                },
+                child: Text(
+                  'QR',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Spacer(),
+          IconBadge(
+            icon: Icon(Icons.shop, color: Colors.white, size: 20,),
+            itemCount: (state.channelSetFlow == null || state.channelSetFlow.cart == null) ? 0 : state.channelSetFlow.cart.length,
+            badgeColor: Colors.red,
+            itemColor: Colors.white,
+            hideZero: true,
+            onTap: () {
+              print('test');
+            },
+          ),
+          SizedBox(width: 10,),
         ],
       ),
     );
@@ -426,238 +496,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
         Divider(height: 1, color: Colors.white.withOpacity(0.5)),
       ],
     );
-  }
-
-  List<Widget> popupButtons(BuildContext context, ProductListModel model) {
-    return [
-      Container(
-        height: 44,
-        child: SizedBox.expand(
-          child: MaterialButton(
-            onPressed: () {},
-            child: Text(
-              Language.getProductStrings('edit'),
-            ),
-          ),
-        ),
-      ),
-      Container(
-        height: 44,
-        child: SizedBox.expand(
-          child: MaterialButton(
-            onPressed: () {
-              Navigator.pop(context);
-              showCupertinoDialog(
-                context: context,
-                builder: (builder) {
-                  return Dialog(
-                    backgroundColor: Colors.transparent,
-                    child: Container(
-                      height: 216,
-                      child: BlurEffectView(
-                        padding: EdgeInsets.all(16),
-                        child: Column(
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(top: 16),
-                            ),
-                            Icon(Icons.info),
-                            Padding(
-                              padding: EdgeInsets.only(top: 16),
-                            ),
-                            Text(
-                              Language.getPosStrings('Deleting Products'),
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w300,
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 16),
-                            ),
-                            Text(
-                              Language.getPosStrings(
-                                  'Do you really want to delete your product?'),
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w300,
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 16),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                MaterialButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  height: 24,
-                                  elevation: 0,
-                                  minWidth: 0,
-                                  color: overlayBackground(),
-                                  child: Text(
-                                    Language.getPosStrings('actions.no'),
-                                  ),
-                                ),
-                                MaterialButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    // screenBloc.add(DeleteProductsEvent(
-                                    //     models: [model.productsModel]));
-                                  },
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  height: 24,
-                                  elevation: 0,
-                                  minWidth: 0,
-                                  color: overlayBackground(),
-                                  child: Text(
-                                    Language.getPosStrings('actions.yes'),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              );
-            },
-            child: Text(
-              Language.getProductStrings('delete'),
-            ),
-          ),
-        ),
-      ),
-    ];
-  }
-
-  List<OverflowMenuItem> productsPopUpActions(
-      BuildContext context, PosScreenState state) {
-    return [
-      OverflowMenuItem(
-        title: 'Select All',
-        onTap: () {
-          // screenBloc.add(SelectAllProductsEvent());
-        },
-      ),
-      OverflowMenuItem(
-        title: 'UnSelect',
-        onTap: () {
-          // screenBloc.add(UnSelectProductsEvent());
-        },
-      ),
-      OverflowMenuItem(
-        title: 'Add to Collection',
-        onTap: () {
-          // screenBloc.add(AddToCollectionEvent());
-        },
-      ),
-      OverflowMenuItem(
-        title: 'Delete Products',
-        onTap: () {
-          showCupertinoDialog(
-            context: context,
-            builder: (builder) {
-              return Dialog(
-                backgroundColor: Colors.transparent,
-                child: Container(
-                  height: 216,
-                  child: BlurEffectView(
-                    padding: EdgeInsets.all(16),
-                    child: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.only(top: 16),
-                        ),
-                        Icon(Icons.info),
-                        Padding(
-                          padding: EdgeInsets.only(top: 16),
-                        ),
-                        Text(
-                          Language.getPosStrings('Deleting Products'),
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w300,
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 16),
-                        ),
-                        Text(
-                          Language.getPosStrings(
-                              'Do you really want to delete your products?'),
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w300,
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 16),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            MaterialButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              height: 24,
-                              elevation: 0,
-                              minWidth: 0,
-                              color: overlayBackground(),
-                              child: Text(
-                                Language.getPosStrings('actions.no'),
-                              ),
-                            ),
-                            MaterialButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                                List<ProductsModel> deletes = [];
-                                // state.products.forEach((element) {
-                                //   if (element.isChecked) {
-                                //     deletes.add(element.productsModel);
-                                //   }
-                                // });
-                                // screenBloc
-                                //     .add(DeleteProductsEvent(models: deletes));
-                              },
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              height: 24,
-                              elevation: 0,
-                              minWidth: 0,
-                              color: overlayBackground(),
-                              child: Text(
-                                Language.getPosStrings('actions.yes'),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
-          );
-        },
-      ),
-    ];
   }
 
   void navigateProductDetail(ProductsModel model) {

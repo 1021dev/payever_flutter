@@ -14,10 +14,9 @@ import 'package:payever/commons/commons.dart';
 
 class WorkshopScreen1 extends StatefulWidget {
   final CheckoutScreenBloc checkoutScreenBloc;
-  final bool fromCheckOutScreen;
 
   const WorkshopScreen1(
-      {this.checkoutScreenBloc, this.fromCheckOutScreen = true});
+      {this.checkoutScreenBloc});
 
   @override
   _WorkshopScreen1State createState() => _WorkshopScreen1State();

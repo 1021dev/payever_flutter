@@ -816,7 +816,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
   }
 
   Stream<PosScreenState> cardProduct(Map<String, dynamic> body) async* {
-    yield state.copyWith(isLoading: true);
+    yield state.copyWith(isUpdating: true);
     String token = GlobalUtils.activeToken.accessToken;
     String langCode = getDefaultLanguage();
 
@@ -824,9 +824,11 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
         token, state.channelSetFlow.id, langCode, body);
 
     if (response is Map) {
+      ChannelSetFlow channelSetFlow = ChannelSetFlow.fromJson(response);
+      yield state.copyWith(channelSetFlow: channelSetFlow);
       yield PosScreenSuccess();
     }
-    yield state.copyWith(isLoading: false);
+    yield state.copyWith(isUpdating: false);
   }
 
   String getDefaultLanguage() {

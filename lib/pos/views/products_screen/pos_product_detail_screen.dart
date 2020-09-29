@@ -161,14 +161,18 @@ class _PosProductDetailScreenState extends State<PosProductDetailScreen> {
                   ),
                   InkWell(
                     onTap: () {
+                      if (state.isUpdating) return;
                       Map<String, dynamic> card = {
                         'id': product.id,
                         'name': product.title,
                         'quantity': 1,
                         'uuid': product.id,
                       };
+                      List<dynamic>cards = state.channelSetFlow.cart;
+                      if(cards == null) cards = [];
+                      cards.add(card);
                       Map<String, dynamic> body = {
-                        'cart': [card]
+                        'cart': cards
                       };
                       widget.posScreenBloc.add(CardProductEvent(body: body));
                     },
@@ -181,11 +185,20 @@ class _PosProductDetailScreenState extends State<PosProductDetailScreen> {
                         borderRadius: BorderRadius.circular(4),
                         color: overlayBackground(),
                       ),
-                      child: Text(
-                        'In the Cart',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w500),
-                      ),
+                      child: state.isUpdating
+                          ? Center(
+                              child: Container(
+                                width: 30,
+                                height: 30,
+                                child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                            ),
+                              ))
+                          : Text(
+                              'In the Cart',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w500),
+                            ),
                     ),
                   ),
                   SizedBox(
