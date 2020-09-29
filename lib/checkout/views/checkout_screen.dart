@@ -268,7 +268,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   Widget _getBody(CheckoutScreenState state) {
     switch (selectedIndex) {
       case 0:
-        return state.isLoading ?
+        return state.isLoading || state.channelSet == null ?
         Center(
           child: CircularProgressIndicator(),
         ) : WorkshopScreen1(checkoutScreenBloc: this.screenBloc,);

@@ -104,8 +104,7 @@ class _WorkshopViewState extends State<WorkshopView> {
       WorkshopScreenBloc(checkoutScreenBloc: widget.checkoutScreenBloc)
         ..add(WorkshopScreenInitEvent(
           business: widget.checkoutScreenBloc.state.business,
-          checkoutFlow: widget.checkoutScreenBloc.state.checkoutFlow,
-          channelSetFlow: widget.checkoutScreenBloc.state.channelSetFlow,
+          channelSet: widget.checkoutScreenBloc.state.channelSet,
           defaultCheckout: widget.checkoutScreenBloc.state.defaultCheckout,
         ));
     }
@@ -114,7 +113,7 @@ class _WorkshopViewState extends State<WorkshopView> {
     } else {
       _formKeyOrder = GlobalKey<FormState>();
     }
-    initialize(widget.checkoutScreenBloc.state.channelSetFlow);
+    // initialize(widget.checkoutScreenBloc.state.channelSetFlow);
     super.initState();
   }
 
@@ -189,7 +188,7 @@ class _WorkshopViewState extends State<WorkshopView> {
         },
       );
     }
-    if (widget.checkoutScreenBloc.state.channelSet == null) {
+    if (state.channelSetFlow == null) {
       return Container();
     }
     return _workshop(state);

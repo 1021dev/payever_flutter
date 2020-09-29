@@ -76,7 +76,7 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
           if (langs.length > 0) {
             defaultLanguage = langs.first.name;
           }
-          if (widget.checkoutScreenBloc.state.channelSetFlow == null) {
+          if (widget.checkoutScreenBloc.state.channelSet == null) {
             return Container(
               child: Center(
                 child: CircularProgressIndicator(),
@@ -480,7 +480,7 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                               ),
                               Flexible(
                                 child: Text(
-                                  widget.checkoutScreenBloc.state.channelSetFlow.channelSetId,
+                                  widget.checkoutScreenBloc.state.channelSet.id,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
@@ -495,10 +495,10 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                                 onPressed: () {
                                   Clipboard.setData(ClipboardData(
                                       text: widget.checkoutScreenBloc.state
-                                          .channelSetFlow.channelSetId));
+                                          .channelSet.id));
                                   setState(() {
                                     clipboardString = widget.checkoutScreenBloc.state
-                                        .channelSetFlow.channelSetId;
+                                        .channelSet.id;
                                   });
                                 },
                                 shape: RoundedRectangleBorder(
@@ -510,7 +510,7 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                                 minWidth: 0,
                                 child: Text(
                                   clipboardString == widget.checkoutScreenBloc.state
-                                      .channelSetFlow.channelSetId
+                                      .channelSet.id
                                       ? 'copied'
                                       : Language.getPosStrings('actions.copy'),
                                   style: TextStyle(

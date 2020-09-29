@@ -33,8 +33,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
         WorkshopScreenBloc(checkoutScreenBloc: widget.checkoutScreenBloc)
           ..add(WorkshopScreenInitEvent(
             business: widget.checkoutScreenBloc.state.business,
-            checkoutFlow: widget.checkoutScreenBloc.state.checkoutFlow,
-            channelSetFlow: widget.checkoutScreenBloc.state.channelSetFlow,
+            channelSet: widget.checkoutScreenBloc.state.channelSet,
             defaultCheckout: widget.checkoutScreenBloc.state.defaultCheckout,
           ));
     super.initState();
@@ -105,7 +104,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
             title: 'Your checkout',
             businessName: widget.checkoutScreenBloc.dashboardScreenBloc.state
                 .activeBusiness.name,
-            openUrl: state.channelSetFlow.id,
+            openUrl: openUrl,
             isLoadingQrcode: state.isLoadingQrcode,
             onOpenTap: () {
               Navigator.push(

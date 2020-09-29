@@ -108,76 +108,6 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       yield* installIntegration(event.integrationId);
     } else if (event is BusinessUploadEvent) {
       yield* uploadBusiness(event.body);
-    } else if (event is GetChannelSetFlowEvent) {
-      yield* getChannelSetFlow();
-    } else if (event is UpdateChannelSetFlowEvent) {
-      yield state.copyWith(channelSetFlow: event.channelSetFlow);
-    }
-  }
-
-  Stream<CheckoutScreenState> getChannelSetFlow() async* {
-    String langCode = getDefaultLanguage();
-    dynamic checkoutFlowResponse = await api.getCheckoutChannelSetFlow(token, langCode, state.channelSetFlow.id);
-    ChannelSetFlow channelSetFlow;
-    if (checkoutFlowResponse is Map) {
-      channelSetFlow = ChannelSetFlow.fromJson(checkoutFlowResponse);
-      if (channelSetFlow.reference.isNotEmpty && channelSetFlow.amount > 0) {
-        Map<String, dynamic>body = {};
-        body['flow'] = checkoutFlowResponse;
-        dynamic qrcodelinkResponse = await api.getChannelSetQRcode(token, body);
-        if (qrcodelinkResponse is Map) {
-          String id = qrcodelinkResponse['id'];
-
-          dynamic response = await api.postGenerateTerminalQRCode(
-            GlobalUtils.activeToken.accessToken,
-            state.business,
-            dashboardScreenBloc.state.activeBusiness.name,
-            '$imageBase${dashboardScreenBloc.state.activeTerminal.logo}',
-            dashboardScreenBloc.state.activeTerminal.id,
-            '${Env.checkout}/pay/restore-flow-from-code/channel-set-id/$id',
-          );
-
-          String imageData;
-          if (response is Map) {
-            dynamic form = response['form'];
-            String contentType = form['contentType'] != null
-                ? form['contentType']
-                : '';
-            dynamic content = form['content'] != null ? form['content'] : null;
-            if (content != null) {
-              List<dynamic> contentData = content[contentType];
-              for (int i = 0; i < contentData.length; i++) {
-                dynamic data = content[contentType][i];
-                if (data['data'] != null) {
-                  List<dynamic> list = data['data'];
-                  for (dynamic w in list) {
-                    if (w[0]['type'] == 'image') {
-                      imageData = w[0]['value'];
-                    }
-                  }
-                }
-              }
-            }
-          }
-          http.Response qrResponse;
-          if (imageData != null) {
-            var headers = {
-              HttpHeaders.authorizationHeader: 'Bearer ${GlobalUtils.activeToken.accessToken}',
-              HttpHeaders.contentTypeHeader: 'application/json',
-              HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-            };
-            print('url => $imageData');
-            qrResponse = await http.get(
-              imageData,
-              headers:  headers,
-            );
-          }
-          yield state.copyWith(qrImage: qrResponse.bodyBytes);
-          yield CheckoutScreenStatePrefilledQRCodeSuccess();
-        }
-      } else {
-
-      }
     }
   }
 
@@ -246,7 +176,6 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     }
 
     yield state.copyWith(
-      // isLoading: false,
       checkouts: checkouts,
       integrations: integrations,
       defaultCheckout: defaultCheckout,
@@ -273,41 +202,17 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     (element.checkout == state.defaultCheckout.id && element.type == 'link'));
 
     CheckoutFlow checkoutFlow;
-    String langCode = getDefaultLanguage();
-
     dynamic channelFlowResponse = await api.getCheckoutChannelFlow(
         token, channelSet.id);
     if (channelFlowResponse is Map) {
       checkoutFlow = CheckoutFlow.fromJson(channelFlowResponse);
     }
-
-    ChannelSetFlow channelSetFlow;
-    dynamic checkoutFlowResponse = await api.getCheckoutFlow(
-        token, langCode, channelSet.id);
-    if (checkoutFlowResponse is Map) {
-      // channelSetFlow = ChannelSetFlow.fromMap(checkoutFlowResponse);
-      channelSetFlow = ChannelSetFlow.fromJson(checkoutFlowResponse);
-    }
-    await api.checkoutFlowStorage(
-        token, channelSetFlow.id);
-
     yield state.copyWith(
-      isLoading: false,
       channelSets: channelSets,
       channelSet: channelSet,
-      channelSetFlow: channelSetFlow,
       checkoutFlow: checkoutFlow,
+      isLoading: false,
     );
-  }
-
-  String getDefaultLanguage() {
-    Lang defaultLang;
-    List<Lang> langList = state.defaultCheckout.settings.languages.where((
-        element) => element.active).toList();
-    if (langList.length > 0) {
-      defaultLang = langList.first;
-    }
-    return defaultLang != null ? defaultLang.code : 'en';
   }
 
   Stream<CheckoutScreenState> getPaymentData() async* {

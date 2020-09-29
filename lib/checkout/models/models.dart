@@ -241,7 +241,7 @@ class CheckoutFlow {
 @JsonSerializable()
 class ChannelSetFlow {
   @JsonKey(name: 'accept_terms_payever')          String acceptTermsPayever;
-  @JsonKey(name: 'amount')                        num amount;
+  @JsonKey(name: 'amount', defaultValue: 0)       num amount;
   @JsonKey(name: 'api_call')                      String apiCall;
   @JsonKey(name: 'api_call_cart')                 String apiCallCart;
   @JsonKey(name: 'api_call_id')                   String apiCallId;

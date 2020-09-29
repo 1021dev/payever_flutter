@@ -28,14 +28,8 @@ class WorkshopScreenBloc
   Stream<WorkshopScreenState> mapEventToState(
       WorkshopScreenEvent event) async* {
     if (event is WorkshopScreenInitEvent) {
-      if (event.business != null) {
-        yield state.copyWith(
-          business: event.business,
-          channelSetFlow: event.channelSetFlow,
-          checkoutFlow: event.checkoutFlow,
-          defaultCheckout: event.defaultCheckout,
-        );
-      }
+      yield* fetchInitData(
+          event.business, event.defaultCheckout, event.channelSet);
     } else if (event is PatchCheckoutFlowOrderEvent) {
       yield* patchCheckoutFlowOrder(event.body);
     } else if (event is PatchCheckoutFlowAddressEvent) {
@@ -51,12 +45,54 @@ class WorkshopScreenBloc
     } else if (event is GetPrefilledQRCodeEvent) {
       yield* getPrefilledQrcode();
     } else if (event is RefreshWorkShopEvent) {
-      checkoutScreenBloc.add(CheckoutScreenInitEvent());
+      yield state.copyWith(isLoading: true);
+      ChannelSetFlow channelSetFlow;
+      dynamic response =
+      await api.getCheckoutFlow(token, 'en', state.channelSet.id);
+      if (response is Map) {
+        channelSetFlow = ChannelSetFlow.fromJson(response);
+      }
+      await api.checkoutFlowStorage(token, channelSetFlow.id);
+      yield state.copyWith(
+        channelSetFlow: channelSetFlow,
+        isLoading: false,
+      );
     } else if (event is PayflowLoginEvent) {
       yield* login(event.email, event.password);
     } else if (event is PayCreditPaymentEvent) {
       yield* payByCreditCard(event.body);
     }
+  }
+
+  Stream<WorkshopScreenState> fetchInitData(String businessId,
+      Checkout defaultCheckout, ChannelSet channelSet) async* {
+    yield state.copyWith(
+      isLoading: true,
+      business: businessId,
+      channelSet: channelSet,
+      defaultCheckout: defaultCheckout,
+    );
+    dynamic response =
+        await api.getCheckoutFlow(token, 'en', channelSet.id);
+    ChannelSetFlow channelSetFlow;
+    if (response is Map) {
+      channelSetFlow = ChannelSetFlow.fromJson(response);
+    }
+    await api.checkoutFlowStorage(token, channelSetFlow.id);
+    yield state.copyWith(
+      channelSetFlow: channelSetFlow,
+      isLoading: false,
+    );
+  }
+
+  String getDefaultLanguage() {
+    Lang defaultLang;
+    List<Lang> langList = state.defaultCheckout.settings.languages.where((
+        element) => element.active).toList();
+    if (langList.length > 0) {
+      defaultLang = langList.first;
+    }
+    return defaultLang != null ? defaultLang.code : 'en';
   }
 
   Stream<WorkshopScreenState> patchCheckoutFlowOrder(Map body) async* {
@@ -81,7 +117,6 @@ class WorkshopScreenBloc
         updatePayflowIndex: -1,
         channelSetFlow: channelSetFlow,
       );
-      checkoutScreenBloc.add(UpdateChannelSetFlowEvent(channelSetFlow));
     }
   }
 
@@ -133,7 +168,6 @@ class WorkshopScreenBloc
         updatePayflowIndex: -1,
         channelSetFlow: channelSetFlow,
       );
-      checkoutScreenBloc.add(UpdateChannelSetFlowEvent(channelSetFlow));
 
       bool selectedPaymentOption = false;
       if (channelSetFlow.paymentOptionId == null) {
@@ -179,7 +213,6 @@ class WorkshopScreenBloc
         updatePayflowIndex: -1,
         channelSetFlow: channelSetFlow,
       );
-      checkoutScreenBloc.add(UpdateChannelSetFlowEvent(channelSetFlow));
       Future.delayed(const Duration(milliseconds: 500))
           .then((value) => state.copyWith(isPaid: false));
     }
@@ -252,7 +285,6 @@ class WorkshopScreenBloc
         payResult: payResult,
         updatePayflowIndex: -1,
       );
-      checkoutScreenBloc.add(UpdateChannelSetFlowEvent(channelSetFlow));
       Future.delayed(const Duration(milliseconds: 500))
           .then((value) => state.copyWith(isPaid: false));
     }

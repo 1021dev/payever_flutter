@@ -2,17 +2,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/models/user.dart';
+import 'package:payever/pos/models/pos.dart';
 
 class WorkshopScreenState {
+  final bool isLoading;
   final bool isLoadingQrcode;
   final bool isUpdating;
   final bool isPaid;
   final bool isCheckingEmail;
   final int updatePayflowIndex;
   final String business;
+  final ChannelSet channelSet;
   final ChannelSetFlow channelSetFlow;
   final Checkout defaultCheckout;
-  final CheckoutFlow checkoutFlow;
   final bool isAvailable;
   final bool isValid;
   final dynamic qrForm;
@@ -22,15 +24,16 @@ class WorkshopScreenState {
   final PayResult payResult;
 
   WorkshopScreenState({
+    this.isLoading = false,
     this.isLoadingQrcode = false,
     this.isUpdating = false,
     this.isPaid = false,
     this.isCheckingEmail = false,
     this.updatePayflowIndex = -1,
     this.business,
+    this.channelSet,
     this.channelSetFlow,
     this.defaultCheckout,
-    this.checkoutFlow,
     this.isAvailable = false,
     this.isValid = false,
     this.qrForm,
@@ -41,6 +44,7 @@ class WorkshopScreenState {
   });
 
   List<Object> get props => [
+        this.isLoading,
         this.isLoadingQrcode,
         this.isUpdating,
         this.isPaid,
@@ -49,7 +53,6 @@ class WorkshopScreenState {
         this.business,
         this.channelSetFlow,
         this.defaultCheckout,
-        this.checkoutFlow,
         this.isAvailable,
         this.isValid,
         this.qrForm,
@@ -60,15 +63,16 @@ class WorkshopScreenState {
   ];
 
   WorkshopScreenState copyWith({
+    bool isLoading,
     bool isLoadingQrcode,
     bool isUpdating,
     bool isPaid,
+    ChannelSet channelSet,
     bool isCheckingEmail,
     int updatePayflowIndex,
     String business,
     ChannelSetFlow channelSetFlow,
     Checkout defaultCheckout,
-    CheckoutFlow checkoutFlow,
     bool isAvailable,
     bool isValid,
     dynamic qrForm,
@@ -78,6 +82,7 @@ class WorkshopScreenState {
     PayResult payResult,
   }) {
     return WorkshopScreenState(
+      isLoading: isLoading ?? this.isLoading,
       isLoadingQrcode: isLoadingQrcode ?? this.isLoadingQrcode,
       isUpdating: isUpdating ?? this.isUpdating,
       isPaid: isPaid ?? this.isPaid,
@@ -86,9 +91,9 @@ class WorkshopScreenState {
       isValid: isValid ?? this.isValid,
       updatePayflowIndex: updatePayflowIndex ?? this.updatePayflowIndex,
       business: business ?? this.business,
+      channelSet: channelSet ?? this.channelSet,
       channelSetFlow: channelSetFlow ?? this.channelSetFlow,
       defaultCheckout: defaultCheckout ?? this.defaultCheckout,
-      checkoutFlow: checkoutFlow ?? this.checkoutFlow,
       qrForm: qrForm,
       qrImage: qrImage,
       prefilledLink: prefilledLink ?? this.prefilledLink,

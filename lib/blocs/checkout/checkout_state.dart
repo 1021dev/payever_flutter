@@ -20,7 +20,6 @@ class CheckoutScreenState {
   final List<String> integrations;
   final Checkout defaultCheckout;
   final CheckoutFlow checkoutFlow;
-  final ChannelSetFlow channelSetFlow;
   final List<IntegrationModel> connections;
   final List<IntegrationModel> checkoutConnections;
   final List<ConnectModel> connects;
@@ -64,7 +63,6 @@ class CheckoutScreenState {
     this.integrations = const [],
     this.defaultCheckout,
     this.checkoutFlow,
-    this.channelSetFlow,
     this.connections = const [],
     this.checkoutConnections = const [],
     this.connects = const [],
@@ -109,7 +107,6 @@ class CheckoutScreenState {
     this.integrations,
     this.defaultCheckout,
     this.checkoutFlow,
-    this.channelSetFlow,
     this.connects,
     this.connections,
     this.checkoutConnections,
@@ -155,7 +152,6 @@ class CheckoutScreenState {
     List<String> integrations,
     Checkout defaultCheckout,
     CheckoutFlow checkoutFlow,
-    ChannelSetFlow channelSetFlow,
     List<IntegrationModel> connections,
     List<IntegrationModel> checkoutConnections,
     List<ConnectModel> connects,
@@ -200,7 +196,6 @@ class CheckoutScreenState {
       integrations: integrations ?? this.integrations,
       defaultCheckout: defaultCheckout ?? this.defaultCheckout,
       checkoutFlow: checkoutFlow ?? this.checkoutFlow,
-      channelSetFlow: channelSetFlow ?? this.channelSetFlow,
       connections: connections ?? this.connections,
       checkoutConnections: checkoutConnections ?? this.checkoutConnections,
       connects: connects ?? this.connects,

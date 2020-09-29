@@ -276,15 +276,3 @@ class BusinessUploadEvent extends CheckoutScreenEvent {
   @override
   List<Object> get props => [body];
 }
-
-class GetChannelSetFlowEvent extends CheckoutScreenEvent {
-
-}
-
-class UpdateChannelSetFlowEvent extends CheckoutScreenEvent {
-  final ChannelSetFlow channelSetFlow;
-
-  UpdateChannelSetFlowEvent(this.channelSetFlow);
-  @override
-  List<Object> get props => [channelSetFlow];
-}

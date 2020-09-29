@@ -290,7 +290,7 @@ Map<String, dynamic> _$CheckoutFlowToJson(CheckoutFlow instance) =>
 ChannelSetFlow _$ChannelSetFlowFromJson(Map<String, dynamic> json) {
   return ChannelSetFlow()
     ..acceptTermsPayever = json['accept_terms_payever'] as String
-    ..amount = json['amount'] as num
+    ..amount = json['amount'] as num ?? 0
     ..apiCall = json['api_call'] as String
     ..apiCallCart = json['api_call_cart'] as String
     ..apiCallId = json['api_call_id'] as String
