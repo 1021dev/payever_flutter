@@ -58,7 +58,7 @@ class CheckoutSwitchScreenBloc extends Bloc<CheckoutSwitchScreenEvent, CheckoutS
 //    if (response != null) {
 //      checkoutScreenBloc.state.copyWith(defaultCheckout: checkout);
 //    }
-    checkoutScreenBloc.add(CheckoutScreenInitEvent(business: businessId, defaultCheckout: checkout, checkouts: checkoutScreenBloc.state.checkouts));
+    checkoutScreenBloc.add(CheckoutScreenInitEvent(defaultCheckout: checkout));
 
     yield state.copyWith(blobName: '', isLoading: false);
   }
@@ -88,7 +88,7 @@ class CheckoutSwitchScreenBloc extends Bloc<CheckoutSwitchScreenEvent, CheckoutS
       }
     }
     checkoutScreenBloc.state.copyWith(checkouts: checkouts, defaultCheckout: defaultCheckout);
-    checkoutScreenBloc.add(CheckoutScreenInitEvent(business: businessId, defaultCheckout: defaultCheckout, checkouts: checkouts));
+    checkoutScreenBloc.add(CheckoutScreenInitEvent(defaultCheckout: defaultCheckout, checkouts: checkouts));
 
     yield state.copyWith(blobName: '', isUpdating: false);
     yield CheckoutSwitchScreenStateSuccess();

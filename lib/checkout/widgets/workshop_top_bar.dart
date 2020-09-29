@@ -7,6 +7,7 @@ import '../../theme.dart';
 import 'checkout_top_button.dart';
 
 class WorkshopTopBar extends StatefulWidget {
+  final Function onTapSwitchCheckout;
   final Function onOpenTap;
   final Function onCloseTap;
   final Function onCopyPrefilledLink;
@@ -18,6 +19,7 @@ class WorkshopTopBar extends StatefulWidget {
 
   WorkshopTopBar(
       {this.onOpenTap,
+      this.onTapSwitchCheckout,
       this.onPrefilledQrcode,
       this.title,
       this.onCloseTap,
@@ -152,6 +154,13 @@ class _WorkshopTopBarState extends State<WorkshopTopBar> {
 
   List<CheckOutPopupButton> _morePopup(BuildContext context) {
     List<CheckOutPopupButton> checkoutPopups = [
+      CheckOutPopupButton(
+        title: 'Switch Checkout',
+        icon: Container(),
+        onTap: () {
+          widget.onTapSwitchCheckout();
+        },
+      ),
       CheckOutPopupButton(
         title: 'Copy pay link',
         icon: SvgPicture.asset(

@@ -5,12 +5,15 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/checkout/checkout_bloc.dart';
+import 'package:payever/checkout/models/models.dart';
 import 'package:payever/checkout/views/channels/channels_checkout_flow_screen.dart';
 import 'package:payever/checkout/views/workshop/prefilled_qr_screen.dart';
 import 'package:payever/checkout/views/workshop/subview/pay_success_view.dart';
 import 'package:payever/checkout/views/workshop/subview/work_shop_view.dart';
 import 'package:payever/checkout/widgets/workshop_top_bar.dart';
 import 'package:payever/commons/commons.dart';
+
+import 'checkout_switch_screen.dart';
 
 class WorkshopScreen1 extends StatefulWidget {
   final CheckoutScreenBloc checkoutScreenBloc;
@@ -26,13 +29,14 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
 
   final _formKeyOrder = GlobalKey<FormState>();
   WorkshopScreenBloc screenBloc;
-
+  bool switchCheckout = false;
   @override
   void initState() {
     screenBloc =
-        WorkshopScreenBloc(checkoutScreenBloc: widget.checkoutScreenBloc)
+        WorkshopScreenBloc()
           ..add(WorkshopScreenInitEvent(
-            business: widget.checkoutScreenBloc.state.business,
+            activeBusiness: widget.checkoutScreenBloc.state.activeBusiness,
+            activeTerminal: widget.checkoutScreenBloc.state.activeTerminal,
             channelSet: widget.checkoutScreenBloc.state.channelSet,
             defaultCheckout: widget.checkoutScreenBloc.state.defaultCheckout,
           ));
@@ -80,17 +84,17 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
   }
 
   Widget _body(WorkshopScreenState state) {
-    // if (switchCheckout) {
-    //   return CheckoutSwitchScreen(
-    //     businessId: state.business,
-    //     checkoutScreenBloc: widget.checkoutScreenBloc,
-    //     onOpen: (Checkout checkout) {
-    //       setState(() {
-    //         switchCheckout = false;
-    //       });
-    //     },
-    //   );
-    // }
+    if (switchCheckout) {
+      return CheckoutSwitchScreen(
+        businessId: state.activeBusiness.id,
+        checkoutScreenBloc: widget.checkoutScreenBloc,
+        onOpen: (Checkout checkout) {
+          setState(() {
+            switchCheckout = false;
+          });
+        },
+      );
+    }
     if (widget.checkoutScreenBloc.state.channelSet == null) {
       return Container();
     }
@@ -106,6 +110,13 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                 .activeBusiness.name,
             openUrl: openUrl,
             isLoadingQrcode: state.isLoadingQrcode,
+            onTapSwitchCheckout: () {
+              setState(() {
+                setState(() {
+                  switchCheckout = true;
+                });
+              });
+            },
             onOpenTap: () {
               Navigator.push(
                 context,
@@ -127,7 +138,6 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
           ),
           Flexible(
             child: WorkshopView(
-              checkoutScreenBloc: widget.checkoutScreenBloc,
               workshopScreenBloc: screenBloc,
               formKeyOrder: _formKeyOrder,
             ),
@@ -150,9 +160,6 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
   }
 
   showPaySuccessDialog(WorkshopScreenState state) {
-    // if (state.channelSetFlow.payment == null ||
-    //     state.channelSetFlow.payment.paymentDetails == null) return;
-    // if (state.payResult == null) return;
     showCupertinoDialog(
       context: context,
       builder: (builder) {

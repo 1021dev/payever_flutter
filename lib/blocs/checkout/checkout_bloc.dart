@@ -34,6 +34,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       if (event.business != null) {
         yield state.copyWith(
           activeBusiness: event.business,
+          activeTerminal: event.terminal,
           checkouts: event.checkouts,
           defaultCheckout: event.defaultCheckout,
         );
@@ -740,17 +741,17 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       integration = ConnectIntegration.toMap(integrationResponse);
     }
 
-    if (dashboardScreenBloc.state.activeTerminal == null) {
+    if (state.activeTerminal == null) {
       return;
     }
 
     dynamic response = await api.postGenerateTerminalQRCode(
       GlobalUtils.activeToken.accessToken,
       state.activeBusiness.id,
-      dashboardScreenBloc.state.activeBusiness.name,
-      '$imageBase${dashboardScreenBloc.state.activeTerminal.logo}',
-      dashboardScreenBloc.state.activeTerminal.id,
-      '${Env.checkout}/pay/create-flow-from-qr/channel-set-id/${dashboardScreenBloc.state.activeTerminal.channelSet}',
+      state.activeBusiness.name,
+      '$imageBase${state.activeTerminal.logo}',
+      state.activeTerminal.id,
+      '${Env.checkout}/pay/create-flow-from-qr/channel-set-id/${state.activeTerminal.channelSet}',
     );
 
     String imageData;

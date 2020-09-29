@@ -11,12 +11,10 @@ import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:http/http.dart' as http;
+import 'package:payever/connect/models/connect.dart';
 
 class WorkshopScreenBloc
     extends Bloc<WorkshopScreenEvent, WorkshopScreenState> {
-  final CheckoutScreenBloc checkoutScreenBloc;
-
-  WorkshopScreenBloc({this.checkoutScreenBloc});
 
   ApiService api = ApiService();
   String token = GlobalUtils.activeToken.accessToken;
@@ -29,7 +27,7 @@ class WorkshopScreenBloc
       WorkshopScreenEvent event) async* {
     if (event is WorkshopScreenInitEvent) {
       yield* fetchInitData(
-          event.business, event.defaultCheckout, event.channelSet);
+          event.activeBusiness, event.activeTerminal, event.defaultCheckout, event.channelSet);
     } else if (event is PatchCheckoutFlowOrderEvent) {
       yield* patchCheckoutFlowOrder(event.body);
     } else if (event is PatchCheckoutFlowAddressEvent) {
@@ -64,11 +62,12 @@ class WorkshopScreenBloc
     }
   }
 
-  Stream<WorkshopScreenState> fetchInitData(String businessId,
+  Stream<WorkshopScreenState> fetchInitData(Business activeBusiness, Terminal terminal,
       Checkout defaultCheckout, ChannelSet channelSet) async* {
     yield state.copyWith(
       isLoading: true,
-      business: businessId,
+      activeBusiness: activeBusiness,
+      activeTerminal: terminal,
       channelSet: channelSet,
       defaultCheckout: defaultCheckout,
     );
@@ -258,8 +257,22 @@ class WorkshopScreenBloc
       updatePayflowIndex: 3,
     );
 
-    Map<String, dynamic> paymentVariants =
-        checkoutScreenBloc.state.paymentVariants;
+
+    Map<String, PaymentVariant> paymentVariants = {};
+    dynamic paymentVariantsResponse = await api.getPaymentVariants(
+        token, state.activeBusiness.id);
+    if (paymentVariantsResponse is Map) {
+      paymentVariantsResponse.keys.toList().forEach((key) {
+        dynamic value = paymentVariantsResponse[key];
+        if (value is Map) {
+          PaymentVariant variant = PaymentVariant.fromMap(value);
+          if (variant != null) {
+            paymentVariants[key] = variant;
+          }
+        }
+      });
+    }
+
     String connectId = paymentVariants[paymentMethod].variants.first.uuid;
     dynamic response = await api.payByThirdParty(token, connectId, body);
 
@@ -326,11 +339,11 @@ class WorkshopScreenBloc
     }
 
     dynamic response = await api.postGenerateTerminalQRCode(
-      GlobalUtils.activeToken.accessToken,
-      state.business,
-      checkoutScreenBloc.dashboardScreenBloc.state.activeBusiness.name,
-      '$imageBase${checkoutScreenBloc.dashboardScreenBloc.state.activeTerminal.logo}',
-      checkoutScreenBloc.dashboardScreenBloc.state.activeTerminal.id,
+      token,
+      state.activeBusiness.id,
+      state.activeBusiness.name,
+      '$imageBase${state.activeTerminal.logo}',
+      state.activeTerminal.id,
       state.prefilledLink,
     );
 
@@ -407,7 +420,6 @@ class WorkshopScreenBloc
           isUpdating: false,
           updatePayflowIndex: -1,
         );
-        checkoutScreenBloc.token = token;
       }
     } catch (error){
       print(onError.toString());

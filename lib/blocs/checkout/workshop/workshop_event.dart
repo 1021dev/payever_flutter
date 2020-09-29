@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:payever/checkout/models/models.dart';
+import 'package:payever/commons/models/business.dart';
 import 'package:payever/pos/models/pos.dart';
 
 abstract class WorkshopScreenEvent extends Equatable {
@@ -10,19 +11,22 @@ abstract class WorkshopScreenEvent extends Equatable {
 }
 
 class WorkshopScreenInitEvent extends WorkshopScreenEvent {
-  final String business;
+  final Business activeBusiness;
+  final Terminal activeTerminal;
   final ChannelSet channelSet;
   final Checkout defaultCheckout;
 
   WorkshopScreenInitEvent({
-    this.business,
+    this.activeBusiness,
+    this.activeTerminal,
     this.defaultCheckout,
     this.channelSet,
   });
 
   @override
   List<Object> get props => [
-        this.business,
+        this.activeBusiness,
+        this.activeTerminal,
         this.defaultCheckout,
         this.channelSet,
       ];

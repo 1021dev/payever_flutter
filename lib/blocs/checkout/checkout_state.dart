@@ -14,6 +14,7 @@ class CheckoutScreenState {
   final bool sectionUpdate;
   final String openUrl;
   final Business activeBusiness;
+  final Terminal activeTerminal;
   final List<Checkout> checkouts;
   final List<ChannelSet> channelSets;
   final ChannelSet channelSet;
@@ -56,6 +57,7 @@ class CheckoutScreenState {
     this.loadingPaymentOption = false,
     this.sectionUpdate = false,
     this.activeBusiness,
+    this.activeTerminal,
     this.openUrl = '',
     this.checkouts = const [],
     this.channelSets = const [],
@@ -99,6 +101,7 @@ class CheckoutScreenState {
     this.loadingConnect,
     this.loadingChannel,
     this.sectionUpdate,
+    this.activeTerminal,
     this.activeBusiness,
     this.openUrl,
     this.checkouts,
@@ -145,6 +148,7 @@ class CheckoutScreenState {
     bool loadingPaymentOption,
     bool sectionUpdate,
     Business activeBusiness,
+    Terminal activeTerminal,
     String openUrl,
     List<Checkout> checkouts,
     List<ChannelSet> channelSets,
@@ -189,6 +193,7 @@ class CheckoutScreenState {
       loadingPaymentOption: loadingPaymentOption ?? this.loadingPaymentOption,
       sectionUpdate: sectionUpdate ?? this.sectionUpdate,
       activeBusiness: activeBusiness ?? this.activeBusiness,
+      activeTerminal: activeTerminal ?? this.activeTerminal,
       openUrl: openUrl ?? this.openUrl,
       checkouts: checkouts ?? this.checkouts,
       channelSets: channelSets ?? this.channelSets,

@@ -7,7 +7,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
-import 'package:payever/blocs/checkout/checkout_bloc.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/checkout/views/workshop/prefilled_qr_screen.dart';
 import 'package:payever/checkout/views/workshop/subview/pay_success_view.dart';
@@ -22,17 +21,23 @@ import 'package:payever/widgets/address_field_group.dart';
 import 'package:payever/widgets/googlemap_address_filed.dart';
 import 'package:payever/widgets/peronal_name_field.dart';
 import 'package:the_validator/the_validator.dart';
-
 import '../../../../theme.dart';
-import '../checkout_switch_screen.dart';
-
 
 class WorkshopView extends StatefulWidget {
-  final CheckoutScreenBloc checkoutScreenBloc;
   final WorkshopScreenBloc workshopScreenBloc;
   final GlobalKey formKeyOrder;
+  final Business business;
+  final Terminal terminal;
+  final ChannelSet channelSet;
+  final Checkout defaultCheckout;
+
   const WorkshopView(
-      {this.checkoutScreenBloc, this.workshopScreenBloc, this.formKeyOrder});
+      {this.workshopScreenBloc,
+      this.formKeyOrder,
+      this.business,
+      this.terminal,
+      this.channelSet,
+      this.defaultCheckout});
 
   @override
   _WorkshopViewState createState() => _WorkshopViewState();
@@ -68,7 +73,7 @@ class _WorkshopViewState extends State<WorkshopView> {
   String company;
   String phone;
 
-  bool switchCheckout = false;
+
   bool payflowLogin = false;
 
   var _formKeyOrder;
@@ -101,11 +106,12 @@ class _WorkshopViewState extends State<WorkshopView> {
       screenBloc = widget.workshopScreenBloc;
     } else {
       screenBloc =
-      WorkshopScreenBloc(checkoutScreenBloc: widget.checkoutScreenBloc)
+      WorkshopScreenBloc()
         ..add(WorkshopScreenInitEvent(
-          business: widget.checkoutScreenBloc.state.business,
-          channelSet: widget.checkoutScreenBloc.state.channelSet,
-          defaultCheckout: widget.checkoutScreenBloc.state.defaultCheckout,
+          activeBusiness: widget.business,
+          activeTerminal: widget.terminal,
+          channelSet: widget.channelSet,
+          defaultCheckout: widget.defaultCheckout,
         ));
     }
     if (widget.formKeyOrder != null) {
@@ -177,17 +183,6 @@ class _WorkshopViewState extends State<WorkshopView> {
   }
 
   Widget _body(WorkshopScreenState state) {
-    if (switchCheckout) {
-      return CheckoutSwitchScreen(
-        businessId: state.business,
-        checkoutScreenBloc: widget.checkoutScreenBloc,
-        onOpen: (Checkout checkout) {
-          setState(() {
-            switchCheckout = false;
-          });
-        },
-      );
-    }
     if (state.channelSetFlow == null) {
       return Container();
     }
@@ -195,9 +190,7 @@ class _WorkshopViewState extends State<WorkshopView> {
   }
 
   Widget _workshop(WorkshopScreenState state) {
-    Business business =
-        widget.checkoutScreenBloc.dashboardScreenBloc.state.activeBusiness;
-    String currencyString = business.currency;
+    String currencyString = state.activeBusiness.currency;
     NumberFormat format = NumberFormat();
     currency = format.simpleCurrencySymbol(currencyString);
 
@@ -281,33 +274,6 @@ class _WorkshopViewState extends State<WorkshopView> {
                     ),
                   )
                       : Container(),
-                  Spacer(),
-                  MaterialButton(
-                    color: overlayBackground(),
-                    child: Text(
-                      'Switch Checkout',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        switchCheckout = true;
-                      });
-                    },
-                    //callback when button is clicked
-                    height: 32,
-                    minWidth: 0,
-                    padding: EdgeInsets.symmetric(horizontal: 8),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
-                      side: BorderSide(
-                        color: Colors.black38,
-                        width: 1,
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),

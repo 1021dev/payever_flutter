@@ -11,11 +11,13 @@ abstract class CheckoutScreenEvent extends Equatable {
 
 class CheckoutScreenInitEvent extends CheckoutScreenEvent {
   final Business business;
+  final Terminal terminal;
   final List<Checkout> checkouts;
   final Checkout defaultCheckout;
 
   CheckoutScreenInitEvent({
     this.business,
+    this.terminal,
     this.checkouts,
     this.defaultCheckout,
   });
@@ -23,6 +25,7 @@ class CheckoutScreenInitEvent extends CheckoutScreenEvent {
   @override
   List<Object> get props => [
     this.business,
+    this.terminal,
     this.checkouts,
     this.defaultCheckout,
   ];

@@ -98,6 +98,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         globalStateModel: widget.globalStateModel)
       ..add(CheckoutScreenInitEvent(
         business: widget.globalStateModel.currentBusiness,
+        terminal: widget.dashboardScreenBloc.state.activeTerminal,
         checkouts: widget.checkouts,
         defaultCheckout: widget.defaultCheckout,
       ));

@@ -93,13 +93,13 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
 
   @override
   void initState() {
-    screenBloc =
-        WorkshopScreenBloc(checkoutScreenBloc: widget.checkoutScreenBloc);
-    screenBloc.add(WorkshopScreenInitEvent(
-      business: widget.checkoutScreenBloc.state.business,
-      channelSet: widget.checkoutScreenBloc.state.channelSet,
-      defaultCheckout: widget.checkoutScreenBloc.state.defaultCheckout,
-    ));
+    screenBloc = WorkshopScreenBloc()
+      ..add(WorkshopScreenInitEvent(
+        activeBusiness: widget.checkoutScreenBloc.state.activeBusiness,
+        activeTerminal: widget.checkoutScreenBloc.state.activeTerminal,
+        channelSet: widget.checkoutScreenBloc.state.channelSet,
+        defaultCheckout: widget.checkoutScreenBloc.state.defaultCheckout,
+      ));
     // initialize(widget.checkoutScreenBloc.state.channelSetFlow);
     super.initState();
   }
@@ -164,7 +164,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
   Widget _body(WorkshopScreenState state) {
     if (switchCheckout) {
       return CheckoutSwitchScreen(
-        businessId: state.business,
+        businessId: state.activeBusiness.id,
         checkoutScreenBloc: widget.checkoutScreenBloc,
         onOpen: (Checkout checkout) {
           setState(() {

@@ -1,22 +1,26 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/checkout/models/models.dart';
+import 'package:payever/commons/models/business.dart';
 import 'package:payever/commons/models/user.dart';
 import 'package:payever/pos/models/pos.dart';
 
 class WorkshopScreenState {
+  final Business activeBusiness;
+  final Checkout defaultCheckout;
+  final Terminal activeTerminal;
+  final ChannelSet channelSet;
+
   final bool isLoading;
   final bool isLoadingQrcode;
   final bool isUpdating;
   final bool isPaid;
   final bool isCheckingEmail;
-  final int updatePayflowIndex;
-  final String business;
-  final ChannelSet channelSet;
-  final ChannelSetFlow channelSetFlow;
-  final Checkout defaultCheckout;
   final bool isAvailable;
   final bool isValid;
+
+  final ChannelSetFlow channelSetFlow;
+  final int updatePayflowIndex;
   final dynamic qrForm;
   final dynamic qrImage;
   final String prefilledLink;
@@ -30,7 +34,8 @@ class WorkshopScreenState {
     this.isPaid = false,
     this.isCheckingEmail = false,
     this.updatePayflowIndex = -1,
-    this.business,
+    this.activeBusiness,
+    this.activeTerminal,
     this.channelSet,
     this.channelSetFlow,
     this.defaultCheckout,
@@ -50,9 +55,11 @@ class WorkshopScreenState {
         this.isPaid,
         this.isCheckingEmail,
         this.updatePayflowIndex,
-        this.business,
-        this.channelSetFlow,
+        this.activeBusiness,
+        this.activeTerminal,
         this.defaultCheckout,
+        this.channelSet,
+        this.channelSetFlow,
         this.isAvailable,
         this.isValid,
         this.qrForm,
@@ -70,7 +77,8 @@ class WorkshopScreenState {
     ChannelSet channelSet,
     bool isCheckingEmail,
     int updatePayflowIndex,
-    String business,
+    Business activeBusiness,
+    Terminal activeTerminal,
     ChannelSetFlow channelSetFlow,
     Checkout defaultCheckout,
     bool isAvailable,
@@ -90,7 +98,8 @@ class WorkshopScreenState {
       isAvailable: isAvailable ?? this.isAvailable,
       isValid: isValid ?? this.isValid,
       updatePayflowIndex: updatePayflowIndex ?? this.updatePayflowIndex,
-      business: business ?? this.business,
+      activeBusiness: activeBusiness ?? this.activeBusiness,
+      activeTerminal: activeTerminal ?? this.activeTerminal,
       channelSet: channelSet ?? this.channelSet,
       channelSetFlow: channelSetFlow ?? this.channelSetFlow,
       defaultCheckout: defaultCheckout ?? this.defaultCheckout,
