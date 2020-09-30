@@ -29,3 +29,5 @@ export './personal/personal.dart';
 export './theme/theme.dart';
 export './business/business.dart';
 export './register/register.dart';
+export './pos/pos_product/pos_product.dart';
+export './pos/pos_product_detail/pos_product_detail.dart';

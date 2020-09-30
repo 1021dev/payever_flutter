@@ -8,7 +8,7 @@ import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/theme.dart';
 
 class ProductsFilterScreen extends StatefulWidget {
-  final PosScreenBloc screenBloc;
+  final PosProductScreenBloc screenBloc;
 
   ProductsFilterScreen({
     this.screenBloc,
@@ -27,7 +27,6 @@ class _ProductsFilterScreenState extends State<ProductsFilterScreen> {
   
   @override
   void initState() {
-//    selectedCategory = widget.screenBloc.state.selectedCategory;
     super.initState();
   }
 
@@ -49,14 +48,14 @@ class _ProductsFilterScreenState extends State<ProductsFilterScreen> {
 
     return BlocListener(
       bloc: widget.screenBloc,
-      listener: (BuildContext context, PosScreenState state) async {
-        // if (state is PosScreenStateFailure) {
+      listener: (BuildContext context, PosProductScreenState state) async {
+        // if (state is PosProductScreenStateFailure) {
         //   Fluttertoast.showToast(msg: state.error);
         // }
       },
-      child: BlocBuilder<PosScreenBloc, PosScreenState>(
+      child: BlocBuilder<PosProductScreenBloc, PosProductScreenState>(
         bloc: widget.screenBloc,
-        builder: (BuildContext context, PosScreenState state) {
+        builder: (BuildContext context, PosProductScreenState state) {
           return new OrientationBuilder(builder: (context, orientation) {
             return Scaffold(
               backgroundColor: overlayBackground(),
@@ -79,7 +78,7 @@ class _ProductsFilterScreenState extends State<ProductsFilterScreen> {
     );
   }
 
-  Widget _getBody(PosScreenState state) {
+  Widget _getBody(PosProductScreenState state) {
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

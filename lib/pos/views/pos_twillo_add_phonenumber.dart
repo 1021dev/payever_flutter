@@ -442,7 +442,7 @@ class _PosTwilioAddPhoneNumberState extends State<PosTwilioAddPhoneNumber> {
                                   ));
                             },
                             color: overlayBackground(),
-                            child: state.searching ? CircularProgressIndicator() :  Text(
+                            child: state.isSearching ? CircularProgressIndicator() :  Text(
                               Language.getPosTpmStrings('tpm.communications.twilio.search'),
                               style: TextStyle(
                                 fontSize: 16,

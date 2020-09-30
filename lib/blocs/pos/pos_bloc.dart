@@ -7,7 +7,6 @@ import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/pos/models/pos.dart';
 import 'package:payever/commons/utils/common_utils.dart';
-import 'package:payever/products/models/models.dart';
 import '../bloc.dart';
 
 class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
@@ -119,21 +118,10 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       yield* removePhoneNumber(event.businessId, event.action, event.id, event.sid);
     } else if (event is UpdateAddPhoneNumberSettings) {
       yield state.copyWith(settingsModel: event.settingsModel);
-    } else if (event is ProductsFilterEvent) {
-      yield state.copyWith(
-          subCategories: event.categories,
-          searchText: event.searchText,
-          orderDirection: event.orderDirection);
-      yield* filterProducts();
-    } else if (event is ResetProductsFilterEvent) {
-      yield state.copyWith(subCategories: [], searchText: '', orderDirection: true);
-      yield* filterProducts();
-    } else if (event is CardProductEvent) {
-      yield* cardProduct(event.body);
     } else if (event is RestoreQrCodeEvent) {
       yield* getPrefilledLink();
-    } else if (event is CartOrderEvent) {
-      yield* cartProgress();
+    } else if (event is UpdateChannelSetFlowEvent) {
+      yield state.copyWith(channelSetFlow: event.channelSetFlow);
     }
   }
 
@@ -197,96 +185,9 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
         print('channelSetFlow id:' + channelSetFlow.id);
       }
 
-      yield state.copyWith(channelSetFlow: channelSetFlow);
+      yield state.copyWith(channelSetFlow: channelSetFlow, isLoading: false);
     }
-    // Get Product
-    Map<String, dynamic> body = {
-      'operationName': null,
-      'variables': {},
-      'query': '{\n  getProducts(businessUuid: \"${state.businessId}\", paginationLimit: 100, pageNumber: 1, orderBy: \"price\", orderDirection: \"asc\", filterById: [], search: \"\", filters: []) {\n    products {\n      images\n      id\n      title\n      description\n      onSales\n      price\n      salePrice\n      vatRate\n      sku\n      barcode\n      currency\n      type\n      active\n      categories {\n        title\n      }\n      collections {\n        _id\n        name\n        description\n      }\n      variants {\n        id\n        images\n        options {\n          name\n          value\n        }\n        description\n        onSales\n        price\n        salePrice\n        sku\n        barcode\n      }\n      channelSets {\n        id\n        type\n        name\n      }\n      shipping {\n        weight\n        width\n        length\n        height\n      }\n    }\n    info {\n      pagination {\n        page\n        page_count\n        per_page\n        item_count\n      }\n    }\n  }\n}\n'
-    };
-
-    dynamic response = await api.getProducts(token, body);
-    List<ProductsModel> products = [];
-    print('Products filter response: ' + response.toString());
-    if (response is Map) {
-      dynamic data = response['data'];
-      if (data != null) {
-        dynamic getProducts = data['getProducts'];
-        if (getProducts != null) {
-          List productsObj = getProducts['products'];
-          if (productsObj != null) {
-            productsObj.forEach((element) {
-              products.add(ProductsModel.toMap(element));
-            });
-          }
-        }
-      }
-    }
-    yield state.copyWith(products: products);
-    dynamic response1 = await api.productsFilterOption(token, dashboardScreenBloc.state.activeBusiness.id);
-    List<ProductFilterOption>filterOptions = [];
-    if (response1 is List) {
-      response1.forEach((element) {
-        ProductFilterOption filterOption = ProductFilterOption.fromJson(element);
-        filterOptions.add(filterOption);
-      });
-    }
-    yield state.copyWith(filterOptions: filterOptions, isLoading: false);
-    
     add(GetPosIntegrationsEvent(businessId: activeBusinessId));
-  }
-
-  String getFilterValue(String key) {
-    return '{field:\"value\",fieldType:\"string\",fieldCondition:\"is\",value:\"$key\"}';
-  }
-
-  Stream<PosScreenState> filterProducts() async* {
-    yield state.copyWith(searching: true);
-    List<String> keys = state.categories;
-    print('categories: $keys');
-    String searchText = state.searchText;
-    String orderDirection = state.orderDirection ? 'asc' : 'desc';
-    String query;
-    String normalValue = '{\n  getProducts(businessUuid: \"${state.businessId}\", paginationLimit: 100, pageNumber: 1, orderBy: \"price\", orderDirection: \"$orderDirection\", filterById: [], search: \"$searchText\", filters: []) {\n    products {\n      images\n      id\n      title\n      description\n      onSales\n      price\n      salePrice\n      vatRate\n      sku\n      barcode\n      currency\n      type\n      active\n      categories {\n        title\n      }\n      collections {\n        _id\n        name\n        description\n      }\n      variants {\n        id\n        images\n        options {\n          name\n          value\n        }\n        description\n        onSales\n        price\n        salePrice\n        sku\n        barcode\n      }\n      channelSets {\n        id\n        type\n        name\n      }\n      shipping {\n        weight\n        width\n        length\n        height\n      }\n    }\n    info {\n      pagination {\n        page\n        page_count\n        per_page\n        item_count\n      }\n    }\n  }\n}\n';
-
-    if (keys == null || keys.isEmpty) {
-      query = normalValue;
-    } else {
-      String keysValue = '';
-      keys.forEach((key) {
-        if (keysValue.isEmpty) {
-          keysValue = getFilterValue(key);
-        } else {
-          keysValue += ', ${getFilterValue(key)}';
-        }
-      });
-      query = '{\n getProducts(\n businessUuid: \"${state.businessId}\",\n  paginationLimit: 100,\n  pageNumber: 1,\n orderBy: \"price\",\n orderDirection: \"$orderDirection\", filterById: [], search: \"$searchText\"\n  filters: [\n    \n   {\n  field:\"variant\",\n fieldType:\"child\",\n  fieldCondition: \"is\",\n  filters: {field:\"options\",fieldType:\"nested\",fieldCondition:\"is\",filters:[$keysValue]},\n   }\n   \n  ],\n  useNewFiltration: true,\n  ) {\n  products {\n  imagesUrl\n  _id\n  title\n   description\n   price\n  salePrice\n  currency\n   }\n   }\n  }\n ';
-    }
-
-    Map<String, dynamic> body = {
-      'operationName': null,
-      'variables': {},
-      'query': query
-    };
-    dynamic response = await api.getProducts(GlobalUtils.activeToken.accessToken, body);
-    List<ProductsModel> products = [];
-    print('Products filter response: ' + response.toString());
-    if (response is Map) {
-      dynamic data = response['data'];
-      if (data != null) {
-        dynamic getProducts = data['getProducts'];
-        if (getProducts != null) {
-          List productsObj = getProducts['products'];
-          if (productsObj != null) {
-            productsObj.forEach((element) {
-              products.add(ProductsModel.toMap(element));
-            });
-          }
-        }
-      }
-    }
-    yield state.copyWith(products: products, searching: false);
   }
 
   Stream<PosScreenState> getIntegrations(String businessId) async* {
@@ -711,7 +612,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       String phoneNumber,
       String id,
       ) async* {
-    yield state.copyWith(searching: true);
+    yield state.copyWith(isSearching: true);
     dynamic response = await api.searchPhoneNumberSettings(
       GlobalUtils.activeToken.accessToken,
       businessId,
@@ -772,7 +673,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     }
     model.country = dropdownItems.firstWhere((element) => element.value == fieldsetData['country']);
 
-    yield state.copyWith(twilioAddPhoneForm: contentData, settingsModel: model, searching: false);
+    yield state.copyWith(twilioAddPhoneForm: contentData, settingsModel: model, isSearching: false);
   }
 
   Stream<PosScreenState> purchasePhoneNumber(
@@ -813,90 +714,12 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
   }
 
   Stream<PosScreenState> getBlob(dynamic w, String url) async* {
+    print('qrcode url: $url');
     http.Response  response =  await api.getQrcode(GlobalUtils.activeToken.accessToken, url, w);
     if (response is Response) {
       print('qrcode url: $url');
       yield state.copyWith(qrImage: response.bodyBytes);
     }
-  }
-
-  Stream<PosScreenState> cardProduct(Map<String, dynamic> body) async* {
-    yield state.copyWith(isUpdating: true);
-    String token = GlobalUtils.activeToken.accessToken;
-    String langCode = getDefaultLanguage();
-
-    dynamic response = await api.patchCheckoutFlowOrder(
-        token, state.channelSetFlow.id, langCode, body);
-
-    if (response is Map) {
-      ChannelSetFlow channelSetFlow = ChannelSetFlow.fromJson(response);
-      yield state.copyWith(channelSetFlow: channelSetFlow);
-      yield PosScreenSuccess();
-      // add(CartOrderEvent());
-    }
-    yield state.copyWith(isUpdating: false);
-
-  }
-
-  Stream<PosScreenState> cartProgress() async* {
-    String productIdsText = '';
-    state.channelSetFlow.cart.forEach((element) {
-      productIdsText += '\"${element.id}\" ';
-    });
-
-    String query = '\n        query getProducts {\n          getProductsByIdsOrVariantIds(ids: [$productIdsText]) {\n            id\n            businessUuid\n            images\n            currency\n            uuid\n            title\n            description\n            onSales\n            price\n            salePrice\n            sku\n            barcode\n            type\n            active\n            vatRate\n            categories{_id, slug, title}\n            channelSets{id, type, name}\n            variants{id, images, title, options{_id, name, value}, description, onSales, price, salePrice, sku, barcode}\n            shipping{free, general, weight, width, length, height}\n          }\n        }\n ';
-    Map<String, dynamic> body1 = {'query': query};
-    dynamic response1 = await api.getProducts(GlobalUtils.activeToken.accessToken, body1);
-    if (!(response1 is Map)) return;
-    List<ProductsModel> products = [];
-    if (response1 is Map) {
-      dynamic data = response1['data'];
-      if (data != null) {
-        dynamic getProducts = data['getProductsByIdsOrVariantIds'];
-        if (getProducts != null) {
-          getProducts.forEach((element) {
-            products.add(ProductsModel.toMap(element));
-          });
-        }
-      }
-    }
-
-    Map<String, dynamic>body2 = {};
-    List<dynamic>carts = [];
-    num amount = 0;
-    products.forEach((element) {
-      amount += element.price * 1;
-      String image = element.images == null || element.images.isEmpty ? null : element.images.first;
-      carts.add({
-        'extra_data': null,
-        'id': element.id,
-        'identifier': element.id,
-        'image': image == null ? null :
-        'https://payeverproduction.blob.core.windows.net/products/$image',
-        'name': element.title,
-        'price': element.price,
-        'price_net': null,
-        'quantity': 2,
-        'sku': element.sku,
-        'uuid': element.id,
-        'vat': 0,
-        '_optionsAsLine': null
-      });
-    });
-
-    body2 = {
-      'amount' : amount,
-      'business_shipping_option_id' : null,
-      'cart': carts
-    };
-    yield PosScreenSuccess();
-    dynamic response2 = await api.patchCheckoutFlowOrder(GlobalUtils.activeToken.accessToken, state.channelSetFlow.id, 'en', body2);
-    if (response2 is Map) {
-
-      ChannelSetFlow flow = ChannelSetFlow.fromJson(response2);
-      yield state.copyWith(channelSetFlow: flow);
-    }
-    yield state.copyWith(isUpdating: false);
   }
 
   String getDefaultLanguage() {

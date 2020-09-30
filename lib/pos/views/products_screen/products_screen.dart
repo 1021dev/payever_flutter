@@ -8,6 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/checkout/models/models.dart';
 import 'package:payever/checkout/views/workshop/subview/work_shop_view.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/pos/views/products_screen/pos_product_detail_screen.dart';
@@ -21,30 +22,37 @@ import '../pos_qr_app.dart';
 
 class ProductsScreen extends StatefulWidget {
   final PosScreenBloc posScreenBloc;
-
-  ProductsScreen({
-    this.posScreenBloc,
-  });
+  final ChannelSetFlow channelSetFlow;
+  final String businessId;
+  ProductsScreen(this.businessId, this.posScreenBloc, this.channelSetFlow,);
 
   @override
   createState() => _ProductsScreenState();
 }
 
 class _ProductsScreenState extends State<ProductsScreen> {
+  
   bool _isPortrait;
   bool _isTablet;
   bool isGridMode = true;
   bool orderStatus = false;
   bool cartStatus = false;
   TextEditingController searchController = TextEditingController();
+  
+  PosProductScreenBloc screenBloc;
+  
   @override
   void initState() {
+    screenBloc = PosProductScreenBloc(widget.posScreenBloc)
+      ..add(
+          PosProductsScreenInitEvent(widget.businessId, widget.channelSetFlow));
     super.initState();
   }
 
   @override
   void dispose() {
     searchController.dispose();
+    screenBloc.close();
     super.dispose();
   }
 
@@ -60,19 +68,21 @@ class _ProductsScreenState extends State<ProductsScreen> {
     _isTablet = Measurements.width < 600 ? false : true;
 
     return BlocListener(
-      bloc: widget.posScreenBloc,
-      listener: (BuildContext context, PosScreenState state) async {
+      bloc: screenBloc,
+      listener: (BuildContext context, PosProductScreenState state) async {
 
       },
-      child: BlocBuilder<PosScreenBloc, PosScreenState>(
-        bloc: widget.posScreenBloc,
-        builder: (BuildContext context, PosScreenState state) {
+      child: BlocBuilder<PosProductScreenBloc, PosProductScreenState>(
+        bloc: screenBloc,
+        builder: (BuildContext context, PosProductScreenState state) {
           return Scaffold(
             body: SafeArea(
               bottom: false,
               child: BackgroundBase(
                 true,
-                body: _body(state),
+                body: state.isLoading
+                    ? Center(child: CircularProgressIndicator())
+                    : _body(state),
               ),
             ),
           );
@@ -81,7 +91,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
   }
 
-  Widget _body(PosScreenState state) {
+  Widget _body(PosProductScreenState state) {
     return Stack(
       children: [
         Column(
@@ -95,11 +105,11 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   Visibility(
                     visible: orderStatus,
                     child: WorkshopView(
-                      business: state.activeBusiness,
-                      terminal: state.activeTerminal,
+                      business: widget.posScreenBloc.state.activeBusiness,
+                      terminal: widget.posScreenBloc.state.activeTerminal,
                       channelSetFlow: state.channelSetFlow,
-                      channelSetId: state.activeTerminal.channelSet,
-                      defaultCheckout: state.defaultCheckout,
+                      channelSetId: widget.posScreenBloc.state.activeTerminal.channelSet,
+                      defaultCheckout: widget.posScreenBloc.state.defaultCheckout,
                       fromCart: cartStatus,
                       onTapClose: () {
                         setState(() {
@@ -122,7 +132,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
   }
 
-  Widget _toolBar(PosScreenState state) {
+  Widget _toolBar(PosProductScreenState state) {
     searchController.text = state.searchText;
     return Container(
       height: 50,
@@ -162,7 +172,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                       controller: searchController,
                       onChanged: (String value) {
                         if (value.length > 2) {
-                          widget.posScreenBloc.add(ProductsFilterEvent(searchText: value));
+                          screenBloc.add(ProductsFilterEvent(searchText: value));
                         }
                       },
                     ),
@@ -175,7 +185,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
             alignment: Alignment.centerRight,
             child: InkWell(
               onTap: () {
-                widget.posScreenBloc.add(ProductsFilterEvent(
+                screenBloc.add(ProductsFilterEvent(
                     orderDirection: !state.orderDirection));
               },
               child: Container(
@@ -234,7 +244,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
   }
 
-  Widget _secondToolBar(PosScreenState state) {
+  Widget _secondToolBar(PosProductScreenState state) {
     num cartCount = 0;
     if (state.channelSetFlow != null && state.channelSetFlow.cart != null) {
       state.channelSetFlow.cart.forEach((element) =>
@@ -285,7 +295,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
                         fromProductsScreen: true,
                       ),
                       type: PageTransitionType.fade,
-                      duration: Duration(milliseconds: 500),
                     ),
                   );
                 },
@@ -345,7 +354,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
             return Transform(
               transform: Matrix4.translationValues(-curvedValue * 200, 0.0, 0),
               child: ProductsFilterScreen(
-                screenBloc: widget.posScreenBloc,
+                screenBloc: screenBloc,
               ),
             );
           },
@@ -368,7 +377,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
   }
 
-  Widget gridBody(PosScreenState state) {
+  Widget gridBody(PosProductScreenState state) {
     if (state.products == null || state.products.isEmpty)
         return Container();
 
@@ -377,7 +386,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       productsItems.add(PosProductGridItem(
         product,
         onTap: (ProductsModel model) {
-          navigateProductDetail(model);
+          navigateProductDetail(model, state);
         },
       ));
     });
@@ -404,7 +413,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
   }
 
-  Widget _listBody(PosScreenState state) {
+  Widget _listBody(PosProductScreenState state) {
     if (state.products == null || state.products.isEmpty)
       return Container();
     return ListView.builder(
@@ -413,7 +422,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
             _productListBody(state, state.products[index]));
   }
 
-  Widget _productListBody(PosScreenState state, ProductsModel model) {
+  Widget _productListBody(PosProductScreenState state, ProductsModel model) {
     return Column(
       children: <Widget>[
         Container(
@@ -467,7 +476,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
               IconButton(
                 icon: Icon(Icons.navigate_next),
                 onPressed: () {
-                  navigateProductDetail(model);
+                  navigateProductDetail(model, state);
                 },
               ),
             ],
@@ -478,13 +487,11 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
   }
 
-  void navigateProductDetail(ProductsModel model) {
+  void navigateProductDetail(ProductsModel model, PosProductScreenState state) {
     Navigator.push(
       context,
       PageTransition(
-        child: PosProductDetailScreen(
-          posScreenBloc: widget.posScreenBloc,
-          productsModel: model,
+        child: PosProductDetailScreen(model, widget.posScreenBloc, state.channelSetFlow,
         ),
         type: PageTransitionType.fade,
       ),

@@ -5,8 +5,8 @@ import 'package:payever/products/models/models.dart';
 
 class PosScreenState {
   final bool isLoading;
-  final bool searching;
   final bool isLoadingQrcode; // & Cart Progress Flag
+  final bool isSearching;
   final String businessId;
   final List<Terminal> terminals;
   final Business activeBusiness;
@@ -15,7 +15,7 @@ class PosScreenState {
   final ChannelSetFlow channelSetFlow;
   final bool businessCopied;
   final bool terminalCopied;
-  final List<ProductsModel> products;
+
   final List<Communication> integrations;
   final List<Communication> communications;
   final DevicePaymentSettings devicePaymentSettings;
@@ -32,20 +32,15 @@ class PosScreenState {
   final List<CountryDropdownItem> dropdownItems;
   final dynamic fieldSetData;
   final dynamic qrImage;
-  final List<ProductFilterOption> filterOptions;
-  // Product Filter
-  final List<String>categories;
-  final bool orderDirection;
-  final String searchText;
 
   PosScreenState({
     this.isLoading = false,
     this.isUpdating = false,
+    this.isSearching = false,
     this.isLoadingQrcode = false,
     this.activeBusiness,
     this.defaultCheckout,
     this.channelSetFlow,
-    this.searching = false,
     this.terminals = const [],
     this.activeTerminal,
     this.businessId,
@@ -66,18 +61,13 @@ class PosScreenState {
     this.dropdownItems = const [],
     this.fieldSetData,
     this.qrImage,
-    this.products,
-    this.filterOptions = const [],
-    this.categories = const [],
-    this.orderDirection = true,
-    this.searchText = '',
   });
 
   List<Object> get props => [
     this.isLoading,
     this.isUpdating,
+    this.isSearching,
     this.isLoadingQrcode,
-    this.searching,
     this.terminals,
     this.activeBusiness,
     this.defaultCheckout,
@@ -101,21 +91,16 @@ class PosScreenState {
     this.dropdownItems,
     this.fieldSetData,
     this.qrImage,
-    this.products,
-    this.filterOptions,
-    this.categories,
-    this.orderDirection,
-    this.searchText,
   ];
 
   PosScreenState copyWith({
     bool isLoading,
     bool isUpdating,
+    bool isSearching,
     bool isLoadingQrcode,
     Business activeBusiness,
     Checkout defaultCheckout,
     ChannelSetFlow channelSetFlow,
-    bool searching,
     String businessId,
     List<Terminal> terminals,
     Terminal activeTerminal,
@@ -134,23 +119,17 @@ class PosScreenState {
     List twilioAddPhoneForm,
     AddPhoneNumberSettingsModel settingsModel,
     List<CountryDropdownItem> dropdownItems,
-    List<ProductsModel> products,
-    List<ProductFilterOption> filterOptions,
     dynamic fieldSetData,
     dynamic qrImage,
-    String selectedCategory,
-    List<String>subCategories,
-    bool orderDirection,
-    String searchText,
   }) {
     return PosScreenState(
       isLoading: isLoading ?? this.isLoading,
       isUpdating: isUpdating ?? this.isUpdating,
+      isSearching: isSearching ?? this.isSearching,
       isLoadingQrcode: isLoadingQrcode ?? this.isLoadingQrcode,
       activeBusiness: activeBusiness ?? this.activeBusiness,
       defaultCheckout: defaultCheckout ?? this.defaultCheckout,
       channelSetFlow: channelSetFlow ?? this.channelSetFlow,
-      searching: searching ?? this.searching,
       terminals: terminals ?? this.terminals,
       businessId: businessId ?? this.businessId,
       activeTerminal: activeTerminal ?? this.activeTerminal,
@@ -171,11 +150,6 @@ class PosScreenState {
       dropdownItems: dropdownItems ?? this.dropdownItems,
       fieldSetData: fieldSetData ?? this.fieldSetData,
       qrImage: qrImage ?? this.qrImage,
-      products: products ?? this.products,
-      filterOptions: filterOptions ?? this.filterOptions,
-      categories: subCategories ?? this.categories,
-      orderDirection: orderDirection ?? this.orderDirection,
-      searchText: searchText ?? this.searchText,
     );
   }
 }

@@ -458,7 +458,7 @@ class _PosScreenState extends State<PosScreen> {
   Widget _getBody(PosScreenState state) {
     switch(selectedIndex) {
       case 0:
-        return ProductsScreen(posScreenBloc: screenBloc);
+        return ProductsScreen(state.businessId, screenBloc, state.channelSetFlow);
       case 1:
         return _connectWidget(state);
       case 2:

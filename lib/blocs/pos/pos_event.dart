@@ -147,16 +147,7 @@ class InstallTwilioEvent extends PosScreenEvent {
   ];
 }
 
-class CardProductEvent extends PosScreenEvent {
-  final Map body;
 
-  CardProductEvent({this.body});
-
-  @override
-  List<Object> get props => [
-    this.body,
-  ];
-}
 
 
 class UninstallTwilioEvent extends PosScreenEvent {
@@ -626,27 +617,14 @@ class GetQRImage extends PosScreenEvent {
   ];
 }
 
-class ProductsFilterEvent extends PosScreenEvent {
-  final List<String> categories;
-  final bool orderDirection;
-  final String searchText;
-  
-  ProductsFilterEvent({
-    this.orderDirection,
-    this.searchText,
-    this.categories,
-  });
+class RestoreQrCodeEvent extends PosScreenEvent{}
+
+class UpdateChannelSetFlowEvent extends PosScreenEvent {
+  final ChannelSetFlow channelSetFlow;
+  UpdateChannelSetFlowEvent(this.channelSetFlow);
 
   @override
   List<Object> get props => [
-    this.categories,
-    this.orderDirection,
-    this.searchText,
+    this.channelSetFlow,
   ];
 }
-
-class ResetProductsFilterEvent extends PosScreenEvent{}
-
-class RestoreQrCodeEvent extends PosScreenEvent{}
-
-class CartOrderEvent extends PosScreenEvent{}
