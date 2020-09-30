@@ -41,3 +41,15 @@ class ProductsFilterEvent extends PosProductScreenEvent {
 }
 
 class ResetProductsFilterEvent extends PosProductScreenEvent{}
+
+class CartOrderEvent extends PosProductScreenEvent{}
+
+class UpdateProductChannelSetFlowEvent extends PosProductScreenEvent {
+  final ChannelSetFlow channelSetFlow;
+  UpdateProductChannelSetFlowEvent(this.channelSetFlow);
+
+  @override
+  List<Object> get props => [
+    this.channelSetFlow,
+  ];
+}

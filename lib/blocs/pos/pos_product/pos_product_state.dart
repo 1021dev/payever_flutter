@@ -7,7 +7,8 @@ import 'package:payever/products/models/models.dart';
 class PosProductScreenState {
   final bool isLoading;
   final bool isUpdating;
-  final bool isLoadingQrcode;
+  final bool isLoadingCartView;
+  final bool cartProgressed;
   final bool searching;
   final String businessId;
   final ChannelSetFlow channelSetFlow;
@@ -21,7 +22,8 @@ class PosProductScreenState {
   PosProductScreenState({
     this.isLoading = false,
     this.isUpdating = false,
-    this.isLoadingQrcode = false,
+    this.isLoadingCartView = false,
+    this.cartProgressed = false,
     this.businessId,
     this.channelSetFlow,
     this.categories = const [],
@@ -35,7 +37,8 @@ class PosProductScreenState {
   List<Object> get props => [
     this.isLoading,
     this.isUpdating,
-    this.isLoadingQrcode,
+    this.isLoadingCartView,
+    this.cartProgressed,
     this.businessId,
     this.channelSetFlow,
     this.categories,
@@ -49,7 +52,8 @@ class PosProductScreenState {
   PosProductScreenState copyWith({
     bool isLoading,
     bool isUpdating,
-    bool isLoadingQrcode,
+    bool isLoadingCartView,
+    bool cartProgressed,
     String businessId,
     ChannelSetFlow channelSetFlow,
     List<String>subCategories,
@@ -62,7 +66,8 @@ class PosProductScreenState {
     return PosProductScreenState(
       isLoading: isLoading ?? this.isLoading,
       isUpdating: isUpdating ?? this.isUpdating,
-      isLoadingQrcode: isLoadingQrcode ?? this.isLoadingQrcode,
+      isLoadingCartView: isLoadingCartView ?? this.isLoadingCartView,
+      cartProgressed: cartProgressed ?? this.cartProgressed,
       businessId: businessId ?? this.businessId,
       channelSetFlow: channelSetFlow ?? this.channelSetFlow,
       categories: subCategories ?? this.categories,

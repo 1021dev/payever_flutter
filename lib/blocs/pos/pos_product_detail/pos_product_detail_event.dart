@@ -25,5 +25,3 @@ class CartProductEvent extends PosProductDetailScreenEvent {
     this.body,
   ];
 }
-
-class CartOrderEvent extends PosProductDetailScreenEvent{}

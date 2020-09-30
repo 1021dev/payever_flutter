@@ -70,7 +70,12 @@ class _ProductsScreenState extends State<ProductsScreen> {
     return BlocListener(
       bloc: screenBloc,
       listener: (BuildContext context, PosProductScreenState state) async {
-
+        if(state.cartProgressed) {
+          setState(() {
+            cartStatus = true;
+            orderStatus = true;
+          });
+        }
       },
       child: BlocBuilder<PosProductScreenBloc, PosProductScreenState>(
         bloc: screenBloc,
@@ -309,7 +314,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
             ],
           ),
           Spacer(),
-          state.isLoadingQrcode
+          state.isLoadingCartView
               ? Container(
                   width: 25,
                   height: 25,
@@ -328,13 +333,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
               if (state.channelSetFlow.cart == null || state.channelSetFlow.cart.isEmpty) {
                 Fluttertoast.showToast(msg: 'Cart is empty');
               } else {
-                state.channelSetFlow.cart.forEach((element) {
-                  print('CartItems: ${element.toJson().toString()}');
-                });
-                setState(() {
-                  cartStatus = true;
-                  orderStatus = true;
-                });
+                screenBloc.add(CartOrderEvent());
               }
             },
           ),
@@ -491,7 +490,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     Navigator.push(
       context,
       PageTransition(
-        child: PosProductDetailScreen(model, widget.posScreenBloc, state.channelSetFlow,
+        child: PosProductDetailScreen(model, screenBloc, state.channelSetFlow,
         ),
         type: PageTransitionType.fade,
       ),

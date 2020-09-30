@@ -3286,7 +3286,7 @@ class ApiService {
   Future<dynamic> getQrcode(String token, String link, dynamic data) async {
     if (link != null) {
       try {
-        print('$TAG - updateLegalDocument() ');
+        print('$TAG - getQrcode() ');
         http.Response response = await http.get(
           '$link',
           headers: _getHeaders(token),

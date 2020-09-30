@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:bloc/bloc.dart';
-import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/checkout/models/models.dart';
@@ -715,8 +714,8 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
 
   Stream<PosScreenState> getBlob(dynamic w, String url) async* {
     print('qrcode url: $url');
-    http.Response  response =  await api.getQrcode(GlobalUtils.activeToken.accessToken, url, w);
-    if (response is Response) {
+    http.Response response =  await api.getQrcode(GlobalUtils.activeToken.accessToken, url, w);
+    if (response is http.Response) {
       print('qrcode url: $url');
       yield state.copyWith(qrImage: response.bodyBytes);
     }

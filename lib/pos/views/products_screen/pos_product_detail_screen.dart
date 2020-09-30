@@ -14,11 +14,11 @@ import 'package:payever/theme.dart';
 
 class PosProductDetailScreen extends StatefulWidget {
   final ProductsModel productsModel;
-  final PosScreenBloc posScreenBloc;
+  final PosProductScreenBloc posProductScreenBloc;
   final ChannelSetFlow channelSetFlow;
 
   PosProductDetailScreen(
-      this.productsModel, this.posScreenBloc, this.channelSetFlow);
+      this.productsModel, this.posProductScreenBloc, this.channelSetFlow);
 
   @override
   _PosProductDetailScreenState createState() =>
@@ -36,7 +36,7 @@ class _PosProductDetailScreenState extends State<PosProductDetailScreen> {
 
   @override
   void initState() {
-    screenBloc = PosProductDetailScreenBloc(widget.posScreenBloc)
+    screenBloc = PosProductDetailScreenBloc(widget.posProductScreenBloc)
       ..add(PosProductDetailScreenInitEvent(widget.channelSetFlow));
     super.initState();
   }
