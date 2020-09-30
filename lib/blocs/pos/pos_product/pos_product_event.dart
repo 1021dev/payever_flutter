@@ -42,6 +42,8 @@ class ProductsFilterEvent extends PosProductScreenEvent {
 
 class ResetProductsFilterEvent extends PosProductScreenEvent{}
 
+class ResetCardProgressEvent extends PosProductScreenEvent{}
+
 class CartOrderEvent extends PosProductScreenEvent{}
 
 class UpdateProductChannelSetFlowEvent extends PosProductScreenEvent {

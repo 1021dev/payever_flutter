@@ -75,7 +75,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       bloc: screenBloc,
       listener: (BuildContext context, PosProductScreenState state) async {
         if (state.cartProgressed && !state.isLoadingCartView) {
-          print('cartProgressed');
+          screenBloc.add(ResetCardProgressEvent());
           setState(() {
             cartStatus = true;
             orderStatus = true;

@@ -40,6 +40,8 @@ class PosProductScreenBloc
       posScreenBloc.add(UpdateChannelSetFlowEvent(event.channelSetFlow));
     } else if (event is CartOrderEvent) {
       yield* cartProgress();
+    } else if (event is ResetCardProgressEvent) {
+      yield state.copyWith(cartProgressed: false);
     }
   }
 
@@ -209,8 +211,8 @@ class PosProductScreenBloc
       posScreenBloc.add(UpdateChannelSetFlowEvent(flow));
       await Future.delayed(Duration(milliseconds: 500));
       yield state.copyWith(isLoadingCartView: false, cartProgressed: true);
-      await Future.delayed(Duration(milliseconds: 100));
-      yield state.copyWith(cartProgressed: false);
+      // await Future.delayed(Duration(milliseconds: 100));
+      // yield state.copyWith(cartProgressed: false);
     }
     yield state.copyWith(isLoadingCartView: false);
   }

@@ -240,10 +240,16 @@ class _WorkshopViewState extends State<WorkshopView> {
         totalPrice += element.price * element.quantity;
       });
       amount = totalPrice;
+      reference = state.channelSetFlow.reference;
     } else {
       amount = state.channelSetFlow.amount.toDouble();
+      reference = state.channelSetFlow.reference;
+      if (!isOrderApproved) {
+        amount = 0;
+        reference = '';
+      }
     }
-    reference = state.channelSetFlow.reference;
+
 
     return BackgroundBase(
       true,
@@ -438,6 +444,9 @@ class _WorkshopViewState extends State<WorkshopView> {
             onTapClose: (CartItem item) {
               setState(() {
                 widget.cart.remove(item);
+                if (widget.cart.isEmpty) {
+                  widget.onTapClose();
+                }
               });
             },
           ),
