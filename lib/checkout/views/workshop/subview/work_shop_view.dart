@@ -434,24 +434,43 @@ class _WorkshopViewState extends State<WorkshopView> {
     if (cartOrder) {
       return Column(
         children: [
-          CartOrderView(
-            cart: widget.cart,
-            workshopScreenBloc: screenBloc,
-            currency: state.channelSetFlow.currency,
-            onTapQuality: (CartItem item) {
-              showInputQualityDialog(item);
-            },
-            onTapClose: (CartItem item) {
+          WorkshopHeader(
+            title: Language.getCheckoutStrings(
+                'checkout_order_summary.title'),
+            isExpanded: editOrder ? true : _selectedSectionIndex == 0,
+            isApproved: isOrderApproved,
+            onTap: () {
               setState(() {
-                widget.cart.remove(item);
-                if (widget.cart.isEmpty) {
-                  widget.onTapClose();
-                }
+                _selectedSectionIndex =
+                _selectedSectionIndex == 0 ? -1 : 0;
               });
             },
           ),
-          orderNextBtn(state),
-          SizedBox(height: 20,),
+          Visibility(
+            visible: _selectedSectionIndex == 0,
+            child: Column(
+              children: [
+                CartOrderView(
+                  cart: widget.cart,
+                  workshopScreenBloc: screenBloc,
+                  currency: state.channelSetFlow.currency,
+                  onTapQuality: (CartItem item) {
+                    showInputQualityDialog(item);
+                  },
+                  onTapClose: (CartItem item) {
+                    setState(() {
+                      widget.cart.remove(item);
+                      if (widget.cart.isEmpty) {
+                        widget.onTapClose();
+                      }
+                    });
+                  },
+                ),
+                orderNextBtn(state),
+                SizedBox(height: 20,),
+              ],
+            ),
+          ),
         ],
       );
     }

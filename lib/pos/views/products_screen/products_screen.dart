@@ -102,7 +102,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   Widget _body(PosProductScreenState state) {
-    print('cartProgressed :${state.cartProgressed}');
     return Stack(
       children: [
         Column(
