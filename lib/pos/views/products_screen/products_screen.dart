@@ -24,23 +24,27 @@ class ProductsScreen extends StatefulWidget {
   final PosScreenBloc posScreenBloc;
   final ChannelSetFlow channelSetFlow;
   final String businessId;
-  ProductsScreen(this.businessId, this.posScreenBloc, this.channelSetFlow,);
+
+  ProductsScreen(
+    this.businessId,
+    this.posScreenBloc,
+    this.channelSetFlow,
+  );
 
   @override
   createState() => _ProductsScreenState();
 }
 
 class _ProductsScreenState extends State<ProductsScreen> {
-  
   bool _isPortrait;
   bool _isTablet;
   bool isGridMode = true;
   bool orderStatus = false;
   bool cartStatus = false;
   TextEditingController searchController = TextEditingController();
-  
+
   PosProductScreenBloc screenBloc;
-  
+
   @override
   void initState() {
     screenBloc = PosProductScreenBloc(widget.posScreenBloc)
@@ -70,7 +74,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     return BlocListener(
       bloc: screenBloc,
       listener: (BuildContext context, PosProductScreenState state) async {
-        if(state.cartProgressed) {
+        if (state.cartProgressed) {
           setState(() {
             cartStatus = true;
             orderStatus = true;
@@ -104,29 +108,29 @@ class _ProductsScreenState extends State<ProductsScreen> {
             _toolBar(state),
             _secondToolBar(state),
             Expanded(
-              child: Stack(
-                children: [
-                  isGridMode ? gridBody(state) : _listBody(state),
-                  Visibility(
-                    visible: orderStatus,
-                    child: WorkshopView(
-                      business: widget.posScreenBloc.state.activeBusiness,
-                      terminal: widget.posScreenBloc.state.activeTerminal,
-                      channelSetFlow: state.channelSetFlow,
-                      channelSetId: widget.posScreenBloc.state.activeTerminal.channelSet,
-                      defaultCheckout: widget.posScreenBloc.state.defaultCheckout,
-                      fromCart: cartStatus,
-                      onTapClose: () {
-                        setState(() {
-                          orderStatus = false;
-                          cartStatus = false;
-                        });
-                      },
-                    ),
+                child: Stack(
+              children: [
+                isGridMode ? gridBody(state) : _listBody(state),
+                Visibility(
+                  visible: orderStatus,
+                  child: WorkshopView(
+                    business: widget.posScreenBloc.state.activeBusiness,
+                    terminal: widget.posScreenBloc.state.activeTerminal,
+                    channelSetFlow: state.channelSetFlow,
+                    channelSetId:
+                        widget.posScreenBloc.state.activeTerminal.channelSet,
+                    defaultCheckout: widget.posScreenBloc.state.defaultCheckout,
+                    fromCart: cartStatus,
+                    onTapClose: () {
+                      setState(() {
+                        orderStatus = false;
+                        cartStatus = false;
+                      });
+                    },
                   ),
-                ],
-              )
-            ),
+                ),
+              ],
+            )),
             // _bottomBar(state),
           ],
         ),
@@ -164,8 +168,13 @@ class _ProductsScreenState extends State<ProductsScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.search, size: 20,),
-                  SizedBox(width: 4,),
+                  Icon(
+                    Icons.search,
+                    size: 20,
+                  ),
+                  SizedBox(
+                    width: 4,
+                  ),
                   Expanded(
                     child: TextFormField(
                       style: textFieldStyle,
@@ -177,7 +186,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                       controller: searchController,
                       onChanged: (String value) {
                         if (value.length > 2) {
-                          screenBloc.add(ProductsFilterEvent(searchText: value));
+                          screenBloc
+                              .add(ProductsFilterEvent(searchText: value));
                         }
                       },
                     ),
@@ -190,8 +200,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
             alignment: Alignment.centerRight,
             child: InkWell(
               onTap: () {
-                screenBloc.add(ProductsFilterEvent(
-                    orderDirection: !state.orderDirection));
+                screenBloc.add(
+                    ProductsFilterEvent(orderDirection: !state.orderDirection));
               },
               child: Container(
                 child: SvgPicture.asset(
@@ -252,8 +262,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
   Widget _secondToolBar(PosProductScreenState state) {
     num cartCount = 0;
     if (state.channelSetFlow != null && state.channelSetFlow.cart != null) {
-      state.channelSetFlow.cart.forEach((element) =>
-      cartCount += element.quantity);
+      state.channelSetFlow.cart
+          .forEach((element) => cartCount += element.quantity);
     }
 
     searchController.text = state.searchText;
@@ -267,28 +277,35 @@ class _ProductsScreenState extends State<ProductsScreen> {
               Padding(
                 padding: EdgeInsets.only(left: 12),
               ),
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    orderStatus = true;
-                  });
-                },
-                child: Text(
-                  'Amount',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 12, right: 12),
-                child: Container(
-                  width: 1,
-                  color: Color(0xFF888888),
-                  height: 24,
-                ),
-              ),
+              orderStatus
+                  ? Container()
+                  : Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              orderStatus = true;
+                            });
+                          },
+                          child: Text(
+                            'Amount',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 12, right: 12),
+                          child: Container(
+                            width: 1,
+                            color: Color(0xFF888888),
+                            height: 24,
+                          ),
+                        ),
+                      ],
+                    ),
               InkWell(
                 onTap: () {
                   Navigator.push(
@@ -318,26 +335,37 @@ class _ProductsScreenState extends State<ProductsScreen> {
               ? Container(
                   width: 25,
                   height: 25,
+                  margin: EdgeInsets.only(right: 20),
                   alignment: Alignment.center,
                   child: CircularProgressIndicator(
+                    backgroundColor: Colors.white,
                     strokeWidth: 2,
                   ),
                 )
-              : IconBadge(
-            icon: Icon(Icons.shop, color: Colors.white, size: 20,),
-            itemCount: cartCount,
-            badgeColor: Colors.red,
-            itemColor: Colors.white,
-            hideZero: true,
-            onTap: () {
-              if (state.channelSetFlow.cart == null || state.channelSetFlow.cart.isEmpty) {
-                Fluttertoast.showToast(msg: 'Cart is empty');
-              } else {
-                screenBloc.add(CartOrderEvent());
-              }
-            },
+              : orderStatus
+                  ? Container()
+                  : IconBadge(
+                      icon: Icon(
+                        Icons.shop,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                      itemCount: cartCount,
+                      badgeColor: Colors.red,
+                      itemColor: Colors.white,
+                      hideZero: true,
+                      onTap: () {
+                        if (state.channelSetFlow.cart == null ||
+                            state.channelSetFlow.cart.isEmpty) {
+                          Fluttertoast.showToast(msg: 'Cart is empty');
+                        } else {
+                          screenBloc.add(CartOrderEvent());
+                        }
+                      },
+                    ),
+          SizedBox(
+            width: 10,
           ),
-          SizedBox(width: 10,),
         ],
       ),
     );
@@ -377,8 +405,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   Widget gridBody(PosProductScreenState state) {
-    if (state.products == null || state.products.isEmpty)
-        return Container();
+    if (state.products == null || state.products.isEmpty) return Container();
 
     List<Widget> productsItems = [];
     state.products.forEach((product) {
@@ -413,8 +440,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   Widget _listBody(PosProductScreenState state) {
-    if (state.products == null || state.products.isEmpty)
-      return Container();
+    if (state.products == null || state.products.isEmpty) return Container();
     return ListView.builder(
         itemCount: state.products.length,
         itemBuilder: (context, index) =>
@@ -470,8 +496,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   ],
                 ),
               ),
-              Text(
-                  '${Measurements.currency(model.currency)}${model.price}'),
+              Text('${Measurements.currency(model.currency)}${model.price}'),
               IconButton(
                 icon: Icon(Icons.navigate_next),
                 onPressed: () {
@@ -490,7 +515,10 @@ class _ProductsScreenState extends State<ProductsScreen> {
     Navigator.push(
       context,
       PageTransition(
-        child: PosProductDetailScreen(model, screenBloc, state.channelSetFlow,
+        child: PosProductDetailScreen(
+          model,
+          screenBloc,
+          state.channelSetFlow,
         ),
         type: PageTransitionType.fade,
       ),
