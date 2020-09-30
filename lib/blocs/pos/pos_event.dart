@@ -648,3 +648,5 @@ class ProductsFilterEvent extends PosScreenEvent {
 class ResetProductsFilterEvent extends PosScreenEvent{}
 
 class RestoreQrCodeEvent extends PosScreenEvent{}
+
+class CartOrderEvent extends PosScreenEvent{}

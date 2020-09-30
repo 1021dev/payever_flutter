@@ -372,7 +372,7 @@ class _PosScreenState extends State<PosScreen> {
         bottom: false,
         child: BackgroundBase(
           true,
-          body: state.isLoading ?
+          body: state.isLoading || state.activeTerminal == null?
           Center(
             child: CircularProgressIndicator(),
           ): Center(

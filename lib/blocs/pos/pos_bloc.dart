@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
@@ -132,6 +132,8 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       yield* cardProduct(event.body);
     } else if (event is RestoreQrCodeEvent) {
       yield* getPrefilledLink();
+    } else if (event is CartOrderEvent) {
+      yield* cartProgress();
     }
   }
 
@@ -830,29 +832,70 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       ChannelSetFlow channelSetFlow = ChannelSetFlow.fromJson(response);
       yield state.copyWith(channelSetFlow: channelSetFlow);
       yield PosScreenSuccess();
+      // add(CartOrderEvent());
     }
+    yield state.copyWith(isUpdating: false);
 
-    String query = '{"query":"\n        query getProducts {\n          getProductsByIdsOrVariantIds(ids: [\"8ed476cf-15b5-446c-a139-8bb7184261ea\" \"11e566d3-4177-43ac-9dee-78a5812a08fd\" \"10f54806-cdef-4ff1-8a98-167f9b6daf22\"]) {\n            id\n            businessUuid\n            images\n            currency\n            uuid\n            title\n            description\n            onSales\n            price\n            salePrice\n            sku\n            barcode\n            type\n            active\n            vatRate\n            categories{_id, slug, title}\n            channelSets{id, type, name}\n            variants{id, images, title, options{_id, name, value}, description, onSales, price, salePrice, sku, barcode}\n            shipping{free, general, weight, width, length, height}\n          }\n        }\n    "}';
+  }
+
+  Stream<PosScreenState> cartProgress() async* {
+    String productIdsText = '';
+    state.channelSetFlow.cart.forEach((element) {
+      productIdsText += '\"${element.id}\" ';
+    });
+
+    String query = '\n        query getProducts {\n          getProductsByIdsOrVariantIds(ids: [$productIdsText]) {\n            id\n            businessUuid\n            images\n            currency\n            uuid\n            title\n            description\n            onSales\n            price\n            salePrice\n            sku\n            barcode\n            type\n            active\n            vatRate\n            categories{_id, slug, title}\n            channelSets{id, type, name}\n            variants{id, images, title, options{_id, name, value}, description, onSales, price, salePrice, sku, barcode}\n            shipping{free, general, weight, width, length, height}\n          }\n        }\n ';
     Map<String, dynamic> body1 = {'query': query};
     dynamic response1 = await api.getProducts(GlobalUtils.activeToken.accessToken, body1);
+    if (!(response1 is Map)) return;
     List<ProductsModel> products = [];
     if (response1 is Map) {
       dynamic data = response1['data'];
       if (data != null) {
         dynamic getProducts = data['getProductsByIdsOrVariantIds'];
         if (getProducts != null) {
-          List productsObj = getProducts['products'];
-          if (productsObj != null) {
-            productsObj.forEach((element) {
-              products.add(ProductsModel.toMap(element));
-            });
-          }
+          getProducts.forEach((element) {
+            products.add(ProductsModel.toMap(element));
+          });
         }
       }
     }
-    yield state.copyWith(products: products, searching: false);
 
+    Map<String, dynamic>body2 = {};
+    List<dynamic>carts = [];
+    num amount = 0;
+    products.forEach((element) {
+      amount += element.price * 1;
+      String image = element.images == null || element.images.isEmpty ? null : element.images.first;
+      carts.add({
+        'extra_data': null,
+        'id': element.id,
+        'identifier': element.id,
+        'image': image == null ? null :
+        'https://payeverproduction.blob.core.windows.net/products/$image',
+        'name': element.title,
+        'price': element.price,
+        'price_net': null,
+        'quantity': 2,
+        'sku': element.sku,
+        'uuid': element.id,
+        'vat': 0,
+        '_optionsAsLine': null
+      });
+    });
 
+    body2 = {
+      'amount' : amount,
+      'business_shipping_option_id' : null,
+      'cart': carts
+    };
+    yield PosScreenSuccess();
+    dynamic response2 = await api.patchCheckoutFlowOrder(GlobalUtils.activeToken.accessToken, state.channelSetFlow.id, 'en', body2);
+    if (response2 is Map) {
+
+      ChannelSetFlow flow = ChannelSetFlow.fromJson(response2);
+      yield state.copyWith(channelSetFlow: flow);
+    }
     yield state.copyWith(isUpdating: false);
   }
 

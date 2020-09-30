@@ -235,6 +235,12 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   Widget _secondToolBar(PosScreenState state) {
+    num cartCount = 0;
+    if (state.channelSetFlow != null && state.channelSetFlow.cart != null) {
+      state.channelSetFlow.cart.forEach((element) =>
+      cartCount += element.quantity);
+    }
+
     searchController.text = state.searchText;
     return Container(
       height: 50,
@@ -294,9 +300,18 @@ class _ProductsScreenState extends State<ProductsScreen> {
             ],
           ),
           Spacer(),
-          IconBadge(
+          state.isLoadingQrcode
+              ? Container(
+                  width: 25,
+                  height: 25,
+                  alignment: Alignment.center,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                  ),
+                )
+              : IconBadge(
             icon: Icon(Icons.shop, color: Colors.white, size: 20,),
-            itemCount: (state.channelSetFlow == null || state.channelSetFlow.cart == null) ? 0 : state.channelSetFlow.cart.length,
+            itemCount: cartCount,
             badgeColor: Colors.red,
             itemColor: Colors.white,
             hideZero: true,

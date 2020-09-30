@@ -6,7 +6,7 @@ import 'package:payever/products/models/models.dart';
 class PosScreenState {
   final bool isLoading;
   final bool searching;
-  final bool isLoadingQrcode;
+  final bool isLoadingQrcode; // & Cart Progress Flag
   final String businessId;
   final List<Terminal> terminals;
   final Business activeBusiness;
