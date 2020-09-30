@@ -171,7 +171,9 @@ class PosProductScreenBloc
     List<dynamic>carts = [];
     num amount = 0;
     products.forEach((element) {
-      amount += element.price * 1;
+      CartItem item = state.channelSetFlow.cart.firstWhere((cartItem) => cartItem.id == element.id);
+      num quantity = item == null ? 1 : item.quantity;
+      amount += element.price * quantity;
       String image = element.images == null || element.images.isEmpty ? null : element.images.first;
       carts.add({
         'extra_data': null,
@@ -182,7 +184,7 @@ class PosProductScreenBloc
         'name': element.title,
         'price': element.price,
         'price_net': null,
-        'quantity': 2,
+        'quantity': quantity,
         'sku': element.sku,
         'uuid': element.id,
         'vat': 0,
@@ -199,8 +201,14 @@ class PosProductScreenBloc
     dynamic response2 = await api.patchCheckoutFlowOrder(GlobalUtils.activeToken.accessToken, state.channelSetFlow.id, 'en', body2);
     if (response2 is Map) {
       ChannelSetFlow flow = ChannelSetFlow.fromJson(response2);
-      yield state.copyWith(channelSetFlow: flow, cartProgressed: true);
+      flow.cart.forEach((element) {
+        print('channelSetFlow2: ${element.toJson().toString()}');
+      });
+
+      yield state.copyWith(channelSetFlow: flow);
       posScreenBloc.add(UpdateChannelSetFlowEvent(flow));
+      await Future.delayed(Duration(milliseconds: 500));
+      yield state.copyWith(isLoadingCartView: false, cartProgressed: true);
       await Future.delayed(Duration(milliseconds: 100));
       yield state.copyWith(cartProgressed: false);
     }

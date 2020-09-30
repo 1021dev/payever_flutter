@@ -74,7 +74,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
     return BlocListener(
       bloc: screenBloc,
       listener: (BuildContext context, PosProductScreenState state) async {
-        if (state.cartProgressed) {
+        if (state.cartProgressed && !state.isLoadingCartView) {
+          print('cartProgressed');
           setState(() {
             cartStatus = true;
             orderStatus = true;
@@ -101,6 +102,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   Widget _body(PosProductScreenState state) {
+    print('cartProgressed :${state.cartProgressed}');
     return Stack(
       children: [
         Column(
@@ -111,24 +113,22 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 child: Stack(
               children: [
                 isGridMode ? gridBody(state) : _listBody(state),
-                Visibility(
-                  visible: orderStatus,
-                  child: WorkshopView(
-                    business: widget.posScreenBloc.state.activeBusiness,
-                    terminal: widget.posScreenBloc.state.activeTerminal,
-                    channelSetFlow: state.channelSetFlow,
-                    channelSetId:
-                        widget.posScreenBloc.state.activeTerminal.channelSet,
-                    defaultCheckout: widget.posScreenBloc.state.defaultCheckout,
-                    fromCart: cartStatus,
-                    onTapClose: () {
-                      setState(() {
-                        orderStatus = false;
-                        cartStatus = false;
-                      });
-                    },
-                  ),
-                ),
+                orderStatus ? WorkshopView(
+                  business: widget.posScreenBloc.state.activeBusiness,
+                  terminal: widget.posScreenBloc.state.activeTerminal,
+                  channelSetFlow: state.channelSetFlow,
+                  channelSetId:
+                      widget.posScreenBloc.state.activeTerminal.channelSet,
+                  defaultCheckout: widget.posScreenBloc.state.defaultCheckout,
+                  fromCart: cartStatus,
+                  cart: cartStatus ? state.channelSetFlow.cart : null,
+                  onTapClose: () {
+                    setState(() {
+                      orderStatus = false;
+                      cartStatus = false;
+                    });
+                  },
+                ) : Container(),
               ],
             )),
             // _bottomBar(state),

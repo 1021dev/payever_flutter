@@ -11,8 +11,8 @@ class CartOrderView extends StatefulWidget {
   final WorkshopScreenBloc workshopScreenBloc;
   final List<CartItem> cart;
   final String currency;
-
-  const CartOrderView(this.cart, this.currency, this.workshopScreenBloc);
+  final Function onTapQuality;
+  const CartOrderView(this.cart, this.currency, this.workshopScreenBloc, this.onTapQuality);
 
   @override
   _CartOrderViewState createState() => _CartOrderViewState(cart);
@@ -20,8 +20,6 @@ class CartOrderView extends StatefulWidget {
 
 class _CartOrderViewState extends State<CartOrderView> {
   final List<CartItem> cart;
-  List<num> quantityList = Iterable<int>.generate(1000).toList();
-
   _CartOrderViewState(this.cart);
   @override
   void initState() {
@@ -74,11 +72,26 @@ class _CartOrderViewState extends State<CartOrderView> {
                   height: 100,
                   width: double.infinity,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
                     children: [
-                      IconButton(
-                        icon: Icon(Icons.close),
-                        onPressed: () {},
+                      InkWell(
+                        onTap: () {
+
+                        },
+                        child: Container(
+                          width: 25,
+                          height: 25,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.black54,
+                          ),
+                          child: Icon(
+                            Icons.close,
+                            size: 20,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
                       Container(
                         width:80,
@@ -125,31 +138,18 @@ class _CartOrderViewState extends State<CartOrderView> {
                         ),
                       ),
                       Text('${cartItem.name}'),
-                      // DropdownButtonFormField(
-                      //   dropdownColor: overlayFilterViewBackground(),
-                      //   items: List.generate(quantityList.length, (index) {
-                      //     return DropdownMenuItem(
-                      //       child: Text(
-                      //         '${quantityList[index]}',
-                      //       ),
-                      //       value: quantityList[index],
-                      //     );
-                      //   }).toList(),
-                      //   value: cartItem.quantity ?? 1,
-                      //   onChanged: (val) {
-                      //     cartItem.quantity = val;
-                      //   },
-                      //   icon: Icon(
-                      //     Icons.keyboard_arrow_down,
-                      //   ),
-                      //   decoration: InputDecoration(
-                      //     border: InputBorder.none,
-                      //   ),
-                      //   hint: Text(
-                      //     Language.getSettingsStrings(
-                      //         'form.create_form.address.country.label'),
-                      //   ),
-                      // ),
+                      InkWell(
+                        onTap: (){
+                          widget.onTapQuality(cartItem);
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('${cartItem.quantity}'),
+                            Icon(Icons.keyboard_arrow_down),
+                          ],
+                        ),
+                      ),
                       Text(
                         '${Measurements.currency(widget.currency)} ${formatter.format(cartItem.price)}',
                         style: TextStyle(

@@ -184,7 +184,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
         print('channelSetFlow id:' + channelSetFlow.id);
       }
 
-      yield state.copyWith(channelSetFlow: channelSetFlow, isLoading: false);
+      yield state.copyWith(channelSetFlow: channelSetFlow,/* isLoading: false*/);
     }
     add(GetPosIntegrationsEvent(businessId: activeBusinessId));
   }
@@ -205,7 +205,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     integrationObj.forEach((element) {
       integrations.add(element);
     });
-    yield state.copyWith(terminalIntegrations: integrations);
+    yield state.copyWith(terminalIntegrations: integrations, isLoading: false);
   }
 
   Stream<PosScreenState> getCommunications(String businessId) async* {

@@ -34,6 +34,7 @@ class WorkshopView extends StatefulWidget {
   final ChannelSetFlow channelSetFlow;
   final Function onTapClose;
   final bool fromCart;
+  final List<CartItem>cart;
   const WorkshopView(
       {this.workshopScreenBloc,
       this.formKeyOrder,
@@ -43,6 +44,7 @@ class WorkshopView extends StatefulWidget {
       this.defaultCheckout,
       this.channelSetFlow,
       this.onTapClose,
+      this.cart,
       this.fromCart = false});
 
   @override
@@ -412,157 +414,173 @@ class _WorkshopViewState extends State<WorkshopView> {
     if (state.channelSetFlow == null) {
       return Container();
     }
-    List<CartItem>cart = state.channelSetFlow.cart;
     return !widget.fromCart
         ? Form(
-      key: _formKeyOrder,
-      child: Visibility(
-        visible: isVisible(state, 'order'),
-        child: Column(
-          children: <Widget>[
-            _cautionTestMode(state),
-            WorkshopHeader(
-              title:
-              Language.getCheckoutStrings('checkout_order_summary.title'),
-              isExpanded: editOrder ? true : _selectedSectionIndex == 0,
-              isApproved: isOrderApproved,
-              onTap: () {
-                setState(() {
-                  _selectedSectionIndex = _selectedSectionIndex == 0 ? -1 : 0;
-                });
-              },
-            ),
-            Visibility(
-              visible: editOrder ? true : _selectedSectionIndex == 0,
+            key: _formKeyOrder,
+            child: Visibility(
+              visible: isVisible(state, 'order'),
               child: Column(
                 children: <Widget>[
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.all(Radius.circular(4)),
-                    ),
+                  _cautionTestMode(state),
+                  WorkshopHeader(
+                    title: Language.getCheckoutStrings(
+                        'checkout_order_summary.title'),
+                    isExpanded: editOrder ? true : _selectedSectionIndex == 0,
+                    isApproved: isOrderApproved,
+                    onTap: () {
+                      setState(() {
+                        _selectedSectionIndex =
+                            _selectedSectionIndex == 0 ? -1 : 0;
+                      });
+                    },
+                  ),
+                  Visibility(
+                    visible: editOrder ? true : _selectedSectionIndex == 0,
                     child: Column(
                       children: <Widget>[
-                        BlurEffectView(
-                          color: overlayRow(),
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(4),
-                              topRight: Radius.circular(4)),
-                          child: Container(
-                            height: 55,
-                            padding: EdgeInsets.symmetric(vertical: 4),
-                            child: TextFormField(
-                              style: textFieldStyle,
-                              initialValue: amount > 0 ? '$amount' : '',
-                              onChanged: (val) {
-                                amount = double.parse(val);
-                              },
-                              validator: (text) {
-                                if (text.isEmpty || double.parse(text) <= 0) {
-                                  return 'Amount required';
-                                }
-                                if (double.parse(text) < 1) {
-                                  return 'Correct Amount required';
-                                }
-                                return null;
-                              },
-                              decoration: textFieldDecoration(Language.getCartStrings(
-                                  'checkout_cart_edit.form.label.amount'), prefixIcon: Container(
-                                width: 44,
-                                child: Center(
-                                  child: Text(
-                                    currency,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400,
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.all(Radius.circular(4)),
+                          ),
+                          child: Column(
+                            children: <Widget>[
+                              BlurEffectView(
+                                color: overlayRow(),
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(4),
+                                    topRight: Radius.circular(4)),
+                                child: Container(
+                                  height: 55,
+                                  padding: EdgeInsets.symmetric(vertical: 4),
+                                  child: TextFormField(
+                                    style: textFieldStyle,
+                                    initialValue: amount > 0 ? '$amount' : '',
+                                    onChanged: (val) {
+                                      amount = double.parse(val);
+                                    },
+                                    validator: (text) {
+                                      if (text.isEmpty ||
+                                          double.parse(text) <= 0) {
+                                        return 'Amount required';
+                                      }
+                                      if (double.parse(text) < 1) {
+                                        return 'Correct Amount required';
+                                      }
+                                      return null;
+                                    },
+                                    decoration: textFieldDecoration(
+                                      Language.getCartStrings(
+                                          'checkout_cart_edit.form.label.amount'),
+                                      prefixIcon: Container(
+                                        width: 44,
+                                        child: Center(
+                                          child: Text(
+                                            currency,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                                     ),
+                                    keyboardType:
+                                        TextInputType.numberWithOptions(
+                                            decimal: true),
                                   ),
                                 ),
                               ),
+                              SizedBox(
+                                height: 2,
                               ),
-                              keyboardType: TextInputType.numberWithOptions(
-                                  decimal: true),
+                              BlurEffectView(
+                                color: overlayRow(),
+                                borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(4),
+                                    bottomRight: Radius.circular(4)),
+                                child: Container(
+                                  height: 55,
+                                  padding: EdgeInsets.symmetric(vertical: 4),
+                                  alignment: Alignment.center,
+                                  child: TextFormField(
+                                    style: textFieldStyle,
+                                    onChanged: (val) {
+                                      reference = val;
+                                    },
+                                    initialValue: reference,
+                                    validator: (text) {
+                                      if (text.isEmpty) {
+                                        return 'Reference required';
+                                      }
+                                      return null;
+                                    },
+                                    decoration: textFieldDecoration(
+                                        Language.getCartStrings(
+                                            'checkout_cart_edit.form.label.reference')),
+                                    keyboardType: TextInputType.text,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          height: 55,
+                          child: SizedBox.expand(
+                            child: MaterialButton(
+                              onPressed: () {
+                                // screenBloc.add(RefreshWorkShopEvent());
+                                if (_formKeyOrder.currentState.validate() &&
+                                    !state.isUpdating) {
+                                  _selectedSectionIndex = 0;
+                                  screenBloc.add(PatchCheckoutFlowOrderEvent(
+                                      body: {
+                                        'amount': amount,
+                                        'reference': reference
+                                      }));
+                                }
+                              },
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              color: overlayBackground(),
+                              child: state.isUpdating &&
+                                      state.updatePayflowIndex == 0
+                                  ? Center(
+                                      child: Container(
+                                          width: 30,
+                                          height: 30,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                          )))
+                                  : Text(
+                                      editOrder ? 'Save' : 'Next Step',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
                             ),
                           ),
                         ),
                         SizedBox(
-                          height: 2,
-                        ),
-                        BlurEffectView(
-                          color: overlayRow(),
-                          borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(4),
-                              bottomRight: Radius.circular(4)),
-                          child: Container(
-                            height: 55,
-                            padding: EdgeInsets.symmetric(vertical: 4),
-                            alignment: Alignment.center,
-                            child: TextFormField(
-                              style: textFieldStyle,
-                              onChanged: (val) {
-                                reference = val;
-                              },
-                              initialValue: reference,
-                              validator: (text) {
-                                if (text.isEmpty) {
-                                  return 'Reference required';
-                                }
-                                return null;
-                              },
-                              decoration: textFieldDecoration(Language.getCartStrings(
-                                  'checkout_cart_edit.form.label.reference')),
-                              keyboardType: TextInputType.text,
-                            ),
-                          ),
+                          height: 20,
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    height: 55,
-                    child: SizedBox.expand(
-                      child: MaterialButton(
-                        onPressed: () {
-                          // screenBloc.add(RefreshWorkShopEvent());
-                          if (_formKeyOrder.currentState.validate() &&
-                              !state.isUpdating) {
-                            _selectedSectionIndex = 0;
-                            screenBloc.add(PatchCheckoutFlowOrderEvent(body: {
-                              'amount': amount,
-                              'reference': reference
-                            }));
-                          }
-                        },
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        color: overlayBackground(),
-                        child: state.isUpdating && state.updatePayflowIndex == 0
-                            ? Center(child: Container(width: 30, height: 30, child: CircularProgressIndicator(strokeWidth: 2,)))
-                            : Text(
-                          editOrder ? 'Save' : 'Next Step',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
-    )
-        : CartOrderView(cart, state.channelSetFlow.currency, screenBloc);
+          )
+        : CartOrderView(widget.cart, state.channelSetFlow.currency, screenBloc,
+            (CartItem item) {
+              showInputQualityDialog(item);
+            });
   }
 
   Widget _orderDetailView(WorkshopScreenState state) {
@@ -1550,6 +1568,95 @@ class _WorkshopViewState extends State<WorkshopView> {
           ),
         );
       },
+    );
+  }
+
+  void showInputQualityDialog(CartItem item) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+          ),
+          content: inputQualityView(item),
+        );
+      },
+    );
+  }
+
+  Widget inputQualityView(CartItem item) {
+    TextEditingController controller = TextEditingController(text: '${item.quantity}');
+    final _formKey = GlobalKey<FormState>();
+    return SingleChildScrollView(
+      child: Form(
+        key: _formKey,
+        child: Container(
+          height: 120,
+          child: Container(
+            padding: EdgeInsets.fromLTRB(0 , 6, 0, 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: overlayColor().withOpacity(0.5),
+                    borderRadius: BorderRadius.all(Radius.circular(6)),
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 65,
+                        padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        child:  TextFormField(
+                          controller: controller,
+                          autofocus: true,
+                          textInputAction: TextInputAction.done,
+                          decoration: textFieldDecoration('Quality'),
+                          style: TextStyle(
+                            fontSize: 18,
+                          ),
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Quality required';
+                            }
+                            int quality = int.parse(value);
+                            if (quality < 1) {
+                              return 'Quality required';
+                            }
+                            return null;
+                          },
+                          keyboardType: TextInputType.number,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  alignment: Alignment.bottomRight,
+                  child: InkWell(
+                    onTap: () {
+                      if (_formKey.currentState.validate()) {
+                        setState(() {
+                          item.quantity = int.parse(controller.text);
+                        });
+                        FocusScope.of(context).unfocus();
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: Container(
+                      width: 60,
+                      height: 36,
+                      alignment: Alignment.bottomCenter,
+                      child: Text('Add'),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

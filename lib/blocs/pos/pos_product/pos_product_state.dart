@@ -20,7 +20,7 @@ class PosProductScreenState {
   final String searchText;
 
   PosProductScreenState({
-    this.isLoading = false,
+    this.isLoading = true,
     this.isUpdating = false,
     this.isLoadingCartView = false,
     this.cartProgressed = false,
