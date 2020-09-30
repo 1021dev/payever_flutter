@@ -162,21 +162,33 @@ class _PosProductDetailScreenState extends State<PosProductDetailScreen> {
                   InkWell(
                     onTap: () {
                       if (state.isUpdating) return;
-                      Map<String, dynamic> card = {
-                        'id': product.id,
-                        'name': product.title,
-                        'quantity': 1,
-                        'uuid': product.id,
-                      };
                       List<dynamic> cards = [];
-                      state.channelSetFlow.cart.forEach((element) {
-                        cards.add(element.toJson());
-                      });
-                      if(cards == null) cards = [];
-                      cards.add(card);
-                      Map<String, dynamic> body = {
-                        'cart': cards
-                      };
+                      bool alreadyAdded = false;
+                      if (state.channelSetFlow.cart != null && state.channelSetFlow.cart.isNotEmpty) {
+                        state.channelSetFlow.cart.forEach((element) {
+                          num quantity = element.quantity;
+                          if (element.id == product.id) {
+                            quantity ++;
+                            alreadyAdded = true;
+                          }
+                          Map<String, dynamic> card = {
+                            'id': element.id,
+                            'name': element.name,
+                            'quantity': quantity,
+                            'uuid': element.uuid,
+                          };
+                          cards.add(card);
+                        });
+                      }
+                      if (!alreadyAdded) {
+                        cards.add({
+                          'id': product.id,
+                          'name': product.title,
+                          'quantity': 1,
+                          'uuid': product.id,
+                        });
+                      }
+                      Map<String, dynamic> body = {'cart': cards};
                       widget.posScreenBloc.add(CardProductEvent(body: body));
                     },
                     child: Container(

@@ -25,8 +25,6 @@ class _CartOrderViewState extends State<CartOrderView> {
   _CartOrderViewState(this.cart);
   @override
   void initState() {
-    super.initState();
-
     List<dynamic> cards = [];
     cart.forEach((element) {
       cards.add(element.toJson());
@@ -38,6 +36,7 @@ class _CartOrderViewState extends State<CartOrderView> {
       'cart': cards
     };
     widget.workshopScreenBloc.add(CartUpdateEvent(body: body));
+    super.initState();
   }
   
   @override

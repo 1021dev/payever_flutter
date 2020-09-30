@@ -111,7 +111,7 @@ class ProductsModel {
     vatRate = obj[GlobalUtils.DB_PROD_MODEL_VAT_RATE];
     type = obj[GlobalUtils.DB_PROD_MODEL_TYPE];
     onSales = obj[GlobalUtils.DB_PROD_MODEL_SALES];
-    businessUuid = obj[businessUuid];
+    businessUuid = obj['businessUuid'];
 
     if (obj[GlobalUtils.DB_PROD_MODEL_IMAGES] != null)
       obj[GlobalUtils.DB_PROD_MODEL_IMAGES].forEach((img) {
@@ -177,16 +177,6 @@ class ProductsModel {
     } else {
       map['shipping'] = {};
     }
-
-//    if (collections.length > 0) {
-//      List collectionsArr = [];
-//      collections.forEach((element) {
-//        collectionsArr.add(element.toDictionary());
-//      });
-//      map['collections'] = collectionsArr;
-//    } else {
-//      map['collections'] = [];
-//    }
 
     if (variants.length > 0) {
       List variantsArr = [];

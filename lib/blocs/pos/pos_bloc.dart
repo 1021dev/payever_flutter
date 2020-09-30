@@ -831,6 +831,28 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       yield state.copyWith(channelSetFlow: channelSetFlow);
       yield PosScreenSuccess();
     }
+
+    String query = '{"query":"\n        query getProducts {\n          getProductsByIdsOrVariantIds(ids: [\"8ed476cf-15b5-446c-a139-8bb7184261ea\" \"11e566d3-4177-43ac-9dee-78a5812a08fd\" \"10f54806-cdef-4ff1-8a98-167f9b6daf22\"]) {\n            id\n            businessUuid\n            images\n            currency\n            uuid\n            title\n            description\n            onSales\n            price\n            salePrice\n            sku\n            barcode\n            type\n            active\n            vatRate\n            categories{_id, slug, title}\n            channelSets{id, type, name}\n            variants{id, images, title, options{_id, name, value}, description, onSales, price, salePrice, sku, barcode}\n            shipping{free, general, weight, width, length, height}\n          }\n        }\n    "}';
+    Map<String, dynamic> body1 = {'query': query};
+    dynamic response1 = await api.getProducts(GlobalUtils.activeToken.accessToken, body1);
+    List<ProductsModel> products = [];
+    if (response1 is Map) {
+      dynamic data = response1['data'];
+      if (data != null) {
+        dynamic getProducts = data['getProductsByIdsOrVariantIds'];
+        if (getProducts != null) {
+          List productsObj = getProducts['products'];
+          if (productsObj != null) {
+            productsObj.forEach((element) {
+              products.add(ProductsModel.toMap(element));
+            });
+          }
+        }
+      }
+    }
+    yield state.copyWith(products: products, searching: false);
+
+
     yield state.copyWith(isUpdating: false);
   }
 

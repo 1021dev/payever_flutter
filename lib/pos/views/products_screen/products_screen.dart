@@ -104,6 +104,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                       onTapClose: () {
                         setState(() {
                           orderStatus = false;
+                          cartStatus = false;
                         });
                       },
                     ),
@@ -307,7 +308,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   print('CartItems: ${element.toJson().toString()}');
                 });
                 setState(() {
-                  // cartStatus = true;
+                  cartStatus = true;
                   orderStatus = true;
                 });
               }
