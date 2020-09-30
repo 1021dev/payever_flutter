@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
@@ -14,8 +15,10 @@ import 'package:payever/theme.dart';
 class PosProductDetailScreen extends StatefulWidget {
   final ProductsModel productsModel;
   final PosScreenBloc posScreenBloc;
+  final ChannelSetFlow channelSetFlow;
 
-  PosProductDetailScreen({this.productsModel, this.posScreenBloc});
+  PosProductDetailScreen(
+      this.productsModel, this.posScreenBloc, this.channelSetFlow);
 
   @override
   _PosProductDetailScreenState createState() =>
@@ -26,18 +29,21 @@ class _PosProductDetailScreenState extends State<PosProductDetailScreen> {
   final ProductsModel product;
   bool _isPortrait;
   bool _isTablet;
-
+  PosProductDetailScreenBloc screenBloc;
   _PosProductDetailScreenState(this.product);
 
   double imageHeight = 0;
 
   @override
   void initState() {
+    screenBloc = PosProductDetailScreenBloc(widget.posScreenBloc)
+      ..add(PosProductDetailScreenInitEvent(widget.channelSetFlow));
     super.initState();
   }
 
   @override
   void dispose() {
+    screenBloc.close();
     super.dispose();
   }
 
@@ -57,15 +63,15 @@ class _PosProductDetailScreenState extends State<PosProductDetailScreen> {
     }
 
     return BlocListener(
-      bloc: widget.posScreenBloc,
-      listener: (BuildContext context, PosScreenState state) async {
-        if (state is PosScreenSuccess) {
+      bloc: screenBloc,
+      listener: (BuildContext context, PosProductDetailScreenState state) async {
+        if (state is PosProductDetailScreenSuccess) {
           Navigator.pop(context);
         }
       },
-      child: BlocBuilder<PosScreenBloc, PosScreenState>(
-        bloc: widget.posScreenBloc,
-        builder: (BuildContext context, PosScreenState state) {
+      child: BlocBuilder<PosProductDetailScreenBloc, PosProductDetailScreenState>(
+        bloc: screenBloc,
+        builder: (BuildContext context, PosProductDetailScreenState state) {
           return Scaffold(
             resizeToAvoidBottomPadding: true,
             appBar: Appbar(product.title ?? ''),
@@ -82,7 +88,7 @@ class _PosProductDetailScreenState extends State<PosProductDetailScreen> {
     );
   }
 
-  Widget _getBody(PosScreenState state) {
+  Widget _getBody(PosProductDetailScreenState state) {
     return Center(
       child: state.isLoading
           ? CircularProgressIndicator()
@@ -189,7 +195,7 @@ class _PosProductDetailScreenState extends State<PosProductDetailScreen> {
                         });
                       }
                       Map<String, dynamic> body = {'cart': cards};
-                      widget.posScreenBloc.add(CardProductEvent(body: body));
+                      screenBloc.add(CartProductEvent(body: body));
                     },
                     child: Container(
                       width: double.infinity,
