@@ -83,7 +83,7 @@ class _WorkshopViewState extends State<WorkshopView> {
 
 
   bool payflowLogin = false;
-
+  bool cartOrder = false;
   var _formKeyOrder;
   final _formKeyAccount = GlobalKey<FormState>();
   final _formKeyBilling = GlobalKey<FormState>();
@@ -142,6 +142,7 @@ class _WorkshopViewState extends State<WorkshopView> {
 
   @override
   Widget build(BuildContext context) {
+    cartOrder = widget.fromCart;
     return BlocListener(
       bloc: screenBloc,
       listener: (BuildContext context, WorkshopScreenState state) async {
@@ -233,6 +234,16 @@ class _WorkshopViewState extends State<WorkshopView> {
     String currencyString = state.activeBusiness.currency;
     NumberFormat format = NumberFormat();
     currency = format.simpleCurrencySymbol(currencyString);
+    if (cartOrder) {
+      double totalPrice = 0;
+      widget.cart.forEach((element) {
+        totalPrice += element.price * element.quantity;
+      });
+      amount = totalPrice;
+    } else {
+      amount = state.channelSetFlow.amount.toDouble();
+    }
+    reference = state.channelSetFlow.reference;
 
     return BackgroundBase(
       true,
@@ -288,7 +299,7 @@ class _WorkshopViewState extends State<WorkshopView> {
                       children: <Widget>[
                         Text(
                           state.channelSetFlow != null
-                              ? '$currency${state.channelSetFlow.amount.toStringAsFixed(2)}'
+                              ? '$currency${amount.toStringAsFixed(2)}'
                               : '',
                           style: TextStyle(
                             fontSize: 14,
@@ -414,8 +425,28 @@ class _WorkshopViewState extends State<WorkshopView> {
     if (state.channelSetFlow == null) {
       return Container();
     }
-    return !widget.fromCart
-        ? Form(
+    if (cartOrder) {
+      return Column(
+        children: [
+          CartOrderView(
+            cart: widget.cart,
+            workshopScreenBloc: screenBloc,
+            currency: state.channelSetFlow.currency,
+            onTapQuality: (CartItem item) {
+              showInputQualityDialog(item);
+            },
+            onTapClose: (CartItem item) {
+              setState(() {
+                widget.cart.remove(item);
+              });
+            },
+          ),
+          orderNextBtn(state),
+          SizedBox(height: 20,),
+        ],
+      );
+    }
+    return Form(
             key: _formKeyOrder,
             child: Visibility(
               visible: isVisible(state, 'order'),
@@ -528,45 +559,7 @@ class _WorkshopViewState extends State<WorkshopView> {
                         SizedBox(
                           height: 20,
                         ),
-                        Container(
-                          height: 55,
-                          child: SizedBox.expand(
-                            child: MaterialButton(
-                              onPressed: () {
-                                // screenBloc.add(RefreshWorkShopEvent());
-                                if (_formKeyOrder.currentState.validate() &&
-                                    !state.isUpdating) {
-                                  _selectedSectionIndex = 0;
-                                  screenBloc.add(PatchCheckoutFlowOrderEvent(
-                                      body: {
-                                        'amount': amount,
-                                        'reference': reference
-                                      }));
-                                }
-                              },
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              color: overlayBackground(),
-                              child: state.isUpdating &&
-                                      state.updatePayflowIndex == 0
-                                  ? Center(
-                                      child: Container(
-                                          width: 30,
-                                          height: 30,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 2,
-                                          )))
-                                  : Text(
-                                      editOrder ? 'Save' : 'Next Step',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                            ),
-                          ),
-                        ),
+                        orderNextBtn(state),
                         SizedBox(
                           height: 20,
                         ),
@@ -576,11 +569,60 @@ class _WorkshopViewState extends State<WorkshopView> {
                 ],
               ),
             ),
-          )
-        : CartOrderView(widget.cart, state.channelSetFlow.currency, screenBloc,
-            (CartItem item) {
-              showInputQualityDialog(item);
-            });
+          );
+
+  }
+
+  Widget orderNextBtn(WorkshopScreenState state) {
+    return Container(
+      height: 55,
+      child: SizedBox.expand(
+        child: MaterialButton(
+          onPressed: () {
+            print('Reference: ${state.channelSetFlow.reference}');
+            if (cartOrder) {
+              _selectedSectionIndex = 0;
+              screenBloc.add(PatchCheckoutFlowOrderEvent(
+                  body: {
+                    'amount': amount,
+                    'reference': state.channelSetFlow.reference
+                  }));
+            } else {
+              screenBloc.add(RefreshWorkShopEvent());
+              if (_formKeyOrder.currentState.validate() &&
+                  !state.isUpdating) {
+                _selectedSectionIndex = 0;
+                screenBloc.add(PatchCheckoutFlowOrderEvent(
+                    body: {
+                      'amount': amount,
+                      'reference': reference
+                    }));
+              }
+            }
+          },
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4),
+          ),
+          color: overlayBackground(),
+          child: state.isUpdating &&
+              state.updatePayflowIndex == 0
+              ? Center(
+              child: Container(
+                  width: 30,
+                  height: 30,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                  )))
+              : Text(
+            editOrder ? 'Save' : 'Next Step',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _orderDetailView(WorkshopScreenState state) {

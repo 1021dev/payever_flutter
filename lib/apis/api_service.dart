@@ -2717,6 +2717,20 @@ class ApiService {
       return Future.error(e);
     }
   }
+
+  Future<dynamic> cartInventoryOrder(String token, String orderId) async {
+    try {
+      print('$TAG - checkoutAuthorization()');
+      dynamic response = await _client.getTypeless(
+        '$inventoryUrl/order/$orderId',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   ///---------------------------------------------------------------------------
   ///                   Checkout - Switch / Create / Edit / Delete
   ///---------------------------------------------------------------------------

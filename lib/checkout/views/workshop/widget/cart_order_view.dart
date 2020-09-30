@@ -12,7 +12,14 @@ class CartOrderView extends StatefulWidget {
   final List<CartItem> cart;
   final String currency;
   final Function onTapQuality;
-  const CartOrderView(this.cart, this.currency, this.workshopScreenBloc, this.onTapQuality);
+  final Function onTapClose;
+
+  const CartOrderView(
+      {this.cart,
+      this.currency,
+      this.workshopScreenBloc,
+      this.onTapQuality,
+      this.onTapClose});
 
   @override
   _CartOrderViewState createState() => _CartOrderViewState(cart);
@@ -20,12 +27,14 @@ class CartOrderView extends StatefulWidget {
 
 class _CartOrderViewState extends State<CartOrderView> {
   final List<CartItem> cart;
+
   _CartOrderViewState(this.cart);
+
   @override
   void initState() {
     super.initState();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<WorkshopScreenBloc, WorkshopScreenState>(
@@ -56,9 +65,12 @@ class _CartOrderViewState extends State<CartOrderView> {
             width: double.infinity,
             child: Row(
               children: [
-                Expanded(child: Text('Total')),
-                Text('Qty'),
-                Text('Price'),
+                Expanded(flex: 5, child: Text('Total')),
+                Expanded(
+                    flex: 3,
+                    child: Row(
+                      children: [Expanded(child: Text('Qty')), Text('Price')],
+                    )),
               ],
             ),
           ),
@@ -72,89 +84,109 @@ class _CartOrderViewState extends State<CartOrderView> {
                   height: 100,
                   width: double.infinity,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-
+                    // mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      InkWell(
-                        onTap: () {
-
-                        },
-                        child: Container(
-                          width: 25,
-                          height: 25,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.black54,
-                          ),
-                          child: Icon(
-                            Icons.close,
-                            size: 20,
-                            color: Colors.white,
+                      Expanded(
+                        flex: 1,
+                        child: InkWell(
+                          onTap: () {
+                            widget.onTapClose(cartItem);
+                          },
+                          child: Container(
+                            width: 25,
+                            height: 25,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.black54,
+                            ),
+                            child: Icon(
+                              Icons.close,
+                              size: 20,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
-                      Container(
-                        width:80,
-                        height:80,
-                        margin: EdgeInsets.symmetric(horizontal: 30),
-                        alignment: Alignment.center,
-                        child: CachedNetworkImage(
-                          imageUrl: cartItem.image,
-                          imageBuilder: (context, imageProvider) => Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              image: DecorationImage(
-                                image: imageProvider,
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                          ),
-                          color: Colors.white,
-                          placeholder: (context, url) => Container(
-                            child: Center(
-                              child: Container(
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
+                      Expanded(
+                        flex: 4,
+                        child: Row(
+                          // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Container(
+                              width: 80,
+                              height: 80,
+                              margin: EdgeInsets.only(right: 30),
+                              alignment: Alignment.center,
+                              child: CachedNetworkImage(
+                                imageUrl: cartItem.image,
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                ),
+                                color: Colors.white,
+                                placeholder: (context, url) => Container(
+                                  child: Center(
+                                    child: Container(
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                errorWidget: (context, url, error) => Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(8.0),
+                                        topRight: Radius.circular(8.0)),
+                                  ),
+                                  child: Center(
+                                    child: SvgPicture.asset(
+                                      'assets/images/no_image.svg',
+                                      color: Colors.black54,
+                                      width: 50,
+                                      height: 50,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          errorWidget: (context, url, error) => Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(8.0),
-                                  topRight: Radius.circular(8.0)),
-                            ),
-                            child: Center(
-                              child: SvgPicture.asset(
-                                'assets/images/no_image.svg',
-                                color: Colors.black54,
-                                width: 50,
-                                height: 50,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Text('${cartItem.name}'),
-                      InkWell(
-                        onTap: (){
-                          widget.onTapQuality(cartItem);
-                        },
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text('${cartItem.quantity}'),
-                            Icon(Icons.keyboard_arrow_down),
+                            Text('${cartItem.name}'),
                           ],
                         ),
                       ),
-                      Text(
-                        '${Measurements.currency(widget.currency)} ${formatter.format(cartItem.price)}',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
+                      Expanded(
+                        flex: 3,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: InkWell(
+                                onTap: () {
+                                  widget.onTapQuality(cartItem);
+                                },
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text('${cartItem.quantity}'),
+                                    Icon(Icons.keyboard_arrow_down),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Text(
+                              '${Measurements.currency(widget.currency)} ${formatter.format(cartItem.price)}',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -162,11 +194,7 @@ class _CartOrderViewState extends State<CartOrderView> {
                 );
               },
               separatorBuilder: (context, index) {
-                return Divider(
-                  thickness: 0,
-                  height: 10,
-                  color: Colors.transparent,
-                );
+                return _divider;
               },
               itemCount: cart.length),
           _divider,
@@ -175,12 +203,23 @@ class _CartOrderViewState extends State<CartOrderView> {
             height: 60,
             child: Row(
               children: [
-                Text('SUBTOTAL'),
-                Text(
-                  '${Measurements.currency(widget.currency)} ${formatter.format(totalPrice)}',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
+                Expanded(
+                  flex: 5,
+                  child: Container(),
+                ),
+                Expanded(
+                  flex: 3,
+                  child: Row(
+                    children: [
+                      Expanded(child: Text('SUBTOTAL')),
+                      Text(
+                        '${Measurements.currency(widget.currency)} ${formatter.format(totalPrice)}',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -192,12 +231,20 @@ class _CartOrderViewState extends State<CartOrderView> {
             height: 60,
             child: Row(
               children: [
-                Text('TOTAL'),
-                Text(
-                  '${Measurements.currency(widget.currency)} ${formatter.format(totalPrice)}',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
+                Expanded(flex: 5, child: Container()),
+                Expanded(
+                  flex: 3,
+                  child: Row(
+                    children: [
+                      Expanded(child: Text('TOTAL')),
+                      Text(
+                        '${Measurements.currency(widget.currency)} ${formatter.format(totalPrice)}',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
