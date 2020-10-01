@@ -13,9 +13,9 @@ import 'package:payever/dashboard/sub_view/dashboard_transactions_view.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/personal/views/personal_setting_screen.dart';
 import 'package:payever/search/views/search_screen.dart';
+import 'package:payever/settings/models/models.dart';
 import 'package:payever/settings/views/general/language_screen.dart';
 import 'package:payever/settings/views/wallpaper/wallpaper_screen.dart';
-
 import 'package:payever/theme.dart';
 import 'package:payever/transactions/views/transactions_screen.dart';
 import 'package:payever/welcome/welcome_screen.dart';
@@ -68,7 +68,9 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
         business: widget.globalStateModel.currentBusiness.id,
         user: widget.dashboardScreenBloc.state.user,
       ));
-    String wallpaper = widget.dashboardScreenBloc.state.personalWallpaper.currentWallpaper.wallpaper;
+
+    MyWallpaper wallpapers = widget.dashboardScreenBloc.state.personalWallpaper;
+    String wallpaper = wallpapers.currentWallpaper.wallpaper;
     activeBusiness = widget.globalStateModel.currentBusiness;
     currentWallpaper ='${Env.storage}/wallpapers/$wallpaper';
     super.initState();
@@ -448,6 +450,7 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
                 setScreenBloc: SettingScreenBloc(
                   dashboardScreenBloc: widget.dashboardScreenBloc,
                   globalStateModel: widget.globalStateModel,
+                  isDashboardMode: false,
                 )..add(SettingScreenInitEvent(
                     business: state.business,
                   )),
@@ -466,6 +469,7 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
                 settingBloc: SettingScreenBloc(
                   dashboardScreenBloc: widget.dashboardScreenBloc,
                   globalStateModel: widget.globalStateModel,
+                  isDashboardMode: false,
                 )..add(SettingScreenInitEvent(
                     business: state.business,
                     user: state.user,

@@ -2668,12 +2668,13 @@ class ApiService {
     }
   }
 
-  Future<dynamic> addNewWallpaper(String token, String businessId, String theme, String wallpaper) async {
+  Future<dynamic> addNewWallpaper(String token, String businessId, String theme, String wallpaper, bool isDashboardMode) async {
     try {
       print('$TAG - addNewWallpaper()');
       print('$TAG - $wallpaperUrl$businessId/wallpapers');
+      String url = isDashboardMode ? '$wallpaperUrl$businessId/wallpapers' : wallpaperUrlPer;
       dynamic response = await _client.postTypeLess(
-          '$wallpaperUrl$businessId/wallpapers',
+          '$url',
           body: {'theme': theme, 'wallpaper': wallpaper},
           headers: _getHeaders(token)
       );

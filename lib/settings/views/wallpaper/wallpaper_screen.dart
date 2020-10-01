@@ -86,30 +86,6 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
     );
   }
 
-  List<OverflowMenuItem> appBarPopUpActions(
-      BuildContext context, SettingScreenState state) {
-    return [
-      OverflowMenuItem(
-        title: 'List',
-        iconData: 'assets/images/list.svg',
-        onTap: () {
-          setState(() {
-            isGridMode = false;
-          });
-        },
-      ),
-      OverflowMenuItem(
-        title: 'Grid',
-        iconData: 'assets/images/grid.svg',
-        onTap: () {
-          setState(() {
-            isGridMode = true;
-          });
-        },
-      ),
-    ];
-  }
-
   Widget _getBody(SettingScreenState state) {
     List<Wallpaper> wallpapers = _getWallpapers(state);
     return Column(
@@ -423,7 +399,32 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
   bool isInstalled(Wallpaper wallpaper) {
     return widget.globalStateModel.currentWallpaper == '${Env.storage}/wallpapers/${wallpaper.wallpaper}';
   }
+
+  List<OverflowMenuItem> appBarPopUpActions(
+      BuildContext context, SettingScreenState state) {
+    return [
+      OverflowMenuItem(
+        title: 'List',
+        iconData: 'assets/images/list.svg',
+        onTap: () {
+          setState(() {
+            isGridMode = false;
+          });
+        },
+      ),
+      OverflowMenuItem(
+        title: 'Grid',
+        iconData: 'assets/images/grid.svg',
+        onTap: () {
+          setState(() {
+            isGridMode = true;
+          });
+        },
+      ),
+    ];
+  }
 }
+
 
 class OverflowMenuItem {
   final String title;

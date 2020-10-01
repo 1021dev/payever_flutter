@@ -3,15 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
-import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/contacts/models/model.dart';
 import 'package:payever/transactions/models/enums.dart';
 
 import '../../theme.dart';
-
-bool _isPortrait;
-bool _isTablet;
 
 class ContactsFilterScreen extends StatefulWidget {
   final ContactScreenBloc screenBloc;
@@ -50,12 +46,6 @@ class _ContactsFilterScreenState extends State<ContactsFilterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
-    Measurements.height = (_isPortrait
-        ? MediaQuery.of(context).size.height : MediaQuery.of(context).size.width);
-    Measurements.width = (_isPortrait
-        ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.height);
-    _isTablet = Measurements.width < 600 ? false : true;
 
     Map<String, String> filterTypes = filterConditionsByFilterType('weight');
     return Scaffold(

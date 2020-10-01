@@ -15,9 +15,9 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
 
   final DashboardScreenBloc dashboardScreenBloc;
   final GlobalStateModel globalStateModel;
+  final isDashboardMode;
 
-
-  SettingScreenBloc({this.dashboardScreenBloc, this.globalStateModel});
+  SettingScreenBloc({this.dashboardScreenBloc, this.globalStateModel, this.isDashboardMode = true});
 
   ApiService api = ApiService();
   String token = GlobalUtils.activeToken.accessToken;
@@ -139,8 +139,7 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
     dynamic response = await api.getBusiness(token, id);
 
     Business business = Business.map(response);
-
-    dashboardScreenBloc.state.copyWith(activeBusiness: business);
+    dashboardScreenBloc.add(UpdateBusiness(business));
     globalStateModel.setCurrentBusiness(business, notify: true);
     yield state.copyWith(isLoading: false);
   }
@@ -184,11 +183,20 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
           });
         });
         // My Wallpapers
-        dynamic objects1 = await api.getMyWallpaper(token, state.business,);
-        MyWallpaper myWallpaper = MyWallpaper.fromMap(objects1);
-        myWallpaper.myWallpapers.forEach((wallpaper) {
-          myWallpapers.add(wallpaper);
-        });
+        if (isDashboardMode) {
+          dynamic objects1 = await api.getMyWallpaper(token, state.business,);
+          MyWallpaper myWallpaper = MyWallpaper.fromMap(objects1);
+          myWallpaper.myWallpapers.forEach((wallpaper) {
+            myWallpapers.add(wallpaper);
+          });
+        } else {
+          MyWallpaper personalWallpaper;
+          dynamic wallPaperObj = await api.getWallpaperPersonal(token);
+          if (wallPaperObj is Map) {
+            personalWallpaper = MyWallpaper.fromMap(wallPaperObj);
+            myWallpapers = personalWallpaper.myWallpapers;
+          }
+        }
       }
     }
 
@@ -220,7 +228,7 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
       yield SettingScreenStateFailure(error: response.error);
     } else {
       String blobName = response['blobName'];
-      await api.addNewWallpaper(token, state.business, 'default', blobName);
+      await api.addNewWallpaper(token, state.business, 'default', blobName, isDashboardMode);
 
       List<Wallpaper>myWallpapers = state.myWallpapers;
       if (myWallpapers == null) myWallpapers = [];
@@ -593,7 +601,7 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
       yield state.copyWith(isLoading: true);
       dynamic userResponse = await api.getUser(token);
       User user = User.map(userResponse);
-      dashboardScreenBloc.state.copyWith(user: user);
+      dashboardScreenBloc.add(UpdateUserEvent(user));
       yield state.copyWith(isLoading: false, user: user);
     }
   }

@@ -6,15 +6,12 @@ import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/dashboard/dashboard_bloc.dart';
 import 'package:payever/checkout/models/models.dart';
-import 'package:payever/commons/models/user.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
-import 'package:payever/dashboard/sub_view/business_logo.dart';
 import 'package:payever/login/login_screen.dart';
-import 'package:payever/notifications/notifications_screen.dart';
-import 'package:payever/search/views/search_screen.dart';
+import 'package:payever/pos/widgets/pos_top_button.dart';
 import 'package:payever/settings/views/general/language_screen.dart';
 import 'package:payever/settings/views/general/password_screen.dart';
 import 'package:payever/settings/views/general/personal_information_screen.dart';
@@ -74,9 +71,10 @@ class _PersonalSettingScreenState extends State<PersonalSettingScreen> {
   @override
   void initState() {
     screenBloc = SettingScreenBloc(
-        dashboardScreenBloc: widget.dashboardScreenBloc,
-        globalStateModel: widget.globalStateModel)
-      ..add(SettingScreenInitEvent(
+      dashboardScreenBloc: widget.dashboardScreenBloc,
+      globalStateModel: widget.globalStateModel,
+      isDashboardMode: false,
+    )..add(SettingScreenInitEvent(
         business: widget.globalStateModel.currentBusiness.id,
         user: widget.dashboardScreenBloc.state.user,
       ));
@@ -116,246 +114,113 @@ class _PersonalSettingScreenState extends State<PersonalSettingScreen> {
       child: BlocBuilder<SettingScreenBloc, SettingScreenState>(
         bloc: screenBloc,
         builder: (BuildContext context, SettingScreenState state) {
-          return _body(state);
-        },
-      ),
-    );
-  }
-
-  Widget _appBar(SettingScreenState state) {
-    User user = widget.dashboardScreenBloc.state.user;
-    String name, logo;
-    if (user != null) {
-      name = user.fullName ?? '';
-      if (user.logo != null)
-        logo =
-            'https://payeverproduction.blob.core.windows.net/images/${user.logo}';
-    }
-
-    return AppBar(
-      centerTitle: false,
-      elevation: 0,
-      automaticallyImplyLeading: false,
-      bottom: TabBar(
-        isScrollable: true,
-        indicatorColor: Colors.white70,
-        onTap: (index) {
-          if (index == 1) {
-          } else if (index == 2) {
-          } else if (index == 3) {
-          } else if (index == 4) {}
-        },
-        tabs: <Widget>[
-          Tab(
-            text: 'Personal information',
-          ),
-          Tab(
-            text: 'Language',
-          ),
-          Tab(
-            text: 'Shipping address',
-          ),
-          Tab(
-            text: 'Password',
-          ),
-          Tab(
-            text: 'Email notification',
-          ),
-          Tab(
-            text: 'Wallpapers',
-          ),
-        ],
-      ),
-      title: Row(
-        children: <Widget>[
-          Container(
-            child: Center(
-              child: Container(
-                child: SvgPicture.asset(
+          return Scaffold(
+              appBar: MainAppbar(
+                dashboardScreenBloc: widget.dashboardScreenBloc,
+                dashboardScreenState: widget.dashboardScreenBloc.state,
+                title: Language.getCommerceOSStrings(
+                    'info_boxes.settings.heading'),
+                icon: SvgPicture.asset(
                   'assets/images/setting.svg',
                   width: 20,
                   height: 20,
                 ),
               ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 8),
-          ),
-          Text(
-            Language.getCommerceOSStrings('dashboard.apps.settings'),
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-      actions: <Widget>[
-        Padding(
-          padding: EdgeInsets.all(6),
-          child: InkWell(
-            child: Row(
-              children: <Widget>[
-                BusinessLogo(
-                  url: logo,
-                ),
-                _isTablet || !_isPortrait
-                    ? Padding(
-                        padding: EdgeInsets.only(left: 4, right: 4),
-                        child: Text(
-                          name,
-                          style: TextStyle(
-                            fontSize: 14,
-                          ),
-                        ),
-                      )
-                    : Container(),
-              ],
-            ),
-            onTap: () {},
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.all(6),
-          child: InkWell(
-            child: SvgPicture.asset(
-              'assets/images/searchicon.svg',
-              width: 20,
-            ),
-            onTap: () {
-              Navigator.push(
-                context,
-                PageTransition(
-                  child: SearchScreen(
-                    dashboardScreenBloc: widget.dashboardScreenBloc,
-                    businessId:
-                        widget.dashboardScreenBloc.state.activeBusiness.id,
-                    searchQuery: '',
-                    appWidgets: widget.dashboardScreenBloc.state.currentWidgets,
-                    activeBusiness:
-                        widget.dashboardScreenBloc.state.activeBusiness,
-                    currentWall: widget.dashboardScreenBloc.state.curWall,
-                  ),
-                  type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 500),
-                ),
-              );
-            },
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.all(6),
-          child: InkWell(
-            child: SvgPicture.asset(
-              'assets/images/notificationicon.svg',
-              width: 20,
-            ),
-            onTap: () async {
-              Provider.of<GlobalStateModel>(context, listen: false)
-                  .setCurrentBusiness(
-                      widget.dashboardScreenBloc.state.activeBusiness);
-              Provider.of<GlobalStateModel>(context, listen: false)
-                  .setCurrentWallpaper(
-                      widget.dashboardScreenBloc.state.curWall);
-
-              await showGeneralDialog(
-                barrierColor: null,
-                transitionBuilder: (context, a1, a2, wg) {
-                  final curvedValue = Curves.ease.transform(a1.value) - 1.0;
-                  return Transform(
-                    transform:
-                        Matrix4.translationValues(-curvedValue * 200, 0.0, 0),
-                    child: NotificationsScreen(
-                      business: widget.dashboardScreenBloc.state.activeBusiness,
-                      businessApps:
-                          widget.dashboardScreenBloc.state.businessWidgets,
-                      dashboardScreenBloc: widget.dashboardScreenBloc,
-                      type: 'transactions',
+              body: SafeArea(
+                  bottom: false,
+                  child: BackgroundBase(
+                    true,
+                    body: Column(
+                      children: [
+                        _toolBar(state),
+                        Expanded(child: _body(state)),
+                      ],
                     ),
-                  );
-                },
-                transitionDuration: Duration(milliseconds: 200),
-                barrierDismissible: true,
-                barrierLabel: '',
-                context: context,
-                pageBuilder: (context, animation1, animation2) {
-                  return null;
-                },
-              );
-            },
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.all(6),
-          child: InkWell(
-            child: SvgPicture.asset(
-              'assets/images/list.svg',
-              width: 20,
-            ),
-            onTap: () {
+                  )));
+        },
+      ),
+    );
+  }
 
-            },
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.all(6),
-          child: InkWell(
-            child: SvgPicture.asset(
-              'assets/images/closeicon.svg',
-              width: 16,
+  Widget _toolBar(SettingScreenState state) {
+    return Container(
+      height: 50,
+      width: double.infinity,
+      color: overlaySecondAppBar(),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: <Widget>[
+            PosTopButton(
+              title: 'Personal information',
+              selectedIndex: selectedIndex,
+              index: 0,
+              onTap: () {
+                setState(() {
+                  selectedIndex = 0;
+                });
+              },
             ),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
+            PosTopButton(
+              title: 'Language',
+              selectedIndex: selectedIndex,
+              index: 1,
+              onTap: () {
+                setState(() {
+                  selectedIndex = 1;
+                });
+              },
+            ),
+            PosTopButton(
+              title: 'Shipping address',
+              index: 2,
+              selectedIndex: selectedIndex,
+              onTap: () {
+                setState(() {
+                  selectedIndex = 2;
+                });
+              },
+            ),
+            PosTopButton(
+              title: 'Password',
+              selectedIndex: selectedIndex,
+              index: 3,
+              onTap: () {
+                setState(() {
+                  selectedIndex = 3;
+                });
+              },
+            ),
+            PosTopButton(
+              title: 'Email notification',
+              selectedIndex: selectedIndex,
+              index: 4,
+              onTap: () {
+                setState(() {
+                  selectedIndex = 4;
+                });
+              },
+            ),
+            PosTopButton(
+              title: 'Wallpapers',
+              selectedIndex: selectedIndex,
+              index: 5,
+              onTap: () {
+                setState(() {
+                  selectedIndex = 5;
+                });
+              },
+            ),
+          ],
         ),
-        Padding(
-          padding: EdgeInsets.only(right: 8),
-        ),
-      ],
+      ),
     );
   }
 
   Widget _body(SettingScreenState state) {
     iconSize = _isTablet ? 120 : 80;
     margin = _isTablet ? 24 : 16;
-    return DefaultTabController(
-      length: 6,
-      initialIndex: 0,
-      child: Scaffold(
-        backgroundColor: overlayBackground(),
-        resizeToAvoidBottomPadding: false,
-        appBar: MainAppbar(
-          dashboardScreenBloc: widget.dashboardScreenBloc,
-          dashboardScreenState: widget.dashboardScreenBloc.state,
-          title: Language.getCommerceOSStrings('dashboard.apps.settings'),
-          icon: SvgPicture.asset(
-            'assets/images/setting.svg',
-            height: 20,
-            width: 20,
-          ),
-        ),
-        body: SafeArea(
-          bottom: false,
-          child: BackgroundBase(
-            true,
-            body: TabBarView(
-              physics: NeverScrollableScrollPhysics(),
-              children: <Widget>[
-                _getBody(state, 0),
-                _getBody(state, 1),
-                _getBody(state, 2),
-                _getBody(state, 3),
-                _getBody(state, 4),
-                _getBody(state, 5),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+    return _getBody(state, selectedIndex);
   }
 
   Widget _getBody(SettingScreenState state, int index) {
