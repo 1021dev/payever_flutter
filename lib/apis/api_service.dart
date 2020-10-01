@@ -141,11 +141,7 @@ class ApiService {
       print('$TAG - getBusinesses()');
       dynamic response = await _client.getTypeless(
           businessUrl,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -158,11 +154,7 @@ class ApiService {
       print('$TAG - getBusiness($id)');
       dynamic response = await _client.getTypeless(
           '$businessUrl/$id',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -176,11 +168,7 @@ class ApiService {
       dynamic response = await _client.postTypeLess(
           businessUrl,
           body: body,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -270,11 +258,7 @@ class ApiService {
       print('$TAG - getBusinessRegistrationForm()');
       dynamic response = await _client.getTypeless(
           '${Env.commerceOsBack}/api/business-registration/form-data',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -282,16 +266,12 @@ class ApiService {
     }
   }
 
-  Future<dynamic> getBusinessApps(String businessId, String accessToken) async {
+  Future<dynamic> getBusinessApps(String businessId, String token) async {
     try {
       print('$TAG - getBusinessApps()');
       dynamic response = await _client.getTypeless(
         '$businessApps$businessId',
-        headers: {
-          HttpHeaders.authorizationHeader: 'Bearer $accessToken',
-          HttpHeaders.contentTypeHeader: 'application/json',
-          HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-        }
+        headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -299,16 +279,12 @@ class ApiService {
     }
   }
 
-  Future<dynamic> getPersonalApps(String accessToken) async {
+  Future<dynamic> getPersonalApps(String token) async {
     try {
       print('$TAG - getPersonalApps()');
       dynamic response = await _client.getTypeless(
           'https://commerceos-backend.payever.org/api/apps/user',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $accessToken',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -352,11 +328,7 @@ class ApiService {
       print('TAG - getAuthUser()');
       dynamic response = await _client.getTypeless(
           '${Env.auth}/api/user',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -370,11 +342,7 @@ class ApiService {
       dynamic response = await _client.putTypeless(
           '${Env.auth}/api/$id',
           body: {},
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -388,11 +356,7 @@ class ApiService {
       dynamic response = await _client.patchTypeless(
           '${Env.auth}/api/user',
           body: body,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -406,11 +370,7 @@ class ApiService {
       dynamic response = await _client.postTypeLess(
           '${Env.auth}/api/user',
           body: body,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -424,11 +384,7 @@ class ApiService {
       dynamic response = await _client.patchTypeless(
           userUrl,
           body: body,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -441,11 +397,7 @@ class ApiService {
       print('$TAG - refreshToken()');
       dynamic response = await _client.getTypeless(
           refreshUrl,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -513,11 +465,7 @@ class ApiService {
       print('$TAG - getDays()');
       dynamic response = await _client.getTypeless(
           '$transactionsUrl$id$days',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -530,11 +478,7 @@ class ApiService {
       print('$TAG - getMonths()');
       dynamic response = await _client.getTypeless(
           '$transactionsUrl$id$months',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -548,11 +492,7 @@ class ApiService {
       print('$TAG - getTransactionList()');
       dynamic response = await _client.getTypeless(
           '$transactionWidUrl$id$transactionWidEnd$query',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -566,11 +506,7 @@ class ApiService {
       print('$TAG - getWidgets()');
       dynamic response = await _client.getTypeless(
           '$widgetsUrl$id$widgetsEnd',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -583,11 +519,7 @@ class ApiService {
       print('$TAG - getWidgetsPersonal()');
       dynamic response = await _client.getTypeless(
           widgetsUrlPer,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -600,11 +532,7 @@ class ApiService {
       print('$TAG - getWallpaper()');
       dynamic response = await _client.getTypeless(
           '$wallpaperUrl$id$wallpaperEnd',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -618,11 +546,7 @@ class ApiService {
       dynamic response = await _client.patchTypeless(
           '${Env.users}/api/business/$id/enable',
           body: {},
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -635,11 +559,7 @@ class ApiService {
       print('$TAG - getWallpaperPersonal()');
       dynamic response = await _client.getTypeless(
           wallpaperUrlPer,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -652,11 +572,7 @@ class ApiService {
       print('$TAG - getMonthsPersonal()');
       dynamic response = await _client.getTypeless(
           '${transactionsUrlPer}last-monthly',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -669,11 +585,7 @@ class ApiService {
       print('$TAG - getDaysPersonal()');
       dynamic response = await _client.getTypeless(
           '${transactionsUrlPer}last-daily',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -686,11 +598,7 @@ class ApiService {
       print('$TAG - geTerminal()');
       dynamic response = await _client.getTypeless(
           '$posBusiness$idBusiness$posTerminalEnd',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -703,11 +611,7 @@ class ApiService {
       print('$TAG - getChannelSet()');
       dynamic response = await _client.getTypeless(
           '$checkoutBusiness$idBusiness$endChannelSet',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -733,11 +637,7 @@ class ApiService {
       print('$TAG - getLastWeek()');
       dynamic response = await _client.getTypeless(
           '$transactionsUrl$idBusiness$widgetsChannelSet$channel$days',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -750,11 +650,7 @@ class ApiService {
       print('$TAG - getPopularWeek()');
       dynamic response = await _client.getTypeless(
           '$productsUrl$idBusiness$widgetsChannelSet$channel$popularWeek',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -767,11 +663,7 @@ class ApiService {
       print('$TAG - getProductsPopularWeek()');
       dynamic response = await _client.getTypeless(
           '$productsUrl$idBusiness$popularWeek',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -784,11 +676,7 @@ class ApiService {
       print('$TAG - getProductsPopularMonth()');
       dynamic response = await _client.getTypeless(
           '$productsUrl$idBusiness$popularMonth',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -801,11 +689,7 @@ class ApiService {
       print('$TAG - getProductLastSold()');
       dynamic response = await _client.getTypeless(
           '$productsUrl$idBusiness$prodLastSold',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -818,11 +702,7 @@ class ApiService {
       print('$TAG - getProductsPopularMonthRandom()');
       dynamic response = await _client.getTypeless(
           '$productsUrl$idBusiness$popularMonth$productRandomEnd',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -864,11 +744,7 @@ class ApiService {
       dynamic response = await _client.postTypeLess(
           '${Env.products}/products',
           body: body,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -882,11 +758,7 @@ class ApiService {
       dynamic response = await _client.getTypeless(
           '${Env.products}/collections/$businessId',
           queryParameters: query,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -900,11 +772,7 @@ class ApiService {
       dynamic response = await _client.postTypeLess(
           '$productBase/collections/$idBusiness',
           body: body,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -918,11 +786,7 @@ class ApiService {
       dynamic response = await _client.patchTypeless(
           '$productBase/collections/$idBusiness/$id',
           body: body,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -938,11 +802,7 @@ class ApiService {
       dynamic response = await _client.putTypeless(
           '${Env.products}/collections/$businessId/$collectionId/products/associate',
           body: body,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -955,11 +815,7 @@ class ApiService {
       dynamic response = await _client.deleteTypeless(
           '$productBase/collections/$idBusiness/list',
           body: body,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -972,11 +828,7 @@ class ApiService {
       print('$TAG - getShops()');
       dynamic response = await _client.getTypeless(
           '$shopsUrl$idBusiness$shopEnd',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -989,11 +841,7 @@ class ApiService {
       print('$TAG - getShop()');
       dynamic response = await _client.getTypeless(
           '$shopUrl$idBusiness$shopEnd',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -1006,11 +854,7 @@ class ApiService {
       print('$TAG - getShopDetail()');
       dynamic response = await _client.getTypeless(
         '$shopUrl$idBusiness$shopEnd/$shopId',
-        headers: {
-          HttpHeaders.authorizationHeader: 'Bearer $token',
-          HttpHeaders.contentTypeHeader: 'application/json',
-          HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-        }
+        headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -1023,11 +867,7 @@ class ApiService {
       print('$TAG - getTemplates()');
       dynamic response = await _client.getTypeless(
           '${Env.builderShop}/templates',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -1040,11 +880,7 @@ class ApiService {
       print('$TAG - getOwnThemes()');
       dynamic response = await _client.getTypeless(
           '${Env.builderShop}/business/$businessId/shop/$shopId/themes',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -1492,11 +1328,7 @@ class ApiService {
             'installed': isInstall,
             'microUuid': uuid,
           },
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1511,11 +1343,7 @@ class ApiService {
           body: {
             'setupStatus': 'completed'
           },
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1528,11 +1356,7 @@ class ApiService {
       print('$TAG - getPosIntegrations()');
       dynamic response = await _client.getTypeless(
           '${Env.pos}/api/business/$businessId$endIntegration',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1545,11 +1369,7 @@ class ApiService {
       print('$TAG - getTerminalIntegrations()');
       dynamic response = await _client.getTypeless(
           '${Env.pos}/api/business/$businessId/terminal/$terminalId$endIntegration',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1562,11 +1382,7 @@ class ApiService {
       print('$TAG - getPosCommunications()');
       dynamic response = await _client.getTypeless(
           '${Env.connect}/api/business/$businessId$endIntegration/category/communications',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1579,11 +1395,7 @@ class ApiService {
       print('$TAG - patchPosConnectDevicePaymentInstall()');
       dynamic response = await _client.patchTypeless(
           '${Env.connect}/api/business/$businessId/integration/device-payments/install',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1596,11 +1408,7 @@ class ApiService {
       print('$TAG - patchPosConnectDevicePaymentUninstall()');
       dynamic response = await _client.patchTypeless(
           '${Env.connect}/api/business/$businessId/integration/device-payments/uninstall',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1613,11 +1421,7 @@ class ApiService {
       print('$TAG - patchPosQrInstall()');
       dynamic response = await _client.patchTypeless(
           '${Env.connect}/api/business/$businessId/integration/qr/install',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1630,11 +1434,7 @@ class ApiService {
       print('$TAG - patchPosQrUninstall()');
       dynamic response = await _client.patchTypeless(
           '${Env.connect}/api/business/$businessId/integration/qr/uninstall',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1647,11 +1447,7 @@ class ApiService {
       print('$TAG - patchPosTwilioInstall()');
       dynamic response = await _client.patchTypeless(
           '${Env.connect}/api/business/$businessId/integration/twilio/install',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1664,11 +1460,7 @@ class ApiService {
       print('$TAG - patchPosTwilioUninstall()');
       dynamic response = await _client.patchTypeless(
           '${Env.connect}/api/business/$businessId/integration/twilio/uninstall',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1681,11 +1473,7 @@ class ApiService {
       print('$TAG - patchPosTerminalDevicePaymentInstall()');
       dynamic response = await _client.patchTypeless(
           '${Env.pos}/api/business/$businessId/terminal/$terminalId/integration/$payment/install',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1698,11 +1486,7 @@ class ApiService {
       print('$TAG - patchPosTerminalDevicePaymentUninstall()');
       dynamic response = await _client.patchTypeless(
           '${Env.pos}/api/business/$businessId/terminal/$terminalId/integration/$payment/uninstall',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1716,11 +1500,7 @@ class ApiService {
       dynamic response = await _client.putTypeless(
           '${Env.shop}/api/business/$businessId/shop/$shopId/default',
           body: {},
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1733,11 +1513,7 @@ class ApiService {
       print('$TAG - getPosDevicePaymentSettings()');
       dynamic response = await _client.getTypeless(
           '${Env.devicePayments}/api/v1/$businessId/settings',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1751,11 +1527,7 @@ class ApiService {
       dynamic response = await _client.patchTypeless(
           '${Env.shop}/api/business/$businessId/shop/access/$shopId',
           body: config.toData(),
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1782,11 +1554,7 @@ class ApiService {
             'id': id,
             'url': url,
           },
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1813,11 +1581,7 @@ class ApiService {
             'id': id,
             'url': url,
           },
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1836,11 +1600,7 @@ class ApiService {
       dynamic response = await _client.postTypeLess(
           '${Env.qr}/api/form/$businessId/save',
           body: data,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1857,11 +1617,7 @@ class ApiService {
       dynamic response = await _client.postTypeLess(
           '${Env.thirdPartyCommunication}/api/business/$businessId/integration/twilio/form',
           body: {},
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1883,11 +1639,7 @@ class ApiService {
             'action': action,
             'id': id,
           },
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1919,11 +1671,7 @@ class ApiService {
             'id': id,
             'phoneNumber': phoneNumber,
           },
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1949,11 +1697,7 @@ class ApiService {
             'phone': phone,
             'price': price,
           },
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1977,11 +1721,7 @@ class ApiService {
             'id': id,
             'sid': sid,
           },
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1999,11 +1739,7 @@ class ApiService {
             'secondFactor' : secondFactor,
             'verificationType' : verificationType,
           },
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -2103,11 +1839,7 @@ class ApiService {
           body: {
             'name': name,
           },
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -2124,11 +1856,7 @@ class ApiService {
             'logo': logo,
             'name': name,
           },
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -2145,11 +1873,7 @@ class ApiService {
             'logo': logo,
             'name': name,
           },
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -2162,11 +1886,7 @@ class ApiService {
       print('$TAG - patchActiveTerminal()');
       dynamic response = await _client.patchTypeless(
           '$posBusiness$businessId/terminal/$terminalId/active',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -2179,11 +1899,7 @@ class ApiService {
       print('$TAG - patchActiveTerminal()');
       dynamic response = await _client.deleteTypeless(
           '$posBusiness$businessId$posTerminalMid$terminalId',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -2203,11 +1919,7 @@ class ApiService {
           body: {
             'appName': appName,
           },
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -2220,11 +1932,7 @@ class ApiService {
       print('$TAG - busTest() ->> $app');
       dynamic response = await _client.postTypeLess(
           '${Env.notifications}/bus-test/notification/$kind/$entity/$app',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -2237,11 +1945,7 @@ class ApiService {
       print('$TAG - getNotifications() ->> $app');
       dynamic response = await _client.getTypeless(
           '${Env.notifications}/api/notification/kind/$kind/entity/$entity/app/$app',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -2254,11 +1958,7 @@ class ApiService {
       print('$TAG - deleteNotification() ->> $id');
       dynamic response = await _client.deleteTypeless(
           '${Env.notifications}/api/notification/$id',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -2271,11 +1971,7 @@ class ApiService {
       print('$TAG - getInventories()');
       dynamic response = await _client.getTypeless(
           '${Env.inventory}/api/business/$businessId/inventory',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -2289,11 +1985,7 @@ class ApiService {
       print('$TAG - getTaxes()');
       dynamic response = await _client.getTypeless(
           '${Env.common}/api/tax/list/$country',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -2306,11 +1998,7 @@ class ApiService {
       print('$TAG - getBillingSubscription()');
       dynamic response = await _client.getTypeless(
           '${Env.connect}/api/integration/billing-subscriptions',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -2323,11 +2011,7 @@ class ApiService {
       print('$TAG - getBusinessBillingSubscription()');
       dynamic response = await _client.getTypeless(
           '${Env.connect}/api/business/$businessId/integration/billing-subscriptions',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -2340,11 +2024,7 @@ class ApiService {
       print('$TAG - getInventory()');
       dynamic response = await _client.getTypeless(
           '${Env.inventory}/api/business/$businessId/inventory/sku/$sku',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -2358,11 +2038,7 @@ class ApiService {
       dynamic response = await _client.patchTypeless(
           '${Env.inventory}/api/business/$businessId/inventory/sku/$sku',
           body: body,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -2376,11 +2052,7 @@ class ApiService {
       dynamic response = await _client.patchTypeless(
           '${Env.inventory}/api/business/$businessId/inventory/sku/$sku/$method',
           body: body,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -2394,11 +2066,7 @@ class ApiService {
       dynamic response = await _client.postTypeLess(
           '${Env.products}/products',
           body: body,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -2412,11 +2080,7 @@ class ApiService {
       dynamic response = await _client.postTypeLess(
           '${Env.products}/products',
           body: body,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -2457,11 +2121,7 @@ class ApiService {
       print('$TAG - getCollection()');
       dynamic response = await _client.getTypeless(
           '${Env.products}/collections/$businessId/$collectionId',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -2475,11 +2135,7 @@ class ApiService {
       dynamic response = await _client.postTypeLess(
           '${Env.contacts}/graphql',
           body: body,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -2806,11 +2462,7 @@ class ApiService {
           body: {
             'checkoutId': checkoutId,
           },
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -2866,11 +2518,7 @@ class ApiService {
       dynamic response = await _client.patchTypeless(
           '${Env.checkout}/api/business/$business/checkout/$checkoutId/connection/$connectionId/install',
           body: {},
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -2884,11 +2532,7 @@ class ApiService {
       dynamic response = await _client.patchTypeless(
           '${Env.checkout}/api/business/$business/checkout/$checkoutId/connection/$connectionId/uninstall',
           body: {},
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -2902,11 +2546,7 @@ class ApiService {
       dynamic response = await _client.patchTypeless(
           '${Env.checkout}/api/business/$business/checkout/$checkoutId/integration/$integrationId/${isInstall ? 'install' : 'uninstall'}',
           body: {},
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -3333,11 +2973,7 @@ class ApiService {
   ///***************************************************************************
 
   Map<String, String>_getHeaders(String token) {
-    return {
-      HttpHeaders.authorizationHeader: 'Bearer $token',
-      HttpHeaders.contentTypeHeader: 'application/json',
-      HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-    };
+    return _getHeaders(token);
   }
 
 
