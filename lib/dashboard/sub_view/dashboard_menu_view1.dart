@@ -18,10 +18,11 @@ class DashboardMenuView1 extends StatelessWidget {
   final Widget scaffold;
   final Business activeBusiness;
   final DashboardScreenBloc dashboardScreenBloc;
-
+  final bool isBusinessMode;
   DashboardMenuView1({
     this.scaffold,
     this.dashboardScreenBloc,
+    this.isBusinessMode = true,
     @required this.activeBusiness,
   });
 
@@ -130,54 +131,61 @@ class DashboardMenuView1 extends StatelessWidget {
                 height: 0,
                 thickness: 0.5,
               ),
-              InkWell(
-                onTap: () {
-                  Navigator.pop(context);
-                  Provider.of<GlobalStateModel>(context, listen: false)
-                      .setCurrentBusiness(dashboardScreenBloc.state.activeBusiness);
-                  Provider.of<GlobalStateModel>(context, listen: false)
-                      .setCurrentWallpaper(dashboardScreenBloc.state.curWall);
-                  Navigator.push(
-                    context,
-                    PageTransition(
-                      child: PersonalInitScreen(
-                        dashboardScreenBloc: dashboardScreenBloc,
+              Visibility(
+                visible: isBusinessMode,
+                child: Column(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                        Provider.of<GlobalStateModel>(context, listen: false)
+                            .setCurrentBusiness(dashboardScreenBloc.state.activeBusiness);
+                        Provider.of<GlobalStateModel>(context, listen: false)
+                            .setCurrentWallpaper(dashboardScreenBloc.state.curWall);
+                        Navigator.push(
+                          context,
+                          PageTransition(
+                            child: PersonalInitScreen(
+                              dashboardScreenBloc: dashboardScreenBloc,
+                            ),
+                            type: PageTransitionType.fade,
+                          ),
+                        );
+                      },
+                      child: Container(
+                        height: 50,
+                        child: Row(
+                          children: [
+                            SizedBox(width: 8,),
+                            Container(
+                              width: 25,
+                              child: Center(
+                                child: SvgPicture.asset(
+                                  'assets/images/business_person.svg',
+                                  width: 20,
+                                  color: iconColor(),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 8,),
+                            Flexible(
+                              child: Text(
+                                Language.getSettingsStrings('info_boxes.panels.general.menu_list.personal_information.title'),
+                                style: TextStyle(
+                                  fontSize: 14,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
-                      type: PageTransitionType.fade,
                     ),
-                  );
-                },
-                child: Container(
-                  height: 50,
-                  child: Row(
-                    children: [
-                      SizedBox(width: 8,),
-                      Container(
-                        width: 25,
-                        child: Center(
-                          child: SvgPicture.asset(
-                            'assets/images/business_person.svg',
-                            width: 20,
-                            color: iconColor(),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 8,),
-                      Flexible(
-                        child: Text(
-                          Language.getSettingsStrings('info_boxes.panels.general.menu_list.personal_information.title'),
-                          style: TextStyle(
-                            fontSize: 14,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
+                    Divider(
+                      height: 0,
+                      thickness: 0.5,
+                    ),
+                  ],
                 ),
-              ),
-              Divider(
-                height: 0,
-                thickness: 0.5,
               ),
               InkWell(
                 onTap: () {

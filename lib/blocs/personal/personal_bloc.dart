@@ -40,6 +40,8 @@ class PersonalScreenBloc extends Bloc<PersonalScreenEvent, PersonalScreenState> 
   Stream<PersonalScreenState> getPersonalWidgets(String id) async* {
     yield state.copyWith(isLoading: true);
     List<BusinessApps> personalApps = [];
+    dynamic wallPaperObj = await api.getWallpaperPersonal(token);
+
     dynamic businessAppsObj = await api.getPersonalApps(token);
     personalApps.clear();
     businessAppsObj.forEach((item) {

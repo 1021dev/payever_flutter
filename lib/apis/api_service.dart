@@ -283,7 +283,7 @@ class ApiService {
     try {
       print('$TAG - getPersonalApps()');
       dynamic response = await _client.getTypeless(
-          'https://commerceos-backend.payever.org/api/apps/user',
+          '$personalApps',
           headers: _getHeaders(token),
       );
       return response;
@@ -2973,7 +2973,11 @@ class ApiService {
   ///***************************************************************************
 
   Map<String, String>_getHeaders(String token) {
-    return _getHeaders(token);
+    return {
+      HttpHeaders.authorizationHeader: 'Bearer $token',
+      HttpHeaders.contentTypeHeader: 'application/json',
+      HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+    };
   }
 
 

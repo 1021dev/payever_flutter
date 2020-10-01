@@ -15,7 +15,7 @@ import 'package:provider/provider.dart';
 class MainAppbar extends StatelessWidget with PreferredSizeWidget {
   final String title;
   final Widget icon;
-  final bool isDashboard;
+  final bool isBusinessMode;
   final bool isClose;
   final DashboardScreenBloc dashboardScreenBloc;
   final DashboardScreenState dashboardScreenState;
@@ -33,7 +33,7 @@ class MainAppbar extends StatelessWidget with PreferredSizeWidget {
     this.dashboardScreenBloc,
     this.dashboardScreenState,
     this.innerDrawerKey,
-    this.isDashboard = true,
+    this.isBusinessMode = true,
     this.isClose = true,
   }) {
     user = dashboardScreenState.user;
@@ -56,7 +56,7 @@ class MainAppbar extends StatelessWidget with PreferredSizeWidget {
 
     String logo = '';
     String name = '';
-    if (isDashboard) {
+    if (isBusinessMode) {
       if (activeBusiness != null) {
         name = activeBusiness.name;
         if (activeBusiness.logo != null)
@@ -197,6 +197,7 @@ class MainAppbar extends StatelessWidget with PreferredSizeWidget {
                     return DashboardMenuView1(
                       dashboardScreenBloc: dashboardScreenBloc,
                       activeBusiness: dashboardScreenState.activeBusiness,
+                      isBusinessMode: isBusinessMode,
                     );
                   });
             },

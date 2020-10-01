@@ -36,7 +36,7 @@ class PosScreenState {
   final dynamic qrImage;
 
   PosScreenState({
-    this.isLoading = false,
+    this.isLoading = true,
     this.isUpdating = false,
     this.isSearching = false,
     this.isLoadingQrcode = false,

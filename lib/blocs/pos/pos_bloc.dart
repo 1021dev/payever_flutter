@@ -26,9 +26,11 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
           channelSets: event.channelSets,
           activeTerminal: event.activeTerminal,
           terminals: event.terminals,
-          defaultCheckout: event.defaultCheckout);
-      yield* fetchProducts();
+          defaultCheckout: event.defaultCheckout
+      );
       yield* fetchPos();
+    } else if (event is GetProductsEvent) {
+      yield* fetchProducts();
     } else if (event is GetPosIntegrationsEvent) {
       yield* getIntegrations();
     } else if (event is GetTerminalIntegrationsEvent) {
@@ -191,7 +193,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
 
       yield state.copyWith(channelSetFlow: channelSetFlow,);
     }
-    add(GetPosIntegrationsEvent());
+    add(GetProductsEvent());
   }
 
   Stream<PosScreenState> fetchProducts() async* {
@@ -234,6 +236,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       });
     }
     yield state.copyWith(filterOptions: filterOptions, isLoading: false);
+    add(GetPosIntegrationsEvent());
   }
 
   Stream<PosScreenState> getIntegrations() async* {

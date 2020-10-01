@@ -144,10 +144,12 @@ class _PersonalScreenState extends State<PersonalScreen> {
           width: 24,
         ),
         innerDrawerKey: _innerDrawerKey,
-        isDashboard: false,
+        isBusinessMode: false,
       ),
       body: SafeArea(
         bottom: false,
+        right: false,
+        left: false,
         child: BackgroundBase(
           false,
           backgroundColor: Colors.transparent,

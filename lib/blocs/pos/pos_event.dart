@@ -37,7 +37,7 @@ class PosScreenInitEvent extends PosScreenEvent {
 }
 
 class GetPosIntegrationsEvent extends PosScreenEvent {}
-
+class GetProductsEvent extends PosScreenEvent {}
 class GetTerminalIntegrationsEvent extends PosScreenEvent {
   final String businessId;
   final String terminalId;
