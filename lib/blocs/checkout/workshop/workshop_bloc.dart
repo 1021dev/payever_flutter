@@ -62,6 +62,8 @@ class WorkshopScreenBloc
       yield* login(event.email, event.password);
     } else if (event is PayCreditPaymentEvent) {
       yield* payByCreditCard(event.body);
+    } else if (event is ResetApprovedStepFlagEvent) {
+      yield state.copyWith(isApprovedStep: false);
     }
   }
 
@@ -115,10 +117,10 @@ class WorkshopScreenBloc
         updatePayflowIndex: -1,
       );
     } else if (response is Map) {
-      if (body.containsKey('amount')) yield WorkshopScreenPayflowStateSuccess();
       channelSetFlow = ChannelSetFlow.fromJson(response);
       yield state.copyWith(
         isUpdating: false,
+        isApprovedStep: body.containsKey('amount'),
         updatePayflowIndex: -1,
         channelSetFlow: channelSetFlow,
       );
@@ -166,10 +168,10 @@ class WorkshopScreenBloc
         updatePayflowIndex: -1,
       );
     } else if (response is Map) {
-      yield WorkshopScreenPayflowStateSuccess();
       channelSetFlow = ChannelSetFlow.fromJson(response);
       yield state.copyWith(
         isUpdating: false,
+        isApprovedStep: true,
         updatePayflowIndex: -1,
         channelSetFlow: channelSetFlow,
       );
@@ -417,9 +419,9 @@ class WorkshopScreenBloc
         await api.checkoutAuthorization(token, state.channelSetFlow.id);
         dynamic userResponse = await api.getUser(token);
         User user = User.map(userResponse);
-        yield WorkshopScreenPayflowStateSuccess();
         yield state.copyWith(
           user:user,
+          isApprovedStep: true,
           isUpdating: false,
           updatePayflowIndex: -1,
         );

@@ -177,7 +177,8 @@ class _WorkshopViewState extends State<WorkshopView> {
           phone = '';
           payflowLogin = false;
         }
-        if (state is WorkshopScreenPayflowStateSuccess) {
+        if (state.isApprovedStep) {
+          screenBloc.add(ResetApprovedStepFlagEvent());
           setState(() {
             switch (_selectedSectionIndex) {
               case 0:
@@ -249,7 +250,6 @@ class _WorkshopViewState extends State<WorkshopView> {
         reference = '';
       }
     }
-
 
     return BackgroundBase(
       true,
@@ -616,7 +616,6 @@ class _WorkshopViewState extends State<WorkshopView> {
                     'reference': state.channelSetFlow.reference
                   }));
             } else {
-              screenBloc.add(RefreshWorkShopEvent());
               if (_formKeyOrder.currentState.validate() &&
                   !state.isUpdating) {
                 _selectedSectionIndex = 0;

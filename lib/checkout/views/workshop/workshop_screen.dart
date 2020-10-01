@@ -115,7 +115,8 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
     return BlocListener(
       bloc: screenBloc,
       listener: (BuildContext context, WorkshopScreenState state) async {
-        if (state is WorkshopScreenPayflowStateSuccess) {
+        screenBloc.add(ResetApprovedStepFlagEvent());
+        if (state.isApprovedStep) {
           setState(() {
             switch (_selectedSectionIndex) {
               case 0:

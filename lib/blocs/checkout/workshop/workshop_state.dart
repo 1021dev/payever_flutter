@@ -15,6 +15,7 @@ class WorkshopScreenState {
   final bool isLoadingQrcode;
   final bool isUpdating;
   final bool isReset;
+  final bool isApprovedStep;
   final bool isCheckingEmail;
   final bool isAvailable;
   final bool isValid;
@@ -31,6 +32,7 @@ class WorkshopScreenState {
     this.isLoading = false,
     this.isLoadingQrcode = false,
     this.isUpdating = false,
+    this.isApprovedStep = false,
     this.isReset = false,
     this.isCheckingEmail = false,
     this.updatePayflowIndex = -1,
@@ -52,6 +54,7 @@ class WorkshopScreenState {
         this.isLoading,
         this.isLoadingQrcode,
         this.isUpdating,
+        this.isApprovedStep,
         this.isReset,
         this.isCheckingEmail,
         this.updatePayflowIndex,
@@ -74,6 +77,7 @@ class WorkshopScreenState {
     bool isLoadingQrcode,
     bool isUpdating,
     bool isReset,
+    bool isApprovedStep,
     String channelSetId,
     bool isCheckingEmail,
     int updatePayflowIndex,
@@ -93,6 +97,7 @@ class WorkshopScreenState {
       isLoading: isLoading ?? this.isLoading,
       isLoadingQrcode: isLoadingQrcode ?? this.isLoadingQrcode,
       isUpdating: isUpdating ?? this.isUpdating,
+      isApprovedStep: isApprovedStep ?? this.isApprovedStep,
       isReset: isReset ?? this.isReset,
       isCheckingEmail: isCheckingEmail ?? this.isCheckingEmail,
       isAvailable: isAvailable ?? this.isAvailable,
@@ -111,8 +116,6 @@ class WorkshopScreenState {
     );
   }
 }
-
-class WorkshopScreenPayflowStateSuccess extends WorkshopScreenState {}
 
 class WorkshopScreenStateSuccess extends WorkshopScreenState {}
 

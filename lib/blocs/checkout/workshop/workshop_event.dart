@@ -121,6 +121,7 @@ class PayInstantPaymentEvent extends WorkshopScreenEvent {
       ];
 }
 
+class ResetApprovedStepFlagEvent extends WorkshopScreenEvent {}
 class RefreshWorkShopEvent extends WorkshopScreenEvent {}
 
 class CartUpdateEvent extends WorkshopScreenEvent {
