@@ -115,7 +115,7 @@ class _CartOrderViewState extends State<CartOrderView> {
                             Container(
                               width: 80,
                               height: 80,
-                              margin: EdgeInsets.only(right: 30),
+                              margin: EdgeInsets.only(right: 20),
                               alignment: Alignment.center,
                               child: CachedNetworkImage(
                                 imageUrl: cartItem.image,
@@ -157,7 +157,7 @@ class _CartOrderViewState extends State<CartOrderView> {
                                 ),
                               ),
                             ),
-                            Text('${cartItem.name}'),
+                            Flexible(child: Text('${cartItem.name}',overflow: TextOverflow.ellipsis,)),
                           ],
                         ),
                       ),

@@ -210,10 +210,13 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
               ),
               child: Row(
                 children: [
-                  IconButton(icon: Icon(Icons.search), onPressed: () => {}),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 4, right: 4),
+                    child: Icon(Icons.search, size: 20,),
+                  ),
                   Expanded(
                     child: TextFormField(
-                      style: TextStyle(fontSize: 16),
+                      style: textFieldStyle,
                       keyboardType: TextInputType.text,
                       decoration: InputDecoration(
                         hintText: 'Search wallpapers',

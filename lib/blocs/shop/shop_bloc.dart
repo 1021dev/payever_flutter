@@ -66,22 +66,28 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
     }
 
     dynamic templatesObj = await api.getTemplates(GlobalUtils.activeToken.accessToken);
-    if (templatesObj != null) {
+    if (templatesObj is DioError) {
+
+    } else {
       templatesObj.forEach((element) {
-          templates.add(TemplateModel.fromMap(element));
+        templates.add(TemplateModel.fromMap(element));
       });
-    }
-    templates.forEach((template) {
-      template.items.forEach((item) {
-        item.themes.forEach((theme) {
-          themes.add(theme);
-          themeListModes.add(ThemeListModel(themeModel: theme, isChecked: false));
+      templates.forEach((template) {
+        template.items.forEach((item) {
+          item.themes.forEach((theme) {
+            themes.add(theme);
+            themeListModes.add(ThemeListModel(themeModel: theme, isChecked: false));
+          });
         });
       });
-    });
+    }
+
+
     List<ThemeModel> myThemes = [];
     dynamic themeObj = await api.getMyThemes(GlobalUtils.activeToken.accessToken, activeBusinessId, activeShop.id);
-    if (themeObj != null) {
+    if (themeObj is DioError) {
+
+    } else {
       themeObj.forEach((element) {
         myThemes.add(ThemeModel.toMap(element));
         myThemeListModes.add(ThemeListModel(themeModel: ThemeModel.toMap(element), isChecked: false));

@@ -76,9 +76,6 @@ class WorkshopScreenBloc
       defaultCheckout: defaultCheckout,
       channelSetFlow: channelSetFlow1,
     );
-    channelSetFlow1.cart.forEach((element) {
-      print('channelSetFlow1: ${element.toJson().toString()}');
-    });
     if (!isReload) return;
     dynamic response =
         await api.getCheckoutFlow(token, 'en', channelSetId);

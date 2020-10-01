@@ -184,10 +184,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                       ),
                       controller: searchController,
                       onChanged: (String value) {
-                        if (value.length > 2) {
                           screenBloc
                               .add(ProductsFilterEvent(searchText: value));
-                        }
                       },
                     ),
                   )

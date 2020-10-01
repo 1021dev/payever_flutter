@@ -285,41 +285,46 @@ class ColorStyleItem extends StatelessWidget {
         children: <Widget>[
           Container(
             height: 50,
-            child: Row(
-              children: <Widget>[
-                Text('Text color'),
-                Spacer(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    _colorPad(context, 'Primary', style.inputTextPrimaryColor, (color) =>
-                      style.inputTextPrimaryColor = color
-                    ),
-                    SizedBox(width: 30,),
-                    _colorPad(context, 'Secondary', style.inputTextSecondaryColor, (color) =>
-                      style.inputTextSecondaryColor = color
-                    ),
-                  ],
-                ),
-              ],
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: <Widget>[
+                  Text('Text color'),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      _colorPad(context, 'Primary', style.inputTextPrimaryColor, (color) =>
+                        style.inputTextPrimaryColor = color
+                      ),
+                      SizedBox(width: 30,),
+                      _colorPad(context, 'Secondary', style.inputTextSecondaryColor, (color) =>
+                        style.inputTextSecondaryColor = color
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
           _divider(),
           Container(
             height: 50,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text('Background color'),
-                SizedBox(width: 30,),
-                _colorPad(context, 'Fill', style.inputBackgroundColor, (color) =>
-                  style.inputBackgroundColor = color
-                ),
-                SizedBox(width: 30,),
-                _colorPad(context, 'Border', style.inputBorderColor, (color) =>
-                  style.inputBorderColor = color
-                ),
-              ],
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text('Background color'),
+                  SizedBox(width: 30,),
+                  _colorPad(context, 'Fill', style.inputBackgroundColor, (color) =>
+                    style.inputBackgroundColor = color
+                  ),
+                  SizedBox(width: 30,),
+                  _colorPad(context, 'Border', style.inputBorderColor, (color) =>
+                    style.inputBorderColor = color
+                  ),
+                ],
+              ),
             ),
           ),
           _divider(),

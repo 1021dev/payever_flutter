@@ -48,7 +48,7 @@ class DashboardMenuView1 extends StatelessWidget {
       isActive = activeBusiness.active;
     }
     return Container(
-      height: Measurements.height - (_isPortrait ? 345 : 0),
+      height: _isPortrait ? 450 : Measurements.height,
       color: Colors.transparent,
       child: Scaffold(
         backgroundColor: Colors.transparent,
