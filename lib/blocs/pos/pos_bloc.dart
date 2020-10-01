@@ -6,6 +6,7 @@ import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/pos/models/pos.dart';
 import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/products/models/models.dart';
 import '../bloc.dart';
 
 class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
@@ -26,6 +27,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
           activeTerminal: event.activeTerminal,
           terminals: event.terminals,
           defaultCheckout: event.defaultCheckout);
+      yield* fetchProducts();
       yield* fetchPos();
     } else if (event is GetPosIntegrationsEvent) {
       yield* getIntegrations();
@@ -142,30 +144,35 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     terminals.forEach((terminal) async {
       channelSets.forEach((channelSet) async {
         if (terminal.channelSet == channelSet.id) {
-          dynamic paymentObj = await api.getCheckoutIntegration(state.businessId, channelSet.checkout, token);
-          paymentObj.forEach((pm) {
-            terminal.paymentMethods.add(pm);
-          });
-
-          dynamic daysObj = await api.getLastWeek(state.businessId, channelSet.id, token);
-          int length = daysObj.length - 1;
-          for (int i = length; i > length - 7; i--) {
-            terminal.lastWeekAmount += Day.map(daysObj[i]).amount;
+          if (terminal.paymentMethods == null || terminal.paymentMethods.isEmpty) {
+            dynamic paymentObj = await api.getCheckoutIntegration(state.businessId, channelSet.checkout, token);
+            paymentObj.forEach((pm) {
+              terminal.paymentMethods.add(pm);
+            });
           }
-          daysObj.forEach((day) {
-            terminal.lastWeek.add(Day.map(day));
-          });
 
-          dynamic productsObj = await api.getPopularWeek(state.businessId, channelSet.id, token);
-          productsObj.forEach((product) {
-            terminal.bestSales.add(Product.fromJson(product));
-          });
+          if (terminal.paymentMethods == null) {
+            dynamic daysObj = await api.getLastWeek(state.businessId, channelSet.id, token);
+            int length = daysObj.length - 1;
+            for (int i = length; i > length - 7; i--) {
+              terminal.lastWeekAmount += Day.map(daysObj[i]).amount;
+            }
+            daysObj.forEach((day) {
+              terminal.lastWeek.add(Day.map(day));
+            });
+          }
+
+          if (terminal.paymentMethods == null || terminal.paymentMethods.isEmpty) {
+            dynamic productsObj = await api.getPopularWeek(state.businessId, channelSet.id, token);
+            productsObj.forEach((product) {
+              terminal.bestSales.add(Product.fromJson(product));
+            });
+          }
         }
       });
     });
 
     Terminal activeTerminal = terminals.firstWhere((element) => element.active);
-
     if (state.activeTerminal == null) {
       yield state.copyWith(activeTerminal: activeTerminal, terminals: terminals, terminalCopied: false);
     } else {
@@ -182,9 +189,51 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
         print('channelSetFlow id:' + channelSetFlow.id);
       }
 
-      yield state.copyWith(channelSetFlow: channelSetFlow,/* isLoading: false*/);
+      yield state.copyWith(channelSetFlow: channelSetFlow,);
     }
     add(GetPosIntegrationsEvent());
+  }
+
+  Stream<PosScreenState> fetchProducts() async* {
+    yield state.copyWith(isLoading: true);
+    // Get Product
+    Map<String, dynamic> body = {
+      'operationName': null,
+      'variables': {},
+      'query':
+      '{\n  getProducts(businessUuid: \"${state.businessId}\", paginationLimit: 100, pageNumber: 1, orderBy: \"price\", orderDirection: \"asc\", filterById: [], search: \"\", filters: []) {\n    products {\n      images\n      id\n      title\n      description\n      onSales\n      price\n      salePrice\n      vatRate\n      sku\n      barcode\n      currency\n      type\n      active\n      categories {\n        title\n      }\n      collections {\n        _id\n        name\n        description\n      }\n      variants {\n        id\n        images\n        options {\n          name\n          value\n        }\n        description\n        onSales\n        price\n        salePrice\n        sku\n        barcode\n      }\n      channelSets {\n        id\n        type\n        name\n      }\n      shipping {\n        weight\n        width\n        length\n        height\n      }\n    }\n    info {\n      pagination {\n        page\n        page_count\n        per_page\n        item_count\n      }\n    }\n  }\n}\n'
+    };
+
+    dynamic response =
+    await api.getProducts(GlobalUtils.activeToken.accessToken, body);
+    List<ProductsModel> products = [];
+    print('Products filter response: ' + response.toString());
+    if (response is Map) {
+      dynamic data = response['data'];
+      if (data != null) {
+        dynamic getProducts = data['getProducts'];
+        if (getProducts != null) {
+          List productsObj = getProducts['products'];
+          if (productsObj != null) {
+            productsObj.forEach((element) {
+              products.add(ProductsModel.toMap(element));
+            });
+          }
+        }
+      }
+    }
+    yield state.copyWith(products: products);
+    dynamic response1 = await api.productsFilterOption(
+        GlobalUtils.activeToken.accessToken, state.businessId);
+    List<ProductFilterOption> filterOptions = [];
+    if (response1 is List) {
+      response1.forEach((element) {
+        ProductFilterOption filterOption =
+        ProductFilterOption.fromJson(element);
+        filterOptions.add(filterOption);
+      });
+    }
+    yield state.copyWith(filterOptions: filterOptions, isLoading: false);
   }
 
   Stream<PosScreenState> getIntegrations() async* {

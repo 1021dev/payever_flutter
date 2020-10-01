@@ -310,8 +310,8 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
         }
       });
     });
-    Terminal activeTerminal;
 
+    Terminal activeTerminal;
     if (terminals.length > 0) {
       activeTerminal = terminals.firstWhere((element) => element.active);
     }

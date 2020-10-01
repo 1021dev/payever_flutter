@@ -23,8 +23,11 @@ class PosProductScreenBloc
       PosProductScreenEvent event) async* {
     if (event is PosProductsScreenInitEvent) {
       yield state.copyWith(
-          businessId: event.businessId, channelSetFlow: event.channelSetFlow);
-      yield* fetchProducts();
+          businessId: event.businessId,
+          channelSetFlow: event.channelSetFlow,
+          products: event.products,
+          filterOptions: event.filterOptions);
+      // yield* fetchProducts();
     } else if (event is ProductsFilterEvent) {
       yield state.copyWith(
           subCategories: event.categories,

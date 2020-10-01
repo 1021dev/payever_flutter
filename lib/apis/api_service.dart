@@ -720,11 +720,7 @@ class ApiService {
       print('$TAG - getCheckoutIntegration()');
       dynamic response = await _client.getTypeless(
           '$checkoutBusiness$idBusiness$checkout$checkoutID$endIntegration',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {

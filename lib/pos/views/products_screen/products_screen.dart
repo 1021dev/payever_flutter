@@ -24,11 +24,15 @@ class ProductsScreen extends StatefulWidget {
   final PosScreenBloc posScreenBloc;
   final ChannelSetFlow channelSetFlow;
   final String businessId;
+  final List<ProductsModel> products;
+  final List<ProductFilterOption> filterOptions;
 
   ProductsScreen(
     this.businessId,
     this.posScreenBloc,
     this.channelSetFlow,
+    this.products,
+    this.filterOptions,
   );
 
   @override
@@ -49,7 +53,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   void initState() {
     screenBloc = PosProductScreenBloc(widget.posScreenBloc)
       ..add(
-          PosProductsScreenInitEvent(widget.businessId, widget.channelSetFlow));
+          PosProductsScreenInitEvent(widget.businessId, widget.channelSetFlow, widget.products, widget.filterOptions));
     super.initState();
   }
 

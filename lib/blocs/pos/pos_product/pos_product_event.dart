@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:payever/checkout/models/models.dart';
+import 'package:payever/pos/models/pos.dart';
+import 'package:payever/products/models/models.dart';
 
 
 abstract class PosProductScreenEvent extends Equatable {
@@ -12,7 +14,10 @@ abstract class PosProductScreenEvent extends Equatable {
 class PosProductsScreenInitEvent extends PosProductScreenEvent {
   final ChannelSetFlow channelSetFlow;
   final String businessId;
-  PosProductsScreenInitEvent(this.businessId, this.channelSetFlow);
+  final List<ProductsModel> products;
+  final List<ProductFilterOption> filterOptions;
+
+  PosProductsScreenInitEvent(this.businessId, this.channelSetFlow, this.products, this.filterOptions);
 
   @override
   List<Object> get props => [
