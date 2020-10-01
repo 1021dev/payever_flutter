@@ -25,6 +25,7 @@ import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/login/login_screen.dart';
+import 'package:payever/pos/models/pos.dart';
 import 'package:payever/shop/widgets/shop_top_button.dart';
 import 'package:payever/theme.dart';
 import 'package:payever/widgets/main_app_bar.dart';
@@ -38,11 +39,13 @@ class CheckoutInitScreen extends StatelessWidget {
   final DashboardScreenBloc dashboardScreenBloc;
   final List<Checkout> checkouts;
   final Checkout defaultCheckout;
+  final List<ChannelSet> channelSets;
 
   CheckoutInitScreen({
     this.dashboardScreenBloc,
     this.checkouts = const [],
     this.defaultCheckout,
+    this.channelSets,
   });
 
   @override
@@ -54,6 +57,7 @@ class CheckoutInitScreen extends StatelessWidget {
       dashboardScreenBloc: dashboardScreenBloc,
       checkouts: checkouts,
       defaultCheckout: defaultCheckout,
+      channelSets: channelSets,
     );
   }
 }
@@ -64,12 +68,14 @@ class CheckoutScreen extends StatefulWidget {
   final DashboardScreenBloc dashboardScreenBloc;
   final List<Checkout> checkouts;
   final Checkout defaultCheckout;
+  final List<ChannelSet> channelSets;
 
   CheckoutScreen({
     this.globalStateModel,
     this.dashboardScreenBloc,
     this.checkouts = const [],
     this.defaultCheckout,
+    this.channelSets,
   });
 
   @override
@@ -101,6 +107,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         terminal: widget.dashboardScreenBloc.state.activeTerminal,
         checkouts: widget.checkouts,
         defaultCheckout: widget.defaultCheckout,
+        channelSets: widget.channelSets,
       ));
     super.initState();
   }

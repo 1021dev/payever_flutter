@@ -31,16 +31,13 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
   Stream<CheckoutScreenState> mapEventToState(
       CheckoutScreenEvent event) async* {
     if (event is CheckoutScreenInitEvent) {
-      if (event.business != null) {
-        yield state.copyWith(
-          activeBusiness: event.business,
-          activeTerminal: event.terminal,
-          checkouts: event.checkouts,
-          defaultCheckout: event.defaultCheckout,
-        );
-      } else {
-
-      }
+      yield state.copyWith(
+        activeBusiness: event.business,
+        activeTerminal: event.terminal,
+        checkouts: event.checkouts,
+        defaultCheckout: event.defaultCheckout,
+        channelSets: event.channelSets,
+      );
       yield* fetchConnectInstallations(state.activeBusiness.id, isLoading: true);
     } else if (event is GetPaymentConfig) {
       yield* getPaymentData();
@@ -116,15 +113,16 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       {bool isLoading = false}) async* {
     yield state.copyWith(isLoading: isLoading);
 
-    List<Checkout> checkouts = [];
+    List<Checkout> checkouts = state.checkouts;
     List<String> integrations = [];
     Checkout defaultCheckout;
-
-    dynamic checkoutsResponse = await api.getCheckout(token, business);
-    if (checkoutsResponse is List) {
-      checkoutsResponse.forEach((element) {
-        checkouts.add(Checkout.fromJson(element));
-      });
+    if (checkouts == null || checkouts.isEmpty) {
+      dynamic checkoutsResponse = await api.getCheckout(token, business);
+      if (checkoutsResponse is List) {
+        checkoutsResponse.forEach((element) {
+          checkouts.add(Checkout.fromJson(element));
+        });
+      }
     }
 
     if (state.defaultCheckout == null) {
@@ -188,15 +186,18 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
   }
 
   Stream<CheckoutScreenState> getCheckoutFlow() async* {
-    List<ChannelSet> channelSets = [];
-    dynamic channelSetResponse = await api.getChannelSet(state.activeBusiness.id, token);
-    if (channelSetResponse is List) {
-      channelSetResponse.forEach((element) {
-        ChannelSet channelSet = ChannelSet.fromJson(element);
-        if (channelSet.checkout != null &&
-            channelSet.checkout == state.defaultCheckout.id)
-          channelSets.add(ChannelSet.fromJson(element));
-      });
+    List<ChannelSet> channelSets = state.channelSets;
+    if (channelSets == null || channelSets.isEmpty) {
+      print('get ChannelSets...');
+      dynamic channelSetResponse = await api.getChannelSet(state.activeBusiness.id, token);
+      if (channelSetResponse is List) {
+        channelSetResponse.forEach((element) {
+          ChannelSet channelSet = ChannelSet.fromJson(element);
+          if (channelSet.checkout != null &&
+              channelSet.checkout == state.defaultCheckout.id)
+            channelSets.add(ChannelSet.fromJson(element));
+        });
+      }
     }
 
     ChannelSet channelSet = channelSets.firstWhere((element) =>

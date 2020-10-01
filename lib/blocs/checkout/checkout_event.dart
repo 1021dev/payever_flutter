@@ -14,12 +14,14 @@ class CheckoutScreenInitEvent extends CheckoutScreenEvent {
   final Terminal terminal;
   final List<Checkout> checkouts;
   final Checkout defaultCheckout;
+  final List<ChannelSet> channelSets;
 
   CheckoutScreenInitEvent({
     this.business,
     this.terminal,
     this.checkouts,
     this.defaultCheckout,
+    this.channelSets,
   });
 
   @override
@@ -28,6 +30,7 @@ class CheckoutScreenInitEvent extends CheckoutScreenEvent {
     this.terminal,
     this.checkouts,
     this.defaultCheckout,
+    this.channelSets,
   ];
 }
 

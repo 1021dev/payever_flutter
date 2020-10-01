@@ -409,6 +409,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 dashboardScreenBloc: screenBloc,
                 checkouts: state.checkouts,
                 defaultCheckout: state.defaultCheckout,
+                channelSets: state.channelSets,
               ),
               type: PageTransitionType.fade,
               duration: Duration(milliseconds: 500),
@@ -651,6 +652,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 CheckoutInitScreen(
                   dashboardScreenBloc: screenBloc,
                   checkouts: state.checkouts,
+                  channelSets: state.channelSets,
                   defaultCheckout: state.defaultCheckout,
                 ),
               isDuration: true,
