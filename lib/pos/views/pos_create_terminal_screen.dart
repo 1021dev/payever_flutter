@@ -21,13 +21,11 @@ bool _isTablet;
 class PosCreateTerminalScreen extends StatefulWidget {
 
   final PosScreenBloc screenBloc;
-  final String businessId;
   final Terminal editTerminal;
   final bool fromDashBoard;
 
   PosCreateTerminalScreen({
     this.screenBloc,
-    this.businessId,
     this.editTerminal,
     this.fromDashBoard = false,
   });
@@ -327,14 +325,12 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
   void submitTerminal(PosScreenState state) {
     if (widget.editTerminal != null) {
       widget.screenBloc.add(UpdatePosTerminalEvent(
-        businessId: widget.businessId,
         name: terminalNameController.text,
         logo: state.blobName != '' ? state.blobName : null,
         terminalId: widget.editTerminal.id,
       ));
     } else {
       widget.screenBloc.add(CreatePosTerminalEvent(
-        businessId: widget.businessId,
         name: terminalNameController.text,
         logo: state.blobName != '' ? state.blobName : null,
       ));
@@ -345,7 +341,7 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
     PickedFile img = await ImagePicker().getImage(source: ImageSource.gallery);
     if (img.path != null) {
       print("_image: $img");
-      widget.screenBloc.add(UploadTerminalImage(file: File(img.path), businessId: widget.businessId));
+      widget.screenBloc.add(UploadTerminalImage(file: File(img.path)));
     }
   }
 

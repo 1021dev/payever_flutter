@@ -18,13 +18,10 @@ bool _isPortrait;
 bool _isTablet;
 
 class PosSwitchTerminalsScreen extends StatefulWidget {
-
   final PosScreenBloc screenBloc;
-  final String businessId;
 
   PosSwitchTerminalsScreen({
     this.screenBloc,
-    this.businessId,
   });
 
   @override
@@ -47,7 +44,7 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
     List<Terminal> terminals = widget.screenBloc.state.terminals;
     defaultTerminal = terminals.where((element) => element.active).first;
 
-    widget.screenBloc.add(GetPosTerminalsEvent(businessId: widget.businessId));
+    widget.screenBloc.add(GetPosTerminalsEvent());
     super.initState();
   }
 
@@ -242,7 +239,6 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
                   context,
                   PageTransition(
                     child: PosCreateTerminalScreen(
-                      businessId: widget.businessId,
                       screenBloc: widget.screenBloc,
                     ),
                     type: PageTransitionType.fade,
@@ -304,7 +300,7 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
           );
         },
         onOpen: (Terminal tn) {
-          widget.screenBloc.add(SetActiveTerminalEvent(activeTerminal: tn, businessId: widget.businessId));
+          widget.screenBloc.add(SetActiveTerminalEvent(activeTerminal: tn));
           Navigator.pop(context);
         },
       )).toList(),
@@ -324,7 +320,6 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
                 context,
                 PageTransition(
                   child: PosCreateTerminalScreen(
-                    businessId: widget.businessId,
                     screenBloc: widget.screenBloc,
                     editTerminal: terminal,
                   ),
@@ -343,7 +338,7 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
           child: MaterialButton(
             onPressed: () {
               Navigator.pop(context);
-              widget.screenBloc.add(SetDefaultTerminalEvent(activeTerminal: terminal, businessId: widget.businessId));
+              widget.screenBloc.add(SetDefaultTerminalEvent(activeTerminal: terminal));
             },
             child: Text('Set as Default'),
           ),
@@ -411,7 +406,7 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
                                 MaterialButton(
                                   onPressed: () {
                                     Navigator.pop(context);
-                                    widget.screenBloc.add(DeleteTerminalEvent(businessId: widget.businessId, activeTerminal: terminal));
+                                    widget.screenBloc.add(DeleteTerminalEvent(activeTerminal: terminal));
                                   },
                                   child: Text(
                                     'Yes',

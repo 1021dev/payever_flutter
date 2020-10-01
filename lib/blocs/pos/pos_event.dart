@@ -14,10 +14,13 @@ abstract class PosScreenEvent extends Equatable {
 class PosScreenInitEvent extends PosScreenEvent {
   final Business currentBusiness;
   final List<Terminal> terminals;
+  final List<ChannelSet> channelSets;
   final Terminal activeTerminal;
   final Checkout defaultCheckout;
+
   PosScreenInitEvent({
     this.currentBusiness,
+    this.channelSets,
     this.terminals,
     this.activeTerminal,
     this.defaultCheckout,
@@ -26,22 +29,14 @@ class PosScreenInitEvent extends PosScreenEvent {
   @override
   List<Object> get props => [
     this.currentBusiness,
+    this.channelSets,
     this.terminals,
     this.activeTerminal,
     this.defaultCheckout,
   ];
 }
 
-class GetPosIntegrationsEvent extends PosScreenEvent {
-  final String businessId;
-
-  GetPosIntegrationsEvent({this.businessId});
-
-  @override
-  List<Object> get props => [
-    this.businessId,
-  ];
-}
+class GetPosIntegrationsEvent extends PosScreenEvent {}
 
 class GetTerminalIntegrationsEvent extends PosScreenEvent {
   final String businessId;
@@ -288,17 +283,15 @@ class CreatePosTerminalEvent extends PosScreenEvent{
 }
 
 class UpdatePosTerminalEvent extends PosScreenEvent{
-  final String businessId;
   final String logo;
   final String name;
   final String terminalId;
-  UpdatePosTerminalEvent({this.name, this.businessId, this.logo, this.terminalId});
+  UpdatePosTerminalEvent({this.name, this.logo, this.terminalId});
 
   @override
   List<Object> get props => [
     this.name,
     this.logo,
-    this.businessId,
     this.terminalId,
   ];
 }
@@ -331,29 +324,24 @@ class SetDefaultTerminalEvent extends PosScreenEvent{
 
 class DeleteTerminalEvent extends PosScreenEvent{
   final Terminal activeTerminal;
-  final String businessId;
 
-  DeleteTerminalEvent({this.activeTerminal, this.businessId});
+  DeleteTerminalEvent({this.activeTerminal});
 
   @override
   List<Object> get props => [
     this.activeTerminal,
-    this.businessId,
   ];
 }
 
 class GetPosTerminalsEvent extends PosScreenEvent {
-  final String businessId;
   final Terminal activeTerminal;
 
   GetPosTerminalsEvent({
-    this.businessId,
     this.activeTerminal,
   });
 
   @override
   List<Object> get props => [
-    this.businessId,
     this.activeTerminal,
   ];
 }

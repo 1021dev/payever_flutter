@@ -220,8 +220,6 @@ class WorkshopScreenBloc
         updatePayflowIndex: -1,
         channelSetFlow: channelSetFlow,
       );
-      // Future.delayed(const Duration(milliseconds: 500))
-      //     .then((value) => state.copyWith(isPaid: false));
     }
   }
   Stream<WorkshopScreenState> payByCreditCard(Map<String, dynamic>cardJson) async* {

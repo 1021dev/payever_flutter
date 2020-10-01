@@ -91,7 +91,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           } else if (widget.businessApps.code.contains('shop')) {
             businessApp = ShopInitScreen(dashboardScreenBloc: widget.dashboardScreenBloc);
           } else if (widget.businessApps.code.contains('pos')) {
-            businessApp = PosInitScreen(dashboardScreenBloc: widget.dashboardScreenBloc);
+            businessApp = PosInitScreen(
+              dashboardScreenBloc: widget.dashboardScreenBloc,
+              currentBusiness: widget.dashboardScreenBloc.state.activeBusiness,
+            );
           } else if (widget.businessApps.code.contains('connect')) {
             businessApp = ConnectInitScreen(dashboardScreenBloc: widget.dashboardScreenBloc);
           } else if (widget.businessApps.code.contains('checkout')) {

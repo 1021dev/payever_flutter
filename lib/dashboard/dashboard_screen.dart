@@ -348,6 +348,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
               child: PosInitScreen(
                 dashboardScreenBloc: screenBloc,
                 defaultCheckout: state.defaultCheckout,
+                currentBusiness: state.activeBusiness,
+                activeTerminal: state.activeTerminal,
+                terminals: state.terminalList,
+                channelSets: state.channelSets,
               ),
               type: PageTransitionType.fade,
               duration: Duration(milliseconds: 500),
@@ -548,7 +552,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
             PageTransition(
               child: PosCreateTerminalScreen(
                 fromDashBoard: true,
-                businessId: globalStateModel.currentBusiness.id,
                 screenBloc: PosScreenBloc(
                   dashboardScreenBloc: screenBloc,
                 ),
@@ -568,6 +571,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
               PosInitScreen(
                 dashboardScreenBloc: screenBloc,
                 defaultCheckout: state.defaultCheckout,
+                currentBusiness: state.activeBusiness,
+                activeTerminal: state.activeTerminal,
+                terminals: state.terminalList,
+                channelSets: state.channelSets,
               ),
               isDuration: true
           );

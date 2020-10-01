@@ -26,8 +26,6 @@ import 'package:payever/pos/views/products_screen/products_screen.dart';
 import 'package:payever/pos/widgets/pos_top_button.dart';
 import 'package:payever/theme.dart';
 import 'package:payever/widgets/main_app_bar.dart';
-import 'package:provider/provider.dart';
-
 import 'pos_device_payment_settings.dart';
 
 class PosInitScreen extends StatelessWidget {
@@ -36,42 +34,48 @@ class PosInitScreen extends StatelessWidget {
   final Terminal activeTerminal;
   final DashboardScreenBloc dashboardScreenBloc;
   final Checkout defaultCheckout;
+  final Business currentBusiness;
+  final List<ChannelSet> channelSets;
 
   PosInitScreen({
     this.terminals,
     this.activeTerminal,
     this.dashboardScreenBloc,
     this.defaultCheckout,
+    this.currentBusiness,
+    this.channelSets,
   });
 
   @override
   Widget build(BuildContext context) {
-    GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
 
     return PosScreen(
       dashboardScreenBloc: dashboardScreenBloc,
-      globalStateModel: globalStateModel,
+      currentBusiness: currentBusiness,
       terminals: terminals,
       activeTerminal: activeTerminal,
       defaultCheckout: defaultCheckout,
+      channelSets: channelSets,
     );
   }
 }
 
 class PosScreen extends StatefulWidget {
 
-  final GlobalStateModel globalStateModel;
   final List<Terminal> terminals;
   final Terminal activeTerminal;
   final DashboardScreenBloc dashboardScreenBloc;
   final Checkout defaultCheckout;
+  final Business currentBusiness;
+  final List<ChannelSet> channelSets;
 
   PosScreen({
-    this.globalStateModel,
+    this.currentBusiness,
     this.terminals,
     this.activeTerminal,
     this.dashboardScreenBloc,
     this.defaultCheckout,
+    this.channelSets,
   });
 
   @override
@@ -103,7 +107,6 @@ class _PosScreenState extends State<PosScreen> {
             context,
             PageTransition(
               child: PosSwitchTerminalsScreen(
-                businessId: widget.globalStateModel.currentBusiness.id,
                 screenBloc: screenBloc,
               ),
               type: PageTransitionType.fade,
@@ -119,7 +122,6 @@ class _PosScreenState extends State<PosScreen> {
             context,
             PageTransition(
               child: PosCreateTerminalScreen(
-                businessId: widget.globalStateModel.currentBusiness.id,
                 screenBloc: screenBloc,
               ),
               type: PageTransitionType.fade,
@@ -135,7 +137,6 @@ class _PosScreenState extends State<PosScreen> {
             context,
             PageTransition(
               child: PosCreateTerminalScreen(
-                businessId: widget.globalStateModel.currentBusiness.id,
                 screenBloc: screenBloc,
                 editTerminal: state.activeTerminal,
               ),
@@ -154,10 +155,11 @@ class _PosScreenState extends State<PosScreen> {
     screenBloc = PosScreenBloc(
       dashboardScreenBloc: widget.dashboardScreenBloc,
     )..add(PosScreenInitEvent(
-        currentBusiness: widget.globalStateModel.currentBusiness,
+        currentBusiness: widget.currentBusiness,
         terminals: widget.terminals,
         activeTerminal: widget.activeTerminal,
         defaultCheckout: widget.defaultCheckout,
+        channelSets: widget.channelSets,
       ));
   }
 
@@ -368,11 +370,11 @@ class _PosScreenState extends State<PosScreen> {
                                       onChanged: (value) {
                                         screenBloc.add(value ? InstallTerminalDevicePaymentEvent(
                                           payment: integrations[index].integration.name,
-                                          businessId: widget.globalStateModel.currentBusiness.id,
+                                          businessId: widget.currentBusiness.id,
                                           terminalId: state.activeTerminal.id,
                                         ): UninstallTerminalDevicePaymentEvent(
                                           payment: integrations[index].integration.name,
-                                          businessId: widget.globalStateModel.currentBusiness.id,
+                                          businessId: widget.currentBusiness.id,
                                           terminalId: state.activeTerminal.id,
                                         ));
                                       },
@@ -388,7 +390,7 @@ class _PosScreenState extends State<PosScreen> {
                                           context,
                                           PageTransition(
                                             child: PosDevicePaymentSettings(
-                                              businessId: widget.globalStateModel.currentBusiness.id,
+                                              businessId: widget.currentBusiness.id,
                                               screenBloc: screenBloc,
                                             ),
                                             type: PageTransitionType.fade,
@@ -401,9 +403,9 @@ class _PosScreenState extends State<PosScreen> {
                                           context,
                                           PageTransition(
                                             child: PosQRAppScreen(
-                                              businessId: widget.globalStateModel.currentBusiness.id,
+                                              businessId: widget.currentBusiness.id,
                                               screenBloc: screenBloc,
-                                              businessName: widget.globalStateModel.currentBusiness.name,
+                                              businessName: widget.currentBusiness.name,
                                             ),
                                             type: PageTransitionType.fade,
                                             duration: Duration(milliseconds: 500),
@@ -414,9 +416,9 @@ class _PosScreenState extends State<PosScreen> {
                                           context,
                                           PageTransition(
                                             child: PosTwilioScreen(
-                                              businessId: widget.globalStateModel.currentBusiness.id,
+                                              businessId: widget.currentBusiness.id,
                                               screenBloc: screenBloc,
-                                              businessName: widget.globalStateModel.currentBusiness.name,
+                                              businessName: widget.currentBusiness.name,
                                             ),
                                             type: PageTransitionType.fade,
                                             duration: Duration(milliseconds: 500),
@@ -476,7 +478,7 @@ class _PosScreenState extends State<PosScreen> {
                       context,
                       PageTransition(
                         child: PosConnectScreen(
-                          globalStateModel: widget.globalStateModel,
+                          activeBusiness: widget.currentBusiness,
                           screenBloc: screenBloc,
                         ),
                         type: PageTransitionType.fade,
@@ -529,7 +531,7 @@ class _PosScreenState extends State<PosScreen> {
               ),
               Expanded(
                 child: AutoSizeText(
-                  widget.globalStateModel.currentBusiness.id,
+                  widget.currentBusiness.id,
                   minFontSize: 12,
                   maxLines: 2,
                   style: TextStyle(
@@ -554,7 +556,7 @@ class _PosScreenState extends State<PosScreen> {
                   ),
                 ),
                 onPressed: () {
-                  screenBloc.add(CopyBusinessEvent(businessId: widget.globalStateModel.currentBusiness.id));
+                  screenBloc.add(CopyBusinessEvent(businessId: widget.currentBusiness.id));
                 },
               ),
             ],
@@ -597,7 +599,9 @@ class _PosScreenState extends State<PosScreen> {
                   ),
                 ),
                 onPressed: () {
-                  screenBloc.add(CopyTerminalEvent(businessId: widget.globalStateModel.currentBusiness.id, terminal: state.activeTerminal));
+                  screenBloc.add(CopyTerminalEvent(
+                      businessId: widget.currentBusiness.id,
+                      terminal: state.activeTerminal));
                 },
               ),
             ],
