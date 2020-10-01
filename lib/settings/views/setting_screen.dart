@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:iso_countries/iso_countries.dart';
 import 'package:page_transition/page_transition.dart';
@@ -10,7 +9,6 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
-import 'package:payever/dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/settings/models/models.dart';
 import 'package:payever/settings/views/appearance_screen.dart';
@@ -70,8 +68,6 @@ class _SettingScreenState extends State<SettingScreen> {
   double iconSize;
   double margin;
   List<Country> countryList;
-  final GlobalKey<InnerDrawerState> _innerDrawerKey =
-      GlobalKey<InnerDrawerState>();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -140,32 +136,23 @@ class _SettingScreenState extends State<SettingScreen> {
       child: BlocBuilder<SettingScreenBloc, SettingScreenState>(
         bloc: screenBloc,
         builder: (BuildContext context, SettingScreenState state) {
-          return DashboardMenuView(
-            innerDrawerKey: _innerDrawerKey,
-            dashboardScreenBloc: widget.dashboardScreenBloc,
-            activeBusiness: widget.dashboardScreenBloc.state.activeBusiness,
-            onClose: () {
-              _innerDrawerKey.currentState.toggle();
-            },
-            scaffold: Scaffold(
-              appBar: MainAppbar(
-                dashboardScreenBloc: widget.dashboardScreenBloc,
-                dashboardScreenState: widget.dashboardScreenBloc.state,
-                title:
-                Language.getCommerceOSStrings('info_boxes.settings.heading'),
-                icon: SvgPicture.asset(
-                  'assets/images/setting.svg',
-                  width: 20,
-                  height: 20,
-                ),
-                innerDrawerKey: _innerDrawerKey,
+          return Scaffold(
+            appBar: MainAppbar(
+              dashboardScreenBloc: widget.dashboardScreenBloc,
+              dashboardScreenState: widget.dashboardScreenBloc.state,
+              title:
+              Language.getCommerceOSStrings('info_boxes.settings.heading'),
+              icon: SvgPicture.asset(
+                'assets/images/setting.svg',
+                width: 20,
+                height: 20,
               ),
-              body: SafeArea(
-                bottom: false,
-                child: BackgroundBase(
+            ),
+            body: SafeArea(
+              bottom: false,
+              child: BackgroundBase(
                   true,
                   body: _body(state)
-                ),
               ),
             ),
           );

@@ -19,7 +19,6 @@ class MainAppbar extends StatelessWidget with PreferredSizeWidget {
   final bool isClose;
   final DashboardScreenBloc dashboardScreenBloc;
   final DashboardScreenState dashboardScreenState;
-  final GlobalKey<InnerDrawerState> innerDrawerKey;
 
   User user;
   Business activeBusiness;
@@ -32,7 +31,6 @@ class MainAppbar extends StatelessWidget with PreferredSizeWidget {
     this.icon,
     this.dashboardScreenBloc,
     this.dashboardScreenState,
-    this.innerDrawerKey,
     this.isBusinessMode = true,
     this.isClose = true,
   }) {

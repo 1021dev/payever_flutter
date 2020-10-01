@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/dashboard/dashboard_bloc.dart';
@@ -9,7 +8,6 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
-import 'package:payever/dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/dashboard/sub_view/dashboard_settings_view.dart';
 import 'package:payever/dashboard/sub_view/dashboard_transactions_view.dart';
 import 'package:payever/login/login_screen.dart';
@@ -56,8 +54,6 @@ class _PersonalScreenState extends State<PersonalScreen> {
   double iconSize;
   double margin;
 
-  final GlobalKey<InnerDrawerState> _innerDrawerKey =
-      GlobalKey<InnerDrawerState>();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -117,15 +113,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
       child: BlocBuilder<PersonalScreenBloc, PersonalScreenState>(
         bloc: screenBloc,
         builder: (BuildContext context, PersonalScreenState state) {
-          return DashboardMenuView(
-            innerDrawerKey: _innerDrawerKey,
-            dashboardScreenBloc: widget.dashboardScreenBloc,
-            activeBusiness: widget.dashboardScreenBloc.state.activeBusiness,
-            onClose: () {
-              _innerDrawerKey.currentState.toggle();
-            },
-            scaffold: _body(state),
-          );
+          return _body(state);
         },
       ),
     );
@@ -143,7 +131,6 @@ class _PersonalScreenState extends State<PersonalScreen> {
           height: 16,
           width: 24,
         ),
-        innerDrawerKey: _innerDrawerKey,
         isBusinessMode: false,
       ),
       body: SafeArea(

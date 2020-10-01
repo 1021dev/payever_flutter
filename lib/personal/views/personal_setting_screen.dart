@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
@@ -13,7 +12,6 @@ import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/dashboard/sub_view/business_logo.dart';
-import 'package:payever/dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/notifications/notifications_screen.dart';
 import 'package:payever/search/views/search_screen.dart';
@@ -23,6 +21,7 @@ import 'package:payever/settings/views/general/personal_information_screen.dart'
 import 'package:payever/settings/views/general/shipping_addresses_screen.dart';
 import 'package:payever/settings/views/wallpaper/wallpaper_screen.dart';
 import 'package:payever/theme.dart';
+import 'package:payever/widgets/main_app_bar.dart';
 import 'package:provider/provider.dart';
 
 class PersonalSettingInitScreen extends StatelessWidget {
@@ -66,8 +65,6 @@ class _PersonalSettingScreenState extends State<PersonalSettingScreen> {
   bool _isPortrait;
   bool _isTablet;
 
-  final GlobalKey<InnerDrawerState> _innerDrawerKey =
-      GlobalKey<InnerDrawerState>();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   double iconSize;
@@ -121,15 +118,7 @@ class _PersonalSettingScreenState extends State<PersonalSettingScreen> {
       child: BlocBuilder<SettingScreenBloc, SettingScreenState>(
         bloc: screenBloc,
         builder: (BuildContext context, SettingScreenState state) {
-          return DashboardMenuView(
-            innerDrawerKey: _innerDrawerKey,
-            dashboardScreenBloc: widget.dashboardScreenBloc,
-            activeBusiness: widget.dashboardScreenBloc.state.activeBusiness,
-            onClose: () {
-              _innerDrawerKey.currentState.toggle();
-            },
-            scaffold: _body(state),
-          );
+          return _body(state);
         },
       ),
     );
@@ -308,7 +297,7 @@ class _PersonalSettingScreenState extends State<PersonalSettingScreen> {
               width: 20,
             ),
             onTap: () {
-              _innerDrawerKey.currentState.toggle();
+
             },
           ),
         ),
@@ -340,7 +329,16 @@ class _PersonalSettingScreenState extends State<PersonalSettingScreen> {
       child: Scaffold(
         backgroundColor: overlayBackground(),
         resizeToAvoidBottomPadding: false,
-        appBar: _appBar(state),
+        appBar: MainAppbar(
+          dashboardScreenBloc: widget.dashboardScreenBloc,
+          dashboardScreenState: widget.dashboardScreenBloc.state,
+          title: Language.getCommerceOSStrings('dashboard.apps.settings'),
+          icon: SvgPicture.asset(
+            'assets/images/setting.svg',
+            height: 20,
+            width: 20,
+          ),
+        ),
         body: SafeArea(
           bottom: false,
           child: BackgroundBase(

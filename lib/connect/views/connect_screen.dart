@@ -14,11 +14,7 @@ import 'package:payever/connect/views/connect_setting_screen.dart';
 import 'package:payever/connect/widgets/connect_grid_item.dart';
 import 'package:payever/connect/widgets/connect_list_item.dart';
 import 'package:payever/connect/widgets/connect_top_button.dart';
-import 'package:payever/dashboard/sub_view/business_logo.dart';
-import 'package:payever/dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/login/login_screen.dart';
-import 'package:payever/notifications/notifications_screen.dart';
-import 'package:payever/search/views/search_screen.dart';
 import 'package:payever/theme.dart';
 import 'package:payever/widgets/main_app_bar.dart';
 import 'package:provider/provider.dart';
@@ -178,15 +174,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
       child: BlocBuilder<ConnectScreenBloc, ConnectScreenState>(
         bloc: screenBloc,
         builder: (BuildContext context, ConnectScreenState state) {
-          return DashboardMenuView(
-            innerDrawerKey: _innerDrawerKey,
-            dashboardScreenBloc: widget.dashboardScreenBloc,
-            activeBusiness: widget.dashboardScreenBloc.state.activeBusiness,
-            onClose: () {
-              _innerDrawerKey.currentState.toggle();
-            },
-            scaffold: _body(state),
-          );
+          return _body(state);
         },
       ),
     );
@@ -206,7 +194,6 @@ class _ConnectScreenState extends State<ConnectScreen> {
           height: 20,
           width: 20,
         ),
-        innerDrawerKey: _innerDrawerKey,
       ),
       body: SafeArea(
         bottom: false,

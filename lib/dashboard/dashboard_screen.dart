@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
@@ -40,7 +39,6 @@ import 'sub_view/dashboard_business_apps_view.dart';
 import 'sub_view/dashboard_checkout_view.dart';
 import 'sub_view/dashboard_connect_view.dart';
 import 'sub_view/dashboard_contact_view.dart';
-import 'sub_view/dashboard_menu_view.dart';
 import 'sub_view/dashboard_products_view.dart';
 import 'sub_view/dashboard_settings_view.dart';
 import 'sub_view/dashboard_shop_view.dart';
@@ -80,8 +78,6 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   String uiKit = '${Env.commerceOs}/assets/ui-kit/icons-png/';
-  final GlobalKey<InnerDrawerState> _innerDrawerKey =
-      GlobalKey<InnerDrawerState>();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   DashboardScreenBloc screenBloc;
   bool isLoaded = false;
@@ -227,15 +223,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       Language.language = state.language;
       Language(context);
     }
-    return DashboardMenuView(
-      innerDrawerKey: _innerDrawerKey,
-      dashboardScreenBloc: screenBloc,
-      activeBusiness: state.activeBusiness,
-      onClose: () {
-        _innerDrawerKey.currentState.toggle();
-      },
-      scaffold: _body(state),
-    );
+    return _body(state);
   }
 
   Widget _body(DashboardScreenState state) {
@@ -1135,7 +1123,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           height: 16,
           width: 24,
         ),
-        innerDrawerKey: _innerDrawerKey,
         isClose: false,
       ),
       // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,

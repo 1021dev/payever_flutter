@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:page_transition/page_transition.dart';
@@ -12,11 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
-import 'package:payever/dashboard/sub_view/business_logo.dart';
-import 'package:payever/dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/login/login_screen.dart';
-import 'package:payever/notifications/notifications_screen.dart';
-import 'package:payever/search/views/search_screen.dart';
 import 'package:payever/theme.dart';
 import 'package:payever/transactions/models/enums.dart';
 import 'package:payever/transactions/views/filter_content_view.dart';
@@ -82,7 +77,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
   bool noTransactions = false;
   List<TagItemModel> _filterItems;
   int _searchTagIndex = -1;
-  final GlobalKey<InnerDrawerState> _innerDrawerKey = GlobalKey<InnerDrawerState>();
 
   @override
   void initState() {
@@ -149,15 +143,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
             _filterItems.add(TagItemModel(title: 'Search is: ${state.searchText}', type: null));
             _searchTagIndex = _filterItems.length - 1;
           }
-          return DashboardMenuView(
-            innerDrawerKey: _innerDrawerKey,
-            dashboardScreenBloc: widget.dashboardScreenBloc,
-            activeBusiness: widget.dashboardScreenBloc.state.activeBusiness,
-            onClose: () {
-              _innerDrawerKey.currentState.toggle();
-            },
-            scaffold: _body(state),
-          );
+          return _body(state);
         },
       ),
     );
@@ -175,7 +161,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
           height: 20,
           width: 20,
         ),
-        innerDrawerKey: _innerDrawerKey,
       ),
       body: SafeArea(
         bottom: false,

@@ -7,21 +7,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
-import 'package:payever/dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/pos/widgets/pos_top_button.dart';
 import 'package:payever/products/models/models.dart';
 import 'package:payever/products/views/collection_detail_screen.dart';
 import 'package:payever/products/views/product_detail_screen.dart';
 import 'package:payever/products/views/products_filter_screen.dart';
 import 'package:payever/products/widgets/collection_grid_item.dart';
-import 'package:payever/products/widgets/product_filter_content_view.dart';
 import 'package:payever/products/widgets/product_grid_item.dart';
 import 'package:payever/products/widgets/product_sort_content_view.dart';
 import 'package:payever/theme.dart';
@@ -73,8 +70,6 @@ class ProductsScreen extends StatefulWidget {
 }
 
 class _ProductsScreenState extends State<ProductsScreen> {
-  final GlobalKey<InnerDrawerState> _innerDrawerKey =
-      GlobalKey<InnerDrawerState>();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   InAppWebViewController webView;
@@ -385,15 +380,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       child: BlocBuilder<ProductsScreenBloc, ProductsScreenState>(
         bloc: screenBloc,
         builder: (BuildContext context, ProductsScreenState state) {
-          return DashboardMenuView(
-            innerDrawerKey: _innerDrawerKey,
-            dashboardScreenBloc: widget.dashboardScreenBloc,
-            activeBusiness: widget.dashboardScreenBloc.state.activeBusiness,
-            onClose: () {
-              _innerDrawerKey.currentState.toggle();
-            },
-            scaffold: _body(state),
-          );
+          return _body(state);
         },
       ),
     );
@@ -411,7 +398,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
           height: 20,
           width: 20,
         ),
-        innerDrawerKey: _innerDrawerKey,
       ),
       body: SafeArea(
         bottom: false,

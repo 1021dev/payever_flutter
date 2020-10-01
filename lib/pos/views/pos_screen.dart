@@ -7,7 +7,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
@@ -15,7 +14,6 @@ import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
-import 'package:payever/dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/pos/views/pos_connect_screen.dart';
 import 'package:payever/pos/views/pos_create_terminal_screen.dart';
@@ -86,7 +84,6 @@ class _PosScreenState extends State<PosScreen> {
 
   static const platform = const MethodChannel('payever.flutter.dev/tapthephone');
 
-  final GlobalKey<InnerDrawerState> _innerDrawerKey = GlobalKey<InnerDrawerState>();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   InAppWebViewController webView;
@@ -188,15 +185,7 @@ class _PosScreenState extends State<PosScreen> {
       child: BlocBuilder<PosScreenBloc, PosScreenState>(
         bloc: screenBloc,
         builder: (BuildContext context, PosScreenState state) {
-          return DashboardMenuView(
-            innerDrawerKey: _innerDrawerKey,
-            dashboardScreenBloc: widget.dashboardScreenBloc,
-            activeBusiness: widget.dashboardScreenBloc.state.activeBusiness,
-            onClose: () {
-              _innerDrawerKey.currentState.toggle();
-            },
-            scaffold: _body(state),
-          );
+          return _body(state);
         },
       ),
     );
@@ -217,7 +206,6 @@ class _PosScreenState extends State<PosScreen> {
           height: 20,
           width: 20,
         ),
-        innerDrawerKey: _innerDrawerKey,
       ),
       body: SafeArea(
         bottom: false,

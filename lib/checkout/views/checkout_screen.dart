@@ -17,13 +17,11 @@ import 'package:payever/checkout/views/payments/checkout_payment_settings_screen
 import 'package:payever/checkout/views/payments/payment_options_screen.dart';
 import 'package:payever/checkout/views/sections/sections_screen.dart';
 import 'package:payever/checkout/views/settings/settings_screen.dart';
-import 'package:payever/checkout/views/workshop/workshop_screen.dart';
 import 'package:payever/checkout/views/workshop/workshop_screen1.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
-import 'package:payever/dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/pos/models/pos.dart';
 import 'package:payever/shop/widgets/shop_top_button.dart';
@@ -145,15 +143,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       child: BlocBuilder<CheckoutScreenBloc, CheckoutScreenState>(
         bloc: screenBloc,
         builder: (BuildContext context, CheckoutScreenState state) {
-          return DashboardMenuView(
-            innerDrawerKey: _innerDrawerKey,
-            dashboardScreenBloc: widget.dashboardScreenBloc,
-            activeBusiness: widget.dashboardScreenBloc.state.activeBusiness,
-            onClose: () {
-              _innerDrawerKey.currentState.toggle();
-            },
-            scaffold: _body(state),
-          );
+          return _body(state);
         },
       ),
     );
@@ -173,7 +163,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           height: 20,
           width: 20,
         ),
-        innerDrawerKey: _innerDrawerKey,
       ),
       body: SafeArea(
         bottom: false,
