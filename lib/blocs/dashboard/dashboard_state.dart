@@ -4,6 +4,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:payever/commons/models/fetchwallpaper.dart';
 import 'package:payever/products/models/models.dart';
+import 'package:payever/settings/models/models.dart';
 import 'package:payever/shop/models/models.dart';
 
 class DashboardScreenState {
@@ -39,6 +40,7 @@ class DashboardScreenState {
   final Checkout defaultCheckout;
   final String installBusinessAppId;
   final List<ChannelSet>channelSets;
+  final MyWallpaper personalWallpaper;
 
   DashboardScreenState({
     this.isLoading = false,
@@ -73,6 +75,7 @@ class DashboardScreenState {
     this.defaultCheckout,
     this.installBusinessAppId = '',
     this.channelSets,
+    this.personalWallpaper,
   });
 
   List<Object> get props => [
@@ -108,6 +111,7 @@ class DashboardScreenState {
     this.defaultCheckout,
     this.installBusinessAppId,
     this.channelSets,
+    this.personalWallpaper,
   ];
 
   DashboardScreenState copyWith({
@@ -143,6 +147,7 @@ class DashboardScreenState {
     Checkout defaultCheckout,
     List<ChannelSet> channelSets,
     String installBusinessAppId,
+    MyWallpaper personalWallpaper,
   }) {
     return DashboardScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -177,6 +182,7 @@ class DashboardScreenState {
       installBusinessAppId: installBusinessAppId ?? this.installBusinessAppId,
       defaultCheckout: defaultCheckout ?? this.defaultCheckout,
       channelSets: channelSets ?? this.channelSets,
+      personalWallpaper: personalWallpaper ?? this.personalWallpaper,
     );
   }
 }

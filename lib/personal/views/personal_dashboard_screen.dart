@@ -54,7 +54,7 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
   double iconSize;
   double margin;
 
-  PersonalScreenBloc screenBloc;
+  PersonalDashboardScreenBloc screenBloc;
   TextEditingController searchController = TextEditingController();
   FocusNode searchFocus = FocusNode();
   String searchString = '';
@@ -63,17 +63,14 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
 
   @override
   void initState() {
-    screenBloc = PersonalScreenBloc(
-        dashboardScreenBloc: widget.dashboardScreenBloc,
-        globalStateModel: widget.globalStateModel);
-    screenBloc.add(PersonalScreenInitEvent(
-      business: widget.globalStateModel.currentBusiness.id,
-      user: widget.dashboardScreenBloc.state.user,
-    ));
-
+    screenBloc = PersonalDashboardScreenBloc()
+      ..add(PersonalScreenInitEvent(
+        business: widget.globalStateModel.currentBusiness.id,
+        user: widget.dashboardScreenBloc.state.user,
+      ));
+    String wallpaper = widget.dashboardScreenBloc.state.personalWallpaper.currentWallpaper.wallpaper;
     activeBusiness = widget.globalStateModel.currentBusiness;
-    currentWallpaper = widget.dashboardScreenBloc.state.curWall;
-
+    currentWallpaper ='${Env.storage}/wallpapers/$wallpaper';
     super.initState();
   }
 
@@ -96,7 +93,7 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
 
     return BlocListener(
       bloc: screenBloc,
-      listener: (BuildContext context, PersonalScreenState state) async {
+      listener: (BuildContext context, PersonalDashboardScreenState state) async {
         if (state is PersonalScreenStateFailure) {
           Navigator.pushReplacement(
             context,
@@ -107,16 +104,16 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
           );
         }
       },
-      child: BlocBuilder<PersonalScreenBloc, PersonalScreenState>(
+      child: BlocBuilder<PersonalDashboardScreenBloc, PersonalDashboardScreenState>(
         bloc: screenBloc,
-        builder: (BuildContext context, PersonalScreenState state) {
+        builder: (BuildContext context, PersonalDashboardScreenState state) {
           return _body(state);
         },
       ),
     );
   }
 
-  Widget _body(PersonalScreenState state) {
+  Widget _body(PersonalDashboardScreenState state) {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       appBar: MainAppbar(
@@ -166,7 +163,7 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
     );
   }
 
-  Widget _headerView(PersonalScreenState state) {
+  Widget _headerView(PersonalDashboardScreenState state) {
     return Column(
       children: [
         SizedBox(height: 60),
@@ -207,7 +204,7 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
     );
   }
 
-  Widget _searchBar(PersonalScreenState state) {
+  Widget _searchBar(PersonalDashboardScreenState state) {
     return BlurEffectView(
       radius: 12,
       padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -377,7 +374,7 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
     );
   }
 
-  Widget _transactionView(PersonalScreenState state) {
+  Widget _transactionView(PersonalDashboardScreenState state) {
     AppWidget appWidget = state.personalWidgets
         .where((element) => element.type.contains('transactions'))
         .first;
@@ -416,7 +413,7 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
         : Container();
   }
 
-  Widget _settingsView(PersonalScreenState state) {
+  Widget _settingsView(PersonalDashboardScreenState state) {
     AppWidget appWidget = state.personalWidgets
         .where((element) => element.type.contains('settings'))
         .first;
@@ -481,7 +478,7 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
         });
   }
 
-  _navigateAppsScreen(PersonalScreenState state, Widget target,
+  _navigateAppsScreen(PersonalDashboardScreenState state, Widget target,
       {bool isDuration = false}) {
     Provider.of<GlobalStateModel>(context, listen: false)
         .setCurrentBusiness(activeBusiness);

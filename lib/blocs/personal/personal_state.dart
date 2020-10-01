@@ -3,7 +3,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/models/app_widget.dart';
 import 'package:payever/settings/models/models.dart';
 
-class PersonalScreenState {
+class PersonalDashboardScreenState {
   final bool isLoading;
   final List<BusinessApps> personalApps;
   final List<AppWidget> personalWidgets;
@@ -28,7 +28,7 @@ class PersonalScreenState {
   final User user;
   final AuthUser authUser;
 
-  PersonalScreenState({
+  PersonalDashboardScreenState({
     this.isLoading = false,
     this.personalApps = const[],
     this.personalWidgets = const[],
@@ -73,7 +73,7 @@ class PersonalScreenState {
     this.authUser,
   ];
 
-  PersonalScreenState copyWith({
+  PersonalDashboardScreenState copyWith({
     bool isLoading,
     List<BusinessApps> personalApps,
     List<AppWidget> personalWidgets,
@@ -93,7 +93,7 @@ class PersonalScreenState {
     User user,
     AuthUser authUser,
   }) {
-    return PersonalScreenState(
+    return PersonalDashboardScreenState(
       isLoading: isLoading ?? this.isLoading,
       personalApps: personalApps ?? this.personalApps,
       personalWidgets: personalWidgets ?? this.personalWidgets,
@@ -118,7 +118,7 @@ class PersonalScreenState {
   }
 }
 
-class PersonalScreenStateFailure extends PersonalScreenState {
+class PersonalScreenStateFailure extends PersonalDashboardScreenState {
   final String error;
 
   PersonalScreenStateFailure({@required this.error}) : super();

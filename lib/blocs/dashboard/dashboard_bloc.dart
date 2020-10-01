@@ -12,6 +12,7 @@ import 'package:payever/commons/utils/standard_data.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:payever/commons/models/fetchwallpaper.dart';
 import 'package:payever/products/models/models.dart';
+import 'package:payever/settings/models/models.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/transactions/transactions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -211,6 +212,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
           }
         }
       }
+
       if (activeBusiness != null) {
         dynamic wallpaperObj = await api.getWallpaper(
             activeBusiness.id, accessToken);
@@ -236,6 +238,12 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
           businessWidgets.add(BusinessApps.fromMap(item));
         });
       }
+      MyWallpaper personalWallpaper;
+      dynamic wallPaperObj = await api.getWallpaperPersonal(accessToken);
+      if (wallPaperObj is Map) {
+        personalWallpaper = MyWallpaper.fromMap(wallPaperObj);
+      }
+
       yield state.copyWith(
         isInitialScreen: false,
         isLoading: false,
@@ -247,6 +255,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
         currentWallpaper: fetchWallpaper != null ? fetchWallpaper.currentWallpaper: null,
         curWall: currentWallpaper,
         language: language,
+        personalWallpaper: personalWallpaper,
       );
 
       if (activeBusiness != null) {

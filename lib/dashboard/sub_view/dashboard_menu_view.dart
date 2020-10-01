@@ -6,7 +6,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/business/views/business_register_screen.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/login/login_screen.dart';
-import 'package:payever/personal/views/personal_screen.dart';
+import 'package:payever/personal/views/personal_dashboard_screen.dart';
 import 'package:payever/switcher/switcher.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';

@@ -3,29 +3,24 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/bloc.dart';
-import 'package:payever/blocs/dashboard/dashboard_bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/settings/models/models.dart';
 import 'personal.dart';
 
-class PersonalScreenBloc extends Bloc<PersonalScreenEvent, PersonalScreenState> {
-
-  final DashboardScreenBloc dashboardScreenBloc;
-  final GlobalStateModel globalStateModel;
-
-
-  PersonalScreenBloc({this.dashboardScreenBloc, this.globalStateModel});
-
+class PersonalDashboardScreenBloc extends Bloc<PersonalDashboardScreenEvent, PersonalDashboardScreenState> {
+  
+  PersonalDashboardScreenBloc();
+  
   ApiService api = ApiService();
   String token = GlobalUtils.activeToken.accessToken;
 
   @override
-  PersonalScreenState get initialState => PersonalScreenState();
+  PersonalDashboardScreenState get initialState => PersonalDashboardScreenState();
 
   @override
-  Stream<PersonalScreenState> mapEventToState(
-      PersonalScreenEvent event) async* {
+  Stream<PersonalDashboardScreenState> mapEventToState(
+      PersonalDashboardScreenEvent event) async* {
     if (event is PersonalScreenInitEvent) {
       if (event.business != null) {
         yield state.copyWith(
@@ -37,10 +32,9 @@ class PersonalScreenBloc extends Bloc<PersonalScreenEvent, PersonalScreenState> 
     }
   }
 
-  Stream<PersonalScreenState> getPersonalWidgets(String id) async* {
+  Stream<PersonalDashboardScreenState> getPersonalWidgets(String id) async* {
     yield state.copyWith(isLoading: true);
     List<BusinessApps> personalApps = [];
-    dynamic wallPaperObj = await api.getWallpaperPersonal(token);
 
     dynamic businessAppsObj = await api.getPersonalApps(token);
     personalApps.clear();
@@ -59,19 +53,19 @@ class PersonalScreenBloc extends Bloc<PersonalScreenEvent, PersonalScreenState> 
     yield state.copyWith(isLoading: false, personalApps: personalApps, personalWidgets: widgetApps);
   }
 
-  Stream<PersonalScreenState> uploadBusinessImage(File file) async* {
+  Stream<PersonalDashboardScreenState> uploadBusinessImage(File file) async* {
     yield state.copyWith(blobName: '', isUpdatingBusinessImg: true);
     dynamic response = await api.postImageToBusiness(file, state.business, GlobalUtils.activeToken.accessToken);
     String blobName = response['blobName'];
     yield state.copyWith(blobName: blobName, isUpdatingBusinessImg: false);
   }
 
-  Stream<PersonalScreenState> fetchConnectInstallations(String business,
+  Stream<PersonalDashboardScreenState> fetchConnectInstallations(String business,
       {bool isLoading = false}) async* {
     yield state.copyWith(isLoading: isLoading);
   }
 
-  Stream<PersonalScreenState> fetchWallpapers() async* {
+  Stream<PersonalDashboardScreenState> fetchWallpapers() async* {
     String token = GlobalUtils.activeToken.accessToken;
     yield state.copyWith(isLoading: true);
 

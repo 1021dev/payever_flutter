@@ -8,14 +8,14 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/models/app_widget.dart';
 import 'package:payever/settings/models/models.dart';
 
-abstract class PersonalScreenEvent extends Equatable {
-  PersonalScreenEvent();
+abstract class PersonalDashboardScreenEvent extends Equatable {
+  PersonalDashboardScreenEvent();
 
   @override
   List<Object> get props => [];
 }
 
-class PersonalScreenInitEvent extends PersonalScreenEvent {
+class PersonalScreenInitEvent extends PersonalDashboardScreenEvent {
   final String business;
   final User user;
   PersonalScreenInitEvent({

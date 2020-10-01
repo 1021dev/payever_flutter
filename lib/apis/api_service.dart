@@ -554,7 +554,7 @@ class ApiService {
     }
   }
 
-  Future<dynamic> getWallpaperPersonal(String token,) async {
+  Future<dynamic> getWallpaperPersonal(String token) async {
     try {
       print('$TAG - getWallpaperPersonal()');
       dynamic response = await _client.getTypeless(

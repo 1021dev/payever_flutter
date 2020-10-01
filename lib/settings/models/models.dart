@@ -72,6 +72,7 @@ class Wallpaper {
 
 class MyWallpaper {
   String business;
+  String user;
   String createdAt;
   Wallpaper currentWallpaper;
   String industry;
@@ -83,6 +84,7 @@ class MyWallpaper {
 
   MyWallpaper.fromMap(dynamic obj) {
     business = obj['business'];
+    user = obj['user'];
     createdAt = obj['createdAt'];
     industry = obj['industry'];
     product = obj['product'];
