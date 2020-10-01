@@ -14,12 +14,12 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../theme.dart';
 
-class DashboardMenuView1 extends StatelessWidget {
+class DashboardMenuView extends StatelessWidget {
   final Widget scaffold;
   final Business activeBusiness;
   final DashboardScreenBloc dashboardScreenBloc;
   final bool isBusinessMode;
-  DashboardMenuView1({
+  DashboardMenuView({
     this.scaffold,
     this.dashboardScreenBloc,
     this.isBusinessMode = true,
@@ -145,7 +145,7 @@ class DashboardMenuView1 extends StatelessWidget {
                         Navigator.push(
                           context,
                           PageTransition(
-                            child: PersonalInitScreen(
+                            child: PersonalDashboardInitScreen(
                               dashboardScreenBloc: dashboardScreenBloc,
                             ),
                             type: PageTransitionType.fade,

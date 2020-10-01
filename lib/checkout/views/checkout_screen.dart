@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
@@ -17,7 +16,7 @@ import 'package:payever/checkout/views/payments/checkout_payment_settings_screen
 import 'package:payever/checkout/views/payments/payment_options_screen.dart';
 import 'package:payever/checkout/views/sections/sections_screen.dart';
 import 'package:payever/checkout/views/settings/settings_screen.dart';
-import 'package:payever/checkout/views/workshop/workshop_screen1.dart';
+import 'package:payever/checkout/views/workshop/workshop_screen.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
@@ -86,9 +85,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   bool _isPortrait;
   bool _isTablet;
 
-  final GlobalKey<InnerDrawerState> _innerDrawerKey = GlobalKey<InnerDrawerState>();
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   double iconSize;
   double margin;
 
@@ -268,7 +264,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         return state.isLoading || state.channelSet == null ?
         Center(
           child: CircularProgressIndicator(),
-        ) : WorkshopScreen1(checkoutScreenBloc: this.screenBloc,);
+        ) : WorkshopScreen(checkoutScreenBloc: this.screenBloc,);
       case 1:
         return PaymentOptionsScreen(
           connects: state.connects,

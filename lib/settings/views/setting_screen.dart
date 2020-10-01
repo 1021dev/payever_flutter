@@ -68,8 +68,6 @@ class _SettingScreenState extends State<SettingScreen> {
   double iconSize;
   double margin;
   List<Country> countryList;
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
   SettingScreenBloc screenBloc;
   String salutation;

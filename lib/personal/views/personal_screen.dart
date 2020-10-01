@@ -23,39 +23,36 @@ import 'package:payever/widgets/main_app_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:payever/blocs/bloc.dart';
 
-class PersonalInitScreen extends StatelessWidget {
+class PersonalDashboardInitScreen extends StatelessWidget {
   final DashboardScreenBloc dashboardScreenBloc;
 
-  const PersonalInitScreen({this.dashboardScreenBloc});
+  const PersonalDashboardInitScreen({this.dashboardScreenBloc});
 
   @override
   Widget build(BuildContext context) {
     GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
-    return PersonalScreen(
+    return PersonalDashboardScreen(
       globalStateModel: globalStateModel,
       dashboardScreenBloc: dashboardScreenBloc,
     );
   }
 }
 
-class PersonalScreen extends StatefulWidget {
+class PersonalDashboardScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
   final DashboardScreenBloc dashboardScreenBloc;
 
-  PersonalScreen({this.globalStateModel, this.dashboardScreenBloc});
+  PersonalDashboardScreen({this.globalStateModel, this.dashboardScreenBloc});
 
   @override
-  _PersonalScreenState createState() => _PersonalScreenState();
+  _PersonalDashboardScreenState createState() => _PersonalDashboardScreenState();
 }
 
-class _PersonalScreenState extends State<PersonalScreen> {
+class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
   bool _isPortrait;
   bool _isTablet;
   double iconSize;
   double margin;
-
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
   PersonalScreenBloc screenBloc;
   TextEditingController searchController = TextEditingController();

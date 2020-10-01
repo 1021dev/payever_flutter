@@ -57,8 +57,6 @@ class _ContactScreenState extends State<ContactScreen> {
   bool _isTablet;
 
   ContactScreenBloc screenBloc;
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   static int selectedIndex = 0;
   static int selectedStyle = 1;
 

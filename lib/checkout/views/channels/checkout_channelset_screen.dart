@@ -33,8 +33,6 @@ class _CheckoutChannelSetScreenState extends State<CheckoutChannelSetScreen> {
   double margin;
 
   CheckoutChannelSetScreenBloc screenBloc;
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   void initState() {

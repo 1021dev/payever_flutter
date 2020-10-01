@@ -40,7 +40,6 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
   double margin;
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   final TextEditingController industryController = TextEditingController();
   TextEditingController companyNameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();

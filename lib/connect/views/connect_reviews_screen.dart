@@ -38,8 +38,6 @@ class _ConnectReviewsScreenState extends State<ConnectReviewsScreen> {
   bool _isPortrait;
   bool _isTablet;
 
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   double iconSize;
   double margin;
   List<ConnectPopupButton> uninstallPopUp(BuildContext context, ConnectScreenState state) {

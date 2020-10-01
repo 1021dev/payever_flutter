@@ -84,8 +84,6 @@ class _PosScreenState extends State<PosScreen> {
 
   static const platform = const MethodChannel('payever.flutter.dev/tapthephone');
 
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   InAppWebViewController webView;
   double progress = 0;
   String url = '';

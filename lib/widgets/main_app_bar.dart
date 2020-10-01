@@ -7,7 +7,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/dashboard/sub_view/business_logo.dart';
-import 'package:payever/dashboard/sub_view/dashboard_menu_view1.dart';
+import 'package:payever/dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/notifications/notifications_screen.dart';
 import 'package:payever/search/views/search_screen.dart';
 import 'package:provider/provider.dart';
@@ -192,7 +192,7 @@ class MainAppbar extends StatelessWidget with PreferredSizeWidget {
               showCupertinoModalPopup(
                   context: context,
                   builder: (builder) {
-                    return DashboardMenuView1(
+                    return DashboardMenuView(
                       dashboardScreenBloc: dashboardScreenBloc,
                       activeBusiness: dashboardScreenState.activeBusiness,
                       isBusinessMode: isBusinessMode,

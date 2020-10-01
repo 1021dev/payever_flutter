@@ -32,8 +32,6 @@ class _ConnectVersionHistoryScreenState extends State<ConnectVersionHistoryScree
   bool _isPortrait;
   bool _isTablet;
 
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   double iconSize;
   double margin;
 

@@ -46,8 +46,6 @@ class _ConnectPaymentSettingsScreenState extends State<ConnectPaymentSettingsScr
   PaymentVariant variant;
 
   ConnectSettingsDetailScreenBloc screenBloc;
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   void initState() {

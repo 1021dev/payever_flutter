@@ -40,8 +40,6 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
   bool _isPortrait;
   bool _isTablet;
 
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   double iconSize;
   double margin;
   static int selectedStyle = 1;

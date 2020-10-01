@@ -45,8 +45,6 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
 
   String clipboardString = '';
   TextEditingController controller = TextEditingController();
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
