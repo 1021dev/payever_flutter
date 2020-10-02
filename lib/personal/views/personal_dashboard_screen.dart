@@ -236,7 +236,7 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
                         contentPadding: EdgeInsets.all(0),
                         isDense: true,
                         border: InputBorder.none,
-                        hintText: 'Search',
+                        hintText: Language.getTransactionStrings('form.filter.labels.search').toUpperCase(),
                       ),
                       style: TextStyle(
                         fontSize: 14,
