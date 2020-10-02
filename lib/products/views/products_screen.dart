@@ -1418,38 +1418,50 @@ class _ProductsScreenState extends State<ProductsScreen> {
           AspectRatio(
             aspectRatio: 6 / 1,
             child: Container(
+              width: double.infinity,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(12.0),
                       bottomRight: Radius.circular(12.0)),
                   color: overlayBackground()),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-
                 children: <Widget>[
-                  InkWell(
-                    onTap: () => goDetailProduct(),
-                    child: AutoSizeText(
-                      Language.getProductStrings('add_product'),
-                      style: TextStyle(
-                        fontSize: 12,
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: InkWell(
+                        onTap: () => goDetailProduct(),
+                        child: AutoSizeText(
+                          Language.getProductStrings('add_product'),
+                          style: TextStyle(
+                            fontSize: 12,
+                          ),
+                          maxLines: 1,
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                      maxLines: 1,
                     ),
                   ),
                   Container(
                     width: 1,
                     color: Color(0xFF888888),
                   ),
-                  InkWell(
-                    onTap: () => goDetailCollection(),
-                    child: AutoSizeText(
-                      Language.getProductStrings('Add Collection'),
-                      style: TextStyle(
-                        fontSize: 12,
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: InkWell(
+                        onTap: () => goDetailCollection(),
+                        child: AutoSizeText(
+                          Language.getProductStrings('Add Collection'),
+                          style: TextStyle(
+                            fontSize: 12,
+                          ),
+                          maxLines: 1,
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],

@@ -4,7 +4,6 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/payever_bloc_delegate.dart';
 import 'package:payever/commons/commons.dart';
@@ -27,20 +26,15 @@ void main() async {
     switch (status) {
       case DataConnectionStatus.connected:
         GlobalUtils.isConnected = true;
-        Fluttertoast.showToast(msg: 'Connection is available.');
-        print('Data connection is available.');
+        print('Data connection: is available.');
         break;
       case DataConnectionStatus.disconnected:
-        print('Data connection You are disconnected from the internet.');
-        Fluttertoast.showToast(
-            msg: 'Data connection You are disconnected from the internet.');
+        print('Data connection: You are disconnected from the internet.');
         GlobalUtils.isConnected = false;
         break;
       default:
         GlobalUtils.isConnected = false;
-        Fluttertoast.showToast(
-            msg: 'Data connection You are disconnected from the internet.');
-        print('Data connection You are disconnected from the internet.');
+        print('Data connection: You are disconnected from the internet.');
         break;
     }
   });

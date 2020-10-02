@@ -6,10 +6,8 @@ import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/models/business.dart';
 import 'package:payever/commons/utils/common_utils.dart';
-import 'package:payever/commons/utils/global_keys.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
-import 'package:payever/commons/views/custom_elements/custom_elements.dart';
 import 'package:payever/dashboard/dashboard_screen.dart';
 import 'package:payever/dashboard/fake_dashboard_screen.dart';
 import 'package:payever/login/login_screen.dart';
@@ -309,7 +307,6 @@ class _SwitcherState extends State<Switcher> {
                       ),
                       widget.screenBloc.state.businesses.length > 0
                           ? InkWell(
-                        key: GlobalKeys.allButton,
                         highlightColor: Colors.transparent,
                         child: Chip(
                           backgroundColor: overlayBackground(),

@@ -8,7 +8,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/models/version.dart';
 import 'package:payever/commons/utils/common_utils.dart';
-import 'package:payever/commons/utils/global_keys.dart';
 import 'package:payever/login/register_screen.dart';
 import 'package:payever/login/wiget/dashboard_background.dart';
 import 'package:payever/login/wiget/select_language.dart';

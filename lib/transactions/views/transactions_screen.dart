@@ -538,7 +538,6 @@ class _CustomListState extends State<CustomList> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      key: GlobalKeys.transactionList,
 //      shrinkWrap: true,
       controller: controller,
       itemCount: widget.collection.length,
