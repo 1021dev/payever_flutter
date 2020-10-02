@@ -19,9 +19,39 @@ import 'dashboard/dashboard_screen.dart';
 import 'login/login_screen.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 
-void main() {
+void main() async {
   BlocSupervisor.delegate = PayeverBlocDelegate();
   Provider.debugCheckInvalidValueType = null;
+
+  DataConnectionChecker().onStatusChange.listen((status) {
+    switch (status) {
+      case DataConnectionStatus.connected:
+        GlobalUtils.isConnected = true;
+        Fluttertoast.showToast(msg: 'Connection is available.');
+        print('Data connection is available.');
+        break;
+      case DataConnectionStatus.disconnected:
+        print('Data connection You are disconnected from the internet.');
+        Fluttertoast.showToast(
+            msg: 'Data connection You are disconnected from the internet.');
+        GlobalUtils.isConnected = false;
+        break;
+      default:
+        GlobalUtils.isConnected = false;
+        Fluttertoast.showToast(
+            msg: 'Data connection You are disconnected from the internet.');
+        print('Data connection You are disconnected from the internet.');
+        break;
+    }
+  });
+  // var isDeviceConnected = false;
+  // Connectivity().onConnectivityChanged.listen((ConnectivityResult result) async {
+  //   if(result != ConnectivityResult.none) {
+  //     isDeviceConnected = await DataConnectionChecker().hasConnection;
+  //     Fluttertoast.showToast(msg: 'Connection is $isDeviceConnected.');
+  //     print('Data connection1 $isDeviceConnected.');
+  //   }
+  // });
   runApp(PayeverApp());
 }
 
@@ -50,35 +80,6 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     _loadCredentials.addListener(listener);
     _storedCredentials();
-    var isDeviceConnected = false;
-
-    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) async {
-      if(result != ConnectivityResult.none) {
-        isDeviceConnected = await DataConnectionChecker().hasConnection;
-        Fluttertoast.showToast(msg: 'Connection is $isDeviceConnected.');
-      }
-    });
-    // DataConnectionChecker().onStatusChange.listen((status) {
-    //   switch (status) {
-    //     case DataConnectionStatus.connected:
-    //       GlobalUtils.isConnected = true;
-    //       Fluttertoast.showToast(msg: 'Connection is available.');
-    //       print('Data connection is available.');
-    //       break;
-    //     case DataConnectionStatus.disconnected:
-    //       print('You are disconnected from the internet.');
-    //       Fluttertoast.showToast(
-    //           msg: 'You are disconnected from the internet.');
-    //       GlobalUtils.isConnected = false;
-    //       break;
-    //     default:
-    //       GlobalUtils.isConnected = false;
-    //       Fluttertoast.showToast(
-    //           msg: 'You are disconnected from the internet.');
-    //       break;
-    //   }
-    // }
-    // );
   }
 
   @override

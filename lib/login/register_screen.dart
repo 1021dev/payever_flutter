@@ -374,6 +374,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                         ),
                         onTap: () {
+                          if (!GlobalUtils.isConnected) {
+                            Fluttertoast.showToast(msg: 'No internet connection!');
+                            return;
+                          }
                           if (state.isRegister)
                             return;
                           if (state.isRegistered) {

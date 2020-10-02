@@ -175,7 +175,7 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
       children: [
         SizedBox(height: 60),
         Text(
-          'Welcome ${state.user.firstName ?? 'undefined'},',
+          '${Language.getCommerceOSStrings('dashboard.welcome')} ${state.user.firstName ?? '${Language.getCommerceOSStrings('dashboard.undefined')}'},',
           style: TextStyle(
             fontSize: 26,
             fontWeight: FontWeight.bold,
@@ -191,7 +191,7 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
         ),
         SizedBox(height: 4),
         Text(
-          'grow your business',
+          Language.getCommerceOSStrings('dashboard.grow.your.business'),
           style: TextStyle(
             fontSize: 18,
             shadows: [

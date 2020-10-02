@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/models/version.dart';
 import 'package:payever/commons/utils/common_utils.dart';
@@ -324,7 +325,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       child: !state.isLogIn
                           ? InkWell(
-                        key: GlobalKeys.loginButton,
                         child: Center(
                           child: Text(
                             'Login',
@@ -335,7 +335,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         onTap: () {
-                          print('login');
+                          if (!GlobalUtils.isConnected) {
+                            Fluttertoast.showToast(msg: 'No internet connection!');
+                            return;
+                          }
                           _submit();
                         },
                       )
@@ -404,6 +407,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 InkWell(
                   onTap: () {
+                    if (!GlobalUtils.isConnected) {
+                      Fluttertoast.showToast(msg: 'No internet connection!');
+                      return;
+                    }
                     Navigator.push(
                         context,
                         PageTransition(
