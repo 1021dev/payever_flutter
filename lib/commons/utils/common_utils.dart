@@ -8,7 +8,6 @@ import 'package:iso_countries/iso_countries.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:data_connection_checker/data_connection_checker.dart';
 import '../models/models.dart';
 import 'utils.dart';
 

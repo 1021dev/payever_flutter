@@ -58,6 +58,7 @@ dependencies:
   json_annotation: ^3.0.0
   icon_badge: ^0.0.1+5
   data_connection_checker: ^0.3.4
+  connectivity: ^0.4.9+3
   meta: ^1.1.8
 
 dev_dependencies:

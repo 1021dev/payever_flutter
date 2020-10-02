@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/payever_bloc_delegate.dart';
 import 'package:payever/commons/commons.dart';
@@ -20,20 +21,6 @@ import 'package:data_connection_checker/data_connection_checker.dart';
 void main() {
   BlocSupervisor.delegate = PayeverBlocDelegate();
   Provider.debugCheckInvalidValueType = null;
-
-  DataConnectionChecker().onStatusChange.listen((status) {
-    switch (status) {
-      case DataConnectionStatus.connected:
-        GlobalUtils.isConnected = true;
-        print('Data connection is available.');
-        break;
-      case DataConnectionStatus.disconnected:
-        print('You are disconnected from the internet.');
-        GlobalUtils.isConnected = false;
-        break;
-    }
-  });
-
   runApp(PayeverApp());
 }
 
@@ -62,6 +49,26 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     _loadCredentials.addListener(listener);
     _storedCredentials();
+    DataConnectionChecker().onStatusChange.listen((status) {
+      switch (status) {
+        case DataConnectionStatus.connected:
+          GlobalUtils.isConnected = true;
+          Fluttertoast.showToast(msg: 'Connection is available.');
+          print('Data connection is available.');
+          break;
+        case DataConnectionStatus.disconnected:
+          print('You are disconnected from the internet.');
+          Fluttertoast.showToast(
+              msg: 'You are disconnected from the internet.');
+          GlobalUtils.isConnected = false;
+          break;
+        default:
+          GlobalUtils.isConnected = false;
+          Fluttertoast.showToast(
+              msg: 'You are disconnected from the internet.');
+          break;
+      }
+    });
   }
 
   @override
