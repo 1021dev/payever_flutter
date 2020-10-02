@@ -306,6 +306,7 @@ class _SettingScreenState extends State<SettingScreen> {
         _target = WallpaperScreen(
           globalStateModel: widget.globalStateModel,
           setScreenBloc: screenBloc,
+          fromDashboard: false,
         );
         break;
       case 3:

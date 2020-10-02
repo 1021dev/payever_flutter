@@ -18,10 +18,10 @@ class WallpaperScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
   final SettingScreenBloc setScreenBloc;
   final bool fromDashboard;
-  final bool isDashboard;
+  final bool isBusinessMode;
 
   WallpaperScreen(
-      {this.globalStateModel, this.setScreenBloc, this.fromDashboard = false, this.isDashboard = true});
+      {this.globalStateModel, this.setScreenBloc, this.fromDashboard = false, this.isBusinessMode = true});
 
   @override
   _WallpaperScreenState createState() => _WallpaperScreenState();
@@ -67,7 +67,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
         builder: (BuildContext context, SettingScreenState state) {
           return Scaffold(
             resizeToAvoidBottomPadding: false,
-            appBar: widget.isDashboard ? Appbar('Wallpapers') : null,
+            appBar: (!widget.isBusinessMode && !widget.fromDashboard)? null : Appbar('Wallpapers'),
             body: SafeArea(
               bottom: false,
               child: BackgroundBase(
@@ -393,11 +393,16 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
 
   void updateWallpaper(Wallpaper wallpaper) {
     if (isInstalled(wallpaper)) return;
-    widget.setScreenBloc.add(UpdateWallpaperEvent(body: wallpaper.toDictionary()));
+    widget.setScreenBloc.add(UpdateWallpaperEvent(wallpaper: wallpaper));
   }
 
   bool isInstalled(Wallpaper wallpaper) {
-    return widget.globalStateModel.currentWallpaper == '${Env.storage}/wallpapers/${wallpaper.wallpaper}';
+    if (widget.isBusinessMode) {
+      return widget.globalStateModel.currentWallpaper == '${Env.storage}/wallpapers/${wallpaper.wallpaper}';
+    }
+    print('personal wallpaper:' + widget.setScreenBloc.personalDashboardScreenBloc.state.curWall);
+    print('current wallpaper:' + '${Env.storage}/wallpapers/${wallpaper.wallpaper}');
+    return widget.setScreenBloc.personalDashboardScreenBloc.state.curWall == '${Env.storage}/wallpapers/${wallpaper.wallpaper}';
   }
 
   List<OverflowMenuItem> appBarPopUpActions(

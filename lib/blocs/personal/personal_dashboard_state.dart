@@ -7,113 +7,71 @@ class PersonalDashboardScreenState {
   final bool isLoading;
   final List<BusinessApps> personalApps;
   final List<AppWidget> personalWidgets;
-
-
   final bool isUpdating;
   final bool isDeleting;
-  final String updatingWallpaper;
   final bool isUpdatingBusinessImg;
   final bool uploadUserImage;
   final String business;
-  final List<WallpaperCategory> wallpaperCategories;
-  final List<Wallpaper> wallpapers;
-  final List<Wallpaper> myWallpapers;
-  final String selectedCategory;
-  final List<String>subCategories;
-  final String blobName;
-
-  final bool emailInvalid;
-
-  final bool isSearching;
   final User user;
   final AuthUser authUser;
+  final MyWallpaper personalWallpaper;
+  final String curWall;
 
   PersonalDashboardScreenState({
     this.isLoading = false,
     this.personalApps = const[],
     this.personalWidgets = const[],
-
     this.isUpdating = false,
     this.isDeleting = false,
-    this.updatingWallpaper,
     this.isUpdatingBusinessImg = false,
     this.uploadUserImage = false,
     this.business,
-    this.wallpaperCategories,
-    this.wallpapers,
-    this.myWallpapers,
-    this.selectedCategory = 'All',
-    this.subCategories,
-    this.blobName,
-    this.emailInvalid = false,
-    this.isSearching = false,
     this.user,
     this.authUser,
+    this.personalWallpaper,
+    this.curWall,
   });
 
   List<Object> get props => [
     this.isLoading,
     this.personalApps,
     this.personalWidgets,
-
     this.isUpdating,
     this.isDeleting,
-    this.updatingWallpaper,
     this.isUpdatingBusinessImg,
     this.uploadUserImage,
     this.business,
-    this.wallpaperCategories,
-    this.wallpapers,
-    this.myWallpapers,
-    this.subCategories,
-    this.blobName,
-    this.emailInvalid,
-    this.isSearching,
     this.user,
     this.authUser,
+    this.personalWallpaper,
+    this.curWall,
   ];
 
   PersonalDashboardScreenState copyWith({
     bool isLoading,
     List<BusinessApps> personalApps,
     List<AppWidget> personalWidgets,
-
     bool isUpdating,
     bool isDeleting,
-    bool uploadUserImage,
-    String updatingWallpaper,
-    bool isUpdatingBusinessImg,
-    String business,
-    String selectedCategory,
-    List<WallpaperCategory> wallpaperCategories,
-    List<Wallpaper> wallpapers,
-    List<Wallpaper> myWallpapers,
-    String blobName,
-    bool isSearching,
     User user,
     AuthUser authUser,
+    MyWallpaper personalWallpaper,
+    String curWall,
+    String business,
   }) {
     return PersonalDashboardScreenState(
       isLoading: isLoading ?? this.isLoading,
       personalApps: personalApps ?? this.personalApps,
       personalWidgets: personalWidgets ?? this.personalWidgets,
-
       isUpdating: isUpdating ?? this.isUpdating,
       isDeleting: isDeleting ?? this.isDeleting,
-      updatingWallpaper: updatingWallpaper ?? this.updatingWallpaper,
       isUpdatingBusinessImg: isUpdatingBusinessImg ?? this.isUpdatingBusinessImg,
       uploadUserImage: uploadUserImage ?? this.uploadUserImage,
       business: business ?? this.business,
-      wallpaperCategories: wallpaperCategories ?? this.wallpaperCategories,
-      wallpapers: wallpapers ?? this.wallpapers,
-      selectedCategory: selectedCategory ?? this.selectedCategory,
-      myWallpapers: myWallpapers ?? this.myWallpapers,
-      subCategories: subCategories ?? this.subCategories,
-      blobName: blobName ?? this.blobName,
-      emailInvalid: emailInvalid ?? this.emailInvalid,
-      isSearching: isSearching ?? this.isSearching,
       user: user ?? this.user,
       authUser: authUser ?? this.authUser,
+      personalWallpaper: personalWallpaper ?? this.personalWallpaper,
+      curWall: curWall ?? this.curWall,
     );
   }
 }

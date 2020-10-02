@@ -23,9 +23,10 @@ import 'package:provider/provider.dart';
 
 class PersonalSettingInitScreen extends StatelessWidget {
   final DashboardScreenBloc dashboardScreenBloc;
-
+  final PersonalDashboardScreenBloc personalDashboardScreenBloc;
   PersonalSettingInitScreen({
     this.dashboardScreenBloc,
+    this.personalDashboardScreenBloc,
   });
 
   @override
@@ -35,6 +36,7 @@ class PersonalSettingInitScreen extends StatelessWidget {
     return PersonalSettingScreen(
       globalStateModel: globalStateModel,
       dashboardScreenBloc: dashboardScreenBloc,
+      personalDashboardScreenBloc: personalDashboardScreenBloc,
     );
   }
 }
@@ -42,6 +44,7 @@ class PersonalSettingInitScreen extends StatelessWidget {
 class PersonalSettingScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
   final DashboardScreenBloc dashboardScreenBloc;
+  final PersonalDashboardScreenBloc personalDashboardScreenBloc;
   final List<Checkout> checkouts;
   final Checkout defaultCheckout;
 
@@ -50,6 +53,7 @@ class PersonalSettingScreen extends StatefulWidget {
     this.dashboardScreenBloc,
     this.checkouts = const [],
     this.defaultCheckout,
+    this.personalDashboardScreenBloc,
   });
 
   @override
@@ -73,7 +77,8 @@ class _PersonalSettingScreenState extends State<PersonalSettingScreen> {
     screenBloc = SettingScreenBloc(
       dashboardScreenBloc: widget.dashboardScreenBloc,
       globalStateModel: widget.globalStateModel,
-      isDashboardMode: false,
+      personalDashboardScreenBloc: widget.personalDashboardScreenBloc,
+      isBusinessMode: false,
     )..add(SettingScreenInitEvent(
         business: widget.globalStateModel.currentBusiness.id,
         user: widget.dashboardScreenBloc.state.user,
@@ -264,7 +269,7 @@ class _PersonalSettingScreenState extends State<PersonalSettingScreen> {
             ? WallpaperScreen(
                 globalStateModel: widget.globalStateModel,
                 setScreenBloc: screenBloc,
-                isDashboard: false,
+                isBusinessMode: false,
               )
             : Container();
     }

@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/settings/models/models.dart';
 
 abstract class DashboardScreenEvent extends Equatable {
   DashboardScreenEvent();
@@ -135,27 +136,28 @@ class WatchTutorials extends DashboardScreenEvent {
   WatchTutorials({this.tutorial});
 }
 
-class UpdateUserEvent extends DashboardScreenEvent {
-  final User user;
-  UpdateUserEvent(this.user);
-  @override
-  List<Object> get props => [this.user];
-}
-
-
-class UpdateWallpaper extends DashboardScreenEvent {
-  final String curWall;
-  UpdateWallpaper(this.curWall);
-  @override
-  List<Object> get props => [this.curWall];
-}
-
-class UpdateBusiness extends DashboardScreenEvent {
+class UpdateBusinessUserWallpaperEvent extends DashboardScreenEvent {
   final Business business;
-  UpdateBusiness(this.business);
+  final User user;
+  final AuthUser authUser;
+  final String curWall;
+  final MyWallpaper personalWallpaper;
+
+  UpdateBusinessUserWallpaperEvent(
+      {this.business,
+      this.curWall,
+      this.user,
+      this.authUser,
+      this.personalWallpaper});
 
   @override
-  List<Object> get props => [this.business];
+  List<Object> get props => [
+        this.business,
+        this.curWall,
+        this.user,
+        this.authUser,
+        this.personalWallpaper,
+      ];
 }
 
 class UpdateTheme extends DashboardScreenEvent {

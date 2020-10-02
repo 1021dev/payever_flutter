@@ -52,12 +52,8 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       yield* deleteNotification(event.notificationId);
     } else if (event is WatchTutorials) {
       yield* watchTutorial(event.tutorial);
-    } else if(event is UpdateWallpaper) {
-      yield state.copyWith(curWall: event.curWall);
     } else if (event is UpdateTheme) {
 
-    } else if(event is UpdateUserEvent) {
-      yield state.copyWith(user: event.user);
     } else if(event is BusinessAppInstallEvent) {
       yield* installBusinessApp(event.businessApp);
     } else if(event is WidgetInstallEvent) {
@@ -71,6 +67,13 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
         user: StandardData.user,
         curWall: 'https://payever.azureedge.net/images/commerceos-background.jpg'
       );
+    } else if (event is UpdateBusinessUserWallpaperEvent) {
+      yield state.copyWith(
+          activeBusiness: event.business,
+          user: event.user,
+          authUser: event.authUser,
+          curWall: event.curWall,
+          personalWallpaper: event.personalWallpaper);
     }
   }
 

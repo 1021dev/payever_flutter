@@ -25,8 +25,9 @@ import 'package:payever/blocs/bloc.dart';
 
 class PersonalDashboardInitScreen extends StatelessWidget {
   final DashboardScreenBloc dashboardScreenBloc;
+  final bool isRefresh;
 
-  const PersonalDashboardInitScreen({this.dashboardScreenBloc});
+  const PersonalDashboardInitScreen({this.dashboardScreenBloc,this.isRefresh = false});
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +35,7 @@ class PersonalDashboardInitScreen extends StatelessWidget {
     return PersonalDashboardScreen(
       globalStateModel: globalStateModel,
       dashboardScreenBloc: dashboardScreenBloc,
+      isRefresh: isRefresh,
     );
   }
 }
@@ -41,8 +43,8 @@ class PersonalDashboardInitScreen extends StatelessWidget {
 class PersonalDashboardScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
   final DashboardScreenBloc dashboardScreenBloc;
-
-  PersonalDashboardScreen({this.globalStateModel, this.dashboardScreenBloc});
+  final bool isRefresh;
+  PersonalDashboardScreen({this.globalStateModel, this.dashboardScreenBloc, this.isRefresh = false});
 
   @override
   _PersonalDashboardScreenState createState() => _PersonalDashboardScreenState();
@@ -59,20 +61,23 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
   FocusNode searchFocus = FocusNode();
   String searchString = '';
   Business activeBusiness;
-  String currentWallpaper;
 
   @override
   void initState() {
-    screenBloc = PersonalDashboardScreenBloc()
-      ..add(PersonalScreenInitEvent(
-        business: widget.globalStateModel.currentBusiness.id,
-        user: widget.dashboardScreenBloc.state.user,
-      ));
-
     MyWallpaper wallpapers = widget.dashboardScreenBloc.state.personalWallpaper;
     String wallpaper = wallpapers.currentWallpaper.wallpaper;
     activeBusiness = widget.globalStateModel.currentBusiness;
-    currentWallpaper ='${Env.storage}/wallpapers/$wallpaper';
+    String curWall ='${Env.storage}/wallpapers/$wallpaper';
+    print('activeBusiness id ${activeBusiness.id}');
+    screenBloc = PersonalDashboardScreenBloc()
+      ..add(PersonalScreenInitEvent(
+        user: widget.dashboardScreenBloc.state.user,
+        personalWallpaper: wallpapers,
+        curWall: curWall,
+        business: activeBusiness.id,
+        isRefresh: widget.isRefresh,
+      ));
+
     super.initState();
   }
 
@@ -136,7 +141,7 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
         child: BackgroundBase(
           false,
           backgroundColor: Colors.transparent,
-          wallPaper: currentWallpaper,
+          wallPaper: state.curWall,
           body: state.isLoading || state.user == null
               ? Center(
                   child: CircularProgressIndicator(),
@@ -269,7 +274,7 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
                               searchQuery: searchController.text,
                               appWidgets: widget.dashboardScreenBloc.state.currentWidgets,
                               activeBusiness: activeBusiness,
-                              currentWall: currentWallpaper,
+                              currentWall: state.curWall,
                             ),
                             type: PageTransitionType.fade,
                             duration: Duration(milliseconds: 500),
@@ -331,7 +336,7 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
                                   searchQuery: searchController.text,
                                   appWidgets: widget.dashboardScreenBloc.state.currentWidgets,
                                   activeBusiness: activeBusiness,
-                                  currentWall: currentWallpaper,
+                                  currentWall: state.curWall,
                                 ),
                                 type: PageTransitionType.fade,
                                 duration: Duration(milliseconds: 500),
@@ -430,12 +435,13 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
           Provider.of<GlobalStateModel>(context, listen: false)
               .setCurrentBusiness(activeBusiness);
           Provider.of<GlobalStateModel>(context, listen: false)
-              .setCurrentWallpaper(currentWallpaper);
+              .setCurrentWallpaper(state.curWall);
           Navigator.push(
             context,
             PageTransition(
               child: PersonalSettingInitScreen(
                 dashboardScreenBloc: widget.dashboardScreenBloc,
+                personalDashboardScreenBloc: screenBloc,
               ),
               type: PageTransitionType.fade,
             ),
@@ -447,14 +453,17 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
             PageTransition(
               child: WallpaperScreen(
                 globalStateModel: widget.globalStateModel,
+                isBusinessMode: false,
+                fromDashboard:true,
                 setScreenBloc: SettingScreenBloc(
                   dashboardScreenBloc: widget.dashboardScreenBloc,
+                  personalDashboardScreenBloc: screenBloc,
                   globalStateModel: widget.globalStateModel,
-                  isDashboardMode: false,
+                  isBusinessMode: false,
                 )..add(SettingScreenInitEvent(
                     business: state.business,
+                    user: state.user,
                   )),
-                fromDashboard: true,
               ),
               type: PageTransitionType.fade,
             ),
@@ -468,8 +477,9 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
                 globalStateModel: widget.globalStateModel,
                 settingBloc: SettingScreenBloc(
                   dashboardScreenBloc: widget.dashboardScreenBloc,
+                  personalDashboardScreenBloc: screenBloc,
                   globalStateModel: widget.globalStateModel,
-                  isDashboardMode: false,
+                  isBusinessMode: false,
                 )..add(SettingScreenInitEvent(
                     business: state.business,
                     user: state.user,
@@ -487,7 +497,7 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
     Provider.of<GlobalStateModel>(context, listen: false)
         .setCurrentBusiness(activeBusiness);
     Provider.of<GlobalStateModel>(context, listen: false)
-        .setCurrentWallpaper(currentWallpaper);
+        .setCurrentWallpaper(state.curWall);
     Navigator.push(
       context,
       PageTransition(

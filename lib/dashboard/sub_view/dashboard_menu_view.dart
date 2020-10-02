@@ -147,6 +147,7 @@ class DashboardMenuView extends StatelessWidget {
                           PageTransition(
                             child: PersonalDashboardInitScreen(
                               dashboardScreenBloc: dashboardScreenBloc,
+                              isRefresh: true,
                             ),
                             type: PageTransitionType.fade,
                           ),

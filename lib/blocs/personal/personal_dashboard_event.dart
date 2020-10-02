@@ -1,11 +1,5 @@
-
-import 'dart:io';
-
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
-import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
-import 'package:payever/commons/models/app_widget.dart';
 import 'package:payever/settings/models/models.dart';
 
 abstract class PersonalDashboardScreenEvent extends Equatable {
@@ -16,16 +10,38 @@ abstract class PersonalDashboardScreenEvent extends Equatable {
 }
 
 class PersonalScreenInitEvent extends PersonalDashboardScreenEvent {
-  final String business;
   final User user;
+  final MyWallpaper personalWallpaper;
+  final String curWall;
+  final bool isRefresh;
+  final String business;
   PersonalScreenInitEvent({
     this.business,
     this.user,
+    this.personalWallpaper,
+    this.curWall,
+    this.isRefresh = false,
   });
 
   @override
   List<Object> get props => [
     this.business,
     this.user,
+    this.personalWallpaper,
+    this.curWall,
   ];
+}
+
+class UpdatePersonalWallpaperEvent extends PersonalScreenInitEvent {
+  final String curWall;
+  final MyWallpaper personalWallpaper;
+  UpdatePersonalWallpaperEvent({
+    this.curWall,
+    this.personalWallpaper,
+  });
+
+  @override
+  List<Object> get props => [
+        this.curWall,this.personalWallpaper,
+      ];
 }

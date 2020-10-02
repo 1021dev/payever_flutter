@@ -1044,7 +1044,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     if (response is DioError) {
       yield CheckoutScreenConnectInstallStateFailure(error: response.error);
     } else if (response is Map){
-      dashboardScreenBloc.add(UpdateBusiness(Business.map(response)));
+      dashboardScreenBloc.add(UpdateBusinessUserWallpaperEvent(business: Business.map(response)));
       globalStateModel.setCurrentBusiness(Business.map(response),
           notify: true);
       yield state.copyWith(isUpdating: false);

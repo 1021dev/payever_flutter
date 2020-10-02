@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/bloc.dart';
@@ -20,17 +19,21 @@ class PersonalDashboardScreenBloc extends Bloc<PersonalDashboardScreenEvent, Per
   Stream<PersonalDashboardScreenState> mapEventToState(
       PersonalDashboardScreenEvent event) async* {
     if (event is PersonalScreenInitEvent) {
-      if (event.business != null) {
-        yield state.copyWith(
-          business: event.business,
-          user: event.user
-        );
+      yield state.copyWith(
+        business: event.business,
+        personalWallpaper: event.personalWallpaper,
+        curWall: event.curWall,
+        user: event.user
+      );
+      if (event.isRefresh) {
+        yield* getPersonalWidgets();
       }
-      yield* getPersonalWidgets(event.business);
+    } else if (event is UpdatePersonalWallpaperEvent) {
+      yield state.copyWith(personalWallpaper: event.personalWallpaper, curWall: event.curWall);
     }
   }
 
-  Stream<PersonalDashboardScreenState> getPersonalWidgets(String id) async* {
+  Stream<PersonalDashboardScreenState> getPersonalWidgets() async* {
     yield state.copyWith(isLoading: true);
     List<BusinessApps> personalApps = [];
 
@@ -49,18 +52,6 @@ class PersonalDashboardScreenBloc extends Bloc<PersonalDashboardScreenEvent, Per
       });
     }
     yield state.copyWith(isLoading: false, personalApps: personalApps, personalWidgets: widgetApps);
-  }
-
-  Stream<PersonalDashboardScreenState> uploadBusinessImage(File file) async* {
-    yield state.copyWith(blobName: '', isUpdatingBusinessImg: true);
-    dynamic response = await api.postImageToBusiness(file, state.business, GlobalUtils.activeToken.accessToken);
-    String blobName = response['blobName'];
-    yield state.copyWith(blobName: blobName, isUpdatingBusinessImg: false);
-  }
-
-  Stream<PersonalDashboardScreenState> fetchConnectInstallations(String business,
-      {bool isLoading = false}) async* {
-    yield state.copyWith(isLoading: isLoading);
   }
 
 }
