@@ -100,19 +100,21 @@ class _FakeDashboardScreenState extends State<FakeDashboardScreen> {
       Language.language = state.language;
       Language(context);
     }
-    return Stack(children: <Widget>[
-      _body(state),
-      BlurEffectView(
-        blur: 6.5,
-        radius: 0,
-        color: overlayBackground(),
-      ),
-      BlurryContainer(
-        blur: 6.5,
-        child: Container(),
-        // color: overlayBackground(),
-      ),
-    ],);
+    return Stack(
+      children: <Widget>[
+        _body(state),
+        BlurEffectView(
+          blur: 6.5,
+          radius: 0,
+          color: overlayBackground(),
+        ),
+        BlurryContainer(
+          blur: 20,
+          child: Container(),
+          bgColor: overlayBackground(),
+        ),
+      ],
+    );
   }
 
   Widget _body(DashboardScreenState state) {

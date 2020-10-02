@@ -104,7 +104,7 @@ class _WorkshopViewState extends State<WorkshopView> {
     'Your payment option'
   ];
   Map<String, dynamic>cardJson = {};
-
+  double mainWidth = 0;
   WorkshopScreenBloc screenBloc;
 
   @override
@@ -143,6 +143,9 @@ class _WorkshopViewState extends State<WorkshopView> {
   @override
   Widget build(BuildContext context) {
     cartOrder = widget.fromCart;
+    if (mainWidth == 0) {
+      mainWidth = GlobalUtils.isTablet(context) ? Measurements.width * 0.7 : Measurements.width;
+    }
     return BlocListener(
       bloc: screenBloc,
       listener: (BuildContext context, WorkshopScreenState state) async {
@@ -253,160 +256,163 @@ class _WorkshopViewState extends State<WorkshopView> {
 
     return BackgroundBase(
       true,
-      body: Container(
-        height: double.infinity,
-        child: Column(
-          children: <Widget>[
-            Container(
-              width: Measurements.width,
-              height: 50,
-              padding: EdgeInsets.only(left: 16, right: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  editOrder
-                      ? MaterialButton(
-                    child: Row(
-                      children: <Widget>[
-                        Icon(
-                          Icons.keyboard_arrow_left,
-                          size: 24,
-                        ),
-                        Text(
-                          'Pay',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
+      body: Align(
+        alignment: Alignment.center,
+        child: Container(
+          height: double.infinity,
+          width: mainWidth,
+          child: Column(
+            children: <Widget>[
+              Container(
+                height: 50,
+                padding: EdgeInsets.only(left: 16, right: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    editOrder
+                        ? MaterialButton(
+                      child: Row(
+                        children: <Widget>[
+                          Icon(
+                            Icons.keyboard_arrow_left,
+                            size: 24,
                           ),
-                        ),
-                      ],
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        editOrder = false;
-                      });
-                    },
-                    height: 32,
-                    minWidth: 0,
-                    padding: EdgeInsets.only(left: 4, right: 4),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  )
-                      : SvgPicture.asset(
-                    'assets/images/payeverlogoandname.svg',
-                    color: iconColor(),
-                    height: 16,
-                  ),
-                  Spacer(),
-                  isOrderApproved
-                      ? MaterialButton(
-                    child: Row(
-                      children: <Widget>[
-                        Text(
-                          state.channelSetFlow != null
-                              ? '$currency${amount.toStringAsFixed(2)}'
-                              : '',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
+                          Text(
+                            'Pay',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
-                        ),
-                        Icon(
-                          Icons.keyboard_arrow_down,
-                          size: 16,
-                        ),
-                      ],
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        editOrder = !editOrder;
-                      });
-                    },
-                    height: 32,
-                    minWidth: 0,
-                    padding: EdgeInsets.only(left: 4, right: 4),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  )
-                      : Container(),
-                  Visibility(
-                    visible: widget.onTapClose != null,
-                    child: MaterialButton(
-                      child: Container(
-                        width: 70,
-                        height: 32,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          border: Border.all(color: Colors.grey),
-                        ),
-                        child: Text(
-                          'Cancel',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
+                        ],
                       ),
                       onPressed: () {
-                        widget.onTapClose();
+                        setState(() {
+                          editOrder = false;
+                        });
                       },
                       height: 32,
                       minWidth: 0,
                       padding: EdgeInsets.only(left: 4, right: 4),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    )
+                        : SvgPicture.asset(
+                      'assets/images/payeverlogoandname.svg',
+                      color: iconColor(),
+                      height: 16,
                     ),
-                  )
-                ],
+                    Spacer(),
+                    isOrderApproved
+                        ? MaterialButton(
+                      child: Row(
+                        children: <Widget>[
+                          Text(
+                            state.channelSetFlow != null
+                                ? '$currency${amount.toStringAsFixed(2)}'
+                                : '',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          Icon(
+                            Icons.keyboard_arrow_down,
+                            size: 16,
+                          ),
+                        ],
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          editOrder = !editOrder;
+                        });
+                      },
+                      height: 32,
+                      minWidth: 0,
+                      padding: EdgeInsets.only(left: 4, right: 4),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    )
+                        : Container(),
+                    Visibility(
+                      visible: widget.onTapClose != null,
+                      child: MaterialButton(
+                        child: Container(
+                          width: 70,
+                          height: 32,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(color: Colors.grey),
+                          ),
+                          child: Text(
+                            'Cancel',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                        onPressed: () {
+                          widget.onTapClose();
+                        },
+                        height: 32,
+                        minWidth: 0,
+                        padding: EdgeInsets.only(left: 4, right: 4),
+                      ),
+                    )
+                  ],
+                ),
               ),
-            ),
-            _divider,
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    editOrder
-                        ? Container(
+              _divider,
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      editOrder
+                          ? Container(
+                          width: Measurements.width,
+                          padding: EdgeInsets.only(
+                            left: 16,
+                            right: 16,
+                            top: 16,
+                          ),
+                          child: _orderView(state)/*_editOrderView(state)*/)
+                          : Container(
                         width: Measurements.width,
                         padding: EdgeInsets.only(
                           left: 16,
                           right: 16,
-                          top: 16,
+                          bottom: 16,
                         ),
-                        child: _orderView(state)/*_editOrderView(state)*/)
-                        : Container(
-                      width: Measurements.width,
-                      padding: EdgeInsets.only(
-                        left: 16,
-                        right: 16,
-                        bottom: 16,
+                        child: Column(
+                          children: <Widget>[
+                            _orderView(state),
+                            _divider,
+                            _accountView(state),
+                            _divider,
+                            _billingView(state),
+                            _divider,
+                            _selectPaymentView(state),
+                            _divider,
+                            // _sendToDeviceView(state),
+                            // _divider,
+                            _paymentOptionView(state),
+                            _divider,
+                            _addressView(state),
+                            _divider,
+                            _orderDetailView(state),
+                          ],
+                        ),
                       ),
-                      child: Column(
-                        children: <Widget>[
-                          _orderView(state),
-                          _divider,
-                          _accountView(state),
-                          _divider,
-                          _billingView(state),
-                          _divider,
-                          _selectPaymentView(state),
-                          _divider,
-                          // _sendToDeviceView(state),
-                          // _divider,
-                          _paymentOptionView(state),
-                          _divider,
-                          _addressView(state),
-                          _divider,
-                          _orderDetailView(state),
-                        ],
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

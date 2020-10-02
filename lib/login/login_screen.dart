@@ -138,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
         children: <Widget>[
           DashBoardBackGround(isLoading: state.isLoading,),
           _loginBody(state),
-          SelectLanguage()
+          SelectLanguage(isRegister: false)
         ],
       ),
     );

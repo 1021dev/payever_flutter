@@ -5,16 +5,23 @@ import 'package:super_rich_text/super_rich_text.dart';
 import '../../theme.dart';
 
 class SelectLanguage extends StatefulWidget {
+  final bool isRegister;
+
+  const SelectLanguage({this.isRegister = true});
+
   @override
   _SelectLanguageState createState() => _SelectLanguageState();
 }
 
 class _SelectLanguageState extends State<SelectLanguage> {
+
   @override
   Widget build(BuildContext context) {
+    Alignment _alignment = (widget.isRegister && GlobalUtils.isTablet(context))? Alignment.bottomRight : Alignment.bottomCenter;
+    double rightMargin = (widget.isRegister && GlobalUtils.isTablet(context))? 16 : 0;
     return Container(
-      alignment: Alignment.bottomRight,
-      padding: EdgeInsets.fromLTRB(0, 0, 16, 0),
+      alignment: _alignment,
+      margin: EdgeInsets.fromLTRB(0, 0, rightMargin, 0),
       child: Container(
         width: 60,
         height: 40,
@@ -30,7 +37,7 @@ class _SelectLanguageState extends State<SelectLanguage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               DropdownButton(
-                value: 'EN',
+                value: 'ENG',
                 isDense: true,
                 icon: Icon(
                   Icons.keyboard_arrow_down,
@@ -43,7 +50,7 @@ class _SelectLanguageState extends State<SelectLanguage> {
                 dropdownColor: Color.fromRGBO(0, 0, 0, 0.6),
                 underline: Container(),
                 onChanged: (val) {},
-                items: <String>['EN', 'DE', 'NR', 'PL', 'UK']
+                items: <String>['ENG', 'DE', 'NR', 'PL', 'UK']
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,

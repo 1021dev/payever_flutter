@@ -393,7 +393,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   password: passwordController.text));
                             }
                           }
-                          // Navigator.pop(context);
                         },
                       ),
                     ),
@@ -434,6 +433,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ],
                   ),
                 ),
+                _alreadyHaveAccount,
                 _isTablet
                     ? Container()
                     : Padding(
@@ -443,6 +443,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ],
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  get _alreadyHaveAccount {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: InkWell(
+        onTap: () {
+          Navigator.pop(context);
+        },
+        child: Container(
+          height: 55,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                GlobalUtils.theme == 'light' ? Color.fromRGBO(49, 161, 239, 1) : Color.fromRGBO(237, 237, 244, 1),
+                GlobalUtils.theme == 'light' ? Color.fromRGBO(0, 120, 208, 1) : Color.fromRGBO(174, 176, 183, 1)
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Center(child: Text('Already have an account?', style: TextStyle(color: GlobalUtils.theme == 'light' ? Colors.white : Colors.black, fontSize: 16),)),
         ),
       ),
     );
