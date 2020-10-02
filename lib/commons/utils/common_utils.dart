@@ -8,7 +8,7 @@ import 'package:iso_countries/iso_countries.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:data_connection_checker/data_connection_checker.dart';
 import '../models/models.dart';
 import 'utils.dart';
 
@@ -323,7 +323,7 @@ class GlobalUtils {
   static var isDashboardLoaded = false;
   static String fingerprint = '';
   static String theme = changeThemeBloc.state.theme;
-
+  static bool isConnected = true;
   //URLS
   //static String  pass= 'P@ssword123';//test 1
   // static String  pass= 'Test1234!';//staging 1

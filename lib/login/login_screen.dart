@@ -97,6 +97,11 @@ class _LoginScreenState extends State<LoginScreen> {
     if (widget.mainWidth == 0) {
       widget.mainWidth = _isTablet ? Measurements.width * 0.5 : Measurements.width;
     }
+    if (!GlobalUtils.isConnected) {
+      setState(() {
+        _isInvalidInformation = true;
+      });
+    }
     return BlocListener(
         bloc: loginScreenBloc,
         listener: (BuildContext context, LoginScreenState state) async {
@@ -173,32 +178,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 if (_isInvalidInformation)
-                  Container(
-                    padding: EdgeInsets.fromLTRB(15, 10, 8, 10),
-                    decoration: BoxDecoration(
-                      color: Color(0xffff644e),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.warning,
-                          color: Colors.white,
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Flexible(
-                          child: Text(
-                            'Your account information was entered incorrectly.',
-                            softWrap: true,
-                            style: TextStyle(
-                                color: Colors.white, fontSize: 14),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
+                  _errorWidget,
                 if (_isInvalidInformation)
                   SizedBox(
                     height: 6,
@@ -389,7 +369,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: TextStyle(
                         decoration: TextDecoration.underline,
                         fontSize: 14,
-                        color: GlobalUtils.theme == 'light' ? Color.fromRGBO(150, 150, 150, 1) : Colors.white,
+                        color: GlobalUtils.theme == 'light' ? Color.fromRGBO(20, 20, 20, 1) : Colors.white,
                       ),
                     ),
                     onTap: () {
@@ -405,18 +385,18 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: <Widget>[
                       Expanded(
                         child: Container(
-                          height: 1,
-                          color: GlobalUtils.theme == 'light' ? Color.fromRGBO(150, 150, 150, 1) : Colors.white,
+                          height: 0.5,
+                          color: GlobalUtils.theme == 'light' ? Color.fromRGBO(20, 20, 20, 1) : Colors.white,
                         ),
                       ),
                       Container(
                           padding: EdgeInsets.symmetric(horizontal: 10),
                           alignment: Alignment.center,
-                          child: Text('or', style: TextStyle(color: GlobalUtils.theme == 'light' ? Color.fromRGBO(150, 150, 150, 1) : Colors.white, fontSize: 14),)),
+                          child: Text('or', style: TextStyle(color: GlobalUtils.theme == 'light' ? Color.fromRGBO(20, 20, 20, 1) : Colors.white, fontSize: 14),)),
                       Expanded(
                         child: Container(
-                          height: 1,
-                          color: GlobalUtils.theme == 'light' ? Color.fromRGBO(150, 150, 150, 1) : Colors.white,
+                          height: 0.5,
+                          color: GlobalUtils.theme == 'light' ? Color.fromRGBO(20, 20, 20, 1) : Colors.white,
                         ),
                       ),
                     ],
@@ -510,6 +490,37 @@ class _LoginScreenState extends State<LoginScreen> {
           );
         }
         );
+  }
+
+  get _errorWidget {
+    print('GlobalUtils.isConnected: ${GlobalUtils.isConnected }');
+    String title = GlobalUtils.isConnected ? 'Your account information was entered incorrectly.' : 'You have no internet';
+    return Container(
+      padding: EdgeInsets.fromLTRB(15, 10, 8, 10),
+      decoration: BoxDecoration(
+        color: Color(0xffff644e),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.warning,
+            color: Colors.white,
+          ),
+          SizedBox(
+            width: 5,
+          ),
+          Flexible(
+            child: Text(
+              title,
+              softWrap: true,
+              style: TextStyle(
+                  color: Colors.white, fontSize: 14),
+            ),
+          )
+        ],
+      ),
+    );
   }
 
   void _submit() {

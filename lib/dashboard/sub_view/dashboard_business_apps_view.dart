@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/commons/commons.dart';
-import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/views/custom_elements/BusinessAppCell.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/theme.dart';
@@ -57,7 +56,7 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
       padding: EdgeInsets.fromLTRB(14, 12, 14, 0),
       isDashboard: true,
       child: Container(
-        height: 60 + (businessApps.length / 4).ceilToDouble() * 86,
+        height: (widget.isTablet ? 80 : 60) + (businessApps.length / 4).ceilToDouble() * 86,
         child: Column(
           children: [
             Row(

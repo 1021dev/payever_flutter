@@ -400,8 +400,6 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
     if (widget.isBusinessMode) {
       return widget.globalStateModel.currentWallpaper == '${Env.storage}/wallpapers/${wallpaper.wallpaper}';
     }
-    print('personal wallpaper:' + widget.setScreenBloc.personalDashboardScreenBloc.state.curWall);
-    print('current wallpaper:' + '${Env.storage}/wallpapers/${wallpaper.wallpaper}');
     return widget.setScreenBloc.personalDashboardScreenBloc.state.curWall == '${Env.storage}/wallpapers/${wallpaper.wallpaper}';
   }
 
