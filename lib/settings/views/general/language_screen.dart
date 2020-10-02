@@ -29,6 +29,7 @@ class _LanguageScreenScreenState extends State<LanguageScreen> {
   Map<String, String> languages = {
     'en': 'English',
     'de': 'Deutsch',
+    'es': 'Español',
     'no': 'Norsk',
     'da': 'Dansk',
     'sv': 'Svenska',

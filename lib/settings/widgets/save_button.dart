@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
-import 'package:payever/theme.dart';
 
 class SaveBtn extends StatelessWidget {
   final bool isUpdating;
   final Function onUpdate;
   final Color color;
   final bool isBottom;
-  final String title;
+  String title;
   SaveBtn({
     this.isUpdating = false,
     this.onUpdate,
     this.color = Colors.black87,
     this.isBottom = true,
-    this.title = 'Save',
+    this.title,
   });
 
   @override
@@ -22,6 +22,9 @@ class SaveBtn extends StatelessWidget {
   }
 
   Widget saveButton() {
+    if (title == null || title.isEmpty) {
+      title = Language.getCommerceOSStrings('actions.save');
+    }
     return BlurEffectView(
       borderRadius: isBottom ? BorderRadius.only(
         bottomLeft: Radius.circular(8.0),

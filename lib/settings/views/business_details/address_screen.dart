@@ -151,7 +151,6 @@ class _AddressScreenState extends State<AddressScreen> {
                           ),
                           SaveBtn(
                             isUpdating: state.isUpdating,
-                            title: Language.getSettingsStrings('actions.save'),
                             onUpdate: () {
                               if (_formKey.currentState.validate() &&
                                   !state.isUpdating) {

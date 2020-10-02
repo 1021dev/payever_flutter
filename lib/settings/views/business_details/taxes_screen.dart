@@ -225,7 +225,6 @@ class _TaxesScreenState extends State<TaxesScreen> {
                             isUpdating: state.isUpdating,
                             color: overlayBackground(),
                             isBottom: false,
-                            title: Language.getSettingsStrings('actions.save'),
                             onUpdate: () {
                               if (_formKey.currentState.validate() &&
                                   !state.isUpdating) {

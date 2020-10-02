@@ -322,7 +322,6 @@ class _CompanyScreenState extends State<CompanyScreen> {
                         ),
                         SaveBtn(
                           isUpdating: state.isUpdating,
-                          title: Language.getSettingsStrings('actions.save'),
                           onUpdate: () {
                             if (urlWebsite != null && urlWebsite != '') {
                               if (!Uri.parse(urlWebsite).isAbsolute) {

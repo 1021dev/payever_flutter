@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:payever/commons/utils/translations.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../theme.dart';
 import 'checkout_top_button.dart';
@@ -67,7 +68,7 @@ class _WorkshopTopBarState extends State<WorkshopTopBar> {
                 ),
                 child: Center(
                   child: Text(
-                    'Open',
+                    Language.getCommerceOSStrings('actions.open'),
                     style: TextStyle(
                       fontSize: 15,
                     ),

@@ -211,7 +211,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                                         initialValue: phone ?? '',
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.only(left: 16, right: 16),
-                                          labelText: Language.getPosTpmStrings('Phone (optional)'),
+                                          labelText: Language.getCommerceOSStrings('forms.personal_create.phone.placeholder'),
                                           enabledBorder: InputBorder.none,
                                           focusedBorder: UnderlineInputBorder(
                                             borderSide: BorderSide(color: Colors.blue, width: 0.5),

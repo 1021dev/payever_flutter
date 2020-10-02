@@ -206,7 +206,7 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                                     },
                                                     decoration: InputDecoration(
                                                       border: InputBorder.none,
-                                                      labelText: 'Google Autocomplete',
+                                                      labelText: Language.getSettingsStrings('form.create_form.address.google_autocomplete.label'),
                                                       labelStyle: TextStyle(
                                                         fontSize: 12,
                                                       ),
@@ -248,7 +248,7 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                                 border: InputBorder.none,
                                               ),
                                               hint: Text(
-                                                'Country',
+                                                Language.getSettingsStrings('form.create_form.address.country.placeholder'),
                                               ),
                                               validator: (val) {
                                                 if (val == null) {
@@ -287,7 +287,7 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                                 initialValue: shippingAddress.city ?? '',
                                                 decoration: InputDecoration(
                                                   contentPadding: EdgeInsets.only(left: 16, right: 16),
-                                                  labelText: Language.getPosTpmStrings('City'),
+                                                  labelText: Language.getSettingsStrings('form.create_form.address.city.placeholder'),
                                                   enabledBorder: InputBorder.none,
                                                   focusedBorder: UnderlineInputBorder(
                                                     borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -317,7 +317,7 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                                 initialValue: shippingAddress.street ?? '',
                                                 decoration: InputDecoration(
                                                   contentPadding: EdgeInsets.only(left: 16, right: 16),
-                                                  labelText: Language.getPosTpmStrings('Street'),
+                                                  labelText: Language.getSettingsStrings('form.create_form.address.street.label'),
                                                   enabledBorder: InputBorder.none,
                                                   focusedBorder: UnderlineInputBorder(
                                                     borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -353,7 +353,7 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                                 initialValue: shippingAddress.apartment ?? '',
                                                 decoration: InputDecoration(
                                                   contentPadding: EdgeInsets.only(left: 16, right: 16),
-                                                  labelText: Language.getPosTpmStrings('Apartment, suite, etc (optional)'),
+                                                  labelText: Language.getSettingsStrings('form.create_form.address.apartment.label'),
                                                   enabledBorder: InputBorder.none,
                                                   focusedBorder: UnderlineInputBorder(
                                                     borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -383,7 +383,7 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                                 initialValue: shippingAddress.zipCode ?? '',
                                                 decoration: InputDecoration(
                                                   contentPadding: EdgeInsets.only(left: 16, right: 16),
-                                                  labelText: Language.getPosTpmStrings('ZIP Code'),
+                                                  labelText: Language.getSettingsStrings('form.create_form.address.zip_code.label'),
                                                   enabledBorder: InputBorder.none,
                                                   focusedBorder: UnderlineInputBorder(
                                                     borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -408,7 +408,7 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                                 isUpdating: false,
                                                 color: overlayBackground(),
                                                 isBottom: false,
-                                                title: 'Delete',
+                                                title: Language.getSettingsStrings('actions.delete'),
                                                 onUpdate: () {
                                                   setState(() {
                                                     shippingAddresses.removeAt(index);
@@ -433,7 +433,6 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                                 isUpdating: state.isUpdating,
                                                 color: overlayBackground(),
                                                 isBottom: false,
-                                                title: 'Save',
                                                 onUpdate: () {
                                                   if (_formKey.currentState.validate() &&
                                                       !state.isUpdating) {
@@ -488,7 +487,7 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                 },
                                 child: Align(
                                   alignment: Alignment.centerLeft,
-                                  child: Text('Add +',),
+                                  child: Text('${Language.getSettingsStrings('actions.add')} +',),
                                 ),
                               ),
                             ),

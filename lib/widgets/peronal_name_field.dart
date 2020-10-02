@@ -92,7 +92,7 @@ class _PersonalNameFieldState extends State<PersonalNameField> {
                   textCapitalization: TextCapitalization.words,
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(left: 16, right: 16),
-                    labelText: Language.getPosTpmStrings('First Name'),
+                    labelText: Language.getCommerceOSStrings('forms.personal_create.firstName.label'),
                     enabledBorder: InputBorder.none,
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -128,7 +128,7 @@ class _PersonalNameFieldState extends State<PersonalNameField> {
                   initialValue: widget.lastName ?? '',
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(left: 16, right: 16),
-                    labelText: Language.getPosTpmStrings('Last Name'),
+                    labelText: Language.getCommerceOSStrings('forms.personal_create.lastName.label'),
                     enabledBorder: InputBorder.none,
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.blue, width: 0.5),

@@ -145,7 +145,6 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
                           ),
                           SaveBtn(
                             isUpdating: state.isUpdating,
-                            title: Language.getSettingsStrings('actions.save'),
                             onUpdate: () {
                               if (!state.isUpdating) {
                                 widget.setScreenBloc.add(

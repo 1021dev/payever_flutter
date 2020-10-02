@@ -199,7 +199,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               },
             ),
             ShopTopButton(
-              title: Language.getPosConnectStrings('integrations.payments.instant_payment.category'),
+              title: Language.getSettingsStrings('info_boxes.panels.general.menu_list.personal_information.title'),
               selectedIndex: selectedIndex,
               index: 1,
               onTap: () {

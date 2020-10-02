@@ -126,7 +126,7 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
       appBar: MainAppbar(
         dashboardScreenBloc: widget.dashboardScreenBloc,
         dashboardScreenState: widget.dashboardScreenBloc.state,
-        title: 'Personal',
+        title: Language.getCommerceOSStrings('dashboard.personal_title'),
         icon: SvgPicture.asset(
           'assets/images/payeverlogo.svg',
           height: 16,

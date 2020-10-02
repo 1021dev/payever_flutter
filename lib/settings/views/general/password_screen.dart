@@ -280,7 +280,6 @@ class _PasswordScreenState extends State<PasswordScreen> {
                           SaveBtn(
                             isUpdating: state.isUpdating,
                             isBottom: false,
-                            title: 'Save',
                             onUpdate: () {
                               if (_formKey.currentState.validate() &&
                                   !state.isUpdating) {
