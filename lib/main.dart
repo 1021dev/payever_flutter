@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -49,26 +50,35 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     _loadCredentials.addListener(listener);
     _storedCredentials();
-    DataConnectionChecker().onStatusChange.listen((status) {
-      switch (status) {
-        case DataConnectionStatus.connected:
-          GlobalUtils.isConnected = true;
-          Fluttertoast.showToast(msg: 'Connection is available.');
-          print('Data connection is available.');
-          break;
-        case DataConnectionStatus.disconnected:
-          print('You are disconnected from the internet.');
-          Fluttertoast.showToast(
-              msg: 'You are disconnected from the internet.');
-          GlobalUtils.isConnected = false;
-          break;
-        default:
-          GlobalUtils.isConnected = false;
-          Fluttertoast.showToast(
-              msg: 'You are disconnected from the internet.');
-          break;
+    var isDeviceConnected = false;
+
+    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) async {
+      if(result != ConnectivityResult.none) {
+        isDeviceConnected = await DataConnectionChecker().hasConnection;
+        Fluttertoast.showToast(msg: 'Connection is $isDeviceConnected.');
       }
     });
+    // DataConnectionChecker().onStatusChange.listen((status) {
+    //   switch (status) {
+    //     case DataConnectionStatus.connected:
+    //       GlobalUtils.isConnected = true;
+    //       Fluttertoast.showToast(msg: 'Connection is available.');
+    //       print('Data connection is available.');
+    //       break;
+    //     case DataConnectionStatus.disconnected:
+    //       print('You are disconnected from the internet.');
+    //       Fluttertoast.showToast(
+    //           msg: 'You are disconnected from the internet.');
+    //       GlobalUtils.isConnected = false;
+    //       break;
+    //     default:
+    //       GlobalUtils.isConnected = false;
+    //       Fluttertoast.showToast(
+    //           msg: 'You are disconnected from the internet.');
+    //       break;
+    //   }
+    // }
+    // );
   }
 
   @override

@@ -157,7 +157,7 @@ class _PersonalSettingScreenState extends State<PersonalSettingScreen> {
         child: Row(
           children: <Widget>[
             PosTopButton(
-              title: 'Personal information',
+              title: Language.getSettingsStrings('info_boxes.panels.general.menu_list.personal_information.title'),
               selectedIndex: selectedIndex,
               index: 0,
               onTap: () {
@@ -167,7 +167,7 @@ class _PersonalSettingScreenState extends State<PersonalSettingScreen> {
               },
             ),
             PosTopButton(
-              title: 'Language',
+              title: Language.getSettingsStrings('info_boxes.panels.general.menu_list.language.title'),
               selectedIndex: selectedIndex,
               index: 1,
               onTap: () {
@@ -177,7 +177,7 @@ class _PersonalSettingScreenState extends State<PersonalSettingScreen> {
               },
             ),
             PosTopButton(
-              title: 'Shipping address',
+              title: Language.getSettingsStrings('info_boxes.panels.general.menu_list.shipping_address.title'),
               index: 2,
               selectedIndex: selectedIndex,
               onTap: () {
@@ -187,7 +187,7 @@ class _PersonalSettingScreenState extends State<PersonalSettingScreen> {
               },
             ),
             PosTopButton(
-              title: 'Password',
+              title: Language.getSettingsStrings('info_boxes.panels.general.menu_list.password.title'),
               selectedIndex: selectedIndex,
               index: 3,
               onTap: () {
@@ -197,7 +197,7 @@ class _PersonalSettingScreenState extends State<PersonalSettingScreen> {
               },
             ),
             PosTopButton(
-              title: 'Email notification',
+              title: Language.getSettingsStrings('info_boxes.panels.general.menu_list.email_notifications.title'),
               selectedIndex: selectedIndex,
               index: 4,
               onTap: () {
@@ -207,7 +207,7 @@ class _PersonalSettingScreenState extends State<PersonalSettingScreen> {
               },
             ),
             PosTopButton(
-              title: 'Wallpapers',
+              title: Language.getSettingsStrings('info_boxes.panels.wallpaper.title'),
               selectedIndex: selectedIndex,
               index: 5,
               onTap: () {

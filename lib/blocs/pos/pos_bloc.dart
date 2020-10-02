@@ -127,7 +127,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     // Get Terminals
     if (terminals == null || terminals.isEmpty) {
       dynamic terminalsObj = await api.getTerminal(state.businessId, token);
-      if (terminalsObj != null) {
+      if (terminalsObj is List) {
         terminalsObj.forEach((terminal) {
           terminals.add(Terminal.fromJson(terminal));
         });
@@ -136,7 +136,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     // Get ChannelSets
     if (channelSets == null || channelSets.isEmpty) {
       dynamic channelsObj = await api.getChannelSet(state.businessId, token);
-      if (channelsObj != null) {
+      if (channelsObj is List) {
         channelsObj.forEach((channelSet) {
           channelSets.add(ChannelSet.fromJson(channelSet));
         });
@@ -148,27 +148,33 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
         if (terminal.channelSet == channelSet.id) {
           if (terminal.paymentMethods == null || terminal.paymentMethods.isEmpty) {
             dynamic paymentObj = await api.getCheckoutIntegration(state.businessId, channelSet.checkout, token);
-            paymentObj.forEach((pm) {
-              terminal.paymentMethods.add(pm);
-            });
+            if (paymentObj is List) {
+              paymentObj.forEach((pm) {
+                terminal.paymentMethods.add(pm);
+              });
+            }
           }
 
           if (terminal.paymentMethods == null) {
             dynamic daysObj = await api.getLastWeek(state.businessId, channelSet.id, token);
-            int length = daysObj.length - 1;
-            for (int i = length; i > length - 7; i--) {
-              terminal.lastWeekAmount += Day.map(daysObj[i]).amount;
+            if (daysObj is List) {
+              int length = daysObj.length - 1;
+              for (int i = length; i > length - 7; i--) {
+                terminal.lastWeekAmount += Day.map(daysObj[i]).amount;
+              }
+              daysObj.forEach((day) {
+                terminal.lastWeek.add(Day.map(day));
+              });
             }
-            daysObj.forEach((day) {
-              terminal.lastWeek.add(Day.map(day));
-            });
           }
 
           if (terminal.paymentMethods == null || terminal.paymentMethods.isEmpty) {
             dynamic productsObj = await api.getPopularWeek(state.businessId, channelSet.id, token);
-            productsObj.forEach((product) {
-              terminal.bestSales.add(Product.fromJson(product));
-            });
+            if (productsObj is List) {
+              productsObj.forEach((product) {
+                terminal.bestSales.add(Product.fromJson(product));
+              });
+            }
           }
         }
       });
@@ -197,7 +203,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
   }
 
   Stream<PosScreenState> fetchProducts() async* {
-    yield state.copyWith(isLoading: true);
+    // yield state.copyWith(isLoading: true);
     // Get Product
     Map<String, dynamic> body = {
       'operationName': null,

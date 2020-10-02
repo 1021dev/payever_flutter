@@ -300,6 +300,7 @@
     "forms.error.validator.password.minlength": "Password should be 8 or more characters",
     "forms.error.validator.required": "Field is required",
     "forms.error.validator.user.not_unique": "Name should be unique",
+
     "info_boxes.headers.business.label": "Business Settings",
     "info_boxes.headers.personal.label": "Personal Settings",
     "info_boxes.label": "Business Settings",
@@ -333,6 +334,7 @@
     "info_boxes.panels.wallpaper.tabs.gallery": "Gallery",
     "info_boxes.panels.wallpaper.tabs.my_wallpapers": "My Wallpapers",
     "info_boxes.panels.wallpaper.title": "Wallpaper",
+
     "welcome.message": "Here you can add applications which will help you to grow up your Business.",
     "welcome.title": "Welcome to Settings App! Set up your data"
 }

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/checkout/views/channels/channels_checkout_flow_screen.dart';
@@ -330,6 +331,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           );
         } else if (aw.code.contains('pos')) {
+          if (isLoadingData(state))  return;
           Navigator.push(
             context,
             PageTransition(
@@ -390,6 +392,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           );
         } else if (aw.code.contains('checkout')) {
+          if (isLoadingData(state))  return;
           Navigator.push(
             context,
             PageTransition(
@@ -555,6 +558,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           }
         },
         onTapOpen: () {
+          if (isLoadingData(state))  return;
           _navigateAppsScreen(
               state,
               PosInitScreen(
@@ -635,6 +639,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             screenBloc.add(DeleteNotification(notificationId: model.id));
           },
           onOpen: () {
+            if (isLoadingData(state))  return;
             _navigateAppsScreen(
                 state,
                 CheckoutInitScreen(
@@ -1255,7 +1260,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         contentPadding: EdgeInsets.all(0),
                         isDense: true,
                         border: InputBorder.none,
-                        hintText: Language.getTransactionStrings('form.filter.labels.search'),
+                        hintText: Language.getTransactionStrings('form.filter.labels.search').toUpperCase(),
                       ),
                       style: TextStyle(
                         fontSize: 14,
@@ -1422,5 +1427,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
     } else {
       throw 'Could not launch $url';
     }
+  }
+
+  bool isLoadingData(DashboardScreenState state) {
+    if (state.activeBusiness == null || state.defaultCheckout == null) {
+      Fluttertoast.showToast(msg:'Loading...');
+      return true;
+    }
+    return false;
   }
 }
