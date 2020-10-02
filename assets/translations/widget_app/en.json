@@ -15,6 +15,7 @@
     "widgets.transactions.6-months": "6M",
     "widgets.transactions.1-year": "1Y",
     "widgets.actions.edit": "Edit",
+    "widgets.actions.continue-setup": "Continue setup process",
     "widgets.tutorial.title": "Tutorial",
     "widgets.tutorial.quick-tour": "Take a quick tour",
     "widgets.tutorial.learn-more": "Learn more about payever Dashboard and how it works.",

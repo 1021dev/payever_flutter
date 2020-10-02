@@ -43,7 +43,7 @@ class DashboardSetupButtons extends StatelessWidget {
               },
               child: Center(
                 child: Text(
-                  !businessApps.installed ? 'Get started' : 'Continue setup process',
+                  !businessApps.installed ? Language.getWelcomeStrings('welcome.get-started') : Language.getWidgetStrings('widgets.actions.continue-setup'),
                   softWrap: true,
                   style: TextStyle(
                       fontSize: 12),
@@ -64,7 +64,7 @@ class DashboardSetupButtons extends StatelessWidget {
               },
               child: Center(
                 child: Text(
-                  'Learn more',
+                  Language.getWidgetStrings('widgets.actions.learn-more'),
                   softWrap: true,
                   style: TextStyle(
                       fontSize: 12),
