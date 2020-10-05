@@ -66,6 +66,7 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
 
   @override
   void initState() {
+    GlobalUtils.isBusinessMode = false;
     MyWallpaper wallpapers = widget.dashboardScreenBloc.state.personalWallpaper;
     String wallpaper = wallpapers.currentWallpaper.wallpaper;
     activeBusiness = widget.globalStateModel.currentBusiness;
@@ -139,6 +140,7 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
           width: 24,
         ),
         isBusinessMode: false,
+        toggleBusinessMode: true,
       ),
       body: SafeArea(
         bottom: false,

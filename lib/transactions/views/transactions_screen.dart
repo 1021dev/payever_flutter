@@ -522,7 +522,7 @@ class _CustomListState extends State<CustomList> {
         api.getTransactionList(
           widget.globalStateModel.currentBusiness.id,
           GlobalUtils.activeToken.accessToken,
-          queryString, true).then((transaction) {
+          queryString).then((transaction) {
           List<Collection> temp = Transaction.toMap(transaction).collection;
           if (temp.isNotEmpty) {
             setState(() {

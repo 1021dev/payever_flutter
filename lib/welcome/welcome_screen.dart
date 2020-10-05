@@ -22,9 +22,6 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 
-bool _isPortrait;
-bool _isTablet;
-
 class WelcomeScreen extends StatefulWidget {
   final BusinessApps businessApps;
   final Business business;
@@ -62,14 +59,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
-    Measurements.height = (_isPortrait
-        ? MediaQuery.of(context).size.height
-        : MediaQuery.of(context).size.width);
-    Measurements.width = (_isPortrait
-        ? MediaQuery.of(context).size.width
-        : MediaQuery.of(context).size.height);
-    _isTablet = Measurements.width < 600 ? false : true;
 
     return BlocListener(
       bloc: screenBloc,
@@ -84,7 +73,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           );
         } else if (state is WelcomeScreenStateSuccess) {
           GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context, listen: false);
-          globalStateModel.setRefresh(true);
+          globalStateModel.setRefresh(GlobalUtils.isBusinessMode);
           Widget businessApp;
           if (widget.businessApps.code.contains('transaction')) {
             businessApp = TransactionScreenInit(dashboardScreenBloc: widget.dashboardScreenBloc);

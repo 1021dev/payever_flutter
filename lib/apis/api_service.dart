@@ -487,9 +487,11 @@ class ApiService {
   }
 
   Future<dynamic> getTransactionList(
-      String id, String token, String query, bool isBusinessMode) async {
+      String id, String token, String query,) async {
     try {
-      print('$TAG - getTransactionList()');
+      bool isBusinessMode = GlobalUtils.isBusinessMode;
+      print('$TAG - getTransactionList() : Business Mode: $isBusinessMode');
+
       String url = isBusinessMode ? '$transactionWidUrl$id$transactionWidEnd$query' : '${Env.transactions}/api/user$transactionWidEnd$query';
       dynamic response = await _client.getTypeless(
           url,
@@ -1339,8 +1341,10 @@ class ApiService {
   Future<dynamic> toggleSetUpStatus(String token, String id, String type) async {
     try {
       print('$TAG - toggleSetUpStatus()');
+      String url = GlobalUtils.isBusinessMode ? '${Env.commerceOsBack}/api/apps/business/$id/app/$type/toggle-setup-status'
+          : '${Env.commerceOsBack}/api/apps/user/app/$type/toggle-setup-status';
       dynamic response = await _client.patchTypeless(
-          '${Env.commerceOsBack}/api/apps/business/$id/app/$type/toggle-setup-status',
+          url,
           body: {
             'setupStatus': 'completed'
           },

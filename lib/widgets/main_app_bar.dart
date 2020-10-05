@@ -18,6 +18,7 @@ class MainAppbar extends StatelessWidget with PreferredSizeWidget {
   final bool isClose;
   final DashboardScreenBloc dashboardScreenBloc;
   final DashboardScreenState dashboardScreenState;
+  final bool toggleBusinessMode;
 
   User user;
   Business activeBusiness;
@@ -32,6 +33,7 @@ class MainAppbar extends StatelessWidget with PreferredSizeWidget {
     this.dashboardScreenState,
     this.isBusinessMode = true,
     this.isClose = true,
+    this.toggleBusinessMode = false,
   }) {
     user = dashboardScreenState.user;
     activeBusiness = dashboardScreenState.activeBusiness;
@@ -209,6 +211,9 @@ class MainAppbar extends StatelessWidget with PreferredSizeWidget {
                     width: 16,
                   ),
                   onTap: () {
+                    if (toggleBusinessMode) {
+                      GlobalUtils.isBusinessMode = true;
+                    }
                     Navigator.pop(context);
                   },
                 ),

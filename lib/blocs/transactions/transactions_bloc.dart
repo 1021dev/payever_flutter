@@ -69,7 +69,7 @@ class TransactionsScreenBloc extends Bloc<TransactionsScreenEvent, TransactionsS
       }
     }
     try {
-      dynamic obj = await api.getTransactionList(state.currentBusiness.id, GlobalUtils.activeToken.accessToken, queryString, true);
+      dynamic obj = await api.getTransactionList(state.currentBusiness.id, GlobalUtils.activeToken.accessToken, queryString);
       Transaction transaction = Transaction.toMap(obj);
       yield state.copyWith(isLoading: false, isSearchLoading: false, transaction: transaction);
 

@@ -596,8 +596,6 @@ class _FakeDashboardScreenState extends State<FakeDashboardScreen> {
                             searchController.text = searchString;
                             FocusScope.of(context).unfocus();
                           });
-                          screenBloc.add(DashboardScreenInitEvent(
-                              wallpaper: globalStateModel.currentWallpaper));
                         } else {
                           setState(() {
                             searchString = '';
@@ -657,9 +655,6 @@ class _FakeDashboardScreenState extends State<FakeDashboardScreen> {
                                 searchController.text = searchString;
                                 FocusScope.of(context).unfocus();
                               });
-                              screenBloc.add(DashboardScreenInitEvent(
-                                  wallpaper:
-                                      globalStateModel.currentWallpaper));
                             } else {
                               setState(() {
                                 searchString = '';

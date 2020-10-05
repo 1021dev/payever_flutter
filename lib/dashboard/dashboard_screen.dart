@@ -91,6 +91,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   void initState() {
+    GlobalUtils.isBusinessMode = true;
     screenBloc = DashboardScreenBloc();
     screenBloc.add(DashboardScreenInitEvent(
         wallpaper: widget.wallpaper, isRefresh: widget.refresh));
