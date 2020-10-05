@@ -111,7 +111,7 @@ class _FakeDashboardScreenState extends State<FakeDashboardScreen> {
         BlurryContainer(
           blur: 20,
           child: Container(),
-          bgColor: overlayBackground(),
+          bgColor: GlobalUtils.theme == 'light' ? overlayBackground() : Colors.transparent,
         ),
       ],
     );

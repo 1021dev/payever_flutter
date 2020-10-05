@@ -1,6 +1,4 @@
 import 'package:payever/commons/models/fetchwallpaper.dart';
-import 'package:payever/shop/models/models.dart';
-
 import '../utils/utils.dart';
 
 class Business {

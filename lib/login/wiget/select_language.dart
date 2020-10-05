@@ -37,7 +37,7 @@ class _SelectLanguageState extends State<SelectLanguage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               DropdownButton(
-                value: 'ENG',
+                value: 'EN',
                 isDense: true,
                 icon: Icon(
                   Icons.keyboard_arrow_down,
@@ -50,7 +50,7 @@ class _SelectLanguageState extends State<SelectLanguage> {
                 dropdownColor: Color.fromRGBO(0, 0, 0, 0.6),
                 underline: Container(),
                 onChanged: (val) {},
-                items: <String>['ENG', 'DE', 'NR', 'PL', 'UK']
+                items: <String>['EN', 'DE', 'NR', 'PL', 'UK']
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,

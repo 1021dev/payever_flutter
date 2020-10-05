@@ -339,8 +339,8 @@ class GlobalUtils {
   //static String  mail= 'service@payever.de';//staging 2
 
   //static const String COMMERCE_OS_URL = 'https://commerceos.test.devpayever.com';//test
-  // static const String COMMERCE_OS_URL = 'https://commerceos.staging.devpayever.com';//staging
-  static const String COMMERCE_OS_URL = 'https://commerceos.payever.org'; //live
+  static const String COMMERCE_OS_URL = 'https://commerceos.staging.devpayever.com';//staging
+  // static const String COMMERCE_OS_URL = 'https://commerceos.payever.org'; //live
 
   static const String POS_URL = 'https://getpayever.com/pos';
 
@@ -672,20 +672,6 @@ class GlobalUtils {
   static const String DB_PROD_INFO_ITEM_PAGE = 'page';
   static const String DB_PROD_INFO_ITEM_PAGE_COUNT = 'page_count';
   static const String DB_PROD_INFO_ITEM_PER_PAGE = 'per_page';
-
-  static const String DB_SHOP_ACTIVE = 'active';
-  static const String DB_SHOP_BUSINESS = 'business';
-  static const String DB_SHOP_CHANNEL_SET = 'channelSet';
-  static const String DB_SHOP_CREATED_AT = 'createdAt';
-  static const String DB_SHOP_DEFAULT_LOCALE = 'defaultLocale';
-  static const String DB_SHOP_LIVE = 'live';
-  static const String DB_SHOP_LOCALES = 'locales';
-  static const String DB_SHOP_LOGO = 'logo';
-  static const String DB_SHOP_NAME = 'name';
-  static const String DB_SHOP_THEME = 'theme';
-  static const String DB_SHOP_UPDATED_AT = 'updatedAt';
-  static const String DB_SHOP__v = '__v';
-  static const String DB_SHOP_ID = '_id';
 
   static const String DB_TUTORIAL_INIT = '\$init';
   static const String DB_TUTORIAL_ICON = 'icon';
