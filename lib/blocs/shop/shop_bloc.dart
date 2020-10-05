@@ -21,7 +21,7 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
   Stream<ShopScreenState> mapEventToState(ShopScreenEvent event) async* {
     if (event is ShopScreenInitEvent) {
       yield* fetchShop(event.currentBusinessId);
-    } else if (event is InstallTemplateEvent) {
+    } else if (event is InstallThemeEvent) {
       yield* installTheme(event.businessId, event.shopId, event.themeId);
     } else if (event is GetActiveThemeEvent) {
       yield* getActiveTheme(event.businessId, event.shopId);
@@ -86,12 +86,10 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
 
     List<ThemeModel> myThemes = [];
     dynamic themeObj = await api.getMyThemes(token, activeBusinessId, activeShop.id);
-    if (themeObj is DioError) {
-
-    } else {
+    if (themeObj is List) {
       themeObj.forEach((element) {
-        myThemes.add(ThemeModel.fromJson(element));
-        myThemeListModes.add(ThemeListModel(themeModel: ThemeModel.fromJson(element), isChecked: false));
+        myThemes.add(ThemeModel.fromJson(element['theme']));
+        myThemeListModes.add(ThemeListModel(themeModel: ThemeModel.fromJson(element['theme']), isChecked: false));
       });
     }
 
@@ -112,7 +110,7 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
   Stream<ShopScreenState> installTheme(String activeBusinessId, String shopId, String themeId) async* {
     String token = GlobalUtils.activeToken.accessToken;
     yield state.copyWith(isUpdating: true, installThemeId: themeId);
-    dynamic response = await api.installTemplate(token, activeBusinessId, shopId, themeId);
+    dynamic response = await api.installTheme(token, activeBusinessId, shopId, themeId);
     if (response is Map) {
       print(ThemeResponse.fromJson(response));
     }

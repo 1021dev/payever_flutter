@@ -23,12 +23,12 @@ class ShopScreenInitEvent extends ShopScreenEvent {
   ];
 }
 
-class InstallTemplateEvent extends ShopScreenEvent {
+class InstallThemeEvent extends ShopScreenEvent {
   final String businessId;
   final String shopId;
   final String themeId;
 
-  InstallTemplateEvent({
+  InstallThemeEvent({
     this.businessId,
     this.shopId,
     this.themeId,

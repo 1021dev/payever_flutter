@@ -99,6 +99,7 @@ Map<String, dynamic> _$ThemeItemModelToJson(ThemeItemModel instance) =>
 ThemeModel _$ThemeModelFromJson(Map<String, dynamic> json) {
   return ThemeModel()
     ..id = json['id'] as String
+    ..application = json['application'] as String
     ..isActive = json['isActive'] as bool ?? false
     ..isDeployed = json['isDeployed'] as bool ?? false
     ..name = json['name'] as String
@@ -110,29 +111,6 @@ ThemeModel _$ThemeModelFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$ThemeModelToJson(ThemeModel instance) =>
     <String, dynamic>{
-      'id': instance.id,
-      'isActive': instance.isActive,
-      'isDeployed': instance.isDeployed,
-      'name': instance.name,
-      'picture': instance.picture,
-      'shopId': instance.shopId,
-      'themeId': instance.themeId,
-      'type': instance.type,
-    };
-
-Theme _$ThemeFromJson(Map<String, dynamic> json) {
-  return Theme()
-    ..id = json['id'] as String
-    ..isActive = json['isActive'] as bool ?? false
-    ..isDeployed = json['isDeployed'] as bool ?? false
-    ..name = json['name'] as String
-    ..picture = json['picture'] as String
-    ..shopId = json['shopId'] as String
-    ..themeId = json['themeId'] as String
-    ..type = json['type'] as String;
-}
-
-Map<String, dynamic> _$ThemeToJson(Theme instance) => <String, dynamic>{
       'id': instance.id,
       'isActive': instance.isActive,
       'isDeployed': instance.isDeployed,

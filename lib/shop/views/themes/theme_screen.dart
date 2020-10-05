@@ -561,7 +561,7 @@ class _ThemesScreenState extends State<ThemesScreen> {
 
   void installTheme(ShopScreenState state, String themeId) {
     if (state.activeShop != null) {
-      widget.screenBloc.add(InstallTemplateEvent(
+      widget.screenBloc.add(InstallThemeEvent(
         businessId: widget.globalStateModel.currentBusiness.id,
         themeId: themeId,
         shopId: state.activeShop.id,

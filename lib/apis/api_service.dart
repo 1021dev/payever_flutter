@@ -888,11 +888,11 @@ class ApiService {
     }
   }
 
-  Future<dynamic> installTemplate(String token, String businessId, String shopId, String templateId) async {
+  Future<dynamic> installTheme(String token, String businessId, String shopId, String themeId) async {
     try {
-      print('$TAG - installTemplate()');
-      dynamic response = await _client.putTypeless(
-          '${Env.builderShop}/business/$businessId/shop/$shopId/template/$templateId/install',
+      print('$TAG - installTheme()');
+      dynamic response = await _client.postTypeLess(
+          '${Env.builderShop}/api/business/$businessId/application/$shopId/theme/$themeId/install',
           body: {},
           headers: _getHeaders(token),
       );
@@ -906,7 +906,7 @@ class ApiService {
     try {
       print('$TAG - deleteTheme()');
       dynamic response = await _client.deleteTypeless(
-          '${Env.builderShop}/business/$businessId/shop/$shopId/theme/$themeId',
+          '${Env.builderShop}/api/business/$businessId/application/$shopId/theme/$themeId',
           headers: _getHeaders(token),
       );
       return response;
@@ -919,7 +919,7 @@ class ApiService {
     try {
       print('$TAG - duplicateTheme()');
       dynamic response = await _client.putTypeless(
-        '${Env.builderShop}/business/$businessId/shop/$shopId/theme/$themeId/duplicate',
+        '${Env.builderShop}/api/business/$businessId/application/$shopId/theme/$themeId/duplicate',
         headers: _getHeaders(token),
       );
       return response;
@@ -930,9 +930,9 @@ class ApiService {
 
   Future<dynamic> getActiveTheme(String token, String businessId, String shopId) async {
     try {
-      print('$TAG - duplicateTheme()');
+      print('$TAG - getActiveTheme()');
       dynamic response = await _client.getTypeless(
-        '${Env.builderShop}/business/$businessId/shop/$shopId/themes/active',
+        '${Env.builderShop}/api/business/$businessId/application/$shopId/themes/active',
         headers: _getHeaders(token),
       );
       return response;
