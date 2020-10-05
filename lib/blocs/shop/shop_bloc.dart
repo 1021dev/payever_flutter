@@ -48,13 +48,14 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
   }
 
   Stream<ShopScreenState> fetchShop(String activeBusinessId) async* {
+    String token = GlobalUtils.activeToken.accessToken;
     yield state.copyWith(isLoading: true);
     List<ShopDetailModel> shops = [];
     List<TemplateModel> templates = [];
     List<ThemeModel> themes = [];
     List<ThemeListModel> themeListModes = [];
     List<ThemeListModel> myThemeListModes = [];
-    dynamic response = await api.getShop(activeBusinessId, GlobalUtils.activeToken.accessToken);
+    dynamic response = await api.getShop(activeBusinessId, token);
     if (response is List) {
       response.forEach((element) {
         shops.add(ShopDetailModel.toMap(element));
@@ -65,7 +66,7 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
       activeShop = shops.firstWhere((element) => element.isDefault);
     }
 
-    dynamic templatesObj = await api.getTemplates(GlobalUtils.activeToken.accessToken);
+    dynamic templatesObj = await api.getTemplates(token);
     if (templatesObj is DioError) {
 
     } else {
@@ -84,7 +85,7 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
 
 
     List<ThemeModel> myThemes = [];
-    dynamic themeObj = await api.getMyThemes(GlobalUtils.activeToken.accessToken, activeBusinessId, activeShop.id);
+    dynamic themeObj = await api.getMyThemes(token, activeBusinessId, activeShop.id);
     if (themeObj is DioError) {
 
     } else {
@@ -109,8 +110,9 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
   }
 
   Stream<ShopScreenState> installTheme(String activeBusinessId, String shopId, String themeId) async* {
+    String token = GlobalUtils.activeToken.accessToken;
     yield state.copyWith(isUpdating: true, installThemeId: themeId);
-    dynamic response = await api.installTemplate(GlobalUtils.activeToken.accessToken, activeBusinessId, shopId, themeId);
+    dynamic response = await api.installTemplate(token, activeBusinessId, shopId, themeId);
     if (response != null) {
       print(ThemeResponse.toMap(response));
     }
@@ -119,8 +121,9 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
   }
 
   Stream<ShopScreenState> duplicateTheme(String activeBusinessId, String shopId, String themeId) async* {
+    String token = GlobalUtils.activeToken.accessToken;
     yield state.copyWith(isDuplicate: true);
-    dynamic response = await api.duplicateTheme(GlobalUtils.activeToken.accessToken, activeBusinessId, shopId, themeId);
+    dynamic response = await api.duplicateTheme(token, activeBusinessId, shopId, themeId);
     if (response is DioError) {
       yield ShopScreenStateThemeFailure(error:  response.message);
     } else if (response is Map) {

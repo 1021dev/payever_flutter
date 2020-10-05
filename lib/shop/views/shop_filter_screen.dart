@@ -330,7 +330,7 @@ class _ShopFilterScreenState extends State<ShopFilterScreen> {
   }
 
   String getMainCategory(String code) {
-    print('Shop filter code: $code');
+    // print('Shop filter code: $code');
     if (code.isEmpty) return '';
     code = code.replaceAll('BUSINESS_PRODUCT_', '');
     code = code.replaceAll('_', ' ');

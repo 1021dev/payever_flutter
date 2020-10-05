@@ -866,7 +866,7 @@ class ApiService {
     try {
       print('$TAG - getTemplates()');
       dynamic response = await _client.getTypeless(
-          '${Env.builderShop}/templates',
+          '${Env.builderShop}/api/templates',
           headers: _getHeaders(token),
       );
       return response;
@@ -879,7 +879,7 @@ class ApiService {
     try {
       print('$TAG - getOwnThemes()');
       dynamic response = await _client.getTypeless(
-          '${Env.builderShop}/business/$businessId/shop/$shopId/themes',
+          '${Env.builderShop}/api/business/$businessId/application/$shopId/themes',
           headers: _getHeaders(token),
       );
       return response;
