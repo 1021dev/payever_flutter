@@ -376,7 +376,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
 
   Stream<DashboardScreenState> getTotal(Business currentBusiness) async* {
     dynamic response = await api.getTransactionList(
-        currentBusiness.id, GlobalUtils.activeToken.accessToken, '');
+        currentBusiness.id, GlobalUtils.activeToken.accessToken, '', true);
     yield state.copyWith(total: Transaction.toMap(response).paginationData.amount.toDouble());
 
     add(FetchShops(business: currentBusiness));

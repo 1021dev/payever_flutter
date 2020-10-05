@@ -323,6 +323,7 @@ class GlobalUtils {
   static String fingerprint = '';
   static String theme = changeThemeBloc.state.theme;
   static bool isConnected = true;
+  static bool isBusinessMode = true;
   //URLS
   //static String  pass= 'P@ssword123';//test 1
   // static String  pass= 'Test1234!';//staging 1

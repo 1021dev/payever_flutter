@@ -24,6 +24,7 @@ class DashboardProductsView extends StatefulWidget {
   final Function onTapGetStarted;
   final Function onTapContinueSetup;
   final Function onTapLearnMore;
+  final double mainWidth;
 
   DashboardProductsView({
     this.appWidget,
@@ -38,6 +39,7 @@ class DashboardProductsView extends StatefulWidget {
     this.onTapGetStarted,
     this.onTapContinueSetup,
     this.onTapLearnMore,
+    this.mainWidth,
   });
 
   @override
@@ -171,7 +173,7 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                   SizedBox(height: 8),
                   widget.lastSales != null
                       ? Container(
-                          height: (Measurements.width - 20)/ 4,
+                          height: (widget.mainWidth - 20)/ 4 + 10,
                           child: GridView.count(
                             crossAxisCount: 4,
                             crossAxisSpacing: 6,

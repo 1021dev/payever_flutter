@@ -8,6 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:intl/intl.dart';
+import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
@@ -166,7 +167,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
         bottom: false,
         child: BackgroundBase(
           true,
-          body: state.isLoading ?
+          body: state.isLoading || state.transaction == null ?
           Center(
             child: CircularProgressIndicator(),
           ): Column(
@@ -492,7 +493,7 @@ class _CustomListState extends State<CustomList> {
         });
         page++;
 
-        TransactionsApi api = TransactionsApi();
+        ApiService api = ApiService();
         String queryString = '';
         String sortQuery = '';
         if (widget.screenState.curSortType == 'date') {
@@ -521,8 +522,7 @@ class _CustomListState extends State<CustomList> {
         api.getTransactionList(
           widget.globalStateModel.currentBusiness.id,
           GlobalUtils.activeToken.accessToken,
-          queryString,
-        ).then((transaction) {
+          queryString, true).then((transaction) {
           List<Collection> temp = Transaction.toMap(transaction).collection;
           if (temp.isNotEmpty) {
             setState(() {

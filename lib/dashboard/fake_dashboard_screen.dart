@@ -354,6 +354,7 @@ class _FakeDashboardScreenState extends State<FakeDashboardScreen> {
           lastSales: state.lastSalesRandom,
           business: state.activeBusiness,
           notifications: notifications,
+          mainWidth: widget.mainWidth,
         ),
       );
     }

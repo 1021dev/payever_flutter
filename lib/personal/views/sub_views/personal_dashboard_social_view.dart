@@ -6,15 +6,19 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/theme.dart';
-import 'package:badges/badges.dart'
+import 'package:badges/badges.dart';
 
 class PersonalDashboardSocialView extends StatefulWidget {
   final Function onTapEdit;
   final Function onTapWidget;
+  final double mainWidth;
+  final bool isTablet;
 
   PersonalDashboardSocialView({
     this.onTapEdit,
     this.onTapWidget,
+    this.mainWidth,
+    this.isTablet,
   });
 
   @override
@@ -56,7 +60,7 @@ class _PersonalDashboardSocialViewState
                       width: 8,
                     ),
                     Text(
-                      'BUSINESS APPS',
+                      'SOCIAL',
                       style: TextStyle(
                         fontSize: 12,
                       ),
@@ -87,10 +91,11 @@ class _PersonalDashboardSocialViewState
             ),
             SizedBox(height: 12),
             Container(
-              height: (Measurements.width - 16/*(main padding)*/ - 16 * 6) / 6 * 1.6 + 12 + 12,
+              padding: EdgeInsets.symmetric(horizontal: widget.isTablet ? 20 : 0),
+              height: (widget.mainWidth - 16/*(main padding)*/ - 16 * 6) / 6 * 1.6 + 12 + 12 - (widget.isTablet ? 20 : 0),
               child: GridView.count(
                 crossAxisCount: 6,
-                crossAxisSpacing: 16,
+                crossAxisSpacing: widget.isTablet ? 20 : 4,
                 shrinkWrap: true,
                 childAspectRatio: 1/1.6,
                 children: List.generate(socials.length, (index) {
@@ -129,31 +134,37 @@ class _PersonalDashboardSocialViewState
         bgColor = Color.fromRGBO(241, 25, 118, 1);
         break;
       case 5:
+        badgCount = '1';
         bgColor = Color.fromRGBO(0, 119, 181, 1);
         break;
     }
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Badge(
-          badgeContent: Text(badgCount),
-          child: AspectRatio(
-            aspectRatio: 1,
-            child: Container(
-              width: double.infinity,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: bgColor,
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0, right: 10),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Badge(
+            badgeContent: Text(badgCount),
+            showBadge: badgCount != '0',
+            padding: EdgeInsets.all(widget.isTablet ? 10 : 5),
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: Container(
+                width: double.infinity,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: bgColor,
+                ),
+                child: SvgPicture.asset(image),
               ),
-              child: SvgPicture.asset(image),
             ),
           ),
-        ),
-        SizedBox(height: 11,),
-        AutoSizeText(title, style: TextStyle(fontSize: 12, color: Color.fromRGBO(238, 238, 238, 1)), maxLines: 1, minFontSize: 8,),
-      ],
+          SizedBox(height: 11,),
+          AutoSizeText(title, style: TextStyle(fontSize: 14, color: Color.fromRGBO(238, 238, 238, 1)), maxLines: 1, minFontSize: 8,),
+        ],
+      ),
     );
   }
 }

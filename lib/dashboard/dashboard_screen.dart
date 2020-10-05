@@ -831,6 +831,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           appWidget: appWidget,
           lastSales: state.lastSalesRandom,
           business: state.activeBusiness,
+          mainWidth: widget.mainWidth,
           onOpen: () async {
             Provider.of<GlobalStateModel>(context, listen: false)
                 .setCurrentBusiness(state.activeBusiness);

@@ -62,6 +62,7 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
   FocusNode searchFocus = FocusNode();
   String searchString = '';
   Business activeBusiness;
+  double mainWidth = 0;
 
   @override
   void initState() {
@@ -98,6 +99,10 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
         ? MediaQuery.of(context).size.width
         : MediaQuery.of(context).size.height);
     _isTablet = Measurements.width < 600 ? false : true;
+
+    if (mainWidth == 0) {
+      mainWidth = _isTablet ? Measurements.width * 0.7 : Measurements.width;
+    }
 
     return BlocListener(
       bloc: screenBloc,
@@ -150,7 +155,7 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
               : Container(
                   alignment: Alignment.topCenter,
                   child: Container(
-                    width: Measurements.width,
+                    width: mainWidth,
                     padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
                     child: SingleChildScrollView(
                       child: Column(
@@ -388,6 +393,8 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
     return PersonalDashboardSocialView(
       onTapEdit: () {},
       onTapWidget: () {},
+      isTablet: _isTablet,
+      mainWidth: mainWidth,
     );
   }
 

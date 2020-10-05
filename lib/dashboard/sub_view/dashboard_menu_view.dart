@@ -86,6 +86,7 @@ class DashboardMenuView extends StatelessWidget {
               isActive && dashboardScreenBloc.state.businesses.length > 1 ? InkWell(
                 onTap: () async {
                   //onSwitchBusiness,
+                  GlobalUtils.isBusinessMode = true;
                   Navigator.pop(context);
                   final result = await Navigator.push(
                     context,
@@ -142,6 +143,7 @@ class DashboardMenuView extends StatelessWidget {
                             .setCurrentBusiness(dashboardScreenBloc.state.activeBusiness);
                         Provider.of<GlobalStateModel>(context, listen: false)
                             .setCurrentWallpaper(dashboardScreenBloc.state.curWall);
+                        GlobalUtils.isBusinessMode = false;
                         Navigator.push(
                           context,
                           PageTransition(
@@ -237,6 +239,7 @@ class DashboardMenuView extends StatelessWidget {
               ),
               InkWell(
                 onTap: () async {
+                  GlobalUtils.isBusinessMode = true;
                   Navigator.pop(context);
                   SharedPreferences.getInstance().then((p) {
                     p.setString(GlobalUtils.BUSINESS, '');

@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:payever/apis/api_service.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/transactions/transactions.dart';
 
@@ -7,7 +8,7 @@ import '../bloc.dart';
 class TransactionsScreenBloc extends Bloc<TransactionsScreenEvent, TransactionsScreenState> {
   final DashboardScreenBloc dashboardScreenBloc;
   TransactionsScreenBloc({this.dashboardScreenBloc});
-  TransactionsApi api = TransactionsApi();
+  ApiService api = ApiService();
 
   @override
   TransactionsScreenState get initialState => TransactionsScreenState();
@@ -68,7 +69,7 @@ class TransactionsScreenBloc extends Bloc<TransactionsScreenEvent, TransactionsS
       }
     }
     try {
-      dynamic obj = await api.getTransactionList(state.currentBusiness.id, GlobalUtils.activeToken.accessToken, queryString);
+      dynamic obj = await api.getTransactionList(state.currentBusiness.id, GlobalUtils.activeToken.accessToken, queryString, true);
       Transaction transaction = Transaction.toMap(obj);
       yield state.copyWith(isLoading: false, isSearchLoading: false, transaction: transaction);
 

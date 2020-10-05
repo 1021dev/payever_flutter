@@ -487,11 +487,12 @@ class ApiService {
   }
 
   Future<dynamic> getTransactionList(
-      String id, String token, String query) async {
+      String id, String token, String query, bool isBusinessMode) async {
     try {
       print('$TAG - getTransactionList()');
+      String url = isBusinessMode ? '$transactionWidUrl$id$transactionWidEnd$query' : '${Env.transactions}/api/user$transactionWidEnd$query';
       dynamic response = await _client.getTypeless(
-          '$transactionWidUrl$id$transactionWidEnd$query',
+          url,
           headers: _getHeaders(token)
       );
       return response;
