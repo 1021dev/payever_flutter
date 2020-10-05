@@ -426,7 +426,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     dynamic response = await api.getShops(currentBusiness.id, GlobalUtils.activeToken.accessToken);
     if (response is List) {
       response.forEach((element) {
-        shops.add(ShopModel.toMap(element));
+        shops.add(ShopModel.fromJson(element));
       });
     }
     ShopModel activeShop;

@@ -1526,7 +1526,7 @@ class ApiService {
       print('$TAG - updateShopConfig()');
       dynamic response = await _client.patchTypeless(
           '${Env.shop}/api/business/$businessId/shop/access/$shopId',
-          body: config.toData(),
+          body: config.toJson(),
           headers: _getHeaders(token)
       );
       return response;

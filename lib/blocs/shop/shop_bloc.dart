@@ -58,7 +58,7 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
     dynamic response = await api.getShop(activeBusinessId, token);
     if (response is List) {
       response.forEach((element) {
-        shops.add(ShopDetailModel.toMap(element));
+        shops.add(ShopDetailModel.fromJson(element));
       });
     }
     ShopDetailModel activeShop;
@@ -71,7 +71,7 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
 
     } else {
       templatesObj.forEach((element) {
-        templates.add(TemplateModel.fromMap(element));
+        templates.add(TemplateModel.fromJson(element));
       });
       templates.forEach((template) {
         template.items.forEach((item) {
@@ -90,8 +90,8 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
 
     } else {
       themeObj.forEach((element) {
-        myThemes.add(ThemeModel.toMap(element));
-        myThemeListModes.add(ThemeListModel(themeModel: ThemeModel.toMap(element), isChecked: false));
+        myThemes.add(ThemeModel.fromJson(element));
+        myThemeListModes.add(ThemeListModel(themeModel: ThemeModel.fromJson(element), isChecked: false));
       });
     }
 
@@ -113,8 +113,8 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
     String token = GlobalUtils.activeToken.accessToken;
     yield state.copyWith(isUpdating: true, installThemeId: themeId);
     dynamic response = await api.installTemplate(token, activeBusinessId, shopId, themeId);
-    if (response != null) {
-      print(ThemeResponse.toMap(response));
+    if (response is Map) {
+      print(ThemeResponse.fromJson(response));
     }
     add(GetActiveThemeEvent(businessId: activeBusinessId, shopId: shopId));
     yield state.copyWith(isUpdating: false, installThemeId: '');
@@ -127,7 +127,7 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
     if (response is DioError) {
       yield ShopScreenStateThemeFailure(error:  response.message);
     } else if (response is Map) {
-      print(ThemeResponse.toMap(response));
+      print(ThemeResponse.fromJson(response));
       add(GetActiveThemeEvent(businessId: activeBusinessId, shopId: shopId));
     }
     yield state.copyWith(isDuplicate: false);
@@ -142,13 +142,13 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
     dynamic response = await api.getActiveTheme(GlobalUtils.activeToken.accessToken, activeBusinessId, shopId);
     if (response is List) {
       if (response.length > 0) {
-        yield state.copyWith(activeTheme: ThemeModel.toMap(response.first));
+        yield state.copyWith(activeTheme: ThemeModel.fromJson(response.first));
       }
     }
 
     dynamic defaultObj = await api.getShopDetail(activeBusinessId, GlobalUtils.activeToken.accessToken, shopId);
     if (defaultObj != null) {
-      ShopDetailModel model = ShopDetailModel.toMap(defaultObj);
+      ShopDetailModel model = ShopDetailModel.fromJson(defaultObj);
       yield state.copyWith(activeShop: model);
     }
   }
@@ -170,7 +170,7 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
   Stream<ShopScreenState> setDefaultShop(String businessId, String shopId) async* {
     dynamic response = await api.setDefaultShop(GlobalUtils.activeToken.accessToken, businessId, shopId);
     if (response != null) {
-      yield state.copyWith(activeShop: ShopDetailModel.toMap(response));
+      yield state.copyWith(activeShop: ShopDetailModel.fromJson(response));
     }
     yield ShopScreenStateSuccess();
   }
@@ -179,7 +179,7 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
     dynamic response = await api.updateShopConfig(GlobalUtils.activeToken.accessToken, businessId, shopId, config);
     dynamic defaultObj = await api.getShopDetail(businessId, GlobalUtils.activeToken.accessToken, shopId);
     if (defaultObj != null) {
-      ShopDetailModel model = ShopDetailModel.toMap(defaultObj);
+      ShopDetailModel model = ShopDetailModel.fromJson(defaultObj);
       yield state.copyWith(activeShop: model);
     }
   }

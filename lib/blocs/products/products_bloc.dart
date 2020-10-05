@@ -839,7 +839,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     dynamic response = await api.getShops(state.businessId, token);
     if (response is List) {
       response.forEach((element) {
-        shops.add(ShopModel.toMap(element));
+        shops.add(ShopModel.fromJson(element));
       });
     }
     yield state.copyWith(shops: shops, isLoading: false);

@@ -1,117 +1,100 @@
 import 'package:payever/commons/commons.dart';
+import 'package:json_annotation/json_annotation.dart';
+part 'models.g.dart';
 
+@JsonSerializable()
 class ShopModel {
-  bool active;
-  String business;
-  String channelSet;
-  String createdAt;
-  String defaultLocale;
-  String id;
-  bool live;
-  List<String> locales = [];
-  String logo;
-  String name;
-  PasswordModel password;
-  String updatedAt;
-  num __v;
-  String _id;
+  ShopModel();
 
-  ShopModel.toMap(dynamic obj) {
-    active = obj['active'];
-    business = obj['business'];
-    channelSet = obj['channelSet'];
-    createdAt = obj['createdAt'];
-    defaultLocale = obj['defaultLocale'];
-    id = obj['id'];
-    live = obj['live'];
-    logo = obj['logo'];
-    name = obj['name'];
-    updatedAt = obj['updatedAt'];
-    __v = obj['__v'];
-    _id = obj['_id'];
-    if (obj['password'] != null) {
-      password = PasswordModel.toMap(obj['password']);
-    }
-    if (obj['locales'] != null){
-      List list = obj['locales'];
-      list.forEach((element) {
-        locales.add(element.toString());
-      });
-    }
-  }
+  @JsonKey(name: 'active') bool active;
+  @JsonKey(name: 'business') String business;
+  @JsonKey(name: 'channelSet') String channelSet;
+  @JsonKey(name: 'createdAt') String createdAt;
+  @JsonKey(name: 'defaultLocale') String defaultLocale;
+  @JsonKey(name: 'id') String id;
+  @JsonKey(name: 'live') bool live;
+  @JsonKey(name: 'locales') List<String> locales = [];
+  @JsonKey(name: 'logo') String logo;
+  @JsonKey(name: 'name') String name;
+  @JsonKey(name: 'password') PasswordModel password;
+  @JsonKey(name: 'updatedAt') String updatedAt;
 
+  factory ShopModel.fromJson(Map<String, dynamic> json) => _$ShopModelFromJson(json);
+  Map<String, dynamic> toJson() => _$ShopModelToJson(this);
 }
 
+@JsonSerializable()
 class PasswordModel {
-  bool enabled = false;
-  bool passwordLock = false;
-  String _id;
+  PasswordModel();
 
-  PasswordModel.toMap(dynamic obj) {
-    enabled = obj['enabled'];
-    passwordLock = obj['passwordLock'];
-    _id = obj['_id'];
-  }
+  @JsonKey(name: 'enabled', defaultValue: false)       bool enabled;
+  @JsonKey(name: 'passwordLock', defaultValue: false)  bool passwordLock;
+  @JsonKey(name: '_id')           String id;
+
+  factory PasswordModel.fromJson(Map<String, dynamic> json) => _$PasswordModelFromJson(json);
+  Map<String, dynamic> toJson() => _$PasswordModelToJson(this);
 }
 
+@JsonSerializable()
 class TemplateModel {
-  String code;
-  String icon;
-  String id;
-  List<ThemeItemModel> items = [];
-  int order;
+  TemplateModel();
 
-  TemplateModel.fromMap(dynamic obj) {
-    id = obj['id'];
-    icon = obj['icon'];
-    code = obj['code'];
-    order = obj['order'];
-    dynamic itemObj = obj['items'];
-    if (itemObj is List){
-      itemObj.forEach((element)=> items.add(ThemeItemModel.fromMap(element)));
-    }
-  }
+  @JsonKey(name: 'code')    String code;
+  @JsonKey(name: 'icon')    String icon;
+  @JsonKey(name: 'id')      String id;
+  @JsonKey(name: 'items')   List<ThemeItemModel> items;
+  @JsonKey(name: 'order')   int order;
+
+  factory TemplateModel.fromJson(Map<String, dynamic> json) => _$TemplateModelFromJson(json);
+  Map<String, dynamic> toJson() => _$TemplateModelToJson(this);
 }
 
+@JsonSerializable()
 class ThemeItemModel {
-  String code;
-  String groupId;
-  String id;
-  List<ThemeModel>themes = [];
-  String type;
+  ThemeItemModel();
 
-  ThemeItemModel.fromMap(dynamic obj) {
-    id = obj['id'] ?? '';
-    code = obj['code'] ?? '';
-    groupId = obj['groupId'] ?? '';
-    type = obj['type'] ?? '';
-    dynamic themesObj = obj['themes'];
-    if (themesObj is List){
-      themesObj.forEach((element)=> themes.add(ThemeModel.toMap(element)));
-    }
-  }
+  @JsonKey(name: 'code')      String code;
+  @JsonKey(name: 'groupId')   String groupId;
+  @JsonKey(name: 'id')        String id;
+  @JsonKey(name: 'themes')    List<ThemeModel>themes;
+  @JsonKey(name: 'type')      String type;
+
+  factory ThemeItemModel.fromJson(Map<String, dynamic> json) => _$ThemeItemModelFromJson(json);
+  Map<String, dynamic> toJson() => _$ThemeItemModelToJson(this);
 }
 
+@JsonSerializable()
 class ThemeModel {
-  String id;
-  bool isActive = false;
-  bool isDeployed = false;
-  String name = '';
-  String picture;
-  String shopId;
-  String themeId;
-  String type;
+  ThemeModel();
 
-  ThemeModel.toMap(dynamic obj) {
-    id = obj['id'] ?? '';
-    isActive = obj['isActive'] ?? false;
-    isDeployed = obj['isDeployed'] ?? false;
-    name = obj['name'] ?? '';
-    picture = obj['picture'] ?? '';
-    shopId = obj['shopId'] ?? '';
-    themeId = obj['themeId'] ?? '';
-    type = obj['type'] ?? '';
-  }
+  @JsonKey(name: 'id')        String id;
+  @JsonKey(name: 'isActive', defaultValue: false)   bool isActive;
+  @JsonKey(name: 'isDeployed', defaultValue: false) bool isDeployed;
+  @JsonKey(name: 'name')      String name;
+  @JsonKey(name: 'picture')   String picture;
+  @JsonKey(name: 'shopId')    String shopId;
+  @JsonKey(name: 'themeId')   String themeId;
+  @JsonKey(name: 'type')      String type;
+
+  factory ThemeModel.fromJson(Map<String, dynamic> json) => _$ThemeModelFromJson(json);
+  Map<String, dynamic> toJson() => _$ThemeModelToJson(this);
+}
+
+@JsonSerializable()
+class Theme {
+  Theme();
+
+  @JsonKey(name: 'id')        String id;
+  @JsonKey(name: 'isActive', defaultValue: false)bool isActive;
+  @JsonKey(name: 'isDeployed', defaultValue: false)bool isDeployed = false;
+  @JsonKey(name: 'name')      String name;
+  @JsonKey(name: 'picture')   String picture;
+  @JsonKey(name: 'shopId')    String shopId;
+  @JsonKey(name: 'themeId')   String themeId;
+  @JsonKey(name: 'type')      String type;
+
+  factory Theme.fromJson(Map<String, dynamic> json) => _$ThemeFromJson(json);
+  Map<String, dynamic> toJson() => _$ThemeToJson(this);
 }
 
 class ThemeListModel {
@@ -121,97 +104,64 @@ class ThemeListModel {
   ThemeListModel({this.themeModel, this.isChecked});
 }
 
-
+@JsonSerializable()
 class ShopDetailModel {
-  AccessConfig accessConfig;
-  BusinessM business;
-  ChannelSet channelSet;
-  String id;
-  bool isDefault = false;
-  String name;
-  String picture;
+  ShopDetailModel();
 
-  ShopDetailModel.toMap(dynamic obj) {
-    id = obj['id'];
-    isDefault = obj['isDefault'];
-    name = obj['name'];
-    picture = obj['picture'];
-    if (obj['accessConfig'] != null){
-      accessConfig = AccessConfig.toMap(obj['accessConfig']);
-    }
-    if (obj['business'] != null){
-      business = BusinessM.toMap(obj['business']);
-    }
-    if (obj['channelSet'] != null){
-      channelSet = ChannelSet.fromJson(obj['channelSet']);
-    }
-  }
+  @JsonKey(name: 'id')              String id;
+  @JsonKey(name: 'accessConfig')    AccessConfig accessConfig;
+  @JsonKey(name: 'business')        BusinessM business;
+  @JsonKey(name: 'channelSet')      ChannelSet channelSet;
+  @JsonKey(name: 'isDefault', defaultValue: false)       bool isDefault;
+  @JsonKey(name: 'name')            String name;
+  @JsonKey(name: 'picture')         String picture;
+
+  factory ShopDetailModel.fromJson(Map<String, dynamic> json) => _$ShopDetailModelFromJson(json);
+  Map<String, dynamic> toJson() => _$ShopDetailModelToJson(this);
 }
 
+@JsonSerializable()
 class AccessConfig {
-  String id;
-  String internalDomain;
-  String internalDomainPattern;
-  bool isLive;
-  bool isLocked;
-  bool isPrivate;
-  String ownDomain;
-  String privateMessage;
-  String privatePassword;
+  AccessConfig();
 
-  AccessConfig.toMap(dynamic obj) {
-    id = obj['id'];
-    internalDomain = obj['internalDomain'];
-    internalDomainPattern = obj['internalDomainPattern'];
-    isLive = obj['isLive'];
-    isLocked = obj['isLocked'];
-    isPrivate = obj['isPrivate'];
-    ownDomain = obj['ownDomain'];
-    privateMessage = obj['privateMessage'];
-    privatePassword = obj['privatePassword'];
-  }
+  @JsonKey(name: 'id')                      String id;
+  @JsonKey(name: 'internalDomain')          String internalDomain;
+  @JsonKey(name: 'internalDomainPattern')   String internalDomainPattern;
+  @JsonKey(name: 'isLive')                  bool isLive;
+  @JsonKey(name: 'isLocked')                bool isLocked;
+  @JsonKey(name: 'isPrivate')               bool isPrivate;
+  @JsonKey(name: 'ownDomain')               String ownDomain;
+  @JsonKey(name: 'privateMessage')          String privateMessage;
+  @JsonKey(name: 'privatePassword')         String privatePassword;
 
-  Map<String, dynamic> toData() {
-    Map<String, dynamic> data = {};
-    data['internalDomain'] = internalDomain;
-    data['internalDomainPattern'] = internalDomainPattern;
-    data['isLive'] = isLive;
-    data['isLocked'] = isLocked;
-    data['isPrivate'] = isPrivate;
-    data['ownDomain'] = ownDomain;
-    data['privatePassword'] = privatePassword;
-    data['privateMessage'] = privateMessage;
-
-    return data;
-  }
+  factory AccessConfig.fromJson(Map<String, dynamic> json) => _$AccessConfigFromJson(json);
+  Map<String, dynamic> toJson() => _$AccessConfigToJson(this);
 }
 
+@JsonSerializable()
 class BusinessM {
-  String id;
-  String name;
+  BusinessM();
 
-  BusinessM.toMap(dynamic obj) {
-    id = obj['id'];
-    name = obj['name'];
-  }
+  @JsonKey(name: 'id')    String id;
+  @JsonKey(name: 'name')    String name;
+
+  factory BusinessM.fromJson(Map<String, dynamic> json) => _$BusinessMFromJson(json);
+  Map<String, dynamic> toJson() => _$BusinessMToJson(this);
 }
 
+@JsonSerializable()
 class ThemeResponse {
-  String id;
-  String name;
-  String picture;
-  dynamic published;
-  String source;
-  String type;
-  List<dynamic> versions;
+  ThemeResponse();
 
-  ThemeResponse.toMap(dynamic obj) {
-    id = obj['id'];
-    name = obj['name'];
-    picture = obj['picture'];
-    published = obj['published'];
-    source = obj['source'];
-    type = obj['type'];
-    versions = obj['versions'];
-  }
+  @JsonKey(name: 'id')            String id;
+  @JsonKey(name: 'name')          String name;
+  @JsonKey(name: 'picture')       String picture;
+  @JsonKey(name: 'published')     dynamic published;
+  @JsonKey(name: 'source')        String source;
+  @JsonKey(name: 'type')          String type;
+  @JsonKey(name: 'versions')      List<dynamic> versions;
+
+  factory ThemeResponse.fromJson(Map<String, dynamic> json) => _$ThemeResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$ThemeResponseToJson(this);
+
 }
