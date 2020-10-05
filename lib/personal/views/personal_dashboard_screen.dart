@@ -12,6 +12,7 @@ import 'package:payever/dashboard/sub_view/dashboard_settings_view.dart';
 import 'package:payever/dashboard/sub_view/dashboard_transactions_view.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/personal/views/personal_setting_screen.dart';
+import 'package:payever/personal/views/sub_views/personal_dashboard_social_view.dart';
 import 'package:payever/search/views/search_screen.dart';
 import 'package:payever/settings/models/models.dart';
 import 'package:payever/settings/views/general/language_screen.dart';
@@ -156,6 +157,8 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
                         children: <Widget>[
                           _headerView(state),
                           _searchBar(state),
+                          SizedBox(height: 16),
+                          _socialView(state),
                           SizedBox(height: 16),
                           _transactionView(state),
                           SizedBox(height: 16),
@@ -378,6 +381,13 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _socialView(PersonalDashboardScreenState state) {
+    return PersonalDashboardSocialView(
+      onTapEdit: () {},
+      onTapWidget: () {},
     );
   }
 

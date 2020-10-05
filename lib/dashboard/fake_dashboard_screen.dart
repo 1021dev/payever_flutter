@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -103,20 +105,69 @@ class _FakeDashboardScreenState extends State<FakeDashboardScreen> {
     return Stack(
       children: <Widget>[
         _body(state),
-        BlurEffectView(
-          blur: 6.5,
-          radius: 0,
-          color: overlayBackground(),
-        ),
-        BlurryContainer(
-          blur: 20,
-          child: Container(),
-          bgColor: GlobalUtils.theme == 'light' ? overlayBackground() : Colors.transparent,
-        ),
+        _blurBackGround(),
       ],
     );
   }
 
+  Widget _blurBackGround() {
+    if (GlobalUtils.theme == 'light') {
+      return Stack(
+        children: <Widget>[
+          BlurEffectView(
+            blur: 6.5,
+            radius: 0,
+            color: overlayBackground(),
+          ),
+          BlurryContainer(
+            blur: 20,
+            child: Container(),
+            bgColor: overlayBackground(),
+          ),
+        ],
+      );
+    }
+    return Stack(
+      children: <Widget>[
+        BlurryContainer(
+          blur: 6.5,
+          child: Container(),
+          bgColor: Colors.transparent,
+        ),
+        BlurryContainer(
+          blur: 6.5,
+          child: Container(),
+          bgColor: Colors.transparent,
+        ),
+        BlurryContainer(
+          blur: 6.5,
+          child: Container(),
+          bgColor: Colors.transparent,
+        ),
+        BlurryContainer(
+          blur: 6.5,
+          child: Container(),
+          bgColor: Colors.transparent,
+        ),
+        BlurryContainer(
+          blur: 6.5,
+          child: Container(),
+          bgColor: Colors.transparent,
+        ),
+        BlurryContainer(
+          blur: 6.5,
+          child: Container(),
+          bgColor: Colors.transparent,
+        ),
+        BlurryContainer(
+          blur: 6.5,
+          child: Container(),
+          bgColor: Colors.transparent,
+        ),
+      ],
+    );
+
+  }
   Widget _body(DashboardScreenState state) {
     List<AppWidget> widgets = [];
     List<BusinessApps> businessApps = [];
