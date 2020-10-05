@@ -24,7 +24,10 @@ class BusinessAppCell extends StatelessWidget {
     if (code == 'products') {
       code  = 'product';
     }
-
+    String title = currentApp.dashboardInfo.title;
+    if (title.contains('setting')) {
+      title = 'info_boxes.settings.heading';
+    }
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -67,7 +70,7 @@ class BusinessAppCell extends StatelessWidget {
                 ): Container(),
                 SizedBox(width: 4,),
                 Text(
-                  Language.getCommerceOSStrings(currentApp.dashboardInfo.title),
+                  Language.getCommerceOSStrings(title),
                   style: TextStyle(
                     fontSize: 10,
                   ),

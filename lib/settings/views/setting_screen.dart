@@ -258,16 +258,20 @@ class _SettingScreenState extends State<SettingScreen> {
       children: <Widget>[
         GestureDetector(
           onTap: () => _onTileClicked(index),
-          child: Container(
-            padding: EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: overlayBackground(),
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: SvgPicture.asset(
-              settingItems[index].image,
-              color: iconColor(),
+          child: AspectRatio(
+            aspectRatio: 1/1,
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: overlayBackground(),
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: SvgPicture.asset(
+                settingItems[index].image,
+                color: iconColor(),
+              ),
             ),
           ),
         ),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
@@ -169,7 +170,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
           InkWell(
             onTap: () {},
             child: Text(
-              'Reset',
+              Language.getCommerceOSStrings('actions.reset'),
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.white
