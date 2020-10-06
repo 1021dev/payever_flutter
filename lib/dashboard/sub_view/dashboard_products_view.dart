@@ -173,7 +173,7 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                   SizedBox(height: 8),
                   widget.lastSales != null
                       ? Container(
-                          height: (widget.mainWidth - 20)/ 4 + 10,
+                          height: (widget.mainWidth - 20)/ 4,
                           child: GridView.count(
                             crossAxisCount: 4,
                             crossAxisSpacing: 6,

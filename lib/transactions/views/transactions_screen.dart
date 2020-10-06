@@ -23,7 +23,6 @@ import 'package:provider/provider.dart';
 
 import '../utils/utils.dart';
 import '../view_models/view_models.dart';
-import '../network/network.dart';
 import '../../commons/view_models/view_models.dart';
 import '../../commons/models/models.dart';
 import 'sub_view/search_text_content_view.dart';
@@ -412,29 +411,33 @@ class _TransactionScreenState extends State<TransactionScreen> {
                   ),
                 )),
               ),
-              Container(
-                height: 50,
-                color: overlayBackground(),
-                alignment: Alignment.center,
-                child: !noTransactions ? AutoSizeText(
-                  Language.getTransactionStrings('total_orders.heading')
-                      .toString()
-                      .replaceFirst('{{total_count}}', '${_quantity ?? 0}')
-                      .replaceFirst('{{total_sum}}',
-                      '${_currency ?? '€'}${f.format(_totalAmount ?? 0)}'),
-                  overflow: TextOverflow.fade,
-                  maxLines: 1,
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
-                )
-                    : Container(),
-              )
+              _bottomView(),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Widget _bottomView() {
+    return GlobalUtils.isBusinessMode ? Container(
+      height: 50,
+      color: overlayBackground(),
+      alignment: Alignment.center,
+      child: !noTransactions ? AutoSizeText(
+        Language.getTransactionStrings('total_orders.heading')
+            .toString()
+            .replaceFirst('{{total_count}}', '${_quantity ?? 0}')
+            .replaceFirst('{{total_sum}}',
+            '${_currency ?? '€'}${f.format(_totalAmount ?? 0)}'),
+        overflow: TextOverflow.fade,
+        maxLines: 1,
+        style: TextStyle(
+          fontSize: 16,
+        ),
+      )
+          : Container(),
+    ) : Container();
   }
 
   void showSearchTextDialog(TransactionsScreenState state) {
@@ -462,9 +465,16 @@ class _TransactionScreenState extends State<TransactionScreen> {
 
 class CustomList extends StatefulWidget {
   final GlobalStateModel globalStateModel;
-  final List<Collection> collection;
+  final List<Collection> totalCollection;
   final TransactionsScreenState screenState;
-  CustomList(this.globalStateModel, this.collection, this.screenState);
+  List<Collection> collection = [];
+  CustomList(this.globalStateModel, this.totalCollection, this.screenState){
+    if (GlobalUtils.isBusinessMode) {
+      collection.addAll(totalCollection);
+    } else {
+      collection = totalCollection.where((element) => element.businessUuid == null || element.businessUuid.isEmpty).toList();
+    }
+  }
 
   @override
   _CustomListState createState() => _CustomListState();
@@ -476,6 +486,7 @@ class _CustomListState extends State<CustomList> {
 
   int page = 1;
   int pageCount;
+
 
   @override
   void initState() {
