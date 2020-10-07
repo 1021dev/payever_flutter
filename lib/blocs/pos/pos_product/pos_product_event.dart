@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:meta/meta.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/pos/models/pos.dart';
 import 'package:payever/products/models/models.dart';
@@ -60,3 +61,9 @@ class UpdateProductChannelSetFlowEvent extends PosProductScreenEvent {
     this.channelSetFlow,
   ];
 }
+
+@immutable
+class PosProductsReloadEvent extends PosProductScreenEvent {}
+
+@immutable
+class PosProductsLoadMoreEvent extends PosProductScreenEvent {}

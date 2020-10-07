@@ -1,5 +1,3 @@
-
-
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/pos/models/pos.dart';
 import 'package:payever/products/models/models.dart';
@@ -14,6 +12,7 @@ class PosProductScreenState {
   final ChannelSetFlow channelSetFlow;
   // Product Filter
   final List<ProductsModel> products;
+  final Info productsInfo;
   final List<ProductFilterOption> filterOptions;
   final List<String>categories;
   final bool orderDirection;
@@ -31,6 +30,7 @@ class PosProductScreenState {
     this.searchText = '',
     this.searching = false,
     this.products,
+    this.productsInfo,
     this.filterOptions = const [],
   });
 
@@ -46,6 +46,7 @@ class PosProductScreenState {
     this.searchText,
     this.searching,
     this.products,
+    this.productsInfo,
     this.filterOptions,
   ];
 
@@ -60,6 +61,7 @@ class PosProductScreenState {
     bool orderDirection,
     String searchText,
     bool searching,
+    Info productsInfo,
     List<ProductsModel> products,
     List<ProductFilterOption> filterOptions,
   }) {
@@ -75,6 +77,7 @@ class PosProductScreenState {
       searchText: searchText ?? this.searchText,
       searching: searching ?? this.searching,
       products: products ?? this.products,
+      productsInfo: productsInfo ?? this.productsInfo,
       filterOptions: filterOptions ?? this.filterOptions,
     );
   }

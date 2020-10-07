@@ -7,19 +7,19 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/theme.dart';
 
-class ProductsFilterScreen extends StatefulWidget {
+class PosProductsFilterScreen extends StatefulWidget {
   final PosProductScreenBloc screenBloc;
 
-  ProductsFilterScreen({
+  PosProductsFilterScreen({
     this.screenBloc,
   });
 
   @override
-  _ProductsFilterScreenState createState() =>
-      _ProductsFilterScreenState();
+  _PosProductsFilterScreenState createState() =>
+      _PosProductsFilterScreenState();
 }
 
-class _ProductsFilterScreenState extends State<ProductsFilterScreen> {
+class _PosProductsFilterScreenState extends State<PosProductsFilterScreen> {
   List<String>  selectedCategories = [];
   List<String> subCategories = [];
   bool _isPortrait;

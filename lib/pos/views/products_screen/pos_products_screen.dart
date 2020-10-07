@@ -12,22 +12,23 @@ import 'package:payever/checkout/models/models.dart';
 import 'package:payever/checkout/views/workshop/subview/work_shop_view.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/pos/views/products_screen/pos_product_detail_screen.dart';
-import 'package:payever/pos/views/products_screen/products_filter_screen.dart';
+import 'package:payever/pos/views/products_screen/pos_products_filter_screen.dart';
 import 'package:payever/pos/views/products_screen/widget/pos_product_grid_item.dart';
 import 'package:payever/products/models/models.dart';
 import 'package:payever/theme.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:icon_badge/icon_badge.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../pos_qr_app.dart';
 
-class ProductsScreen extends StatefulWidget {
+class PosProductsScreen extends StatefulWidget {
   final PosScreenBloc posScreenBloc;
   final ChannelSetFlow channelSetFlow;
   final String businessId;
   final List<ProductsModel> products;
   final List<ProductFilterOption> filterOptions;
 
-  ProductsScreen(
+  PosProductsScreen(
     this.businessId,
     this.posScreenBloc,
     this.channelSetFlow,
@@ -36,10 +37,10 @@ class ProductsScreen extends StatefulWidget {
   );
 
   @override
-  createState() => _ProductsScreenState();
+  createState() => _PosProductsScreenState();
 }
 
-class _ProductsScreenState extends State<ProductsScreen> {
+class _PosProductsScreenState extends State<PosProductsScreen> {
   bool _isPortrait;
   bool _isTablet;
   bool isGridMode = true;
@@ -48,6 +49,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
   TextEditingController searchController = TextEditingController();
 
   PosProductScreenBloc screenBloc;
+  RefreshController _productsRefreshController = RefreshController(
+    initialRefresh: false,
+  );
 
   @override
   void initState() {
@@ -381,7 +385,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
             final curvedValue = 1.0 - Curves.ease.transform(a1.value);
             return Transform(
               transform: Matrix4.translationValues(-curvedValue * 200, 0.0, 0),
-              child: ProductsFilterScreen(
+              child: PosProductsFilterScreen(
                 screenBloc: screenBloc,
               ),
             );
@@ -422,20 +426,41 @@ class _ProductsScreenState extends State<ProductsScreen> {
         horizontal: 12,
         vertical: 16,
       ),
-      child: CustomScrollView(
-        slivers: <Widget>[
-          SliverGrid.count(
-            crossAxisCount: _isTablet ? 3 : (_isPortrait ? 2 : 3),
-            crossAxisSpacing: _isTablet ? 12 : (_isPortrait ? 0 : 6),
-            mainAxisSpacing: _isTablet ? 12 : (_isPortrait ? 6 : 6),
-            children: List.generate(
-              productsItems.length,
-              (index) {
-                return productsItems[index];
-              },
+      child: SmartRefresher(
+        enablePullDown: true,
+        enablePullUp: true,
+        header: MaterialClassicHeader(
+          semanticsLabel: '',
+        ),
+        footer: CustomFooter(
+          loadStyle: LoadStyle.ShowWhenLoading,
+          height: 1,
+          builder: (context, status) {
+            return Container();
+          },
+        ),
+        controller: _productsRefreshController,
+        onRefresh: () {
+          _refreshProducts();
+        },
+        onLoading: () {
+          _loadMoreProducts(state);
+        },
+        child: CustomScrollView(
+          slivers: <Widget>[
+            SliverGrid.count(
+              crossAxisCount: _isTablet ? 3 : (_isPortrait ? 2 : 3),
+              crossAxisSpacing: _isTablet ? 12 : (_isPortrait ? 0 : 6),
+              mainAxisSpacing: _isTablet ? 12 : (_isPortrait ? 6 : 6),
+              children: List.generate(
+                productsItems.length,
+                (index) {
+                  return productsItems[index];
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -446,6 +471,23 @@ class _ProductsScreenState extends State<ProductsScreen> {
         itemCount: state.products.length,
         itemBuilder: (context, index) =>
             _productListBody(state, state.products[index]));
+  }
+
+  void _loadMoreProducts(PosProductScreenState state) async {
+    print('Load more products');
+    if (state.productsInfo.page == state.productsInfo.pageCount) {
+      _productsRefreshController.loadComplete();
+      return;
+    }
+    screenBloc.add(PosProductsLoadMoreEvent());
+    await Future.delayed(Duration(seconds: 0, milliseconds: 1000));
+    _productsRefreshController.loadComplete();
+  }
+
+  void _refreshProducts() async {
+    screenBloc.add(PosProductsReloadEvent());
+    await Future.delayed(Duration(seconds: 0, milliseconds: 1000));
+    _productsRefreshController.refreshCompleted(resetFooterState: true);
   }
 
   Widget _productListBody(PosProductScreenState state, ProductsModel model) {

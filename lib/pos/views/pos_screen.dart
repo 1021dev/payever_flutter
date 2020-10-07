@@ -19,7 +19,7 @@ import 'package:payever/pos/views/pos_create_terminal_screen.dart';
 import 'package:payever/pos/views/pos_qr_app.dart';
 import 'package:payever/pos/views/pos_switch_terminals_screen.dart';
 import 'package:payever/pos/views/pos_twillo_settings.dart';
-import 'package:payever/pos/views/products_screen/products_screen.dart';
+import 'package:payever/pos/views/products_screen/pos_products_screen.dart';
 import 'package:payever/pos/widgets/pos_top_button.dart';
 import 'package:payever/products/models/models.dart';
 import 'package:payever/theme.dart';
@@ -94,7 +94,7 @@ class _PosScreenState extends State<PosScreen> {
   @override
   void initState() {
     super.initState();
-    print('Product: ${widget.products.length}');
+
     screenBloc = PosScreenBloc(
       dashboardScreenBloc: widget.dashboardScreenBloc,
     )..add(PosScreenInitEvent(
@@ -254,7 +254,7 @@ class _PosScreenState extends State<PosScreen> {
   Widget _getBody(PosScreenState state) {
     switch(selectedIndex) {
       case 0:
-        return ProductsScreen(state.businessId, screenBloc,
+        return PosProductsScreen(state.businessId, screenBloc,
             state.channelSetFlow, state.products, state.filterOptions);
       case 1:
         return _connectWidget(state);

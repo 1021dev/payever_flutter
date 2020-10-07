@@ -561,7 +561,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         },
         onTapOpen: () {
           if (isLoadingData(state))  return;
-          print('Product1: ${state.products.length}');
           _navigateAppsScreen(
               state,
               PosInitScreen(
