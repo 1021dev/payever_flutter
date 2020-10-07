@@ -27,12 +27,13 @@ class PosProductsScreen extends StatefulWidget {
   final String businessId;
   final List<ProductsModel> products;
   final List<ProductFilterOption> filterOptions;
-
+  final Info productsInfo;
   PosProductsScreen(
     this.businessId,
     this.posScreenBloc,
     this.channelSetFlow,
     this.products,
+    this.productsInfo,
     this.filterOptions,
   );
 
@@ -56,8 +57,8 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
   @override
   void initState() {
     screenBloc = PosProductScreenBloc(widget.posScreenBloc)
-      ..add(
-          PosProductsScreenInitEvent(widget.businessId, widget.channelSetFlow, widget.products, widget.filterOptions));
+      ..add(PosProductsScreenInitEvent(widget.businessId, widget.channelSetFlow,
+          widget.products, widget.productsInfo, widget.filterOptions));
     super.initState();
   }
 
@@ -459,6 +460,19 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
                 },
               ),
             ),
+            new SliverToBoxAdapter(
+              child: state.products.length <
+                  state.productsInfo.itemCount
+                  ? Container(
+                child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+              )
+                  : Container(),
+            )
           ],
         ),
       ),
@@ -467,10 +481,40 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
 
   Widget _listBody(PosProductScreenState state) {
     if (state.products == null || state.products.isEmpty) return Container();
-    return ListView.builder(
-        itemCount: state.products.length,
-        itemBuilder: (context, index) =>
-            _productListBody(state, state.products[index]));
+    return SmartRefresher(
+      enablePullDown: true,
+      enablePullUp: true,
+      header: MaterialClassicHeader(
+        semanticsLabel: '',
+      ),
+      footer: CustomFooter(
+        loadStyle: LoadStyle.ShowWhenLoading,
+        height: 60,
+        builder: (context, status) {
+          return Container(
+            child: Center(
+                child: Container(
+                    margin: EdgeInsets.only(top: 20),
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 1,
+                    ))),
+          );
+        },
+      ),
+      controller: _productsRefreshController,
+      onRefresh: () {
+        _refreshProducts();
+      },
+      onLoading: () {
+        _loadMoreProducts(state);
+      },
+      child: ListView.builder(
+          itemCount: state.products.length,
+          itemBuilder: (context, index) =>
+              _productListBody(state, state.products[index])),
+    );
   }
 
   void _loadMoreProducts(PosProductScreenState state) async {

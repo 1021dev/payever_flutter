@@ -277,9 +277,10 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     add(DashboardScreenLoadDataEvent());
   }
 
-  Stream<DashboardScreenState> fetchProducts() async* {
+  Stream<DashboardScreenState> fetchPosProducts() async* {
     // Get Product
     List<ProductsModel> products = [];
+    Info productInfo;
     Map<String, dynamic> body = {
       'operationName': null,
       'variables': {},
@@ -293,17 +294,24 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       if (data != null) {
         dynamic getProducts = data['getProducts'];
         if (getProducts != null) {
+          dynamic infoObj = getProducts['info'];
+          if (infoObj != null) {
+            print('infoObj => $infoObj');
+            dynamic pagination = infoObj['pagination'];
+            if (pagination != null) {
+              productInfo = Info.toMap(pagination);
+            }
+          }
           List productsObj = getProducts['products'];
           if (productsObj != null) {
             productsObj.forEach((element) {
-              ProductsModel model = ProductsModel.toMap(element);
-              products.add(model);
+              products.add(ProductsModel.toMap(element));
             });
           }
         }
       }
     }
-    yield state.copyWith(products: products);
+    yield state.copyWith(posProducts: products, posProductsInfo: productInfo);
     yield* getCheckout();
   }
 
@@ -450,7 +458,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       connects.add(ConnectModel.toMap(element));
     });
     yield state.copyWith(connects: connects);
-    yield* fetchProducts();
+    yield* fetchPosProducts();
   }
 
   Stream<DashboardScreenState> getProductsPopularMonthRandom(Business currentBusiness) async* {

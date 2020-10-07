@@ -16,9 +16,10 @@ class PosProductsScreenInitEvent extends PosProductScreenEvent {
   final ChannelSetFlow channelSetFlow;
   final String businessId;
   final List<ProductsModel> products;
+  final Info productsInfo;
   final List<ProductFilterOption> filterOptions;
 
-  PosProductsScreenInitEvent(this.businessId, this.channelSetFlow, this.products, this.filterOptions);
+  PosProductsScreenInitEvent(this.businessId, this.channelSetFlow, this.products, this.productsInfo, this.filterOptions);
 
   @override
   List<Object> get props => [

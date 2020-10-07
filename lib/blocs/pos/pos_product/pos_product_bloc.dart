@@ -26,6 +26,7 @@ class PosProductScreenBloc
           businessId: event.businessId,
           channelSetFlow: event.channelSetFlow,
           products: event.products,
+          productsInfo: event.productsInfo,
           filterOptions: event.filterOptions);
     } else if (event is ProductsFilterEvent) {
       yield state.copyWith(
@@ -45,7 +46,7 @@ class PosProductScreenBloc
     } else if (event is ResetCardProgressEvent) {
       yield state.copyWith(cartProgressed: false);
     } else if (event is PosProductsLoadMoreEvent) {
-
+      yield* loadMoreProducts();
     }
   }
 
@@ -160,14 +161,14 @@ class PosProductScreenBloc
         }
       }
     }
-    if (products.length > 0 && products.length == (page - 1) * 20) {
-      products.forEach((element) {
-        products.add(element);
-      });
+    List<ProductsModel> totalProducts = state.products;
+    if (products != null && products.isNotEmpty) {
+      totalProducts.addAll(products);
     }
+
     yield state.copyWith(
       productsInfo: productInfo,
-      products: products,
+      products: totalProducts,
     );
   }
 

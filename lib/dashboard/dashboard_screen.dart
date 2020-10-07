@@ -343,7 +343,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 activeTerminal: state.activeTerminal,
                 terminals: state.terminalList,
                 channelSets: state.channelSets,
-                products: state.products,
+                products: state.posProducts,
               ),
               type: PageTransitionType.fade,
               duration: Duration(milliseconds: 500),
@@ -570,7 +570,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 activeTerminal: state.activeTerminal,
                 terminals: state.terminalList,
                 channelSets: state.channelSets,
-                products: state.products,
+                products: state.posProducts,
               ),
               isDuration: true
           );
