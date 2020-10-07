@@ -8,7 +8,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:intl/intl.dart';
-import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
@@ -20,6 +19,7 @@ import 'package:payever/transactions/views/sort_content_view.dart';
 import 'package:payever/transactions/views/export_content_view.dart';
 import 'package:payever/widgets/main_app_bar.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../utils/utils.dart';
 import '../../commons/view_models/view_models.dart';
 import '../../commons/models/models.dart';
@@ -28,7 +28,6 @@ import 'transactions_details_screen.dart';
 
 bool _isPortrait;
 bool _isTablet;
-final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
 
 class TagItemModel {
   String title;
@@ -66,6 +65,7 @@ class TransactionScreen extends StatefulWidget {
 }
 
 class _TransactionScreenState extends State<TransactionScreen> {
+
   TransactionsScreenBloc screenBloc;
   String wallpaper;
   num _quantity;
@@ -76,13 +76,16 @@ class _TransactionScreenState extends State<TransactionScreen> {
   List<TagItemModel> _filterItems;
   int _searchTagIndex = -1;
 
+  RefreshController _transactionsRefreshController = RefreshController(
+    initialRefresh: false,
+  );
+
   @override
   void initState() {
     super.initState();
     screenBloc = TransactionsScreenBloc(
       dashboardScreenBloc: widget.dashboardScreenBloc,
-    );
-    screenBloc.add(TransactionsScreenInitEvent(widget.globalStateModel.currentBusiness));
+    )..add(TransactionsScreenInitEvent(widget.globalStateModel.currentBusiness));
   }
 
   @override
@@ -323,7 +326,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
               bottom: 8,
             ),
             child: Tags(
-              key: _tagStateKey,
               itemCount: _filterItems.length,
               alignment: WrapAlignment.start,
               spacing: 4,
@@ -445,7 +447,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : (state.transaction.collection.length > 0
+          : (state.collections.length > 0
               ? _listBody(state)
               : Center(
                   child: Text(
@@ -460,10 +462,74 @@ class _TransactionScreenState extends State<TransactionScreen> {
   }
 
   Widget _listBody(TransactionsScreenState state) {
-    return CustomList(
-        widget.globalStateModel,
-        state.transaction != null ? state.transaction.collection : [],
-        state);
+    return SmartRefresher(
+      enablePullDown: true,
+      enablePullUp: true,
+      header: MaterialClassicHeader(
+        semanticsLabel: '',
+      ),
+      footer: CustomFooter(
+        loadStyle: LoadStyle.ShowWhenLoading,
+        height: 60,
+        builder: (context, status) {
+          return Container(
+            child: Center(
+                child: Container(
+                    margin: EdgeInsets.only(top: 20),
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 1,
+                    ))),
+          );
+        },
+      ),
+      controller: _transactionsRefreshController,
+      onRefresh: () {
+        _refreshTransactions();
+      },
+      onLoading: () {
+        _loadMoreTransactions(state);
+      },
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemCount: state.collections.length,
+        itemBuilder: (BuildContext context, int index) {
+          return Container(
+            child: _isTablet
+                ? TabletTableRow(
+              globalStateModel: widget.globalStateModel,
+              currentTransaction: state.collections[index],
+              state: state,
+              isHeader: false,
+            )
+                : PhoneTableRow(
+              globalStateModel: widget.globalStateModel,
+              currentTransaction: state.collections[index],
+              state: state,
+              isHeader: false,
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  void _loadMoreTransactions(TransactionsScreenState state) async {
+    print('Load more products: ${state.collections.length}');
+    if (state.collections.length == state.paginationData.total) {
+      _transactionsRefreshController.loadComplete();
+      return;
+    }
+    screenBloc.add(LoadMoreTransactionsEvent());
+    await Future.delayed(Duration(seconds: 0, milliseconds: 1000));
+    _transactionsRefreshController.loadComplete();
+  }
+
+  void _refreshTransactions() async {
+    screenBloc.add(RefreshTransactionsEvent());
+    await Future.delayed(Duration(seconds: 0, milliseconds: 1000));
+    _transactionsRefreshController.refreshCompleted(resetFooterState: true);
   }
 
   void showSearchTextDialog(TransactionsScreenState state) {
@@ -482,126 +548,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
                     UpdateSearchText(searchText: value)
                 );
               }
-          ),
-        );
-      },
-    );
-  }
-
-}
-
-class CustomList extends StatefulWidget {
-  final GlobalStateModel globalStateModel;
-  final List<Collection> totalCollection;
-  final TransactionsScreenState screenState;
-  List<Collection> collection = [];
-  CustomList(this.globalStateModel, this.totalCollection, this.screenState){
-    if (GlobalUtils.isBusinessMode) {
-      collection.addAll(totalCollection);
-    } else {
-      collection = totalCollection.where((element) => element.businessUuid == null || element.businessUuid.isEmpty).toList();
-    }
-  }
-
-  @override
-  _CustomListState createState() => _CustomListState();
-}
-
-class _CustomListState extends State<CustomList> {
-  ScrollController controller;
-  ValueNotifier isLoading = ValueNotifier(false);
-
-  int page = 1;
-  int pageCount;
-
-
-  @override
-  void initState() {
-    super.initState();
-
-    controller = ScrollController()..addListener(_scrollListener);
-  }
-
-  void _scrollListener() {
-    pageCount = (widget.screenState.transaction.paginationData.total / 50).ceil();
-    print('ScrollController pageCount: $pageCount');
-    if (controller.position.extentAfter < 500) {
-      if (page < pageCount && !isLoading.value) {
-        setState(() {
-          isLoading.value = true;
-        });
-        page++;
-
-        ApiService api = ApiService();
-        String queryString = '';
-        String sortQuery = '';
-        if (widget.screenState.curSortType == 'date') {
-          sortQuery = 'orderBy=created_at&direction=desc&';
-        } else if (widget.screenState.curSortType == 'total_high') {
-          sortQuery = 'orderBy=total&direction=desc&';
-        } else if (widget.screenState.curSortType == 'total_low') {
-          sortQuery = 'orderBy=total&direction=asc&';
-        } else if (widget.screenState.curSortType == 'customer_name') {
-          sortQuery = 'orderBy=customer_name&direction=asc&';
-        }
-        queryString = '?${sortQuery}limit=50&query=${widget.screenState.searchText}&page=$page&currency=${widget.globalStateModel.currentBusiness.currency}';
-        if (widget.screenState.filterTypes.length > 0) {
-          for (int i = 0; i < widget.screenState.filterTypes.length; i++) {
-            FilterItem item = widget.screenState.filterTypes[i];
-            String filterType = item.type;
-            String filterCondition = item.condition;
-            String filterValue = item.value;
-            String filterConditionString = 'filters[$filterType][$i][condition]';
-            String filterValueString = 'filters[$filterType][$i][value]';
-            String queryTemp = '&$filterConditionString=$filterCondition&$filterValueString=$filterValue';
-            queryString = '$queryString$queryTemp';
-          }
-        }
-
-        api.getTransactionList(
-          widget.globalStateModel.currentBusiness.id,
-          GlobalUtils.activeToken.accessToken,
-          queryString).then((transaction) {
-          List<Collection> temp = Transaction.fromJson(transaction).collection;
-          if (temp.isNotEmpty) {
-            setState(() {
-              isLoading.value = false;
-              widget.collection.addAll(temp);
-            });
-          }
-        });
-      }
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-//      shrinkWrap: true,
-      controller: controller,
-      itemCount: widget.collection.length,
-      itemBuilder: (BuildContext context, int index) {
-//        if (index == 0)
-//          return _isTablet
-//              ? TabletTableRow(null, true, null)
-//              : PhoneTableRow(null, true, null);
-//        index = index - 1;
-        Key itemKey = Key('transaction.list.transaction_$index');
-
-        return Container(
-          key: itemKey,
-          child: _isTablet
-              ? TabletTableRow(
-            globalStateModel: widget.globalStateModel,
-            currentTransaction: widget.collection[index],
-            state: widget.screenState,
-            isHeader: false,
-          )
-              : PhoneTableRow(
-            globalStateModel: widget.globalStateModel,
-            currentTransaction: widget.collection[index],
-            state: widget.screenState,
-            isHeader: false,
           ),
         );
       },
@@ -633,7 +579,6 @@ class PhoneTableRow extends StatelessWidget {
     return InkWell(
       highlightColor: Colors.transparent,
       child: Container(
-        //alignment: Alignment.topCenter,
 
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,

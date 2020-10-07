@@ -168,7 +168,8 @@ PaginationData _$PaginationDataFromJson(Map<String, dynamic> json) {
   return PaginationData()
     ..page = json['page'] as num
     ..total = json['total'] as num
-    ..amount = json['amount'] as num;
+    ..amount = json['amount'] as num
+    ..currency = json['amount_currency'] as String;
 }
 
 Map<String, dynamic> _$PaginationDataToJson(PaginationData instance) =>
@@ -176,6 +177,7 @@ Map<String, dynamic> _$PaginationDataToJson(PaginationData instance) =>
       'page': instance.page,
       'total': instance.total,
       'amount': instance.amount,
+      'amount_currency': instance.currency,
     };
 
 Usages _$UsagesFromJson(Map<String, dynamic> json) {

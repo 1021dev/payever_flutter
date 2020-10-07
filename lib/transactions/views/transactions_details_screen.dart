@@ -1,5 +1,5 @@
 import 'dart:ui';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,7 +9,6 @@ import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/transaction_detail/transaction_detail.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/theme.dart';
-
 import '../utils/utils.dart';
 import '../../commons/models/models.dart';
 import '../../commons/views/custom_elements/custom_elements.dart';
@@ -193,12 +192,8 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
 
   Widget highlightHeaderRow() {
     bool _noItem = parts.currentTransaction.cart.items.isEmpty;
-    bool havePicture;
-    if (_noItem) {
-      havePicture = false;
-    } else {
-      havePicture = parts.currentTransaction.cart.items[0].thumbnail != null;
-    }
+
+
     Widget title() {
       if (_noItem) {
         return AutoSizeText(
@@ -247,6 +242,16 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
                 '${parts.currentTransaction.cart.items.length}'));
       }
     }
+    String imageUrl = '';
+    if (parts.currentTransaction.cart != null && parts.currentTransaction.cart.items != null && parts.currentTransaction.cart.items.isNotEmpty) {
+      imageUrl = parts.currentTransaction.cart.items[0].thumbnail
+          .contains('https:')
+          ? parts.currentTransaction.cart.items[0].thumbnail
+          : Env.storage +
+          '/products/' +
+          parts.currentTransaction.cart.items[0]
+              .thumbnail;
+    }
 
     return Padding(
       padding: EdgeInsets.all(0),
@@ -257,35 +262,57 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Row(children: <Widget>[
-              Container(
-                width: Measurements.width * getCustomNumber(0.15, 0.25),
-                height: Measurements.width * getCustomNumber(0.15, 0.25),
-                decoration: BoxDecoration(
-                  shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.circular(12),
-                  color: overlayBackground(),
-                  image: !havePicture
-                      ? null
-                      : DecorationImage(
-                      image: NetworkImage(parts
-                          .currentTransaction.cart.items[0].thumbnail
-                          .contains('https:')
-                          ? parts.currentTransaction.cart.items[0].thumbnail
-                          : Env.storage +
-                          '/products/' +
-                          parts.currentTransaction.cart.items[0]
-                              .thumbnail)),
+              CachedNetworkImage(
+                imageUrl:imageUrl,
+                imageBuilder: (context, imageProvider) => Container(
+                  width: Measurements.width * getCustomNumber(0.15, 0.25),
+                  height: Measurements.width * getCustomNumber(0.15, 0.25),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    image: DecorationImage(
+                      image: imageProvider,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
                 ),
-                child: havePicture
-                    ? Container()
-                    : Center(
-                  child: SvgPicture.asset(
-                    'assets/images/no_image.svg',
-                    height: Measurements.height * 0.05,
-                    color: iconColor(),
+                color: Colors.white,
+                placeholder: (context, url) => Container(
+                  width: Measurements.width * getCustomNumber(0.15, 0.25),
+                  height: Measurements.width * getCustomNumber(0.15, 0.25),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Center(
+                    child: Container(
+                      width: 30,
+                      height: 30,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                      ),
+                    ),
+                  ),
+                ),
+                errorWidget: (context, url, error) => Container(
+                  width: Measurements.width * getCustomNumber(0.15, 0.25),
+                  height: Measurements.width * getCustomNumber(0.15, 0.25),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Center(
+                    child: AspectRatio(
+                      aspectRatio: 0.8,
+                      child: SvgPicture.asset(
+                        'assets/images/no_image.svg',
+                        color: Colors.black54,
+                      ),
+                    ),
                   ),
                 ),
               ),
+
               Flexible(
                 child: Container(
                   padding: EdgeInsets.only(left: Measurements.width * 0.06),

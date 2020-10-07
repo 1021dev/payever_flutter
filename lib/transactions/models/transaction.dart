@@ -103,9 +103,10 @@ class BillingAddress {
 class PaginationData {
   PaginationData();
 
-  @JsonKey(name: 'page')      num page;
-  @JsonKey(name: 'total')     num total;
-  @JsonKey(name: 'amount')    num amount;
+  @JsonKey(name: 'page')              num page;
+  @JsonKey(name: 'total')             num total;
+  @JsonKey(name: 'amount')            num amount;
+  @JsonKey(name: 'amount_currency')   String currency;
 
   factory PaginationData.fromJson(Map<String, dynamic> json) => _$PaginationDataFromJson(json);
   Map<String, dynamic> toJson() => _$PaginationDataToJson(this);
