@@ -255,10 +255,12 @@ class _PosScreenState extends State<PosScreen> {
     switch(selectedIndex) {
       case 0:
         if (posProductScreen == null) {
+          List<ProductsModel>products = [];
+          products.addAll(widget.products);
           posProductScreen = PosProductsScreen(
               state.businessId,
               screenBloc,
-              state.products,
+              products,
               widget.dashboardScreenBloc.state.posProductsInfo,);
         }
         return posProductScreen;

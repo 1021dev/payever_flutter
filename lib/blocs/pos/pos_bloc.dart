@@ -2,11 +2,9 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:payever/apis/api_service.dart';
-import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/pos/models/pos.dart';
 import 'package:payever/commons/utils/common_utils.dart';
-import 'package:payever/products/models/models.dart';
 import '../bloc.dart';
 
 class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
@@ -27,11 +25,8 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
           activeTerminal: event.activeTerminal,
           terminals: event.terminals,
           defaultCheckout: event.defaultCheckout,
-          products: event.products
       );
       yield* fetchPos();
-    } else if (event is GetProductsEvent) {
-      yield* fetchProducts();
     } else if (event is GetPosIntegrationsEvent) {
       yield* getIntegrations();
     } else if (event is GetTerminalIntegrationsEvent) {
@@ -185,42 +180,8 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     if (state.activeTerminal == null) {
       yield state.copyWith(activeTerminal: activeTerminal, terminals: terminals, terminalCopied: false);
     } else {
-      yield state.copyWith(terminals: terminals, terminalCopied: false);
+      yield state.copyWith(terminals: terminals, terminalCopied: false, isLoading: false);
     }
-    add(GetProductsEvent());
-  }
-
-  Stream<PosScreenState> fetchProducts() async* {
-    // yield state.copyWith(isLoading: true);
-    // Get Product
-    List<ProductsModel> products = state.products;
-    if (products == null || products.isEmpty) {
-      products = [];
-      Map<String, dynamic> body = {
-        'operationName': null,
-        'variables': {},
-        'query':
-        '{\n  getProducts(businessUuid: \"${state.businessId}\", paginationLimit: 100, pageNumber: 1, orderBy: \"price\", orderDirection: \"asc\", filterById: [], search: \"\", filters: []) {\n    products {\n      images\n      id\n      title\n      description\n      onSales\n      price\n      salePrice\n      vatRate\n      sku\n      barcode\n      currency\n      type\n      active\n      categories {\n        title\n      }\n      collections {\n        _id\n        name\n        description\n      }\n      variants {\n        id\n        images\n        options {\n          name\n          value\n        }\n        description\n        onSales\n        price\n        salePrice\n        sku\n        barcode\n      }\n      channelSets {\n        id\n        type\n        name\n      }\n      shipping {\n        weight\n        width\n        length\n        height\n      }\n    }\n    info {\n      pagination {\n        page\n        page_count\n        per_page\n        item_count\n      }\n    }\n  }\n}\n'
-      };
-
-      dynamic response =
-      await api.getProducts(GlobalUtils.activeToken.accessToken, body);
-      if (response is Map) {
-        dynamic data = response['data'];
-        if (data != null) {
-          dynamic getProducts = data['getProducts'];
-          if (getProducts != null) {
-            List productsObj = getProducts['products'];
-            if (productsObj != null) {
-              productsObj.forEach((element) {
-                products.add(ProductsModel.toMap(element));
-              });
-            }
-          }
-        }
-      }
-    }
-    yield state.copyWith(products: products, isLoading: false);
     add(GetPosIntegrationsEvent());
   }
 

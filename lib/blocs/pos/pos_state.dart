@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
-import 'package:payever/products/models/models.dart';
 
 class PosScreenState {
   final bool isLoading;
@@ -16,7 +15,6 @@ class PosScreenState {
   final ChannelSetFlow channelSetFlow;
   final bool businessCopied;
   final bool terminalCopied;
-  final List<ProductsModel> products;
   final List<Communication> integrations;
   final List<Communication> communications;
   final DevicePaymentSettings devicePaymentSettings;
@@ -46,7 +44,6 @@ class PosScreenState {
     this.channelSets = const [],
     this.activeTerminal,
     this.businessId,
-    this.products = const [],
     this.businessCopied = false,
     this.terminalCopied = false,
     this.integrations = const [],
@@ -77,7 +74,6 @@ class PosScreenState {
     this.defaultCheckout,
     this.channelSetFlow,
     this.businessId,
-    this.products,
     this.activeTerminal,
     this.businessCopied,
     this.terminalCopied,
@@ -110,7 +106,6 @@ class PosScreenState {
     List<Terminal> terminals,
     List<ChannelSet> channelSets,
     Terminal activeTerminal,
-    List<ProductsModel> products,
     bool businessCopied,
     bool terminalCopied,
     List<Communication> integrations,
@@ -141,7 +136,6 @@ class PosScreenState {
       channelSets: channelSets ?? this.channelSets,
       businessId: businessId ?? this.businessId,
       activeTerminal: activeTerminal ?? this.activeTerminal,
-      products: products ?? this.products,
       businessCopied: businessCopied ?? this.businessCopied,
       terminalCopied: terminalCopied ?? this.terminalCopied,
       integrations: integrations ?? this.integrations,

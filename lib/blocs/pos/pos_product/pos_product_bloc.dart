@@ -26,6 +26,7 @@ class PosProductScreenBloc
           businessId: event.businessId,
           products: event.products,
           productsInfo: event.productsInfo);
+      yield* fetchProducts();
       // Get Channel Set
       yield* getChannelSet();
     } else if (event is ProductsFilterEvent) {
@@ -47,7 +48,44 @@ class PosProductScreenBloc
       yield state.copyWith(cartProgressed: false);
     } else if (event is PosProductsLoadMoreEvent) {
       yield* loadMoreProducts();
+    } else if (event is PosProductsReloadEvent) {
+      yield state
+          .copyWith(subCategories: [], searchText: '', orderDirection: true);
+      yield* filterProducts();
     }
+  }
+
+  Stream<PosProductScreenState> fetchProducts() async* {
+    // yield state.copyWith(isLoading: true);
+    // Get Product
+    List<ProductsModel> products = state.products;
+    if (products == null || products.isEmpty) {
+      products = [];
+      Map<String, dynamic> body = {
+        'operationName': null,
+        'variables': {},
+        'query':
+        '{\n  getProducts(businessUuid: \"${state.businessId}\", paginationLimit: 100, pageNumber: 1, orderBy: \"price\", orderDirection: \"asc\", filterById: [], search: \"\", filters: []) {\n    products {\n      images\n      id\n      title\n      description\n      onSales\n      price\n      salePrice\n      vatRate\n      sku\n      barcode\n      currency\n      type\n      active\n      categories {\n        title\n      }\n      collections {\n        _id\n        name\n        description\n      }\n      variants {\n        id\n        images\n        options {\n          name\n          value\n        }\n        description\n        onSales\n        price\n        salePrice\n        sku\n        barcode\n      }\n      channelSets {\n        id\n        type\n        name\n      }\n      shipping {\n        weight\n        width\n        length\n        height\n      }\n    }\n    info {\n      pagination {\n        page\n        page_count\n        per_page\n        item_count\n      }\n    }\n  }\n}\n'
+      };
+
+      dynamic response =
+      await api.getProducts(GlobalUtils.activeToken.accessToken, body);
+      if (response is Map) {
+        dynamic data = response['data'];
+        if (data != null) {
+          dynamic getProducts = data['getProducts'];
+          if (getProducts != null) {
+            List productsObj = getProducts['products'];
+            if (productsObj != null) {
+              productsObj.forEach((element) {
+                products.add(ProductsModel.toMap(element));
+              });
+            }
+          }
+        }
+      }
+    }
+    yield state.copyWith(products: products, isLoading: false);
   }
 
   Stream<PosProductScreenState> getChannelSet() async* {
@@ -139,7 +177,8 @@ class PosProductScreenBloc
         }
       }
     }
-    yield state.copyWith(products: products, productsInfo: productInfo, searching: false);
+    yield state.copyWith(
+        products: products, productsInfo: productInfo, searching: false);
   }
 
   String getFilterValue(String key) {

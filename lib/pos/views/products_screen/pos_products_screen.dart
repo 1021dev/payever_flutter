@@ -8,7 +8,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
-import 'package:payever/checkout/models/models.dart';
 import 'package:payever/checkout/views/workshop/subview/work_shop_view.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/pos/views/products_screen/pos_product_detail_screen.dart';
@@ -56,6 +55,7 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
     screenBloc = PosProductScreenBloc(widget.posScreenBloc)
       ..add(PosProductsScreenInitEvent(widget.businessId,
           widget.products, widget.productsInfo));
+    print('product length: ${widget.products.length}');
     super.initState();
   }
 
@@ -152,7 +152,7 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
   }
 
   Widget _toolBar(PosProductScreenState state) {
-    searchController.text = state.searchText;
+    // searchController.text = state.searchText;
     return Container(
       height: 50,
       color: overlaySecondAppBar().withOpacity(0.9),
@@ -199,7 +199,26 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
                               .add(ProductsFilterEvent(searchText: value));
                       },
                     ),
-                  )
+                  ),
+                  if (searchController.text != null &&
+                      searchController.text.length > 0)
+                    InkWell(
+                      onTap: () {
+                        screenBloc.add(ProductsFilterEvent(searchText: ''));
+                      },
+                      child: Container(
+                          width: 20,
+                          height: 20,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                            color: Colors.grey[600]
+                          ),
+                          child: Icon(
+                            Icons.close,
+                            size: 18,
+                            color: Colors.white,
+                          )),
+                    ),
                 ],
               ),
             ),
