@@ -112,6 +112,7 @@ ThemeModel _$ThemeModelFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$ThemeModelToJson(ThemeModel instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'application': instance.application,
       'isActive': instance.isActive,
       'isDeployed': instance.isDeployed,
       'name': instance.name,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:payever/commons/models/app_widget.dart';
 
-import '../transactions.dart';
 
 class TransactionStateModel extends ChangeNotifier {
   

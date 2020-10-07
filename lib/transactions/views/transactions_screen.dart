@@ -526,6 +526,7 @@ class _CustomListState extends State<CustomList> {
 
   void _scrollListener() {
     pageCount = (widget.screenState.transaction.paginationData.total / 50).ceil();
+    print('ScrollController pageCount: $pageCount');
     if (controller.position.extentAfter < 500) {
       if (page < pageCount && !isLoading.value) {
         setState(() {
@@ -563,7 +564,7 @@ class _CustomListState extends State<CustomList> {
           widget.globalStateModel.currentBusiness.id,
           GlobalUtils.activeToken.accessToken,
           queryString).then((transaction) {
-          List<Collection> temp = Transaction.toMap(transaction).collection;
+          List<Collection> temp = Transaction.fromJson(transaction).collection;
           if (temp.isNotEmpty) {
             setState(() {
               isLoading.value = false;

@@ -367,10 +367,10 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
           dynamic daysObj = await api.getLastWeek(activeBusiness.id, channelSet.id, token);
           int length = daysObj.length - 1;
           for (int i = length; i > length - 7; i--) {
-            terminal.lastWeekAmount += Day.map(daysObj[i]).amount;
+            terminal.lastWeekAmount += Day.fromJson(daysObj[i]).amount;
           }
           daysObj.forEach((day) {
-            terminal.lastWeek.add(Day.map(day));
+            terminal.lastWeek.add(Day.fromJson(day));
           });
 
           dynamic productsObj = await api.getPopularWeek(activeBusiness.id, channelSet.id, token);
@@ -409,7 +409,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     List<Day> lastMonth = [];
     var days = await fetchDaily(currentBusiness);
     days.forEach((day) {
-      lastMonth.add(Day.map(day));
+      lastMonth.add(Day.fromJson(day));
     });
     yield state.copyWith(lastMonth: lastMonth);
     yield* getMonthly(currentBusiness);
@@ -420,7 +420,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     List<double> monthlySum = [];
     var months = await fetchMonthly(currentBusiness);
     months.forEach((month) {
-      lastYear.add(Month.map(month));
+      lastYear.add(Month.fromJson(month));
     });
     num sum = 0;
     for (int i = (lastYear.length - 1); i >= 0; i--) {
@@ -435,7 +435,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
   Stream<DashboardScreenState> getTotal(Business currentBusiness) async* {
     dynamic response = await api.getTransactionList(
         currentBusiness.id, GlobalUtils.activeToken.accessToken, '');
-    yield state.copyWith(total: Transaction.toMap(response).paginationData.amount.toDouble());
+    yield state.copyWith(total: Transaction.fromJson(response).paginationData.amount.toDouble());
 
     add(FetchShops(business: currentBusiness));
   }

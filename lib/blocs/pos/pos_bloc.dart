@@ -156,10 +156,10 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
             if (daysObj is List) {
               int length = daysObj.length - 1;
               for (int i = length; i > length - 7; i--) {
-                terminal.lastWeekAmount += Day.map(daysObj[i]).amount;
+                terminal.lastWeekAmount += Day.fromJson(daysObj[i]).amount;
               }
               daysObj.forEach((day) {
-                terminal.lastWeek.add(Day.map(day));
+                terminal.lastWeek.add(Day.fromJson(day));
               });
             }
           }

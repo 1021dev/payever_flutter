@@ -1,4 +1,4 @@
-import '../../commons/models/transaction.dart';
+import '../../transactions/models/transaction.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'pos.g.dart';
 

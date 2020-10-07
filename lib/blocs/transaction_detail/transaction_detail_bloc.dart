@@ -24,7 +24,7 @@ class TransactionDetailScreenBloc extends Bloc<TransactionDetailScreenEvent, Tra
     yield state.copyWith(isLoading: true);
     try {
       dynamic obj = await api.getTransactionDetail(businessId, GlobalUtils.activeToken.accessToken, transactionId);
-      TransactionDetails data = TransactionDetails.toMap(obj);
+      TransactionDetails data = TransactionDetails.fromJson(obj);
       yield state.copyWith(isLoading: false, data: data);
       debugPrint('Transaction Detail Data => $obj');
     } catch (error) {

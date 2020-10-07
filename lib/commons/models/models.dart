@@ -6,7 +6,7 @@ export 'expandable_header.dart';
 export '../../pos/models/pos.dart';
 export 'token.dart';
 export 'tutorial.dart';
-export 'transaction.dart';
+export '../../transactions/models/transaction.dart';
 export 'user.dart';
 export 'version.dart';
 

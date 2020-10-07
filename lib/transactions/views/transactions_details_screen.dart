@@ -376,12 +376,12 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
   }
 
   Widget orderRowBody() {
-    int ref = parts.currentTransaction.details.reference == null ? 0 : 1;
-    int no = parts.currentTransaction.details.applicationNo == null ? 0 : 1;
+    int ref = parts.currentTransaction.details.order.reference == null ? 0 : 1;
+    int no = parts.currentTransaction.details.order.applicationNo == null ? 0 : 1;
     int number =
-    parts.currentTransaction.details.applicationNumber == null ? 0 : 1;
-    int finance = parts.currentTransaction.details.financeId == null ? 0 : 1;
-    int pan = parts.currentTransaction.details.panId == null ? 0 : 1;
+    parts.currentTransaction.details.order.applicationNumber == null ? 0 : 1;
+    int finance = parts.currentTransaction.details.order.financeId == null ? 0 : 1;
+    int pan = parts.currentTransaction.details.order.panId == null ? 0 : 1;
     int orig = parts.currentTransaction.transaction.originalID == null ? 0 : 1;
     int length = ref + no + number + finance + pan + orig;
 
@@ -438,7 +438,7 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
                 ),
               ],
             ),
-            parts.currentTransaction.details.reference != null
+            parts.currentTransaction.details.order.reference != null
                 ? Container(
               alignment: Alignment.centerLeft,
               padding: EdgeInsets.all(5),
@@ -461,14 +461,14 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
                     ),
                     TextSpan(
                       text:
-                      '${parts.currentTransaction.details.reference}',
+                      '${parts.currentTransaction.details.order.reference}',
                     ),
                   ],
                 ),
               ),
             )
                 : Container(),
-            parts.currentTransaction.details.panId != null
+            parts.currentTransaction.details.order.panId != null
                 ? Container(
               alignment: Alignment.centerLeft,
               padding: EdgeInsets.all(5),
@@ -491,14 +491,14 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
                     ),
                     TextSpan(
                       text:
-                      '${parts.currentTransaction.details.panId}',
+                      '${parts.currentTransaction.details.order.panId}',
                     ),
                   ],
                 ),
               ),
             )
                 : Container(),
-            parts.currentTransaction.details.applicationNo != null
+            parts.currentTransaction.details.order.applicationNo != null
                 ? Container(
               alignment: Alignment.centerLeft,
               padding: EdgeInsets.all(5),
@@ -521,14 +521,14 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
                     ),
                     TextSpan(
                       text:
-                      '${parts.currentTransaction.details.applicationNo}',
+                      '${parts.currentTransaction.details.order.applicationNo}',
                     ),
                   ],
                 ),
               ),
             )
                 : Container(),
-            parts.currentTransaction.details.applicationNumber != null
+            parts.currentTransaction.details.order.applicationNumber != null
                 ? Container(
               alignment: Alignment.centerLeft,
               padding: EdgeInsets.all(5),
@@ -551,14 +551,14 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
                     ),
                     TextSpan(
                       text:
-                      '${parts.currentTransaction.details.applicationNumber}',
+                      '${parts.currentTransaction.details.order.applicationNumber}',
                     ),
                   ],
                 ),
               ),
             )
                 : Container(),
-            parts.currentTransaction.details.financeId != null
+            parts.currentTransaction.details.order.financeId != null
                 ? Container(
               alignment: Alignment.centerLeft,
               padding: EdgeInsets.all(5),
@@ -581,7 +581,7 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
                     ),
                     TextSpan(
                       text:
-                      '${parts.currentTransaction.details.financeId}',
+                      '${parts.currentTransaction.details.order.financeId}',
                     ),
                   ],
                 ),

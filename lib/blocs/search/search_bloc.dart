@@ -63,7 +63,7 @@ class SearchScreenBloc extends Bloc<SearchScreenEvent, SearchScreenState> {
     String sortQuery = '?orderBy=created_at&direction=desc&query=$key&limit=8';
 
     dynamic obj = await api.getTransactionList(businessId, GlobalUtils.activeToken.accessToken, sortQuery);
-    Transaction data = Transaction.toMap(obj);
+    Transaction data = Transaction.fromJson(obj);
     searchTransactionsResult = data.collection;
 
     print('searchBusinessResult=> $searchBusinessResult');
