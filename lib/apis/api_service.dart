@@ -503,6 +503,23 @@ class ApiService {
     }
   }
 
+  Future<dynamic> getTransactionDetail(
+      String idBusiness, String token, String idTrans) async {
+    print("TAG - getTransactionDetail()");
+
+    try {
+      dynamic response = await _client.getTypeless(
+          RestDataSource.transactionWidUrl +
+              idBusiness +
+              RestDataSource.transactionWidDetails +
+              idTrans,
+          headers: _getHeaders(token)
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
 
   Future<dynamic> getWidgets(String id, String token) async {
     try {

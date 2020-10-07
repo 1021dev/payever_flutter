@@ -20,9 +20,7 @@ import 'package:payever/transactions/views/sort_content_view.dart';
 import 'package:payever/transactions/views/export_content_view.dart';
 import 'package:payever/widgets/main_app_bar.dart';
 import 'package:provider/provider.dart';
-
 import '../utils/utils.dart';
-import '../view_models/view_models.dart';
 import '../../commons/view_models/view_models.dart';
 import '../../commons/models/models.dart';
 import 'sub_view/search_text_content_view.dart';

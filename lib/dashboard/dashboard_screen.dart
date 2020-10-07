@@ -12,6 +12,7 @@ import 'package:payever/checkout/views/workshop/create_edit_checkout_screen.dart
 import 'package:payever/commons/models/app_widget.dart';
 import 'package:payever/commons/models/models.dart';
 import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/dashboard/edit_business_app_screen.dart';

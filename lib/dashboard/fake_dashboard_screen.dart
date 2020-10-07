@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +10,7 @@ import 'package:payever/commons/models/app_widget.dart';
 import 'package:payever/commons/models/business_apps.dart';
 import 'package:payever/commons/models/models.dart';
 import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/search/views/search_screen.dart';
@@ -19,7 +19,6 @@ import 'package:payever/transactions/transactions.dart';
 import 'package:payever/widgets/main_app_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'sub_view/dashboard_app_pos.dart';
 import 'sub_view/dashboard_business_apps_view.dart';
 import 'sub_view/dashboard_checkout_view.dart';

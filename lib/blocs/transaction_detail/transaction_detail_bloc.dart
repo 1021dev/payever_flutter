@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/transaction_detail/transaction_detail.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/transactions/transactions.dart';
@@ -8,7 +9,7 @@ import '../bloc.dart';
 
 class TransactionDetailScreenBloc extends Bloc<TransactionDetailScreenEvent, TransactionDetailScreenState> {
   TransactionDetailScreenBloc();
-  TransactionsApi api = TransactionsApi();
+  ApiService api = ApiService();
 
   @override
   TransactionDetailScreenState get initialState => TransactionDetailScreenState();

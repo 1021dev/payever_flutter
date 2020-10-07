@@ -43,14 +43,16 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
 
   bool _isTablet = false;
   bool _isPortrait = true;
-  TransactionDetailScreenBloc screenBloc = TransactionDetailScreenBloc();
+  TransactionDetailScreenBloc screenBloc;
 
   @override
   void initState() {
-    screenBloc.add(TransactionDetailScreenInitEvent(
-      businessId: widget.businessId,
-      transactionId: widget.transactionId,
-    ));
+    print('transaction uuid: ${widget.transactionId}');
+    screenBloc = TransactionDetailScreenBloc()
+      ..add(TransactionDetailScreenInitEvent(
+        businessId: widget.businessId,
+        transactionId: widget.transactionId,
+      ));
     super.initState();
   }
 
