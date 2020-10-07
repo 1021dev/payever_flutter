@@ -200,7 +200,9 @@ TransactionDetails _$TransactionDetailsFromJson(Map<String, dynamic> json) {
         ? null
         : TDBillingAddress.fromJson(
             json['billing_address'] as Map<String, dynamic>)
-    ..business = json['business'] as String
+    ..business = json['business'] == null
+        ? null
+        : BusinessUUid.fromJson(json['business'] as Map<String, dynamic>)
     ..cart = json['cart'] == null
         ? null
         : CartItems.fromJson(json['cart'] as Map<String, dynamic>)
@@ -241,7 +243,9 @@ TransactionDetails _$TransactionDetailsFromJson(Map<String, dynamic> json) {
     ..transaction = json['transaction'] == null
         ? null
         : TDTransaction.fromJson(json['transaction'] as Map<String, dynamic>)
-    ..userId = json['user'] as String;
+    ..userId = json['user'] == null
+        ? null
+        : UserId.fromJson(json['user'] as Map<String, dynamic>);
 }
 
 Map<String, dynamic> _$TransactionDetailsToJson(TransactionDetails instance) =>
@@ -352,6 +356,23 @@ Map<String, dynamic> _$ItemsToJson(Items instance) => <String, dynamic>{
       'upadated_at': instance.updatedAt,
       'vat_rate': instance.vatRate,
       'options': instance.options,
+    };
+
+BusinessUUid _$BusinessUUidFromJson(Map<String, dynamic> json) {
+  return BusinessUUid()..uuid = json['uuid'] as String;
+}
+
+Map<String, dynamic> _$BusinessUUidToJson(BusinessUUid instance) =>
+    <String, dynamic>{
+      'uuid': instance.uuid,
+    };
+
+UserId _$UserIdFromJson(Map<String, dynamic> json) {
+  return UserId()..userId = json['id'] as String;
+}
+
+Map<String, dynamic> _$UserIdToJson(UserId instance) => <String, dynamic>{
+      'id': instance.userId,
     };
 
 Option _$OptionFromJson(Map<String, dynamic> json) {

@@ -4,8 +4,8 @@ import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/commons/models/app_widget.dart';
 import 'package:payever/theme.dart';
-import 'package:payever/transactions/models/currency.dart';
 import 'package:payever/transactions/models/enums.dart';
+import 'package:payever/transactions/models/transaction.dart';
 
 class ProductFilterRangeContentView extends StatefulWidget {
   final String type;

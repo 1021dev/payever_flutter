@@ -1,6 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:payever/commons/utils/common_utils.dart';
-import 'package:payever/transactions/models/currency.dart';
 part 'connect.g.dart';
 
 class ConnectModel {

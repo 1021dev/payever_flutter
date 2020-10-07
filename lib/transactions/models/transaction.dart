@@ -129,7 +129,7 @@ class TransactionDetails {
 
   @JsonKey(name: 'actions')           List<Actions> actions;
   @JsonKey(name: 'billing_address')   TDBillingAddress billingAddress;
-  @JsonKey(name: 'business')          String business;
+  @JsonKey(name: 'business')          BusinessUUid business;
   @JsonKey(name: 'cart')              CartItems cart;
   @JsonKey(name: 'channel')           TDChannel channel;
   @JsonKey(name: 'channel_set')       TDChannelSet channelSet;
@@ -143,7 +143,7 @@ class TransactionDetails {
   @JsonKey(name: 'status')            Status status;
   @JsonKey(name: 'store')             Store store;
   @JsonKey(name: 'transaction')       TDTransaction transaction;
-  @JsonKey(name: 'user')              String userId;
+  @JsonKey(name: 'user')              UserId userId;
 
   factory TransactionDetails.fromJson(Map<String, dynamic> json) => _$TransactionDetailsFromJson(json);
   Map<String, dynamic> toJson() => _$TransactionDetailsToJson(this);
@@ -212,6 +212,26 @@ class Items {
 
 }
 
+
+@JsonSerializable()
+class BusinessUUid {
+  BusinessUUid();
+
+  @JsonKey(name: 'uuid')      String uuid;
+
+  factory BusinessUUid.fromJson(Map<String, dynamic> json) => _$BusinessUUidFromJson(json);
+  Map<String, dynamic> toJson() => _$BusinessUUidToJson(this);
+}
+
+@JsonSerializable()
+class UserId {
+  UserId();
+
+  @JsonKey(name: 'id')      String userId;
+
+  factory UserId.fromJson(Map<String, dynamic> json) => _$UserIdFromJson(json);
+  Map<String, dynamic> toJson() => _$UserIdToJson(this);
+}
 
 @JsonSerializable()
 class Option {
@@ -398,4 +418,20 @@ class TDTransaction {
 
   factory TDTransaction.fromJson(Map<String, dynamic> json) => _$TDTransactionFromJson(json);
   Map<String, dynamic> toJson() => _$TDTransactionToJson(this);
+}
+
+class Currency {
+  final String name;
+  final String code;
+  final String symbol;
+
+  Currency({this.name, this.code, this.symbol});
+
+  factory Currency.fromJson(Map<String, dynamic> json) {
+    return new Currency(
+      name: json['name'] as String,
+      code: json['cc'] as String,
+      symbol: json['symbol'] as String,
+    );
+  }
 }
