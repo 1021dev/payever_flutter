@@ -181,14 +181,13 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                         onChanged: (val) {
                           searchString = val;
-                          Future.delayed(
-                              Duration(milliseconds: 300))
+                          Future.delayed(Duration(milliseconds: 300))
                               .then((value) async {
                             if (!state.isLoading) {
-                              screenBloc.add(SearchEvent(businessId: widget.businessId, key: val));
+                              screenBloc.add(SearchEvent(
+                                  businessId: widget.businessId, key: val));
                             }
-                          }
-                          );
+                          });
                         },
                         onSubmitted: (val) {
                           screenBloc.add(SearchEvent(businessId: widget.businessId, key: val));

@@ -204,6 +204,7 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
                       searchController.text.length > 0)
                     InkWell(
                       onTap: () {
+                        searchController.text = '';
                         screenBloc.add(ProductsFilterEvent(searchText: ''));
                       },
                       child: Container(
@@ -296,7 +297,7 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
           .forEach((element) => cartCount += element.quantity);
     }
 
-    searchController.text = state.searchText;
+    // searchController.text = state.searchText;
     return Container(
       height: 50,
       color: overlaySecondAppBar().withOpacity(0.8),

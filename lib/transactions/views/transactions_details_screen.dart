@@ -119,9 +119,12 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
                 )
               ],
             ),
-            body: BackgroundBase(
-              true,
-              body: _getBody(state),
+            body: SafeArea(
+              bottom: false,
+              child: BackgroundBase(
+                true,
+                body: _getBody(state),
+              ),
             ),
           );
         },
@@ -219,7 +222,7 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
               ),
               softWrap: true,
             ),
-            parts.currentTransaction.cart.items[0].options.length > 0 ?
+            parts.currentTransaction.cart.items[0].options != null && parts.currentTransaction.cart.items[0].options.length > 0 ?
             Padding(
               padding: EdgeInsets.only(top: 4),
               child: AutoSizeText(
