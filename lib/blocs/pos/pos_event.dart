@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:equatable/equatable.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/products/models/models.dart';
 
 abstract class PosScreenEvent extends Equatable {
   PosScreenEvent();
@@ -17,6 +18,7 @@ class PosScreenInitEvent extends PosScreenEvent {
   final List<ChannelSet> channelSets;
   final Terminal activeTerminal;
   final Checkout defaultCheckout;
+  final List<ProductsModel> products;
 
   PosScreenInitEvent({
     this.currentBusiness,
@@ -24,6 +26,7 @@ class PosScreenInitEvent extends PosScreenEvent {
     this.terminals,
     this.activeTerminal,
     this.defaultCheckout,
+    this.products,
   });
 
   @override
@@ -33,11 +36,14 @@ class PosScreenInitEvent extends PosScreenEvent {
     this.terminals,
     this.activeTerminal,
     this.defaultCheckout,
+    this.products
   ];
 }
 
 class GetPosIntegrationsEvent extends PosScreenEvent {}
+
 class GetProductsEvent extends PosScreenEvent {}
+
 class GetTerminalIntegrationsEvent extends PosScreenEvent {
   final String businessId;
   final String terminalId;

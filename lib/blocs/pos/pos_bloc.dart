@@ -26,7 +26,8 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
           channelSets: event.channelSets,
           activeTerminal: event.activeTerminal,
           terminals: event.terminals,
-          defaultCheckout: event.defaultCheckout
+          defaultCheckout: event.defaultCheckout,
+          products: event.products
       );
       yield* fetchPos();
     } else if (event is GetProductsEvent) {
@@ -205,32 +206,34 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
   Stream<PosScreenState> fetchProducts() async* {
     // yield state.copyWith(isLoading: true);
     // Get Product
-    Map<String, dynamic> body = {
-      'operationName': null,
-      'variables': {},
-      'query':
-      '{\n  getProducts(businessUuid: \"${state.businessId}\", paginationLimit: 100, pageNumber: 1, orderBy: \"price\", orderDirection: \"asc\", filterById: [], search: \"\", filters: []) {\n    products {\n      images\n      id\n      title\n      description\n      onSales\n      price\n      salePrice\n      vatRate\n      sku\n      barcode\n      currency\n      type\n      active\n      categories {\n        title\n      }\n      collections {\n        _id\n        name\n        description\n      }\n      variants {\n        id\n        images\n        options {\n          name\n          value\n        }\n        description\n        onSales\n        price\n        salePrice\n        sku\n        barcode\n      }\n      channelSets {\n        id\n        type\n        name\n      }\n      shipping {\n        weight\n        width\n        length\n        height\n      }\n    }\n    info {\n      pagination {\n        page\n        page_count\n        per_page\n        item_count\n      }\n    }\n  }\n}\n'
-    };
+    List<ProductsModel> products = state.products;
+    if (products == null || products.isEmpty) {
+      products = [];
+      Map<String, dynamic> body = {
+        'operationName': null,
+        'variables': {},
+        'query':
+        '{\n  getProducts(businessUuid: \"${state.businessId}\", paginationLimit: 100, pageNumber: 1, orderBy: \"price\", orderDirection: \"asc\", filterById: [], search: \"\", filters: []) {\n    products {\n      images\n      id\n      title\n      description\n      onSales\n      price\n      salePrice\n      vatRate\n      sku\n      barcode\n      currency\n      type\n      active\n      categories {\n        title\n      }\n      collections {\n        _id\n        name\n        description\n      }\n      variants {\n        id\n        images\n        options {\n          name\n          value\n        }\n        description\n        onSales\n        price\n        salePrice\n        sku\n        barcode\n      }\n      channelSets {\n        id\n        type\n        name\n      }\n      shipping {\n        weight\n        width\n        length\n        height\n      }\n    }\n    info {\n      pagination {\n        page\n        page_count\n        per_page\n        item_count\n      }\n    }\n  }\n}\n'
+      };
 
-    dynamic response =
-    await api.getProducts(GlobalUtils.activeToken.accessToken, body);
-    List<ProductsModel> products = [];
-    print('Products filter response: ' + response.toString());
-    if (response is Map) {
-      dynamic data = response['data'];
-      if (data != null) {
-        dynamic getProducts = data['getProducts'];
-        if (getProducts != null) {
-          List productsObj = getProducts['products'];
-          if (productsObj != null) {
-            productsObj.forEach((element) {
-              products.add(ProductsModel.toMap(element));
-            });
+      dynamic response =
+      await api.getProducts(GlobalUtils.activeToken.accessToken, body);
+      if (response is Map) {
+        dynamic data = response['data'];
+        if (data != null) {
+          dynamic getProducts = data['getProducts'];
+          if (getProducts != null) {
+            List productsObj = getProducts['products'];
+            if (productsObj != null) {
+              productsObj.forEach((element) {
+                products.add(ProductsModel.toMap(element));
+              });
+            }
           }
         }
       }
     }
-    yield state.copyWith(products: products);
+    yield state.copyWith(products: products, isLoading: false);
     dynamic response1 = await api.productsFilterOption(
         GlobalUtils.activeToken.accessToken, state.businessId);
     List<ProductFilterOption> filterOptions = [];
@@ -241,7 +244,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
         filterOptions.add(filterOption);
       });
     }
-    yield state.copyWith(filterOptions: filterOptions, isLoading: false);
+    yield state.copyWith(filterOptions: filterOptions);
     add(GetPosIntegrationsEvent());
   }
 

@@ -343,6 +343,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 activeTerminal: state.activeTerminal,
                 terminals: state.terminalList,
                 channelSets: state.channelSets,
+                products: state.products,
               ),
               type: PageTransitionType.fade,
               duration: Duration(milliseconds: 500),
@@ -560,6 +561,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         },
         onTapOpen: () {
           if (isLoadingData(state))  return;
+          print('Product1: ${state.products.length}');
           _navigateAppsScreen(
               state,
               PosInitScreen(
@@ -569,6 +571,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 activeTerminal: state.activeTerminal,
                 terminals: state.terminalList,
                 channelSets: state.channelSets,
+                products: state.products,
               ),
               isDuration: true
           );

@@ -1,4 +1,3 @@
-
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,7 +16,6 @@ import 'package:payever/shop/models/models.dart';
 import 'package:payever/transactions/transactions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenState> {
   DashboardScreenBloc();
   ApiService api = ApiService();
@@ -34,10 +32,10 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       yield* _checkVersion(event.wallpaper, event.isRefresh);
     } else if (event is DashboardScreenLoadDataEvent) {
       yield* _fetchInitialData();
-    } else if (event is FetchPosEvent) {
-      yield* fetchPOSCard(event.business);
     } else if (event is FetchMonthlyEvent) {
       yield* getDaily(event.business);
+    } else if (event is FetchPosEvent) {
+      yield* fetchPOSCard(event.business);
     } else if (event is FetchTutorials) {
       yield* getTutorials(event.business);
     } else if (event is FetchProducts) {
@@ -270,7 +268,6 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
   }
 
   Stream<DashboardScreenState> _fetchInitialDataRenew(Token token, bool renew) async* {
-
     GlobalUtils.activeToken = token;
     if (!renew) {
       GlobalUtils.activeToken.refreshToken = preferences.getString(GlobalUtils.REFRESH_TOKEN) ?? '';
@@ -278,6 +275,59 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     preferences.setString(GlobalUtils.TOKEN, GlobalUtils.activeToken.accessToken);
     preferences.setString(GlobalUtils.LAST_OPEN, DateTime.now().toString());
     add(DashboardScreenLoadDataEvent());
+  }
+
+  Stream<DashboardScreenState> fetchProducts() async* {
+    // Get Product
+    List<ProductsModel> products = [];
+    Map<String, dynamic> body = {
+      'operationName': null,
+      'variables': {},
+      'query':
+          '{\n  getProducts(businessUuid: \"${state.activeBusiness.id}\", paginationLimit: 20, pageNumber: 1, orderBy: \"price\", orderDirection: \"asc\", filterById: [], search: \"\", filters: []) {\n    products {\n      images\n      id\n      title\n      description\n      onSales\n      price\n      salePrice\n      vatRate\n      sku\n      barcode\n      currency\n      type\n      active\n      categories {\n        title\n      }\n      collections {\n        _id\n        name\n        description\n      }\n      variants {\n        id\n        images\n        options {\n          name\n          value\n        }\n        description\n        onSales\n        price\n        salePrice\n        sku\n        barcode\n      }\n      channelSets {\n        id\n        type\n        name\n      }\n      shipping {\n        weight\n        width\n        length\n        height\n      }\n    }\n    info {\n      pagination {\n        page\n        page_count\n        per_page\n        item_count\n      }\n    }\n  }\n}\n'
+    };
+    dynamic response =
+        await api.getProducts(GlobalUtils.activeToken.accessToken, body);
+    if (response is Map) {
+      dynamic data = response['data'];
+      if (data != null) {
+        dynamic getProducts = data['getProducts'];
+        if (getProducts != null) {
+          List productsObj = getProducts['products'];
+          if (productsObj != null) {
+            productsObj.forEach((element) {
+              ProductsModel model = ProductsModel.toMap(element);
+              products.add(model);
+            });
+          }
+        }
+      }
+    }
+    yield state.copyWith(products: products);
+    yield* getCheckout();
+  }
+
+  Stream<DashboardScreenState> getCheckout() async* {
+    List<Checkout> checkouts = [];
+    Checkout defaultCheckout;
+    dynamic checkoutsResponse = await api.getCheckout(GlobalUtils.activeToken.accessToken, state.activeBusiness.id);
+    if (checkoutsResponse is List) {
+      checkoutsResponse.forEach((element) {
+        checkouts.add(Checkout.fromJson(element));
+      });
+    }
+    List defaults = checkouts.where((element) => element.isDefault).toList();
+
+    if (defaults.length > 0) {
+      defaultCheckout = defaults.first;
+    } else {
+      if (checkouts.length > 0) {
+        defaultCheckout = checkouts.first;
+      }
+    }
+
+    yield state.copyWith(checkouts: checkouts, defaultCheckout: defaultCheckout);
+    add(FetchTutorials(business: state.activeBusiness));
   }
 
   Stream<DashboardScreenState> fetchPOSCard(Business activeBusiness) async* {
@@ -382,6 +432,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     add(FetchShops(business: currentBusiness));
   }
 
+
   Stream<DashboardScreenState> getTutorials(Business currentBusiness) async* {
     dynamic response = await api.getTutorials(GlobalUtils.activeToken.accessToken, currentBusiness.id);
     List<Tutorial> tutorials = [];
@@ -389,7 +440,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       tutorials.add(Tutorial.map(element));
     });
     yield state.copyWith(tutorials: tutorials);
-    yield* getCheckout();
+    add(FetchNotifications());
   }
 
   Stream<DashboardScreenState> getConnects(Business currentBusiness) async* {
@@ -399,17 +450,8 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       connects.add(ConnectModel.toMap(element));
     });
     yield state.copyWith(connects: connects);
-    add(FetchTutorials(business: currentBusiness));
+    yield* fetchProducts();
   }
-
-//  Future<List<WallpaperCategory>> getWallpaper() => EmployeesApi().getWallpapers()
-//      .then((wallpapers){
-//    List<WallpaperCategory> _list = List();
-//    wallpapers.forEach((cat){
-//      _list.add(WallpaperCategory.map(cat));
-//    });
-//    return _list;
-//  });
 
   Stream<DashboardScreenState> getProductsPopularMonthRandom(Business currentBusiness) async* {
     List<Products> lastSales = [];
@@ -496,29 +538,6 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
   Stream<DashboardScreenState> deleteNotification(String notificationId) async* {
     dynamic response = await api.deleteNotification(GlobalUtils.activeToken.accessToken, notificationId);
     yield* fetchNotifications();
-  }
-
-  Stream<DashboardScreenState> getCheckout() async* {
-    List<Checkout> checkouts = [];
-    Checkout defaultCheckout;
-    dynamic checkoutsResponse = await api.getCheckout(GlobalUtils.activeToken.accessToken, state.activeBusiness.id);
-    if (checkoutsResponse is List) {
-      checkoutsResponse.forEach((element) {
-        checkouts.add(Checkout.fromJson(element));
-      });
-    }
-    List defaults = checkouts.where((element) => element.isDefault).toList();
-
-    if (defaults.length > 0) {
-      defaultCheckout = defaults.first;
-    } else {
-      if (checkouts.length > 0) {
-        defaultCheckout = checkouts.first;
-      }
-    }
-
-    yield state.copyWith(checkouts: checkouts, defaultCheckout: defaultCheckout);
-    add(FetchNotifications());
   }
 
   Stream<DashboardScreenState> watchTutorial(Tutorial tutorial) async* {

@@ -6,6 +6,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:iso_countries/iso_countries.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/checkout/models/models.dart';
+import 'package:payever/products/models/models.dart';
 import 'package:payever/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/models.dart';
@@ -311,6 +313,7 @@ class Measurements {
     return displayName = displayName.toUpperCase();
   }
 }
+
 Color hexToColor(String code) {
   return new Color(int.parse(code.substring(1, 9), radix: 16) + 0xFF000000);
 }
@@ -324,6 +327,20 @@ class GlobalUtils {
   static String theme = changeThemeBloc.state.theme;
   static bool isConnected = true;
   static bool isBusinessMode = true;
+
+  // Global Params
+  // static User user;
+  // static Business currentBusiness;
+  // static String wallpaper;
+  //
+  // static List<Terminal> terminals;
+  // static Terminal activeTerminal;
+  //
+  // static List<ChannelSet> channelSets;
+  // static Checkout defaultCheckout;
+  //
+  // static List<ProductsModel> products;
+  // static List<CollectionModel> collections;
   //URLS
   //static String  pass= 'P@ssword123';//test 1
   // static String  pass= 'Test1234!';//staging 1
@@ -369,19 +386,11 @@ class GlobalUtils {
   static const String EVENTS_KEY = 'fetch_events';
   static const String LANGUAGE = 'language';
 
-  // static Channels
-
-  static const String CHANNEL_POS = 'pos';
-  static const String CHANNEL_SHOP = 'shop';
 
   // token__
-  static const String DB_TOKEN = 'Token';
+
   static const String DB_TOKEN_ACC = 'accessToken';
   static const String DB_TOKEN_RFS = 'refreshToken';
-
-  // tables__
-  static const String DB_USER = 'User';
-  static const String DB_BUSINESS = 'Business';
 
   // user__
   static const String DB_USER_ID = '_id';

@@ -28,6 +28,7 @@ class DashboardScreenState {
   final List<Day> lastMonth;
   final List<Tutorial> tutorials;
   final List<Widget> activeWid;
+  final List<ProductsModel> products;
   final String language;
   final String curWall;
   final List<Business> searchBusinesses;
@@ -57,6 +58,7 @@ class DashboardScreenState {
     this.total = 0,
     this.terminalList,
     this.activeTerminal,
+    this.products = const [],
     this.lastYear = const [],
     this.monthlySum = const [],
     this.lastMonth = const [],
@@ -92,6 +94,7 @@ class DashboardScreenState {
     this.total,
     this.terminalList,
     this.activeTerminal,
+    this.products,
     this.lastYear,
     this.monthlySum,
     this.lastMonth,
@@ -134,6 +137,7 @@ class DashboardScreenState {
     List<Day> lastMonth,
     List<Tutorial> tutorials,
     List<Widget> activeWid,
+    List<ProductsModel> products,
     String language,
     String curWall,
     List<Business> searchBusinesses,
@@ -175,6 +179,7 @@ class DashboardScreenState {
       searchTransactions: searchTransactions ?? this.searchTransactions,
       lastSalesRandom: lastSalesRandom ?? this.lastSalesRandom,
       connects: connects ?? this.connects,
+      products: products ?? this.products,
       shops: shops ?? this.shops,
       activeShop: activeShop ?? this.activeShop,
       notifications: notifications ?? this.notifications,

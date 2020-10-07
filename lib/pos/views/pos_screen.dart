@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
@@ -22,6 +21,7 @@ import 'package:payever/pos/views/pos_switch_terminals_screen.dart';
 import 'package:payever/pos/views/pos_twillo_settings.dart';
 import 'package:payever/pos/views/products_screen/products_screen.dart';
 import 'package:payever/pos/widgets/pos_top_button.dart';
+import 'package:payever/products/models/models.dart';
 import 'package:payever/theme.dart';
 import 'package:payever/widgets/main_app_bar.dart';
 import 'pos_device_payment_settings.dart';
@@ -34,6 +34,7 @@ class PosInitScreen extends StatelessWidget {
   final Checkout defaultCheckout;
   final Business currentBusiness;
   final List<ChannelSet> channelSets;
+  final List<ProductsModel> products;
 
   PosInitScreen({
     this.terminals,
@@ -42,6 +43,7 @@ class PosInitScreen extends StatelessWidget {
     this.defaultCheckout,
     this.currentBusiness,
     this.channelSets,
+    this.products,
   });
 
   @override
@@ -54,6 +56,7 @@ class PosInitScreen extends StatelessWidget {
       activeTerminal: activeTerminal,
       defaultCheckout: defaultCheckout,
       channelSets: channelSets,
+      products: products,
     );
   }
 }
@@ -66,6 +69,7 @@ class PosScreen extends StatefulWidget {
   final Checkout defaultCheckout;
   final Business currentBusiness;
   final List<ChannelSet> channelSets;
+  final List<ProductsModel> products;
 
   PosScreen({
     this.currentBusiness,
@@ -74,6 +78,7 @@ class PosScreen extends StatefulWidget {
     this.dashboardScreenBloc,
     this.defaultCheckout,
     this.channelSets,
+    this.products,
   });
 
   @override
@@ -83,70 +88,13 @@ class PosScreen extends StatefulWidget {
 class _PosScreenState extends State<PosScreen> {
 
   static const platform = const MethodChannel('payever.flutter.dev/tapthephone');
-
-  InAppWebViewController webView;
-  double progress = 0;
-  String url = '';
-
   PosScreenBloc screenBloc;
-  String wallpaper;
   int selectedIndex = 0;
-  bool isShowCommunications = false;
-
-  List<OverflowMenuItem> appBarPopUpActions(BuildContext context, PosScreenState state) {
-    return [
-      OverflowMenuItem(
-        title: 'Switch terminal',
-        onTap: () async {
-          Navigator.push(
-            context,
-            PageTransition(
-              child: PosSwitchTerminalsScreen(
-                screenBloc: screenBloc,
-              ),
-              type: PageTransitionType.fade,
-              duration: Duration(milliseconds: 500),
-            ),
-          );
-        },
-      ),
-      OverflowMenuItem(
-        title: 'Add new terminal',
-        onTap: () async {
-          Navigator.push(
-            context,
-            PageTransition(
-              child: PosCreateTerminalScreen(
-                screenBloc: screenBloc,
-              ),
-              type: PageTransitionType.fade,
-              duration: Duration(milliseconds: 500),
-            ),
-          );
-        },
-      ),
-      OverflowMenuItem(
-        title: 'Edit',
-        onTap: () {
-          Navigator.push(
-            context,
-            PageTransition(
-              child: PosCreateTerminalScreen(
-                screenBloc: screenBloc,
-                editTerminal: state.activeTerminal,
-              ),
-              type: PageTransitionType.fade,
-              duration: Duration(milliseconds: 500),
-            ),
-          );
-        },
-      ),
-    ];
-  }
 
   @override
   void initState() {
     super.initState();
+    print('Product: ${widget.products.length}');
     screenBloc = PosScreenBloc(
       dashboardScreenBloc: widget.dashboardScreenBloc,
     )..add(PosScreenInitEvent(
@@ -155,6 +103,7 @@ class _PosScreenState extends State<PosScreen> {
         activeTerminal: widget.activeTerminal,
         defaultCheckout: widget.defaultCheckout,
         channelSets: widget.channelSets,
+        products: widget.products
       ));
   }
 
@@ -596,6 +545,57 @@ class _PosScreenState extends State<PosScreen> {
         ],
       ),
     );
+  }
+
+  List<OverflowMenuItem> appBarPopUpActions(BuildContext context, PosScreenState state) {
+    return [
+      OverflowMenuItem(
+        title: 'Switch terminal',
+        onTap: () async {
+          Navigator.push(
+            context,
+            PageTransition(
+              child: PosSwitchTerminalsScreen(
+                screenBloc: screenBloc,
+              ),
+              type: PageTransitionType.fade,
+              duration: Duration(milliseconds: 500),
+            ),
+          );
+        },
+      ),
+      OverflowMenuItem(
+        title: 'Add new terminal',
+        onTap: () async {
+          Navigator.push(
+            context,
+            PageTransition(
+              child: PosCreateTerminalScreen(
+                screenBloc: screenBloc,
+              ),
+              type: PageTransitionType.fade,
+              duration: Duration(milliseconds: 500),
+            ),
+          );
+        },
+      ),
+      OverflowMenuItem(
+        title: 'Edit',
+        onTap: () {
+          Navigator.push(
+            context,
+            PageTransition(
+              child: PosCreateTerminalScreen(
+                screenBloc: screenBloc,
+                editTerminal: state.activeTerminal,
+              ),
+              type: PageTransitionType.fade,
+              duration: Duration(milliseconds: 500),
+            ),
+          );
+        },
+      ),
+    ];
   }
 
   Future<Null> _showNativeView() async {

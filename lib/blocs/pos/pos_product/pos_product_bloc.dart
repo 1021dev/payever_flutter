@@ -48,51 +48,6 @@ class PosProductScreenBloc
     }
   }
 
-  Stream<PosProductScreenState> fetchProducts() async* {
-    print('getProducts...');
-    if (state.products != null && state.products.isNotEmpty)
-      return;
-    yield state.copyWith(isLoading: true);
-    // Get Product
-    Map<String, dynamic> body = {
-      'operationName': null,
-      'variables': {},
-      'query':
-          '{\n  getProducts(businessUuid: \"${state.businessId}\", paginationLimit: 100, pageNumber: 1, orderBy: \"price\", orderDirection: \"asc\", filterById: [], search: \"\", filters: []) {\n    products {\n      images\n      id\n      title\n      description\n      onSales\n      price\n      salePrice\n      vatRate\n      sku\n      barcode\n      currency\n      type\n      active\n      categories {\n        title\n      }\n      collections {\n        _id\n        name\n        description\n      }\n      variants {\n        id\n        images\n        options {\n          name\n          value\n        }\n        description\n        onSales\n        price\n        salePrice\n        sku\n        barcode\n      }\n      channelSets {\n        id\n        type\n        name\n      }\n      shipping {\n        weight\n        width\n        length\n        height\n      }\n    }\n    info {\n      pagination {\n        page\n        page_count\n        per_page\n        item_count\n      }\n    }\n  }\n}\n'
-    };
-
-    dynamic response =
-        await api.getProducts(GlobalUtils.activeToken.accessToken, body);
-    List<ProductsModel> products = [];
-    print('Products filter response: ' + response.toString());
-    if (response is Map) {
-      dynamic data = response['data'];
-      if (data != null) {
-        dynamic getProducts = data['getProducts'];
-        if (getProducts != null) {
-          List productsObj = getProducts['products'];
-          if (productsObj != null) {
-            productsObj.forEach((element) {
-              products.add(ProductsModel.toMap(element));
-            });
-          }
-        }
-      }
-    }
-    yield state.copyWith(products: products);
-    dynamic response1 = await api.productsFilterOption(
-        GlobalUtils.activeToken.accessToken, state.businessId);
-    List<ProductFilterOption> filterOptions = [];
-    if (response1 is List) {
-      response1.forEach((element) {
-        ProductFilterOption filterOption =
-            ProductFilterOption.fromJson(element);
-        filterOptions.add(filterOption);
-      });
-    }
-    yield state.copyWith(filterOptions: filterOptions, isLoading: false);
-  }
-
   Stream<PosProductScreenState> filterProducts() async* {
     yield state.copyWith(searching: true);
     List<String> keys = state.categories;
