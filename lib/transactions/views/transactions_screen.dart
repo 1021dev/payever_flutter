@@ -171,250 +171,251 @@ class _TransactionScreenState extends State<TransactionScreen> {
             child: CircularProgressIndicator(),
           ): Column(
             children: [
-              Container(
-                height: 50,
-                color: overlaySecondAppBar(),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: 12,
-                        ),
-                        InkWell(
-                          onTap: () {
-                            if (state.isSearchLoading) return;
-                            showSearchTextDialog(state);
-                          },
-                          child: SvgPicture.asset(
-                            'assets/images/searchicon.svg',
-                            width: 20,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 16,
-                        ),
-                        InkWell(
-                          onTap: () {
-                            if (state.isSearchLoading) return;
-                            showCupertinoModalPopup(
-                                context: context,
-                                builder: (builder) {
-                                  return FilterContentView(
-                                    onSelected: (FilterItem val) {
-                                      Navigator.pop(context);
-                                      List<FilterItem> filterTypes = [];
-                                      filterTypes.addAll(state.filterTypes);
-                                      if (val != null) {
-                                        if (filterTypes.length > 0) {
-                                          int isExist = filterTypes.indexWhere((element) => element.type == val.type);
-                                          if (isExist > -1) {
-                                            filterTypes[isExist] = val;
-                                          } else {
-                                            filterTypes.add(val);
-                                          }
-                                        } else {
-                                          filterTypes.add(val);
-                                        }
-                                      } else {
-                                        if (filterTypes.length > 0) {
-                                          int isExist = filterTypes.indexWhere((element) => element.type == val.type);
-                                          if (isExist != null) {
-                                            filterTypes.removeAt(isExist);
-                                          }
-                                        }
-                                      }
-                                      screenBloc.add(
-                                          UpdateFilterTypes(filterTypes: filterTypes)
-                                      );
-                                    },
-                                  );
-                                });
-                          },
-                          child: Container(
-                            width: 30,
-                            height: 30,
-                            alignment: Alignment.center,
-                            child: SvgPicture.asset('assets/images/filter.svg', width: 20,),
-                          ),
-                        ),
-                        FlatButton(
-                          onPressed: () {
-                            if (state.isSearchLoading) return;
-                            showGeneralDialog(
-                                barrierLabel: 'Export',
-                                barrierDismissible: true,
-                                transitionDuration: Duration(milliseconds: 350),
-                                context: context,
-                                pageBuilder: (context, anim1, anim2) {
-                                  return Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: ExportContentView(
-                                      onSelectType: (index) {},
-                                    ),
-                                  );
-                                }
-                            );
-                          },
-                          child: Text(
-                            'Export',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            if (state.isSearchLoading) return;
-                            showCupertinoModalPopup(
-                                context: context,
-                                builder: (builder) {
-                                  return SortContentView(
-                                    selectedIndex: state.curSortType ,
-                                    onSelected: (val) {
-                                      Navigator.pop(context);
-                                      screenBloc.add(
-                                          UpdateSortType(sortType: val)
-                                      );
-                                    },
-                                  );
-                                });
-                          },
-                          child: SvgPicture.asset(
-                            'assets/images/sort-by-button.svg',
-                            width: 20,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 24,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              _filterItems.length > 0 ?
-              Container(
-                width: Device.width,
-                padding: EdgeInsets.only(
-                  left: 16, right: 16, top: 8, bottom: 8,
-                ),
-                child: Tags(
-                  key: _tagStateKey,
-                  itemCount: _filterItems.length,
-                  alignment: WrapAlignment.start,
-                  spacing: 4,
-                  runSpacing: 8,
-                  itemBuilder: (int index) {
-                    return ItemTags(
-                      key: Key('filterItem$index'),
-                      index: index,
-                      title: _filterItems[index].title,
-                      color: overlayBackground(),
-                      activeColor: overlayBackground(),
-                      textActiveColor: iconColor(),
-                      textColor: iconColor(),
-                      elevation: 0,
-                      padding: EdgeInsets.only(
-                        left: 16, top: 8, bottom: 8, right: 16,
-                      ),
-                      removeButton: ItemTagsRemoveButton(
-                        backgroundColor: Colors.transparent,
-                        onRemoved: () {
-                          if (index == _searchTagIndex) {
-                            _searchTagIndex = -1;
-                            screenBloc.add(
-                                UpdateSearchText(searchText: '')
-                            );
-                          } else {
-                            List<FilterItem> filterTypes = [];
-                            filterTypes.addAll(state.filterTypes);
-                            filterTypes.removeAt(index);
-                            screenBloc.add(
-                                UpdateFilterTypes(filterTypes: filterTypes)
-                            );
-                          }
-                          return true;
-                        },
-                        color: iconColor(),
-                      ),
-                    );
-                  },
-                ),
-              ): Container(height: 0,),
-              Container(
-                height: 35,
-                color: overlayBackground(),
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: 16,
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        'Channel',
-                        style: TextStyle(
-                          fontSize: 12,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        'Type',
-                        style: TextStyle(
-                          fontSize: 12,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        'Customer name',
-                        style: TextStyle(
-                          fontSize: 12,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        'Total',
-                        style: TextStyle(
-                          fontSize: 12,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: state.isSearchLoading ? Center(
-                  child: CircularProgressIndicator(),
-                ) : (state.transaction.collection.length > 0 ? CustomList(widget.globalStateModel,
-                    state.transaction != null ? state.transaction.collection : [],
-                    state):
-                Center(
-                  child: Text(
-                    'The list is empty',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w200,
-                    ),
-                  ),
-                )),
-              ),
+              _toolbar(state),
+              _filterbar(state),
+              _secondToolbar,
+              _transactionsBody(state),
               _bottomView(),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _toolbar(TransactionsScreenState state) {
+    return Container(
+      height: 50,
+      color: overlaySecondAppBar(),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              SizedBox(
+                width: 12,
+              ),
+              InkWell(
+                onTap: () {
+                  if (state.isSearchLoading) return;
+                  showSearchTextDialog(state);
+                },
+                child: SvgPicture.asset(
+                  'assets/images/searchicon.svg',
+                  width: 20,
+                ),
+              ),
+              SizedBox(
+                width: 16,
+              ),
+              InkWell(
+                onTap: () {
+                  if (state.isSearchLoading) return;
+                  showCupertinoModalPopup(
+                      context: context,
+                      builder: (builder) {
+                        return FilterContentView(
+                          onSelected: (FilterItem val) {
+                            Navigator.pop(context);
+                            List<FilterItem> filterTypes = [];
+                            filterTypes.addAll(state.filterTypes);
+                            if (val != null) {
+                              if (filterTypes.length > 0) {
+                                int isExist = filterTypes.indexWhere((element) => element.type == val.type);
+                                if (isExist > -1) {
+                                  filterTypes[isExist] = val;
+                                } else {
+                                  filterTypes.add(val);
+                                }
+                              } else {
+                                filterTypes.add(val);
+                              }
+                            } else {
+                              if (filterTypes.length > 0) {
+                                int isExist = filterTypes.indexWhere((element) => element.type == val.type);
+                                if (isExist != null) {
+                                  filterTypes.removeAt(isExist);
+                                }
+                              }
+                            }
+                            screenBloc.add(
+                                UpdateFilterTypes(filterTypes: filterTypes)
+                            );
+                          },
+                        );
+                      });
+                },
+                child: Container(
+                  width: 30,
+                  height: 30,
+                  alignment: Alignment.center,
+                  child: SvgPicture.asset('assets/images/filter.svg', width: 20,),
+                ),
+              ),
+              FlatButton(
+                onPressed: () {
+                  if (state.isSearchLoading) return;
+                  showGeneralDialog(
+                      barrierLabel: 'Export',
+                      barrierDismissible: true,
+                      transitionDuration: Duration(milliseconds: 350),
+                      context: context,
+                      pageBuilder: (context, anim1, anim2) {
+                        return Align(
+                          alignment: Alignment.bottomCenter,
+                          child: ExportContentView(
+                            onSelectType: (index) {},
+                          ),
+                        );
+                      }
+                  );
+                },
+                child: Text(
+                  'Export',
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              InkWell(
+                onTap: () {
+                  if (state.isSearchLoading) return;
+                  showCupertinoModalPopup(
+                      context: context,
+                      builder: (builder) {
+                        return SortContentView(
+                          selectedIndex: state.curSortType ,
+                          onSelected: (val) {
+                            Navigator.pop(context);
+                            screenBloc.add(
+                                UpdateSortType(sortType: val)
+                            );
+                          },
+                        );
+                      });
+                },
+                child: SvgPicture.asset(
+                  'assets/images/sort-by-button.svg',
+                  width: 20,
+                ),
+              ),
+              SizedBox(
+                width: 24,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _filterbar(TransactionsScreenState state) {
+    return _filterItems.length > 0
+        ? Container(
+            width: Device.width,
+            padding: EdgeInsets.only(
+              left: 16,
+              right: 16,
+              top: 8,
+              bottom: 8,
+            ),
+            child: Tags(
+              key: _tagStateKey,
+              itemCount: _filterItems.length,
+              alignment: WrapAlignment.start,
+              spacing: 4,
+              runSpacing: 8,
+              itemBuilder: (int index) {
+                return ItemTags(
+                  key: Key('filterItem$index'),
+                  index: index,
+                  title: _filterItems[index].title,
+                  color: overlayBackground(),
+                  activeColor: overlayBackground(),
+                  textActiveColor: iconColor(),
+                  textColor: iconColor(),
+                  elevation: 0,
+                  padding: EdgeInsets.only(
+                    left: 16,
+                    top: 8,
+                    bottom: 8,
+                    right: 16,
+                  ),
+                  removeButton: ItemTagsRemoveButton(
+                    backgroundColor: Colors.transparent,
+                    onRemoved: () {
+                      if (index == _searchTagIndex) {
+                        _searchTagIndex = -1;
+                        screenBloc.add(UpdateSearchText(searchText: ''));
+                      } else {
+                        List<FilterItem> filterTypes = [];
+                        filterTypes.addAll(state.filterTypes);
+                        filterTypes.removeAt(index);
+                        screenBloc
+                            .add(UpdateFilterTypes(filterTypes: filterTypes));
+                      }
+                      return true;
+                    },
+                    color: iconColor(),
+                  ),
+                );
+              },
+            ),
+          )
+        : Container();
+  }
+
+  get _secondToolbar {
+    return Container(
+      height: 35,
+      color: overlayBackground(),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 16,
+          ),
+          Expanded(
+            flex: 1,
+            child: Text(
+              'Channel',
+              style: TextStyle(
+                fontSize: 12,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Text(
+              'Type',
+              style: TextStyle(
+                fontSize: 12,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
+              'Customer name',
+              style: TextStyle(
+                fontSize: 12,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
+              'Total',
+              style: TextStyle(
+                fontSize: 12,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -440,6 +441,33 @@ class _TransactionScreenState extends State<TransactionScreen> {
     ) : Container();
   }
 
+  Widget _transactionsBody(TransactionsScreenState state) {
+    return Expanded(
+      child: state.isSearchLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : (state.transaction.collection.length > 0
+              ? _listBody(state)
+              : Center(
+                  child: Text(
+                    'The list is empty',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w200,
+                    ),
+                  ),
+                )),
+    );
+  }
+
+  Widget _listBody(TransactionsScreenState state) {
+    return CustomList(
+        widget.globalStateModel,
+        state.transaction != null ? state.transaction.collection : [],
+        state);
+  }
+
   void showSearchTextDialog(TransactionsScreenState state) {
     showDialog(
       context: context,
@@ -461,6 +489,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
       },
     );
   }
+
 }
 
 class CustomList extends StatefulWidget {
