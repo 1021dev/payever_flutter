@@ -14,9 +14,6 @@ import 'package:payever/theme.dart';
 
 import 'pos_create_terminal_screen.dart';
 
-bool _isPortrait;
-bool _isTablet;
-
 class PosSwitchTerminalsScreen extends StatefulWidget {
   final PosScreenBloc screenBloc;
 
@@ -29,6 +26,8 @@ class PosSwitchTerminalsScreen extends StatefulWidget {
 }
 
 class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
+  bool _isPortrait;
+  bool _isTablet;
   String imageBase = Env.storage + '/images/';
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();

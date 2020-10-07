@@ -288,6 +288,9 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
 
   Widget _secondToolBar(PosProductScreenState state) {
     num cartCount = 0;
+    if (widget.posScreenBloc.state.activeTerminal == null)
+      return Container();
+
     if (state.channelSetFlow != null && state.channelSetFlow.cart != null) {
       state.channelSetFlow.cart
           .forEach((element) => cartCount += element.quantity);

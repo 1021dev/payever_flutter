@@ -143,7 +143,7 @@ class PosProductScreenBloc
         }
       });
       query =
-          '{\n getProducts(\n businessUuid: \"${state.businessId}\",\n  paginationLimit: 20,\n  pageNumber: 1,\n orderBy: \"price\",\n orderDirection: \"$orderDirection\", filterById: [], search: \"$searchText\"\n  filters: [\n    \n   {\n  field:\"variant\",\n fieldType:\"child\",\n  fieldCondition: \"is\",\n  filters: {field:\"options\",fieldType:\"nested\",fieldCondition:\"is\",filters:[$keysValue]},\n   }\n   \n  ],\n  useNewFiltration: true,\n  ) {\n  products {\n  imagesUrl\n  _id\n  title\n   description\n   price\n  salePrice\n  currency\n   }\n  info {\n      pagination {\n        page\n        page_count\n        per_page\n        item_count\n      }\n    }\n  }\n  }\n ';
+          '{\n getProducts(\n businessUuid: \"${state.businessId}\",\n  paginationLimit: 20,\n  pageNumber: 1,\n orderBy: \"price\",\n orderDirection: \"$orderDirection\", filterById: [], search: \"$searchText\"\n  filters: [\n    \n   {\n  field:\"variant\",\n fieldType:\"child\",\n  fieldCondition: \"is\",\n  filters: {field:\"options\",fieldType:\"nested\",fieldCondition:\"is\",filters:[$keysValue]},\n   }\n   \n  ],\n  useNewFiltration: true,\n  ) {\n  products {\n  images\n  id\n  title\n   description\n   price\n  salePrice\n  currency\n   }\n  info {\n      pagination {\n        page\n        page_count\n        per_page\n        item_count\n      }\n    }\n  }\n  }\n ';
     }
 
     Map<String, dynamic> body = {

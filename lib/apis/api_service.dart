@@ -598,7 +598,7 @@ class ApiService {
 
   Future<dynamic> getTerminal(String idBusiness, String token) async {
     try {
-      print('$TAG - geTerminal()');
+      print('$TAG - getTerminal()');
       dynamic response = await _client.getTypeless(
           '$posBusiness$idBusiness$posTerminalEnd',
           headers: _getHeaders(token),

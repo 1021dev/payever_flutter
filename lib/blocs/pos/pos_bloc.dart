@@ -175,10 +175,9 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
         }
       });
     });
-
-    Terminal activeTerminal = terminals.firstWhere((element) => element.active);
-    if (state.activeTerminal == null) {
-      yield state.copyWith(activeTerminal: activeTerminal, terminals: terminals, terminalCopied: false);
+    if (terminals != null && terminals.isNotEmpty) {
+      Terminal activeTerminal = terminals.firstWhere((element) => element.active);
+      yield state.copyWith(activeTerminal: activeTerminal, terminals: terminals, terminalCopied: false, isLoading: false);
     } else {
       yield state.copyWith(terminals: terminals, terminalCopied: false, isLoading: false);
     }
@@ -192,7 +191,13 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       integrations.add(Communication.fromJson(element));
     });
     yield state.copyWith(integrations: integrations);
-    add(GetTerminalIntegrationsEvent(businessId: state.businessId, terminalId: state.activeTerminal.id));
+    if (state.activeTerminal != null) {
+      add(GetTerminalIntegrationsEvent(
+          businessId: state.businessId, terminalId: state.activeTerminal.id));
+    } else {
+      print('There is no active Terminal');
+      yield state.copyWith(isLoading: false);
+    }
   }
 
   Stream<PosScreenState> getTerminalIntegrations(String businessId, String terminalId) async* {

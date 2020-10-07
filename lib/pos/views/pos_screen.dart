@@ -115,7 +115,6 @@ class _PosScreenState extends State<PosScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return BlocListener(
       bloc: screenBloc,
       listener: (BuildContext context, PosScreenState state) async {
@@ -158,18 +157,16 @@ class _PosScreenState extends State<PosScreen> {
         bottom: false,
         child: BackgroundBase(
           true,
-          body: state.isLoading || state.activeTerminal == null?
+          body: state.isLoading ?
           Center(
             child: CircularProgressIndicator(),
-          ): Center(
-            child: Column(
-              children: <Widget>[
-                _toolBar(state),
-                Expanded(
-                  child: _getBody(state),
-                ),
-              ],
-            ),
+          ): Column(
+            children: <Widget>[
+              _toolBar(state),
+              Expanded(
+                child: _getBody(state),
+              ),
+            ],
           ),
         ),
       ),
@@ -182,36 +179,39 @@ class _PosScreenState extends State<PosScreen> {
       color: overlaySecondAppBar(),
       child: Row(
         children: <Widget>[
-          PosTopButton(
-            title: state.activeTerminal != null ? state.activeTerminal.name : '',
-            selectedIndex: selectedIndex,
-            index: 0,
-            onTap: () {
-              setState(() {
-                selectedIndex = 0;
-              });
-            },
-          ),
-          PosTopButton(
-            title: 'Connect',
-            selectedIndex: selectedIndex,
-            index: 1,
-            onTap: () {
-              setState(() {
-                selectedIndex = 1;
-              });
-            },
-          ),
-          PosTopButton(
-            title: 'Settings',
-            index: 2,
-            selectedIndex: selectedIndex,
-            onTap: () {
-              setState(() {
-                selectedIndex = 2;
-              });
-            },
-          ),
+          if (state.activeTerminal != null)
+            PosTopButton(
+              title: state.activeTerminal.name,
+              selectedIndex: selectedIndex,
+              index: 0,
+              onTap: () {
+                setState(() {
+                  selectedIndex = 0;
+                });
+              },
+            ),
+          if (state.activeTerminal != null)
+            PosTopButton(
+              title: 'Connect',
+              selectedIndex: selectedIndex,
+              index: 1,
+              onTap: () {
+                setState(() {
+                  selectedIndex = 1;
+                });
+              },
+            ),
+          if (state.activeTerminal != null)
+            PosTopButton(
+              title: 'Settings',
+              index: 2,
+              selectedIndex: selectedIndex,
+              onTap: () {
+                setState(() {
+                  selectedIndex = 2;
+                });
+              },
+            ),
           PosTopButton(
             title: 'Open',
             selectedIndex: selectedIndex,
@@ -557,21 +557,22 @@ class _PosScreenState extends State<PosScreen> {
 
   List<OverflowMenuItem> appBarPopUpActions(BuildContext context, PosScreenState state) {
     return [
-      OverflowMenuItem(
-        title: 'Switch terminal',
-        onTap: () async {
-          Navigator.push(
-            context,
-            PageTransition(
-              child: PosSwitchTerminalsScreen(
-                screenBloc: screenBloc,
+      if (state.activeTerminal != null)
+        OverflowMenuItem(
+          title: 'Switch terminal',
+          onTap: () async {
+            Navigator.push(
+              context,
+              PageTransition(
+                child: PosSwitchTerminalsScreen(
+                  screenBloc: screenBloc,
+                ),
+                type: PageTransitionType.fade,
+                duration: Duration(milliseconds: 500),
               ),
-              type: PageTransitionType.fade,
-              duration: Duration(milliseconds: 500),
-            ),
-          );
-        },
-      ),
+            );
+          },
+        ),
       OverflowMenuItem(
         title: 'Add new terminal',
         onTap: () async {
