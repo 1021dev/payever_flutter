@@ -24,10 +24,10 @@ class PosProductScreenBloc
     if (event is PosProductsScreenInitEvent) {
       yield state.copyWith(
           businessId: event.businessId,
-          channelSetFlow: event.channelSetFlow,
           products: event.products,
-          productsInfo: event.productsInfo,
-          filterOptions: event.filterOptions);
+          productsInfo: event.productsInfo);
+      // Get Channel Set
+      yield* getChannelSet();
     } else if (event is ProductsFilterEvent) {
       yield state.copyWith(
           subCategories: event.categories,
@@ -48,6 +48,38 @@ class PosProductScreenBloc
     } else if (event is PosProductsLoadMoreEvent) {
       yield* loadMoreProducts();
     }
+  }
+
+  Stream<PosProductScreenState> getChannelSet() async* {
+    if (posScreenBloc.state.activeTerminal == null) return;
+    ChannelSetFlow channelSetFlow;
+    String langCode = getDefaultLanguage();
+    dynamic checkoutFlowResponse = await api.getCheckoutFlow(
+        GlobalUtils.activeToken.accessToken,
+        langCode,
+        posScreenBloc.state.activeTerminal.channelSet);
+    if (checkoutFlowResponse is Map) {
+      channelSetFlow = ChannelSetFlow.fromJson(checkoutFlowResponse);
+    }
+    yield state.copyWith(
+      channelSetFlow: channelSetFlow,
+    );
+    posScreenBloc.add(UpdateChannelSetFlowEvent(channelSetFlow));
+    yield* fetchProductsFilterOptions();
+  }
+
+  Stream<PosProductScreenState>fetchProductsFilterOptions() async* {
+    dynamic response = await api.productsFilterOption(
+        GlobalUtils.activeToken.accessToken, state.businessId);
+    List<ProductFilterOption> filterOptions = [];
+    if (response is List) {
+      response.forEach((element) {
+        ProductFilterOption filterOption =
+        ProductFilterOption.fromJson(element);
+        filterOptions.add(filterOption);
+      });
+    }
+    yield state.copyWith(filterOptions: filterOptions);
   }
 
   Stream<PosProductScreenState> filterProducts() async* {
@@ -242,5 +274,15 @@ class PosProductScreenBloc
       // yield state.copyWith(cartProgressed: false);
     }
     yield state.copyWith(isLoadingCartView: false);
+  }
+
+  String getDefaultLanguage() {
+    Lang defaultLang;
+    List<Lang> langList = posScreenBloc.state.defaultCheckout.settings.languages.where((
+        element) => element.active).toList();
+    if (langList.length > 0) {
+      defaultLang = langList.first;
+    }
+    return defaultLang != null ? defaultLang.code : 'en';
   }
 }

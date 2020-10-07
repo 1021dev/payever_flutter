@@ -90,7 +90,7 @@ class _PosScreenState extends State<PosScreen> {
   static const platform = const MethodChannel('payever.flutter.dev/tapthephone');
   PosScreenBloc screenBloc;
   int selectedIndex = 0;
-
+  PosProductsScreen posProductScreen;
   @override
   void initState() {
     super.initState();
@@ -254,8 +254,14 @@ class _PosScreenState extends State<PosScreen> {
   Widget _getBody(PosScreenState state) {
     switch(selectedIndex) {
       case 0:
-        return PosProductsScreen(state.businessId, screenBloc,
-            state.channelSetFlow, state.products, widget.dashboardScreenBloc.state.posProductsInfo, state.filterOptions);
+        if (posProductScreen == null) {
+          posProductScreen = PosProductsScreen(
+              state.businessId,
+              screenBloc,
+              state.products,
+              widget.dashboardScreenBloc.state.posProductsInfo,);
+        }
+        return posProductScreen;
       case 1:
         return _connectWidget(state);
       case 2:

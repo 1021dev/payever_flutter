@@ -187,19 +187,6 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     } else {
       yield state.copyWith(terminals: terminals, terminalCopied: false);
     }
-    // Get Channel Set
-    if (activeTerminal != null) {
-      ChannelSetFlow channelSetFlow;
-      String langCode = getDefaultLanguage();
-      dynamic checkoutFlowResponse = await api.getCheckoutFlow(
-          token, langCode, activeTerminal.channelSet);
-      if (checkoutFlowResponse is Map) {
-        channelSetFlow = ChannelSetFlow.fromJson(checkoutFlowResponse);
-        print('channelSetFlow id:' + channelSetFlow.id);
-      }
-
-      yield state.copyWith(channelSetFlow: channelSetFlow,);
-    }
     add(GetProductsEvent());
   }
 
@@ -234,17 +221,6 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       }
     }
     yield state.copyWith(products: products, isLoading: false);
-    dynamic response1 = await api.productsFilterOption(
-        GlobalUtils.activeToken.accessToken, state.businessId);
-    List<ProductFilterOption> filterOptions = [];
-    if (response1 is List) {
-      response1.forEach((element) {
-        ProductFilterOption filterOption =
-        ProductFilterOption.fromJson(element);
-        filterOptions.add(filterOption);
-      });
-    }
-    yield state.copyWith(filterOptions: filterOptions);
     add(GetPosIntegrationsEvent());
   }
 
@@ -778,15 +754,5 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       print('qrcode url: $url');
       yield state.copyWith(qrImage: response.bodyBytes);
     }
-  }
-
-  String getDefaultLanguage() {
-    Lang defaultLang;
-    List<Lang> langList = dashboardScreenBloc.state.defaultCheckout.settings.languages.where((
-        element) => element.active).toList();
-    if (langList.length > 0) {
-      defaultLang = langList.first;
-    }
-    return defaultLang != null ? defaultLang.code : 'en';
   }
 }

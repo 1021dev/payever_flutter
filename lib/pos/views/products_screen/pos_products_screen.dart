@@ -23,18 +23,15 @@ import '../pos_qr_app.dart';
 
 class PosProductsScreen extends StatefulWidget {
   final PosScreenBloc posScreenBloc;
-  final ChannelSetFlow channelSetFlow;
   final String businessId;
   final List<ProductsModel> products;
-  final List<ProductFilterOption> filterOptions;
   final Info productsInfo;
+
   PosProductsScreen(
     this.businessId,
     this.posScreenBloc,
-    this.channelSetFlow,
     this.products,
     this.productsInfo,
-    this.filterOptions,
   );
 
   @override
@@ -57,8 +54,8 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
   @override
   void initState() {
     screenBloc = PosProductScreenBloc(widget.posScreenBloc)
-      ..add(PosProductsScreenInitEvent(widget.businessId, widget.channelSetFlow,
-          widget.products, widget.productsInfo, widget.filterOptions));
+      ..add(PosProductsScreenInitEvent(widget.businessId,
+          widget.products, widget.productsInfo));
     super.initState();
   }
 
@@ -121,22 +118,7 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
                 child: Stack(
               children: [
                 isGridMode ? gridBody(state) : _listBody(state),
-                orderStatus ? WorkshopView(
-                  business: widget.posScreenBloc.state.activeBusiness,
-                  terminal: widget.posScreenBloc.state.activeTerminal,
-                  channelSetFlow: state.channelSetFlow,
-                  channelSetId:
-                      widget.posScreenBloc.state.activeTerminal.channelSet,
-                  defaultCheckout: widget.posScreenBloc.state.defaultCheckout,
-                  fromCart: cartStatus,
-                  cart: cartStatus ? state.channelSetFlow.cart : null,
-                  onTapClose: () {
-                    setState(() {
-                      orderStatus = false;
-                      cartStatus = false;
-                    });
-                  },
-                ) : Container(),
+                orderStatus ? _workShopView(state) : Container(),
               ],
             )),
             // _bottomBar(state),
@@ -147,6 +129,26 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
             : Container(),
       ],
     );
+  }
+
+  Widget _workShopView(PosProductScreenState state) {
+    return state.channelSetFlow == null
+        ? Container()
+        : WorkshopView(
+            business: widget.posScreenBloc.state.activeBusiness,
+            terminal: widget.posScreenBloc.state.activeTerminal,
+            channelSetFlow: state.channelSetFlow,
+            channelSetId: widget.posScreenBloc.state.activeTerminal.channelSet,
+            defaultCheckout: widget.posScreenBloc.state.defaultCheckout,
+            fromCart: cartStatus,
+            cart: cartStatus ? state.channelSetFlow.cart : null,
+            onTapClose: () {
+              setState(() {
+                orderStatus = false;
+                cartStatus = false;
+              });
+            },
+          );
   }
 
   Widget _toolBar(PosProductScreenState state) {

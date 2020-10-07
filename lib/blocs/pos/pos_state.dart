@@ -17,7 +17,6 @@ class PosScreenState {
   final bool businessCopied;
   final bool terminalCopied;
   final List<ProductsModel> products;
-  final List<ProductFilterOption> filterOptions; // Product filter options
   final List<Communication> integrations;
   final List<Communication> communications;
   final DevicePaymentSettings devicePaymentSettings;
@@ -48,7 +47,6 @@ class PosScreenState {
     this.activeTerminal,
     this.businessId,
     this.products = const [],
-    this.filterOptions = const [],
     this.businessCopied = false,
     this.terminalCopied = false,
     this.integrations = const [],
@@ -80,7 +78,6 @@ class PosScreenState {
     this.channelSetFlow,
     this.businessId,
     this.products,
-    this.filterOptions,
     this.activeTerminal,
     this.businessCopied,
     this.terminalCopied,
@@ -114,7 +111,6 @@ class PosScreenState {
     List<ChannelSet> channelSets,
     Terminal activeTerminal,
     List<ProductsModel> products,
-    List<ProductFilterOption> filterOptions,
     bool businessCopied,
     bool terminalCopied,
     List<Communication> integrations,
@@ -146,7 +142,6 @@ class PosScreenState {
       businessId: businessId ?? this.businessId,
       activeTerminal: activeTerminal ?? this.activeTerminal,
       products: products ?? this.products,
-      filterOptions: filterOptions ?? this.filterOptions,
       businessCopied: businessCopied ?? this.businessCopied,
       terminalCopied: terminalCopied ?? this.terminalCopied,
       integrations: integrations ?? this.integrations,
