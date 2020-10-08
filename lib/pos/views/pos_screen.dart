@@ -14,9 +14,11 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
+import 'package:payever/pos/views/pos_connect_init_screen.dart';
 import 'package:payever/pos/views/pos_connect_screen.dart';
 import 'package:payever/pos/views/pos_create_terminal_screen.dart';
 import 'package:payever/pos/views/pos_qr_app.dart';
+import 'package:payever/pos/views/pos_setting_screen.dart';
 import 'package:payever/pos/views/pos_switch_terminals_screen.dart';
 import 'package:payever/pos/views/pos_twillo_settings.dart';
 import 'package:payever/pos/views/products_screen/pos_products_screen.dart';
@@ -418,24 +420,38 @@ class _PosScreenState extends State<PosScreen> {
                     Container(
                       height: 61,
                       padding: EdgeInsets.only(left: 14, right: 14),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 24,
-                            height: 24,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: NetworkImage(
-                                  '${Env.cdnIcon}icon-comerceos-settings-not-installed.png',
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            PageTransition(
+                              child: PosSettingScreen(
+                                screenBloc: screenBloc,
+                              ),
+                              type: PageTransitionType.fade,
+                              duration: Duration(milliseconds: 500),
+                            ),
+                          );
+                        },
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 24,
+                              height: 24,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: NetworkImage(
+                                    '${Env.cdnIcon}icon-comerceos-settings-not-installed.png',
+                                  ),
+                                  fit: BoxFit.contain,
                                 ),
-                                fit: BoxFit.contain,
                               ),
                             ),
-                          ),
-                          SizedBox(width: 12,),
-                          Expanded(child: Text('Settings', style: TextStyle(fontSize: 18),)),
-                          Icon(Icons.arrow_forward_ios, size: 20),
-                        ],
+                            SizedBox(width: 12,),
+                            Expanded(child: Text('Settings', style: TextStyle(fontSize: 18),)),
+                            Icon(Icons.arrow_forward_ios, size: 20),
+                          ],
+                        ),
                       ),
                     ),
                   Divider(
@@ -447,24 +463,38 @@ class _PosScreenState extends State<PosScreen> {
                   Container(
                     height: 61,
                     padding: EdgeInsets.only(left: 14, right: 14),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 24,
-                          height: 24,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: NetworkImage(
-                                '${Env.cdnIcon}icon-comerceos-connect-not-installed.png',
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          PageTransition(
+                            child: PosConnectInitScreen(
+                              screenBloc: screenBloc,
+                            ),
+                            type: PageTransitionType.fade,
+                            duration: Duration(milliseconds: 500),
+                          ),
+                        );
+                      },
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 24,
+                            height: 24,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: NetworkImage(
+                                  '${Env.cdnIcon}icon-comerceos-connect-not-installed.png',
+                                ),
+                                fit: BoxFit.contain,
                               ),
-                              fit: BoxFit.contain,
                             ),
                           ),
-                        ),
-                        SizedBox(width: 12,),
-                        Expanded(child: Text('Connect', style: TextStyle(fontSize: 18),)),
-                        Icon(Icons.arrow_forward_ios, size: 20),
-                      ],
+                          SizedBox(width: 12,),
+                          Expanded(child: Text('Connect', style: TextStyle(fontSize: 18),)),
+                          Icon(Icons.arrow_forward_ios, size: 20),
+                        ],
+                      ),
                     ),
                   ),
                 ],
