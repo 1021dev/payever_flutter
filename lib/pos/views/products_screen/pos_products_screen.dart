@@ -53,8 +53,8 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
   @override
   void initState() {
     screenBloc = PosProductScreenBloc(widget.posScreenBloc)
-      ..add(PosProductsScreenInitEvent(widget.businessId,
-          widget.products, widget.productsInfo));
+      ..add(PosProductsScreenInitEvent(
+          widget.businessId, widget.products, widget.productsInfo));
     print('product length: ${widget.products.length}');
     super.initState();
   }
@@ -92,7 +92,8 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
         bloc: screenBloc,
         builder: (BuildContext context, PosProductScreenState state) {
           return Scaffold(
-            appBar: Appbar(widget.posScreenBloc.state.activeTerminal.name ?? ''),
+            appBar:
+                Appbar(widget.posScreenBloc.state.activeTerminal.name ?? ''),
             body: SafeArea(
               bottom: false,
               child: BackgroundBase(
@@ -170,8 +171,7 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
                       ),
                       controller: searchController,
                       onChanged: (String value) {
-                          screenBloc
-                              .add(ProductsFilterEvent(searchText: value));
+                        screenBloc.add(ProductsFilterEvent(searchText: value));
                       },
                     ),
                   ),
@@ -186,9 +186,7 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
                           width: 20,
                           height: 20,
                           decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                            color: Colors.grey[600]
-                          ),
+                              shape: BoxShape.circle, color: Colors.grey[600]),
                           child: Icon(
                             Icons.close,
                             size: 18,
@@ -264,8 +262,7 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
 
   Widget _secondToolBar(PosProductScreenState state) {
     num cartCount = 0;
-    if (widget.posScreenBloc.state.activeTerminal == null)
-      return Container();
+    if (widget.posScreenBloc.state.activeTerminal == null) return Container();
 
     if (state.channelSetFlow != null && state.channelSetFlow.cart != null) {
       state.channelSetFlow.cart
@@ -283,12 +280,28 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
                 padding: EdgeInsets.only(left: 12),
               ),
               Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        InkWell(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  state.isUpdating
+                      ? Container(
+                          width: 24,
+                          height: 24,
+                          alignment: Alignment.center,
+                          child: CircularProgressIndicator(
+                            backgroundColor: Colors.white,
+                          ),
+                        )
+                      : InkWell(
                           onTap: () {
                             if (state.channelSetFlow == null) {
-                              Fluttertoast.showToast(msg: 'Loading...');
+                              // screenBloc.add(GetChannelSetFlowEvent());
+                              // Future.delayed(Duration(milliseconds: 1500)).then((value) {
+                              //   if (state.channelSetFlow != null) {
+                              //     navigateWorkshopScreen(state);
+                              //   } else {
+                              //     Fluttertoast.showToast(msg: 'Can not fetch Pay flow.');
+                              //   }
+                              // });
                               return;
                             }
                             navigateWorkshopScreen(state);
@@ -301,16 +314,16 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 12, right: 12),
-                          child: Container(
-                            width: 1,
-                            color: Color(0xFF888888),
-                            height: 24,
-                          ),
-                        ),
-                      ],
+                  Padding(
+                    padding: EdgeInsets.only(left: 12, right: 12),
+                    child: Container(
+                      width: 1,
+                      color: Color(0xFF888888),
+                      height: 24,
                     ),
+                  ),
+                ],
+              ),
               InkWell(
                 onTap: () {
                   Navigator.push(
@@ -347,28 +360,28 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
                   ),
                 )
               : IconBadge(
-                      icon: Icon(
-                        Icons.shop,
-                        color: Colors.white,
-                        size: 20,
-                      ),
-                      itemCount: cartCount,
-                      badgeColor: Colors.red,
-                      itemColor: Colors.white,
-                      hideZero: true,
-                      onTap: () {
-                        if (state.channelSetFlow == null) {
-                          Fluttertoast.showToast(msg: 'Loading...');
-                          return;
-                        }
-                        if (state.channelSetFlow.cart == null ||
-                            state.channelSetFlow.cart.isEmpty) {
-                          Fluttertoast.showToast(msg: 'Cart is empty');
-                        } else {
-                          screenBloc.add(CartOrderEvent());
-                        }
-                      },
-                    ),
+                  icon: Icon(
+                    Icons.shop,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                  itemCount: cartCount,
+                  badgeColor: Colors.red,
+                  itemColor: Colors.white,
+                  hideZero: true,
+                  onTap: () {
+                    if (state.channelSetFlow == null) {
+                      // Fluttertoast.showToast(msg: 'Loading...');
+                      return;
+                    }
+                    if (state.channelSetFlow.cart == null ||
+                        state.channelSetFlow.cart.isEmpty) {
+                      Fluttertoast.showToast(msg: 'Cart is empty');
+                    } else {
+                      screenBloc.add(CartOrderEvent());
+                    }
+                  },
+                ),
           SizedBox(
             width: 10,
           ),
@@ -461,16 +474,15 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
               ),
             ),
             new SliverToBoxAdapter(
-              child: state.products.length <
-                  state.productsInfo.itemCount
+              child: state.products.length < state.productsInfo.itemCount
                   ? Container(
-                child: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                ),
-              )
+                      child: Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                    )
                   : Container(),
             )
           ],
@@ -634,5 +646,4 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
       ),
     );
   }
-
 }

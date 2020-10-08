@@ -29,8 +29,6 @@ class PosProductScreenBloc
           products: event.products,
           productsInfo: event.productsInfo);
       yield* fetchProducts();
-      // Get Channel Set
-      yield* getChannelSet();
     } else if (event is ProductsFilterEvent) {
       yield state.copyWith(
           subCategories: event.categories,
@@ -54,6 +52,9 @@ class PosProductScreenBloc
       yield state
           .copyWith(subCategories: [], searchText: '', orderDirection: true);
       yield* filterProducts();
+    } else if (event is GetChannelSetFlowEvent) {
+      yield state.copyWith(isUpdating: true);
+      yield* getChannelSet();
     }
   }
 
@@ -88,6 +89,8 @@ class PosProductScreenBloc
       }
     }
     yield state.copyWith(products: products, isLoading: false);
+    // Get Channel Set
+    yield* getChannelSet();
   }
 
   Stream<PosProductScreenState> getChannelSet() async* {
@@ -102,7 +105,7 @@ class PosProductScreenBloc
       channelSetFlow = ChannelSetFlow.fromJson(checkoutFlowResponse);
     }
     yield state.copyWith(
-      channelSetFlow: channelSetFlow,
+      channelSetFlow: channelSetFlow, isUpdating: false
     );
     posScreenBloc.add(UpdateChannelSetFlowEvent(channelSetFlow));
     yield* fetchProductsFilterOptions();

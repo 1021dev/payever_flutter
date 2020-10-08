@@ -148,17 +148,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return BlocListener(
         bloc: screenBloc,
         listener: (BuildContext context, DashboardScreenState state) {
+          String code = state.openAppCode;
           if (state.defaultCheckout != null
-              && (state.openAppCode.contains('pos')
-                  || state.openAppCode.contains('checkout'))) {
-            Future.delayed(Duration(milliseconds: 100)).then((value) {
-              if (state.openAppCode.contains('pos')) {
-                navigatePosApp();
-              } else {
-                navigateCheckoutApp();
-              }
-              screenBloc.add(OpenAppEvent(openAppCode:''));
-            });
+              && (code.contains('pos')
+                  || code.contains('checkout'))) {
+            if (code.contains('pos')) {
+              Future.delayed(Duration(milliseconds: 100)).then((value) {
+                  navigatePosApp();
+              });
+            } else {
+              Future.delayed(Duration(milliseconds: 100)).then((value) {
+                  navigateCheckoutApp();
+              });
+            }
+            screenBloc.add(OpenAppEvent(openAppCode:''));
           } else if (state is DashboardScreenLogout) {
             Navigator.pushReplacement(
               context,
@@ -1302,31 +1305,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   void navigatePosApp() {
-    screenBloc.add(OpenAppEvent(openAppCode: ''));
-    Navigator.push(
-      context,
-      PageTransition(
-        child: PosInitScreen(dashboardScreenBloc: screenBloc),
-        type: PageTransitionType.fade,
-        duration: Duration(milliseconds: 500),
-      ),
-    );
+    _navigateAppsScreen(screenBloc.state, PosInitScreen(dashboardScreenBloc: screenBloc));
   }
 
   void navigateCheckoutApp() {
-    screenBloc.add(OpenAppEvent(openAppCode: ''));
-    Navigator.push(
-      context,
-      PageTransition(
-        child: CheckoutInitScreen(dashboardScreenBloc: screenBloc),
-        type: PageTransitionType.fade,
-        duration: Duration(milliseconds: 500),
-      ),
-    );
+    _navigateAppsScreen(screenBloc.state, CheckoutInitScreen(dashboardScreenBloc: screenBloc));
   }
 
   _navigateAppsScreen(
-      DashboardScreenState state, Widget widget, {bool isDuration = false}) {
+      DashboardScreenState state, Widget widget, {bool isDuration = true}) {
     screenBloc.add(OpenAppEvent(openAppCode: ''));
 
     Provider.of<GlobalStateModel>(context, listen: false)

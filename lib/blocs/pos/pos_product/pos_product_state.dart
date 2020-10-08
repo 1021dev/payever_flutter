@@ -4,7 +4,7 @@ import 'package:payever/products/models/models.dart';
 
 class PosProductScreenState {
   final bool isLoading;
-  final bool isUpdating;
+  final bool isUpdating; // Filter update and Get ChannelSetFlow
   final bool isLoadingCartView;
   final bool cartProgressed;
   final bool searching;

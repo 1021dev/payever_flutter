@@ -117,31 +117,33 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
                       },
                       itemCount: paymentOptions.length),
                   Container(
-                    height: 50,
+                    height: 41,
                     child: SizedBox.expand(
-                      child: MaterialButton(
-                        onPressed: () {
+                      child: InkWell(
+                        onTap: () {
                           if (paymentMethod == null || paymentMethod.isEmpty) return;
                           Map<String, dynamic>body = _getPaymentRequestBody(paymentMethod, paymentOption);
                           widget.onTapPay(body);
                         },
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        color: overlayBackground(),
-                        child: widget.isUpdating
-                            ? Center(
-                            child: Container(
-                                width: 30,
-                                height: 30,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                )))
-                            : Text(
-                          payBtnTitle ?? '',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
+                        child: Container(
+                          decoration: overlayBtnDecoration(),
+                          alignment: Alignment.center,
+                          child: widget.isUpdating
+                              ? Center(
+                              child: Container(
+                                  width: 30,
+                                  height: 30,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    backgroundColor: GlobalUtils.theme == 'light' ? Colors.white : Colors.black,
+                                  )))
+                              : Text(
+                            payBtnTitle ?? '',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: GlobalUtils.theme == 'light' ? Colors.white : Colors.black,
+                            ),
                           ),
                         ),
                       ),
@@ -264,5 +266,40 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
     body['paymentItems'] = [];
 
     return body;
+  }
+
+  Color overlayBtnBackground() {
+    if (GlobalUtils.theme == 'dark') {
+      return Color.fromRGBO(0, 0, 0, 0.3);
+    } else if (GlobalUtils.theme == 'light') {
+      return Color.fromRGBO(245, 245, 245, 0.6);
+    } else {
+      return Color.fromRGBO(0, 0, 0, 0.2);
+    }
+  }
+
+  BoxDecoration overlayBtnDecoration() {
+    if (GlobalUtils.theme == 'dark') {
+      return BoxDecoration(
+          borderRadius: BorderRadius.circular(4),
+          gradient: LinearGradient(
+            colors: [
+              Color.fromRGBO(237, 237, 244, 1),
+              Color.fromRGBO(174, 176, 183, 1)
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          )
+      );
+    } else if (GlobalUtils.theme == 'light') {
+      return BoxDecoration(
+        borderRadius: BorderRadius.circular(4),
+        color: Color.fromRGBO(44, 44, 44, 0.95),
+      );
+    }
+    return BoxDecoration(
+      borderRadius: BorderRadius.circular(4),
+      color: overlayBtnBackground(),
+    );
   }
 }

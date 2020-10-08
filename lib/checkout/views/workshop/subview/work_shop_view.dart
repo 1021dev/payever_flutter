@@ -262,7 +262,7 @@ class _WorkshopViewState extends State<WorkshopView> {
             color: overlayBackground(),
             borderRadius: BorderRadius.circular(12)
           ),
-          margin: EdgeInsets.only(left: 12, right: 12, bottom: 20, top: 44),
+          margin: EdgeInsets.only(left: 12, right: 12, bottom: 20, top: widget.onTapClose != null ? 44 : 20),
           height: double.infinity,
           width: mainWidth,
           child: Column(
@@ -388,27 +388,46 @@ class _WorkshopViewState extends State<WorkshopView> {
                           : Container(
                         width: Measurements.width,
                         padding: EdgeInsets.only(
-                          left: 16,
-                          right: 16,
                           bottom: 16,
                         ),
                         child: Column(
                           children: <Widget>[
-                            _orderView(state),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              child: _orderView(state),
+                            ),
                             _divider,
-                            _accountView(state),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              child: _accountView(state),
+                            ),
                             _divider,
-                            _billingView(state),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              child: _billingView(state),
+                            ),
                             _divider,
-                            _selectPaymentView(state),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              child: _selectPaymentView(state),
+                            ),
                             _divider,
                             // _sendToDeviceView(state),
                             // _divider,
-                            _paymentOptionView(state),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              child: _paymentOptionView(state),
+                            ),
                             _divider,
-                            _addressView(state),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              child: _addressView(state),
+                            ),
                             _divider,
-                            _orderDetailView(state),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              child: _orderDetailView(state),
+                            ),
                           ],
                         ),
                       ),
@@ -649,6 +668,7 @@ class _WorkshopViewState extends State<WorkshopView> {
                     height: 30,
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
+                      backgroundColor: GlobalUtils.theme == 'light' ? Colors.white : Colors.black,
                     )))
                 : Text(
               editOrder ? 'Save' : 'Next Step',
@@ -670,135 +690,61 @@ class _WorkshopViewState extends State<WorkshopView> {
         top: 16,
         bottom: 16,
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Flexible(
-            flex: 1,
-            child: Container(
-              child: Text(
-                Language.getCheckoutStrings('checkout_order_summary.title')
-                    .toUpperCase(),
-                style: TextStyle(
-                  fontSize: 12,
-                  fontFamily: 'Helvetica Neue',
+          Container(
+            height: 40,
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: Text(
+                    Language.getCartStrings(
+                        'checkout_cart_edit.form.label.subtotal')
+                        .toUpperCase(),
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontFamily: 'Helvetica Neue',
+                    ),
+                  ),
                 ),
-              ),
+                Text(
+                  '${currency}${state.channelSetFlow.amount.toStringAsFixed(2)}',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontFamily: 'Helvetica Neue',
+                  ),
+                ),
+              ],
             ),
           ),
-          Flexible(
-            flex: 2,
-            child: Column(
+          SizedBox(
+            height: 8,
+          ),
+          Container(
+            height: 40,
+            child: Row(
               children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Container(
-                      child: Text(
-                        Language.getCartStrings(
-                            'checkout_cart_edit.form.label.subtotal')
-                            .toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontFamily: 'Helvetica Neue',
-                        ),
-                      ),
+                Expanded(
+                  child: Text(
+                    Language.getCartStrings('checkout_cart_view.total')
+                        .toUpperCase(),
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontFamily: 'Helvetica Neue',
+                      fontWeight: FontWeight.w500,
                     ),
-                    Container(
-                      child: Text(
-                        '${currency}${state.channelSetFlow.amount.toStringAsFixed(2)}',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontFamily: 'Helvetica Neue',
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-                SizedBox(
-                  height: 8,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Container(
-                      child: Text(
-                        Language.getCartStrings(
-                            'checkout_cart_view.payment_costs')
-                            .toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontFamily: 'Helvetica Neue',
-                        ),
-                      ),
-                    ),
-                    Container(
-                      child: Text(
-                        '${currency}0.00',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontFamily: 'Helvetica Neue',
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 8,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Container(
-                      child: Text(
-                        Language.getCartStrings('checkout_cart_view.shipping')
-                            .toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontFamily: 'Helvetica Neue',
-                        ),
-                      ),
-                    ),
-                    Container(
-                      child: Text(
-                        '${currency}0.00',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontFamily: 'Helvetica Neue',
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 16,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Container(
-                      child: Text(
-                        Language.getCartStrings('checkout_cart_view.total')
-                            .toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontFamily: 'Helvetica Neue',
-                        ),
-                      ),
-                    ),
-                    Container(
-                      child: Text(
-                        state.channelSetFlow != null
-                            ? '$currency${state.channelSetFlow.amount.toStringAsFixed(2)}'
-                            : '',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontFamily: 'Helvetica Neue',
-                        ),
-                      ),
-                    ),
-                  ],
+                Text(
+                  state.channelSetFlow != null
+                      ? '$currency${state.channelSetFlow.amount.toStringAsFixed(2)}'
+                      : '',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontFamily: 'Helvetica Neue',
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ],
             ),
@@ -868,10 +814,10 @@ class _WorkshopViewState extends State<WorkshopView> {
                     height: 20,
                   ),
                   Container(
-                    height: 55,
+                    height: 41,
                     child: SizedBox.expand(
-                      child: MaterialButton(
-                        onPressed: () {
+                      child: InkWell(
+                        onTap: () {
                           if (_formKeyAccount.currentState.validate()) {
                             if (payflowLogin) {
                               _selectedSectionIndex = 1;
@@ -882,18 +828,26 @@ class _WorkshopViewState extends State<WorkshopView> {
                             }
                           }
                         },
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        color: overlayBackground(),
-                        child: state.isUpdating && state.updatePayflowIndex == 1
-                            ? Center(child: Container(width: 30, height: 30 ,child: CircularProgressIndicator(strokeWidth: 2,)))
-                            : Text(
-                          Language.getCheckoutStrings(
-                              'checkout_send_flow.action.continue'),
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
+                        child: Container(
+                          decoration: overlayBtnDecoration(),
+                          alignment: Alignment.center,
+                          child: state.isUpdating && state.updatePayflowIndex == 1
+                              ? Center(
+                                      child: Container(
+                                          width: 30,
+                                          height: 30,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            backgroundColor: GlobalUtils.theme == 'light' ? Colors.white : Colors.black,
+                                          )))
+                                  : Text(
+                            Language.getCheckoutStrings(
+                                'checkout_send_flow.action.continue'),
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: GlobalUtils.theme == 'light' ? Colors.white : Colors.black
+                            ),
                           ),
                         ),
                       ),
@@ -1068,10 +1022,10 @@ class _WorkshopViewState extends State<WorkshopView> {
                   height: 20,
                 ),
                 Container(
-                  height: 55,
+                  height: 41,
                   child: SizedBox.expand(
-                    child: MaterialButton(
-                      onPressed: () {
+                    child: InkWell(
+                      onTap: () {
                         bool testMode = false;
                         if (testMode) {
                           Map<String, dynamic> body = {
@@ -1131,25 +1085,27 @@ class _WorkshopViewState extends State<WorkshopView> {
                           }
                         }
                       },
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      color: overlayBackground(),
-                      child: state.isUpdating && state.updatePayflowIndex == 2
-                          ? Center(
-                        child: Container(
-                            width: 30,
-                            height: 30,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                            )),
-                      )
-                          : Text(
-                        Language.getCheckoutStrings(
-                            'checkout_send_flow.action.continue'),
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
+                      child: Container(
+                        decoration: overlayBtnDecoration(),
+                        alignment: Alignment.center,
+                        child: state.isUpdating && state.updatePayflowIndex == 2
+                            ? Center(
+                          child: Container(
+                              width: 30,
+                              height: 30,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                backgroundColor: GlobalUtils.theme == 'light' ? Colors.white : Colors.black,
+                              )),
+                        )
+                            : Text(
+                          Language.getCheckoutStrings(
+                              'checkout_send_flow.action.continue'),
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: GlobalUtils.theme == 'light' ? Colors.white : Colors.black
+                          ),
                         ),
                       ),
                     ),
@@ -1477,7 +1433,7 @@ class _WorkshopViewState extends State<WorkshopView> {
     return Divider(
       height: 0,
       thickness: 0.5,
-      color: iconColor(),
+      color: iconColor().withOpacity(0.6),
     );
   }
 
