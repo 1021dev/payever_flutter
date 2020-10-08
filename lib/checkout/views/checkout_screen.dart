@@ -22,7 +22,6 @@ import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
-import 'package:payever/pos/models/pos.dart';
 import 'package:payever/shop/widgets/shop_top_button.dart';
 import 'package:payever/theme.dart';
 import 'package:payever/widgets/main_app_bar.dart';
@@ -34,15 +33,9 @@ import 'connect/checkout_qr_integration.dart';
 
 class CheckoutInitScreen extends StatelessWidget {
   final DashboardScreenBloc dashboardScreenBloc;
-  final List<Checkout> checkouts;
-  final Checkout defaultCheckout;
-  final List<ChannelSet> channelSets;
 
   CheckoutInitScreen({
     this.dashboardScreenBloc,
-    this.checkouts = const [],
-    this.defaultCheckout,
-    this.channelSets,
   });
 
   @override
@@ -52,9 +45,6 @@ class CheckoutInitScreen extends StatelessWidget {
     return CheckoutScreen(
       globalStateModel: globalStateModel,
       dashboardScreenBloc: dashboardScreenBloc,
-      checkouts: checkouts,
-      defaultCheckout: defaultCheckout,
-      channelSets: channelSets,
     );
   }
 }
@@ -63,16 +53,10 @@ class CheckoutScreen extends StatefulWidget {
 
   final GlobalStateModel globalStateModel;
   final DashboardScreenBloc dashboardScreenBloc;
-  final List<Checkout> checkouts;
-  final Checkout defaultCheckout;
-  final List<ChannelSet> channelSets;
 
   CheckoutScreen({
     this.globalStateModel,
     this.dashboardScreenBloc,
-    this.checkouts = const [],
-    this.defaultCheckout,
-    this.channelSets,
   });
 
   @override
@@ -97,11 +81,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         dashboardScreenBloc: widget.dashboardScreenBloc,
         globalStateModel: widget.globalStateModel)
       ..add(CheckoutScreenInitEvent(
-        business: widget.globalStateModel.currentBusiness,
+        business: widget.dashboardScreenBloc.state.activeBusiness,
         terminal: widget.dashboardScreenBloc.state.activeTerminal,
-        checkouts: widget.checkouts,
-        defaultCheckout: widget.defaultCheckout,
-        channelSets: widget.channelSets,
+        checkouts: widget.dashboardScreenBloc.state.checkouts,
+        defaultCheckout: widget.dashboardScreenBloc.state.defaultCheckout,
+        channelSets: widget.dashboardScreenBloc.state.channelSets,
       ));
     super.initState();
   }

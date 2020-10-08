@@ -148,9 +148,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return BlocListener(
         bloc: screenBloc,
         listener: (BuildContext context, DashboardScreenState state) {
-          if (state.defaultCheckout != null && state.openAppCode.contains('pos')) {
+          if (state.defaultCheckout != null
+              && (state.openAppCode.contains('pos')
+                  || state.openAppCode.contains('checkout'))) {
             Future.delayed(Duration(milliseconds: 100)).then((value) {
-              navigatePosApp();
+              if (state.openAppCode.contains('pos')) {
+                navigatePosApp();
+              } else {
+                navigateCheckoutApp();
+              }
               screenBloc.add(OpenAppEvent(openAppCode:''));
             });
           } else if (state is DashboardScreenLogout) {
@@ -267,158 +273,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
       businessApp = bapps.first;
     }
     if (appWidget != null) {
-      List<NotificationModel> notifications = [];
-      if (state.notifications.containsKey('transactions')) {
-        notifications = state.notifications['transactions'];
-      }
-      dashboardWidgets.add(DashboardTransactionsView(
-        appWidget: appWidget,
-        businessApps: businessApp,
-        isLoading: state.isInitialScreen,
-        total: state.total,
-        lastMonth: state.lastMonth,
-        lastYear: state.lastYear,
-        monthlySum: state.monthlySum,
-        onOpen: () {
-          _navigateAppsScreen(
-              state,
-              TransactionScreenInit(
-                dashboardScreenBloc: screenBloc,
-              )
-          );
-        },
-        onTapContinueSetup: (app) {
-          _navigateAppsScreen(
-              state,
-              WelcomeScreen(
-                dashboardScreenBloc: screenBloc,
-                business: state.activeBusiness,
-                businessApps: app,
-              )
-          );
-        },
-        onTapGetStarted: (app) {
-          _navigateAppsScreen(
-              state,
-              WelcomeScreen(
-                dashboardScreenBloc: screenBloc,
-                business: state.activeBusiness,
-                businessApps: app,
-              )
-          );
-        },
-        onTapLearnMore: () {},
-        notifications: notifications,
-        openNotification: (NotificationModel model) {},
-        deleteNotification: (NotificationModel model) {
-          screenBloc.add(DeleteNotification(notificationId: model.id));
-        },
-      ));
+      dashboardWidgets.add(_transactionView(state, appWidget, businessApp));
     }
     // Business Apps
-    dashboardWidgets.add(DashboardBusinessAppsView(
-      businessApps: state.businessWidgets,
-      appWidgets: state.currentWidgets,
-      openAppCode: state.openAppCode,
-      isTablet: _isTablet,
-      onTapEdit: () {
-        _navigateAppsScreen(state, EditBusinessAppScreen(dashboardScreenBloc: screenBloc, globalStateModel: globalStateModel,));
-      },
-      onTapWidget: (BusinessApps aw) {
-        Provider.of<GlobalStateModel>(context, listen: false)
-            .setCurrentBusiness(state.activeBusiness);
-        Provider.of<GlobalStateModel>(context, listen: false)
-            .setCurrentWallpaper(state.curWall);
-        if (aw.code.contains('transactions')) {
-          Navigator.push(
-            context,
-            PageTransition(
-              child: TransactionScreenInit(
-                dashboardScreenBloc: screenBloc,
-              ),
-              type: PageTransitionType.fade,
-            ),
-          );
-        } else if (aw.code.contains('pos')) {
-          if (isLoadingData(state)) {
-            screenBloc.add(OpenAppEvent(openAppCode: aw.code));
-            return;
-          }
-          navigatePosApp();
-        } else if (aw.code.contains('shop')) {
-          Navigator.push(
-            context,
-            PageTransition(
-              child: ShopInitScreen(
-                dashboardScreenBloc: screenBloc,
-              ),
-              type: PageTransitionType.fade,
-              duration: Duration(milliseconds: 500),
-            ),
-          );
-        } else if (aw.code.contains('products')) {
-          Navigator.push(
-            context,
-            PageTransition(
-              child: ProductsInitScreen(
-                dashboardScreenBloc: screenBloc,
-              ),
-              type: PageTransitionType.fade,
-              duration: Duration(milliseconds: 500),
-            ),
-          );
-        } else if (aw.code.contains('connect')) {
-          Navigator.push(
-            context,
-            PageTransition(
-              child: ConnectInitScreen(
-                dashboardScreenBloc: screenBloc,
-              ),
-              type: PageTransitionType.fade,
-              duration: Duration(milliseconds: 500),
-            ),
-          );
-        } else if (aw.code.contains('contact')) {
-          Navigator.push(
-            context,
-            PageTransition(
-              child: ContactsInitScreen(
-                dashboardScreenBloc: screenBloc,
-              ),
-              type: PageTransitionType.fade,
-              duration: Duration(milliseconds: 500),
-            ),
-          );
-        } else if (aw.code.contains('checkout')) {
-          if (isLoadingData(state))  return;
-          Navigator.push(
-            context,
-            PageTransition(
-              child: CheckoutInitScreen(
-                dashboardScreenBloc: screenBloc,
-                checkouts: state.checkouts,
-                defaultCheckout: state.defaultCheckout,
-                channelSets: state.channelSets,
-              ),
-              type: PageTransitionType.fade,
-              duration: Duration(milliseconds: 500),
-            ),
-          );
-        } else if (aw.code.contains('settings')) {
-          Navigator.push(
-            context,
-            PageTransition(
-              child: SettingInitScreen(
-                dashboardScreenBloc: screenBloc,
-              ),
-              type: PageTransitionType.fade,
-              duration: Duration(milliseconds: 300),
-            ),
-          );
-        }
-      },
-    ));
-
+    dashboardWidgets.add(_businessAppsView(state));
     // Shop
     if (widgets.where((element) => element.type == 'shop').toList().length >
         0) {
@@ -428,96 +286,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           .where((element) => element.code == 'shop')
           .toList()
           .first;
-      List<NotificationModel> notifications = [];
-      if (state.notifications.containsKey('shops')) {
-        notifications = state.notifications['shops'];
-      }
       dashboardWidgets.add(
-        DashboardShopView(
-          businessApps: businessApp,
-          appWidget: appWidget,
-          shops: state.shops,
-          shopModel: state.activeShop,
-          isLoading: state.isLoading,
-          onOpen: () {
-            Provider.of<GlobalStateModel>(context, listen: false)
-                .setCurrentBusiness(state.activeBusiness);
-            Provider.of<GlobalStateModel>(context, listen: false)
-                .setCurrentWallpaper(state.curWall);
-            Navigator.push(
-              context,
-              PageTransition(
-                child: ShopInitScreen(
-                  dashboardScreenBloc: screenBloc,
-                ),
-                type: PageTransitionType.fade,
-                duration: Duration(milliseconds: 500),
-              ),
-            );
-          },
-          onTapEditShop: () {
-            Provider.of<GlobalStateModel>(context, listen: false)
-                .setCurrentBusiness(state.activeBusiness);
-            Provider.of<GlobalStateModel>(context, listen: false)
-                .setCurrentWallpaper(state.curWall);
-            Navigator.push(
-              context,
-              PageTransition(
-                child: ShopInitScreen(
-                  dashboardScreenBloc: screenBloc,
-                ),
-                type: PageTransitionType.fade,
-                duration: Duration(milliseconds: 500),
-              ),
-            );
-          },
-          notifications: notifications,
-          openNotification: (NotificationModel model) {
-            if (model.app == 'products-aware' &&
-                model.message.contains('newProduct')) {
-              Provider.of<GlobalStateModel>(context, listen: false)
-                  .setCurrentBusiness(state.activeBusiness);
-              Provider.of<GlobalStateModel>(context, listen: false)
-                  .setCurrentWallpaper(state.curWall);
-              Navigator.push(
-                context,
-                PageTransition(
-                  child: ProductsInitScreen(
-                    dashboardScreenBloc: screenBloc,
-                  ),
-                  type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 500),
-                ),
-              );
-            }
-          },
-          deleteNotification: (NotificationModel model) {
-            screenBloc.add(DeleteNotification(notificationId: model.id));
-          },
-          onTapGetStarted: (app) {
-            _navigateAppsScreen(
-                state,
-                WelcomeScreen(
-                  dashboardScreenBloc: screenBloc,
-                  business: state.activeBusiness,
-                  businessApps: app,
-                )
-            );
-          },
-          onTapContinueSetup: (app) {
-            _navigateAppsScreen(
-                state,
-                WelcomeScreen(
-                  dashboardScreenBloc: screenBloc,
-                  business: state.activeBusiness,
-                  businessApps: app,
-                )
-            );
-          },
-          onTapLearnMore: (url) {
-            _launchURL(url);
-          },
-        ),
+        _shopView(state, appWidget, businessApp),
       );
     }
     // Point of Sale
@@ -526,78 +296,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           widgets.where((element) => element.type == 'pos').toList().first;
       businessApp =
           businessApps.where((element) => element.code == 'pos').toList().first;
-      List<NotificationModel> notifications = [];
-      if (state.notifications.containsKey('pos')) {
-        notifications = state.notifications['pos'];
-      }
-      dashboardWidgets.add(DashboardAppPosView(
-        isLoading: state.isPosLoading,
-        businessApps: businessApp,
-        appWidget: appWidget,
-        terminals: state.terminalList,
-        activeTerminal: state.activeTerminal,
-        onTapEditTerminal: () async {
-          final result = await Navigator.push(
-            context,
-            PageTransition(
-              child: PosCreateTerminalScreen(
-                fromDashBoard: true,
-                screenBloc: PosScreenBloc(
-                  dashboardScreenBloc: screenBloc,
-                ),
-                editTerminal: state.activeTerminal,
-              ),
-              type: PageTransitionType.fade,
-              duration: Duration(milliseconds: 500),
-            ),
-          );
-          if ((result != null) && (result == 'Terminal Updated')) {
-            screenBloc.add(FetchPosEvent(business: state.activeBusiness));
-          }
-        },
-        onTapOpen: () {
-          navigatePosApp();
-        },
-        notifications: notifications,
-        openNotification: (NotificationModel model) {
-          if (model.app == 'products-aware' &&
-              model.message.contains('newProduct')) {
-            _navigateAppsScreen(
-                state,
-                ProductsInitScreen(
-                  dashboardScreenBloc: screenBloc,
-                ),
-                isDuration: true
-            );
-          }
-        },
-        deleteNotification: (NotificationModel model) {
-          screenBloc.add(DeleteNotification(notificationId: model.id));
-        },
-        onTapGetStarted: (app) {
-          _navigateAppsScreen(
-              state,
-              WelcomeScreen(
-                dashboardScreenBloc: screenBloc,
-                business: state.activeBusiness,
-                businessApps: app,
-              )
-          );
-        },
-        onTapContinueSetup: (app) {
-          _navigateAppsScreen(
-              state,
-              WelcomeScreen(
-                dashboardScreenBloc: screenBloc,
-                business: state.activeBusiness,
-                businessApps: app,
-              )
-          );
-        },
-        onTapLearnMore: (url) {
-          _launchURL(url);
-        },
-      ));
+      dashboardWidgets.add(_pointOfSaleView(state, appWidget, businessApp));
     }
 
     // Checkout
@@ -610,87 +309,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           .toList()
           .first;
       if (appWidget != null) {
-        List<NotificationModel> notifications = [];
-        if (state.notifications.containsKey('checkout')) {
-          notifications = state.notifications['checkout'];
-        }
-        dashboardWidgets.add(DashboardCheckoutView(
-          businessApps: businessApp,
-          appWidget: appWidget,
-          notifications: notifications,
-          checkouts: state.checkouts,
-          defaultCheckout: state.defaultCheckout,
-          openNotification: (NotificationModel model) {},
-          deleteNotification: (NotificationModel model) {
-            screenBloc.add(DeleteNotification(notificationId: model.id));
-          },
-          onOpen: () {
-            if (isLoadingData(state))  return;
-            _navigateAppsScreen(
-                state,
-                CheckoutInitScreen(
-                  dashboardScreenBloc: screenBloc,
-                  checkouts: state.checkouts,
-                  channelSets: state.channelSets,
-                  defaultCheckout: state.defaultCheckout,
-                ),
-              isDuration: true,
-            );
-          },
-          onTapGetStarted: (app) {
-            _navigateAppsScreen(
-                state,
-                WelcomeScreen(
-                  dashboardScreenBloc: screenBloc,
-                  business: state.activeBusiness,
-                  businessApps: app,
-                )
-            );
-          },
-          onTapContinueSetup: (app) {
-            _navigateAppsScreen(
-                state,
-                WelcomeScreen(
-                  dashboardScreenBloc: screenBloc,
-                  business: state.activeBusiness,
-                  businessApps: app,
-                )
-            );
-          },
-          onTapLinkOrManage: (bool isLink) {
-            if (isLink) {
-              List<ChannelSet> channelSets = state.channelSets;
-              if (channelSets == null && channelSets.isEmpty) {
-                return;
-              }
-              ChannelSet channelSet = channelSets.firstWhere((element) =>
-              (element.checkout == state.defaultCheckout.id && element.type == 'link'));
-              if (channelSet == null) {
-                return;
-              }
-              String openUrl =
-                  '${Env.wrapper}/pay/create-flow/channel-set-id/${channelSet.id}';
-              _navigateAppsScreen(
-                state,
-                ChannelCheckoutFlowScreen(
-                  checkoutScreenBloc: CheckoutScreenBloc(),
-                  openUrl: openUrl,
-                  fromDashboard: true,
-                ),
-              );
-            } else {
-              _navigateAppsScreen(
-                state,
-                CreateEditCheckoutScreen(
-                  businessId: state.activeBusiness.id,
-                  checkout: state.defaultCheckout,
-                  fromDashBoard: true,
-                  screenBloc: CheckoutSwitchScreenBloc(),
-                ),
-              );
-            }
-          },
-        ));
+        dashboardWidgets.add(_checkoutView(state, appWidget, businessApp));
       }
     }
 
@@ -777,19 +396,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               .toList()
               .first
           : null;
-      List<NotificationModel> notifications = [];
-      if (state.notifications.containsKey('contacts')) {
-        notifications = state.notifications['contacts'];
-      }
-      dashboardWidgets.add(DashboardContactView(
-        businessApps: businessApp,
-        appWidget: appWidget,
-        notifications: notifications,
-        openNotification: (NotificationModel model) {},
-        deleteNotification: (NotificationModel model) {
-          screenBloc.add(DeleteNotification(notificationId: model.id));
-        },
-      ));
+      dashboardWidgets.add(_contactsView(state, appWidget, businessApp));
     }
 
     // Products
@@ -807,116 +414,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               .toList()
               .first
           : null;
-      List<NotificationModel> notifications = [];
-      if (state.notifications.keys.toList().contains('products')) {
-        notifications = state.notifications['products'];
-      }
-      dashboardWidgets.add(
-        DashboardProductsView(
-          businessApps: businessApp,
-          appWidget: appWidget,
-          lastSales: state.lastSalesRandom,
-          business: state.activeBusiness,
-          mainWidth: widget.mainWidth,
-          onOpen: () async {
-            Provider.of<GlobalStateModel>(context, listen: false)
-                .setCurrentBusiness(state.activeBusiness);
-            Provider.of<GlobalStateModel>(context, listen: false)
-                .setCurrentWallpaper(state.curWall);
-            Navigator.push(
-              context,
-              PageTransition(
-                child: ProductsInitScreen(
-                  dashboardScreenBloc: screenBloc,
-                ),
-                type: PageTransitionType.fade,
-                duration: Duration(milliseconds: 500),
-              ),
-            );
-          },
-          onSelect: (Products product) async {
-            ProductsModel productsModel = new ProductsModel();
-            productsModel.id = product.id;
-            productsModel.title = product.name;
-            List<String> images = [];
-            if (product.thumbnail != null) {
-              images.add(product.thumbnail);
-            }
-            productsModel.images = images;
-            productsModel.businessUuid = product.business;
-            productsModel.price = product.price;
-            productsModel.salePrice = product.salePrice;
-            productsModel.uuid = product.uuid;
-
-            Provider.of<GlobalStateModel>(context, listen: false)
-                .setCurrentBusiness(state.activeBusiness);
-            Provider.of<GlobalStateModel>(context, listen: false)
-                .setCurrentWallpaper(state.curWall);
-            final result = await Navigator.push(
-              context,
-              PageTransition(
-                child: ProductDetailScreen(
-                  productsModel: productsModel,
-                  businessId: globalStateModel.currentBusiness.id,
-                  fromDashBoard: true,
-                  screenBloc:
-                      ProductsScreenBloc(dashboardScreenBloc: screenBloc),
-                ),
-                type: PageTransitionType.fade,
-                duration: Duration(milliseconds: 500),
-              ),
-            );
-            if ((result != null) && (result == 'Products Updated')) {}
-          },
-          notifications: notifications,
-          openNotification: (NotificationModel model) {
-            if (model.message.contains('missing')) {
-              String productId = '';
-              if (model.data != null) {
-                if (model.data['productId'] != null) {
-                  productId = model.data['productId'];
-                }
-              }
-              if (productId != '') {
-                _navigateAppsScreen(
-                    state,
-                    ProductDetailScreen(
-                      productsModel: ProductsModel(id: productId),
-                      businessId: globalStateModel.currentBusiness.id,
-                      fromDashBoard: true,
-                      screenBloc:
-                      ProductsScreenBloc(dashboardScreenBloc: screenBloc),
-                    ),
-                    isDuration: true,
-                );
-              }
-            }
-          },
-          deleteNotification: (NotificationModel model) {
-            screenBloc.add(DeleteNotification(notificationId: model.id));
-          },
-          onTapGetStarted: (app) {
-            _navigateAppsScreen(
-                state,
-                WelcomeScreen(
-                  dashboardScreenBloc: screenBloc,
-                  business: state.activeBusiness,
-                  businessApps: app,
-                )
-            );
-          },
-          onTapContinueSetup: (app) {
-            _navigateAppsScreen(
-                state,
-                WelcomeScreen(
-                  dashboardScreenBloc: screenBloc,
-                  business: state.activeBusiness,
-                  businessApps: app,
-                )
-            );
-          },
-        ),
-      );
+      dashboardWidgets.add(_productsView(state, appWidget, businessApp));
     }
 
     // Connects
@@ -934,52 +432,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               .toList()
               .first
           : null;
-      List<NotificationModel> notifications = [];
-      if (state.notifications.containsKey('connect')) {
-        notifications = state.notifications['connect'];
-      }
-      dashboardWidgets.add(DashboardConnectView(
-        businessApps: businessApp,
-        appWidget: appWidget,
-        notifications: notifications,
-        connects: state.connects,
-        openNotification: (NotificationModel model) {},
-        deleteNotification: (NotificationModel model) {
-          screenBloc.add(DeleteNotification(notificationId: model.id));
-        },
-        tapOpen: () {
-          _navigateAppsScreen(
-              state,
-              ConnectInitScreen(
-                dashboardScreenBloc: screenBloc,
-              ),
-            isDuration: true,
-          );
-        },
-        onTapGetStarted: (app) {
-          _navigateAppsScreen(
-              state,
-              WelcomeScreen(
-                dashboardScreenBloc: screenBloc,
-                business: state.activeBusiness,
-                businessApps: app,
-              )
-          );
-        },
-        onTapContinueSetup: (app) {
-          _navigateAppsScreen(
-              state,
-              WelcomeScreen(
-                dashboardScreenBloc: screenBloc,
-                business: state.activeBusiness,
-                businessApps: app,
-              )
-          );
-        },
-        onTapLearnMore: (url) {
-          _launchURL(url);
-        },
-      ));
+      dashboardWidgets.add(_connectView(state, appWidget, businessApp));
     }
 
     // Settings
@@ -991,113 +444,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
           .where((element) => element.code == 'settings')
           .toList()
           .first;
-      List<NotificationModel> notifications = [];
-      if (state.notifications.containsKey('settings')) {
-        notifications = state.notifications['settings'];
-      }
-      dashboardWidgets.add(DashboardSettingsView(
-          businessApps: businessApp,
-          appWidget: appWidget,
-          notifications: notifications,
-          openNotification: (NotificationModel model) {},
-          deleteNotification: (NotificationModel model) {
-            screenBloc.add(DeleteNotification(notificationId: model.id));
-          },
-          onTapOpen: () {
-            print(businessApp.setupStatus);
-            if (businessApp.setupStatus == 'notStarted') {
-              Provider.of<GlobalStateModel>(context, listen: false)
-                  .setCurrentBusiness(state.activeBusiness);
-              Provider.of<GlobalStateModel>(context, listen: false)
-                  .setCurrentWallpaper(state.curWall);
-              Navigator.push(
-                context,
-                PageTransition(
-                  child: WelcomeScreen(
-                    dashboardScreenBloc: screenBloc,
-                    business: state.activeBusiness,
-                    businessApps: businessApp,
-                  ),
-                  type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 50),
-                ),
-              );
-            } else {
-              Provider.of<GlobalStateModel>(context, listen: false)
-                  .setCurrentBusiness(state.activeBusiness);
-              Provider.of<GlobalStateModel>(context, listen: false)
-                  .setCurrentWallpaper(state.curWall);
-              Navigator.push(
-                context,
-                PageTransition(
-                  child: SettingInitScreen(
-                    dashboardScreenBloc: screenBloc,
-                  ),
-                  type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 300),
-                ),
-              );
-            }
-          },
-          onTapOpenWallpaper: () async {
-            Navigator.push(
-              context,
-              PageTransition(
-                child: WallpaperScreen(
-                  globalStateModel: globalStateModel,
-                  setScreenBloc: SettingScreenBloc(
-                    dashboardScreenBloc: screenBloc,
-                    globalStateModel: globalStateModel,
-                  )..add(SettingScreenInitEvent(
-                    business: state.activeBusiness.id,
-                  )),
-                  fromDashboard: true,
-                ),
-                type: PageTransitionType.fade,
-                duration: Duration(milliseconds: 300),
-              ),
-            );
-          },
-          onTapOpenLanguage: () {
-            Navigator.push(
-              context,
-              PageTransition(
-                child: LanguageScreen(
-                  globalStateModel: globalStateModel,
-                  settingBloc: SettingScreenBloc(
-                    dashboardScreenBloc: screenBloc,
-                    globalStateModel: globalStateModel,
-                  )..add(SettingScreenInitEvent(
-                    business: state.activeBusiness.id,
-                    user: state.user,
-                  )),
-                  fromDashboard: true,
-                ),
-                type: PageTransitionType.fade,
-              ),
-            );
-          }));
+      dashboardWidgets.add(_settingView(state, appWidget, businessApp));
     }
 
     // Tutorials
-    dashboardWidgets.add(DashboardTutorialView(
-      tutorials: state.tutorials,
-      onWatchTutorial: (Tutorial tutorial) {
-        if (tutorial.urls.length > 0) {
-          String lang = state.activeBusiness.defaultLanguage;
-          List<Urls> urls = tutorial.urls
-              .where((element) => element.language == lang)
-              .toList();
-          if (urls.length > 0) {
-            _launchURL(urls.first.url);
-          } else {
-            _launchURL(tutorial.url);
-          }
-        } else {
-          _launchURL(tutorial.url);
-        }
-      },
-    ));
+    dashboardWidgets.add(_tutorialView(state, appWidget, businessApp));
 
     // Paddings
     dashboardWidgets.add(Padding(
@@ -1276,6 +627,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         if (val.length == 0) {
                           return;
                         }
+                        screenBloc.add(OpenAppEvent(openAppCode: ''));
                         final result = await Navigator.push(
                           context,
                           PageTransition(
@@ -1337,6 +689,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       : MaterialButton(
                           onPressed: () async {
                             FocusScope.of(context).unfocus();
+                            screenBloc.add(OpenAppEvent(openAppCode: ''));
                             final result = await Navigator.push(
                               context,
                               PageTransition(
@@ -1392,13 +745,580 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
+  Widget _transactionView(DashboardScreenState state, AppWidget appWidget, BusinessApps businessApp) {
+    List<NotificationModel> notifications = [];
+    if (state.notifications.containsKey('transactions')) {
+      notifications = state.notifications['transactions'];
+    }
+    return DashboardTransactionsView(
+      appWidget: appWidget,
+      businessApps: businessApp,
+      isLoading: state.isInitialScreen,
+      total: state.total,
+      lastMonth: state.lastMonth,
+      lastYear: state.lastYear,
+      monthlySum: state.monthlySum,
+      onOpen: () {
+        _navigateAppsScreen(
+            state,
+            TransactionScreenInit(
+              dashboardScreenBloc: screenBloc,
+            )
+        );
+      },
+      onTapContinueSetup: (app) {
+        _navigateAppsScreen(
+            state,
+            WelcomeScreen(
+              dashboardScreenBloc: screenBloc,
+              business: state.activeBusiness,
+              businessApps: app,
+            )
+        );
+      },
+      onTapGetStarted: (app) {
+        _navigateAppsScreen(
+            state,
+            WelcomeScreen(
+              dashboardScreenBloc: screenBloc,
+              business: state.activeBusiness,
+              businessApps: app,
+            )
+        );
+      },
+      onTapLearnMore: () {},
+      notifications: notifications,
+      openNotification: (NotificationModel model) {},
+      deleteNotification: (NotificationModel model) {
+        screenBloc.add(DeleteNotification(notificationId: model.id));
+      },
+    );
+  }
+
+  Widget _businessAppsView(DashboardScreenState state) {
+    return DashboardBusinessAppsView(
+      businessApps: state.businessWidgets,
+      appWidgets: state.currentWidgets,
+      openAppCode: state.openAppCode,
+      isTablet: _isTablet,
+      onTapEdit: () {
+        _navigateAppsScreen(state, EditBusinessAppScreen(dashboardScreenBloc: screenBloc, globalStateModel: globalStateModel,));
+      },
+      onTapWidget: (BusinessApps aw) {
+
+        Provider.of<GlobalStateModel>(context, listen: false)
+            .setCurrentBusiness(state.activeBusiness);
+        Provider.of<GlobalStateModel>(context, listen: false)
+            .setCurrentWallpaper(state.curWall);
+        if (aw.code.contains('transactions')) {
+          _navigateAppsScreen(state, TransactionScreenInit(
+            dashboardScreenBloc: screenBloc,
+          ));
+        } else if (aw.code.contains('pos')) {
+          if (isLoadingData(state)) {
+            screenBloc.add(OpenAppEvent(openAppCode: aw.code));
+            return;
+          }
+          navigatePosApp();
+        } else if (aw.code.contains('shop')) {
+          _navigateAppsScreen(state, ShopInitScreen(
+            dashboardScreenBloc: screenBloc,
+          ));
+        } else if (aw.code.contains('products')) {
+          _navigateAppsScreen(state, ProductsInitScreen(
+            dashboardScreenBloc: screenBloc,
+          ));
+        } else if (aw.code.contains('connect')) {
+          _navigateAppsScreen(state, ConnectInitScreen(
+            dashboardScreenBloc: screenBloc,
+          ));
+        } else if (aw.code.contains('contact')) {
+          _navigateAppsScreen(state, ContactsInitScreen(
+            dashboardScreenBloc: screenBloc,
+          ));
+        } else if (aw.code.contains('checkout')) {
+          if (isLoadingData(state)) {
+            screenBloc.add(OpenAppEvent(openAppCode: aw.code));
+            return;
+          }
+          navigateCheckoutApp();
+        } else if (aw.code.contains('settings')) {
+          _navigateAppsScreen(state, SettingInitScreen(
+            dashboardScreenBloc: screenBloc,
+          ));
+        }
+      },
+    );
+  }
+
+  Widget _shopView(DashboardScreenState state, AppWidget appWidget, BusinessApps businessApp) {
+    List<NotificationModel> notifications = [];
+    if (state.notifications.containsKey('shops')) {
+      notifications = state.notifications['shops'];
+    }
+    return DashboardShopView(
+      businessApps: businessApp,
+      appWidget: appWidget,
+      shops: state.shops,
+      shopModel: state.activeShop,
+      isLoading: state.isLoading,
+      onOpen: () {
+        _navigateAppsScreen(state, ShopInitScreen(
+          dashboardScreenBloc: screenBloc,
+        ));
+      },
+      onTapEditShop: () {
+        _navigateAppsScreen(state, ShopInitScreen(
+          dashboardScreenBloc: screenBloc,
+        ));
+      },
+      notifications: notifications,
+      openNotification: (NotificationModel model) {
+        if (model.app == 'products-aware' &&
+            model.message.contains('newProduct')) {
+          _navigateAppsScreen(state, ProductsInitScreen(
+            dashboardScreenBloc: screenBloc,
+          ));
+        }
+      },
+      deleteNotification: (NotificationModel model) {
+        screenBloc.add(DeleteNotification(notificationId: model.id));
+      },
+      onTapGetStarted: (app) {
+        _navigateAppsScreen(
+            state,
+            WelcomeScreen(
+              dashboardScreenBloc: screenBloc,
+              business: state.activeBusiness,
+              businessApps: app,
+            )
+        );
+      },
+      onTapContinueSetup: (app) {
+        _navigateAppsScreen(
+            state,
+            WelcomeScreen(
+              dashboardScreenBloc: screenBloc,
+              business: state.activeBusiness,
+              businessApps: app,
+            )
+        );
+      },
+      onTapLearnMore: (url) {
+        _launchURL(url);
+      },
+    );
+  }
+
+  Widget _pointOfSaleView(DashboardScreenState state, AppWidget appWidget, BusinessApps businessApp) {
+    List<NotificationModel> notifications = [];
+    if (state.notifications.containsKey('pos')) {
+      notifications = state.notifications['pos'];
+    }
+    return DashboardAppPosView(
+      isLoading: state.isPosLoading,
+      businessApps: businessApp,
+      appWidget: appWidget,
+      terminals: state.terminalList,
+      activeTerminal: state.activeTerminal,
+      onTapEditTerminal: () async {
+        screenBloc.add(OpenAppEvent(openAppCode: ''));
+        final result = await Navigator.push(
+          context,
+          PageTransition(
+            child: PosCreateTerminalScreen(
+              fromDashBoard: true,
+              screenBloc: PosScreenBloc(
+                dashboardScreenBloc: screenBloc,
+              ),
+              editTerminal: state.activeTerminal,
+            ),
+            type: PageTransitionType.fade,
+            duration: Duration(milliseconds: 500),
+          ),
+        );
+        if ((result != null) && (result == 'Terminal Updated')) {
+          screenBloc.add(FetchPosEvent(business: state.activeBusiness));
+        }
+      },
+      onTapOpen: () {
+        navigatePosApp();
+      },
+      notifications: notifications,
+      openNotification: (NotificationModel model) {
+        if (model.app == 'products-aware' &&
+            model.message.contains('newProduct')) {
+          _navigateAppsScreen(
+              state,
+              ProductsInitScreen(
+                dashboardScreenBloc: screenBloc,
+              ),
+              isDuration: true
+          );
+        }
+      },
+      deleteNotification: (NotificationModel model) {
+        screenBloc.add(DeleteNotification(notificationId: model.id));
+      },
+      onTapGetStarted: (app) {
+        _navigateAppsScreen(
+            state,
+            WelcomeScreen(
+              dashboardScreenBloc: screenBloc,
+              business: state.activeBusiness,
+              businessApps: app,
+            )
+        );
+      },
+      onTapContinueSetup: (app) {
+        _navigateAppsScreen(
+            state,
+            WelcomeScreen(
+              dashboardScreenBloc: screenBloc,
+              business: state.activeBusiness,
+              businessApps: app,
+            )
+        );
+      },
+      onTapLearnMore: (url) {
+        _launchURL(url);
+      },
+    );
+  }
+
+  Widget _checkoutView(DashboardScreenState state, AppWidget appWidget, BusinessApps businessApp) {
+    List<NotificationModel> notifications = [];
+    if (state.notifications.containsKey('checkout')) {
+      notifications = state.notifications['checkout'];
+    }
+    return DashboardCheckoutView(
+      businessApps: businessApp,
+      appWidget: appWidget,
+      notifications: notifications,
+      checkouts: state.checkouts,
+      defaultCheckout: state.defaultCheckout,
+      openNotification: (NotificationModel model) {},
+      deleteNotification: (NotificationModel model) {
+        screenBloc.add(DeleteNotification(notificationId: model.id));
+      },
+      onOpen: () {
+        navigateCheckoutApp();
+      },
+      onTapGetStarted: (app) {
+        _navigateAppsScreen(
+            state,
+            WelcomeScreen(
+              dashboardScreenBloc: screenBloc,
+              business: state.activeBusiness,
+              businessApps: app,
+            )
+        );
+      },
+      onTapContinueSetup: (app) {
+        _navigateAppsScreen(
+            state,
+            WelcomeScreen(
+              dashboardScreenBloc: screenBloc,
+              business: state.activeBusiness,
+              businessApps: app,
+            )
+        );
+      },
+      onTapLinkOrManage: (bool isLink) {
+        if (isLink) {
+          List<ChannelSet> channelSets = state.channelSets;
+          if (channelSets == null && channelSets.isEmpty) {
+            return;
+          }
+          ChannelSet channelSet = channelSets.firstWhere((element) =>
+          (element.checkout == state.defaultCheckout.id && element.type == 'link'));
+          if (channelSet == null) {
+            return;
+          }
+          String openUrl =
+              '${Env.wrapper}/pay/create-flow/channel-set-id/${channelSet.id}';
+          _navigateAppsScreen(
+            state,
+            ChannelCheckoutFlowScreen(
+              checkoutScreenBloc: CheckoutScreenBloc(),
+              openUrl: openUrl,
+              fromDashboard: true,
+            ),
+          );
+        } else {
+          _navigateAppsScreen(
+            state,
+            CreateEditCheckoutScreen(
+              businessId: state.activeBusiness.id,
+              checkout: state.defaultCheckout,
+              fromDashBoard: true,
+              screenBloc: CheckoutSwitchScreenBloc(),
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  Widget _contactsView(DashboardScreenState state, AppWidget appWidget, BusinessApps businessApp) {
+    List<NotificationModel> notifications = [];
+    if (state.notifications.containsKey('contacts')) {
+      notifications = state.notifications['contacts'];
+    }
+    return DashboardContactView(
+      businessApps: businessApp,
+      appWidget: appWidget,
+      notifications: notifications,
+      openNotification: (NotificationModel model) {},
+      deleteNotification: (NotificationModel model) {
+        screenBloc.add(DeleteNotification(notificationId: model.id));
+      },
+    );
+  }
+
+  Widget _productsView(DashboardScreenState state, AppWidget appWidget, BusinessApps businessApp) {
+    List<NotificationModel> notifications = [];
+    if (state.notifications.keys.toList().contains('products')) {
+      notifications = state.notifications['products'];
+    }
+    return DashboardProductsView(
+      businessApps: businessApp,
+      appWidget: appWidget,
+      lastSales: state.lastSalesRandom,
+      business: state.activeBusiness,
+      mainWidth: widget.mainWidth,
+      onOpen: () async {
+        _navigateAppsScreen(state, ProductsInitScreen(
+          dashboardScreenBloc: screenBloc,
+        ));
+      },
+      onSelect: (Products product) async {
+        ProductsModel productsModel = new ProductsModel();
+        productsModel.id = product.id;
+        productsModel.title = product.name;
+        List<String> images = [];
+        if (product.thumbnail != null) {
+          images.add(product.thumbnail);
+        }
+        productsModel.images = images;
+        productsModel.businessUuid = product.business;
+        productsModel.price = product.price;
+        productsModel.salePrice = product.salePrice;
+        productsModel.uuid = product.uuid;
+
+        Provider.of<GlobalStateModel>(context, listen: false)
+            .setCurrentBusiness(state.activeBusiness);
+        Provider.of<GlobalStateModel>(context, listen: false)
+            .setCurrentWallpaper(state.curWall);
+        screenBloc.add(OpenAppEvent(openAppCode: ''));
+        final result = await Navigator.push(
+          context,
+          PageTransition(
+            child: ProductDetailScreen(
+              productsModel: productsModel,
+              businessId: globalStateModel.currentBusiness.id,
+              fromDashBoard: true,
+              screenBloc:
+              ProductsScreenBloc(dashboardScreenBloc: screenBloc),
+            ),
+            type: PageTransitionType.fade,
+            duration: Duration(milliseconds: 500),
+          ),
+        );
+        if ((result != null) && (result == 'Products Updated')) {}
+      },
+      notifications: notifications,
+      openNotification: (NotificationModel model) {
+        if (model.message.contains('missing')) {
+          String productId = '';
+          if (model.data != null) {
+            if (model.data['productId'] != null) {
+              productId = model.data['productId'];
+            }
+          }
+          if (productId != '') {
+            _navigateAppsScreen(
+              state,
+              ProductDetailScreen(
+                productsModel: ProductsModel(id: productId),
+                businessId: globalStateModel.currentBusiness.id,
+                fromDashBoard: true,
+                screenBloc:
+                ProductsScreenBloc(dashboardScreenBloc: screenBloc),
+              ),
+              isDuration: true,
+            );
+          }
+        }
+      },
+      deleteNotification: (NotificationModel model) {
+        screenBloc.add(DeleteNotification(notificationId: model.id));
+      },
+      onTapGetStarted: (app) {
+        _navigateAppsScreen(
+            state,
+            WelcomeScreen(
+              dashboardScreenBloc: screenBloc,
+              business: state.activeBusiness,
+              businessApps: app,
+            )
+        );
+      },
+      onTapContinueSetup: (app) {
+        _navigateAppsScreen(
+            state,
+            WelcomeScreen(
+              dashboardScreenBloc: screenBloc,
+              business: state.activeBusiness,
+              businessApps: app,
+            )
+        );
+      },
+    );
+  }
+
+  Widget _connectView(DashboardScreenState state, AppWidget appWidget, BusinessApps businessApp) {
+    List<NotificationModel> notifications = [];
+    if (state.notifications.containsKey('connect')) {
+      notifications = state.notifications['connect'];
+    }
+    return DashboardConnectView(
+      businessApps: businessApp,
+      appWidget: appWidget,
+      notifications: notifications,
+      connects: state.connects,
+      openNotification: (NotificationModel model) {},
+      deleteNotification: (NotificationModel model) {
+        screenBloc.add(DeleteNotification(notificationId: model.id));
+      },
+      tapOpen: () {
+        _navigateAppsScreen(
+          state,
+          ConnectInitScreen(
+            dashboardScreenBloc: screenBloc,
+          ),
+          isDuration: true,
+        );
+      },
+      onTapGetStarted: (app) {
+        _navigateAppsScreen(
+            state,
+            WelcomeScreen(
+              dashboardScreenBloc: screenBloc,
+              business: state.activeBusiness,
+              businessApps: app,
+            )
+        );
+      },
+      onTapContinueSetup: (app) {
+        _navigateAppsScreen(
+            state,
+            WelcomeScreen(
+              dashboardScreenBloc: screenBloc,
+              business: state.activeBusiness,
+              businessApps: app,
+            )
+        );
+      },
+      onTapLearnMore: (url) {
+        _launchURL(url);
+      },
+    );
+  }
+
+  Widget _settingView(DashboardScreenState state, AppWidget appWidget, BusinessApps businessApp) {
+    List<NotificationModel> notifications = [];
+    if (state.notifications.containsKey('settings')) {
+      notifications = state.notifications['settings'];
+    }
+    return DashboardSettingsView(
+        businessApps: businessApp,
+        appWidget: appWidget,
+        notifications: notifications,
+        openNotification: (NotificationModel model) {},
+        deleteNotification: (NotificationModel model) {
+          screenBloc.add(DeleteNotification(notificationId: model.id));
+        },
+        onTapOpen: () {
+          print(businessApp.setupStatus);
+          if (businessApp.setupStatus == 'notStarted') {
+            _navigateAppsScreen(state, WelcomeScreen(
+              dashboardScreenBloc: screenBloc,
+              business: state.activeBusiness,
+              businessApps: businessApp,
+            ));
+          } else {
+            _navigateAppsScreen(state, SettingInitScreen(
+              dashboardScreenBloc: screenBloc,
+            ));
+          }
+        },
+        onTapOpenWallpaper: () async {
+          _navigateAppsScreen(state, WallpaperScreen(
+            globalStateModel: globalStateModel,
+            setScreenBloc: SettingScreenBloc(
+              dashboardScreenBloc: screenBloc,
+              globalStateModel: globalStateModel,
+            )..add(SettingScreenInitEvent(
+              business: state.activeBusiness.id,
+            )),
+            fromDashboard: true,
+          ));
+        },
+        onTapOpenLanguage: () {
+          _navigateAppsScreen(state, LanguageScreen(
+            globalStateModel: globalStateModel,
+            settingBloc: SettingScreenBloc(
+              dashboardScreenBloc: screenBloc,
+              globalStateModel: globalStateModel,
+            )..add(SettingScreenInitEvent(
+              business: state.activeBusiness.id,
+              user: state.user,
+            )),
+            fromDashboard: true,
+          ));
+        });
+  }
+
+  Widget _tutorialView(DashboardScreenState state, AppWidget appWidget, BusinessApps businessApp) {
+    return DashboardTutorialView(
+      tutorials: state.tutorials,
+      onWatchTutorial: (Tutorial tutorial) {
+        if (tutorial.urls.length > 0) {
+          String lang = state.activeBusiness.defaultLanguage;
+          List<Urls> urls = tutorial.urls
+              .where((element) => element.language == lang)
+              .toList();
+          if (urls.length > 0) {
+            _launchURL(urls.first.url);
+          } else {
+            _launchURL(tutorial.url);
+          }
+        } else {
+          _launchURL(tutorial.url);
+        }
+      },
+    );
+  }
+
   void navigatePosApp() {
+    screenBloc.add(OpenAppEvent(openAppCode: ''));
     Navigator.push(
       context,
       PageTransition(
-        child:  PosInitScreen(
-          dashboardScreenBloc: screenBloc,
-        ),
+        child: PosInitScreen(dashboardScreenBloc: screenBloc),
+        type: PageTransitionType.fade,
+        duration: Duration(milliseconds: 500),
+      ),
+    );
+  }
+
+  void navigateCheckoutApp() {
+    screenBloc.add(OpenAppEvent(openAppCode: ''));
+    Navigator.push(
+      context,
+      PageTransition(
+        child: CheckoutInitScreen(dashboardScreenBloc: screenBloc),
         type: PageTransitionType.fade,
         duration: Duration(milliseconds: 500),
       ),
@@ -1407,6 +1327,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   _navigateAppsScreen(
       DashboardScreenState state, Widget widget, {bool isDuration = false}) {
+    screenBloc.add(OpenAppEvent(openAppCode: ''));
+
     Provider.of<GlobalStateModel>(context, listen: false)
         .setCurrentBusiness(state.activeBusiness);
     Provider.of<GlobalStateModel>(context, listen: false)

@@ -88,7 +88,8 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                       ),
                       Row(
                         children: [
-                          InkWell(
+                          if (widget.checkouts.length > 0)
+                            InkWell(
                             onTap: widget.onOpen,
                             child: Container(
                               height: 20,
