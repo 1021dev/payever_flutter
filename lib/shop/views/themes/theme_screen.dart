@@ -496,7 +496,7 @@ class _ThemesScreenState extends State<ThemesScreen> {
                                 width: 15,
                                 height: 15,
                                 child: CircularProgressIndicator(
-                                  strokeWidth: 1,
+                                  strokeWidth: 2,
                                 ),
                               )
                             : Text(

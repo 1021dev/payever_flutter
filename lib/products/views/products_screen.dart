@@ -827,7 +827,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     margin: EdgeInsets.only(top: 20),
                       width: 20,
                       height: 20,
-                      child: CircularProgressIndicator(strokeWidth: 1,))),
+                      child: CircularProgressIndicator(strokeWidth: 2,))),
                 );
               },
             ),

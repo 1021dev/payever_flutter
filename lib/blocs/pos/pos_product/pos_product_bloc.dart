@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/utils/common_utils.dart';
@@ -257,6 +258,7 @@ class PosProductScreenBloc
     dynamic response1 = await api.getProducts(GlobalUtils.activeToken.accessToken, body1);
     if (response1 is DioError) {
       yield state.copyWith(isLoadingCartView: false);
+      Fluttertoast.showToast(msg: response1.error.toString());
       return;
     }
     List<ProductsModel> products = [];

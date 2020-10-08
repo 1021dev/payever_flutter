@@ -316,7 +316,7 @@ class _EditBusinessAppScreenState extends State<EditBusinessAppScreen> {
                               height: 20,
                               width: 20,
                               child: Center(
-                                child: CircularProgressIndicator(strokeWidth: 1,),
+                                child: CircularProgressIndicator(strokeWidth: 2,),
                               ),
                             ): Text(businessApp.installed ? 'Uninstall' : 'Install',
                             ),
@@ -427,7 +427,7 @@ class _EditBusinessAppScreenState extends State<EditBusinessAppScreen> {
                                   width: 20,
                                   height: 20,
                                   child: CircularProgressIndicator(
-                                    strokeWidth: 1,
+                                    strokeWidth: 2,
                                   ),
                                 )
                               : Text(

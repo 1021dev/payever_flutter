@@ -1303,7 +1303,7 @@ class _ConnectPaymentSettingsScreenState extends State<ConnectPaymentSettingsScr
                               width: 12,
                               height: 12,
                               child: CircularProgressIndicator(
-                                strokeWidth: 1,
+                                strokeWidth: 2,
                               ),
                           ): Text(
                             v.isDefault ? 'Disconnect': 'Delete',

@@ -374,7 +374,7 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
                   alignment: Alignment.center,
                   child: CircularProgressIndicator(
                     backgroundColor: Colors.white,
-                    strokeWidth: 2,
+                    strokeWidth: 3,
                   ),
                 )
               : orderStatus
@@ -531,7 +531,7 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
                     width: 20,
                     height: 20,
                     child: CircularProgressIndicator(
-                      strokeWidth: 1,
+                      strokeWidth: 2,
                     ))),
           );
         },

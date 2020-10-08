@@ -479,7 +479,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                     width: 20,
                     height: 20,
                     child: CircularProgressIndicator(
-                      strokeWidth: 1,
+                      strokeWidth: 2,
                     ))),
           );
         },
