@@ -42,7 +42,6 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
   bool _isPortrait;
   bool _isTablet;
   bool isGridMode = true;
-  bool cartStatus = false;
   TextEditingController searchController = TextEditingController();
 
   PosProductScreenBloc screenBloc;
@@ -82,10 +81,7 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
       listener: (BuildContext context, PosProductScreenState state) async {
         if (state.cartProgressed && !state.isLoadingCartView) {
           screenBloc.add(ResetCardProgressEvent());
-          navigateWorkshopScreen(state);
-          setState(() {
-            cartStatus = true;
-          });
+          navigateWorkshopScreen(state, true);
         }
       },
       child: BlocBuilder<PosProductScreenBloc, PosProductScreenState>(
@@ -304,7 +300,7 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
                               // });
                               return;
                             }
-                            navigateWorkshopScreen(state);
+                            navigateWorkshopScreen(state, false);
                           },
                           child: Text(
                             'Amount',
@@ -624,7 +620,7 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
     );
   }
 
-  void navigateWorkshopScreen(PosProductScreenState state) {
+  void navigateWorkshopScreen(PosProductScreenState state, bool cartStatus) {
     Navigator.push(
       context,
       PageTransition(

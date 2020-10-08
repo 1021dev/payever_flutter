@@ -808,11 +808,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         _navigateAppsScreen(state, EditBusinessAppScreen(dashboardScreenBloc: screenBloc, globalStateModel: globalStateModel,));
       },
       onTapWidget: (BusinessApps aw) {
-
-        Provider.of<GlobalStateModel>(context, listen: false)
-            .setCurrentBusiness(state.activeBusiness);
-        Provider.of<GlobalStateModel>(context, listen: false)
-            .setCurrentWallpaper(state.curWall);
         if (aw.code.contains('transactions')) {
           _navigateAppsScreen(state, TransactionScreenInit(
             dashboardScreenBloc: screenBloc,

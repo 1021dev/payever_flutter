@@ -11,11 +11,8 @@ class BusinessAppCell extends StatelessWidget {
   final BusinessApps currentApp;
   final Function onTap;
   final String openAppCode;
-  BusinessAppCell({
-    this.currentApp,
-    this.onTap,
-    this.openAppCode = ''
-  });
+
+  BusinessAppCell({this.currentApp, this.onTap, this.openAppCode = ''});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +20,7 @@ class BusinessAppCell extends StatelessWidget {
     icon = icon.replaceAll('32', '64');
     String code = currentApp.code;
     if (code == 'products') {
-      code  = 'product';
+      code = 'product';
     }
     String title = currentApp.dashboardInfo.title;
     if (title.contains('setting')) {
@@ -64,26 +61,30 @@ class BusinessAppCell extends StatelessWidget {
                       height: 64,
                       padding: EdgeInsets.all(10),
                       child: Center(
-                          child: CircularProgressIndicator(
-                        backgroundColor: Colors.white,
-                      )))
+                          child: CircularProgressIndicator()))
               ],
-
             ),
             SizedBox(height: 2),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                !currentApp.dashboardInfo.title.contains('setting') &&  currentApp.setupStatus != 'completed' ? Container(
-                  width: 8,
-                  height: 8,
-                  decoration: BoxDecoration(
-                    color: currentApp.installed ? Color(0xFF0084FF): Color(0xFFC02F1D),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                ): Container(),
-                SizedBox(width: 4,),
+                !currentApp.dashboardInfo.title.contains('setting') &&
+                        currentApp.setupStatus != 'completed'
+                    ? Container(
+                        width: 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color: currentApp.installed
+                              ? Color(0xFF0084FF)
+                              : Color(0xFFC02F1D),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      )
+                    : Container(),
+                SizedBox(
+                  width: 4,
+                ),
                 Text(
                   Language.getCommerceOSStrings(title),
                   style: TextStyle(

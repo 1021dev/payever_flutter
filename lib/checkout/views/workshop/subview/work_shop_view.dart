@@ -675,7 +675,7 @@ class _WorkshopViewState extends State<WorkshopView> {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
-                color: GlobalUtils.theme == 'light' ? Colors.white : Colors.black
+                color: GlobalUtils.theme == 'dark' ? Colors.black : Colors.white
               ),
             ),
           ),
@@ -694,7 +694,7 @@ class _WorkshopViewState extends State<WorkshopView> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Container(
-            height: 40,
+            height: 30,
             child: Row(
               children: <Widget>[
                 Expanded(
@@ -718,11 +718,8 @@ class _WorkshopViewState extends State<WorkshopView> {
               ],
             ),
           ),
-          SizedBox(
-            height: 8,
-          ),
           Container(
-            height: 40,
+            height: 30,
             child: Row(
               children: <Widget>[
                 Expanded(
@@ -846,7 +843,7 @@ class _WorkshopViewState extends State<WorkshopView> {
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
-                              color: GlobalUtils.theme == 'light' ? Colors.white : Colors.black
+                              color: GlobalUtils.theme == 'dark' ? Colors.black : Colors.white,
                             ),
                           ),
                         ),
@@ -1104,7 +1101,7 @@ class _WorkshopViewState extends State<WorkshopView> {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
-                            color: GlobalUtils.theme == 'light' ? Colors.white : Colors.black
+                            color: GlobalUtils.theme == 'dark' ? Colors.black : Colors.white,
                           ),
                         ),
                       ),
