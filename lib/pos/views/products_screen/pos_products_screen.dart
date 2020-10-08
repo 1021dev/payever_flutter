@@ -14,6 +14,7 @@ import 'package:payever/pos/views/products_screen/pos_product_detail_screen.dart
 import 'package:payever/pos/views/products_screen/pos_products_filter_screen.dart';
 import 'package:payever/pos/views/products_screen/widget/pos_product_grid_item.dart';
 import 'package:payever/products/models/models.dart';
+import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/theme.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:icon_badge/icon_badge.dart';
@@ -91,6 +92,7 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
         bloc: screenBloc,
         builder: (BuildContext context, PosProductScreenState state) {
           return Scaffold(
+            appBar: Appbar(widget.posScreenBloc.state.activeTerminal.name ?? ''),
             body: SafeArea(
               bottom: false,
               child: BackgroundBase(

@@ -655,7 +655,7 @@ class _WorkshopViewState extends State<WorkshopView> {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
-                color: Colors.black
+                color: GlobalUtils.theme == 'light' ? Colors.white : Colors.black
               ),
             ),
           ),
