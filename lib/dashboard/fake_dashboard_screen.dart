@@ -247,7 +247,7 @@ class _FakeDashboardScreenState extends State<FakeDashboardScreen> {
           appWidget: appWidget,
           shops: state.shops,
           shopModel: state.activeShop,
-          isLoading: state.isLoading,
+          isLoading: false,
           notifications: notifications,
         ),
       );

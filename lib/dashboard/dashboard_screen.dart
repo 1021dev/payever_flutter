@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/checkout/views/channels/channels_checkout_flow_screen.dart';
@@ -149,7 +148,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return BlocListener(
         bloc: screenBloc,
         listener: (BuildContext context, DashboardScreenState state) {
-          if (state is DashboardScreenLogout) {
+          if (state.defaultCheckout != null && state.openAppCode.contains('pos')) {
+            Future.delayed(Duration(milliseconds: 100)).then((value) {
+              navigatePosApp();
+              screenBloc.add(OpenAppEvent(openAppCode:''));
+            });
+          } else if (state is DashboardScreenLogout) {
             Navigator.pushReplacement(
               context,
               PageTransition(
@@ -315,6 +319,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     dashboardWidgets.add(DashboardBusinessAppsView(
       businessApps: state.businessWidgets,
       appWidgets: state.currentWidgets,
+      openAppCode: state.openAppCode,
       isTablet: _isTablet,
       onTapEdit: () {
         _navigateAppsScreen(state, EditBusinessAppScreen(dashboardScreenBloc: screenBloc, globalStateModel: globalStateModel,));
@@ -335,23 +340,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           );
         } else if (aw.code.contains('pos')) {
-          if (isLoadingData(state))  return;
-          Navigator.push(
-            context,
-            PageTransition(
-              child: PosInitScreen(
-                dashboardScreenBloc: screenBloc,
-                defaultCheckout: state.defaultCheckout,
-                currentBusiness: state.activeBusiness,
-                activeTerminal: state.activeTerminal,
-                terminals: state.terminalList,
-                channelSets: state.channelSets,
-                products: state.posProducts,
-              ),
-              type: PageTransitionType.fade,
-              duration: Duration(milliseconds: 500),
-            ),
-          );
+          if (isLoadingData(state)) {
+            screenBloc.add(OpenAppEvent(openAppCode: aw.code));
+            return;
+          }
+          navigatePosApp();
         } else if (aw.code.contains('shop')) {
           Navigator.push(
             context,
@@ -563,20 +556,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           }
         },
         onTapOpen: () {
-          if (isLoadingData(state))  return;
-          _navigateAppsScreen(
-              state,
-              PosInitScreen(
-                dashboardScreenBloc: screenBloc,
-                defaultCheckout: state.defaultCheckout,
-                currentBusiness: state.activeBusiness,
-                activeTerminal: state.activeTerminal,
-                terminals: state.terminalList,
-                channelSets: state.channelSets,
-                products: state.posProducts,
-              ),
-              isDuration: true
-          );
+          navigatePosApp();
         },
         notifications: notifications,
         openNotification: (NotificationModel model) {
@@ -1412,6 +1392,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
+  void navigatePosApp() {
+    Navigator.push(
+      context,
+      PageTransition(
+        child:  PosInitScreen(
+          dashboardScreenBloc: screenBloc,
+        ),
+        type: PageTransitionType.fade,
+        duration: Duration(milliseconds: 500),
+      ),
+    );
+  }
+
   _navigateAppsScreen(
       DashboardScreenState state, Widget widget, {bool isDuration = false}) {
     Provider.of<GlobalStateModel>(context, listen: false)
@@ -1438,7 +1431,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   bool isLoadingData(DashboardScreenState state) {
     if (state.activeBusiness == null || state.defaultCheckout == null) {
-      Fluttertoast.showToast(msg:'Loading...');
       return true;
     }
     return false;

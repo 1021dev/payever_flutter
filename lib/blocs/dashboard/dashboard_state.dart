@@ -43,6 +43,7 @@ class DashboardScreenState {
   final String installBusinessAppId;
   final List<ChannelSet>channelSets;
   final MyWallpaper personalWallpaper;
+  final String openAppCode;
 
   DashboardScreenState({
     this.isLoading = false,
@@ -80,6 +81,7 @@ class DashboardScreenState {
     this.installBusinessAppId = '',
     this.channelSets,
     this.personalWallpaper,
+    this.openAppCode = '',
   });
 
   List<Object> get props => [
@@ -118,6 +120,7 @@ class DashboardScreenState {
     this.installBusinessAppId,
     this.channelSets,
     this.personalWallpaper,
+    this.openAppCode,
   ];
 
   DashboardScreenState copyWith({
@@ -156,6 +159,7 @@ class DashboardScreenState {
     List<ChannelSet> channelSets,
     String installBusinessAppId,
     MyWallpaper personalWallpaper,
+    String openAppCode,
   }) {
     return DashboardScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -193,6 +197,7 @@ class DashboardScreenState {
       defaultCheckout: defaultCheckout ?? this.defaultCheckout,
       channelSets: channelSets ?? this.channelSets,
       personalWallpaper: personalWallpaper ?? this.personalWallpaper,
+      openAppCode: openAppCode ?? this.openAppCode,
     );
   }
 }

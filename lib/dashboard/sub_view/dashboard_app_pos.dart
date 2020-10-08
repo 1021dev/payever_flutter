@@ -99,25 +99,26 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                       ),
                       Row(
                         children: <Widget>[
-                          InkWell(
-                            onTap: widget.onTapOpen,
-                            child: Container(
-                              height: 20,
-                              width: 40,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: overlayDashboardButtonsBackground(),
-                              ),
-                              child: Center(
-                                child: Text(Language.getCommerceOSStrings('actions.open'),
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    color: Colors.white,
+                          if (!widget.isLoading)
+                            InkWell(
+                              onTap: widget.onTapOpen,
+                              child: Container(
+                                height: 20,
+                                width: 40,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: overlayDashboardButtonsBackground(),
+                                ),
+                                child: Center(
+                                  child: Text(Language.getCommerceOSStrings('actions.open'),
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
                           widget.notifications.length > 0 ?
                           SizedBox(width: 8) : Container(),
                           widget.notifications.length > 0 ? Container(

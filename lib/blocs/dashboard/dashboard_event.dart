@@ -185,3 +185,9 @@ class WidgetInstallEvent extends DashboardScreenEvent {
     this.appWidget,
   ];
 }
+
+class OpenAppEvent extends DashboardScreenEvent {
+  final String openAppCode;
+
+  OpenAppEvent({this.openAppCode});
+}

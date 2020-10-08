@@ -10,10 +10,11 @@ import '../../utils/translations.dart';
 class BusinessAppCell extends StatelessWidget {
   final BusinessApps currentApp;
   final Function onTap;
-
+  final String openAppCode;
   BusinessAppCell({
     this.currentApp,
-    this.onTap
+    this.onTap,
+    this.openAppCode = ''
   });
 
   @override
@@ -34,26 +35,40 @@ class BusinessAppCell extends StatelessWidget {
         height: 72,
         child: Column(
           children: [
-            Container(
-              width: 64,
-              height: 64,
-              alignment: Alignment.center,
-              child: Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(
-                      '${Env.cdnIcon}icon-comerceos-$code-not-installed.png',
+            Stack(
+              children: [
+                Container(
+                  width: 64,
+                  height: 64,
+                  alignment: Alignment.center,
+                  child: Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: NetworkImage(
+                          '${Env.cdnIcon}icon-comerceos-$code-not-installed.png',
+                        ),
+                        fit: BoxFit.contain,
+                      ),
                     ),
-                    fit: BoxFit.contain,
+                  ),
+                  decoration: BoxDecoration(
+                    color: overlayDashboardAppsBackground(),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-              ),
-              decoration: BoxDecoration(
-                color: overlayDashboardAppsBackground(),
-                borderRadius: BorderRadius.circular(12),
-              ),
+                if (openAppCode == currentApp.code)
+                  Container(
+                      width: 64,
+                      height: 64,
+                      padding: EdgeInsets.all(10),
+                      child: Center(
+                          child: CircularProgressIndicator(
+                        backgroundColor: Colors.white,
+                      )))
+              ],
+
             ),
             SizedBox(height: 2),
             Row(

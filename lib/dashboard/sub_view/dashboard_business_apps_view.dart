@@ -11,12 +11,15 @@ class DashboardBusinessAppsView extends StatefulWidget {
   final Function onTapEdit;
   final Function onTapWidget;
   final bool isTablet;
+  final String openAppCode;
+
   DashboardBusinessAppsView({
     this.businessApps,
     this.appWidgets,
     this.onTapEdit,
     this.onTapWidget,
     this.isTablet,
+    this.openAppCode,
   });
   @override
   _DashboardBusinessAppsViewState createState() => _DashboardBusinessAppsViewState();
@@ -114,6 +117,7 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
                 mainAxisSpacing: 16,
                 shrinkWrap: true,
                 children: businessApps.map((e) => BusinessAppCell(
+                  openAppCode: widget.openAppCode,
                   onTap: (){
                     widget.onTapWidget(e);
                   },

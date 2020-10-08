@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:package_info/package_info.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/bloc.dart';
@@ -72,6 +73,8 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
           authUser: event.authUser,
           curWall: event.curWall,
           personalWallpaper: event.personalWallpaper);
+    } else if (event is OpenAppEvent) {
+      yield state.copyWith(openAppCode: event.openAppCode);
     }
   }
 
@@ -335,6 +338,13 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     }
 
     yield state.copyWith(checkouts: checkouts, defaultCheckout: defaultCheckout);
+    if (state.openAppCode.contains('pos') || state.openAppCode.contains('checkout')) {
+      if (defaultCheckout != null) {
+        // await Future.delayed(Duration(milliseconds: 100));
+      } else {
+        Fluttertoast.showToast(msg: 'Can not find default checkout.');
+      }
+    }
     add(FetchTutorials(business: state.activeBusiness));
   }
 

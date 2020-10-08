@@ -9,7 +9,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
-import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
@@ -30,58 +29,30 @@ import 'pos_device_payment_settings.dart';
 
 class PosInitScreen extends StatelessWidget {
 
-  final List<Terminal> terminals;
-  final Terminal activeTerminal;
   final DashboardScreenBloc dashboardScreenBloc;
-  final Checkout defaultCheckout;
-  final Business currentBusiness;
-  final List<ChannelSet> channelSets;
-  final List<ProductsModel> products;
 
   PosInitScreen({
-    this.terminals,
-    this.activeTerminal,
     this.dashboardScreenBloc,
-    this.defaultCheckout,
-    this.currentBusiness,
-    this.channelSets,
-    this.products,
   });
 
   @override
   Widget build(BuildContext context) {
-
-    return PosScreen(
-      dashboardScreenBloc: dashboardScreenBloc,
-      currentBusiness: currentBusiness,
-      terminals: terminals,
-      activeTerminal: activeTerminal,
-      defaultCheckout: defaultCheckout,
-      channelSets: channelSets,
-      products: products,
-    );
+    return PosScreen(dashboardScreenBloc);
   }
 }
 
 class PosScreen extends StatefulWidget {
 
-  final List<Terminal> terminals;
-  final Terminal activeTerminal;
   final DashboardScreenBloc dashboardScreenBloc;
-  final Checkout defaultCheckout;
-  final Business currentBusiness;
-  final List<ChannelSet> channelSets;
-  final List<ProductsModel> products;
+  List<ProductsModel>products = [];
+  Business currentBusiness;
 
-  PosScreen({
-    this.currentBusiness,
-    this.terminals,
-    this.activeTerminal,
-    this.dashboardScreenBloc,
-    this.defaultCheckout,
-    this.channelSets,
-    this.products,
-  });
+  PosScreen(this.dashboardScreenBloc) {
+    if (dashboardScreenBloc.state.posProducts != null &&
+        dashboardScreenBloc.state.posProducts.isNotEmpty)
+      products.addAll(dashboardScreenBloc.state.posProducts);
+    currentBusiness = dashboardScreenBloc.state.activeBusiness;
+  }
 
   @override
   createState() => _PosScreenState();
@@ -101,11 +72,11 @@ class _PosScreenState extends State<PosScreen> {
       dashboardScreenBloc: widget.dashboardScreenBloc,
     )
       ..add(PosScreenInitEvent(
-          currentBusiness: widget.currentBusiness,
-          terminals: widget.terminals,
-          activeTerminal: widget.activeTerminal,
-          defaultCheckout: widget.defaultCheckout,
-          channelSets: widget.channelSets,
+          currentBusiness: widget.dashboardScreenBloc.state.activeBusiness,
+          terminals: widget.dashboardScreenBloc.state.terminalList,
+          activeTerminal: widget.dashboardScreenBloc.state.activeTerminal,
+          defaultCheckout: widget.dashboardScreenBloc.state.defaultCheckout,
+          channelSets: widget.dashboardScreenBloc.state.channelSets,
           products: widget.products
       ));
 
