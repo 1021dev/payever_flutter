@@ -315,6 +315,10 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
                       children: [
                         InkWell(
                           onTap: () {
+                            if (state.channelSetFlow == null) {
+                              Fluttertoast.showToast(msg: 'Loading...');
+                              return;
+                            }
                             setState(() {
                               orderStatus = true;
                             });
@@ -386,6 +390,10 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
                       itemColor: Colors.white,
                       hideZero: true,
                       onTap: () {
+                        if (state.channelSetFlow == null) {
+                          Fluttertoast.showToast(msg: 'Loading...');
+                          return;
+                        }
                         if (state.channelSetFlow.cart == null ||
                             state.channelSetFlow.cart.isEmpty) {
                           Fluttertoast.showToast(msg: 'Cart is empty');

@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/utils/common_utils.dart';
@@ -250,10 +251,14 @@ class PosProductScreenBloc
       productIdsText += '\"${element.id}\" ';
     });
 
-    String query = '\n        query getProducts {\n          getProductsByIdsOrVariantIds(ids: [$productIdsText]) {\n            id\n            businessUuid\n            images\n            currency\n            uuid\n            title\n            description\n            onSales\n            price\n            salePrice\n            sku\n            barcode\n            type\n            active\n            vatRate\n            categories{_id, slug, title}\n            channelSets{id, type, name}\n            variants{id, images, title, options{_id, name, value}, description, onSales, price, salePrice, sku, barcode}\n            shipping{free, general, weight, width, length, height}\n      info {\n      pagination {\n        page\n        page_count\n        per_page\n        item_count\n      }\n    }\n    }\n        }\n ';
+    String query = '\n        query getProducts {\n          getProductsByIdsOrVariantIds(ids: [$productIdsText]) {\n            id\n            businessUuid\n            images\n            currency\n            uuid\n            title\n            description\n            onSales\n            price\n            salePrice\n            sku\n            barcode\n            type\n            active\n            vatRate\n            categories{_id, slug, title}\n            channelSets{id, type, name}\n            variants{id, images, title, options{_id, name, value}, description, onSales, price, salePrice, sku, barcode}\n            shipping{free, general, weight, width, length, height}\n          }\n        }\n';
+
     Map<String, dynamic> body1 = {'query': query};
     dynamic response1 = await api.getProducts(GlobalUtils.activeToken.accessToken, body1);
-    if (!(response1 is Map)) return;
+    if (response1 is DioError) {
+      yield state.copyWith(isLoadingCartView: false);
+      return;
+    }
     List<ProductsModel> products = [];
     if (response1 is Map) {
       dynamic data = response1['data'];
