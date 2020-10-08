@@ -41,7 +41,8 @@ class BlurEffectView extends StatelessWidget {
                 ],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-              )),
+              )
+          ),
           child: child,
         );
       else {

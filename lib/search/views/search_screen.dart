@@ -16,9 +16,6 @@ import 'package:payever/theme.dart';
 import 'package:payever/transactions/transactions.dart';
 import 'package:provider/provider.dart';
 
-bool _isPortrait;
-bool _isTablet;
-
 class SearchScreen extends StatefulWidget {
   final String businessId;
   final String searchQuery;
@@ -41,7 +38,9 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-
+  bool _isPortrait;
+  bool _isTablet;
+  double mainWidth = 0;
   SearchScreenBloc screenBloc;
   TextEditingController searchController = TextEditingController();
   String searchString = '';
@@ -75,6 +74,10 @@ class _SearchScreenState extends State<SearchScreen> {
         ? MediaQuery.of(context).size.width
         : MediaQuery.of(context).size.height);
     _isTablet = Measurements.width < 600 ? false : true;
+
+    if (mainWidth == 0) {
+      mainWidth = _isTablet ? Measurements.width * 0.7 : Measurements.width;
+    }
 
     return BlocListener(
       bloc: screenBloc,
@@ -112,32 +115,37 @@ class _SearchScreenState extends State<SearchScreen> {
         true,
         body: SafeArea(
           bottom: false,
-          child: Column(
-            children: <Widget>[
-              Container(
-                alignment: Alignment.topRight,
-                padding: EdgeInsets.only(top: 16, right: 16),
-                child: IconButton(
-                  constraints: BoxConstraints(
-                      maxHeight: 32,
-                      maxWidth: 32,
-                      minHeight: 32,
-                      minWidth: 32
+          child: Center(
+            child: Container(
+              width: mainWidth,
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    alignment: Alignment.topRight,
+                    padding: EdgeInsets.only(top: 16, right: 16),
+                    child: IconButton(
+                      constraints: BoxConstraints(
+                          maxHeight: 32,
+                          maxWidth: 32,
+                          minHeight: 32,
+                          minWidth: 32
+                      ),
+                      icon: Icon(
+                        Icons.close,
+                        size: 24,
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
                   ),
-                  icon: Icon(
-                    Icons.close,
-                    size: 24,
+                  _searchBar(state),
+                  Expanded(
+                    child: _searchResultList(state),
                   ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
+                ],
               ),
-              _searchBar(state),
-              Expanded(
-                child: _searchResultList(state),
-              ),
-            ],
+            ),
           ),
         ),
       ),
@@ -215,7 +223,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget _searchResultList(SearchScreenState state) {
     List<AppWidget> appWidgets = [];
-    appWidgets = widget.appWidgets.where((element) => element.type != 'apps').toList();
+    appWidgets = widget.appWidgets.where((element) => element.type != 'apps' && element.icon.isNotEmpty).toList();
     return SingleChildScrollView(
       child: Container(
         padding: EdgeInsets.all(16),

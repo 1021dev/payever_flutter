@@ -256,16 +256,20 @@ class _WorkshopViewState extends State<WorkshopView> {
 
     return BackgroundBase(
       true,
-      body: Align(
-        alignment: Alignment.center,
+      body: Center(
         child: Container(
+          decoration: BoxDecoration(
+            color: overlayBackground(),
+            borderRadius: BorderRadius.circular(12)
+          ),
+          margin: EdgeInsets.all(12),
           height: double.infinity,
           width: mainWidth,
           child: Column(
             children: <Widget>[
               Container(
-                height: 50,
-                padding: EdgeInsets.only(left: 16, right: 16),
+                height: 60,
+                padding: EdgeInsets.symmetric(horizontal: 18),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -609,10 +613,10 @@ class _WorkshopViewState extends State<WorkshopView> {
 
   Widget orderNextBtn(WorkshopScreenState state) {
     return Container(
-      height: 55,
+      height: 41,
       child: SizedBox.expand(
-        child: MaterialButton(
-          onPressed: () {
+        child: InkWell(
+          onTap: () {
             print('Reference: ${state.channelSetFlow.reference}');
             if (cartOrder) {
               _selectedSectionIndex = 0;
@@ -633,24 +637,25 @@ class _WorkshopViewState extends State<WorkshopView> {
               }
             }
           },
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4),
-          ),
-          color: overlayBackground(),
-          child: state.isUpdating &&
-              state.updatePayflowIndex == 0
-              ? Center(
-              child: Container(
-                  width: 30,
-                  height: 30,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                  )))
-              : Text(
-            editOrder ? 'Save' : 'Next Step',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
+          child: Container(
+            alignment: Alignment.center,
+            decoration: overlayBtnDecoration(),
+            child: state.isUpdating &&
+                state.updatePayflowIndex == 0
+                ? Center(
+                child: Container(
+                    width: 30,
+                    height: 30,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                    )))
+                : Text(
+              editOrder ? 'Save' : 'Next Step',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Colors.black
+              ),
             ),
           ),
         ),
@@ -1734,4 +1739,40 @@ class _WorkshopViewState extends State<WorkshopView> {
       ),
     );
   }
+
+  Color overlayBtnBackground() {
+    if (GlobalUtils.theme == 'dark') {
+      return Color.fromRGBO(0, 0, 0, 0.3);
+    } else if (GlobalUtils.theme == 'light') {
+      return Color.fromRGBO(245, 245, 245, 0.6);
+    } else {
+      return Color.fromRGBO(0, 0, 0, 0.2);
+    }
+  }
+
+  BoxDecoration overlayBtnDecoration() {
+    if (GlobalUtils.theme == 'dark') {
+      return BoxDecoration(
+        borderRadius: BorderRadius.circular(4),
+        gradient: LinearGradient(
+          colors: [
+            Color.fromRGBO(237, 237, 244, 1),
+            Color.fromRGBO(174, 176, 183, 1)
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        )
+      );
+    } else if (GlobalUtils.theme == 'light') {
+      return BoxDecoration(
+        borderRadius: BorderRadius.circular(4),
+        color: Color.fromRGBO(44, 44, 44, 0.95),
+      );
+    }
+    return BoxDecoration(
+      borderRadius: BorderRadius.circular(4),
+      color: overlayBtnBackground(),
+    );
+  }
+
 }
