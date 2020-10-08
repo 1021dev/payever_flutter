@@ -11,7 +11,6 @@ import 'package:payever/checkout/views/workshop/prefilled_qr_screen.dart';
 import 'package:payever/checkout/views/workshop/subview/work_shop_view.dart';
 import 'package:payever/checkout/widgets/workshop_top_bar.dart';
 import 'package:payever/commons/commons.dart';
-
 import 'checkout_switch_screen.dart';
 
 class WorkshopScreen extends StatefulWidget {

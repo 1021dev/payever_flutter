@@ -6,8 +6,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:iso_countries/iso_countries.dart';
 import 'package:payever/blocs/bloc.dart';
-import 'package:payever/checkout/models/models.dart';
-import 'package:payever/products/models/models.dart';
 import 'package:payever/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/models.dart';
@@ -318,6 +316,12 @@ Color hexToColor(String code) {
   return new Color(int.parse(code.substring(1, 9), radix: 16) + 0xFF000000);
 }
 
+enum Appearance {
+  Light,
+  Dark,
+  Default
+}
+
 class GlobalUtils {
   static Token activeToken;
   static BuildContext currentContext;
@@ -327,7 +331,7 @@ class GlobalUtils {
   static String theme = changeThemeBloc.state.theme;
   static bool isConnected = true;
   static bool isBusinessMode = true;
-
+  static Appearance appearance = Appearance.Default;
   // Global Params
   // static User user;
   // static Business currentBusiness;
@@ -385,8 +389,6 @@ class GlobalUtils {
   static const String LAST_OPEN = 'lastOpen';
   static const String EVENTS_KEY = 'fetch_events';
   static const String LANGUAGE = 'language';
-
-
   // token__
 
   static const String DB_TOKEN_ACC = 'accessToken';

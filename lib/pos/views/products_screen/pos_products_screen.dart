@@ -41,7 +41,6 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
   bool _isPortrait;
   bool _isTablet;
   bool isGridMode = true;
-  bool orderStatus = false;
   bool cartStatus = false;
   TextEditingController searchController = TextEditingController();
 
@@ -82,9 +81,9 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
       listener: (BuildContext context, PosProductScreenState state) async {
         if (state.cartProgressed && !state.isLoadingCartView) {
           screenBloc.add(ResetCardProgressEvent());
+          navigateWorkshopScreen(state);
           setState(() {
             cartStatus = true;
-            orderStatus = true;
           });
         }
       },
@@ -114,13 +113,7 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
           children: <Widget>[
             _toolBar(state),
             _secondToolBar(state),
-            Expanded(
-                child: Stack(
-              children: [
-                isGridMode ? gridBody(state) : _listBody(state),
-                orderStatus ? _workShopView(state) : Container(),
-              ],
-            )),
+            Expanded(child: isGridMode ? gridBody(state) : _listBody(state)),
             // _bottomBar(state),
           ],
         ),
@@ -129,26 +122,6 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
             : Container(),
       ],
     );
-  }
-
-  Widget _workShopView(PosProductScreenState state) {
-    return state.channelSetFlow == null
-        ? Container()
-        : WorkshopView(
-            business: widget.posScreenBloc.state.activeBusiness,
-            terminal: widget.posScreenBloc.state.activeTerminal,
-            channelSetFlow: state.channelSetFlow,
-            channelSetId: widget.posScreenBloc.state.activeTerminal.channelSet,
-            defaultCheckout: widget.posScreenBloc.state.defaultCheckout,
-            fromCart: cartStatus,
-            cart: cartStatus ? state.channelSetFlow.cart : null,
-            onTapClose: () {
-              setState(() {
-                orderStatus = false;
-                cartStatus = false;
-              });
-            },
-          );
   }
 
   Widget _toolBar(PosProductScreenState state) {
@@ -297,7 +270,6 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
           .forEach((element) => cartCount += element.quantity);
     }
 
-    // searchController.text = state.searchText;
     return Container(
       height: 50,
       color: overlaySecondAppBar().withOpacity(0.8),
@@ -308,9 +280,7 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
               Padding(
                 padding: EdgeInsets.only(left: 12),
               ),
-              orderStatus
-                  ? Container()
-                  : Row(
+              Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         InkWell(
@@ -319,9 +289,7 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
                               Fluttertoast.showToast(msg: 'Loading...');
                               return;
                             }
-                            setState(() {
-                              orderStatus = true;
-                            });
+                            navigateWorkshopScreen(state);
                           },
                           child: Text(
                             'Amount',
@@ -374,12 +342,9 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
                   alignment: Alignment.center,
                   child: CircularProgressIndicator(
                     backgroundColor: Colors.white,
-                    strokeWidth: 3,
                   ),
                 )
-              : orderStatus
-                  ? Container()
-                  : IconBadge(
+              : IconBadge(
                       icon: Icon(
                         Icons.shop,
                         color: Colors.white,
@@ -644,4 +609,28 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
       ),
     );
   }
+
+  void navigateWorkshopScreen(PosProductScreenState state) {
+    Navigator.push(
+      context,
+      PageTransition(
+        child: WorkshopView(
+          business: widget.posScreenBloc.state.activeBusiness,
+          terminal: widget.posScreenBloc.state.activeTerminal,
+          channelSetFlow: state.channelSetFlow,
+          channelSetId: widget.posScreenBloc.state.activeTerminal.channelSet,
+          defaultCheckout: widget.posScreenBloc.state.defaultCheckout,
+          fromCart: cartStatus,
+          cart: cartStatus ? state.channelSetFlow.cart : null,
+          onTapClose: () {
+            setState(() {
+              cartStatus = false;
+            });
+          },
+        ),
+        type: PageTransitionType.fade,
+      ),
+    );
+  }
+
 }

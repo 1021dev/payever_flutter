@@ -262,7 +262,7 @@ class _WorkshopViewState extends State<WorkshopView> {
             color: overlayBackground(),
             borderRadius: BorderRadius.circular(12)
           ),
-          margin: EdgeInsets.all(12),
+          margin: EdgeInsets.only(left: 12, right: 12, bottom: 20, top: 44),
           height: double.infinity,
           width: mainWidth,
           child: Column(
@@ -360,7 +360,8 @@ class _WorkshopViewState extends State<WorkshopView> {
                           ),
                         ),
                         onPressed: () {
-                          widget.onTapClose();
+                          // widget.onTapClose();
+                          Navigator.pop(context);
                         },
                         height: 32,
                         minWidth: 0,
