@@ -174,7 +174,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     String openUrl =
         '${Env.wrapper}/pay/create-flow/channel-set-id/${state.channelSet.id}';
     return Align(
-      alignment: Alignment.topCenter,
+      alignment: Alignment.center,
       child: SingleChildScrollView(
         child: Container(
           width: mainWidth,
@@ -449,7 +449,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         child: Row(
                           children: [
                             SvgPicture.asset(
-                              'assets/images/prefilled_qr.svg',
+                              'assets/images/qr-generator.svg',
                               width: 24,
                               height: 24,
                               color: iconColor(),

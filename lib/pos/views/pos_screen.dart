@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:ui';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
@@ -156,7 +155,7 @@ class _PosScreenState extends State<PosScreen> {
 
   Widget _body1(PosScreenState state) {
     return Align(
-      alignment: Alignment.topCenter,
+      alignment: Alignment.center,
       child: SingleChildScrollView(
         child: Container(
           width: mainWidth,

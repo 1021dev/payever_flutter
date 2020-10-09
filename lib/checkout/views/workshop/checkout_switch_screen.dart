@@ -10,6 +10,7 @@ import 'package:payever/checkout/models/models.dart';
 import 'package:payever/checkout/views/workshop/create_edit_checkout_screen.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
+import 'package:payever/commons/views/custom_elements/custom_elements.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/theme.dart';
 
@@ -75,7 +76,7 @@ class _CheckoutSwitchScreenState extends State<CheckoutSwitchScreen> {
         builder: (BuildContext context, CheckoutSwitchScreenState state) {
           return Scaffold(
               appBar: Appbar('Switch checkout'),
-              body: SafeArea(bottom: false, child: _body(state)));
+              body: SafeArea(bottom: false, child: BackgroundBase(true, body: _body(state))));
         },
       ),
     );

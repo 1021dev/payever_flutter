@@ -145,7 +145,7 @@ class _ShopScreenState extends State<ShopScreen> {
 
   Widget _body(ShopScreenState state) {
     return Align(
-      alignment: Alignment.topCenter,
+      alignment: Alignment.center,
       child: SingleChildScrollView(
         child: Container(
           width: mainWidth,

@@ -111,8 +111,114 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
         Column(
           children: <Widget>[
             _toolBar(state),
-            _secondToolBar(state),
+//            _secondToolBar(state),
+            InkWell(
+              onTap: () {
+                if (state.channelSetFlow == null || state.isLoadingCartView) return;
+                if (state.channelSetFlow.cart == null ||
+                    state.channelSetFlow.cart.isEmpty) {
+                  Fluttertoast.showToast(msg: 'Cart is empty');
+                } else {
+                  screenBloc.add(CartOrderEvent());
+                }
+              },
+              child: Container(
+                width: GlobalUtils.mainWidth,
+                alignment: Alignment.center,
+                margin: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                height: 56,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: <Color>[
+                        Color(0xFFededf4),
+                        Color(0xFFaeb0b7),
+                      ]),
+                ),
+                child: state.isLoadingCartView
+                    ? Container(
+                  width: 25,
+                  height: 25,
+                  margin: EdgeInsets.only(right: 20),
+                  alignment: Alignment.center,
+                  child: CircularProgressIndicator(
+                    backgroundColor: Colors.white,
+                  ),
+                ):Text(
+                  'Pay with payever',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+                ),
+              ),
+            ),
             Expanded(child: isGridMode ? gridBody(state) : _listBody(state)),
+            Container(
+              width: double.infinity,
+              color: overlayBackground(),
+              height: 124,
+              alignment: Alignment.topCenter,
+              padding:
+                  EdgeInsets.only(top: 12, bottom: 40, left: 16, right: 16),
+              child: Container(
+                width: GlobalUtils.mainWidth,
+                height: double.infinity,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          if (state.channelSetFlow == null) return;
+                          navigateWorkshopScreen(state, false);
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(6),
+                            color: overlayDashboardButtonsBackground(),
+                          ),
+                          child: Text(
+                            'Amount',
+                            style: TextStyle(fontSize: 16, color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 14,
+                    ),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            PageTransition(
+                              child: PosQRAppScreen(
+                                businessId: state.businessId,
+                                screenBloc: widget.posScreenBloc,
+                                fromProductsScreen: true,
+                              ),
+                              type: PageTransitionType.fade,
+                            ),
+                          );
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(6),
+                            color: overlayDashboardButtonsBackground(),
+                          ),
+                          child: Text(
+                            'QR',
+                            style: TextStyle(fontSize: 16, color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            )
             // _bottomBar(state),
           ],
         ),
@@ -434,7 +540,7 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: 12,
-        vertical: 16,
+//        vertical: 16,
       ),
       child: SmartRefresher(
         enablePullDown: true,
@@ -502,7 +608,7 @@ class _PosProductsScreenState extends State<PosProductsScreen> {
           return Container(
             child: Center(
                 child: Container(
-                    margin: EdgeInsets.only(top: 20),
+//                    margin: EdgeInsets.only(top: 20),
                     width: 20,
                     height: 20,
                     child: CircularProgressIndicator(

@@ -56,7 +56,7 @@ class _SectionsScreenState extends State<SectionsScreen> {
       padding: EdgeInsets.all(16),
       child: Center(
         child: Container(
-          width: Measurements.width,
+          width: GlobalUtils.mainWidth,
           child: BlurEffectView(
             child: SingleChildScrollView(
               child: Column(
