@@ -154,240 +154,65 @@ class _PosScreenState extends State<PosScreen> {
     );
   }
 
-  Widget _toolBar(PosScreenState state) {
-    return Container(
-      height: 50,
-      color: overlaySecondAppBar(),
-      child: Row(
-        children: <Widget>[
-          if (state.activeTerminal != null)
-            PosTopButton(
-              title: state.activeTerminal.name,
-              selectedIndex: selectedIndex,
-              index: 0,
-              onTap: () {
-                setState(() {
-                  selectedIndex = 0;
-                });
-              },
-            ),
-          if (state.activeTerminal != null)
-            PosTopButton(
-              title: 'Connect',
-              selectedIndex: selectedIndex,
-              index: 1,
-              onTap: () {
-                setState(() {
-                  selectedIndex = 1;
-                });
-              },
-            ),
-          if (state.activeTerminal != null)
-            PosTopButton(
-              title: 'Settings',
-              index: 2,
-              selectedIndex: selectedIndex,
-              onTap: () {
-                setState(() {
-                  selectedIndex = 2;
-                });
-              },
-            ),
-          PosTopButton(
-            title: 'Open',
-            selectedIndex: selectedIndex,
-            index: 3,
-            onTap: () {
-              if (Platform.isAndroid) {
-                _showNativeView();
-              }
-            },
-          ),
-          PopupMenuButton<OverflowMenuItem>(
-            icon: Icon(Icons.more_horiz, color: Colors.white,),
-            offset: Offset(0, 100),
-            onSelected: (OverflowMenuItem item) => item.onTap(),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-            color: overlayFilterViewBackground(),
-            itemBuilder: (BuildContext context) {
-              return appBarPopUpActions(context, state)
-                  .map((OverflowMenuItem item) {
-                return PopupMenuItem<OverflowMenuItem>(
-                  value: item,
-                  child: Text(
-                    item.title,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w300,
-                    ),
-                  ),
-                );
-              }).toList();
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _getBody(PosScreenState state) {
-    switch(selectedIndex) {
-      case 0:
-        if (posProductScreen == null) {
-          List<ProductsModel>products = [];
-          products.addAll(widget.products);
-          posProductScreen = PosProductsScreen(
-              state.businessId,
-              screenBloc,
-              products,
-              widget.dashboardScreenBloc.state.posProductsInfo,);
-        }
-        return posProductScreen;
-      case 1:
-        return _connectWidget(state);
-      case 2:
-        return _settingsWidget(state);
-      default:
-        return Container();
-    }
-  }
-
   Widget _body1(PosScreenState state) {
     return Align(
       alignment: Alignment.topCenter,
-      child: Container(
-        width: mainWidth,
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-        child: Column(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: overlayBackground(),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Column(
-                children: [
-                  if (state.activeTerminal != null)
-                    Container(
-                      height: 61,
-                      padding: EdgeInsets.only(left: 14, right: 14),
-                      child: InkWell(
-                        onTap: () {
-                          List<ProductsModel>products = [];
-                          products.addAll(widget.products);
-                          Navigator.push(
-                            context,
-                            PageTransition(
-                              child: PosProductsScreen(
-                                state.businessId,
-                                screenBloc,
-                                products,
-                                widget.dashboardScreenBloc.state.posProductsInfo,),
-                              type: PageTransitionType.fade,
-                              duration: Duration(milliseconds: 500),
-                            ),
-                          );
-                        },
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 24,
-                              height: 24,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: NetworkImage(
-                                    '${Env.cdnIcon}icon-comerceos-pos-not-installed.png',
+      child: SingleChildScrollView(
+        child: Container(
+          width: mainWidth,
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+          child: Column(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: overlayBackground(),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  children: [
+                    if (state.activeTerminal != null)
+                      Container(
+                        height: 61,
+                        padding: EdgeInsets.only(left: 14, right: 14),
+                        child: InkWell(
+                          onTap: () {
+                            List<ProductsModel>products = [];
+                            products.addAll(widget.products);
+                            Navigator.push(
+                              context,
+                              PageTransition(
+                                child: PosProductsScreen(
+                                  state.businessId,
+                                  screenBloc,
+                                  products,
+                                  widget.dashboardScreenBloc.state.posProductsInfo,),
+                                type: PageTransitionType.fade,
+                                duration: Duration(milliseconds: 500),
+                              ),
+                            );
+                          },
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 24,
+                                height: 24,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: NetworkImage(
+                                      '${Env.cdnIcon}icon-comerceos-pos-not-installed.png',
+                                    ),
+                                    fit: BoxFit.contain,
                                   ),
-                                  fit: BoxFit.contain,
                                 ),
                               ),
-                            ),
-                            SizedBox(width: 12,),
-                            Expanded(child: Text(state.activeTerminal.name, style: TextStyle(fontSize: 18),)),
-                            Icon(Icons.arrow_forward_ios, size: 20,),
-                          ],
+                              SizedBox(width: 12,),
+                              Expanded(child: Text(state.activeTerminal.name, style: TextStyle(fontSize: 18),)),
+                              Icon(Icons.arrow_forward_ios, size: 20,),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  Divider(
-                    height: 0,
-                    indent: 50,
-                    thickness: 0.5,
-                    color: Colors.grey[500],
-                  ),
-                  Container(
-                    height: 61,
-                    padding: EdgeInsets.only(left: 14, right: 14),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          PageTransition(
-                            child: PosSwitchTerminalsScreen(
-                              screenBloc: screenBloc,
-                            ),
-                            type: PageTransitionType.fade,
-                            duration: Duration(milliseconds: 500),
-                          ),
-                        );
-                      },
-                      child: Row(
-                        children: [
-                          SvgPicture.asset('assets/images/add-terminal.svg', width: 24, height: 24,),
-                          SizedBox(width: 12,),
-                          Expanded(child: Text('Switch terminal', style: TextStyle(fontSize: 18),)),
-                          Icon(Icons.arrow_forward_ios, size: 20),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Divider(
-                    height: 0,
-                    indent: 50,
-                    thickness: 0.5,
-                    color: Colors.grey[500],
-                  ),
-                  Container(
-                    height: 61,
-                    padding: EdgeInsets.only(left: 14, right: 14),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          PageTransition(
-                            child: PosCreateTerminalScreen(
-                              screenBloc: screenBloc,
-                            ),
-                            type: PageTransitionType.fade,
-                            duration: Duration(milliseconds: 500),
-                          ),
-                        );
-                      },
-                      child: Row(
-                        children: [
-                          SvgPicture.asset('assets/images/add-terminal.svg', width: 24, height: 24,),
-                          SizedBox(width: 12,),
-                          Expanded(child: Text('Add new terminal', style: TextStyle(fontSize: 18),)),
-                          Icon(Icons.arrow_forward_ios, size: 20),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 16,),
-            if (state.activeTerminal != null)
-              Container(
-              decoration: BoxDecoration(
-                color: overlayBackground(),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Column(
-                children: [
-                  if (state.activeTerminal != null)
+                    divider,
                     Container(
                       height: 61,
                       padding: EdgeInsets.only(left: 14, right: 14),
@@ -396,7 +221,7 @@ class _PosScreenState extends State<PosScreen> {
                           Navigator.push(
                             context,
                             PageTransition(
-                              child: PosSettingScreen(
+                              child: PosSwitchTerminalsScreen(
                                 screenBloc: screenBloc,
                               ),
                               type: PageTransitionType.fade,
@@ -406,117 +231,178 @@ class _PosScreenState extends State<PosScreen> {
                         },
                         child: Row(
                           children: [
-                            Container(
-                              width: 24,
-                              height: 24,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: NetworkImage(
-                                    '${Env.cdnIcon}icon-comerceos-settings-not-installed.png',
-                                  ),
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                            ),
+                            SvgPicture.asset('assets/images/switch-terminal.svg', width: 24, height: 24,),
                             SizedBox(width: 12,),
-                            Expanded(child: Text('Settings', style: TextStyle(fontSize: 18),)),
+                            Expanded(child: Text('Switch terminal', style: TextStyle(fontSize: 18),)),
                             Icon(Icons.arrow_forward_ios, size: 20),
                           ],
                         ),
                       ),
                     ),
-                  Divider(
-                    height: 0,
-                    indent: 50,
-                    thickness: 0.5,
-                    color: Colors.grey[500],
-                  ),
-                  Container(
-                    height: 61,
-                    padding: EdgeInsets.only(left: 14, right: 14),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          PageTransition(
-                            child: PosQRAppScreen(
-                              businessId: screenBloc.state.activeBusiness.id,
-                              screenBloc: screenBloc,
-                              businessName: screenBloc.state.activeBusiness.name,
-                            ),
-                            type: PageTransitionType.fade,
-                            duration: Duration(milliseconds: 500),
-                          ),
-                        );
-                      },
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 24,
-                            height: 24,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: NetworkImage(
-                                  '${Env.cdnIcon}icon-comerceos-connect-not-installed.png',
-                                ),
-                                fit: BoxFit.contain,
+                    divider,
+                    Container(
+                      height: 61,
+                      padding: EdgeInsets.only(left: 14, right: 14),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            PageTransition(
+                              child: PosCreateTerminalScreen(
+                                screenBloc: screenBloc,
                               ),
+                              type: PageTransitionType.fade,
+                              duration: Duration(milliseconds: 500),
                             ),
-                          ),
-                          SizedBox(width: 12,),
-                          Expanded(child: Text('QR Generator', style: TextStyle(fontSize: 18),)),
-                          Icon(Icons.arrow_forward_ios, size: 20),
-                        ],
+                          );
+                        },
+                        child: Row(
+                          children: [
+                            SvgPicture.asset('assets/images/add-terminal.svg', width: 24, height: 24,),
+                            SizedBox(width: 12,),
+                            Expanded(child: Text('Add new terminal', style: TextStyle(fontSize: 18),)),
+                            Icon(Icons.arrow_forward_ios, size: 20),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  Divider(
-                    height: 0,
-                    indent: 50,
-                    thickness: 0.5,
-                    color: Colors.grey[500],
-                  ),
-                  Container(
-                    height: 61,
-                    padding: EdgeInsets.only(left: 14, right: 14),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          PageTransition(
-                            child: PosConnectInitScreen(
-                              screenBloc: screenBloc,
-                            ),
-                            type: PageTransitionType.fade,
-                            duration: Duration(milliseconds: 500),
-                          ),
-                        );
-                      },
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 24,
-                            height: 24,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: NetworkImage(
-                                  '${Env.cdnIcon}icon-comerceos-connect-not-installed.png',
-                                ),
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 12,),
-                          Expanded(child: Text('Connect', style: TextStyle(fontSize: 18),)),
-                          Icon(Icons.arrow_forward_ios, size: 20),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            )
-          ],
+              SizedBox(height: 16,),
+              if (state.activeTerminal != null)
+                Container(
+                decoration: BoxDecoration(
+                  color: overlayBackground(),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  children: [
+                    Container(
+                      height: 61,
+                      padding: EdgeInsets.only(left: 14, right: 14),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            PageTransition(
+                              child: PosQRAppScreen(
+                                businessId: screenBloc.state.activeBusiness.id,
+                                screenBloc: screenBloc,
+                                businessName: screenBloc.state.activeBusiness.name,
+                              ),
+                              type: PageTransitionType.fade,
+                              duration: Duration(milliseconds: 500),
+                            ),
+                          );
+                        },
+                        child: Row(
+                          children: [
+                            SvgPicture.asset(
+                              'assets/images/qr-generator.svg',
+                              width: 24,
+                              height: 24,
+                              color: iconColor(),
+                            ),
+                            SizedBox(width: 12,),
+                            Expanded(child: Text('QR Generator', style: TextStyle(fontSize: 18),)),
+                            Icon(Icons.arrow_forward_ios, size: 20),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 16,),
+              if (state.activeTerminal != null)
+                Container(
+                  decoration: BoxDecoration(
+                    color: overlayBackground(),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                          height: 61,
+                          padding: EdgeInsets.only(left: 14, right: 14),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                PageTransition(
+                                  child: PosSettingScreen(
+                                    screenBloc: screenBloc,
+                                  ),
+                                  type: PageTransitionType.fade,
+                                  duration: Duration(milliseconds: 500),
+                                ),
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 24,
+                                  height: 24,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: NetworkImage(
+                                        '${Env.cdnIcon}icon-comerceos-settings-not-installed.png',
+                                      ),
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 12,),
+                                Expanded(child: Text('Settings', style: TextStyle(fontSize: 18),)),
+                                Icon(Icons.arrow_forward_ios, size: 20),
+                              ],
+                            ),
+                          ),
+                        ),
+                      divider,
+                      Container(
+                        height: 61,
+                        padding: EdgeInsets.only(left: 14, right: 14),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              PageTransition(
+                                child: PosConnectInitScreen(
+                                  screenBloc: screenBloc,
+                                ),
+                                type: PageTransitionType.fade,
+                                duration: Duration(milliseconds: 500),
+                              ),
+                            );
+                          },
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 24,
+                                height: 24,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: NetworkImage(
+                                      '${Env.cdnIcon}icon-comerceos-connect-not-installed.png',
+                                    ),
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 12,),
+                              Expanded(child: Text('Connect', style: TextStyle(fontSize: 18),)),
+                              Icon(Icons.arrow_forward_ios, size: 20),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+            ],
+          ),
         ),
       ),
     );
@@ -854,6 +740,14 @@ class _PosScreenState extends State<PosScreen> {
         },
       ),
     ];
+  }
+  get divider {
+    return Divider(
+      height: 0,
+      indent: 50,
+      thickness: 0.5,
+      color: Colors.grey[500],
+    );
   }
 
   Future<Null> _showNativeView() async {
