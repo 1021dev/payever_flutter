@@ -262,70 +262,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         ) : WorkshopScreen(checkoutScreenBloc: this.screenBloc);
 
 
-
-      case 3:
-        return ConnectScreen(
-          checkoutScreenBloc: screenBloc,
-          isLoading: state.loadingConnect,
-          onChangeSwitch: (val) {
-            screenBloc.add(InstallCheckoutIntegrationEvent(integrationId: val));
-          },
-          onTapAdd: () {
-            Navigator.push(
-              context,
-              PageTransition(
-                child: CheckoutConnectScreen(
-                  checkoutScreenBloc: screenBloc,
-                  business: state.activeBusiness.id,
-                  category: 'communications',
-                ),
-                type: PageTransitionType.fade,
-                duration: Duration(milliseconds: 500),
-              ),
-            );
-          },
-          onTapOpen: (String title) {
-            if (title.contains('QR')) {
-              Navigator.push(
-                context,
-                PageTransition(
-                  child: CheckoutQRIntegrationScreen(
-                    screenBloc: screenBloc,
-                    title: 'QR',
-                  ),
-                  type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 500),
-                ),
-              );
-            } else if (title.contains('Device')) {
-              Navigator.push(
-                context,
-                PageTransition(
-                  child: CheckoutDevicePaymentScreen(
-                    screenBloc: screenBloc,
-                  ),
-                  type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 500),
-                ),
-              );
-            } else if (title.contains('Twilio')) {
-              Navigator.push(
-                context,
-                PageTransition(
-                  child: CheckoutTwilioScreen(
-                    screenBloc: screenBloc,
-                  ),
-                  type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 500),
-                ),
-              );
-            }
-          },
-        );
-      case 4:
-        return SectionsScreen(
-          checkoutScreenBloc: screenBloc,
-        );
       case 5:
         return CheckoutSettingsScreen(
           checkoutScreenBloc: screenBloc,
@@ -660,7 +596,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             Navigator.push(
                                 context,
                                 PageTransition(
-                                    child: Container(),
+                                    child: ConnectScreen(screenBloc),
                                     type: PageTransitionType.fade
                                 )
                             );
@@ -695,7 +631,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             Navigator.push(
                                 context,
                                 PageTransition(
-                                    child: Container(),
+                                    child: CheckoutSettingsScreen(
+                                      checkoutScreenBloc: screenBloc,
+                                      businessId: state.activeBusiness.id,
+                                      checkout: screenBloc.state.defaultCheckout,
+                                    ),
                                     type: PageTransitionType.fade
                                 )
                             );
@@ -736,7 +676,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             Navigator.push(
                                 context,
                                 PageTransition(
-                                    child: Container(),
+                                    child: SectionsScreen(screenBloc),
                                     type: PageTransitionType.fade
                                 )
                             );
