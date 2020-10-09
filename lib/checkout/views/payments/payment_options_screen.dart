@@ -57,10 +57,7 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
         bloc: screenBloc,
         builder: (BuildContext context, CheckoutScreenState state) {
           return Scaffold(
-            appBar: Appbar(
-              Language.getSettingsStrings(
-                  'info_boxes.panels.general.menu_list.personal_information.title'),
-            ),
+            appBar: Appbar('Payment options'),
             body: SafeArea(
               bottom: false,
               child: BackgroundBase(
