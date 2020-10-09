@@ -15,6 +15,9 @@ import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/dashboard/edit_business_app_screen.dart';
+import 'package:payever/dashboard/sub_view/dashboard_advertising_view.dart';
+import 'package:payever/dashboard/sub_view/dashboard_mail_view.dart';
+import 'package:payever/dashboard/sub_view/dashboard_studio_view.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/connect/views/connect_screen.dart';
 import 'package:payever/contacts/views/contacts_screen.dart';
@@ -317,72 +320,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
 
     // Mail
-//    if (widgets.where((element) => element.type == 'marketing' ).toList().length > 0) {
-//      appWidget = widgets.where((element) => element.type == 'marketing' ).toList().first;
-//      businessApp = businessApps.where((element) => element.code == 'marketing' ).toList().first;
-//      List<NotificationModel> notifications = [];
-//      if (state.notifications.containsKey('marketing')){
-//        notifications = state.notifications['marketing'];
-//      }
-//      dashboardWidgets.add(
-//          DashboardMailView(
-//            businessApps: businessApp,
-//            appWidget: appWidget,
-//            notifications: notifications,
-//            openNotification: (NotificationModel model) {
-//            },
-//            deleteNotification: (NotificationModel model) {
-//              screenBloc.add(DeleteNotification(notificationId: model.id));
-//            },
-//          )
-//      );
-//    }
+   if (widgets.where((element) => element.type == 'marketing' ).toList().length > 0) {
+     appWidget = widgets.where((element) => element.type == 'marketing' ).toList().first;
+     businessApp = businessApps.where((element) => element.code == 'marketing' ).toList().first;
+     dashboardWidgets.add(_mailView(state, appWidget, businessApp));
+   }
 
     // Studio
-//    if (widgets.where((element) => element.type == 'studio' ).toList().length > 0) {
-//      appWidget = widgets.where((element) => element.type == 'studio' ).toList().first;
-//      businessApp = businessApps.where((element) => element.code == 'studio' ).toList().length > 0
-//          ? businessApps.where((element) => element.code == 'studio' ).toList().first : null;
-//      List<NotificationModel> notifications = [];
-//      if (state.notifications.containsKey('studio')){
-//        notifications = state.notifications['studio'];
-//      }
-//      dashboardWidgets.add(
-//          DashboardStudioView(
-//            businessApps: businessApp,
-//            appWidget: appWidget,
-//            notifications: notifications,
-//            openNotification: (NotificationModel model) {
-//            },
-//            deleteNotification: (NotificationModel model) {
-//              screenBloc.add(DeleteNotification(notificationId: model.id));
-//            },
-//          )
-//      );
-//    }
+   if (widgets.where((element) => element.type == 'studio' ).toList().length > 0) {
+     appWidget = widgets.where((element) => element.type == 'studio' ).toList().first;
+     businessApp = businessApps.where((element) => element.code == 'studio' ).toList().length > 0
+         ? businessApps.where((element) => element.code == 'studio' ).toList().first : null;
+     dashboardWidgets.add(_studioView(state, appWidget, businessApp));
+   }
 
     // Ads
-//    if (widgets.where((element) => element.type == 'ads' ).toList().length > 0) {
-//      appWidget = widgets.where((element) => element.type == 'ads' ).toList().first;
-//      businessApp = businessApps.where((element) => element.code == 'ads' ).toList().length > 0
-//          ? businessApps.where((element) => element.code == 'ads' ).toList().first : null;
-//      List<NotificationModel> notifications = [];
-//      if (state.notifications.containsKey('ads')){
-//        notifications = state.notifications['ads'];
-//      }
-//      dashboardWidgets.add(
-//          DashboardAdvertisingView(
-//            businessApps: businessApp,
-//            appWidget: appWidget,
-//            notifications: notifications,
-//            openNotification: (NotificationModel model) {
-//            },
-//            deleteNotification: (NotificationModel model) {
-//              screenBloc.add(DeleteNotification(notificationId: model.id));
-//            },
-//          )
-//      );
-//    }
+   if (widgets.where((element) => element.type == 'ads' ).toList().length > 0) {
+     appWidget = widgets.where((element) => element.type == 'ads' ).toList().first;
+     businessApp = businessApps.where((element) => element.code == 'ads' ).toList().length > 0
+         ? businessApps.where((element) => element.code == 'ads' ).toList().first : null;
+     dashboardWidgets.add(
+         _adsView(state, appWidget, businessApp)
+     );
+   }
 
     // Contacts
     if (widgets.where((element) => element.type == 'contacts').toList().length >
@@ -1054,6 +1014,57 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           );
         }
+      },
+    );
+  }
+
+  Widget _mailView(DashboardScreenState state, AppWidget appWidget, BusinessApps businessApp) {
+    List<NotificationModel> notifications = [];
+    if (state.notifications.containsKey('marketing')){
+      notifications = state.notifications['marketing'];
+    }
+    return DashboardMailView(
+      businessApps: businessApp,
+      appWidget: appWidget,
+      notifications: notifications,
+      openNotification: (NotificationModel model) {
+      },
+      deleteNotification: (NotificationModel model) {
+        screenBloc.add(DeleteNotification(notificationId: model.id));
+      },
+    );
+  }
+
+  Widget _studioView(DashboardScreenState state, AppWidget appWidget, BusinessApps businessApp) {
+    List<NotificationModel> notifications = [];
+    if (state.notifications.containsKey('studio')){
+      notifications = state.notifications['studio'];
+    }
+    return DashboardStudioView(
+      businessApps: businessApp,
+      appWidget: appWidget,
+      notifications: notifications,
+      openNotification: (NotificationModel model) {
+      },
+      deleteNotification: (NotificationModel model) {
+        screenBloc.add(DeleteNotification(notificationId: model.id));
+      },
+    );
+  }
+
+  Widget _adsView(DashboardScreenState state, AppWidget appWidget, BusinessApps businessApp) {
+    List<NotificationModel> notifications = [];
+    if (state.notifications.containsKey('ads')){
+      notifications = state.notifications['ads'];
+    }
+    return DashboardAdvertisingView(
+      businessApps: businessApp,
+      appWidget: appWidget,
+      notifications: notifications,
+      openNotification: (NotificationModel model) {
+      },
+      deleteNotification: (NotificationModel model) {
+        screenBloc.add(DeleteNotification(notificationId: model.id));
       },
     );
   }
