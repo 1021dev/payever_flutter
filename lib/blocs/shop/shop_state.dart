@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:payever/commons/models/business.dart';
 import 'package:payever/shop/models/models.dart';
 
 class ShopScreenState {
@@ -6,6 +7,7 @@ class ShopScreenState {
   final bool isUpdating;
   final bool isUploading;
   final bool isDuplicate;
+  final Business activeBusiness;
   final List<TemplateModel> templates;
   final List<ThemeModel> themes;
   final List<ThemeListModel> themeListModels;
@@ -24,6 +26,7 @@ class ShopScreenState {
     this.isUpdating = false,
     this.isUploading = false,
     this.isDuplicate = false,
+    this.activeBusiness,
     this.shops = const [],
     this.templates = const [],
     this.themes = const [],
@@ -44,6 +47,7 @@ class ShopScreenState {
     this.isUploading,
     this.isDuplicate,
     this.templates,
+    this.activeBusiness,
     this.shops,
     this.themes,
     this.myThemes,
@@ -62,6 +66,7 @@ class ShopScreenState {
     bool isUpdating,
     bool isUploading,
     bool isDuplicate,
+    Business activeBusiness,
     List<TemplateModel> templates,
     List<ThemeModel> themes,
     List<ThemeModel> myThemes,
@@ -80,6 +85,7 @@ class ShopScreenState {
       isUpdating: isUpdating ?? this.isUpdating,
       isUploading: isUploading ?? this.isUploading,
       isDuplicate: isDuplicate ?? this.isDuplicate,
+      activeBusiness: activeBusiness ?? this.activeBusiness,
       templates: templates ?? this.templates,
       shops: shops ?? this.shops,
       themes: themes ?? this.themes,

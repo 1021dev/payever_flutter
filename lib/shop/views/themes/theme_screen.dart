@@ -9,6 +9,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/shop/shop.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/commons/views/custom_elements/custom_elements.dart';
+import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/shop_filter_screen.dart';
 import 'package:payever/shop/widgets/theme_cell.dart';
@@ -79,7 +81,10 @@ class _ThemesScreenState extends State<ThemesScreen> {
       child: BlocBuilder<ShopScreenBloc, ShopScreenState>(
         bloc: widget.screenBloc,
         builder: (BuildContext context, ShopScreenState state) {
-          return _body(state);
+          return Scaffold(
+            appBar: Appbar(Language.getPosStrings('info_boxes.terminal.panels.themes.title'),),
+              body: SafeArea(
+                  bottom: false,child: BackgroundBase(true, body: _body(state))));
         },
       ),
     );

@@ -20,6 +20,7 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
   @override
   Stream<ShopScreenState> mapEventToState(ShopScreenEvent event) async* {
     if (event is ShopScreenInitEvent) {
+      yield state.copyWith(activeBusiness: dashboardScreenBloc.state.activeBusiness);
       yield* fetchShop(event.currentBusinessId);
     } else if (event is InstallThemeEvent) {
       yield* installTheme(event.businessId, event.shopId, event.themeId);

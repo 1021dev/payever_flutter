@@ -236,7 +236,7 @@ class _EnablePasswordScreenState extends State<EnablePasswordScreen> {
                     ),
                     style: TextStyle(fontSize: 16),
                     keyboardType: TextInputType.text,
-                    maxLines: 2,
+                    // maxLines: 2,
                     textInputAction: TextInputAction.newline,
                   ),
                 ),
