@@ -879,3 +879,15 @@ InputDecoration textFieldDecoration(String label, {Widget prefixIcon}) {
 }
 
 final formatter = new NumberFormat('###,###,###.00', 'en_US');
+
+String getDisplayName(String name) {
+  String displayName;
+  if (name.contains(' ')) {
+    displayName = name.substring(0, 1);
+    displayName = displayName + name.split(' ')[1].substring(0, 1);
+  } else {
+    displayName = name.substring(0, 1) + name.substring(name.length - 1);
+    displayName = displayName.toUpperCase();
+  }
+  return displayName;
+}

@@ -1,38 +1,31 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/dashboard/dashboard_bloc.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/checkout/views/channels/channels_screeen.dart';
-import 'package:payever/checkout/views/channels/checkout_channel_shopsystem_screen.dart';
-import 'package:payever/checkout/views/connect/checkout_device_payment_screen.dart';
-import 'package:payever/checkout/views/channels/checkout_link_edit_screen.dart';
-import 'package:payever/checkout/views/connect/checkout_twillo_settings.dart';
 import 'package:payever/checkout/views/connect/connect_screen.dart';
-import 'package:payever/checkout/views/payments/checkout_payment_settings_screen.dart';
 import 'package:payever/checkout/views/payments/payment_options_screen.dart';
 import 'package:payever/checkout/views/sections/sections_screen.dart';
 import 'package:payever/checkout/views/settings/settings_screen.dart';
 import 'package:payever/checkout/views/workshop/checkout_switch_screen.dart';
 import 'package:payever/checkout/views/workshop/create_edit_checkout_screen.dart';
 import 'package:payever/checkout/views/workshop/subview/work_shop_view.dart';
-import 'package:payever/checkout/views/workshop/workshop_screen.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
-import 'package:payever/shop/widgets/shop_top_button.dart';
 import 'package:payever/theme.dart';
 import 'package:payever/widgets/main_app_bar.dart';
 import 'package:provider/provider.dart';
-import 'channels/channels_checkout_flow_screen.dart';
-import 'channels/checkout_channelset_screen.dart';
-import 'connect/checkout_connect_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'connect/checkout_qr_integration.dart';
 
 class CheckoutInitScreen extends StatelessWidget {
@@ -54,7 +47,6 @@ class CheckoutInitScreen extends StatelessWidget {
 }
 
 class CheckoutScreen extends StatefulWidget {
-
   final GlobalStateModel globalStateModel;
   final DashboardScreenBloc dashboardScreenBloc;
 
@@ -65,7 +57,7 @@ class CheckoutScreen extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-   return _CheckoutScreenState();
+    return _CheckoutScreenState();
   }
 }
 
@@ -103,7 +95,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
     Measurements.height = (_isPortrait
         ? MediaQuery.of(context).size.height
@@ -114,8 +105,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     _isTablet = Measurements.width < 600 ? false : true;
 
     if (mainWidth == 0) {
-      mainWidth = GlobalUtils.isTablet(context) ? Measurements.width * 0.7 : Measurements.width;
+      mainWidth = GlobalUtils.isTablet(context)
+          ? Measurements.width * 0.7
+          : Measurements.width;
     }
+    iconSize = _isTablet ? 120 : 80;
+    margin = _isTablet ? 24 : 16;
 
     return BlocListener(
       bloc: screenBloc,
@@ -133,146 +128,40 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       child: BlocBuilder<CheckoutScreenBloc, CheckoutScreenState>(
         bloc: screenBloc,
         builder: (BuildContext context, CheckoutScreenState state) {
-          return _body(state);
+          return Scaffold(
+            backgroundColor: overlayBackground(),
+            appBar: MainAppbar(
+              dashboardScreenBloc: widget.dashboardScreenBloc,
+              dashboardScreenState: widget.dashboardScreenBloc.state,
+              title: Language.getCommerceOSStrings('dashboard.apps.checkout'),
+              icon: SvgPicture.asset(
+                'assets/images/checkout.svg',
+                height: 20,
+                width: 20,
+              ),
+            ),
+            body: SafeArea(
+              bottom: false,
+              child: BackgroundBase(
+                true,
+                body: Column(
+                  children: <Widget>[
+                    // _toolBar(state),
+                    // Expanded(child: _getBody(state)),
+                    Expanded(
+                      child: _body(state),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
         },
       ),
     );
   }
 
   Widget _body(CheckoutScreenState state) {
-    iconSize = _isTablet ? 120: 80;
-    margin = _isTablet ? 24: 16;
-    return Scaffold(
-      backgroundColor: overlayBackground(),
-      appBar: MainAppbar(
-        dashboardScreenBloc: widget.dashboardScreenBloc,
-        dashboardScreenState: widget.dashboardScreenBloc.state,
-        title: Language.getCommerceOSStrings('dashboard.apps.checkout'),
-        icon: SvgPicture.asset(
-          'assets/images/checkout.svg',
-          height: 20,
-          width: 20,
-        ),
-      ),
-      body: SafeArea(
-        bottom: false,
-        child: BackgroundBase(
-          true,
-          body: Column(
-            children: <Widget>[
-              // _toolBar(state),
-              // Expanded(child: _getBody(state)),
-              Expanded(child: _body1(state),)
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _toolBar(CheckoutScreenState state) {
-    String defaultCheckoutTitle = '-';
-    if (state.defaultCheckout != null) {
-      defaultCheckoutTitle = state.defaultCheckout.name;
-    }
-    return Container(
-      height: 50,
-      width: double.infinity,
-      color: Colors.black87,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: <Widget>[
-            ShopTopButton(
-              title: defaultCheckoutTitle,
-              selectedIndex: selectedIndex,
-              index: 0,
-              onTap: () {
-                setState(() {
-                  selectedIndex = 0;
-                });
-              },
-            ),
-            ShopTopButton(
-              title: Language.getSettingsStrings('info_boxes.panels.general.menu_list.personal_information.title'),
-              selectedIndex: selectedIndex,
-              index: 1,
-              onTap: () {
-                screenBloc.add(GetPaymentConfig());
-                setState(() {
-                  selectedIndex = 1;
-                });
-              },
-            ),
-            ShopTopButton(
-              title: Language.getWidgetStrings('widgets.checkout.channels'),
-              index: 2,
-              selectedIndex: selectedIndex,
-              onTap: () {
-                screenBloc.add(GetChannelConfig());
-                setState(() {
-                  selectedIndex = 2;
-                });
-              },
-            ),
-            ShopTopButton(
-              title: Language.getCommerceOSStrings('dashboard.apps.connect'),
-              selectedIndex: selectedIndex,
-              index: 3,
-              onTap: () {
-                screenBloc.add(GetConnectConfig());
-                setState(() {
-                  selectedIndex = 3;
-                });
-              },
-            ),
-            ShopTopButton(
-              title: Language.getPosConnectStrings('Sections'),
-              selectedIndex: selectedIndex,
-              index: 4,
-              onTap: () {
-                screenBloc.add(GetSectionDetails());
-                setState(() {
-                  selectedIndex = 4;
-                });
-              },
-            ),
-            ShopTopButton(
-              title: Language.getConnectStrings('categories.communications.main.titles.settings'),
-              selectedIndex: selectedIndex,
-              index: 5,
-              onTap: () {
-                setState(() {
-                  selectedIndex = 5;
-                });
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _getBody(CheckoutScreenState state) {
-    switch (selectedIndex) {
-      case 0:
-        return state.isLoading || state.channelSet == null ?
-        Center(
-          child: CircularProgressIndicator(),
-        ) : WorkshopScreen(checkoutScreenBloc: this.screenBloc);
-
-
-      case 5:
-        return CheckoutSettingsScreen(
-          checkoutScreenBloc: screenBloc,
-          businessId: state.activeBusiness.id,
-          checkout: screenBloc.state.defaultCheckout,
-        );
-    }
-    return Container();
-  }
-
-  Widget _body1(CheckoutScreenState state) {
     if (state.isLoading || state.channelSet == null)
       return Center(
         child: CircularProgressIndicator(),
@@ -282,6 +171,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     if (state.defaultCheckout != null) {
       defaultCheckoutTitle = state.defaultCheckout.name;
     }
+    String openUrl =
+        '${Env.wrapper}/pay/create-flow/channel-set-id/${state.channelSet.id}';
     return Align(
       alignment: Alignment.topCenter,
       child: SingleChildScrollView(
@@ -313,20 +204,46 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                       channelSetId: state.channelSet.id,
                                       defaultCheckout: state.defaultCheckout,
                                       fromCart: false,
-                                      onTapClose: () {
-
-                                      },
+                                      onTapClose: () {},
                                     ),
-                                    type: PageTransitionType.fade
-                                )
-                            );
+                                    type: PageTransitionType.fade));
                           },
                           child: Row(
                             children: [
-                              SvgPicture.asset('assets/images/checkout.svg', width: 24, height: 24, color: iconColor(),),
-                              SizedBox(width: 12,),
-                              Expanded(child: Text(defaultCheckoutTitle, style: TextStyle(fontSize: 18),)),
-                              Icon(Icons.arrow_forward_ios, size: 20,),
+                              Container(
+                                width: 24,
+                                height: 24,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: <Color>[
+                                        Color(0xFFa3a9b8),
+                                        Color(0xFF868a95),
+                                      ]),
+                                ),
+                                child: Text(
+                                  getDisplayName(defaultCheckoutTitle),
+                                  style: TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 12,
+                              ),
+                              Expanded(
+                                  child: Text(
+                                defaultCheckoutTitle,
+                                style: TextStyle(fontSize: 18),
+                              )),
+                              Icon(
+                                Icons.arrow_forward_ios,
+                                size: 20,
+                              ),
                             ],
                           ),
                         ),
@@ -344,20 +261,26 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                     businessId: state.activeBusiness.id,
                                     checkoutScreenBloc: screenBloc,
                                     onOpen: (Checkout checkout) {
-                                      setState(() {
-
-                                      });
+                                      setState(() {});
                                     },
                                   ),
-                                  type: PageTransitionType.fade
-                              )
-                          );
+                                  type: PageTransitionType.fade));
                         },
                         child: Row(
                           children: [
-                            SvgPicture.asset('assets/images/checkout-switch.svg', width: 24, height: 24,),
-                            SizedBox(width: 12,),
-                            Expanded(child: Text('Switch checkout', style: TextStyle(fontSize: 18),)),
+                            SvgPicture.asset(
+                              'assets/images/checkout-switch.svg',
+                              width: 24,
+                              height: 24,
+                            ),
+                            SizedBox(
+                              width: 12,
+                            ),
+                            Expanded(
+                                child: Text(
+                              'Switch checkout',
+                              style: TextStyle(fontSize: 18),
+                            )),
                             Icon(Icons.arrow_forward_ios, size: 20),
                           ],
                         ),
@@ -377,15 +300,23 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                     fromDashBoard: false,
                                     screenBloc: CheckoutSwitchScreenBloc(),
                                   ),
-                                  type: PageTransitionType.fade
-                              )
-                          );
+                                  type: PageTransitionType.fade));
                         },
                         child: Row(
                           children: [
-                            SvgPicture.asset('assets/images/checkout-add.svg', width: 24, height: 24,),
-                            SizedBox(width: 12,),
-                            Expanded(child: Text('Add new checkout', style: TextStyle(fontSize: 18),)),
+                            SvgPicture.asset(
+                              'assets/images/checkout-add.svg',
+                              width: 24,
+                              height: 24,
+                            ),
+                            SizedBox(
+                              width: 12,
+                            ),
+                            Expanded(
+                                child: Text(
+                              'Add new checkout',
+                              style: TextStyle(fontSize: 18),
+                            )),
                             Icon(Icons.arrow_forward_ios, size: 20),
                           ],
                         ),
@@ -394,139 +325,154 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   ],
                 ),
               ),
-              SizedBox(height: 16,),
+              SizedBox(
+                height: 16,
+              ),
               Container(
-                  decoration: BoxDecoration(
-                    color: overlayBackground(),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 61,
-                        padding: EdgeInsets.only(left: 14, right: 14),
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                PageTransition(
-                                    child: Container(),
-                                    type: PageTransitionType.fade
-                                )
-                            );
-                          },
-                          child: Row(
-                            children: [
-                              SvgPicture.asset(
-                                'assets/images/pay_link.svg',
-                                width: 24,
-                                height: 24,
-                                color: iconColor(),
-                              ),
-                              SizedBox(
-                                width: 12,
-                              ),
-                              Expanded(
-                                  child: Text(
-                                    'Copy pay link',
-                                    style: TextStyle(fontSize: 18),
-                                  )),
-                              Icon(Icons.arrow_forward_ios, size: 20),
-                            ],
-                          ),
-                        ),
-                      ),
-                      divider,
-                      Container(
-                        height: 61,
-                        padding: EdgeInsets.only(left: 14, right: 14),
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                PageTransition(
-                                    child: Container(),
-                                    type: PageTransitionType.fade
-                                )
-                            );
-                          },
-                          child: Row(
-                            children: [
-                              SvgPicture.asset(
-                                'assets/images/prefilled_link.svg',
-                                width: 24,
-                                height: 24,
-                                color: iconColor(),
-                              ),
-                              SizedBox(width: 12,),
-                              Expanded(child: Text('Copy prefilled link', style: TextStyle(fontSize: 18),)),
-                              Icon(Icons.arrow_forward_ios, size: 20),
-                            ],
-                          ),
-                        ),
-                      ),
-                      divider,
-                      Container(
-                        height: 61,
-                        padding: EdgeInsets.only(left: 14, right: 14),
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                PageTransition(
-                                    child: Container(),
-                                    type: PageTransitionType.fade
-                                )
-                            );
-                          },
-                          child: Row(
-                            children: [
-                              SvgPicture.asset(
-                                'assets/images/email_link.svg',
-                                width: 24,
-                                height: 24,
-                                color: iconColor(),
-                              ),
-                              SizedBox(width: 12,),
-                              Expanded(child: Text('E-mail prefilled link', style: TextStyle(fontSize: 18),)),
-                              Icon(Icons.arrow_forward_ios, size: 20),
-                            ],
-                          ),
-                        ),
-                      ),
-                      divider,
-                      Container(
-                        height: 61,
-                        padding: EdgeInsets.only(left: 14, right: 14),
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                PageTransition(
-                                    child: Container(),
-                                    type: PageTransitionType.fade
-                                )
-                            );
-                          },
-                          child: Row(
-                            children: [
-                              SvgPicture.asset(
-                                'assets/images/prefilled_qr.svg',
-                                width: 24,
-                                height: 24,
-                                color: iconColor(),
-                              ),
-                              SizedBox(width: 12,),
-                              Expanded(child: Text('Prefilled QR code', style: TextStyle(fontSize: 18),)),
-                              Icon(Icons.arrow_forward_ios, size: 20),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                decoration: BoxDecoration(
+                  color: overlayBackground(),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-              SizedBox(height: 16,),
+                child: Column(
+                  children: [
+                    Container(
+                      height: 61,
+                      padding: EdgeInsets.only(left: 14, right: 14),
+                      child: InkWell(
+                        onTap: () {
+                          Clipboard.setData(new ClipboardData(text: openUrl));
+                          Fluttertoast.showToast(msg: 'Link successfully copied');
+                        },
+                        child: Row(
+                          children: [
+                            SvgPicture.asset(
+                              'assets/images/pay_link.svg',
+                              width: 24,
+                              height: 24,
+                              color: iconColor(),
+                            ),
+                            SizedBox(
+                              width: 12,
+                            ),
+                            Expanded(
+                                child: Text(
+                              'Copy pay link',
+                              style: TextStyle(fontSize: 18),
+                            )),
+                            Icon(Icons.arrow_forward_ios, size: 20),
+                          ],
+                        ),
+                      ),
+                    ),
+                    divider,
+                    Container(
+                      height: 61,
+                      padding: EdgeInsets.only(left: 14, right: 14),
+                      child: InkWell(
+                        onTap: () {
+
+                        },
+                        child: Row(
+                          children: [
+                            SvgPicture.asset(
+                              'assets/images/prefilled_link.svg',
+                              width: 24,
+                              height: 24,
+                              color: iconColor(),
+                            ),
+                            SizedBox(
+                              width: 12,
+                            ),
+                            Expanded(
+                                child: Text(
+                              'Copy prefilled link',
+                              style: TextStyle(fontSize: 18),
+                            )),
+                            Icon(Icons.arrow_forward_ios, size: 20),
+                          ],
+                        ),
+                      ),
+                    ),
+                    divider,
+                    Container(
+                      height: 61,
+                      padding: EdgeInsets.only(left: 14, right: 14),
+                      child: InkWell(
+                        onTap: () {
+                          _sendMail(
+                              '',
+                              'Pay by payever Link',
+                              'Dear customer, \\n'
+                                  '${state.activeBusiness.name} would like to invite you to pay online via payever. Please click the link below in order to pay for your purchase at ${state.activeBusiness.name}.\\n'
+                                  '$openUrl\\n'
+                                  ' For any questions to ${state.activeBusiness.name} regarding the purchase itself, please reply to this email, for technical questions or questions regarding your payment, please email support@payever.de.');
+                        },
+                        child: Row(
+                          children: [
+                            SvgPicture.asset(
+                              'assets/images/email_link.svg',
+                              width: 24,
+                              height: 24,
+                              color: iconColor(),
+                            ),
+                            SizedBox(
+                              width: 12,
+                            ),
+                            Expanded(
+                                child: Text(
+                              'E-mail prefilled link',
+                              style: TextStyle(fontSize: 18),
+                            )),
+                            Icon(Icons.arrow_forward_ios, size: 20),
+                          ],
+                        ),
+                      ),
+                    ),
+                    divider,
+                    Container(
+                      height: 61,
+                      padding: EdgeInsets.only(left: 14, right: 14),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            PageTransition(
+                              child: CheckoutQRIntegrationScreen(
+                                screenBloc: screenBloc,
+                                title: 'QR',
+                              ),
+                              type: PageTransitionType.fade,
+                              duration: Duration(milliseconds: 500),
+                            ),
+                          );
+                        },
+                        child: Row(
+                          children: [
+                            SvgPicture.asset(
+                              'assets/images/prefilled_qr.svg',
+                              width: 24,
+                              height: 24,
+                              color: iconColor(),
+                            ),
+                            SizedBox(
+                              width: 12,
+                            ),
+                            Expanded(
+                                child: Text(
+                              'Prefilled QR code',
+                              style: TextStyle(fontSize: 18),
+                            )),
+                            Icon(Icons.arrow_forward_ios, size: 20),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 16,
+              ),
               if (state.defaultCheckout != null)
                 Container(
                   decoration: BoxDecoration(
@@ -544,20 +490,24 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                 context,
                                 PageTransition(
                                     child: PaymentOptionsScreen(screenBloc),
-                                    type: PageTransitionType.fade
-                                )
-                            );
-
+                                    type: PageTransitionType.fade));
                           },
                           child: Row(
                             children: [
-                              SvgPicture.asset('assets/images/checkout-payment.svg', width: 24, height: 24,),
+                              SvgPicture.asset(
+                                'assets/images/checkout-payment.svg',
+                                width: 24,
+                                height: 24,
+                                color: iconColor(),
+                              ),
                               SizedBox(
                                 width: 12,
                               ),
                               Expanded(
-                                  child: Text('Payment options', style: TextStyle(fontSize: 18),
-                                  )),
+                                  child: Text(
+                                'Payment options',
+                                style: TextStyle(fontSize: 18),
+                              )),
                               Icon(Icons.arrow_forward_ios, size: 20),
                             ],
                           ),
@@ -573,15 +523,24 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                 context,
                                 PageTransition(
                                     child: ChannelsScreen(screenBloc),
-                                    type: PageTransitionType.fade
-                                )
-                            );
+                                    type: PageTransitionType.fade));
                           },
                           child: Row(
                             children: [
-                              SvgPicture.asset('assets/images/checkout-channels.svg', width: 24, height: 24,),
-                              SizedBox(width: 12,),
-                              Expanded(child: Text(Language.getWidgetStrings('widgets.checkout.channels'), style: TextStyle(fontSize: 18),)),
+                              SvgPicture.asset(
+                                'assets/images/checkout-channels.svg',
+                                width: 24,
+                                height: 24,
+                              ),
+                              SizedBox(
+                                width: 12,
+                              ),
+                              Expanded(
+                                  child: Text(
+                                Language.getWidgetStrings(
+                                    'widgets.checkout.channels'),
+                                style: TextStyle(fontSize: 18),
+                              )),
                               Icon(Icons.arrow_forward_ios, size: 20),
                             ],
                           ),
@@ -597,9 +556,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                 context,
                                 PageTransition(
                                     child: ConnectScreen(screenBloc),
-                                    type: PageTransitionType.fade
-                                )
-                            );
+                                    type: PageTransitionType.fade));
                           },
                           child: Row(
                             children: [
@@ -615,8 +572,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 12,),
-                              Expanded(child: Text(Language.getCommerceOSStrings('dashboard.apps.connect'), style: TextStyle(fontSize: 18),)),
+                              SizedBox(
+                                width: 12,
+                              ),
+                              Expanded(
+                                  child: Text(
+                                Language.getCommerceOSStrings(
+                                    'dashboard.apps.connect'),
+                                style: TextStyle(fontSize: 18),
+                              )),
                               Icon(Icons.arrow_forward_ios, size: 20),
                             ],
                           ),
@@ -631,14 +595,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             Navigator.push(
                                 context,
                                 PageTransition(
-                                    child: CheckoutSettingsScreen(
-                                      checkoutScreenBloc: screenBloc,
-                                      businessId: state.activeBusiness.id,
-                                      checkout: screenBloc.state.defaultCheckout,
-                                    ),
-                                    type: PageTransitionType.fade
-                                )
-                            );
+                                    child: CheckoutSettingsScreen(screenBloc),
+                                    type: PageTransitionType.fade));
                           },
                           child: Row(
                             children: [
@@ -659,9 +617,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               ),
                               Expanded(
                                   child: Text(
-                                    Language.getConnectStrings('categories.communications.main.titles.settings'),
-                                    style: TextStyle(fontSize: 18),
-                                  )),
+                                Language.getConnectStrings(
+                                    'categories.communications.main.titles.settings'),
+                                style: TextStyle(fontSize: 18),
+                              )),
                               Icon(Icons.arrow_forward_ios, size: 20),
                             ],
                           ),
@@ -677,15 +636,23 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                 context,
                                 PageTransition(
                                     child: SectionsScreen(screenBloc),
-                                    type: PageTransitionType.fade
-                                )
-                            );
+                                    type: PageTransitionType.fade));
                           },
                           child: Row(
                             children: [
-                              SvgPicture.asset('assets/images/checkout-section.svg', width: 24, height: 24,),
-                              SizedBox(width: 12,),
-                              Expanded(child: Text('Sections', style: TextStyle(fontSize: 18),)),
+                              SvgPicture.asset(
+                                'assets/images/checkout-section.svg',
+                                width: 24,
+                                height: 24,
+                              ),
+                              SizedBox(
+                                width: 12,
+                              ),
+                              Expanded(
+                                  child: Text(
+                                'Sections',
+                                style: TextStyle(fontSize: 18),
+                              )),
                               Icon(Icons.arrow_forward_ios, size: 20),
                             ],
                           ),
@@ -694,13 +661,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     ],
                   ),
                 ),
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
             ],
           ),
         ),
       ),
     );
   }
+
 
   get divider {
     return Divider(
@@ -709,5 +679,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       thickness: 0.5,
       color: Colors.grey[500],
     );
+  }
+
+  _sendMail(String toMailId, String subject, String body) async {
+    var url = Uri.encodeFull('mailto:$toMailId?subject=$subject&body=$body');
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

@@ -196,13 +196,23 @@ class _PosScreenState extends State<PosScreen> {
                               Container(
                                 width: 24,
                                 height: 24,
+                                alignment: Alignment.center,
                                 decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: NetworkImage(
-                                      '${Env.cdnIcon}icon-comerceos-pos-not-installed.png',
-                                    ),
-                                    fit: BoxFit.contain,
-                                  ),
+                                  shape: BoxShape.circle,
+                                  gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: <Color>[
+                                        Color(0xFFa3a9b8),
+                                        Color(0xFF868a95),
+                                      ]),
+                                ),
+                                child: Text(
+                                  getDisplayName(state.activeTerminal.name),
+                                  style: TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white),
                                 ),
                               ),
                               SizedBox(width: 12,),
