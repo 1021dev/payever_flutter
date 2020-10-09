@@ -16,6 +16,9 @@ import 'package:payever/checkout/views/payments/checkout_payment_settings_screen
 import 'package:payever/checkout/views/payments/payment_options_screen.dart';
 import 'package:payever/checkout/views/sections/sections_screen.dart';
 import 'package:payever/checkout/views/settings/settings_screen.dart';
+import 'package:payever/checkout/views/workshop/checkout_switch_screen.dart';
+import 'package:payever/checkout/views/workshop/create_edit_checkout_screen.dart';
+import 'package:payever/checkout/views/workshop/subview/work_shop_view.dart';
 import 'package:payever/checkout/views/workshop/workshop_screen.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/env.dart';
@@ -257,48 +260,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         Center(
           child: CircularProgressIndicator(),
         ) : WorkshopScreen(checkoutScreenBloc: this.screenBloc);
-      case 1:
-        return PaymentOptionsScreen(
-          connects: state.connects,
-          integrations: state.checkoutConnections,
-          isLoading: state.loadingPaymentOption,
-          paymentOptions: state.paymentOptions,
-          checkoutIntegrations: state.connections,
-          onTapAdd: () {
-            Navigator.push(
-              context,
-              PageTransition(
-                child: CheckoutConnectScreen(
-                  checkoutScreenBloc: screenBloc,
-                  business: state.activeBusiness.id,
-                  category: 'payments',
-                ),
-                type: PageTransitionType.fade,
-                duration: Duration(milliseconds: 500),
-              ),
-            );
-          },
-          onTapOpen: (connectModel) {
-            Navigator.push(
-              context,
-              PageTransition(
-                child: CheckoutPaymentSettingsScreen(
-                  checkoutScreenBloc: screenBloc,
-                  business: state.activeBusiness.id,
-                  connectModel: connectModel,
-                ),
-                type: PageTransitionType.fade,
-                duration: Duration(milliseconds: 500),
-              ),
-            );
-          },
-          onTapInstall: (integrationModel) {
-            screenBloc.add(InstallCheckoutPaymentEvent(integrationModel: integrationModel));
-          },
-          onTapUninstall: (integrationModel) {
-            screenBloc.add(UninstallCheckoutPaymentEvent(integrationModel: integrationModel));
-          },
-        );
+
       case 2:
         return ChannelsScreen(
           checkoutScreenBloc: screenBloc,
@@ -512,8 +474,17 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             Navigator.push(
                                 context,
                                 PageTransition(
-                                    child: WorkshopScreen(
-                                        checkoutScreenBloc: this.screenBloc),
+                                    child: WorkshopView(
+                                      business: state.activeBusiness,
+                                      terminal: state.activeTerminal,
+                                      // channelSetFlow: state.channelSetFlow,
+                                      channelSetId: state.channelSet.id,
+                                      defaultCheckout: state.defaultCheckout,
+                                      fromCart: false,
+                                      onTapClose: () {
+
+                                      },
+                                    ),
                                     type: PageTransitionType.fade
                                 )
                             );
@@ -534,7 +505,21 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       padding: EdgeInsets.only(left: 14, right: 14),
                       child: InkWell(
                         onTap: () {
+                          Navigator.push(
+                              context,
+                              PageTransition(
+                                  child: CheckoutSwitchScreen(
+                                    businessId: state.activeBusiness.id,
+                                    checkoutScreenBloc: screenBloc,
+                                    onOpen: (Checkout checkout) {
+                                      setState(() {
 
+                                      });
+                                    },
+                                  ),
+                                  type: PageTransitionType.fade
+                              )
+                          );
                         },
                         child: Row(
                           children: [
@@ -552,7 +537,17 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       padding: EdgeInsets.only(left: 14, right: 14),
                       child: InkWell(
                         onTap: () {
-
+                          Navigator.push(
+                              context,
+                              PageTransition(
+                                  child: CreateEditCheckoutScreen(
+                                    businessId: state.activeBusiness.id,
+                                    fromDashBoard: false,
+                                    screenBloc: CheckoutSwitchScreenBloc(),
+                                  ),
+                                  type: PageTransitionType.fade
+                              )
+                          );
                         },
                         child: Row(
                           children: [
@@ -581,6 +576,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           padding: EdgeInsets.only(left: 14, right: 14),
                           child: InkWell(
                             onTap: () {
+                              Navigator.push(
+                                  context,
+                                  PageTransition(
+                                      child: PaymentOptionsScreen(screenBloc),
+                                      type: PageTransitionType.fade
+                                  )
+                              );
 
                             },
                             child: Row(
@@ -617,7 +619,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         padding: EdgeInsets.only(left: 14, right: 14),
                         child: InkWell(
                           onTap: () {
-
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                    child: Container(),
+                                    type: PageTransitionType.fade
+                                )
+                            );
                           },
                           child: Row(
                             children: [
@@ -647,14 +655,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         child: InkWell(
                           onTap: () {
                             Navigator.push(
-                              context,
-                              PageTransition(
-                                // child: PosConnectInitScreen(
-                                //   screenBloc: screenBloc,
-                                // ),
-                                // type: PageTransitionType.fade,
-                                // duration: Duration(milliseconds: 500),
-                              ),
+                                context,
+                                PageTransition(
+                                    child: Container(),
+                                    type: PageTransitionType.fade
+                                )
                             );
                           },
                           child: Row(
@@ -684,7 +689,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         padding: EdgeInsets.only(left: 14, right: 14),
                         child: InkWell(
                           onTap: () {
-
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                    child: Container(),
+                                    type: PageTransitionType.fade
+                                )
+                            );
                           },
                           child: Row(
                             children: [
@@ -719,7 +730,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         padding: EdgeInsets.only(left: 14, right: 14),
                         child: InkWell(
                           onTap: () {
-
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                    child: Container(),
+                                    type: PageTransitionType.fade
+                                )
+                            );
                           },
                           child: Row(
                             children: [
@@ -758,7 +775,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         padding: EdgeInsets.only(left: 14, right: 14),
                         child: InkWell(
                           onTap: () {
-
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                    child: Container(),
+                                    type: PageTransitionType.fade
+                                )
+                            );
                           },
                           child: Row(
                             children: [
@@ -787,7 +810,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         padding: EdgeInsets.only(left: 14, right: 14),
                         child: InkWell(
                           onTap: () {
-
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                    child: Container(),
+                                    type: PageTransitionType.fade
+                                )
+                            );
                           },
                           child: Row(
                             children: [
@@ -810,7 +839,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         padding: EdgeInsets.only(left: 14, right: 14),
                         child: InkWell(
                           onTap: () {
-
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                    child: Container(),
+                                    type: PageTransitionType.fade
+                                )
+                            );
                           },
                           child: Row(
                             children: [
@@ -833,7 +868,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         padding: EdgeInsets.only(left: 14, right: 14),
                         child: InkWell(
                           onTap: () {
-
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                    child: Container(),
+                                    type: PageTransitionType.fade
+                                )
+                            );
                           },
                           child: Row(
                             children: [

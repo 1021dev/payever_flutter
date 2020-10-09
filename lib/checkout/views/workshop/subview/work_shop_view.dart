@@ -221,7 +221,7 @@ class _WorkshopViewState extends State<WorkshopView> {
       child: BlocBuilder<WorkshopScreenBloc, WorkshopScreenState>(
         bloc: screenBloc,
         builder: (BuildContext context, state) {
-          return _body(state);
+          return BackgroundBase(true, body: _body(state));
         },
       ),
     );
@@ -254,189 +254,187 @@ class _WorkshopViewState extends State<WorkshopView> {
       }
     }
 
-    return BackgroundBase(
-      true,
-      body: Center(
-        child: Container(
-          decoration: BoxDecoration(
+    return Align(
+      alignment: Alignment.topCenter,
+      child: Container(
+        decoration: BoxDecoration(
             color: overlayBackground(),
             borderRadius: BorderRadius.circular(12)
-          ),
-          margin: EdgeInsets.only(left: 12, right: 12, bottom: 20, top: widget.onTapClose != null ? 44 : 20),
-          height: double.infinity,
-          width: mainWidth,
-          child: Column(
-            children: <Widget>[
-              Container(
-                height: 60,
-                padding: EdgeInsets.symmetric(horizontal: 18),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    editOrder
-                        ? MaterialButton(
-                      child: Row(
-                        children: <Widget>[
-                          Icon(
-                            Icons.keyboard_arrow_left,
-                            size: 24,
-                          ),
-                          Text(
-                            'Pay',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ],
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          editOrder = false;
-                        });
-                      },
-                      height: 32,
-                      minWidth: 0,
-                      padding: EdgeInsets.only(left: 4, right: 4),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    )
-                        : SvgPicture.asset(
-                      'assets/images/payeverlogoandname.svg',
-                      color: iconColor(),
-                      height: 16,
-                    ),
-                    Spacer(),
-                    isOrderApproved
-                        ? MaterialButton(
-                      child: Row(
-                        children: <Widget>[
-                          Text(
-                            state.channelSetFlow != null
-                                ? '$currency${amount.toStringAsFixed(2)}'
-                                : '',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                          Icon(
-                            Icons.keyboard_arrow_down,
-                            size: 16,
-                          ),
-                        ],
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          editOrder = !editOrder;
-                        });
-                      },
-                      height: 32,
-                      minWidth: 0,
-                      padding: EdgeInsets.only(left: 4, right: 4),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    )
-                        : Container(),
-                    Visibility(
-                      visible: widget.onTapClose != null,
-                      child: MaterialButton(
-                        child: Container(
-                          width: 70,
-                          height: 32,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            border: Border.all(color: Colors.grey),
-                          ),
-                          child: Text(
-                            'Cancel',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                            ),
+        ),
+        margin: EdgeInsets.only(left: 12, right: 12, bottom: 20, top: widget.onTapClose != null ? 44 : 20),
+        height: double.infinity,
+        width: mainWidth,
+        child: Column(
+          children: <Widget>[
+            Container(
+              height: 60,
+              padding: EdgeInsets.symmetric(horizontal: 18),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  editOrder
+                      ? MaterialButton(
+                    child: Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.keyboard_arrow_left,
+                          size: 24,
+                        ),
+                        Text(
+                          'Pay',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
-                        onPressed: () {
-                          // widget.onTapClose();
-                          Navigator.pop(context);
-                        },
+                      ],
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        editOrder = false;
+                      });
+                    },
+                    height: 32,
+                    minWidth: 0,
+                    padding: EdgeInsets.only(left: 4, right: 4),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  )
+                      : SvgPicture.asset(
+                    'assets/images/payeverlogoandname.svg',
+                    color: iconColor(),
+                    height: 16,
+                  ),
+                  Spacer(),
+                  isOrderApproved
+                      ? MaterialButton(
+                    child: Row(
+                      children: <Widget>[
+                        Text(
+                          state.channelSetFlow != null
+                              ? '$currency${amount.toStringAsFixed(2)}'
+                              : '',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        Icon(
+                          Icons.keyboard_arrow_down,
+                          size: 16,
+                        ),
+                      ],
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        editOrder = !editOrder;
+                      });
+                    },
+                    height: 32,
+                    minWidth: 0,
+                    padding: EdgeInsets.only(left: 4, right: 4),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  )
+                      : Container(),
+                  Visibility(
+                    visible: widget.onTapClose != null,
+                    child: MaterialButton(
+                      child: Container(
+                        width: 70,
                         height: 32,
-                        minWidth: 0,
-                        padding: EdgeInsets.only(left: 4, right: 4),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(color: Colors.grey),
+                        ),
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
                       ),
-                    )
+                      onPressed: () {
+                        // widget.onTapClose();
+                        Navigator.pop(context);
+                      },
+                      height: 32,
+                      minWidth: 0,
+                      padding: EdgeInsets.only(left: 4, right: 4),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            _divider,
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    editOrder
+                        ? Container(
+                        width: Measurements.width,
+                        padding: EdgeInsets.only(
+                          left: 16,
+                          right: 16,
+                          top: 16,
+                        ),
+                        child: _orderView(state)/*_editOrderView(state)*/)
+                        : Container(
+                      width: Measurements.width,
+                      padding: EdgeInsets.only(
+                        bottom: 16,
+                      ),
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: _orderView(state),
+                          ),
+                          _divider,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: _accountView(state),
+                          ),
+                          _divider,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: _billingView(state),
+                          ),
+                          _divider,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: _selectPaymentView(state),
+                          ),
+                          _divider,
+                          // _sendToDeviceView(state),
+                          // _divider,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: _paymentOptionView(state),
+                          ),
+                          _divider,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: _addressView(state),
+                          ),
+                          _divider,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: _orderDetailView(state),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
-              _divider,
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: <Widget>[
-                      editOrder
-                          ? Container(
-                          width: Measurements.width,
-                          padding: EdgeInsets.only(
-                            left: 16,
-                            right: 16,
-                            top: 16,
-                          ),
-                          child: _orderView(state)/*_editOrderView(state)*/)
-                          : Container(
-                        width: Measurements.width,
-                        padding: EdgeInsets.only(
-                          bottom: 16,
-                        ),
-                        child: Column(
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
-                              child: _orderView(state),
-                            ),
-                            _divider,
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
-                              child: _accountView(state),
-                            ),
-                            _divider,
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
-                              child: _billingView(state),
-                            ),
-                            _divider,
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
-                              child: _selectPaymentView(state),
-                            ),
-                            _divider,
-                            // _sendToDeviceView(state),
-                            // _divider,
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
-                              child: _paymentOptionView(state),
-                            ),
-                            _divider,
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
-                              child: _addressView(state),
-                            ),
-                            _divider,
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
-                              child: _orderDetailView(state),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

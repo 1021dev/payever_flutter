@@ -10,6 +10,7 @@ import 'package:payever/checkout/models/models.dart';
 import 'package:payever/checkout/views/workshop/create_edit_checkout_screen.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
+import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/theme.dart';
 
 bool _isPortrait;
@@ -72,7 +73,9 @@ class _CheckoutSwitchScreenState extends State<CheckoutSwitchScreen> {
       child: BlocBuilder<CheckoutSwitchScreenBloc, CheckoutSwitchScreenState>(
         bloc: screenBloc,
         builder: (BuildContext context, CheckoutSwitchScreenState state) {
-          return _body(state);
+          return Scaffold(
+              appBar: Appbar('Switch checkout'),
+              body: SafeArea(bottom: false, child: _body(state)));
         },
       ),
     );
