@@ -18,6 +18,7 @@ import 'package:payever/checkout/views/sections/sections_screen.dart';
 import 'package:payever/checkout/views/settings/settings_screen.dart';
 import 'package:payever/checkout/views/workshop/workshop_screen.dart';
 import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
@@ -74,6 +75,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   int selectedIndex = 0;
   CheckoutScreenBloc screenBloc;
+  double mainWidth = 0;
 
   @override
   void initState() {
@@ -98,6 +100,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
     Measurements.height = (_isPortrait
         ? MediaQuery.of(context).size.height
@@ -106,6 +109,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         ? MediaQuery.of(context).size.width
         : MediaQuery.of(context).size.height);
     _isTablet = Measurements.width < 600 ? false : true;
+
+    if (mainWidth == 0) {
+      mainWidth = GlobalUtils.isTablet(context) ? Measurements.width * 0.7 : Measurements.width;
+    }
 
     return BlocListener(
       bloc: screenBloc,
@@ -150,8 +157,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           true,
           body: Column(
             children: <Widget>[
-              _toolBar(state),
-              Expanded(child: _getBody(state)),
+              // _toolBar(state),
+              // Expanded(child: _getBody(state)),
+              Expanded(child: _body1(state),)
             ],
           ),
         ),
@@ -248,7 +256,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         return state.isLoading || state.channelSet == null ?
         Center(
           child: CircularProgressIndicator(),
-        ) : WorkshopScreen(checkoutScreenBloc: this.screenBloc,);
+        ) : WorkshopScreen(checkoutScreenBloc: this.screenBloc);
       case 1:
         return PaymentOptionsScreen(
           connects: state.connects,
@@ -470,4 +478,395 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     return Container();
   }
 
+  Widget _body1(CheckoutScreenState state) {
+    if (state.isLoading || state.channelSet == null)
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+
+    String defaultCheckoutTitle = '-';
+    if (state.defaultCheckout != null) {
+      defaultCheckoutTitle = state.defaultCheckout.name;
+    }
+    return Align(
+      alignment: Alignment.topCenter,
+      child: SingleChildScrollView(
+        child: Container(
+          width: mainWidth,
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+          child: Column(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: overlayBackground(),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  children: [
+                    if (state.activeTerminal != null)
+                      Container(
+                        height: 61,
+                        padding: EdgeInsets.only(left: 14, right: 14),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                    child: WorkshopScreen(
+                                        checkoutScreenBloc: this.screenBloc),
+                                    type: PageTransitionType.fade
+                                )
+                            );
+                          },
+                          child: Row(
+                            children: [
+                              SvgPicture.asset('assets/images/checkout.svg', width: 24, height: 24, color: iconColor(),),
+                              SizedBox(width: 12,),
+                              Expanded(child: Text(defaultCheckoutTitle, style: TextStyle(fontSize: 18),)),
+                              Icon(Icons.arrow_forward_ios, size: 20,),
+                            ],
+                          ),
+                        ),
+                      ),
+                    divider,
+                    Container(
+                      height: 61,
+                      padding: EdgeInsets.only(left: 14, right: 14),
+                      child: InkWell(
+                        onTap: () {
+
+                        },
+                        child: Row(
+                          children: [
+                            SvgPicture.asset('assets/images/add-terminal.svg', width: 24, height: 24,),
+                            SizedBox(width: 12,),
+                            Expanded(child: Text('Switch checkout', style: TextStyle(fontSize: 18),)),
+                            Icon(Icons.arrow_forward_ios, size: 20),
+                          ],
+                        ),
+                      ),
+                    ),
+                    divider,
+                    Container(
+                      height: 61,
+                      padding: EdgeInsets.only(left: 14, right: 14),
+                      child: InkWell(
+                        onTap: () {
+
+                        },
+                        child: Row(
+                          children: [
+                            SvgPicture.asset('assets/images/add-terminal.svg', width: 24, height: 24,),
+                            SizedBox(width: 12,),
+                            Expanded(child: Text('Add new checkout', style: TextStyle(fontSize: 18),)),
+                            Icon(Icons.arrow_forward_ios, size: 20),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 16,),
+              if (state.defaultCheckout != null)
+                Container(
+                  decoration: BoxDecoration(
+                    color: overlayBackground(),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    children: [
+                        Container(
+                          height: 61,
+                          padding: EdgeInsets.only(left: 14, right: 14),
+                          child: InkWell(
+                            onTap: () {
+
+                            },
+                            child: Row(
+                            children: [
+                              Container(
+                                width: 24,
+                                height: 24,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: NetworkImage(
+                                      '${Env.cdnIcon}icon-comerceos-settings-not-installed.png',
+                                    ),
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 12,
+                              ),
+                              Expanded(
+                                  child: Text(
+                                Language.getSettingsStrings(
+                                    'info_boxes.panels.general.menu_list.personal_information.title'),
+                                style: TextStyle(fontSize: 18),
+                              )),
+                              Icon(Icons.arrow_forward_ios, size: 20),
+                            ],
+                          ),
+                        ),
+                        ),
+                      divider,
+                      Container(
+                        height: 61,
+                        padding: EdgeInsets.only(left: 14, right: 14),
+                        child: InkWell(
+                          onTap: () {
+
+                          },
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 24,
+                                height: 24,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: NetworkImage(
+                                      '${Env.cdnIcon}icon-comerceos-connect-not-installed.png',
+                                    ),
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 12,),
+                              Expanded(child: Text(Language.getWidgetStrings('widgets.checkout.channels'), style: TextStyle(fontSize: 18),)),
+                              Icon(Icons.arrow_forward_ios, size: 20),
+                            ],
+                          ),
+                        ),
+                      ),
+                      divider,
+                      Container(
+                        height: 61,
+                        padding: EdgeInsets.only(left: 14, right: 14),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              PageTransition(
+                                // child: PosConnectInitScreen(
+                                //   screenBloc: screenBloc,
+                                // ),
+                                // type: PageTransitionType.fade,
+                                // duration: Duration(milliseconds: 500),
+                              ),
+                            );
+                          },
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 24,
+                                height: 24,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: NetworkImage(
+                                      '${Env.cdnIcon}icon-comerceos-connect-not-installed.png',
+                                    ),
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 12,),
+                              Expanded(child: Text(Language.getCommerceOSStrings('dashboard.apps.connect'), style: TextStyle(fontSize: 18),)),
+                              Icon(Icons.arrow_forward_ios, size: 20),
+                            ],
+                          ),
+                        ),
+                      ),
+                      divider,
+                      Container(
+                        height: 61,
+                        padding: EdgeInsets.only(left: 14, right: 14),
+                        child: InkWell(
+                          onTap: () {
+
+                          },
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 24,
+                                height: 24,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: NetworkImage(
+                                      '${Env.cdnIcon}icon-comerceos-settings-not-installed.png',
+                                    ),
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 12,
+                              ),
+                              Expanded(
+                                  child: Text(
+                                    Language.getPosConnectStrings('Sections'),
+                                    style: TextStyle(fontSize: 18),
+                                  )),
+                              Icon(Icons.arrow_forward_ios, size: 20),
+                            ],
+                          ),
+                        ),
+                      ),
+                      divider,
+                      Container(
+                        height: 61,
+                        padding: EdgeInsets.only(left: 14, right: 14),
+                        child: InkWell(
+                          onTap: () {
+
+                          },
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 24,
+                                height: 24,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: NetworkImage(
+                                      '${Env.cdnIcon}icon-comerceos-settings-not-installed.png',
+                                    ),
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 12,),
+                              Expanded(child: Text(Language.getConnectStrings('categories.communications.main.titles.settings'), style: TextStyle(fontSize: 18),)),
+                              Icon(Icons.arrow_forward_ios, size: 20),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              SizedBox(height: 16,),
+              Container(
+                  decoration: BoxDecoration(
+                    color: overlayBackground(),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 61,
+                        padding: EdgeInsets.only(left: 14, right: 14),
+                        child: InkWell(
+                          onTap: () {
+
+                          },
+                          child: Row(
+                            children: [
+                              SvgPicture.asset(
+                                'assets/images/pay_link.svg',
+                                width: 24,
+                                height: 24,
+                                color: iconColor(),
+                              ),
+                              SizedBox(
+                                width: 12,
+                              ),
+                              Expanded(
+                                  child: Text(
+                                    'Copy pay link',
+                                    style: TextStyle(fontSize: 18),
+                                  )),
+                              Icon(Icons.arrow_forward_ios, size: 20),
+                            ],
+                          ),
+                        ),
+                      ),
+                      divider,
+                      Container(
+                        height: 61,
+                        padding: EdgeInsets.only(left: 14, right: 14),
+                        child: InkWell(
+                          onTap: () {
+
+                          },
+                          child: Row(
+                            children: [
+                              SvgPicture.asset(
+                                'assets/images/prefilled_link.svg',
+                                width: 24,
+                                height: 24,
+                                color: iconColor(),
+                              ),
+                              SizedBox(width: 12,),
+                              Expanded(child: Text('Copy prefilled link', style: TextStyle(fontSize: 18),)),
+                              Icon(Icons.arrow_forward_ios, size: 20),
+                            ],
+                          ),
+                        ),
+                      ),
+                      divider,
+                      Container(
+                        height: 61,
+                        padding: EdgeInsets.only(left: 14, right: 14),
+                        child: InkWell(
+                          onTap: () {
+
+                          },
+                          child: Row(
+                            children: [
+                              SvgPicture.asset(
+                                'assets/images/email_link.svg',
+                                width: 24,
+                                height: 24,
+                                color: iconColor(),
+                              ),
+                              SizedBox(width: 12,),
+                              Expanded(child: Text('E-mail prefilled link', style: TextStyle(fontSize: 18),)),
+                              Icon(Icons.arrow_forward_ios, size: 20),
+                            ],
+                          ),
+                        ),
+                      ),
+                      divider,
+                      Container(
+                        height: 61,
+                        padding: EdgeInsets.only(left: 14, right: 14),
+                        child: InkWell(
+                          onTap: () {
+
+                          },
+                          child: Row(
+                            children: [
+                              SvgPicture.asset(
+                                'assets/images/prefilled_qr.svg',
+                                width: 24,
+                                height: 24,
+                                color: iconColor(),
+                              ),
+                              SizedBox(width: 12,),
+                              Expanded(child: Text('Prefilled QR code', style: TextStyle(fontSize: 18),)),
+                              Icon(Icons.arrow_forward_ios, size: 20),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              SizedBox(height: 20,),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  get divider {
+    return Divider(
+      height: 0,
+      indent: 50,
+      thickness: 0.5,
+      color: Colors.grey[500],
+    );
+  }
 }

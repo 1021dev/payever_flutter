@@ -11,6 +11,8 @@ import 'package:payever/checkout/views/workshop/prefilled_qr_screen.dart';
 import 'package:payever/checkout/views/workshop/subview/work_shop_view.dart';
 import 'package:payever/checkout/widgets/workshop_top_bar.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:payever/settings/widgets/app_bar.dart';
 import 'checkout_switch_screen.dart';
 
 class WorkshopScreen extends StatefulWidget {
@@ -69,7 +71,11 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
       child: BlocBuilder<WorkshopScreenBloc, WorkshopScreenState>(
         bloc: screenBloc,
         builder: (BuildContext context, state) {
-          return _body(state);
+          return Scaffold(
+            appBar: Appbar(state.defaultCheckout.name),
+              body: SafeArea(
+                  bottom: false,
+                  child: BackgroundBase(true, body: _body(state))));
         },
       ),
     );

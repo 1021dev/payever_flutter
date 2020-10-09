@@ -68,7 +68,7 @@ class _DashboardAdvertisingViewState extends State<DashboardAdvertisingView> {
                 child: Text(
                   "Start getting new customers",
                   softWrap: true,
-                  style: TextStyle(fontSize: 12),
+                  style: TextStyle(fontSize: 12, color: Colors.white),
                 ),
               ),
             ),
