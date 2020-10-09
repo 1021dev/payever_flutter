@@ -6,31 +6,47 @@ import 'package:payever/checkout/models/models.dart';
 import 'package:payever/checkout/widgets/section_item.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
+import 'package:payever/commons/views/custom_elements/custom_elements.dart';
+import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/theme.dart';
 
 class SectionsScreen extends StatefulWidget {
-  final CheckoutScreenBloc checkoutScreenBloc;
+  final CheckoutScreenBloc screenBloc;
 
-  SectionsScreen({this.checkoutScreenBloc,});
+  SectionsScreen(this.screenBloc);
+
   @override
-  _SectionsScreenState createState() => _SectionsScreenState();
+  _SectionsScreenState createState() => _SectionsScreenState(screenBloc);
 }
 
 class _SectionsScreenState extends State<SectionsScreen> {
+  final CheckoutScreenBloc screenBloc;
+
   bool isExpandedSection1 = false;
   bool isExpandedSection2 = false;
   bool isExpandedSection3 = false;
 
+  _SectionsScreenState(this.screenBloc);
+
   @override
-  Widget build(BuildContext context) {
-    return _body();
+  void initState() {
+    screenBloc.add(GetSectionDetails());
+    super.initState();
   }
 
-  Widget _body() {
+  @override
+  Widget build(BuildContext context) {
     return BlocBuilder<CheckoutScreenBloc, CheckoutScreenState>(
-      bloc: widget.checkoutScreenBloc,
+      bloc: screenBloc,
       builder: (BuildContext context, state) {
-        return state.addSection == 0 ? _getBody(state) : _getAddSectionWidget(state);
+        return Scaffold(
+            appBar: Appbar('Sections'),
+            body: SafeArea(
+                bottom: false,
+                child: BackgroundBase(true,
+                    body: state.addSection == 0
+                        ? _getBody(state)
+                        : _getAddSectionWidget(state))));
       },
     );
   }
@@ -58,13 +74,14 @@ class _SectionsScreenState extends State<SectionsScreen> {
                     },
                     sections: state.sections1,
                     onReorder: (oldIndex, newIndex) {
-                      widget.checkoutScreenBloc.add(ReorderSection1Event(oldIndex: oldIndex, newIndex: newIndex));
+                      screenBloc.add(ReorderSection1Event(
+                          oldIndex: oldIndex, newIndex: newIndex));
                     },
                     onDelete: (Section section) {
-                      widget.checkoutScreenBloc.add(RemoveSectionEvent(section: section));
+                      screenBloc.add(RemoveSectionEvent(section: section));
                     },
                     onEdit: () {
-                      widget.checkoutScreenBloc.add(AddSectionEvent(section: 1));
+                      screenBloc.add(AddSectionEvent(section: 1));
                     },
                   ),
                   Divider(
@@ -83,13 +100,14 @@ class _SectionsScreenState extends State<SectionsScreen> {
                     },
                     sections: state.sections2,
                     onReorder: (oldIndex, newIndex) {
-                      widget.checkoutScreenBloc.add(ReorderSection2Event(oldIndex: oldIndex, newIndex: newIndex));
+                      screenBloc.add(ReorderSection2Event(
+                          oldIndex: oldIndex, newIndex: newIndex));
                     },
                     onDelete: (Section section) {
-                      widget.checkoutScreenBloc.add(RemoveSectionEvent(section: section));
+                      screenBloc.add(RemoveSectionEvent(section: section));
                     },
                     onEdit: () {
-                      widget.checkoutScreenBloc.add(AddSectionEvent(section: 2));
+                      screenBloc.add(AddSectionEvent(section: 2));
                     },
                   ),
                   Divider(
@@ -108,12 +126,11 @@ class _SectionsScreenState extends State<SectionsScreen> {
                     },
                     sections: [],
                     onReorder: (oldIndex, newIndex) {
-                      widget.checkoutScreenBloc.add(ReorderSection3Event(oldIndex: oldIndex, newIndex: newIndex));
+                      screenBloc.add(ReorderSection3Event(
+                          oldIndex: oldIndex, newIndex: newIndex));
                     },
-                    onDelete: (Section section) {
-                    },
-                    onEdit: () {
-                    },
+                    onDelete: (Section section) {},
+                    onEdit: () {},
                   ),
                   Divider(
                     height: 0,
@@ -128,22 +145,24 @@ class _SectionsScreenState extends State<SectionsScreen> {
                         bottomRight: Radius.circular(10),
                       ),
                     ),
-                    child: state.sectionUpdate ? Center(
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                      ),
-                    ) : MaterialButton(
-                      onPressed: () {
-                        widget.checkoutScreenBloc.add(UpdateCheckoutSections());
-                      },
-                      color: overlayBackground(),
-                      child: Text(
-                        'Save',
-                        style: TextStyle(
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
+                    child: state.sectionUpdate
+                        ? Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : MaterialButton(
+                            onPressed: () {
+                              screenBloc.add(UpdateCheckoutSections());
+                            },
+                            color: overlayBackground(),
+                            child: Text(
+                              'Save',
+                              style: TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
                   )
                 ],
               ),
@@ -155,7 +174,9 @@ class _SectionsScreenState extends State<SectionsScreen> {
   }
 
   Widget _getAddSectionWidget(CheckoutScreenState state) {
-    List<Section> sections = state.addSection == 1 ? state.availableSections1: state.availableSections2;
+    List<Section> sections = state.addSection == 1
+        ? state.availableSections1
+        : state.availableSections2;
     return Container(
       width: Measurements.width,
       padding: EdgeInsets.all(16),
@@ -169,7 +190,9 @@ class _SectionsScreenState extends State<SectionsScreen> {
                 Container(
                   height: 50,
                   color: Colors.black54,
-                  padding: EdgeInsets.only(left: 16,),
+                  padding: EdgeInsets.only(
+                    left: 16,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
@@ -178,51 +201,60 @@ class _SectionsScreenState extends State<SectionsScreen> {
                       ),
                       CloseButton(
                         onPressed: () {
-                          widget.checkoutScreenBloc.add(AddSectionEvent(section: 0));
+                          screenBloc.add(AddSectionEvent(section: 0));
                         },
                       )
                     ],
                   ),
                 ),
-                sections.length == 0 ? Container(
-                  height: 50,
-                  padding: EdgeInsets.only(left: 16),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        'No available sections',
-                      ),
-                    ],
-                  ),
-                ) : ListView.separated(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return Container(
-                      height: 50,
-                      child: SizedBox.expand(
-                        child: MaterialButton(
-                          onPressed: () {
-                            widget.checkoutScreenBloc.add(AddSectionToStepEvent(section: sections[index], step: state.addSection));
-                          },
-                          child: Row(
-                            children: <Widget>[
-                              Icon(Icons.add),
-                              SizedBox(width: 8,),
-                              Text(
-                                getTitleFromCode(sections[index].code),
-                              ),
-                            ],
-                          ),
+                sections.length == 0
+                    ? Container(
+                        height: 50,
+                        padding: EdgeInsets.only(left: 16),
+                        child: Row(
+                          children: <Widget>[
+                            Text(
+                              'No available sections',
+                            ),
+                          ],
                         ),
+                      )
+                    : ListView.separated(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return Container(
+                            height: 50,
+                            child: SizedBox.expand(
+                              child: MaterialButton(
+                                onPressed: () {
+                                  screenBloc.add(AddSectionToStepEvent(
+                                      section: sections[index],
+                                      step: state.addSection));
+                                },
+                                child: Row(
+                                  children: <Widget>[
+                                    Icon(Icons.add),
+                                    SizedBox(
+                                      width: 8,
+                                    ),
+                                    Text(
+                                      getTitleFromCode(sections[index].code),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                        separatorBuilder: (context, index) {
+                          return Divider(
+                            color: Colors.transparent,
+                            height: 0,
+                          );
+                        },
+                        itemCount: sections.length,
                       ),
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return Divider(color: Colors.transparent, height: 0,);
-                  },
-                  itemCount: sections.length,
-                ),
               ],
             ),
           ),
