@@ -734,11 +734,20 @@ class GlobalUtils {
 
   static bool isTablet(BuildContext context) {
     bool _isPortrait = GlobalUtils.isPortrait(context);
-    if (_isPortrait)
-      return MediaQuery.of(context).size.width > 600;
+    bool isTablet;
 
-    return MediaQuery.of(context).size.height > 600;
+    if (_isPortrait)
+      isTablet = MediaQuery.of(context).size.width > 600;
+    else
+      isTablet = MediaQuery.of(context).size.height > 600;
+    if (mainWidth == 0) {
+      mainWidth = isTablet ? Measurements.width * 0.7 : Measurements.width;
+    }
+    return isTablet;
   }
+
+  static double mainWidth = 0;
+
 }
 
 String imageBase = Env.storage + '/images/';

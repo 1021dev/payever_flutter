@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/shop/shop_event.dart';
+import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
@@ -70,7 +71,8 @@ class _ShopSettingScreenState extends State<ShopSettingScreen> {
 
   Widget _body(ShopScreenState state) {
     return Container(
-      padding: EdgeInsets.only(left: 16, right: 16),
+      width: GlobalUtils.mainWidth,
+      padding: EdgeInsets.symmetric(horizontal: 16),
       child: Center(
         child: BlurEffectView(
           child: Wrap(

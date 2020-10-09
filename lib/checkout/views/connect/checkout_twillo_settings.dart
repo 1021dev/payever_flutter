@@ -12,15 +12,9 @@ import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/pos/views/pos_twillo_add_phonenumber.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
+import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/theme.dart';
 
-bool _isPortrait;
-bool _isTablet;
-
-List<String> dropdownItems = [
-  'Verify by code',
-  'Verify by ID',
-];
 class CheckoutTwilioScreen extends StatefulWidget {
 
   final CheckoutScreenBloc screenBloc;
@@ -35,13 +29,7 @@ class CheckoutTwilioScreen extends StatefulWidget {
 
 class _CheckoutTwilioScreenState extends State<CheckoutTwilioScreen> {
 
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
-  String wallpaper;
-  String selectedState = '';
   int isOpened = 0;
-
-  var imageData;
 
   @override
   void initState() {
@@ -58,14 +46,6 @@ class _CheckoutTwilioScreenState extends State<CheckoutTwilioScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
-    Measurements.height = (_isPortrait
-        ? MediaQuery.of(context).size.height
-        : MediaQuery.of(context).size.width);
-    Measurements.width = (_isPortrait
-        ? MediaQuery.of(context).size.width
-        : MediaQuery.of(context).size.height);
-    _isTablet = Measurements.width < 600 ? false : true;
 
     return BlocListener(
       bloc: widget.screenBloc,
@@ -89,53 +69,11 @@ class _CheckoutTwilioScreenState extends State<CheckoutTwilioScreen> {
     );
   }
 
-  Widget _appBar(CheckoutScreenState state) {
-    return AppBar(
-      centerTitle: false,
-      elevation: 0,
-      automaticallyImplyLeading: false,
-      backgroundColor: Colors.black87,
-      title: Row(
-        children: <Widget>[
-          Text(
-            'Twilio',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-      actions: <Widget>[
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
-            Icons.close,
-            color: Colors.white,
-            size: 24,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        Padding(
-          padding: EdgeInsets.only(right: 16),
-        ),
-      ],
-    );
-  }
-
   Widget _body(CheckoutScreenState state) {
     return Scaffold(
       backgroundColor: Colors.black,
       resizeToAvoidBottomPadding: false,
-      appBar: _appBar(state),
+      appBar: Appbar('Twilio'),
       body: SafeArea(
         bottom: false,
         child: BackgroundBase(
