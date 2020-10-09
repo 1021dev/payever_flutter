@@ -4,6 +4,8 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/models/app_widget.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 
+import '../../theme.dart';
+
 class DashboardAdvertisingView extends StatefulWidget {
   final AppWidget appWidget;
   final BusinessApps businessApps;
@@ -28,6 +30,7 @@ class _DashboardAdvertisingViewState extends State<DashboardAdvertisingView> {
   @override
   Widget build(BuildContext context) {
     return BlurEffectView(
+      isDashboard: true,
       padding: EdgeInsets.fromLTRB(14, 12, 14, 14),
       child: Column(
         children: [
@@ -59,7 +62,7 @@ class _DashboardAdvertisingViewState extends State<DashboardAdvertisingView> {
               height: 50,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(6),
-                  color: Colors.black26
+                  color: overlayDashboardButtonsBackground(),
               ),
               child: Center(
                 child: Text(

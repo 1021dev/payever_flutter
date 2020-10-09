@@ -10,6 +10,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
+import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/theme.dart';
 
 List<String> dropdownItems = [
@@ -36,10 +37,6 @@ class PosQRAppScreen extends StatefulWidget {
 
 class _PosQRAppScreenState extends State<PosQRAppScreen> {
 
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
-  String wallpaper;
-  String selectedState = '';
   bool isOpened = true;
 
   @override
@@ -91,51 +88,10 @@ class _PosQRAppScreenState extends State<PosQRAppScreen> {
     );
   }
 
-  Widget _appBar(PosScreenState state) {
-    return AppBar(
-      centerTitle: false,
-      elevation: 0,
-      automaticallyImplyLeading: false,
-      title: Row(
-        children: <Widget>[
-          Text(
-            Language.getPosTpmStrings('tpm.communications.qr.title'),
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-      actions: <Widget>[
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
-            Icons.close,
-            color: Colors.white,
-            size: 24,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        Padding(
-          padding: EdgeInsets.only(right: 16),
-        ),
-      ],
-    );
-  }
-
   Widget _body(PosScreenState state) {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
-      appBar: _appBar(state),
+      appBar: Appbar(Language.getPosTpmStrings('tpm.communications.qr.title')),
       body: SafeArea(
         bottom: false,
         child: BackgroundBase(

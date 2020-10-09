@@ -439,6 +439,51 @@ class _PosScreenState extends State<PosScreen> {
                         Navigator.push(
                           context,
                           PageTransition(
+                            child: PosQRAppScreen(
+                              businessId: screenBloc.state.activeBusiness.id,
+                              screenBloc: screenBloc,
+                              businessName: screenBloc.state.activeBusiness.name,
+                            ),
+                            type: PageTransitionType.fade,
+                            duration: Duration(milliseconds: 500),
+                          ),
+                        );
+                      },
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 24,
+                            height: 24,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: NetworkImage(
+                                  '${Env.cdnIcon}icon-comerceos-connect-not-installed.png',
+                                ),
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 12,),
+                          Expanded(child: Text('QR Generator', style: TextStyle(fontSize: 18),)),
+                          Icon(Icons.arrow_forward_ios, size: 20),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    height: 0,
+                    indent: 50,
+                    thickness: 0.5,
+                    color: Colors.grey[500],
+                  ),
+                  Container(
+                    height: 61,
+                    padding: EdgeInsets.only(left: 14, right: 14),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          PageTransition(
                             child: PosConnectInitScreen(
                               screenBloc: screenBloc,
                             ),

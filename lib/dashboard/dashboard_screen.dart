@@ -320,29 +320,56 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
 
     // Mail
-   if (widgets.where((element) => element.type == 'marketing' ).toList().length > 0) {
-     appWidget = widgets.where((element) => element.type == 'marketing' ).toList().first;
-     businessApp = businessApps.where((element) => element.code == 'marketing' ).toList().first;
-     dashboardWidgets.add(_mailView(state, appWidget, businessApp));
-   }
+    if (widgets
+            .where((element) => element.type == 'marketing')
+            .toList()
+            .length >
+        0) {
+      appWidget = widgets
+          .where((element) => element.type == 'marketing')
+          .toList()
+          .first;
+      businessApp = businessApps
+          .where((element) => element.code == 'marketing')
+          .toList()
+          .first;
+      dashboardWidgets.add(_mailView(state, appWidget, businessApp));
+    }
 
     // Studio
-   if (widgets.where((element) => element.type == 'studio' ).toList().length > 0) {
-     appWidget = widgets.where((element) => element.type == 'studio' ).toList().first;
-     businessApp = businessApps.where((element) => element.code == 'studio' ).toList().length > 0
-         ? businessApps.where((element) => element.code == 'studio' ).toList().first : null;
-     dashboardWidgets.add(_studioView(state, appWidget, businessApp));
-   }
+    if (widgets.where((element) => element.type == 'studio').toList().length >
+        0) {
+      appWidget =
+          widgets.where((element) => element.type == 'studio').toList().first;
+      businessApp = businessApps
+                  .where((element) => element.code == 'studio')
+                  .toList()
+                  .length >
+              0
+          ? businessApps
+              .where((element) => element.code == 'studio')
+              .toList()
+              .first
+          : null;
+      dashboardWidgets.add(_studioView(state, appWidget, businessApp));
+    }
 
     // Ads
-   if (widgets.where((element) => element.type == 'ads' ).toList().length > 0) {
-     appWidget = widgets.where((element) => element.type == 'ads' ).toList().first;
-     businessApp = businessApps.where((element) => element.code == 'ads' ).toList().length > 0
-         ? businessApps.where((element) => element.code == 'ads' ).toList().first : null;
-     dashboardWidgets.add(
-         _adsView(state, appWidget, businessApp)
-     );
-   }
+    if (widgets.where((element) => element.type == 'ads').toList().length > 0) {
+      appWidget =
+          widgets.where((element) => element.type == 'ads').toList().first;
+      businessApp = businessApps
+                  .where((element) => element.code == 'ads')
+                  .toList()
+                  .length >
+              0
+          ? businessApps
+              .where((element) => element.code == 'ads')
+              .toList()
+              .first
+          : null;
+      dashboardWidgets.add(_adsView(state, appWidget, businessApp));
+    }
 
     // Contacts
     if (widgets.where((element) => element.type == 'contacts').toList().length >

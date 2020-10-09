@@ -4,6 +4,8 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/models/app_widget.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 
+import '../../theme.dart';
+
 class DashboardStudioView extends StatefulWidget {
   final VoidCallback onOpen;
   final AppWidget appWidget;
@@ -62,7 +64,7 @@ class _DashboardStudioViewState extends State<DashboardStudioView> {
               height: 50,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(6),
-                  color: Colors.black26
+                  color: overlayDashboardButtonsBackground(),
               ),
               child: Center(
                 child: Text(
