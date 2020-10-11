@@ -66,16 +66,12 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    Text(
-                      'APPS',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
+                Text(
+                  'APPS',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
                 InkWell(
                   onTap: widget.onTapEdit,
@@ -99,9 +95,7 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
                 ),
               ],
             ),
-            Padding(
-              padding: EdgeInsets.only(top: 8),
-            ),
+            SizedBox(height: 14,),
             if (businessApps != null) Expanded(
               child: GridView.count(
                 crossAxisCount: widget.isTablet ? 6 : 4,

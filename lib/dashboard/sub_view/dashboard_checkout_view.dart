@@ -1,11 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/models/app_widget.dart';
 import 'package:payever/commons/models/business_apps.dart';
 import 'package:payever/commons/models/models.dart';
-import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
@@ -62,94 +60,17 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
               padding: EdgeInsets.fromLTRB(14, 0, 14, 0),
               child: Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        Language.getCommerceOSStrings('dashboard.apps.checkout').toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      Language.getCommerceOSStrings('dashboard.apps.checkout').toUpperCase(),
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
                       ),
-                      Row(
-                        children: [
-                          if (widget.checkouts.length > 0)
-                            InkWell(
-                            onTap: widget.onOpen,
-                            child: Container(
-                              height: 20,
-                              width: 40,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: overlayDashboardButtonsBackground(),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  Language.getCommerceOSStrings('actions.open'),
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          widget.notifications.length > 0 ? SizedBox(width: 8): Container(),
-                          widget.notifications.length > 0 ? Container(
-                            height: 20,
-                            width: 40,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: overlayBackground(),
-                            ),
-                            child:  Row(
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: Center(
-                                    child: Text(
-                                      '${widget.notifications.length}',
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        isExpanded = !isExpanded;
-                                      });
-                                    },
-                                    child: Container(
-                                      width: 21,
-                                      height: 21,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10.5),
-                                      ),
-                                      child: Center(
-                                        child: SvgPicture.asset(
-                                          isExpanded ? 'assets/images/closeicon.svg' : 'assets/images/icon_plus.svg',
-                                          width: 8,
-                                          color: iconColor(),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ): Container(),
-                        ],
-                      )
-                    ],
+                    ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 8),
-                  ),
+                 SizedBox(height: 14,),
                   widget.checkouts.length > 0
                       ? Row(
                     children: [

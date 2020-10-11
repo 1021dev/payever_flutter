@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/models/app_widget.dart';
-import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/theme.dart';
 
@@ -40,39 +38,17 @@ class _DashboardSettingsViewState extends State<DashboardSettingsView> {
       child: Container(
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  Language.getCommerceOSStrings('info_boxes.settings.heading').toUpperCase(),
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                  ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                Language.getCommerceOSStrings('info_boxes.settings.heading').toUpperCase(),
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
                 ),
-                InkWell(
-                  onTap: widget.onTapOpen,
-                  child: Container(
-                    height: 20,
-                    width: 40,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: overlayDashboardButtonsBackground(),
-                    ),
-                    child: Center(
-                      child: Text(
-                        Language.getCommerceOSStrings('actions.open'),
-                        style: TextStyle(
-                            fontSize: 10,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
-            SizedBox(height: 8),
+            SizedBox(height: 14),
             Row(
               children: [
                 Expanded(

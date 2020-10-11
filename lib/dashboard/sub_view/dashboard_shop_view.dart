@@ -1,7 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:payever/commons/models/app_widget.dart';
 import 'package:payever/commons/models/business_apps.dart';
 import 'package:payever/commons/models/models.dart';
@@ -74,22 +73,17 @@ class _DashboardShopViewState extends State<DashboardShopView> {
               padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
               child: Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        Language.getCommerceOSStrings('dashboard.apps.store').toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      Language.getCommerceOSStrings('dashboard.apps.store').toUpperCase(),
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
                       ),
-
-                    ],
+                    ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 8),
-                  ),
+                  SizedBox(height: 14,),
                   widget.isLoading ? Container(
                     height: 50,
                     child: Center(

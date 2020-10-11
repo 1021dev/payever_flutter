@@ -54,91 +54,17 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
               padding: EdgeInsets.fromLTRB(14, 0, 14, 0),
               child: Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        Language.getCommerceOSStrings('dashboard.apps.connect').toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      Language.getCommerceOSStrings('dashboard.apps.connect').toUpperCase(),
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
                       ),
-                      Row(
-                        children: [
-                          InkWell(
-                            onTap: widget.tapOpen,
-                            child: Container(
-                              height: 20,
-                              width: 40,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: overlayDashboardButtonsBackground(),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  Language.getCommerceOSStrings('actions.open'),
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          widget.notifications.length > 0 ? SizedBox(width: 8): Container(),
-                          widget.notifications.length > 0 ? Container(
-                            height: 20,
-                            width: 40,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.white10,
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: Center(
-                                    child: Text(
-                                      '${widget.notifications.length}',
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        isExpanded = !isExpanded;
-                                      });
-                                    },
-                                    child: Container(
-                                      width: 21,
-                                      height: 21,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(10.5),
-                                      ),
-                                      child: Center(
-                                        child: SvgPicture.asset(
-                                          isExpanded ? 'assets/images/closeicon.svg' : 'assets/images/icon_plus.svg',
-                                          width: 8,
-                                          color: iconColor(),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ): Container(),
-                        ],
-                      )
-                    ],
+                    ),
                   ),
-                  SizedBox(height: 8),
+                  SizedBox(height: 14),
                   widget.connects == null ? Container(
                     height: 72,
                     child: Center(
