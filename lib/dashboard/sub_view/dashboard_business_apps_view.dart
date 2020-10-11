@@ -58,51 +58,30 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
     businessApps.remove(setting);
     businessApps.add(setting);
     return BlurEffectView(
-      padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 18),
       isDashboard: true,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
+          InkWell(
+            onTap: widget.onTapEdit,
+            child: Container(
+              width: double.infinity,
+              alignment: Alignment.centerLeft,
+              child: Text(
                 'APPS',
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              InkWell(
-                onTap: widget.onTapEdit,
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  height: 20,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: overlayDashboardButtonsBackground(),
-                  ),
-                  child: Center(
-                    child: Text(
-                      Language.getCommerceOSStrings('edit_apps.enter_button'),
-                      style: TextStyle(
-                        fontSize: 10,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
           SizedBox(
             height: 14,
           ),
           if (businessApps != null)
             _gridView(businessApps),
-          Padding(
-            padding: EdgeInsets.only(top: 16),
-          ),
         ],
       ),
     );

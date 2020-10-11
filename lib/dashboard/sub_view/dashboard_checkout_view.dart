@@ -55,10 +55,12 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
         isDashboard: true,
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
+            InkWell(
+              onTap: widget.onOpen,
+              child: Container(
+                width: double.infinity,
+                alignment: Alignment.centerLeft,
+                child: Text(
                   Language.getCommerceOSStrings('dashboard.apps.checkout')
                       .toUpperCase(),
                   style: TextStyle(
@@ -66,27 +68,7 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                InkWell(
-                  onTap: widget.onOpen,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    height: 20,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: overlayDashboardButtonsBackground(),
-                    ),
-                    child: Center(
-                      child: Text(
-                        Language.getCommerceOSStrings('actions.open'),
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
             SizedBox(
               height: 14,

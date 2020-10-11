@@ -131,7 +131,7 @@ class _WorkshopViewState extends State<WorkshopView> {
     if (widget.checkoutScreenBloc != null) {
       Future.delayed(Duration(milliseconds: 1000)).then((value) =>
           Fluttertoast.showToast(
-              msg: 'Please entry Amount and Reference to get Prefilled Link'));
+              msg: 'Please entry Amount and Reference to get Prefilled Link', toastLength: Toast.LENGTH_LONG));
     }
     super.initState();
   }

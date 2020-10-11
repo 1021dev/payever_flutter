@@ -38,37 +38,19 @@ class _DashboardSettingsViewState extends State<DashboardSettingsView> {
       child: Container(
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
+            InkWell(
+              onTap: widget.onTapOpen,
+              child: Container(
+                width: double.infinity,
+                alignment: Alignment.centerLeft,
+                child: Text(
                   Language.getCommerceOSStrings('info_boxes.settings.heading').toUpperCase(),
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                InkWell(
-                  onTap: widget.onTapOpen,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    height: 20,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: overlayDashboardButtonsBackground(),
-                    ),
-                    child: Center(
-                      child: Text(
-                        Language.getCommerceOSStrings('actions.open'),
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
             SizedBox(height: 14),
             Column(
