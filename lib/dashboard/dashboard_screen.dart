@@ -1025,16 +1025,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           );
         } else {
-          navigateCheckoutApp();
-//          _navigateAppsScreen(
-//            state,
-//            CreateEditCheckoutScreen(
-//              businessId: state.activeBusiness.id,
-//              checkout: state.defaultCheckout,
-//              fromDashBoard: true,
-//              screenBloc: CheckoutSwitchScreenBloc(),
-//            ),
-//          );
+          _navigateAppsScreen(
+            state,
+            CreateEditCheckoutScreen(
+              businessId: state.activeBusiness.id,
+              checkout: state.defaultCheckout,
+              fromDashBoard: true,
+              screenBloc: CheckoutSwitchScreenBloc(),
+            ),
+          );
         }
       },
     );

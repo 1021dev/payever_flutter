@@ -55,16 +55,38 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
         isDashboard: true,
         child: Column(
           children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                Language.getCommerceOSStrings('dashboard.apps.checkout')
-                    .toUpperCase(),
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  Language.getCommerceOSStrings('dashboard.apps.checkout')
+                      .toUpperCase(),
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
+                InkWell(
+                  onTap: widget.onOpen,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    height: 20,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: overlayDashboardButtonsBackground(),
+                    ),
+                    child: Center(
+                      child: Text(
+                        Language.getCommerceOSStrings('actions.open'),
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             SizedBox(
               height: 14,
@@ -87,7 +109,7 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                             child: Text(
                               'Link',
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: 18,
                                 color: Colors.white,
                               ),
                             ),
@@ -112,7 +134,7 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                                   'menu.customer.manage'),
                               softWrap: true,
                               style: TextStyle(
-                                  fontSize: 16, color: Colors.white),
+                                  fontSize: 18, color: Colors.white),
                             ),
                           ),
                         ),

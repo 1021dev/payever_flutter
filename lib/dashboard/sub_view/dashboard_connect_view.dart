@@ -46,12 +46,11 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
 
     if (widget.businessApps.setupStatus == 'completed') {
       return BlurEffectView(
-        padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 18),
         isDashboard: true,
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.fromLTRB(14, 0, 14, 0),
               child: Column(
                 children: [
                   Align(
@@ -132,7 +131,7 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                                   Language.getCommerceOSStrings('dashboard.apps.connect'),
                                   softWrap: true,
                                   style: TextStyle(
-                                    fontSize: 16,
+                                    fontSize: 18,
                                     color: Colors.white,
                                   ),
                                 ),
@@ -143,7 +142,7 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                       )
                     ],
                   ),
-                  SizedBox(height: 12),
+
                 ],
               ),
             ),
@@ -167,48 +166,52 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
         ),
       );
     } else {
-      return BlurEffectView(
-        padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
-        isDashboard: true,
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
-              child: Column(
-                children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage('${Env.cdnIcon}icon-comerceos-connect-not-installed.png'),
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    Language.getWidgetStrings(widget.appWidget.title),
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                ],
-              ),
-            ),
-            SizedBox(height: 12),
-            DashboardSetupButtons(
-              businessApps: widget.businessApps,
-              onTapContinueSetup: widget.onTapContinueSetup,
-              onTapGetStarted: widget.onTapGetStarted,
-              onTapLearnMore: widget.onTapLearnMore,
-            ),
-          ],
-        ),
-      );
+      return _unInstalledView();
     }
+  }
+
+  Widget _unInstalledView() {
+    return  BlurEffectView(
+      padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
+      isDashboard: true,
+      child: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+            child: Column(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage('${Env.cdnIcon}icon-comerceos-connect-not-installed.png'),
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  Language.getWidgetStrings(widget.appWidget.title),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 4),
+              ],
+            ),
+          ),
+          SizedBox(height: 12),
+          DashboardSetupButtons(
+            businessApps: widget.businessApps,
+            onTapContinueSetup: widget.onTapContinueSetup,
+            onTapGetStarted: widget.onTapGetStarted,
+            onTapLearnMore: widget.onTapLearnMore,
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _itemBuilderDDetails(BuildContext context, int index) {

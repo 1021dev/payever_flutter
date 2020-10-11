@@ -206,7 +206,7 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
                     child: Text(
                       Language.getCommerceOSStrings(title),
                       style: TextStyle(
-                        fontSize: 12,
+                        fontSize: 11,
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),

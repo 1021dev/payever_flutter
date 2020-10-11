@@ -70,49 +70,49 @@ class ProductCell extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(8.0),
-                    bottomRight: Radius.circular(8.0),
-                  ),
-                  gradient: LinearGradient(
-                    colors: [
-                      Colors.transparent,
-                      Color.fromRGBO(0, 0, 0, 1)
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  )),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  SizedBox(height: 14),
-                  Text(
-                    product.name,
-                    softWrap: true,
-                    maxLines: 1,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    '$currency${product.price}',
-                    softWrap: true,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.grey[500],
-                      fontSize: 12,
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                ],
-              ),
-            ),
+//            Container(
+//              width: double.infinity,
+//              decoration: BoxDecoration(
+//                  borderRadius: BorderRadius.only(
+//                    bottomLeft: Radius.circular(8.0),
+//                    bottomRight: Radius.circular(8.0),
+//                  ),
+//                  gradient: LinearGradient(
+//                    colors: [
+//                      Colors.transparent,
+//                      Color.fromRGBO(0, 0, 0, 1)
+//                    ],
+//                    begin: Alignment.topCenter,
+//                    end: Alignment.bottomCenter,
+//                  )),
+//              child: Column(
+//                mainAxisSize: MainAxisSize.min,
+//                children: <Widget>[
+//                  SizedBox(height: 14),
+//                  Text(
+//                    product.name,
+//                    softWrap: true,
+//                    maxLines: 1,
+//                    textAlign: TextAlign.center,
+//                    style: TextStyle(
+//                      color: Colors.white,
+//                      fontSize: 12,
+//                      fontWeight: FontWeight.bold,
+//                    ),
+//                  ),
+//                  Text(
+//                    '$currency${product.price}',
+//                    softWrap: true,
+//                    textAlign: TextAlign.center,
+//                    style: TextStyle(
+//                      color: Colors.grey[500],
+//                      fontSize: 12,
+//                    ),
+//                  ),
+//                  SizedBox(height: 4),
+//                ],
+//              ),
+//            ),
           ],
         ),
       ),
