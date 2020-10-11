@@ -282,3 +282,24 @@ class BusinessUploadEvent extends CheckoutScreenEvent {
   @override
   List<Object> get props => [body];
 }
+
+class CheckoutUpdateChannelSetFlowEvent extends CheckoutScreenEvent {
+  final ChannelSetFlow channelSetFlow;
+  CheckoutUpdateChannelSetFlowEvent(this.channelSetFlow);
+
+  @override
+  List<Object> get props => [channelSetFlow];
+}
+
+class CheckoutGetPrefilledLinkEvent extends CheckoutScreenEvent {
+  final bool isCopyLink;
+
+  CheckoutGetPrefilledLinkEvent({this.isCopyLink = true});
+
+  @override
+  List<Object> get props => [
+    this.isCopyLink,
+  ];
+}
+
+class CheckoutGetPrefilledQRCodeEvent extends CheckoutScreenEvent {}

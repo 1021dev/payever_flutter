@@ -1,3 +1,4 @@
+import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -25,7 +26,7 @@ import 'package:the_validator/the_validator.dart';
 import '../../../../theme.dart';
 
 class WorkshopView extends StatefulWidget {
-  final WorkshopScreenBloc workshopScreenBloc;
+
   final GlobalKey formKeyOrder;
   final Business business;
   final Terminal terminal;
@@ -35,9 +36,10 @@ class WorkshopView extends StatefulWidget {
   final Function onTapClose;
   final bool fromCart;
   final List<CartItem>cart;
+  final CheckoutScreenBloc checkoutScreenBloc;
+
   const WorkshopView(
-      {this.workshopScreenBloc,
-      this.formKeyOrder,
+      {this.formKeyOrder,
       this.business,
       this.terminal,
       this.channelSetId,
@@ -45,7 +47,8 @@ class WorkshopView extends StatefulWidget {
       this.channelSetFlow,
       this.onTapClose,
       this.cart,
-      this.fromCart = false});
+      this.fromCart = false,
+      this.checkoutScreenBloc});
 
   @override
   _WorkshopViewState createState() => _WorkshopViewState();
@@ -89,8 +92,6 @@ class _WorkshopViewState extends State<WorkshopView> {
   final _formKeyBilling = GlobalKey<FormState>();
   final _formKeyPayment = GlobalKey<FormState>();
 
-  bool fromCheckout = true;
-
   List<String> titles = [
     'ACCOUNT',
     'BILLING & SHIPPING',
@@ -109,20 +110,15 @@ class _WorkshopViewState extends State<WorkshopView> {
 
   @override
   void initState() {
-    fromCheckout = widget.workshopScreenBloc != null;
-    if (fromCheckout) {
-      screenBloc = widget.workshopScreenBloc;
-    } else {
-      screenBloc =
-      WorkshopScreenBloc()
-        ..add(WorkshopScreenInitEvent(
-          activeBusiness: widget.business,
-          activeTerminal: widget.terminal,
-          channelSetId: widget.channelSetId,
-          channelSetFlow: widget.channelSetFlow,
-          defaultCheckout: widget.defaultCheckout,
-        ));
-    }
+    screenBloc =
+    WorkshopScreenBloc(checkoutScreenBloc: widget.checkoutScreenBloc)
+      ..add(WorkshopScreenInitEvent(
+        activeBusiness: widget.business,
+        activeTerminal: widget.terminal,
+        channelSetId: widget.channelSetId,
+        channelSetFlow: widget.channelSetFlow,
+        defaultCheckout: widget.defaultCheckout,
+      ));
     if (widget.formKeyOrder != null) {
       _formKeyOrder = widget.formKeyOrder;
     } else {
@@ -134,10 +130,7 @@ class _WorkshopViewState extends State<WorkshopView> {
 
   @override
   void dispose() {
-    if (!fromCheckout) {
-      screenBloc.close();
-    }
-    super.dispose();
+    screenBloc.close();
   }
 
   @override

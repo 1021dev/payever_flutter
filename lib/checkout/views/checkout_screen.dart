@@ -71,6 +71,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   int selectedIndex = 0;
   CheckoutScreenBloc screenBloc;
   double mainWidth = 0;
+  final _formKeyOrder = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -194,19 +195,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         padding: EdgeInsets.only(left: 14, right: 14),
                         child: InkWell(
                           onTap: () {
-                            Navigator.push(
-                                context,
-                                PageTransition(
-                                    child: WorkshopView(
-                                      business: state.activeBusiness,
-                                      terminal: state.activeTerminal,
-                                      // channelSetFlow: state.channelSetFlow,
-                                      channelSetId: state.channelSet.id,
-                                      defaultCheckout: state.defaultCheckout,
-                                      fromCart: false,
-                                      onTapClose: () {},
-                                    ),
-                                    type: PageTransitionType.fade));
+                            navigateWorkshopView(state);
                           },
                           child: Row(
                             children: [
@@ -370,7 +359,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       padding: EdgeInsets.only(left: 14, right: 14),
                       child: InkWell(
                         onTap: () {
-
+                          if (state.channelSetFlow == null ||
+                              state.channelSetFlow.amount < 1 ||
+                              state.channelSetFlow.reference == null) {
+                            navigateWorkshopView(state);
+                          } else {
+                            getPrefilledLink(state, true);
+                          }
                         },
                         child: Row(
                           children: [
@@ -434,17 +429,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       padding: EdgeInsets.only(left: 14, right: 14),
                       child: InkWell(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            PageTransition(
-                              child: CheckoutQRIntegrationScreen(
-                                screenBloc: screenBloc,
-                                title: 'QR',
-                              ),
-                              type: PageTransitionType.fade,
-                              duration: Duration(milliseconds: 500),
-                            ),
-                          );
+                          if (state.channelSetFlow == null ||
+                              state.channelSetFlow.amount < 1 ||
+                              state.channelSetFlow.reference == null) {
+                            navigateWorkshopView(state);
+                          } else {
+                            getPrefilledLink(state, false);
+                          }
                         },
                         child: Row(
                           children: [
@@ -671,6 +662,21 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 
+  void navigateWorkshopView(CheckoutScreenState state) {
+    Navigator.push(
+        context,
+        PageTransition(
+            child: WorkshopView(
+              checkoutScreenBloc: screenBloc,
+              business: state.activeBusiness,
+              terminal: state.activeTerminal,
+              channelSetId: state.channelSet.id,
+              defaultCheckout: state.defaultCheckout,
+              fromCart: false,
+              onTapClose: () {},
+            ),
+            type: PageTransitionType.fade));
+  }
 
   get divider {
     return Divider(
@@ -687,6 +693,18 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       await launch(url);
     } else {
       throw 'Could not launch $url';
+    }
+  }
+
+  void getPrefilledLink(CheckoutScreenState state, bool isCopyLink) {
+    if (_formKeyOrder.currentState.validate()) {
+      num _amount = state.channelSetFlow.amount;
+      String _reference = state.channelSetFlow.reference;
+      if (_amount >= 0 && _reference != null) {
+        screenBloc.add(CheckoutGetPrefilledLinkEvent(isCopyLink: isCopyLink));
+      } else {
+        Fluttertoast.showToast(msg: 'Please set amount and reference.');
+      }
     }
   }
 }

@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/dashboard/dashboard_bloc.dart';
@@ -106,6 +108,12 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       yield* installIntegration(event.integrationId);
     } else if (event is BusinessUploadEvent) {
       yield* uploadBusiness(event.body);
+    } else if (event is CheckoutUpdateChannelSetFlowEvent) {
+      yield state.copyWith(channelSetFlow: event.channelSetFlow);
+    } else if (event is CheckoutGetPrefilledLinkEvent) {
+      yield* getPrefilledLink(event.isCopyLink);
+    } else if (event is CheckoutGetPrefilledQRCodeEvent) {
+      yield* getPrefilledQrcode();
     }
   }
 
@@ -1052,6 +1060,90 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       yield CheckoutScreenConnectInstallStateFailure(error: 'Update Business name failed');
       yield state.copyWith(isUpdating: false);
     }
+  }
+
+  Stream<CheckoutScreenState> getPrefilledLink(bool isCoplyLink) async* {
+    Map<String, dynamic> data = {
+      'flow': state.channelSetFlow.toJson(),
+      'force_choose_payment_only_and_submit': false,
+      'force_no_header': false,
+      'force_no_order': true,
+      'force_payment_only': false,
+      'generate_payment_code': true,
+      'open_next_step_on_init': false,
+    };
+    yield state.copyWith(isLoadingQrcode: true);
+    dynamic qrcodelinkResponse = await api.getChannelSetQRcode(token, data);
+    if (qrcodelinkResponse is Map) {
+      String id = qrcodelinkResponse['id'];
+      String prefilledLink = '${Env.wrapper}/pay/restore-flow-from-code/$id';
+      yield state.copyWith(isLoadingQrcode: !isCoplyLink,
+          prefilledLink: prefilledLink);
+      if (isCoplyLink) {
+        Clipboard.setData(ClipboardData(
+            text:prefilledLink));
+        Fluttertoast.showToast(msg: 'Copied Prefilled Link.');
+      } else {
+        add(CheckoutGetPrefilledQRCodeEvent());
+      }
+    } else {
+      yield state.copyWith(isLoadingQrcode: false);
+    }
+  }
+
+  Stream<CheckoutScreenState> getPrefilledQrcode() async* {
+    if (state.prefilledLink == null || state.prefilledLink.isEmpty) {
+      Fluttertoast.showToast(msg: 'Something wrong.');
+      return;
+    }
+
+    dynamic response = await api.postGenerateTerminalQRCode(
+      token,
+      state.activeBusiness.id,
+      state.activeBusiness.name,
+      '$imageBase${state.activeTerminal.logo}',
+      state.activeTerminal.id,
+      state.prefilledLink,
+    );
+
+    String imageData;
+    if (response is Map) {
+      dynamic form = response['form'];
+      String contentType =
+      form['contentType'] != null ? form['contentType'] : '';
+      dynamic content = form['content'] != null ? form['content'] : null;
+      if (content != null) {
+        List<dynamic> contentData = content[contentType];
+        for (int i = 0; i < contentData.length; i++) {
+          dynamic data = content[contentType][i];
+          if (data['data'] != null) {
+            List<dynamic> list = data['data'];
+            for (dynamic w in list) {
+              if (w[0]['type'] == 'image') {
+                imageData = w[0]['value'];
+              }
+            }
+          }
+        }
+      }
+    }
+    http.Response qrResponse;
+    if (imageData != null) {
+      var headers = {
+        HttpHeaders.authorizationHeader:
+        'Bearer ${GlobalUtils.activeToken.accessToken}',
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+      };
+      print('url => $imageData');
+      qrResponse = await http.get(
+        imageData,
+        headers: headers,
+      );
+    }
+    yield state.copyWith(isLoadingQrcode: false,qrForm: response, qrImage: qrResponse.bodyBytes);
+    await Future.delayed(const Duration(milliseconds: 500));
+    yield state.copyWith(qrForm: null, qrImage: null);
   }
 
 }

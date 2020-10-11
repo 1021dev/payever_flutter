@@ -137,7 +137,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
           ),
           Flexible(
             child: WorkshopView(
-              workshopScreenBloc: screenBloc,
+//              workshopScreenBloc: screenBloc,
               formKeyOrder: _formKeyOrder,
             ),
           ),

@@ -18,6 +18,9 @@ class WorkshopScreenBloc
 
   ApiService api = ApiService();
   String token = GlobalUtils.activeToken.accessToken;
+  final CheckoutScreenBloc checkoutScreenBloc;
+
+  WorkshopScreenBloc({this.checkoutScreenBloc});
 
   @override
   WorkshopScreenState get initialState => WorkshopScreenState();
@@ -56,6 +59,7 @@ class WorkshopScreenBloc
         isLoading: false,
         isReset:true,
       );
+      yield* updateChannelSetFlowOnCheckoutApp(channelSetFlow);
       await Future.delayed(Duration(milliseconds: 100));
       yield state.copyWith(isReset: false);
     } else if (event is PayflowLoginEvent) {
@@ -78,6 +82,7 @@ class WorkshopScreenBloc
       defaultCheckout: defaultCheckout,
       channelSetFlow: channelSetFlow1,
     );
+    yield* updateChannelSetFlowOnCheckoutApp(channelSetFlow1);
     if (!isReload) return;
     dynamic response =
         await api.getCheckoutFlow(token, 'en', channelSetId);
@@ -90,6 +95,7 @@ class WorkshopScreenBloc
       channelSetFlow: channelSetFlow,
       isLoading: false,
     );
+    yield* updateChannelSetFlowOnCheckoutApp(channelSetFlow);
   }
 
   String getDefaultLanguage() {
@@ -124,6 +130,7 @@ class WorkshopScreenBloc
         updatePayflowIndex: -1,
         channelSetFlow: channelSetFlow,
       );
+      yield* updateChannelSetFlowOnCheckoutApp(channelSetFlow);
     }
   }
 
@@ -175,7 +182,7 @@ class WorkshopScreenBloc
         updatePayflowIndex: -1,
         channelSetFlow: channelSetFlow,
       );
-
+      yield* updateChannelSetFlowOnCheckoutApp(channelSetFlow);
       bool selectedPaymentOption = false;
       if (channelSetFlow.paymentOptionId == null) {
         selectedPaymentOption = false;
@@ -220,8 +227,15 @@ class WorkshopScreenBloc
         updatePayflowIndex: -1,
         channelSetFlow: channelSetFlow,
       );
+      yield* updateChannelSetFlowOnCheckoutApp(channelSetFlow);
     }
   }
+
+  Stream<WorkshopScreenState> updateChannelSetFlowOnCheckoutApp(ChannelSetFlow channelSetFlow) async* {
+    if (checkoutScreenBloc == null) return;
+    checkoutScreenBloc.add(CheckoutUpdateChannelSetFlowEvent(channelSetFlow));
+  }
+
   Stream<WorkshopScreenState> payByCreditCard(Map<String, dynamic>cardJson) async* {
     yield state.copyWith(
       isUpdating: true,
@@ -303,6 +317,7 @@ class WorkshopScreenBloc
         payResult: payResult,
         updatePayflowIndex: -1,
       );
+      yield* updateChannelSetFlowOnCheckoutApp(channelSetFlow);
     }
   }
 
@@ -433,4 +448,5 @@ class WorkshopScreenBloc
       yield WorkshopScreenStateFailure(error: error.toString());
     }
   }
+
 }

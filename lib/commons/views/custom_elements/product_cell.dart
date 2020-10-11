@@ -12,7 +12,11 @@ class ProductCell extends StatelessWidget {
   final Business business;
   final Function onTap;
 
-  ProductCell({this.product, this.business, this.onTap,});
+  ProductCell({
+    this.product,
+    this.business,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -30,46 +34,61 @@ class ProductCell extends StatelessWidget {
         child: Stack(
           alignment: AlignmentDirectional.bottomCenter,
           children: <Widget>[
-            CachedNetworkImage(
-              imageUrl:
-              '${Env.storage}/products/${product.thumbnail}',
-              imageBuilder: (context, imageProvider) => Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(14),
-                  image: DecorationImage(
-                    image: imageProvider,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
-              color: Colors.white,
-              placeholder: (context, url) => Container(
-                color: Colors.white,
-                child: Center(
-                  child: Container(
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
+            (product.thumbnail != null && product.thumbnail.isNotEmpty)
+                ? CachedNetworkImage(
+                    imageUrl: '${Env.storage}/products/${product.thumbnail}',
+                    imageBuilder: (context, imageProvider) => Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(14),
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+                    color: Colors.white,
+                    placeholder: (context, url) => Container(
+                      color: Colors.white,
+                      child: Center(
+                        child: Container(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                          ),
+                        ),
+                      ),
+                    ),
+                    errorWidget: (context, url, error) => Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: Center(
+                        child: AspectRatio(
+                          aspectRatio: 0.8,
+                          child: SvgPicture.asset(
+                            'assets/images/no_image.svg',
+                            color: Colors.black54,
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                : Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: Center(
+                      child: AspectRatio(
+                        aspectRatio: 0.8,
+                        child: SvgPicture.asset(
+                          'assets/images/no_image.svg',
+                          color: Colors.black54,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-              errorWidget: (context, url, error) => Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: Center(
-                  child: AspectRatio(
-                    aspectRatio: 0.8,
-                    child: SvgPicture.asset(
-                      'assets/images/no_image.svg',
-                      color: Colors.black54,
-                    ),
-                  ),
-                ),
-              ),
-            ),
 //            Container(
 //              width: double.infinity,
 //              decoration: BoxDecoration(

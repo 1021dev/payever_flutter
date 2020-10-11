@@ -15,6 +15,7 @@ class CheckoutScreenState {
   final String openUrl;
   final Business activeBusiness;
   final Terminal activeTerminal;
+  final ChannelSetFlow channelSetFlow;
   final List<Checkout> checkouts;
   final List<ChannelSet> channelSets;
   final ChannelSet channelSet;
@@ -48,6 +49,8 @@ class CheckoutScreenState {
   final bool isPhoneSearch;
   final List<CheckoutPaymentOption> paymentOptions;
   final Map<String, PaymentVariant> paymentVariants;
+  final String prefilledLink;
+  final bool isLoadingQrcode;
 
   CheckoutScreenState({
     this.isLoading = false,
@@ -56,8 +59,10 @@ class CheckoutScreenState {
     this.loadingConnect = false,
     this.loadingPaymentOption = false,
     this.sectionUpdate = false,
+    this.isLoadingQrcode = false,
     this.activeBusiness,
     this.activeTerminal,
+    this.channelSetFlow,
     this.openUrl = '',
     this.checkouts = const [],
     this.channelSets = const [],
@@ -92,6 +97,7 @@ class CheckoutScreenState {
     this.isPhoneSearch = false,
     this.paymentOptions = const [],
     this.paymentVariants = const {},
+    this.prefilledLink,
   });
 
   List<Object> get props => [
@@ -100,9 +106,11 @@ class CheckoutScreenState {
     this.loadingPaymentOption,
     this.loadingConnect,
     this.loadingChannel,
+    this.isLoadingQrcode,
     this.sectionUpdate,
     this.activeTerminal,
     this.activeBusiness,
+    this.channelSetFlow,
     this.openUrl,
     this.checkouts,
     this.channelSets,
@@ -137,11 +145,13 @@ class CheckoutScreenState {
     this.isPhoneSearch,
     this.paymentOptions,
     this.paymentVariants,
+    this.prefilledLink,
   ];
 
   CheckoutScreenState copyWith({
     bool isLoading,
     bool isUpdating,
+    bool isLoadingQrcode,
     int updatePayflowIndex,
     bool loadingChannel,
     bool loadingConnect,
@@ -149,6 +159,7 @@ class CheckoutScreenState {
     bool sectionUpdate,
     Business activeBusiness,
     Terminal activeTerminal,
+    ChannelSetFlow channelSetFlow,
     String openUrl,
     List<Checkout> checkouts,
     List<ChannelSet> channelSets,
@@ -184,6 +195,7 @@ class CheckoutScreenState {
     bool isPhoneSearch,
     List<CheckoutPaymentOption> paymentOptions,
     Map<String, PaymentVariant> paymentVariants,
+    String prefilledLink,
   }) {
     return CheckoutScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -201,6 +213,7 @@ class CheckoutScreenState {
       integrations: integrations ?? this.integrations,
       defaultCheckout: defaultCheckout ?? this.defaultCheckout,
       checkoutFlow: checkoutFlow ?? this.checkoutFlow,
+      channelSetFlow: channelSetFlow ?? this.channelSetFlow,
       connections: connections ?? this.connections,
       checkoutConnections: checkoutConnections ?? this.checkoutConnections,
       connects: connects ?? this.connects,
@@ -228,6 +241,8 @@ class CheckoutScreenState {
       isPhoneSearch: isPhoneSearch ?? this.isPhoneSearch,
       paymentOptions: paymentOptions ?? this.paymentOptions,
       paymentVariants: paymentVariants ?? this.paymentVariants,
+      prefilledLink: prefilledLink ?? this.prefilledLink,
+      isLoadingQrcode: isLoadingQrcode ?? this.isLoadingQrcode,
     );
   }
 }
