@@ -29,14 +29,13 @@ class BusinessAppCell extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 72,
         child: Column(
           children: [
             Stack(
               children: [
                 Container(
-                  width: 64,
-                  height: 64,
+                  width: 68,
+                  height: 68,
                   alignment: Alignment.center,
                   child: Container(
                     width: 44,
@@ -57,14 +56,14 @@ class BusinessAppCell extends StatelessWidget {
                 ),
                 if (openAppCode == currentApp.code)
                   Container(
-                      width: 64,
-                      height: 64,
+                      width: 68,
+                      height: 68,
                       padding: EdgeInsets.all(10),
                       child: Center(
                           child: CircularProgressIndicator()))
               ],
             ),
-            SizedBox(height: 2),
+            SizedBox(height: 4),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -88,7 +87,7 @@ class BusinessAppCell extends StatelessWidget {
                 Text(
                   Language.getCommerceOSStrings(title),
                   style: TextStyle(
-                    fontSize: 10,
+                    fontSize: 12,
                   ),
                 ),
               ],

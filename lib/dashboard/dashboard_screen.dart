@@ -74,7 +74,7 @@ class DashboardScreen extends StatefulWidget {
   final String wallpaper;
   final bool refresh;
   final bool registered;
-  double mainWidth = 0;
+//  double mainWidth = 0;
 
   DashboardScreen({this.wallpaper, this.refresh, this.registered = false});
 
@@ -105,7 +105,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
   }
 
@@ -122,26 +121,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
       Language.language = p.getString(GlobalUtils.LANGUAGE);
       Language(context);
     });
-//    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
-//    Measurements.height = (_isPortrait
-//        ? MediaQuery.of(context).size.height
-//        : MediaQuery.of(context).size.width);
-//    Measurements.width = (_isPortrait
-//        ? MediaQuery.of(context).size.width
-//        : MediaQuery.of(context).size.height);
-//
-//    if (_isPortrait) {
-//      _isTablet = MediaQuery.of(context).size.width > 600;
-//    } else {
-//      _isTablet = MediaQuery.of(context).size.height > 600;
-//    }
+
     _isPortrait = GlobalUtils.isPortrait(context);
     _isTablet = GlobalUtils.isTablet(context);
     Measurements.loadImages(context);
 
-    if (widget.mainWidth == 0) {
-      widget.mainWidth = _isTablet ? Measurements.width * 0.7 : Measurements.width;
-    }
+//    if (widget.mainWidth == 0) {
+//      widget.mainWidth = _isTablet ? Measurements.width * 0.7 : Measurements.width;
+//    }
 
     if (globalStateModel.refresh) {
       screenBloc.add(DashboardScreenInitEvent(wallpaper: widget.wallpaper));
@@ -248,6 +235,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _body(DashboardScreenState state) {
+    if (state.language != null) {
+      Language.language = state.language;
+      Language(context);
+    }
+
     List<AppWidget> widgets = [];
     List<BusinessApps> businessApps = [];
     if (state.businessWidgets.length > 0) {
@@ -488,7 +480,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           body: Container(
             alignment: Alignment.center,
             child: Container(
-              width: widget.mainWidth,
+              width: GlobalUtils.mainWidth,
               child: Stack(
                 children: <Widget>[
                   Align(alignment: Alignment.center, child: _headerView(state)),
@@ -499,15 +491,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       return Future.delayed(Duration(seconds: 3));
                     },
                     child: ListView.separated(
-                      padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+                      padding: EdgeInsets.symmetric(horizontal: 16),
                       itemCount: dashboardWidgets.length,
                       itemBuilder: (context, index) {
                         return dashboardWidgets[index];
                       },
                       separatorBuilder: (context, index) {
                         return Divider(
-                          height: 8,
-                          thickness: 8,
+                          height: 14,
+                          thickness: 0,
                           color: Colors.transparent,
                         );
                       },
@@ -567,9 +559,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return BlurEffectView(
       radius: 12,
       isDashboard: true,
-      padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+      padding: EdgeInsets.symmetric(horizontal: 16),
       child: Container(
-        height: 40,
+        height: 54,
         child: Row(
           children: [
             SvgPicture.asset(
@@ -592,6 +584,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                       style: TextStyle(
                         fontSize: 14,
+                        fontWeight: FontWeight.w500,
                       ),
                       onChanged: (val) {
                         if (val.length > 0) {
@@ -1122,7 +1115,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appWidget: appWidget,
       lastSales: state.lastSalesRandom,
       business: state.activeBusiness,
-      mainWidth: widget.mainWidth,
+      mainWidth: GlobalUtils.mainWidth,
       onOpen: () async {
         _navigateAppsScreen(state, ProductsInitScreen(
           dashboardScreenBloc: screenBloc,

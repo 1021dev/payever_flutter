@@ -21,6 +21,7 @@ class DashboardBusinessAppsView extends StatefulWidget {
     this.isTablet,
     this.openAppCode,
   });
+
   @override
   _DashboardBusinessAppsViewState createState() => _DashboardBusinessAppsViewState();
 }
@@ -56,7 +57,7 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
     businessApps.remove(setting);
     businessApps.add(setting);
     return BlurEffectView(
-      padding: EdgeInsets.fromLTRB(14, 12, 14, 0),
+      padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
       isDashboard: true,
       child: Container(
         height: (widget.isTablet ? 80 : 60) + (businessApps.length / 4).ceilToDouble() * 86,
@@ -67,21 +68,11 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
               children: [
                 Row(
                   children: [
-                    Container(
-                      width: 20,
-                      height: 20,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: NetworkImage('${iconString()}dashboard.png'),
-                          fit: BoxFit.scaleDown,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 8,),
                     Text(
-                      'BUSINESS APPS',
+                      'APPS',
                       style: TextStyle(
-                        fontSize: 12,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ],
@@ -114,8 +105,10 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
             if (businessApps != null) Expanded(
               child: GridView.count(
                 crossAxisCount: widget.isTablet ? 6 : 4,
-                mainAxisSpacing: 16,
+                mainAxisSpacing: 0,
+                crossAxisSpacing: (GlobalUtils.mainWidth - 64 - 68 * 4) / 4,
                 shrinkWrap: true,
+                childAspectRatio: 1/1.6,
                 children: businessApps.map((e) => BusinessAppCell(
                   openAppCode: widget.openAppCode,
                   onTap: (){

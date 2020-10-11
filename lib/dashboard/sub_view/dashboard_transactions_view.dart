@@ -59,12 +59,12 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
     }
     if (widget.businessApps != null && widget.businessApps.setupStatus == 'completed') {
       return BlurEffectView(
-        padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
+        padding: EdgeInsets.only(top: 12),
         isDashboard: true,
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.fromLTRB(14, 0, 14, 0),
+              padding: EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 children: [
                   Row(
@@ -72,96 +72,88 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                     children: [
                       Row(
                         children: [
-                          Container(
-                            width: 16,
-                            height: 16,
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: NetworkImage('${iconString()}${widget.appWidget.type}.png'),
-                                    fit: BoxFit.fitWidth)),
-                          ),
-                          SizedBox(width: 8,),
                           Text(
                             Language.getCommerceOSStrings('dashboard.apps.transactions').toUpperCase(),
                             style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500
                             ),
                           )
                         ],
                       ),
-                      Row(
-                        children: [
-                          InkWell(
-                            onTap: widget.onOpen,
-                            child: Container(
-                              height: 20,
-                              width: 40,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: overlayDashboardButtonsBackground(),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  Language.getCommerceOSStrings('actions.open'),
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    color: Colors.white
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          widget.notifications.length > 0 ? SizedBox(width: 8): Container(),
-                          widget.notifications.length > 0 ? Container(
-                            height: 20,
-                            width: 40,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: overlayDashboardButtonsBackground(),
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: Center(
-                                    child: Text(
-                                      '${widget.notifications.length}',
-                                      style: TextStyle(
-                                          fontSize: 10,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        isExpanded = !isExpanded;
-                                      });
-                                    },
-                                    child: Container(
-                                      width: 21,
-                                      height: 21,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(10.5),
-                                          color: overlayDashboardNotificationBtnBgColor(),
-                                      ),
-                                      child: Center(
-                                        child: SvgPicture.asset(
-                                          isExpanded ? 'assets/images/closeicon.svg' : 'assets/images/icon_plus.svg',
-                                          width: 8,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ): Container(),
-                        ],
-                      )
+//                      Row(
+//                        children: [
+//                          InkWell(
+//                            onTap: widget.onOpen,
+//                            child: Container(
+//                              height: 20,
+//                              width: 40,
+//                              decoration: BoxDecoration(
+//                                  borderRadius: BorderRadius.circular(10),
+//                                  color: overlayDashboardButtonsBackground(),
+//                              ),
+//                              child: Center(
+//                                child: Text(
+//                                  Language.getCommerceOSStrings('actions.open'),
+//                                  style: TextStyle(
+//                                    fontSize: 10,
+//                                    color: Colors.white
+//                                  ),
+//                                ),
+//                              ),
+//                            ),
+//                          ),
+//                          widget.notifications.length > 0 ? SizedBox(width: 8): Container(),
+//                          widget.notifications.length > 0 ? Container(
+//                            height: 20,
+//                            width: 40,
+//                            decoration: BoxDecoration(
+//                                borderRadius: BorderRadius.circular(10),
+//                                color: overlayDashboardButtonsBackground(),
+//                            ),
+//                            child: Row(
+//                              children: [
+//                                Expanded(
+//                                  flex: 1,
+//                                  child: Center(
+//                                    child: Text(
+//                                      '${widget.notifications.length}',
+//                                      style: TextStyle(
+//                                          fontSize: 10,
+//                                        color: Colors.white,
+//                                      ),
+//                                    ),
+//                                  ),
+//                                ),
+//                                Expanded(
+//                                  flex: 1,
+//                                  child: InkWell(
+//                                    onTap: () {
+//                                      setState(() {
+//                                        isExpanded = !isExpanded;
+//                                      });
+//                                    },
+//                                    child: Container(
+//                                      width: 21,
+//                                      height: 21,
+//                                      decoration: BoxDecoration(
+//                                          borderRadius: BorderRadius.circular(10.5),
+//                                          color: overlayDashboardNotificationBtnBgColor(),
+//                                      ),
+//                                      child: Center(
+//                                        child: SvgPicture.asset(
+//                                          isExpanded ? 'assets/images/closeicon.svg' : 'assets/images/icon_plus.svg',
+//                                          width: 8,
+//                                        ),
+//                                      ),
+//                                    ),
+//                                  ),
+//                                ),
+//                              ],
+//                            ),
+//                          ): Container(),
+//                        ],
+//                      )
                     ],
                   ),
                   widget.isLoading ? Container(
