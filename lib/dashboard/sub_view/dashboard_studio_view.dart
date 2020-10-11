@@ -35,27 +35,17 @@ class _DashboardStudioViewState extends State<DashboardStudioView> {
       isDashboard: true,
       child: Column(
         children: [
-          Row(
-            children: [
-              Container(
-                width: 16,
-                height: 16,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: NetworkImage('${uiKit}studio.png'),
-                        fit: BoxFit.fitWidth)),
+          Container(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'STUDIO',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
               ),
-              SizedBox(width: 8,),
-              Text(
-                'STUDIO',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                ),
-              )
-            ],
+            ),
           ),
-          SizedBox(height: 8),
+          SizedBox(height: 14),
           InkWell(
             onTap: () {
 

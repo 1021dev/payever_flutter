@@ -74,28 +74,12 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 16,
-                            height: 16,
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: NetworkImage('${iconString()}point-of-sale.png'),
-                                    fit: BoxFit.fitWidth)),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(right: 8),
-                          ),
-                          Text(
-                            Language.getCommerceOSStrings('dashboard.apps.pos').toUpperCase(),
-                            style: TextStyle(
-                              fontSize: 12,
-                            ),
-                          )
-                        ],
+                      Text(
+                        Language.getCommerceOSStrings('dashboard.apps.pos').toUpperCase(),
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                       Row(
                         children: <Widget>[

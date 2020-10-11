@@ -43,22 +43,12 @@ class _DashboardSettingsViewState extends State<DashboardSettingsView> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    SvgPicture.asset(
-                      'assets/images/setting.svg',
-                      width: 16,
-                      height: 16,
-                      color: iconColor(),
-                    ),
-                    SizedBox(width: 8,),
-                    Text(
-                      Language.getCommerceOSStrings('info_boxes.settings.heading').toUpperCase(),
-                      style: TextStyle(
-                        fontSize: 12,
-                      ),
-                    )
-                  ],
+                Text(
+                  Language.getCommerceOSStrings('info_boxes.settings.heading').toUpperCase(),
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
                 InkWell(
                   onTap: widget.onTapOpen,

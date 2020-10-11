@@ -65,26 +65,12 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: 16,
-                            height: 16,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: NetworkImage('${iconString()}${widget.appWidget.type}.png'),
-                                fit: BoxFit.fitWidth,
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 8,),
-                          Text(
-                            Language.getCommerceOSStrings('dashboard.apps.checkout').toUpperCase(),
-                            style: TextStyle(
-                              fontSize: 12,
-                            ),
-                          )
-                        ],
+                      Text(
+                        Language.getCommerceOSStrings('dashboard.apps.checkout').toUpperCase(),
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                       Row(
                         children: [

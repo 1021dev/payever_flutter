@@ -57,17 +57,12 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          Icon(Icons.add, size: 20,),
-                          SizedBox(width: 8,),
-                          Text(
-                            Language.getCommerceOSStrings('dashboard.apps.connect').toUpperCase(),
-                            style: TextStyle(
-                              fontSize: 12,
-                            ),
-                          )
-                        ],
+                      Text(
+                        Language.getCommerceOSStrings('dashboard.apps.connect').toUpperCase(),
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                       Row(
                         children: [

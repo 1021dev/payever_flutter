@@ -34,26 +34,17 @@ class _DashboardAdvertisingViewState extends State<DashboardAdvertisingView> {
       padding: EdgeInsets.fromLTRB(14, 12, 14, 14),
       child: Column(
         children: [
-          Row(
-            children: [
-              Container(
-                width: 16,
-                height: 16,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: NetworkImage('${Env.cdnIcon}icons-apps-white/icon-apps-white-ad.png'),
-                        fit: BoxFit.fitWidth)),
+          Container(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'ADVERTISING',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
               ),
-              SizedBox(width: 8,),
-              Text(
-                'ADVERTISING',
-                style: TextStyle(
-                  fontSize: 12,
-                ),
-              )
-            ],
+            ),
           ),
-          SizedBox(height: 8),
+          SizedBox(height: 14),
           InkWell(
             onTap: () {
 

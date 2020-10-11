@@ -33,24 +33,12 @@ class _DashboardTutorialViewState extends State<DashboardTutorialView> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        Container(
-                          width: 16,
-                          height: 16,
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image: NetworkImage('${iconString()}tutorial.png'),
-                                  fit: BoxFit.fitWidth)),
-                        ),
-                        SizedBox(width: 8,),
-                        Text(
-                          'TUTORIALS',
-                          style: TextStyle(
-                            fontSize: 12,
-                          ),
-                        )
-                      ],
+                    Text(
+                      'TUTORIALS',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                     InkWell(
                       onTap: () {

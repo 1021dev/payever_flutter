@@ -77,101 +77,14 @@ class _DashboardShopViewState extends State<DashboardShopView> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: 16,
-                            height: 16,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: NetworkImage('${iconString()}shop.png'),
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 8,),
-                          Text(
-                            Language.getCommerceOSStrings('dashboard.apps.store').toUpperCase(),
-                            style: TextStyle(
-                              fontSize: 12,
-                            ),
-                          )
-                        ],
+                      Text(
+                        Language.getCommerceOSStrings('dashboard.apps.store').toUpperCase(),
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                      Row(
-                        children: [
-                          InkWell(
-                            onTap: widget.onOpen,
-                            child: Container(
-                              height: 20,
-                              width: 40,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: overlayDashboardButtonsBackground(),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  Language.getCommerceOSStrings('actions.open'),
-                                  style: TextStyle(
-                                      fontSize: 10,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          widget.notifications.length > 0 ?
-                          SizedBox(width: 8) : Container(),
-                          widget.notifications.length > 0 ? Container(
-                            height: 20,
-                            width: 40,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: overlayDashboardButtonsBackground(),
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: Center(
-                                    child: Text(
-                                      '${widget.notifications.length}',
-                                      style: TextStyle(
-                                          fontSize: 10,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        isExpanded = !isExpanded;
-                                      });
-                                    },
-                                    child: Container(
-                                      width: 21,
-                                      height: 21,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(10.5),
-                                          color: overlayDashboardNotificationBtnBgColor(),
-                                      ),
-                                      child: Center(
-                                        child: SvgPicture.asset(
-                                          isExpanded ? 'assets/images/closeicon.svg' : 'assets/images/icon_plus.svg',
-                                          width: 8,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ): Container(),
-                        ],
-                      ),
+
                     ],
                   ),
                   Padding(

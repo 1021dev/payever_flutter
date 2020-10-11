@@ -29,6 +29,7 @@ class BusinessAppCell extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        height: 86,
         child: Column(
           children: [
             Stack(
@@ -64,33 +65,36 @@ class BusinessAppCell extends StatelessWidget {
               ],
             ),
             SizedBox(height: 4),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                !currentApp.dashboardInfo.title.contains('setting') &&
-                        currentApp.setupStatus != 'completed'
-                    ? Container(
-                        width: 8,
-                        height: 8,
-                        decoration: BoxDecoration(
-                          color: currentApp.installed
-                              ? Color(0xFF0084FF)
-                              : Color(0xFFC02F1D),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                      )
-                    : Container(),
-                SizedBox(
-                  width: 4,
-                ),
-                Text(
-                  Language.getCommerceOSStrings(title),
-                  style: TextStyle(
-                    fontSize: 12,
+            Container(
+              height: 14,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  !currentApp.dashboardInfo.title.contains('setting') &&
+                          currentApp.setupStatus != 'completed'
+                      ? Container(
+                          width: 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: currentApp.installed
+                                ? Color(0xFF0084FF)
+                                : Color(0xFFC02F1D),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        )
+                      : Container(),
+                  SizedBox(
+                    width: 4,
                   ),
-                ),
-              ],
+                  Text(
+                    Language.getCommerceOSStrings(title),
+                    style: TextStyle(
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
