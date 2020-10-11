@@ -343,7 +343,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               .toList()
               .first
           : null;
-      dashboardWidgets.add(_studioView(state, appWidget, businessApp));
+//      dashboardWidgets.add(_studioView(state, appWidget, businessApp));
     }
 
     // Ads
@@ -360,7 +360,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               .toList()
               .first
           : null;
-      dashboardWidgets.add(_adsView(state, appWidget, businessApp));
+//      dashboardWidgets.add(_adsView(state, appWidget, businessApp));
     }
 
     // Contacts
@@ -841,6 +841,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       shopModel: state.activeShop,
       isLoading: state.isLoading,
       onOpen: () {
+        print('Open Shop');
         _navigateAppsScreen(state, ShopInitScreen(
           dashboardScreenBloc: screenBloc,
         ));
@@ -1116,7 +1117,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appWidget: appWidget,
       lastSales: state.lastSalesRandom,
       business: state.activeBusiness,
-      mainWidth: GlobalUtils.mainWidth,
       onOpen: () async {
         _navigateAppsScreen(state, ProductsInitScreen(
           dashboardScreenBloc: screenBloc,

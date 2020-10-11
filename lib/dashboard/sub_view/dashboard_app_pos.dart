@@ -62,130 +62,134 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
     }
     if (widget.businessApps.setupStatus == 'completed') {
       String themeColor = GlobalUtils.theme == 'light' ? 'black' : 'white';
-      return BlurEffectView(
-        isDashboard: true,
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
-              child: Column(
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      Language.getCommerceOSStrings('dashboard.apps.pos').toUpperCase(),
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
+      return InkWell(
+        onTap: widget.onTapOpen,
+        child: BlurEffectView(
+          isDashboard: true,
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+                child: Column(
+                  children: <Widget>[
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        Language.getCommerceOSStrings('dashboard.apps.pos').toUpperCase(),
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 14,),
-                  widget.isLoading ? Container(
-                    height: 50,
-                    child: Center(
-                      child: CircularProgressIndicator(strokeWidth: 2,),
-                    ),
-                  ):
-                  widget.activeTerminal == null ? Container(
-                    alignment: Alignment.centerLeft,
-                    height: 50,
-                    child: Text(
-                      'You have no terminals here',
-                    ),
-                  ):
-                  Row(
-                    children: <Widget>[
-                      // Terminal View
-                      Expanded(
-                        flex: 1,
-                        child: Row(
-                          children: <Widget>[
-                            widget.activeTerminal.logo != null ?
-                            Container(
-                              width: 50,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                    image: NetworkImage('$imageBase${widget.activeTerminal.logo}'),
-                                    fit: BoxFit.cover,
-                                  )
-                              ),
-                            ):
-                            Container(
-                              child: CircleAvatar(
-                                radius: 25,
-                                backgroundColor: Colors.blueGrey.withOpacity(0.5),
-                                child: Text(
-                                  avatarName,
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                    color: iconColor(),
-                                    fontWeight: FontWeight.w600,
+                    SizedBox(height: 14,),
+                    widget.isLoading ? Container(
+                      height: 50,
+                      child: Center(
+                        child: CircularProgressIndicator(strokeWidth: 2,),
+                      ),
+                    ):
+                    widget.activeTerminal == null ? Container(
+                      alignment: Alignment.centerLeft,
+                      height: 50,
+                      child: Text(
+                        'You have no terminals here',
+                      ),
+                    ):
+                    Row(
+                      children: <Widget>[
+                        // Terminal View
+                        Expanded(
+                          flex: 1,
+                          child: Row(
+                            children: <Widget>[
+                              widget.activeTerminal.logo != null ?
+                              Container(
+                                width: 50,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                      image: NetworkImage('$imageBase${widget.activeTerminal.logo}'),
+                                      fit: BoxFit.cover,
+                                    )
+                                ),
+                              ):
+                              Container(
+                                child: CircleAvatar(
+                                  radius: 25,
+                                  backgroundColor: Colors.blueGrey.withOpacity(0.5),
+                                  child: Text(
+                                    avatarName,
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                      color: iconColor(),
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 12),
-                            ),
-                            Expanded(
-                              child: AutoSizeText(
-                                widget.activeTerminal.name,
-                                maxLines: 2,
-                                minFontSize: 16,
-                                maxFontSize: 24,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w500,
+                              Padding(
+                                padding: EdgeInsets.only(left: 12),
+                              ),
+                              Expanded(
+                                child: AutoSizeText(
+                                  widget.activeTerminal.name,
+                                  maxLines: 2,
+                                  minFontSize: 16,
+                                  maxFontSize: 24,
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 12),
-                      ),
-                      // Edit Button
-                      Expanded(
-                        flex: 1,
-                        child: InkWell(
-                          onTap: widget.onTapEditTerminal,
-                          child: Container(
-                            height: 58,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: overlayDashboardButtonsBackground(),
-                            ),
-                            child: Text(
-                              Language.getCommerceOSStrings('dashboard.edit_apps.enter_button'),
-                              softWrap: true,
-                              style: TextStyle(fontSize: 16, color: Colors.white),
-                            ),
+                            ],
                           ),
                         ),
-                      ),
-                    ],
+//                        Padding(
+//                          padding: EdgeInsets.only(left: 12),
+//                        ),
+//                        // Edit Button
+//                        Expanded(
+//                          flex: 1,
+//                          child: InkWell(
+//                            onTap: widget.onTapEditTerminal,
+//                            child: Container(
+//                              height: 58,
+//                              alignment: Alignment.center,
+//                              decoration: BoxDecoration(
+//                                borderRadius: BorderRadius.circular(8),
+//                                color: overlayDashboardButtonsBackground(),
+//                              ),
+//                              child: Text(
+//                                Language.getCommerceOSStrings('dashboard.edit_apps.enter_button'),
+//                                softWrap: true,
+//                                style: TextStyle(fontSize: 16, color: Colors.white),
+//                              ),
+//                            ),
+//                          ),
+//                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              if (isExpanded)
+                Container(
+                  height: 50.0 * widget.notifications.length,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
+                      color: overlayColor(),
                   ),
-                ],
-              ),
-            ),
-            if (isExpanded)
-              Container(
-                height: 50.0 * widget.notifications.length,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
-                    color: overlayColor(),
+                  child: ListView.builder(
+                    itemBuilder: _itemBuilderDDetails,
+                    itemCount: widget.notifications.length,
+                    physics: NeverScrollableScrollPhysics(),
+                  ),
                 ),
-                child: ListView.builder(
-                  itemBuilder: _itemBuilderDDetails,
-                  itemCount: widget.notifications.length,
-                  physics: NeverScrollableScrollPhysics(),
-                ),
-              ),
-          ],
+            ],
+          ),
         ),
       );
     } else {

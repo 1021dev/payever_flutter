@@ -23,7 +23,6 @@ class DashboardProductsView extends StatefulWidget {
   final Function onTapGetStarted;
   final Function onTapContinueSetup;
   final Function onTapLearnMore;
-  final double mainWidth;
 
   DashboardProductsView({
     this.appWidget,
@@ -38,7 +37,6 @@ class DashboardProductsView extends StatefulWidget {
     this.onTapGetStarted,
     this.onTapContinueSetup,
     this.onTapLearnMore,
-    this.mainWidth,
   });
 
   @override
@@ -51,127 +49,153 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
   @override
   Widget build(BuildContext context) {
     if (widget.businessApps.setupStatus == 'completed') {
-      return BlurEffectView(
-        padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
-        isDashboard: true,
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.fromLTRB(14, 0, 14, 0),
-              child: Column(
+      return _body();
+    } else {
+      return _notInstalledWidget();
+    }
+  }
+
+  Widget _body() {
+    return BlurEffectView(
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+      isDashboard: true,
+      child: Column(
+        children: [
+          Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      Language.getCommerceOSStrings(
-                              'dashboard.apps.products')
-                          .toUpperCase(),
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
+                  Text(
+                    Language.getCommerceOSStrings(
+                    'dashboard.apps.products').toUpperCase(),
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  InkWell(
+                    onTap: widget.onOpen,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      height: 20,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: overlayDashboardButtonsBackground(),
+                      ),
+                      child: Center(
+                        child: Text(
+                          Language.getCommerceOSStrings('actions.open'),
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                  SizedBox(height: 14),
-                  widget.lastSales != null
-                      ? Container(
-                          height: (widget.mainWidth - 20)/ 4,
-                          child: GridView.count(
-                            crossAxisCount: 4,
-                            crossAxisSpacing: 6,
-                            physics: NeverScrollableScrollPhysics(),
-                            children: List.generate(
-                              widget.lastSales.length > 4 ? 4 : widget.lastSales.length,
-                              (index) => ProductCell(
-                                product: widget.lastSales[index],
-                                business: widget.business,
-                                onTap: (Products product) {
-                                  widget.onSelect(product);
-                                },
-                              ),
-                            ).toList(),
-                          ))
-                      : Container(
-                          height: 92,
-                          child: Center(
-                            child: Container(
-                              width: 32,
-                              height: 32,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                              ),
-                            ),
-                          ),
-                        ),
                 ],
               ),
-            ),
-            if (isExpanded)
-              Container(
-                height: 50.0 * widget.notifications.length,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(6),
-                      bottomRight: Radius.circular(6)),
-                  color: overlayBackground(),
+              SizedBox(height: 14),
+              widget.lastSales != null
+                  ? Container(
+                  height: (GlobalUtils.mainWidth - 64 - 8 * 2)/ 3,
+                  child: GridView.count(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 8,
+                    physics: NeverScrollableScrollPhysics(),
+                    children: List.generate(
+                      widget.lastSales.length > 3 ? 3 : widget.lastSales.length,
+                          (index) => ProductCell(
+                        product: widget.lastSales[index],
+                        business: widget.business,
+                        onTap: (Products product) {
+                          widget.onSelect(product);
+                        },
+                      ),
+                    ).toList(),
+                  ))
+                  : Container(
+                height: 92,
+                child: Center(
+                  child: Container(
+                    width: 32,
+                    height: 32,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                    ),
+                  ),
                 ),
-                child: ListView.builder(
-                  itemBuilder: _itemBuilderDDetails,
-                  itemCount: widget.notifications.length,
-                  physics: NeverScrollableScrollPhysics(),
-                ),
-              )
-          ],
-        ),
-      );
-    } else {
-      return BlurEffectView(
-        padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
-        isDashboard: true,
-        child: Column(
-          children: [
+              ),
+            ],
+          ),
+          if (isExpanded)
             Container(
-              padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
-              child: Column(
-                children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: NetworkImage(
-                              '${Env.cdnIcon}icon-comerceos-product-not-installed.png'),
-                          fit: BoxFit.contain),
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    Language.getWidgetStrings(widget.appWidget.title),
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    Language.getWidgetStrings(
-                        'widgets.products.actions.add-new'),
-                    style: TextStyle(
-                      fontSize: 10,
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                ],
+              height: 50.0 * widget.notifications.length,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(6),
+                    bottomRight: Radius.circular(6)),
+                color: overlayBackground(),
               ),
+              child: ListView.builder(
+                itemBuilder: _itemBuilderDDetails,
+                itemCount: widget.notifications.length,
+                physics: NeverScrollableScrollPhysics(),
+              ),
+            )
+        ],
+      ),
+    );
+  }
+
+  Widget _notInstalledWidget() {
+    return BlurEffectView(
+      padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
+      isDashboard: true,
+      child: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+            child: Column(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: NetworkImage(
+                            '${Env.cdnIcon}icon-comerceos-product-not-installed.png'),
+                        fit: BoxFit.contain),
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  Language.getWidgetStrings(widget.appWidget.title),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  Language.getWidgetStrings(
+                      'widgets.products.actions.add-new'),
+                  style: TextStyle(
+                    fontSize: 10,
+                  ),
+                ),
+                SizedBox(height: 4),
+              ],
             ),
-            SizedBox(height: 12),
-            DashboardSetupButtons(
-              businessApps: widget.businessApps,
-              onTapContinueSetup: widget.onTapContinueSetup,
-              onTapGetStarted: widget.onTapGetStarted,
-              onTapLearnMore: widget.onTapLearnMore,
-            ),
-          ],
-        ),
-      );
-    }
+          ),
+          SizedBox(height: 12),
+          DashboardSetupButtons(
+            businessApps: widget.businessApps,
+            onTapContinueSetup: widget.onTapContinueSetup,
+            onTapGetStarted: widget.onTapGetStarted,
+            onTapLearnMore: widget.onTapLearnMore,
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _itemBuilderDDetails(BuildContext context, int index) {

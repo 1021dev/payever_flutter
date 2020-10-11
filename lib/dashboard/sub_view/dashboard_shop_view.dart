@@ -65,133 +65,137 @@ class _DashboardShopViewState extends State<DashboardShopView> {
     }
 
     if (widget.businessApps.setupStatus == 'completed') {
-      return BlurEffectView(
-        isDashboard: true,
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
-              child: Column(
-                children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      Language.getCommerceOSStrings('dashboard.apps.store').toUpperCase(),
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
+      return InkWell(
+        onTap: widget.onOpen,
+        child: BlurEffectView(
+          isDashboard: true,
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+                child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        Language.getCommerceOSStrings('dashboard.apps.store').toUpperCase(),
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 14,),
-                  widget.isLoading ? Container(
-                    height: 50,
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  ):
-                  widget.shopModel != null
-                      ? (
-                      Row(
-                        children: <Widget>[
-                          // Shop View
-                          Expanded(
-                            flex: 1,
-                            child: Row(
-                              children: <Widget>[
-                                widget.shopModel.logo != null ?
-                                Container(
-                                  width: 50,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      image: DecorationImage(
-                                        image: NetworkImage('$imageBase${widget.shopModel.logo}'),
-                                        fit: BoxFit.cover,
-                                      )
-                                  ),
-                                ):
-                                Container(
-                                  child: CircleAvatar(
-                                    radius: 25,
-                                    backgroundColor: Colors.blueGrey.withOpacity(0.5),
-                                    child: Text(
-                                      avatarName,
-                                      style: TextStyle(
-                                        color: iconColor(),
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.w600,
+                    SizedBox(height: 14,),
+                    widget.isLoading ? Container(
+                      height: 50,
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ):
+                    widget.shopModel != null
+                        ? (
+                        Row(
+                          children: <Widget>[
+                            // Shop View
+                            Expanded(
+                              flex: 1,
+                              child: Row(
+                                children: <Widget>[
+                                  widget.shopModel.logo != null ?
+                                  Container(
+                                    width: 50,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        image: DecorationImage(
+                                          image: NetworkImage('$imageBase${widget.shopModel.logo}'),
+                                          fit: BoxFit.cover,
+                                        )
+                                    ),
+                                  ):
+                                  Container(
+                                    child: CircleAvatar(
+                                      radius: 25,
+                                      backgroundColor: Colors.blueGrey.withOpacity(0.5),
+                                      child: Text(
+                                        avatarName,
+                                        style: TextStyle(
+                                          color: iconColor(),
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 12),
-                                ),
-                                Expanded(
-                                  child: AutoSizeText(
-                                    widget.shopModel.name,
-                                    maxLines: 2,
-                                    minFontSize: 16,
-                                    maxFontSize: 24,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 12),
+                                  ),
+                                  Expanded(
+                                    child: AutoSizeText(
+                                      widget.shopModel.name,
+                                      maxLines: 2,
+                                      minFontSize: 16,
+                                      maxFontSize: 24,
+                                      style: TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(left: 12),
-                          ),
-                          // Edit Button
-                          Expanded(
-                            flex: 1,
-                            child: InkWell(
-                              onTap: widget.onTapEditShop,
-                              child: Container(
-                                height: 58,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: overlayDashboardButtonsBackground(),
-                                ),
-                                child: Text(
-                                  Language.getCommerceOSStrings('dashboard.edit_apps.enter_button'),
-                                  softWrap: true,
-                                  style: TextStyle(
-                                      fontSize: 16, color: Colors.white),
-                                ),
+                                ],
                               ),
                             ),
-                          ),
-                        ],
-                      )
-                  ) : Container(
-                    alignment: Alignment.centerLeft,
-                    height: 50,
-                    child: Text(
-                      'You have no shops',
+//                          Padding(
+//                            padding: EdgeInsets.only(left: 12),
+//                          ),
+//                          // Edit Button
+//                          Expanded(
+//                            flex: 1,
+//                            child: InkWell(
+//                              onTap: widget.onTapEditShop,
+//                              child: Container(
+//                                height: 58,
+//                                alignment: Alignment.center,
+//                                decoration: BoxDecoration(
+//                                  borderRadius: BorderRadius.circular(8),
+//                                  color: overlayDashboardButtonsBackground(),
+//                                ),
+//                                child: Text(
+//                                  Language.getCommerceOSStrings('dashboard.edit_apps.enter_button'),
+//                                  softWrap: true,
+//                                  style: TextStyle(
+//                                      fontSize: 16, color: Colors.white),
+//                                ),
+//                              ),
+//                            ),
+//                          ),
+                          ],
+                        )
+                    ) : Container(
+                      alignment: Alignment.centerLeft,
+                      height: 50,
+                      child: Text(
+                        'You have no shops',
+                      ),
                     ),
+                  ],
+                ),
+              ),
+              if (isExpanded)
+                Container(
+                  height: 50.0 * widget.notifications.length,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
+                      color: overlayBackground(),
                   ),
-                ],
-              ),
-            ),
-            if (isExpanded)
-              Container(
-                height: 50.0 * widget.notifications.length,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
-                    color: overlayBackground(),
+                  child: ListView.builder(
+                    itemBuilder: _itemBuilderDDetails,
+                    itemCount: widget.notifications.length,
+                    physics: NeverScrollableScrollPhysics(),
+                  ),
                 ),
-                child: ListView.builder(
-                  itemBuilder: _itemBuilderDDetails,
-                  itemCount: widget.notifications.length,
-                  physics: NeverScrollableScrollPhysics(),
-                ),
-              ),
-          ],
+            ],
+          ),
         ),
       );
     } else {
