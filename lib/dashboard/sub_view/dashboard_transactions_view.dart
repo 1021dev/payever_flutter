@@ -111,12 +111,13 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                       Text(
                         Language.getWidgetStrings('widgets.transactions.this-month'),
                         style: TextStyle(
-                          fontSize: 10,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ],
                   ): Container(),
-                  !widget.isLoading ?  SizedBox(height: 8): Container(),
+                  !widget.isLoading ?  SizedBox(height: 6): Container(),
                   widget.lastYear.length > 0 ?  Row(
                     children: [
                       Text(
