@@ -58,12 +58,11 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
     }
     if (widget.businessApps != null && widget.businessApps.setupStatus == 'completed') {
       return BlurEffectView(
-        padding: EdgeInsets.only(top: 12),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 18),
         isDashboard: true,
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 children: [
                   Align(
@@ -131,7 +130,6 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                       )
                     ],
                   ): Container(),
-                  !widget.isLoading ? SizedBox(height: 20): Container(),
                 ],
               ),
             ),

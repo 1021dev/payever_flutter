@@ -46,85 +46,80 @@ class DashboardCheckoutView extends StatefulWidget {
 }
 
 class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
-  bool isExpanded = false;
+
   @override
   Widget build(BuildContext context) {
-
     if (widget.businessApps.setupStatus == 'completed') {
       return BlurEffectView(
-        padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 18),
         isDashboard: true,
         child: Column(
           children: [
-            Container(
-              padding: EdgeInsets.fromLTRB(14, 0, 14, 0),
-              child: Column(
-                children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      Language.getCommerceOSStrings('dashboard.apps.checkout').toUpperCase(),
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                 SizedBox(height: 14,),
-                  widget.checkouts.length > 0
-                      ? Row(
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                Language.getCommerceOSStrings('dashboard.apps.checkout')
+                    .toUpperCase(),
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 14,
+            ),
+            widget.checkouts.length > 0
+                ? Column(
                     children: [
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                          child: InkWell(
-                            onTap: () {
-                              widget.onTapLinkOrManage(true);
-                            },
-                            child: Container(
-                              height: 58,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(6),
-                                color: overlayDashboardButtonsBackground(),
-                              ),
-                              child: Text(
-                                'Link',
-                                style: TextStyle(fontSize: 16, color: Colors.white,),
+                      Container(
+                        child: InkWell(
+                          onTap: () {
+                            widget.onTapLinkOrManage(true);
+                          },
+                          child: Container(
+                            height: 58,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(6),
+                              color: overlayDashboardButtonsBackground(),
+                            ),
+                            child: Text(
+                              'Link',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
                               ),
                             ),
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 12),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                          child: InkWell(
-                            onTap: () {
-                              widget.onTapLinkOrManage(false);
-                            },
-                            child: Container(
-                              height: 58,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(6),
-                                  color: overlayDashboardButtonsBackground(),
-                              ),
-                              child: Text(
-                                Language.getCommerceOSStrings('menu.customer.manage'),
-                                softWrap: true,
-                                style: TextStyle(fontSize: 16, color: Colors.white),
-                              ),
+                      SizedBox(height: 16),
+                      Container(
+                        child: InkWell(
+                          onTap: () {
+                            widget.onTapLinkOrManage(false);
+                          },
+                          child: Container(
+                            height: 58,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(6),
+                              color: overlayDashboardButtonsBackground(),
+                            ),
+                            child: Text(
+                              Language.getCommerceOSStrings(
+                                  'menu.customer.manage'),
+                              softWrap: true,
+                              style: TextStyle(
+                                  fontSize: 16, color: Colors.white),
                             ),
                           ),
                         ),
                       ),
                     ],
                   )
-                      : Container(
+                : Container(
                     height: 72,
                     child: Center(
                       child: Container(
@@ -136,25 +131,6 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 16),
-                  ),
-                ],
-              ),
-            ),
-            if (isExpanded)
-              Container(
-                height: 50.0 * widget.notifications.length,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
-                  color: overlayBackground(),
-                ),
-                child: ListView.builder(
-                  itemBuilder: _itemBuilderDDetails,
-                  itemCount: widget.notifications.length,
-                  physics: NeverScrollableScrollPhysics(),
-                ),
-              ),
           ],
         ),
       );
@@ -173,7 +149,8 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                     height: 40,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: NetworkImage('${Env.cdnIcon}icon-comerceos-${widget.appWidget.type}-not-installed.png'),
+                        image: NetworkImage(
+                            '${Env.cdnIcon}icon-comerceos-${widget.appWidget.type}-not-installed.png'),
                         fit: BoxFit.fitWidth,
                       ),
                     ),
@@ -181,14 +158,12 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                   SizedBox(height: 8),
                   Text(
                     Language.getWidgetStrings(widget.appWidget.title),
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 4),
                   Text(
-                    Language.getWidgetStrings('widgets.checkout.actions.add-new'),
+                    Language.getWidgetStrings(
+                        'widgets.checkout.actions.add-new'),
                     style: TextStyle(
                       fontSize: 10,
                     ),
@@ -209,6 +184,7 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
       );
     }
   }
+
   Widget _itemBuilderDDetails(BuildContext context, int index) {
     return DashboardOptionCell(
       notificationModel: widget.notifications[index],
@@ -220,5 +196,4 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
       },
     );
   }
-
 }
