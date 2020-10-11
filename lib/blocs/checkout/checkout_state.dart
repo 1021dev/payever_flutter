@@ -50,6 +50,7 @@ class CheckoutScreenState {
   final List<CheckoutPaymentOption> paymentOptions;
   final Map<String, PaymentVariant> paymentVariants;
   final String prefilledLink;
+  final bool isLoadingPrefilledLink;
   final bool isLoadingQrcode;
 
   CheckoutScreenState({
@@ -59,6 +60,7 @@ class CheckoutScreenState {
     this.loadingConnect = false,
     this.loadingPaymentOption = false,
     this.sectionUpdate = false,
+    this.isLoadingPrefilledLink = false,
     this.isLoadingQrcode = false,
     this.activeBusiness,
     this.activeTerminal,
@@ -106,6 +108,7 @@ class CheckoutScreenState {
     this.loadingPaymentOption,
     this.loadingConnect,
     this.loadingChannel,
+    this.isLoadingPrefilledLink,
     this.isLoadingQrcode,
     this.sectionUpdate,
     this.activeTerminal,
@@ -151,6 +154,7 @@ class CheckoutScreenState {
   CheckoutScreenState copyWith({
     bool isLoading,
     bool isUpdating,
+    bool isLoadingPrefilledLink,
     bool isLoadingQrcode,
     int updatePayflowIndex,
     bool loadingChannel,
@@ -200,6 +204,7 @@ class CheckoutScreenState {
     return CheckoutScreenState(
       isLoading: isLoading ?? this.isLoading,
       isUpdating: isUpdating ?? this.isUpdating,
+      isLoadingPrefilledLink: isLoadingPrefilledLink ?? this.isLoadingPrefilledLink,
       loadingChannel: loadingChannel ?? this.loadingChannel,
       loadingConnect: loadingConnect ?? this.loadingConnect,
       loadingPaymentOption: loadingPaymentOption ?? this.loadingPaymentOption,

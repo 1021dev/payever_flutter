@@ -130,4 +130,6 @@ class WorkshopScreenStateFailure extends WorkshopScreenState {
   }
 }
 
+class WorkshopOrderSuccess extends WorkshopScreenState {}
+
 class WorkshopScreenPaySuccess extends WorkshopScreenState {}

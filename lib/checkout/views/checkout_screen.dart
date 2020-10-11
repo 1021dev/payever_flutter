@@ -15,6 +15,7 @@ import 'package:payever/checkout/views/sections/sections_screen.dart';
 import 'package:payever/checkout/views/settings/settings_screen.dart';
 import 'package:payever/checkout/views/workshop/checkout_switch_screen.dart';
 import 'package:payever/checkout/views/workshop/create_edit_checkout_screen.dart';
+import 'package:payever/checkout/views/workshop/prefilled_qr_screen.dart';
 import 'package:payever/checkout/views/workshop/subview/work_shop_view.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/env.dart';
@@ -121,6 +122,18 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             context,
             PageTransition(
               child: LoginInitScreen(),
+              type: PageTransitionType.fade,
+            ),
+          );
+        } else  if (state.qrImage != null) {
+          Navigator.push(
+            context,
+            PageTransition(
+              child: PrefilledQRCodeScreen(
+                qrForm: state.qrForm,
+                qrImage: state.qrImage,
+                title: 'QR',
+              ),
               type: PageTransitionType.fade,
             ),
           );
@@ -362,7 +375,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           if (state.channelSetFlow == null ||
                               state.channelSetFlow.amount < 1 ||
                               state.channelSetFlow.reference == null) {
-                            navigateWorkshopView(state);
+                            navigateWorkshopView(state, isCopyLink: true);
                           } else {
                             getPrefilledLink(state, true);
                           }
@@ -383,7 +396,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               'Copy prefilled link',
                               style: TextStyle(fontSize: 18),
                             )),
-                            Icon(Icons.arrow_forward_ios, size: 20),
+                            state.isLoadingPrefilledLink
+                                ? Container(
+                                    width: 20,
+                                    height: 20,
+                                    alignment: Alignment.center,
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : Icon(Icons.arrow_forward_ios, size: 20),
                           ],
                         ),
                       ),
@@ -432,7 +452,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           if (state.channelSetFlow == null ||
                               state.channelSetFlow.amount < 1 ||
                               state.channelSetFlow.reference == null) {
-                            navigateWorkshopView(state);
+                            navigateWorkshopView(state, isCopyLink: false);
                           } else {
                             getPrefilledLink(state, false);
                           }
@@ -453,7 +473,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               'Prefilled QR code',
                               style: TextStyle(fontSize: 18),
                             )),
-                            Icon(Icons.arrow_forward_ios, size: 20),
+                            state.isLoadingQrcode
+                                ? Container(
+                                    width: 20,
+                                    height: 20,
+                                    alignment: Alignment.center,
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : Icon(Icons.arrow_forward_ios, size: 20),
                           ],
                         ),
                       ),
@@ -662,17 +689,19 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 
-  void navigateWorkshopView(CheckoutScreenState state) {
+  void navigateWorkshopView(CheckoutScreenState state, {bool isCopyLink}) {
     Navigator.push(
         context,
         PageTransition(
             child: WorkshopView(
-              checkoutScreenBloc: screenBloc,
+              checkoutScreenBloc: isCopyLink == null ? null : screenBloc,
               business: state.activeBusiness,
               terminal: state.activeTerminal,
               channelSetId: state.channelSet.id,
               defaultCheckout: state.defaultCheckout,
+              channelSetFlow: state.channelSetFlow,
               fromCart: false,
+              isCopyLink: isCopyLink,
               onTapClose: () {},
             ),
             type: PageTransitionType.fade));
@@ -697,7 +726,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   void getPrefilledLink(CheckoutScreenState state, bool isCopyLink) {
-    if (_formKeyOrder.currentState.validate()) {
+//    if (_formKeyOrder.currentState.validate()) {
       num _amount = state.channelSetFlow.amount;
       String _reference = state.channelSetFlow.reference;
       if (_amount >= 0 && _reference != null) {
@@ -706,5 +735,5 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         Fluttertoast.showToast(msg: 'Please set amount and reference.');
       }
     }
-  }
+//  }
 }

@@ -19,8 +19,9 @@ class WorkshopScreenBloc
   ApiService api = ApiService();
   String token = GlobalUtils.activeToken.accessToken;
   final CheckoutScreenBloc checkoutScreenBloc;
+  final bool isCopyLink;
+  WorkshopScreenBloc({this.checkoutScreenBloc, this.isCopyLink});
 
-  WorkshopScreenBloc({this.checkoutScreenBloc});
 
   @override
   WorkshopScreenState get initialState => WorkshopScreenState();
@@ -131,6 +132,10 @@ class WorkshopScreenBloc
         channelSetFlow: channelSetFlow,
       );
       yield* updateChannelSetFlowOnCheckoutApp(channelSetFlow);
+      if (checkoutScreenBloc != null) {
+        checkoutScreenBloc.add(CheckoutGetPrefilledLinkEvent(isCopyLink: isCopyLink));
+        yield WorkshopOrderSuccess();
+      }
     }
   }
 

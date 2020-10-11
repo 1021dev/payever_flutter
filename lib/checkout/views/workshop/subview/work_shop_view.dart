@@ -1,4 +1,3 @@
-import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -37,6 +36,7 @@ class WorkshopView extends StatefulWidget {
   final bool fromCart;
   final List<CartItem>cart;
   final CheckoutScreenBloc checkoutScreenBloc;
+  final bool isCopyLink;
 
   const WorkshopView(
       {this.formKeyOrder,
@@ -48,7 +48,8 @@ class WorkshopView extends StatefulWidget {
       this.onTapClose,
       this.cart,
       this.fromCart = false,
-      this.checkoutScreenBloc});
+      this.checkoutScreenBloc,
+      this.isCopyLink});
 
   @override
   _WorkshopViewState createState() => _WorkshopViewState();
@@ -110,8 +111,9 @@ class _WorkshopViewState extends State<WorkshopView> {
 
   @override
   void initState() {
-    screenBloc =
-    WorkshopScreenBloc(checkoutScreenBloc: widget.checkoutScreenBloc)
+    screenBloc = WorkshopScreenBloc(
+        checkoutScreenBloc: widget.checkoutScreenBloc,
+        isCopyLink: widget.isCopyLink)
       ..add(WorkshopScreenInitEvent(
         activeBusiness: widget.business,
         activeTerminal: widget.terminal,
@@ -124,13 +126,20 @@ class _WorkshopViewState extends State<WorkshopView> {
     } else {
       _formKeyOrder = GlobalKey<FormState>();
     }
-    // initialize(widget.checkoutScreenBloc.state.channelSetFlow);
+//    if (widget.channelSetFlow != null)
+//      initialize(widget.channelSetFlow);
+    if (widget.checkoutScreenBloc != null) {
+      Future.delayed(Duration(milliseconds: 1000)).then((value) =>
+          Fluttertoast.showToast(
+              msg: 'Please entry Amount and Reference to get Prefilled Link'));
+    }
     super.initState();
   }
 
   @override
   void dispose() {
     screenBloc.close();
+    super.dispose();
   }
 
   @override
@@ -143,7 +152,9 @@ class _WorkshopViewState extends State<WorkshopView> {
       bloc: screenBloc,
       listener: (BuildContext context, WorkshopScreenState state) async {
         print('Reset: ${state.isReset}');
-        if (state is WorkshopScreenState && state.isReset) {
+        if (state is WorkshopOrderSuccess) {
+          Future.delayed(Duration(milliseconds: 300)).then((value) => Navigator.pop(context));
+        } else  if (state is WorkshopScreenState && state.isReset) {
           _selectedSectionIndex = 0;
           isOrderApproved = false;
           isAccountApproved = false;
@@ -173,7 +184,7 @@ class _WorkshopViewState extends State<WorkshopView> {
           phone = '';
           payflowLogin = false;
         }
-        if (state.isApprovedStep) {
+        else if (state.isApprovedStep) {
           screenBloc.add(ResetApprovedStepFlagEvent());
           setState(() {
             switch (_selectedSectionIndex) {
@@ -193,7 +204,8 @@ class _WorkshopViewState extends State<WorkshopView> {
             }
             _selectedSectionIndex++;
           });
-        } else if (state is WorkshopScreenPaySuccess) {
+        }
+        else if (state is WorkshopScreenPaySuccess) {
           showPaySuccessDialog();
         } else if (state is WorkshopScreenStateFailure) {
           Fluttertoast.showToast(msg: state.error);

@@ -57,143 +57,151 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
       currency = format.simpleCurrencySymbol(widget.lastYear.last.currency);
     }
     if (widget.businessApps != null && widget.businessApps.setupStatus == 'completed') {
-      return BlurEffectView(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 18),
-        isDashboard: true,
-        child: Column(
-          children: [
-            Container(
-              child: Column(
-                children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      Language.getCommerceOSStrings('dashboard.apps.transactions').toUpperCase(),
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500
-                      ),
-                    ),
-                  ),
-                  widget.isLoading ? Container(
-                    height: 64,
-                    child: Center(
-                      child: Container(
-                        width: 32,
-                        height: 32,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                        ),
-                      ),
-                    ),
-                  ):
-                  !widget.isLoading ?  SizedBox(height: 14): Container(),
-                  widget.lastYear.length > 0 ?  Row(
-                    children: [
-                      Text(
-                        '${f.format(widget.total)} $currency',
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontSize: 44,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      )
-                    ],
-                  ): Container(),
-                  SizedBox(height: 8),
-                  !widget.isLoading ?  Row(
-                    children: [
-                      Icon(
-                        Icons.arrow_upward,
-                        size: 10,
-                      ),
-                      SizedBox(width: 4),
-                      Text(
-                        Language.getWidgetStrings('widgets.transactions.this-month'),
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ): Container(),
-                  !widget.isLoading ?  SizedBox(height: 6): Container(),
-                  widget.lastYear.length > 0 ?  Row(
-                    children: [
-                      Text(
-                        '${widget.lastYear.last.amount} $currency',
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Color.fromRGBO(28, 187, 45, 1),
-                        ),
-                      )
-                    ],
-                  ): Container(),
-                ],
-              ),
-            ),
-            if (isExpanded)
+      return InkWell(
+        onTap: widget.onOpen,
+        child: BlurEffectView(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+          isDashboard: true,
+          child: Column(
+            children: [
               Container(
-                height: 50.0 * widget.notifications.length,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
-                    color: overlayBackground(),
-                ),
-                child: ListView.builder(
-                  itemBuilder: _itemBuilderDDetails,
-                  itemCount: widget.notifications.length,
-                  physics: NeverScrollableScrollPhysics(),
+                child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        Language.getCommerceOSStrings('dashboard.apps.transactions').toUpperCase(),
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500
+                        ),
+                      ),
+                    ),
+                    widget.isLoading ? Container(
+                      height: 64,
+                      child: Center(
+                        child: Container(
+                          width: 32,
+                          height: 32,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                          ),
+                        ),
+                      ),
+                    ):
+                    !widget.isLoading ?  SizedBox(height: 14): Container(),
+                    widget.lastYear.length > 0 ?  Row(
+                      children: [
+                        Text(
+                          '${f.format(widget.total)} $currency',
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            fontSize: 44,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        )
+                      ],
+                    ): Container(),
+                    SizedBox(height: 8),
+                    !widget.isLoading ?  Row(
+                      children: [
+                        Icon(
+                          Icons.arrow_upward,
+                          size: 10,
+                        ),
+                        SizedBox(width: 4),
+                        Text(
+                          Language.getWidgetStrings('widgets.transactions.this-month'),
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ): Container(),
+                    !widget.isLoading ?  SizedBox(height: 6): Container(),
+                    widget.lastYear.length > 0 ?  Row(
+                      children: [
+                        Text(
+                          '${widget.lastYear.last.amount} $currency',
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Color.fromRGBO(28, 187, 45, 1),
+                          ),
+                        )
+                      ],
+                    ): Container(),
+                  ],
                 ),
               ),
-          ],
+              if (isExpanded)
+                Container(
+                  height: 50.0 * widget.notifications.length,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
+                      color: overlayBackground(),
+                  ),
+                  child: ListView.builder(
+                    itemBuilder: _itemBuilderDDetails,
+                    itemCount: widget.notifications.length,
+                    physics: NeverScrollableScrollPhysics(),
+                  ),
+                ),
+            ],
+          ),
         ),
       );
     } else {
-      return BlurEffectView(
-        padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
-        isDashboard: true,
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
-              child: Column(
-                children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: NetworkImage('${Env.cdnIcon}icon-comerceos-${widget.appWidget.type}-not-installed.png'),
-                          fit: BoxFit.contain),
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    Language.getWidgetStrings(widget.appWidget.title),
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                ],
-              ),
-            ),
-            SizedBox(height: 12),
-            DashboardSetupButtons(
-              businessApps: widget.businessApps,
-              appWidget: widget.appWidget,
-              onTapContinueSetup: widget.onTapContinueSetup,
-              onTapGetStarted: widget.onTapGetStarted,
-              onTapLearnMore: widget.onTapLearnMore,
-            )
-          ],
-        ),
-    );
+      return _noInstalledView();
     }
   }
+
+  Widget _noInstalledView() {
+    return BlurEffectView(
+      padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
+      isDashboard: true,
+      child: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+            child: Column(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: NetworkImage('${Env.cdnIcon}icon-comerceos-${widget.appWidget.type}-not-installed.png'),
+                        fit: BoxFit.contain),
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  Language.getWidgetStrings(widget.appWidget.title),
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold
+                  ),
+                ),
+                SizedBox(height: 4),
+              ],
+            ),
+          ),
+          SizedBox(height: 12),
+          DashboardSetupButtons(
+            businessApps: widget.businessApps,
+            appWidget: widget.appWidget,
+            onTapContinueSetup: widget.onTapContinueSetup,
+            onTapGetStarted: widget.onTapGetStarted,
+            onTapLearnMore: widget.onTapLearnMore,
+          )
+        ],
+      ),
+    );
+  }
+
   Widget _itemBuilderDDetails(BuildContext context, int index) {
     return DashboardOptionCell(
       notificationModel: widget.notifications[index],

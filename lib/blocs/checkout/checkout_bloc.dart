@@ -1072,7 +1072,12 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       'generate_payment_code': true,
       'open_next_step_on_init': false,
     };
-    yield state.copyWith(isLoadingQrcode: true);
+    if (isCoplyLink) {
+      yield state.copyWith(isLoadingPrefilledLink: true);
+    } else {
+      yield state.copyWith(isLoadingQrcode: true);
+    }
+
     dynamic qrcodelinkResponse = await api.getChannelSetQRcode(token, data);
     if (qrcodelinkResponse is Map) {
       String id = qrcodelinkResponse['id'];
@@ -1083,6 +1088,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
         Clipboard.setData(ClipboardData(
             text:prefilledLink));
         Fluttertoast.showToast(msg: 'Copied Prefilled Link.');
+        yield state.copyWith(isLoadingPrefilledLink: false);
       } else {
         add(CheckoutGetPrefilledQRCodeEvent());
       }
