@@ -107,67 +107,74 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
       child: BlocBuilder<PersonalDashboardScreenBloc, PersonalDashboardScreenState>(
         bloc: screenBloc,
         builder: (BuildContext context, PersonalDashboardScreenState state) {
-          return _body(state);
+          return Scaffold(
+            resizeToAvoidBottomPadding: false,
+            appBar: MainAppbar(
+              dashboardScreenBloc: widget.dashboardScreenBloc,
+              dashboardScreenState: widget.dashboardScreenBloc.state,
+              title: Language.getCommerceOSStrings('dashboard.personal_title'),
+              icon: SvgPicture.asset(
+                'assets/images/payeverlogo.svg',
+                height: 16,
+                width: 24,
+              ),
+              isBusinessMode: false,
+              toggleBusinessMode: true,
+            ),
+            body: SafeArea(
+              bottom: false,
+              right: false,
+              left: false,
+              child: BackgroundBase(
+                false,
+                backgroundColor: Colors.transparent,
+                wallPaper: state.curWall,
+                body: _body(state),
+              ),
+            ),
+          );
         },
       ),
     );
   }
 
   Widget _body(PersonalDashboardScreenState state) {
-    return Scaffold(
-      resizeToAvoidBottomPadding: false,
-      appBar: MainAppbar(
-        dashboardScreenBloc: widget.dashboardScreenBloc,
-        dashboardScreenState: widget.dashboardScreenBloc.state,
-        title: Language.getCommerceOSStrings('dashboard.personal_title'),
-        icon: SvgPicture.asset(
-          'assets/images/payeverlogo.svg',
-          height: 16,
-          width: 24,
-        ),
-        isBusinessMode: false,
-        toggleBusinessMode: true,
-      ),
-      body: SafeArea(
-        bottom: false,
-        right: false,
-        left: false,
-        child: BackgroundBase(
-          false,
-          backgroundColor: Colors.transparent,
-          wallPaper: state.curWall,
-          body: state.isLoading || state.user == null
-              ? Center(
-                  child: CircularProgressIndicator(),
-                )
-              : Container(
-                  alignment: Alignment.topCenter,
-                  child: Stack(
-                    children: [
-                      _headerView(state),
-                      Container(
-                        width: GlobalUtils.mainWidth,
-                        padding: EdgeInsets.symmetric(horizontal: 16),
-                        child: SingleChildScrollView(
-                          child: Column(
-                            children: <Widget>[
-                              _searchBar(state),
-                              SizedBox(height: 16),
-                              _socialView(state),
-                              SizedBox(height: 16),
-                              _transactionView(state),
-                              SizedBox(height: 16),
-                              _settingsView(state),
-                            ],
-                          ),
+    return state.isLoading || state.user == null
+        ? Center(
+            child: CircularProgressIndicator(),
+          )
+        : Align(
+          alignment: Alignment.center,
+          child: Container(
+              alignment: Alignment.center,
+              width: GlobalUtils.mainWidth,
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Stack(
+                children: [
+                  Align(alignment: Alignment.center, child: _headerView(state)),
+                  SingleChildScrollView(
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(
+                          height: 175,
                         ),
-                      ),
-                    ],
+                        _searchBar(state),
+                        SizedBox(height: 16),
+                        _socialView(state),
+                        SizedBox(height: 16),
+                        _transactionView(state),
+                        SizedBox(height: 16),
+                        _settingsView(state),
+                        SizedBox(
+                          height: 40,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-        ),
-      ),
-    );
+                ],
+              ),
+            ),
+        );
   }
 
   Widget _headerView(PersonalDashboardScreenState state) {

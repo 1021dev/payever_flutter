@@ -11,14 +11,10 @@ import 'package:badges/badges.dart';
 class PersonalDashboardSocialView extends StatefulWidget {
   final Function onTapEdit;
   final Function onTapWidget;
-  final double mainWidth;
-  final bool isTablet;
 
   PersonalDashboardSocialView({
     this.onTapEdit,
     this.onTapWidget,
-    this.mainWidth,
-    this.isTablet,
   });
 
   @override
@@ -40,72 +36,53 @@ class _PersonalDashboardSocialViewState
   @override
   Widget build(BuildContext context) {
     return BlurEffectView(
-      padding: EdgeInsets.fromLTRB(14, 12, 14, 0),
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 18),
       isDashboard: true,
       child: Container(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 20,
-                      height: 20,
-                      child: Image.asset('assets/images/icons-apps-main-social.png'),
-                    ),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    Text(
-                      'SOCIAL',
-                      style: TextStyle(
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
-                InkWell(
-                  onTap: widget.onTapEdit,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    height: 20,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: overlayDashboardButtonsBackground(),
-                    ),
-                    child: Center(
-                      child: Text(
-                        Language.getCommerceOSStrings('edit_apps.enter_button'),
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
+            InkWell(
+              onTap: widget.onTapEdit,
+              child: Container(
+                width: double.infinity,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'SOCIAL',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
-              ],
-            ),
-            SizedBox(height: 12),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: widget.isTablet ? 20 : 0),
-              height: (widget.mainWidth - 16/*(main padding)*/ - 16 * 6) / 6 * 1.6 + 12 + 12 - (widget.isTablet ? 20 : 0),
-              child: GridView.count(
-                crossAxisCount: 6,
-                crossAxisSpacing: widget.isTablet ? 20 : 4,
-                shrinkWrap: true,
-                childAspectRatio: 1/1.6,
-                children: List.generate(socials.length, (index) {
-                  return _socialItem(index);
-                }).toList(),
-                physics: NeverScrollableScrollPhysics(),
               ),
             ),
+            SizedBox(height: 14),
+            _gridView(),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _gridView() {
+    bool isTablet = GlobalUtils.isTablet(context);
+    int crossAxisCount = isTablet ? 6 : 4;
+    int columnCount = socials.length ~/ crossAxisCount + ((socials.length % crossAxisCount == 0) ? 0 : 1);
+    double height = columnCount * 86.0 + (columnCount - 1) * 30.0;
+    return Container(
+      height: height,
+      child: GridView.count(
+        crossAxisCount: crossAxisCount,
+        mainAxisSpacing: 0,
+        crossAxisSpacing: (GlobalUtils.mainWidth - 64 - 68 * crossAxisCount) / (crossAxisCount - 1),
+        controller: new ScrollController(keepScrollOffset: false),
+        shrinkWrap: true,
+        scrollDirection: Axis.vertical,
+        childAspectRatio: 10 / 16,
+        children: List.generate(socials.length, (index) {
+          return _socialItem(index);
+        }).toList(),
+        physics: NeverScrollableScrollPhysics(),
       ),
     );
   }
@@ -139,15 +116,17 @@ class _PersonalDashboardSocialViewState
         break;
     }
 
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0, right: 10),
+    return Container(
+      width: 68,
+      height: 86,
+      padding: const EdgeInsets.only(top: 8.0, right: 8),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Badge(
             badgeContent: Text(badgCount),
             showBadge: badgCount != '0',
-            padding: EdgeInsets.all(widget.isTablet ? 10 : 5),
+            padding: EdgeInsets.all(GlobalUtils.isTablet(context) ? 10 : 5),
             child: AspectRatio(
               aspectRatio: 1,
               child: Container(
