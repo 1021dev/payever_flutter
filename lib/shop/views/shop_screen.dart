@@ -284,8 +284,7 @@ class _ShopScreenState extends State<ShopScreen> {
                       child: InkWell(
                         onTap: () {
                           Navigator.push(context, PageTransition(
-                            child: ShopEditScreen(
-                            ),
+                            child: ShopEditScreen(screenBloc),
                             type: PageTransitionType.fade,
                           ));
                         },

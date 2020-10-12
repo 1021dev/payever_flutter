@@ -960,9 +960,21 @@ class ApiService {
       return Future.error(e);
     }
   }
-
+  //  https://builder-shops.payever.org/api/theme/898ab6ec-c085-460c-9cdd-d43f90cbedcb
+  Future<dynamic> getShopEditPreViews(String token, String themeId) async {
+    try {
+      print('$TAG - getSnapShot()');
+      dynamic response = await _client.getTypeless(
+        '${Env.builderShop}/api/theme/$themeId',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
   //  https://builder-shops.payever.org/api/theme/898ab6ec-c085-460c-9cdd-d43f90cbedcb/snapshot
-  Future<dynamic> getSnapShot(String token, String themeId) async {
+  Future<dynamic> getShopSnapShot(String token, String themeId) async {
     try {
       print('$TAG - getSnapShot()');
       dynamic response = await _client.getTypeless(

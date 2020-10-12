@@ -67,15 +67,15 @@ class ThemeItemModel {
 class ThemeModel {
   ThemeModel();
 
-  @JsonKey(name: 'id')          String id;
-  @JsonKey(name: 'application') String application;
+  @JsonKey(name: 'id')                              String id;
+  @JsonKey(name: 'application')                     String application;
   @JsonKey(name: 'isActive', defaultValue: false)   bool isActive;
   @JsonKey(name: 'isDeployed', defaultValue: false) bool isDeployed;
-  @JsonKey(name: 'name')        String name;
-  @JsonKey(name: 'picture')     String picture;
-  @JsonKey(name: 'shopId')      String shopId;
-  @JsonKey(name: 'themeId')     String themeId;
-  @JsonKey(name: 'type')        String type;
+  @JsonKey(name: 'name')                            String name;
+  @JsonKey(name: 'picture')                         String picture;
+  @JsonKey(name: 'shopId')                          String shopId;
+  @JsonKey(name: 'theme')                           String themeId;
+  @JsonKey(name: 'type')                            String type;
 
   factory ThemeModel.fromJson(Map<String, dynamic> json) => _$ThemeModelFromJson(json);
   Map<String, dynamic> toJson() => _$ThemeModelToJson(this);
@@ -147,6 +147,14 @@ class ThemeResponse {
 
   factory ThemeResponse.fromJson(Map<String, dynamic> json) => _$ThemeResponseFromJson(json);
   Map<String, dynamic> toJson() => _$ThemeResponseToJson(this);
+
+}
+
+class Preview {
+  String id;
+  dynamic actionId;
+  String previewUrl;
+
 
 }
 
