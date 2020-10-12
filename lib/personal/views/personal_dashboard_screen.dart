@@ -28,7 +28,7 @@ class PersonalDashboardInitScreen extends StatelessWidget {
   final DashboardScreenBloc dashboardScreenBloc;
   final bool isRefresh;
 
-  const PersonalDashboardInitScreen({this.dashboardScreenBloc,this.isRefresh = false});
+  const PersonalDashboardInitScreen({this.dashboardScreenBloc, this.isRefresh = false});
 
   @override
   Widget build(BuildContext context) {
@@ -52,8 +52,7 @@ class PersonalDashboardScreen extends StatefulWidget {
 }
 
 class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
-  bool _isPortrait;
-  bool _isTablet;
+
   double iconSize;
   double margin;
 
@@ -62,7 +61,6 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
   FocusNode searchFocus = FocusNode();
   String searchString = '';
   Business activeBusiness;
-  double mainWidth = 0;
 
   @override
   void initState() {
@@ -92,18 +90,6 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
-    Measurements.height = (_isPortrait
-        ? MediaQuery.of(context).size.height
-        : MediaQuery.of(context).size.width);
-    Measurements.width = (_isPortrait
-        ? MediaQuery.of(context).size.width
-        : MediaQuery.of(context).size.height);
-    _isTablet = Measurements.width < 600 ? false : true;
-
-    if (mainWidth == 0) {
-      mainWidth = _isTablet ? Measurements.width * 0.7 : Measurements.width;
-    }
 
     return BlocListener(
       bloc: screenBloc,
@@ -156,23 +142,27 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
                 )
               : Container(
                   alignment: Alignment.topCenter,
-                  child: Container(
-                    width: mainWidth,
-                    padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: <Widget>[
-                          _headerView(state),
-                          _searchBar(state),
-                          SizedBox(height: 16),
-                          _socialView(state),
-                          SizedBox(height: 16),
-                          _transactionView(state),
-                          SizedBox(height: 16),
-                          _settingsView(state),
-                        ],
+                  child: Stack(
+                    children: [
+                      _headerView(state),
+                      Container(
+                        width: GlobalUtils.mainWidth,
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: <Widget>[
+                              _searchBar(state),
+                              SizedBox(height: 16),
+                              _socialView(state),
+                              SizedBox(height: 16),
+                              _transactionView(state),
+                              SizedBox(height: 16),
+                              _settingsView(state),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
         ),
@@ -227,7 +217,7 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
       padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
       isDashboard: true,
       child: Container(
-        height: 40,
+        height: 54,
         child: Row(
           children: [
             SvgPicture.asset(
@@ -250,6 +240,7 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
                       ),
                       style: TextStyle(
                         fontSize: 14,
+                        fontWeight: FontWeight.w500,
                       ),
                       onChanged: (val) {
                         if (val.length > 0) {
@@ -395,8 +386,6 @@ class _PersonalDashboardScreenState extends State<PersonalDashboardScreen> {
     return PersonalDashboardSocialView(
       onTapEdit: () {},
       onTapWidget: () {},
-      isTablet: _isTablet,
-      mainWidth: mainWidth,
     );
   }
 
