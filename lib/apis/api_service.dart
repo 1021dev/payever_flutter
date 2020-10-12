@@ -963,7 +963,7 @@ class ApiService {
   //  https://builder-shops.payever.org/api/theme/898ab6ec-c085-460c-9cdd-d43f90cbedcb
   Future<dynamic> getShopEditPreViews(String token, String themeId) async {
     try {
-      print('$TAG - getSnapShot()');
+      print('$TAG - getShopEditPreViews()');
       dynamic response = await _client.getTypeless(
         '${Env.builderShop}/api/theme/$themeId',
         headers: _getHeaders(token),

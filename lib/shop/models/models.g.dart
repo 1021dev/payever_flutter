@@ -105,7 +105,7 @@ ThemeModel _$ThemeModelFromJson(Map<String, dynamic> json) {
     ..name = json['name'] as String
     ..picture = json['picture'] as String
     ..shopId = json['shopId'] as String
-    ..themeId = json['themeId'] as String
+    ..themeId = json['theme'] as String
     ..type = json['type'] as String;
 }
 
@@ -118,7 +118,7 @@ Map<String, dynamic> _$ThemeModelToJson(ThemeModel instance) =>
       'name': instance.name,
       'picture': instance.picture,
       'shopId': instance.shopId,
-      'themeId': instance.themeId,
+      'theme': instance.themeId,
       'type': instance.type,
     };
 
@@ -209,8 +209,8 @@ Map<String, dynamic> _$ThemeResponseToJson(ThemeResponse instance) =>
       'versions': instance.versions,
     };
 
-Page _$PageFromJson(Map<String, dynamic> json) {
-  return Page()
+ShopPage _$ShopPageFromJson(Map<String, dynamic> json) {
+  return ShopPage()
     ..contextId = json['contextId'] as String
     ..data = json['data'] == null
         ? null
@@ -225,7 +225,7 @@ Page _$PageFromJson(Map<String, dynamic> json) {
     ..variant = json['variant'] as String;
 }
 
-Map<String, dynamic> _$PageToJson(Page instance) => <String, dynamic>{
+Map<String, dynamic> _$ShopPageToJson(ShopPage instance) => <String, dynamic>{
       'contextId': instance.contextId,
       'data': instance.data,
       'id': instance.id,

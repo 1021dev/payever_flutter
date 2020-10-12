@@ -139,10 +139,8 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
 
   Stream<ShopScreenState> getActiveTheme(String activeBusinessId, String shopId) async* {
     dynamic response = await api.getActiveTheme(GlobalUtils.activeToken.accessToken, activeBusinessId, shopId);
-    if (response is List) {
-      if (response.length > 0) {
-        yield state.copyWith(activeTheme: ThemeModel.fromJson(response.first));
-      }
+    if (response is Map) {
+        yield state.copyWith(activeTheme: ThemeModel.fromJson(response));
     }
 
     dynamic defaultObj = await api.getShopDetail(activeBusinessId, GlobalUtils.activeToken.accessToken, shopId);

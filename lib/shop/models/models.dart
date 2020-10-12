@@ -159,8 +159,8 @@ class Preview {
 }
 
 @JsonSerializable()
-class Page {
-  Page();
+class ShopPage {
+  ShopPage();
 
   @JsonKey(name: 'contextId')       String contextId;
   @JsonKey(name: 'data')            PageData  data;
@@ -171,8 +171,8 @@ class Page {
   @JsonKey(name: 'type')            String type;
   @JsonKey(name: 'variant')         String variant;
 
-  factory Page.fromJson(Map<String, dynamic> json) => _$PageFromJson(json);
-  Map<String, dynamic> toJson() => _$PageToJson(this);
+  factory ShopPage.fromJson(Map<String, dynamic> json) => _$ShopPageFromJson(json);
+  Map<String, dynamic> toJson() => _$ShopPageToJson(this);
 }
 
 @JsonSerializable()
