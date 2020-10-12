@@ -208,3 +208,52 @@ Map<String, dynamic> _$ThemeResponseToJson(ThemeResponse instance) =>
       'type': instance.type,
       'versions': instance.versions,
     };
+
+Page _$PageFromJson(Map<String, dynamic> json) {
+  return Page()
+    ..contextId = json['contextId'] as String
+    ..data = json['data'] == null
+        ? null
+        : PageData.fromJson(json['data'] as Map<String, dynamic>)
+    ..id = json['id'] as String
+    ..name = json['name'] as String
+    ..stylesheetIds = json['stylesheetIds'] == null
+        ? null
+        : StyleSheetIds.fromJson(json['stylesheetIds'] as Map<String, dynamic>)
+    ..templateId = json['templateId'] as String
+    ..type = json['type'] as String
+    ..variant = json['variant'] as String;
+}
+
+Map<String, dynamic> _$PageToJson(Page instance) => <String, dynamic>{
+      'contextId': instance.contextId,
+      'data': instance.data,
+      'id': instance.id,
+      'name': instance.name,
+      'stylesheetIds': instance.stylesheetIds,
+      'templateId': instance.templateId,
+      'type': instance.type,
+      'variant': instance.variant,
+    };
+
+PageData _$PageDataFromJson(Map<String, dynamic> json) {
+  return PageData()..preview = json['preview'] as String;
+}
+
+Map<String, dynamic> _$PageDataToJson(PageData instance) => <String, dynamic>{
+      'preview': instance.preview,
+    };
+
+StyleSheetIds _$StyleSheetIdsFromJson(Map<String, dynamic> json) {
+  return StyleSheetIds()
+    ..desktop = json['desktop'] as String
+    ..mobile = json['mobile'] as String
+    ..tablet = json['tablet'] as String;
+}
+
+Map<String, dynamic> _$StyleSheetIdsToJson(StyleSheetIds instance) =>
+    <String, dynamic>{
+      'desktop': instance.desktop,
+      'mobile': instance.mobile,
+      'tablet': instance.tablet,
+    };

@@ -149,3 +149,42 @@ class ThemeResponse {
   Map<String, dynamic> toJson() => _$ThemeResponseToJson(this);
 
 }
+
+@JsonSerializable()
+class Page {
+  Page();
+
+  @JsonKey(name: 'contextId')       String contextId;
+  @JsonKey(name: 'data')            PageData  data;
+  @JsonKey(name: 'id')              String id;
+  @JsonKey(name: 'name')            String  name;
+  @JsonKey(name: 'stylesheetIds')   StyleSheetIds stylesheetIds;
+  @JsonKey(name: 'templateId')      String templateId;
+  @JsonKey(name: 'type')            String type;
+  @JsonKey(name: 'variant')         String variant;
+
+  factory Page.fromJson(Map<String, dynamic> json) => _$PageFromJson(json);
+  Map<String, dynamic> toJson() => _$PageToJson(this);
+}
+
+@JsonSerializable()
+class PageData {
+  PageData();
+
+  @JsonKey(name: 'preview')       String preview;
+
+  factory PageData.fromJson(Map<String, dynamic> json) => _$PageDataFromJson(json);
+  Map<String, dynamic> toJson() => _$PageDataToJson(this);
+}
+
+@JsonSerializable()
+class StyleSheetIds {
+  StyleSheetIds();
+
+  @JsonKey(name: 'desktop')   String desktop;
+  @JsonKey(name: 'mobile')    String mobile;
+  @JsonKey(name: 'tablet')    String tablet;
+
+  factory StyleSheetIds.fromJson(Map<String, dynamic> json) => _$StyleSheetIdsFromJson(json);
+  Map<String, dynamic> toJson() => _$StyleSheetIdsToJson(this);
+}
