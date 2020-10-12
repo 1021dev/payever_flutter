@@ -11,6 +11,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/create_shop_screen.dart';
 import 'package:payever/shop/views/shop_dashboard_screen.dart';
+import 'package:payever/shop/views/shop_edit_screen.dart';
 import 'package:payever/shop/views/shop_setting_screen.dart';
 import 'package:payever/shop/views/switch_shop_screen.dart';
 import 'package:payever/shop/views/themes/theme_screen.dart';
@@ -282,13 +283,27 @@ class _ShopScreenState extends State<ShopScreen> {
                       padding: EdgeInsets.only(left: 14, right: 14),
                       child: InkWell(
                         onTap: () {
-
+                          Navigator.push(context, PageTransition(
+                            child: ShopEditScreen(
+                            ),
+                            type: PageTransitionType.fade,
+                          ));
                         },
                         child: Row(
                           children: [
-                            SvgPicture.asset('assets/images/shop-edit.svg', width: 24, height: 24,),
-                            SizedBox(width: 12,),
-                            Expanded(child: Text('Edit', style: TextStyle(fontSize: 18),)),
+                            SvgPicture.asset(
+                              'assets/images/shop-edit.svg',
+                              width: 24,
+                              height: 24,
+                            ),
+                            SizedBox(
+                              width: 12,
+                            ),
+                            Expanded(
+                                child: Text(
+                              'Edit',
+                              style: TextStyle(fontSize: 18),
+                            )),
                             Icon(Icons.arrow_forward_ios, size: 20),
                           ],
                         ),
