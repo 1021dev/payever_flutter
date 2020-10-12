@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
 
 class ShopEditScreen extends StatefulWidget {
@@ -16,7 +17,8 @@ class ShopEditScreen extends StatefulWidget {
 
 class _ShopEditScreenState extends State<ShopEditScreen> {
   bool slideOpened = true;
-
+  bool isPortrait;
+  bool isTablet;
   ShopEditScreenBloc screenBloc;
 
   @override
@@ -34,6 +36,9 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
 
   @override
   Widget build(BuildContext context) {
+    isPortrait = GlobalUtils.isPortrait(context);
+    isTablet = GlobalUtils.isTablet(context);
+
     return BlocListener(
       listener: (BuildContext context, ShopEditScreenState state) async {},
       bloc: screenBloc,
@@ -53,17 +58,48 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
     if (state.isLoading) {
       return Center(child: CircularProgressIndicator());
     }
-    return Row(
-      children: [
-        if (slideOpened) Expanded(flex: 10, child: _slidBar(state)),
-        VerticalDivider(),
-        Expanded(flex: 23, child: _mainBody()),
-      ],
+    return Container(
+      padding: EdgeInsets.all(6),
+      child: Row(
+        children: [
+          if (slideOpened) Expanded(flex: (isTablet || !isPortrait) ? 6 : 10, child: _slidBar(state)),
+          if (slideOpened)
+            VerticalDivider(),
+          Expanded(flex: 23, child: _mainBody()),
+        ],
+      ),
     );
   }
 
   Widget _mainBody() {
-    return Container();
+    return Stack(
+      children: [
+        Center(
+          child: AspectRatio(
+            aspectRatio: 1.8/1,
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(6),
+              color: Colors.white,
+            ),
+          ),
+        ),
+        Container(
+          alignment: Alignment.centerLeft,
+          child: Visibility(
+            visible: !slideOpened,
+            child: IconButton(
+              icon: Icon(Icons.navigate_next, color: Colors.black45,),
+              onPressed: () {
+                setState(() {
+                  slideOpened = !slideOpened;
+                });
+              },
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _slidBar(ShopEditScreenState state) {
@@ -74,26 +110,31 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
           Expanded(
             child: ListView.separated(
                 itemBuilder: (context, index) {
-                  ShopPage page = state.pages[index];
+                  Preview preview = state.previews[index];
                   return AspectRatio(
                       aspectRatio: 2 / 1,
                       child: Container(
+                        padding: EdgeInsets.only(left: 10, right: 4),
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: Colors.white,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Row(
                           children: [
-                            Text('1'),
+                            Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Text('${index + 1}')),
+                            SizedBox(
+                              width: 3,
+                            ),
                             Expanded(
                                 child: CachedNetworkImage(
-                              imageUrl: '${page.data.preview}',
+                              imageUrl: '${preview.previewUrl}',
                               imageBuilder: (context, imageProvider) =>
                                   Container(
                                 decoration: BoxDecoration(
                                   color: Colors.white,
-                                  borderRadius: BorderRadius.circular(14),
+                                  borderRadius: BorderRadius.circular(4),
                                   image: DecorationImage(
                                     image: imageProvider,
                                     fit: BoxFit.contain,
@@ -114,7 +155,7 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
                               errorWidget: (context, url, error) => Container(
                                 decoration: BoxDecoration(
                                   color: Colors.white,
-                                  borderRadius: BorderRadius.circular(14),
+                                  borderRadius: BorderRadius.circular(4),
                                 ),
                                 child: Center(
                                   child: AspectRatio(
@@ -131,10 +172,36 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
                         ),
                       ));
                 },
-                separatorBuilder: (index, context) => Divider(),
-                itemCount: state.pages.length),
+                separatorBuilder: (index, context) => Divider(color: Colors.transparent,),
+                itemCount: state.previews.length),
           ),
-          IconButton(icon: Icon(Icons.add_box), onPressed: null),
+          Container(
+            width: double.infinity,
+            child: Stack(
+              children: [
+                Center(
+                    child:
+                        IconButton(icon: Icon(Icons.add_box), onPressed: null)),
+                Positioned(
+                  child: InkWell(
+                      onTap: () {
+                        setState(() {
+                          slideOpened = !slideOpened;
+                        });
+                      },
+                      child: Icon(
+                        (slideOpened
+                            ? Icons.navigate_before
+                            : Icons.navigate_next),
+                        size: 20,
+                      )),
+                  top: 0,
+                  bottom: 0,
+                  right: 0,
+                ),
+              ],
+            ),
+          ),
           SizedBox(
             height: 20,
           )
