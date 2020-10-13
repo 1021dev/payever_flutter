@@ -41,9 +41,9 @@ class ShopEditScreenBloc
 
     List<Preview> previews = [];
     List<ShopPage> pages = [];
-    List<Template> templates = [];
+    Map<String, dynamic> templates = {};
     List<Action>actions = [];
-
+    Map<String, dynamic> stylesheets = {};
     dynamic response =
         await api.getShopEditPreViews(token, themeId);
     if (response is DioError) {
@@ -79,24 +79,11 @@ class ShopEditScreenBloc
       }
       // Stylesheets Map /{deviceKey : {templateId : Background}}
       if (response1['stylesheets'] != null && response1['stylesheets'] is Map) {
-        Map<String, dynamic> obj = response1['stylesheets'];
-        obj.keys.forEach((element) {
-          pages.add(ShopPage.fromJson(obj[element]));
-        });
-        print('Pages Length: ${pages.length}');
+        stylesheets = response1['stylesheets'];
       }
       // Templates
       if (response1['templates'] != null && response1['templates'] is Map) {
-        Map<String, dynamic> obj = response1['templates'];
-        obj.keys.forEach((element) {
-          try {
-            templates.add(Template.fromJson(obj[element]));
-          } catch (e) {
-            print('Template Parse Error:' + e.toString());
-            print('Template Parse Element id:' + element);
-          }
-        });
-        print('Template Length: ${templates.length}');
+        templates = response1['templates'];
       }
     }
 
@@ -117,10 +104,11 @@ class ShopEditScreenBloc
     }
 
     yield state.copyWith(
+        previews: previews,
         pages: pages,
+        stylesheets: stylesheets,
         templates: templates,
         actions: actions,
-        previews: previews,
         isLoading: false);
   }
 }

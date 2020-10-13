@@ -4,8 +4,10 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/template_view.dart';
 
 class ShopEditTemplatesScreen extends StatefulWidget {
+
   final ShopEditScreenBloc screenBloc;
 
   const ShopEditTemplatesScreen(this.screenBloc);
@@ -15,7 +17,7 @@ class ShopEditTemplatesScreen extends StatefulWidget {
 }
 
 class _ShopEditTemplatesScreenState extends State<ShopEditTemplatesScreen> {
-
+  final String TAG = 'ShopEditTemplatesScreen';
   bool isPortrait;
   bool isTablet;
   final ShopEditScreenBloc screenBloc;
@@ -60,15 +62,19 @@ class _ShopEditTemplatesScreenState extends State<ShopEditTemplatesScreen> {
   }
 
   Widget _templateItem(ShopPage page) {
+    Template template = Template.fromJson(screenBloc.state.templates[page.templateId]);
     return Column(
       children: [
         Expanded(
-            child: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(4),
-          ),
+            child: TemplateView(
+              shopPage: page,
+              template: template,
+              background: getBackground(page),
+//          width: double.infinity,
+//          decoration: BoxDecoration(
+//            color: Colors.white,
+//            borderRadius: BorderRadius.circular(4),
+//          ),
         )),
         SizedBox(
           height: 5,
@@ -80,4 +86,27 @@ class _ShopEditTemplatesScreenState extends State<ShopEditTemplatesScreen> {
       ],
     );
   }
+
+  Background getBackground(ShopPage page) {
+    Map<String, dynamic> stylesheets = screenBloc.state.stylesheets;
+
+    if (stylesheets[page.stylesheetIds.mobile] != null && stylesheets[page.stylesheetIds.mobile] is Map) {
+      Map<String, dynamic> obj = stylesheets[page.stylesheetIds.mobile];
+      print(TAG + ' :page TemplateID : ${page.templateId}');
+      print(TAG + ' :obj keys : ${obj.keys}');
+      try{
+        Background background = Background.fromJson(obj['6f3f8cea-ae2d-4501-965d-a3dc08addf4c'/*page.templateId*/]);
+        return background;
+      }
+      catch(e) {
+        print('$TAG : ${e.toString()}');
+        return null;
+      }
+    }
+    return null;
+  }
 }
+
+// Mobile ID 68a386d7-a013-40de-bd5d-e521261dd1b2
+// Template ID 6f3f8cea-ae2d-4501-965d-a3dc08addf4c
+//             fecd4f2a-699a-4fa9-a4f1-ff8b896d984f

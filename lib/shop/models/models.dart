@@ -156,7 +156,6 @@ class Preview {
   String previewUrl;
 }
 
-
 @JsonSerializable()
 class ShopPage {
   ShopPage();
@@ -372,7 +371,10 @@ class Background {
   @JsonKey(name: 'marginRight')           num marginRight;
   @JsonKey(name: 'marginBottom')          num marginBottom;
   @JsonKey(name: 'marginLeft')            num marginLeft;
-  @JsonKey(name: 'margin')                String  margin;
+  @JsonKey(name: 'margin')                String margin;
+  @JsonKey(name: 'position')              String position;
+  @JsonKey(name: 'top')                   dynamic top;
+  @JsonKey(name: 'zIndex')                dynamic zIndex;
 
   factory Background.fromJson(Map<String, dynamic> json) => _$BackgroundFromJson(json);
   Map<String, dynamic> toJson() => _$BackgroundToJson(this);

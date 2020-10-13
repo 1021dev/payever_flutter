@@ -488,7 +488,10 @@ Background _$BackgroundFromJson(Map<String, dynamic> json) {
     ..marginRight = json['marginRight'] as num
     ..marginBottom = json['marginBottom'] as num
     ..marginLeft = json['marginLeft'] as num
-    ..margin = json['margin'] as String;
+    ..margin = json['margin'] as String
+    ..position = json['position'] as String
+    ..top = json['top']
+    ..zIndex = json['zIndex'];
 }
 
 Map<String, dynamic> _$BackgroundToJson(Background instance) =>
@@ -510,4 +513,7 @@ Map<String, dynamic> _$BackgroundToJson(Background instance) =>
       'marginBottom': instance.marginBottom,
       'marginLeft': instance.marginLeft,
       'margin': instance.margin,
+      'position': instance.position,
+      'top': instance.top,
+      'zIndex': instance.zIndex,
     };
