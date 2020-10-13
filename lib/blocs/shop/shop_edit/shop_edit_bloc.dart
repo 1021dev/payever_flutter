@@ -5,6 +5,7 @@ import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/models/template.dart';
 
 import 'shop_edit.dart';
 
@@ -69,10 +70,24 @@ class ShopEditScreenBloc
         Map<String, dynamic> obj = response1['pages'];
         obj.keys.forEach((element) {
           ShopPage shopPage = ShopPage.fromJson(obj[element]);
-          if (shopPage.data.preview != null)
+//          if (shopPage.data.preview != null)
             pages.add(shopPage);
         });
+        yield state.copyWith(pages: pages);
+      }
 
+      List<Template> templates = [];
+      if (response1['templates'] != null && response1['templates'] is Map) {
+        Map<String, dynamic> obj = response1['templates'];
+        obj.keys.forEach((element) {
+          try {
+            templates.add(Template.fromJson(obj[element]));
+          } catch (e) {
+            print('Template Parse Error:' + e.toString());
+            print('Template Parse Element id:' + element);
+          }
+        });
+        yield state.copyWith(templates: templates);
       }
     }
 

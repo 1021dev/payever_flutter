@@ -2,9 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/shop_edit_templetes_screen.dart';
 
 class ShopEditScreen extends StatefulWidget {
   final ShopScreenBloc shopScreenBloc;
@@ -181,7 +183,15 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
               children: [
                 Center(
                     child:
-                        IconButton(icon: Icon(Icons.add_box), onPressed: null)),
+                    IconButton(
+                        icon: Icon(Icons.add_box),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              PageTransition(
+                                  child: ShopEditTemplatesScreen(screenBloc),
+                                  type: PageTransitionType.fade));
+                        })),
                 Positioned(
                   child: InkWell(
                       onTap: () {

@@ -11,7 +11,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/create_shop_screen.dart';
 import 'package:payever/shop/views/shop_dashboard_screen.dart';
-import 'package:payever/shop/views/shop_edit_screen.dart';
+import 'package:payever/shop/views/edit/shop_edit_screen.dart';
 import 'package:payever/shop/views/shop_setting_screen.dart';
 import 'package:payever/shop/views/switch_shop_screen.dart';
 import 'package:payever/shop/views/themes/theme_screen.dart';

@@ -1,0 +1,81 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:payever/blocs/bloc.dart';
+import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/settings/widgets/app_bar.dart';
+import 'package:payever/shop/models/models.dart';
+
+class ShopEditTemplatesScreen extends StatefulWidget {
+  final ShopEditScreenBloc screenBloc;
+
+  const ShopEditTemplatesScreen(this.screenBloc);
+
+  @override
+  _ShopEditTemplatesScreenState createState() => _ShopEditTemplatesScreenState(screenBloc);
+}
+
+class _ShopEditTemplatesScreenState extends State<ShopEditTemplatesScreen> {
+
+  bool isPortrait;
+  bool isTablet;
+  final ShopEditScreenBloc screenBloc;
+
+  _ShopEditTemplatesScreenState(this.screenBloc);
+
+  @override
+  Widget build(BuildContext context) {
+    isPortrait = GlobalUtils.isPortrait(context);
+    isTablet = GlobalUtils.isTablet(context);
+
+    return BlocListener(
+      listener: (BuildContext context, ShopEditScreenState state) async {},
+      bloc: screenBloc,
+      child: BlocBuilder(
+        bloc: screenBloc,
+        builder: (BuildContext context, state) {
+          return Scaffold(
+              appBar: Appbar('Templates'),
+              backgroundColor: Colors.grey[800],
+              body: SafeArea(bottom: false, child: _body(state)));
+        },
+      ),
+    );
+  }
+
+  Widget _body(ShopEditScreenState state) {
+    print('Pages Length: ${state.pages.length}');
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+      child: GridView.count(
+        crossAxisCount: isTablet ? 3 : (isPortrait ? 2 : 3),
+        crossAxisSpacing: isTablet ? 12 : (isPortrait ? 0 : 6),
+        mainAxisSpacing: isTablet ? 12 : (isPortrait ? 6 : 6),
+        children: List.generate(
+          state.pages.length,
+              (index) {
+            return _templateItem(state.pages[index]);
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _templateItem(ShopPage page) {
+    return Column(
+      children: [
+        Expanded(
+            child: Container(
+          width: double.infinity,
+          color: Colors.white,
+        )),
+        SizedBox(
+          height: 5,
+        ),
+        Text(
+          page.name,
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        ),
+      ],
+    );
+  }
+}
