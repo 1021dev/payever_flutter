@@ -40,6 +40,12 @@ class ShopEditScreenBloc
     String token = GlobalUtils.activeToken.accessToken;
     String themeId = state.activeTheme.themeId;
     yield state.copyWith(isLoading: true);
+
+    List<Preview> previews = [];
+    List<ShopPage> pages = [];
+    List<Template> templates = [];
+    List<Action>actions = [];
+    
     dynamic response =
         await api.getShopEditPreViews(token, themeId);
     if (response is DioError) {
@@ -47,7 +53,7 @@ class ShopEditScreenBloc
     } else {
       if (response['source'] != null) {
         dynamic obj = response['source'];
-        List<Preview> previews = [];
+
         if (obj['previews'] != null) {
           Map<String, dynamic> previewObj = obj['previews'];
           previewObj.keys.forEach((element) {
@@ -57,26 +63,22 @@ class ShopEditScreenBloc
             preview.previewUrl = previewObj[element]['previewUrl'];
             previews.add(preview);
           });
-          yield state.copyWith(previews: previews);
         }
       }
     }
+
     dynamic response1 = await api.getShopSnapShot(token, themeId);
     if (response1 is DioError) {
       yield state.copyWith(isLoading: false);
     } else {
-      List<ShopPage> pages = [];
       if (response1['pages'] != null && response1['pages'] is Map) {
         Map<String, dynamic> obj = response1['pages'];
         obj.keys.forEach((element) {
-          ShopPage shopPage = ShopPage.fromJson(obj[element]);
-//          if (shopPage.data.preview != null)
-            pages.add(shopPage);
+            pages.add(ShopPage.fromJson(obj[element]));
         });
-        yield state.copyWith(pages: pages);
+        print('Pages Length: ${pages.length}');
       }
 
-      List<Template> templates = [];
       if (response1['templates'] != null && response1['templates'] is Map) {
         Map<String, dynamic> obj = response1['templates'];
         obj.keys.forEach((element) {
@@ -87,7 +89,7 @@ class ShopEditScreenBloc
             print('Template Parse Element id:' + element);
           }
         });
-        yield state.copyWith(templates: templates);
+        print('Template Length: ${templates.length}');
       }
     }
 
@@ -96,7 +98,6 @@ class ShopEditScreenBloc
     if (response2 is DioError) {
       yield state.copyWith(isLoading: false);
     } else {
-      List<Action>actions = [];
       response2.forEach((element) {
         try {
           actions.add(Action.fromJson(element));
@@ -106,7 +107,13 @@ class ShopEditScreenBloc
         }
       });
       print('Action Count: ${actions.length}');
-      yield state.copyWith(actions: actions, isLoading: false);
     }
+
+    yield state.copyWith(
+        pages: pages,
+        templates: templates,
+        actions: actions,
+        previews: previews,
+        isLoading: false);
   }
 }

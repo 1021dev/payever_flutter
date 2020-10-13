@@ -43,13 +43,12 @@ class _ShopEditTemplatesScreenState extends State<ShopEditTemplatesScreen> {
   }
 
   Widget _body(ShopEditScreenState state) {
-    print('Pages Length: ${state.pages.length}');
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 18),
       child: GridView.count(
         crossAxisCount: isTablet ? 3 : (isPortrait ? 2 : 3),
-        crossAxisSpacing: isTablet ? 12 : (isPortrait ? 0 : 6),
-        mainAxisSpacing: isTablet ? 12 : (isPortrait ? 6 : 6),
+        crossAxisSpacing: isTablet ? 12 : (isPortrait ? 6 : 12),
+        mainAxisSpacing: 12,
         children: List.generate(
           state.pages.length,
               (index) {

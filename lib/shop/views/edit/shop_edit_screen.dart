@@ -60,6 +60,9 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
     if (state.isLoading) {
       return Center(child: CircularProgressIndicator());
     }
+    print('Pages Length: ${state.pages.length}');
+    print('Template Length: ${state.templates.length}');
+    print('Action Count: ${state.actions.length}');
     return Container(
       padding: EdgeInsets.all(6),
       child: Row(
