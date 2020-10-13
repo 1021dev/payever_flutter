@@ -1,6 +1,4 @@
-
 import 'package:payever/shop/models/models.dart';
-import 'package:payever/shop/models/template.dart';
 
 class ShopEditScreenState {
   final bool isLoading;

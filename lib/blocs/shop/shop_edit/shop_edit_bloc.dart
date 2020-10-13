@@ -5,8 +5,6 @@ import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
-import 'package:payever/shop/models/template.dart';
-
 import 'shop_edit.dart';
 
 class ShopEditScreenBloc
@@ -71,6 +69,7 @@ class ShopEditScreenBloc
     if (response1 is DioError) {
       yield state.copyWith(isLoading: false);
     } else {
+      // Pages
       if (response1['pages'] != null && response1['pages'] is Map) {
         Map<String, dynamic> obj = response1['pages'];
         obj.keys.forEach((element) {
@@ -78,7 +77,15 @@ class ShopEditScreenBloc
         });
         print('Pages Length: ${pages.length}');
       }
-
+      // Stylesheets Map /{deviceKey : {templateId : Background}}
+      if (response1['stylesheets'] != null && response1['stylesheets'] is Map) {
+        Map<String, dynamic> obj = response1['stylesheets'];
+        obj.keys.forEach((element) {
+          pages.add(ShopPage.fromJson(obj[element]));
+        });
+        print('Pages Length: ${pages.length}');
+      }
+      // Templates
       if (response1['templates'] != null && response1['templates'] is Map) {
         Map<String, dynamic> obj = response1['templates'];
         obj.keys.forEach((element) {
