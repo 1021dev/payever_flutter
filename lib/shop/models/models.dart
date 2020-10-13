@@ -154,9 +154,8 @@ class Preview {
   String id;
   dynamic actionId;
   String previewUrl;
-
-
 }
+
 
 @JsonSerializable()
 class ShopPage {
@@ -195,4 +194,55 @@ class StyleSheetIds {
 
   factory StyleSheetIds.fromJson(Map<String, dynamic> json) => _$StyleSheetIdsFromJson(json);
   Map<String, dynamic> toJson() => _$StyleSheetIdsToJson(this);
+}
+
+@JsonSerializable()
+class Action {
+  Action();
+
+  @JsonKey(name: 'affectedPageIds')   List<String> affectedPageIds;
+  @JsonKey(name: 'createdAt')         String createdAt;
+  @JsonKey(name: 'effects')           List<Effect> effects;
+  @JsonKey(name: 'id')                String id;
+  @JsonKey(name: 'targetPageId')      String targetPageId;
+
+  factory Action.fromJson(Map<String, dynamic> json) => _$ActionFromJson(json);
+  Map<String, dynamic> toJson() => _$ActionToJson(this);
+}
+
+@JsonSerializable()
+class Effect {
+  Effect();
+
+  @JsonKey(name: 'payload')   Payload payload;
+  @JsonKey(name: 'target')    String target;
+  @JsonKey(name: 'type')      String type;
+
+  factory Effect.fromJson(Map<String, dynamic> json) => _$EffectFromJson(json);
+  Map<String, dynamic> toJson() => _$EffectToJson(this);
+}
+
+@JsonSerializable()
+class Payload {
+  Payload();
+
+  @JsonKey(name: 'children')    List<dynamic> children;
+  @JsonKey(name: 'data')        PayloadData data;
+  @JsonKey(name: 'id')          String id;
+  @JsonKey(name: 'meta')        dynamic meta;
+  @JsonKey(name: 'type')        String type;
+
+  factory Payload.fromJson(Map<String, dynamic> json) => _$PayloadFromJson(json);
+  Map<String, dynamic> toJson() => _$PayloadToJson(this);
+}
+
+@JsonSerializable()
+class PayloadData {
+  PayloadData();
+
+  @JsonKey(name: 'sync')   bool sync;
+  @JsonKey(name: 'text')   String text;
+
+  factory PayloadData.fromJson(Map<String, dynamic> json) => _$PayloadDataFromJson(json);
+  Map<String, dynamic> toJson() => _$PayloadDataToJson(this);
 }

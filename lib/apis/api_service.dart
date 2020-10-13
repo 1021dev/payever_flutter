@@ -976,9 +976,24 @@ class ApiService {
   //  https://builder-shops.payever.org/api/theme/898ab6ec-c085-460c-9cdd-d43f90cbedcb/snapshot
   Future<dynamic> getShopSnapShot(String token, String themeId) async {
     try {
-      print('$TAG - getSnapShot()');
+      print('$TAG - getShopSnapShot()');
       dynamic response = await _client.getTypeless(
         '${Env.builderShop}/api/theme/$themeId/snapshot',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+//  https://builder-shops.payever.org/api/theme/e83ba829-7e99-4af2-9d8e-869c4a2a706c/actions?limit=20&offset=0
+  Future<dynamic> getShopEditActions(String token, String themeId, Map<String, dynamic>query) async {
+    try {
+      print('$TAG - getShopEditActions()');
+      dynamic response = await _client.getTypeless(
+        '${Env.builderShop}/api/theme/$themeId/actions',
+        queryParameters: query,
         headers: _getHeaders(token),
       );
       return response;

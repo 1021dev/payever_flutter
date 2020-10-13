@@ -31,15 +31,16 @@ class ShopEditScreenBloc
   }
 
   Stream<ShopEditScreenState> fetchSnapShot() async* {
-    String token = GlobalUtils.activeToken.accessToken;
     if (state.activeTheme == null) {
       yield state.copyWith(isLoading: false);
       Fluttertoast.showToast(msg: 'There is no active Theme');
       return;
     }
+    String token = GlobalUtils.activeToken.accessToken;
+    String themeId = state.activeTheme.themeId;
     yield state.copyWith(isLoading: true);
     dynamic response =
-        await api.getShopEditPreViews(token, state.activeTheme.themeId);
+        await api.getShopEditPreViews(token, themeId);
     if (response is DioError) {
       Fluttertoast.showToast(msg: response.error);
     } else {
@@ -59,8 +60,7 @@ class ShopEditScreenBloc
         }
       }
     }
-    dynamic response1 =
-        await api.getShopSnapShot(token, state.activeTheme.themeId);
+    dynamic response1 = await api.getShopSnapShot(token, themeId);
     if (response1 is DioError) {
       yield state.copyWith(isLoading: false);
     } else {
@@ -72,8 +72,16 @@ class ShopEditScreenBloc
           if (shopPage.data.preview != null)
             pages.add(shopPage);
         });
-        yield state.copyWith(pages: pages, isLoading: false);
+
       }
+    }
+
+    Map<String, dynamic>query = {'limit': 20, 'offset': 0};
+    dynamic response2 = await api.getShopEditActions(token, themeId, query);
+    if (response2 is DioError) {
+      yield state.copyWith(isLoading: false);
+    } else {
+      yield state.copyWith(isLoading: false);
     }
   }
 }

@@ -257,3 +257,70 @@ Map<String, dynamic> _$StyleSheetIdsToJson(StyleSheetIds instance) =>
       'mobile': instance.mobile,
       'tablet': instance.tablet,
     };
+
+Action _$ActionFromJson(Map<String, dynamic> json) {
+  return Action()
+    ..affectedPageIds =
+        (json['affectedPageIds'] as List)?.map((e) => e as String)?.toList()
+    ..createdAt = json['createdAt'] as String
+    ..effects = (json['effects'] as List)
+        ?.map((e) =>
+            e == null ? null : Effect.fromJson(e as Map<String, dynamic>))
+        ?.toList()
+    ..id = json['id'] as String
+    ..targetPageId = json['targetPageId'] as String;
+}
+
+Map<String, dynamic> _$ActionToJson(Action instance) => <String, dynamic>{
+      'affectedPageIds': instance.affectedPageIds,
+      'createdAt': instance.createdAt,
+      'effects': instance.effects,
+      'id': instance.id,
+      'targetPageId': instance.targetPageId,
+    };
+
+Effect _$EffectFromJson(Map<String, dynamic> json) {
+  return Effect()
+    ..payload = json['payload'] == null
+        ? null
+        : Payload.fromJson(json['payload'] as Map<String, dynamic>)
+    ..target = json['target'] as String
+    ..type = json['type'] as String;
+}
+
+Map<String, dynamic> _$EffectToJson(Effect instance) => <String, dynamic>{
+      'payload': instance.payload,
+      'target': instance.target,
+      'type': instance.type,
+    };
+
+Payload _$PayloadFromJson(Map<String, dynamic> json) {
+  return Payload()
+    ..children = json['children'] as List
+    ..data = json['data'] == null
+        ? null
+        : PayloadData.fromJson(json['data'] as Map<String, dynamic>)
+    ..id = json['id'] as String
+    ..meta = json['meta']
+    ..type = json['type'] as String;
+}
+
+Map<String, dynamic> _$PayloadToJson(Payload instance) => <String, dynamic>{
+      'children': instance.children,
+      'data': instance.data,
+      'id': instance.id,
+      'meta': instance.meta,
+      'type': instance.type,
+    };
+
+PayloadData _$PayloadDataFromJson(Map<String, dynamic> json) {
+  return PayloadData()
+    ..sync = json['sync'] as bool
+    ..text = json['text'] as String;
+}
+
+Map<String, dynamic> _$PayloadDataToJson(PayloadData instance) =>
+    <String, dynamic>{
+      'sync': instance.sync,
+      'text': instance.text,
+    };
