@@ -54,14 +54,14 @@ class _ShopEditTemplatesScreenState extends State<ShopEditTemplatesScreen> {
         children: List.generate(
           state.pages.length,
               (index) {
-            return _templateItem(state.pages[index]);
+            return _templateItem(state.pages[index], state);
           },
         ),
       ),
     );
   }
 
-  Widget _templateItem(ShopPage page) {
+  Widget _templateItem(ShopPage page, ShopEditScreenState state) {
     Template template = Template.fromJson(screenBloc.state.templates[page.templateId]);
     return Column(
       children: [
@@ -69,13 +69,12 @@ class _ShopEditTemplatesScreenState extends State<ShopEditTemplatesScreen> {
             child: TemplateView(
               shopPage: page,
               template: template,
-              background: getBackground(page),
-//          width: double.infinity,
-//          decoration: BoxDecoration(
-//            color: Colors.white,
-//            borderRadius: BorderRadius.circular(4),
-//          ),
+              stylesheets: state.stylesheets,
         )),
+        Expanded(
+            child: Container(
+              color: Colors.white,
+            )),
         SizedBox(
           height: 5,
         ),
@@ -87,24 +86,6 @@ class _ShopEditTemplatesScreenState extends State<ShopEditTemplatesScreen> {
     );
   }
 
-  Background getBackground(ShopPage page) {
-    Map<String, dynamic> stylesheets = screenBloc.state.stylesheets;
-
-    if (stylesheets[page.stylesheetIds.mobile] != null && stylesheets[page.stylesheetIds.mobile] is Map) {
-      Map<String, dynamic> obj = stylesheets[page.stylesheetIds.mobile];
-      print(TAG + ' :page TemplateID : ${page.templateId}');
-      print(TAG + ' :obj keys : ${obj.keys}');
-      try{
-        Background background = Background.fromJson(obj['6f3f8cea-ae2d-4501-965d-a3dc08addf4c'/*page.templateId*/]);
-        return background;
-      }
-      catch(e) {
-        print('$TAG : ${e.toString()}');
-        return null;
-      }
-    }
-    return null;
-  }
 }
 
 // Mobile ID 68a386d7-a013-40de-bd5d-e521261dd1b2

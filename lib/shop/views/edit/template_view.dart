@@ -4,39 +4,102 @@ import 'package:payever/shop/models/models.dart';
 
 class TemplateView extends StatefulWidget {
   final ShopPage shopPage;
-  final Background background;
   final Template template;
+  final Map<String, dynamic> stylesheets;
 
-  const TemplateView({this.shopPage, this.background, this.template});
+  const TemplateView({this.shopPage, this.template, this.stylesheets});
 
   @override
-  _TemplateViewState createState() => _TemplateViewState(shopPage, background, template);
+  _TemplateViewState createState() => _TemplateViewState(shopPage, template, stylesheets);
 }
 
 class _TemplateViewState extends State<TemplateView> {
 
   final ShopPage shopPage;
-  final Background background;
   final Template template;
+  final Map<String, dynamic> stylesheets;
 
-  _TemplateViewState(this.shopPage, this.background, this.template);
+  _TemplateViewState(this.shopPage, this.template, this.stylesheets);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          Expanded(child: _background()),
-        ],
-      ),
+    List sections = [];
+    template.children.forEach((child) {
+      if (child.type == 'section') {
+          sections.add(_section(child));
+      }
+    });
+    return ListView.separated(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      itemCount: sections.length,
+      shrinkWrap: true,
+      itemBuilder: (context, index) {
+        return sections[index];
+      },
+      separatorBuilder: (context, index) {
+        return Divider(
+          height: 14,
+          thickness: 0,
+          color: Colors.transparent,
+        );
+      },
     );
   }
 
-  Widget _background() {
-    if (background == null)
-      return Container();
-    
+  Widget _section(TemplateChild child) {
+    Background background = stylesheets[child.id];
+    if (background == null) return Container();
+    List widgets = [];
+    child.children.forEach((child) {
+      if (child.type == 'text') {
+        widgets.add(_textWidget(child));
+      } else if (child.type == 'button') {
+        widgets.add(_buttonWidget(child));
+      } else if (child.type == 'image') {
+        widgets.add(_imageWidget(child));
+      }
+
+    });
+    return ListView.separated(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      itemCount: widgets.length,
+      shrinkWrap: true,
+      itemBuilder: (context, index) {
+        return widgets[index];
+      },
+      separatorBuilder: (context, index) {
+        return Divider(
+          height: 14,
+          thickness: 0,
+          color: Colors.transparent,
+        );
+      },
+    );
+  }
+
+  Widget _textWidget(TemplateChild child) {
+    Background background = stylesheets[child.id];
     return Container(
+      height: background.height,
+      width: background.width,
+      child: Text(child.data.text),
+    );
+  }
+
+  Widget _buttonWidget(TemplateChild child) {
+    Background background = stylesheets[child.id];
+    return Container(
+      height: background.height,
+      width: background.width,
+      child: Text(child.data.text),
+    );
+  }
+
+  Widget _imageWidget(TemplateChild child) {
+    Background background = stylesheets[child.id];
+    return Container(
+      height: background.height,
+      width: background.width,
       child: CachedNetworkImage(
         imageUrl:
         '${background.backgroundImage}',

@@ -111,4 +111,5 @@ class ShopEditScreenBloc
         actions: actions,
         isLoading: false);
   }
+
 }
