@@ -25,7 +25,11 @@ Map<String, dynamic> _$TemplateToJson(Template instance) => <String, dynamic>{
 
 TemplateChild _$TemplateChildFromJson(Map<String, dynamic> json) {
   return TemplateChild()
-    ..children = json['children'] as List
+    ..children = (json['children'] as List)
+        ?.map((e) => e == null
+            ? null
+            : TemplateChild.fromJson(e as Map<String, dynamic>))
+        ?.toList()
     ..childrenRefs = json['childrenRefs']
     ..context = json['context'] == null
         ? null
@@ -38,7 +42,10 @@ TemplateChild _$TemplateChildFromJson(Map<String, dynamic> json) {
     ..styles = json['styles'] == null
         ? null
         : Styles.fromJson(json['styles'] as Map<String, dynamic>)
-    ..type = json['type'] as String;
+    ..type = json['type'] as String
+    ..data = json['data'] == null
+        ? null
+        : Data.fromJson(json['data'] as Map<String, dynamic>);
 }
 
 Map<String, dynamic> _$TemplateChildToJson(TemplateChild instance) =>
@@ -51,17 +58,28 @@ Map<String, dynamic> _$TemplateChildToJson(TemplateChild instance) =>
       'parent': instance.parent,
       'styles': instance.styles,
       'type': instance.type,
+      'data': instance.data,
     };
 
 Context _$ContextFromJson(Map<String, dynamic> json) {
   return Context()
-    ..data = json['data']
+    ..data = json['data'] == null
+        ? null
+        : Meta.fromJson(json['data'] as Map<String, dynamic>)
     ..state = json['state'] as String;
 }
 
 Map<String, dynamic> _$ContextToJson(Context instance) => <String, dynamic>{
       'data': instance.data,
       'state': instance.state,
+    };
+
+Meta _$MetaFromJson(Map<String, dynamic> json) {
+  return Meta()..deletable = json['deletable'] as bool;
+}
+
+Map<String, dynamic> _$MetaToJson(Meta instance) => <String, dynamic>{
+      'deletable': instance.deletable,
     };
 
 Parent _$ParentFromJson(Map<String, dynamic> json) {
@@ -106,4 +124,29 @@ Map<String, dynamic> _$StylesToJson(Styles instance) => <String, dynamic>{
       'marginRight': instance.marginRight,
       'marginTop': instance.marginTop,
       'width': instance.width,
+    };
+
+Data _$DataFromJson(Map<String, dynamic> json) {
+  return Data()
+    ..text = json['text'] as String
+    ..action = json['action'] == null
+        ? null
+        : ChildAction.fromJson(json['action'] as Map<String, dynamic>);
+}
+
+Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
+      'text': instance.text,
+      'action': instance.action,
+    };
+
+ChildAction _$ChildActionFromJson(Map<String, dynamic> json) {
+  return ChildAction()
+    ..type = json['type'] as String
+    ..payload = json['payload'] as String;
+}
+
+Map<String, dynamic> _$ChildActionToJson(ChildAction instance) =>
+    <String, dynamic>{
+      'type': instance.type,
+      'payload': instance.payload,
     };

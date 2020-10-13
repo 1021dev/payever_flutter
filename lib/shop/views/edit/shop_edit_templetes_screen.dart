@@ -65,7 +65,10 @@ class _ShopEditTemplatesScreenState extends State<ShopEditTemplatesScreen> {
         Expanded(
             child: Container(
           width: double.infinity,
-          color: Colors.white,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(4),
+          ),
         )),
         SizedBox(
           height: 5,

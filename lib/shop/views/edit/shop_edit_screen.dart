@@ -48,7 +48,7 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
         bloc: screenBloc,
         builder: (BuildContext context, state) {
           return Scaffold(
-              appBar: CustomAppBar(''),
+              appBar: CustomAppBar(onTapAdd: ()=> _navigateTemplatesScreen(),),
               backgroundColor: Colors.grey[800],
               body: SafeArea(bottom: false, child: _body(state)));
         },
@@ -189,11 +189,7 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
                     IconButton(
                         icon: Icon(Icons.add_box),
                         onPressed: () {
-                          Navigator.push(
-                              context,
-                              PageTransition(
-                                  child: ShopEditTemplatesScreen(screenBloc),
-                                  type: PageTransitionType.fade));
+                          _navigateTemplatesScreen();
                         })),
                 Positioned(
                   child: InkWell(
@@ -222,13 +218,24 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
       ),
     );
   }
+
+  void _navigateTemplatesScreen() {
+    Navigator.push(
+        context,
+        PageTransition(
+            child: ShopEditTemplatesScreen(screenBloc),
+            type: PageTransitionType.fade));
+  }
 }
 
-class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
-  final String title;
-  final Function onClose;
 
-  CustomAppBar(this.title, {this.onClose});
+
+class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
+
+  final Function onClose;
+  final Function onTapAdd;
+
+  CustomAppBar({this.onClose, this.onTapAdd});
 
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
@@ -280,7 +287,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                 Icons.add,
                 color: Colors.white,
               ),
-              onTap: null,
+              onTap: () => onTapAdd(),
             ),
             InkWell(
                 child: Icon(

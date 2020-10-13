@@ -45,7 +45,7 @@ class ShopEditScreenBloc
     List<ShopPage> pages = [];
     List<Template> templates = [];
     List<Action>actions = [];
-    
+
     dynamic response =
         await api.getShopEditPreViews(token, themeId);
     if (response is DioError) {
