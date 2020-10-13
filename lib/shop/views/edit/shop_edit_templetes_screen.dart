@@ -7,13 +7,13 @@ import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/template_view.dart';
 
 class ShopEditTemplatesScreen extends StatefulWidget {
-
   final ShopEditScreenBloc screenBloc;
 
   const ShopEditTemplatesScreen(this.screenBloc);
 
   @override
-  _ShopEditTemplatesScreenState createState() => _ShopEditTemplatesScreenState(screenBloc);
+  _ShopEditTemplatesScreenState createState() =>
+      _ShopEditTemplatesScreenState(screenBloc);
 }
 
 class _ShopEditTemplatesScreenState extends State<ShopEditTemplatesScreen> {
@@ -53,7 +53,7 @@ class _ShopEditTemplatesScreenState extends State<ShopEditTemplatesScreen> {
         mainAxisSpacing: 12,
         children: List.generate(
           state.pages.length,
-              (index) {
+          (index) {
             return _templateItem(state.pages[index], state);
           },
         ),
@@ -62,19 +62,25 @@ class _ShopEditTemplatesScreenState extends State<ShopEditTemplatesScreen> {
   }
 
   Widget _templateItem(ShopPage page, ShopEditScreenState state) {
-    Template template = Template.fromJson(screenBloc.state.templates[page.templateId]);
+    Template template;
+    try {
+      template = Template.fromJson(screenBloc.state.templates[page.templateId]);
+    } catch (e) {
+//      print(e.toString());
+    }
+
     return Column(
       children: [
         Expanded(
-            child: TemplateView(
-              shopPage: page,
-              template: template,
-              stylesheets: state.stylesheets,
-        )),
-        Expanded(
-            child: Container(
-              color: Colors.white,
-            )),
+            child: (template != null)
+                ? TemplateView(
+                    shopPage: page,
+                    template: template,
+                    stylesheets: state.stylesheets,
+                  )
+                : Container(
+                    color: Colors.white,
+                  )),
         SizedBox(
           height: 5,
         ),
@@ -85,9 +91,4 @@ class _ShopEditTemplatesScreenState extends State<ShopEditTemplatesScreen> {
       ],
     );
   }
-
 }
-
-// Mobile ID 68a386d7-a013-40de-bd5d-e521261dd1b2
-// Template ID 6f3f8cea-ae2d-4501-965d-a3dc08addf4c
-//             fecd4f2a-699a-4fa9-a4f1-ff8b896d984f

@@ -25,69 +25,82 @@ class _TemplateViewState extends State<TemplateView> {
   Widget build(BuildContext context) {
     List sections = [];
     template.children.forEach((child) {
+
       if (child.type == 'section') {
           sections.add(_section(child));
       }
     });
-    return ListView.separated(
-      padding: EdgeInsets.symmetric(horizontal: 16),
-      itemCount: sections.length,
-      shrinkWrap: true,
-      itemBuilder: (context, index) {
-        return sections[index];
-      },
-      separatorBuilder: (context, index) {
-        return Divider(
-          height: 14,
-          thickness: 0,
-          color: Colors.transparent,
-        );
-      },
+
+    print('Sections Length: ${sections.length}');
+    return Container(
+      color: Colors.amber,
+      child: ListView.separated(
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        itemCount: sections.length,
+        shrinkWrap: true,
+        itemBuilder: (context, index) {
+          return sections[index];
+        },
+        separatorBuilder: (context, index) {
+          return Divider(
+            height: 14,
+            thickness: 0,
+            color: Colors.transparent,
+          );
+        },
+      ),
     );
   }
 
   Widget _section(TemplateChild child) {
     Background background = stylesheets[child.id];
-    if (background == null) return Container();
     List widgets = [];
     child.children.forEach((child) {
-      if (child.type == 'text') {
-        widgets.add(_textWidget(child));
-      } else if (child.type == 'button') {
-        widgets.add(_buttonWidget(child));
-      } else if (child.type == 'image') {
+        if (child.type == 'text') {
+          widgets.add(_textWidget(child));
+        } else if (child.type == 'button') {
+//        widgets.add(_buttonWidget(child));
+        } else if (child.type == 'image') {
         widgets.add(_imageWidget(child));
-      }
-
+        }
     });
-    return ListView.separated(
-      padding: EdgeInsets.symmetric(horizontal: 16),
-      itemCount: widgets.length,
-      shrinkWrap: true,
-      itemBuilder: (context, index) {
-        return widgets[index];
-      },
-      separatorBuilder: (context, index) {
-        return Divider(
-          height: 14,
-          thickness: 0,
-          color: Colors.transparent,
-        );
-      },
+
+    return Container(
+      child: ListView.separated(
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        itemCount: widgets.length,
+        shrinkWrap: true,
+        itemBuilder: (context, index) {
+          return widgets[index];
+        },
+        separatorBuilder: (context, index) {
+          return Divider(
+            height: 14,
+            thickness: 0,
+            color: Colors.transparent,
+          );
+        },
+      ),
     );
   }
 
   Widget _textWidget(TemplateChild child) {
-    Background background = stylesheets[child.id];
-    return Container(
-      height: background.height,
-      width: background.width,
-      child: Text(child.data.text),
+//    Background background = stylesheets[child.id];
+//    if (background == null) return Container();
+    return Align(
+      alignment: Alignment.center,
+      child: Container(
+//        height: background.height,
+//        width: background.width,
+        alignment: Alignment.center,
+        child: Text(child.data.text),
+      ),
     );
   }
 
   Widget _buttonWidget(TemplateChild child) {
     Background background = stylesheets[child.id];
+    if (background == null) return Container();
     return Container(
       height: background.height,
       width: background.width,
@@ -97,6 +110,7 @@ class _TemplateViewState extends State<TemplateView> {
 
   Widget _imageWidget(TemplateChild child) {
     Background background = stylesheets[child.id];
+    if (background == null) return Container();
     return Container(
       height: background.height,
       width: background.width,
