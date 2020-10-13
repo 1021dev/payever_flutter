@@ -8,6 +8,7 @@ class ShopEditScreenState {
   final ThemeModel activeTheme;
   final List<Preview> previews;
   final List<ShopPage> pages;
+  final List<Action>actions;
 
   ShopEditScreenState({
     this.isLoading = true,
@@ -16,6 +17,7 @@ class ShopEditScreenState {
     this.activeTheme,
     this.previews = const [],
     this.pages = const [],
+    this.actions = const [],
   });
 
   List<Object> get props => [
@@ -25,6 +27,7 @@ class ShopEditScreenState {
     this.activeTheme,
     this.previews,
     this.pages,
+    this.actions,
   ];
 
   ShopEditScreenState copyWith({
@@ -34,6 +37,7 @@ class ShopEditScreenState {
     ThemeModel activeTheme,
     List<Preview>previews,
     List<ShopPage> pages,
+    List<Action>actions,
   }) {
     return ShopEditScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -42,6 +46,7 @@ class ShopEditScreenState {
       activeTheme: activeTheme ?? this.activeTheme,
       previews: previews ?? this.previews,
       pages: pages ?? this.pages,
+      actions: actions ?? this.actions,
     );
   }
 }

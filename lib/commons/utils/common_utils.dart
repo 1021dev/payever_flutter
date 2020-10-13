@@ -6,9 +6,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:iso_countries/iso_countries.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/commons/models/token.dart';
 import 'package:payever/theme.dart';
+import 'package:payever/transactions/models/transaction.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/models.dart';
 import 'utils.dart';
 
 class Styles {

@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/bloc.dart';
-import 'package:payever/commons/commons.dart';
+import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
 
 import 'shop_edit.dart';
@@ -81,7 +81,17 @@ class ShopEditScreenBloc
     if (response2 is DioError) {
       yield state.copyWith(isLoading: false);
     } else {
-      yield state.copyWith(isLoading: false);
+      List<Action>actions = [];
+      response2.forEach((element) {
+        try {
+          actions.add(Action.fromJson(element));
+        } catch (e) {
+          print('Action Parse Error:' + e.toString());
+          print('Action Parse Element:' + element['id']);
+        }
+      });
+      print('Action Count: ${actions.length}');
+      yield state.copyWith(actions: actions, isLoading: false);
     }
   }
 }
