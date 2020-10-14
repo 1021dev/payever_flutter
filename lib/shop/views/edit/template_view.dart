@@ -7,14 +7,16 @@ class TemplateView extends StatefulWidget {
   final Template template;
   final Map<String, dynamic> stylesheets;
   final Function onTap;
-  const TemplateView({this.shopPage, this.template, this.stylesheets, this.onTap});
+
+  const TemplateView(
+      {this.shopPage, this.template, this.stylesheets, this.onTap});
 
   @override
-  _TemplateViewState createState() => _TemplateViewState(shopPage, template, stylesheets);
+  _TemplateViewState createState() =>
+      _TemplateViewState(shopPage, template, stylesheets);
 }
 
 class _TemplateViewState extends State<TemplateView> {
-
   final ShopPage shopPage;
   final Template template;
   final Map<String, dynamic> stylesheets;
@@ -26,7 +28,7 @@ class _TemplateViewState extends State<TemplateView> {
     List sections = [];
     template.children.forEach((child) {
       if (child.type == 'section') {
-          sections.add(_section(child));
+        sections.add(_section(child));
       } else {
         print('Special Section Type: ${child.type}');
       }
@@ -35,9 +37,8 @@ class _TemplateViewState extends State<TemplateView> {
     return InkWell(
       onTap: widget.onTap,
       child: Container(
-        color: Colors.black54,
+        color: Colors.white,
         child: ListView.separated(
-          padding: EdgeInsets.symmetric(horizontal: 16),
           itemCount: sections.length,
           shrinkWrap: true,
           itemBuilder: (context, index) {
@@ -63,17 +64,18 @@ class _TemplateViewState extends State<TemplateView> {
 
     List widgets = [];
     child.children.forEach((child) {
-        if (child.type == 'text') {
-          widgets.add(_textWidget(child));
-        } else if (child.type == 'button') {
+      if (child.type == 'text') {
+        widgets.add(_textWidget(child));
+      } else if (child.type == 'button') {
 //        widgets.add(_buttonWidget(child));
-        } else if (child.type == 'image') {
+      } else if (child.type == 'image') {
         widgets.add(_imageWidget(child));
-        }
+      }
     });
 
-    if (background != null && background.backgroundImage != null && background.backgroundImage.isNotEmpty) {
-      print('Section Background Image: ${background.backgroundImage}');
+    if (background != null &&
+        background.backgroundImage != null &&
+        background.backgroundImage.isNotEmpty) {
       return Stack(
         children: [
           Container(
@@ -84,17 +86,19 @@ class _TemplateViewState extends State<TemplateView> {
               imageUrl: background.backgroundImage,
               imageBuilder: (context, imageProvider) => Container(
                 decoration: BoxDecoration(
-                  color: Colors.white/*background.backgroundColor*/,
-                  borderRadius: BorderRadius.circular(4),
+                  color: Colors.white /*background.backgroundColor*/,
                   image: DecorationImage(
                     image: imageProvider,
-                    fit: BoxFit.contain,
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
               placeholder: (context, url) =>
                   Container(child: Center(child: CircularProgressIndicator())),
-              errorWidget: (context, url, error) => Icon(Icons.error, size: 40,),
+              errorWidget: (context, url, error) => Icon(
+                Icons.error,
+                size: 40,
+              ),
             ),
           ),
           Container(
@@ -135,20 +139,20 @@ class _TemplateViewState extends State<TemplateView> {
         ),
       );
     }
-
   }
 
   Widget _textWidget(Child child) {
     Background background = getBackground(child);
     if (background == null) {
       print('Text background NULL, Child ID: ${child.id}');
+    } else {
+      print('Text background Valid, Child ID: ${child.id}');
     }
 
     String txt = '';
     if (child.data is Map) {
       Data data = Data.fromJson(child.data);
-      if (data.text != null)
-        txt = data.text;
+      if (data.text != null) txt = data.text;
     } else {
       print('Data is not Map: ${child.data}');
     }
@@ -159,7 +163,7 @@ class _TemplateViewState extends State<TemplateView> {
 //        height: background.height,
 //        width: background.width,
         alignment: Alignment.center,
-        child: Text(txt),
+        child: Text(txt, style: TextStyle(color: Colors.black54)),
       ),
     );
   }
@@ -176,19 +180,18 @@ class _TemplateViewState extends State<TemplateView> {
 
   Widget _imageWidget(Child child) {
     Background background = getBackground(child);
-    if (background == null ||
-        background.backgroundImage == null) return Container();
+    if (background == null || background.backgroundImage == null)
+      return Container();
 
     print('Background Image: ${background.backgroundImage}');
     return Container(
       height: background.height.toDouble(),
       width: background.width.toDouble(),
       child: CachedNetworkImage(
-        imageUrl:
-        '${background.backgroundImage}',
+        imageUrl: '${background.backgroundImage}',
         imageBuilder: (context, imageProvider) => Container(
           decoration: BoxDecoration(
-            color: Colors.white/*background.backgroundColor*/,
+            color: Colors.white /*background.backgroundColor*/,
             borderRadius: BorderRadius.circular(4),
             image: DecorationImage(
               image: imageProvider,
@@ -198,15 +201,19 @@ class _TemplateViewState extends State<TemplateView> {
         ),
         placeholder: (context, url) =>
             Container(child: Center(child: CircularProgressIndicator())),
-        errorWidget: (context, url, error) => Icon(Icons.error, size: 80,),
+        errorWidget: (context, url, error) => Icon(
+          Icons.error,
+          size: 80,
+        ),
       ),
     );
   }
 
   Background getBackground(Child child) {
     try {
-      return Background.fromJson(stylesheets[shopPage.stylesheetIds.mobile][child.id]);
-    } catch(e) {
+      return Background.fromJson(
+          stylesheets[shopPage.stylesheetIds.mobile][child.id]);
+    } catch (e) {
       return null;
     }
   }

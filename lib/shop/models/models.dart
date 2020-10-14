@@ -325,7 +325,7 @@ class Styles {
   @JsonKey(name: 'marginLeft')        num marginLeft;
   @JsonKey(name: 'marginRight')       num marginRight;
   @JsonKey(name: 'marginTop')         num  marginTop;
-  @JsonKey(name: 'width')             num width;
+  @JsonKey(name: 'width')             dynamic width;
 
   factory Styles.fromJson(Map<String, dynamic> json) => _$StylesFromJson(json);
   Map<String, dynamic> toJson() => _$StylesToJson(this);

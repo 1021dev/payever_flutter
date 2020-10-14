@@ -421,7 +421,7 @@ Styles _$StylesFromJson(Map<String, dynamic> json) {
     ..marginLeft = json['marginLeft'] as num
     ..marginRight = json['marginRight'] as num
     ..marginTop = json['marginTop'] as num
-    ..width = json['width'] as num;
+    ..width = json['width'];
 }
 
 Map<String, dynamic> _$StylesToJson(Styles instance) => <String, dynamic>{
