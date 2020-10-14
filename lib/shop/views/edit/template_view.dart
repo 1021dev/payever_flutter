@@ -52,7 +52,7 @@ class _TemplateViewState extends State<TemplateView> {
     );
   }
 
-  Widget _section(TemplateChild child) {
+  Widget _section(Child child) {
     Background background = stylesheets[child.id];
     List widgets = [];
     child.children.forEach((child) {
@@ -84,7 +84,7 @@ class _TemplateViewState extends State<TemplateView> {
     );
   }
 
-  Widget _textWidget(TemplateChild child) {
+  Widget _textWidget(Child child) {
 //    Background background = stylesheets[child.id];
 //    if (background == null) return Container();
     return Align(
@@ -98,7 +98,7 @@ class _TemplateViewState extends State<TemplateView> {
     );
   }
 
-  Widget _buttonWidget(TemplateChild child) {
+  Widget _buttonWidget(Child child) {
     Background background = stylesheets[child.id];
     if (background == null) return Container();
     return Container(
@@ -108,7 +108,7 @@ class _TemplateViewState extends State<TemplateView> {
     );
   }
 
-  Widget _imageWidget(TemplateChild child) {
+  Widget _imageWidget(Child child) {
     Background background = stylesheets[child.id];
     if (background == null) return Container();
     return Container(

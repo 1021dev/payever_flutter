@@ -328,9 +328,8 @@ Map<String, dynamic> _$PayloadDataToJson(PayloadData instance) =>
 Template _$TemplateFromJson(Map<String, dynamic> json) {
   return Template()
     ..children = (json['children'] as List)
-        ?.map((e) => e == null
-            ? null
-            : TemplateChild.fromJson(e as Map<String, dynamic>))
+        ?.map(
+            (e) => e == null ? null : Child.fromJson(e as Map<String, dynamic>))
         ?.toList()
     ..id = json['id'] as String
     ..type = json['type'] as String;
@@ -342,19 +341,20 @@ Map<String, dynamic> _$TemplateToJson(Template instance) => <String, dynamic>{
       'type': instance.type,
     };
 
-TemplateChild _$TemplateChildFromJson(Map<String, dynamic> json) {
-  return TemplateChild()
+Child _$ChildFromJson(Map<String, dynamic> json) {
+  return Child()
     ..children = (json['children'] as List)
-        ?.map((e) => e == null
-            ? null
-            : TemplateChild.fromJson(e as Map<String, dynamic>))
+        ?.map(
+            (e) => e == null ? null : Child.fromJson(e as Map<String, dynamic>))
         ?.toList()
     ..childrenRefs = json['childrenRefs']
     ..context = json['context'] == null
         ? null
         : Context.fromJson(json['context'] as Map<String, dynamic>)
     ..id = json['id'] as String
-    ..meta = json['meta']
+    ..meta = json['meta'] == null
+        ? null
+        : Meta.fromJson(json['meta'] as Map<String, dynamic>)
     ..parent = json['parent'] == null
         ? null
         : Parent.fromJson(json['parent'] as Map<String, dynamic>)
@@ -362,13 +362,10 @@ TemplateChild _$TemplateChildFromJson(Map<String, dynamic> json) {
         ? null
         : Styles.fromJson(json['styles'] as Map<String, dynamic>)
     ..type = json['type'] as String
-    ..data = json['data'] == null
-        ? null
-        : Data.fromJson(json['data'] as Map<String, dynamic>);
+    ..data = json['data'];
 }
 
-Map<String, dynamic> _$TemplateChildToJson(TemplateChild instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$ChildToJson(Child instance) => <String, dynamic>{
       'children': instance.children,
       'childrenRefs': instance.childrenRefs,
       'context': instance.context,
@@ -382,9 +379,7 @@ Map<String, dynamic> _$TemplateChildToJson(TemplateChild instance) =>
 
 Context _$ContextFromJson(Map<String, dynamic> json) {
   return Context()
-    ..data = json['data'] == null
-        ? null
-        : Meta.fromJson(json['data'] as Map<String, dynamic>)
+    ..data = json['data']
     ..state = json['state'] as String;
 }
 
@@ -450,12 +445,20 @@ Data _$DataFromJson(Map<String, dynamic> json) {
     ..text = json['text'] as String
     ..action = json['action'] == null
         ? null
-        : ChildAction.fromJson(json['action'] as Map<String, dynamic>);
+        : ChildAction.fromJson(json['action'] as Map<String, dynamic>)
+    ..name = json['name'] as String
+    ..src = json['src'] as String
+    ..count = json['count'] as num
+    ..product = json['product'] as Map<String, dynamic>;
 }
 
 Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
       'text': instance.text,
       'action': instance.action,
+      'name': instance.name,
+      'src': instance.src,
+      'count': instance.count,
+      'product': instance.product,
     };
 
 ChildAction _$ChildActionFromJson(Map<String, dynamic> json) {

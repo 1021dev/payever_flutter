@@ -250,7 +250,7 @@ class PayloadData {
 class Template {
   Template();
 
-  @JsonKey(name: 'children')  List<TemplateChild> children;
+  @JsonKey(name: 'children')  List<Child> children;
   @JsonKey(name: 'id')        String id;
   @JsonKey(name: 'type')      String type;
 
@@ -259,28 +259,29 @@ class Template {
 }
 
 @JsonSerializable()
-class TemplateChild {
-  TemplateChild();
+class Child {
+  Child();
 
-  @JsonKey(name: 'children')        List<TemplateChild> children;
+  @JsonKey(name: 'children')        List<Child> children;
   @JsonKey(name: 'childrenRefs')    dynamic childrenRefs;
   @JsonKey(name: 'context')         Context context;
   @JsonKey(name: 'id')              String id;
-  @JsonKey(name: 'meta')            dynamic meta;
+  @JsonKey(name: 'meta')            Meta meta;
   @JsonKey(name: 'parent')          Parent parent;
   @JsonKey(name: 'styles')          Styles styles;
   @JsonKey(name: 'type')            String type;
-  @JsonKey(name: 'data')            Data data;
+  @JsonKey(name: 'data')            dynamic data;
 
-  factory TemplateChild.fromJson(Map<String, dynamic> json) => _$TemplateChildFromJson(json);
-  Map<String, dynamic> toJson() => _$TemplateChildToJson(this);
+  factory Child.fromJson(Map<String, dynamic> json) => _$ChildFromJson(json);
+  Map<String, dynamic> toJson() => _$ChildToJson(this);
 }
+
 
 @JsonSerializable()
 class Context {
   Context();
 
-  @JsonKey(name: 'data')    Meta data;
+  @JsonKey(name: 'data')    dynamic data;
   @JsonKey(name: 'state')   String state;
 
   factory Context.fromJson(Map<String, dynamic> json) => _$ContextFromJson(json);
@@ -334,8 +335,13 @@ class Styles {
 class Data {
   Data();
 
-  @JsonKey(name: 'text')    String text;
-  @JsonKey(name: 'action')  ChildAction action;
+  @JsonKey(name: 'text')      String text;
+  @JsonKey(name: 'action')    ChildAction action;
+  @JsonKey(name: 'name')      String name;
+  @JsonKey(name: 'src')       String src;
+  @JsonKey(name: 'count')     num count;
+  @JsonKey(name: 'product')   Map<String, dynamic> product;
+
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
   Map<String, dynamic> toJson() => _$DataToJson(this);
 }
