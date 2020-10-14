@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/template_detail_screen.dart';
 import 'package:payever/shop/views/edit/template_view.dart';
 
 class ShopEditTemplatesScreen extends StatefulWidget {
@@ -77,6 +79,17 @@ class _ShopEditTemplatesScreenState extends State<ShopEditTemplatesScreen> {
                     shopPage: page,
                     template: template,
                     stylesheets: state.stylesheets,
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          PageTransition(
+                              child: TemplateDetailScreen(
+                                shopPage: page,
+                                template: template,
+                                stylesheets: state.stylesheets,
+                              ),
+                              type: PageTransitionType.fade));
+                    },
                   )
                 : Container(
                     color: Colors.white,
