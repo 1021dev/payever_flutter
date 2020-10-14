@@ -7,6 +7,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/shop_edit_templetes_screen.dart';
+import 'package:payever/shop/views/edit/template_detail_screen.dart';
 
 class ShopEditScreen extends StatefulWidget {
   final ShopScreenBloc shopScreenBloc;
@@ -225,6 +226,18 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
         PageTransition(
             child: ShopEditTemplatesScreen(screenBloc),
             type: PageTransitionType.fade));
+//    ShopPage page = screenBloc.state.pages.firstWhere((element) => element.name == 'ABOUT 2');
+//    Template template = Template.fromJson(screenBloc.state.templates[page.templateId]);
+//    Navigator.push(
+//        context,
+//        PageTransition(
+//            child: TemplateDetailScreen(
+//              shopPage: page,
+//              template: template,
+//              stylesheets: screenBloc.state.stylesheets,
+//            ),
+//            type: PageTransitionType.fade));
+
   }
 }
 

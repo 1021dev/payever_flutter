@@ -65,12 +65,6 @@ class _ShopEditTemplatesScreenState extends State<ShopEditTemplatesScreen> {
   }
 
   Widget _templateItem(ShopPage page, ShopEditScreenState state) {
-//    Template template;
-//    try {
-//      template = Template.fromJson(screenBloc.state.templates[page.templateId]);
-//    } catch (e) {
-//      print(e.toString());
-//    }
 //    RenderRepaintBoundary boundary = _globalKey.currentContext.findRenderObject();
 //    boundary.toImage(pixelRatio: 3.0).then((value) => null);
     Template template = Template.fromJson(screenBloc.state.templates[page.templateId]);

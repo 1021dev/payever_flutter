@@ -473,8 +473,8 @@ Map<String, dynamic> _$ChildActionToJson(ChildAction instance) =>
       'payload': instance.payload,
     };
 
-Background _$BackgroundFromJson(Map<String, dynamic> json) {
-  return Background()
+SectionStyleSheet _$SectionStyleSheetFromJson(Map<String, dynamic> json) {
+  return SectionStyleSheet()
     ..display = json['display'] as String
     ..gridTemplateRows = json['gridTemplateRows']
     ..gridTemplateColumns = json['gridTemplateColumns']
@@ -497,7 +497,7 @@ Background _$BackgroundFromJson(Map<String, dynamic> json) {
     ..zIndex = json['zIndex'];
 }
 
-Map<String, dynamic> _$BackgroundToJson(Background instance) =>
+Map<String, dynamic> _$SectionStyleSheetToJson(SectionStyleSheet instance) =>
     <String, dynamic>{
       'display': instance.display,
       'gridTemplateRows': instance.gridTemplateRows,
@@ -519,4 +519,28 @@ Map<String, dynamic> _$BackgroundToJson(Background instance) =>
       'position': instance.position,
       'top': instance.top,
       'zIndex': instance.zIndex,
+    };
+
+ButtonStyleSheet _$ButtonStyleSheetFromJson(Map<String, dynamic> json) {
+  return ButtonStyleSheet()
+    ..background = json['background'] as String
+    ..borderRadius = json['borderRadius'] as num
+    ..padding = json['padding'] as String
+    ..fontSize = json['fontSize'] as num
+    ..color = json['color'] as String
+    ..fontFamily = json['fontFamily'] as String
+    ..margin = json['margin'] as String
+    ..display = json['display'] as String;
+}
+
+Map<String, dynamic> _$ButtonStyleSheetToJson(ButtonStyleSheet instance) =>
+    <String, dynamic>{
+      'background': instance.background,
+      'borderRadius': instance.borderRadius,
+      'padding': instance.padding,
+      'fontSize': instance.fontSize,
+      'color': instance.color,
+      'fontFamily': instance.fontFamily,
+      'margin': instance.margin,
+      'display': instance.display,
     };

@@ -359,9 +359,8 @@ class ChildAction {
 }
 
 @JsonSerializable()
-class Background {
-  Background();
-
+class SectionStyleSheet {
+  SectionStyleSheet();
   @JsonKey(name: 'display')               String display;
   @JsonKey(name: 'gridTemplateRows')      dynamic gridTemplateRows;
   @JsonKey(name: 'gridTemplateColumns')   dynamic gridTemplateColumns;
@@ -383,8 +382,24 @@ class Background {
   @JsonKey(name: 'top')                   dynamic top;
   @JsonKey(name: 'zIndex')                dynamic zIndex;
 
-  factory Background.fromJson(Map<String, dynamic> json) => _$BackgroundFromJson(json);
-  Map<String, dynamic> toJson() => _$BackgroundToJson(this);
+  factory SectionStyleSheet.fromJson(Map<String, dynamic> json) => _$SectionStyleSheetFromJson(json);
+  Map<String, dynamic> toJson() => _$SectionStyleSheetToJson(this);
+}
+
+@JsonSerializable()
+class ButtonStyleSheet {
+  ButtonStyleSheet();
+  @JsonKey(name: 'background')      String background;
+  @JsonKey(name: 'borderRadius')    num borderRadius;
+  @JsonKey(name: 'padding')         String padding;
+  @JsonKey(name: 'fontSize')        num fontSize;
+  @JsonKey(name: 'color')           String color;
+  @JsonKey(name: 'fontFamily')      String fontFamily;
+  @JsonKey(name: 'margin')          String margin;
+  @JsonKey(name: 'display')         String display;
+
+  factory ButtonStyleSheet.fromJson(Map<String, dynamic> json) => _$ButtonStyleSheetFromJson(json);
+  Map<String, dynamic> toJson() => _$ButtonStyleSheetToJson(this);
 }
 
 enum ChildType { text, button, image, block, menu, logo, shape, shopCart, shopCategory, shopProducts }

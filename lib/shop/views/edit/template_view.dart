@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
-import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:flutter_html/flutter_html.dart';
+import '../../../theme.dart';
 
 class TemplateView extends StatefulWidget {
   final ShopPage shopPage;
@@ -60,7 +60,7 @@ class _TemplateViewState extends State<TemplateView> {
   }
 
   Widget _section(Child child) {
-    Background background = getBackground(child);
+    SectionStyleSheet background = getSectionStyleSheet(child.id);
     if (background == null) {
       print('background NULL, Child ID: ${child.id}');
     }
@@ -76,7 +76,7 @@ class _TemplateViewState extends State<TemplateView> {
       } else if (child.type == EnumToString.convertToString(ChildType.shape)) {
 
       } else if (child.type == EnumToString.convertToString(ChildType.block)) {
-
+        widgets.add(_blockWidget(child));
       } else if (child.type == EnumToString.convertToString(ChildType.menu)) {
 
       } else if (child.type == EnumToString.convertToString(ChildType.logo)) {
@@ -90,7 +90,7 @@ class _TemplateViewState extends State<TemplateView> {
       } else {
         print('Special Child Type: ${child.type}');
       }
-
+      // If Type only Block, has sub children
       if (child.children != null && child.children.isNotEmpty) {
 //        print('Special Child Type: ${child.type}');
         if (child.type == 'logo') {
@@ -171,8 +171,12 @@ class _TemplateViewState extends State<TemplateView> {
     }
   }
 
+  Widget _blockWidget(Child child) {
+    return Container();
+  }
+
   Widget _textWidget(Child child) {
-    Background background = getBackground(child);
+    SectionStyleSheet background = getSectionStyleSheet(child.id);
     if (background == null) {
 
     } else {
@@ -213,19 +217,39 @@ class _TemplateViewState extends State<TemplateView> {
     );
   }
 
+
   Widget _buttonWidget(Child child) {
-    try {
-      print('Button Style: ${child.styles.toJson().toString()}');
-      return Container(
-        width: child.styles.height.toDouble(),
-        height: child.styles.height.toDouble(),
-        color: GlobalUtils.colorConvert(child.styles.backgroundColor),
-        child: Text(Data.fromJson(child.data).text, style: TextStyle(color: Colors.black54),),
-      );
-    } catch(e) {
+    if (shopPage.name == 'ABOUT 2')
+      print('Button: ${child.id}');
+    ButtonStyleSheet styleSheet = getButtonStyleSheet(child.id);
+
+    if (styleSheet != null) {
+      dynamic obj = stylesheets[shopPage.stylesheetIds.mobile][child.id];
+      if (styleSheet.display != 'none')
+        return Align(
+          alignment: Alignment.center,
+          child: Container(
+            width: 200,
+            height: 60,
+            alignment: Alignment.center,
+            color: colorConvert(styleSheet.background),
+            child: Text(
+              Data.fromJson(child.data).text,
+              style: TextStyle(
+                  color: colorConvert(styleSheet.color),
+                  fontSize: styleSheet.fontSize.toDouble()),
+            ),
+          ),
+        );
+//      print('Button Background : ${obj.toString()}');
+    } else {
+      if (shopPage.name == 'ABOUT 2')
+        print('Button Background NULL: ${child.id}');
       return Container();
     }
-  }
+
+
+}
 
   Widget _imageWidget(Child child) {
     Styles styles = child.styles;
@@ -261,10 +285,19 @@ class _TemplateViewState extends State<TemplateView> {
     );
   }
 
-  Background getBackground(Child child) {
+  SectionStyleSheet getSectionStyleSheet(String childId) {
     try {
-      return Background.fromJson(
-          stylesheets[shopPage.stylesheetIds.mobile][child.id]);
+      return SectionStyleSheet.fromJson(
+          stylesheets[shopPage.stylesheetIds.mobile][childId]);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  ButtonStyleSheet getButtonStyleSheet(String childId) {
+    try {
+      return ButtonStyleSheet.fromJson(
+          stylesheets[shopPage.stylesheetIds.mobile][childId]);
     } catch (e) {
       return null;
     }
