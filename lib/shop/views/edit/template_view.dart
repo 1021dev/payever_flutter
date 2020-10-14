@@ -71,6 +71,31 @@ class _TemplateViewState extends State<TemplateView> {
 //        widgets.add(_buttonWidget(child));
       } else if (child.type == 'image') {
         widgets.add(_imageWidget(child));
+      } else if (child.type == 'shape') {
+
+      } else if (child.type == 'shop-products') {
+
+      } else if (child.type == 'block') {
+
+      } else if (child.type == 'menu') {
+
+      } else if (child.type == 'logo') {
+
+      } else if (child.type == 'shop-cart') {
+
+      } else if (child.type == 'shop-category') {
+
+      } else {
+        print('Special Child Type: ${child.type}');
+      }
+
+      if (child.children != null && child.children.isNotEmpty) {
+//        print('Special Child Type: ${child.type}');
+        if (child.type == 'logo') {
+
+          print('${child.children}');
+        }
+
       }
     });
 
@@ -104,6 +129,7 @@ class _TemplateViewState extends State<TemplateView> {
           ),
           Container(
             child: ListView.separated(
+              physics: NeverScrollableScrollPhysics(),
               padding: EdgeInsets.symmetric(horizontal: 16),
               itemCount: widgets.length,
               shrinkWrap: true,
@@ -124,6 +150,7 @@ class _TemplateViewState extends State<TemplateView> {
     } else {
       return Container(
         child: ListView.separated(
+          physics: NeverScrollableScrollPhysics(),
           padding: EdgeInsets.symmetric(horizontal: 16),
           itemCount: widgets.length,
           shrinkWrap: true,
@@ -195,16 +222,19 @@ class _TemplateViewState extends State<TemplateView> {
   }
 
   Widget _imageWidget(Child child) {
-    Background background = getBackground(child);
-    if (background == null || background.backgroundImage == null)
+    Styles styles = child.styles;
+    Data data;
+    try {
+      data = Data.fromJson(child.data);
+    } catch (e) {}
+    if (data == null || data.src == null || data.src.isEmpty)
       return Container();
 
-    print('Background Image: ${background.backgroundImage}');
     return Container(
-      height: background.height.toDouble(),
-      width: background.width.toDouble(),
+      height: styles.height.toDouble(),
+      width: styles.width.toDouble(),
       child: CachedNetworkImage(
-        imageUrl: '${background.backgroundImage}',
+        imageUrl: '${data.src}',
         imageBuilder: (context, imageProvider) => Container(
           decoration: BoxDecoration(
             color: Colors.white /*background.backgroundColor*/,
@@ -234,3 +264,5 @@ class _TemplateViewState extends State<TemplateView> {
     }
   }
 }
+//Logo Image
+//https://payeverproduction.blob.core.windows.net/builder/24b4e49a-33d3-4b59-8366-3f0e49ac07d7-0-2.jpeg
