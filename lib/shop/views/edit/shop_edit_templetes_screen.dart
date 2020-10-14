@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
@@ -70,6 +71,8 @@ class _ShopEditTemplatesScreenState extends State<ShopEditTemplatesScreen> {
 //    } catch (e) {
 //      print(e.toString());
 //    }
+//    RenderRepaintBoundary boundary = _globalKey.currentContext.findRenderObject();
+//    boundary.toImage(pixelRatio: 3.0).then((value) => null);
     Template template = Template.fromJson(screenBloc.state.templates[page.templateId]);
     return Column(
       children: [

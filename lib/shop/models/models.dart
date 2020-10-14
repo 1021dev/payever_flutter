@@ -1,5 +1,6 @@
 import 'package:payever/commons/commons.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:enum_to_string/enum_to_string.dart';
 part 'models.g.dart';
 
 @JsonSerializable()
@@ -385,3 +386,5 @@ class Background {
   factory Background.fromJson(Map<String, dynamic> json) => _$BackgroundFromJson(json);
   Map<String, dynamic> toJson() => _$BackgroundToJson(this);
 }
+
+enum ChildType { text, button, image, block, menu, logo, shape, shopCart, shopCategory, shopProducts }

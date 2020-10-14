@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
+import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:flutter_html/flutter_html.dart';
 
@@ -65,25 +67,25 @@ class _TemplateViewState extends State<TemplateView> {
 
     List widgets = [];
     child.children.forEach((child) {
-      if (child.type == 'text') {
+      if (child.type == EnumToString.convertToString(ChildType.text)) {
         widgets.add(_textWidget(child));
-      } else if (child.type == 'button') {
-//        widgets.add(_buttonWidget(child));
-      } else if (child.type == 'image') {
+      } else if (child.type == EnumToString.convertToString(ChildType.button)) {
+        widgets.add(_buttonWidget(child));
+      } else if (child.type == EnumToString.convertToString(ChildType.image)) {
         widgets.add(_imageWidget(child));
-      } else if (child.type == 'shape') {
+      } else if (child.type == EnumToString.convertToString(ChildType.shape)) {
 
-      } else if (child.type == 'shop-products') {
+      } else if (child.type == EnumToString.convertToString(ChildType.block)) {
 
-      } else if (child.type == 'block') {
+      } else if (child.type == EnumToString.convertToString(ChildType.menu)) {
 
-      } else if (child.type == 'menu') {
-
-      } else if (child.type == 'logo') {
+      } else if (child.type == EnumToString.convertToString(ChildType.logo)) {
 
       } else if (child.type == 'shop-cart') {
 
       } else if (child.type == 'shop-category') {
+
+      } else if (child.type == 'shop-products') {
 
       } else {
         print('Special Child Type: ${child.type}');
@@ -212,13 +214,17 @@ class _TemplateViewState extends State<TemplateView> {
   }
 
   Widget _buttonWidget(Child child) {
-    Background background = getBackground(child);
-    if (background == null) return Container();
-    return Container(
-      height: background.height,
-      width: background.width,
-      child: Text(child.data.text),
-    );
+    try {
+      print('Button Style: ${child.styles.toJson().toString()}');
+      return Container(
+        width: child.styles.height.toDouble(),
+        height: child.styles.height.toDouble(),
+        color: GlobalUtils.colorConvert(child.styles.backgroundColor),
+        child: Text(Data.fromJson(child.data).text, style: TextStyle(color: Colors.black54),),
+      );
+    } catch(e) {
+      return Container();
+    }
   }
 
   Widget _imageWidget(Child child) {

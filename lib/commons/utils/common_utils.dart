@@ -12,18 +12,18 @@ import 'package:payever/transactions/models/transaction.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'utils.dart';
 
-class Styles {
-  static TextStyle noAvatarPhone = TextStyle(
-    color: Colors.white.withOpacity(0.7),
-    fontSize: Measurements.height * 0.035,
-    fontWeight: FontWeight.w500,
-  );
-  static TextStyle noAvatarTablet = TextStyle(
-    color: Colors.white.withOpacity(0.7),
-    fontSize: Measurements.height * 0.025,
-    fontWeight: FontWeight.w500,
-  );
-}
+//class Styles {
+//  static TextStyle noAvatarPhone = TextStyle(
+//    color: Colors.white.withOpacity(0.7),
+//    fontSize: Measurements.height * 0.035,
+//    fontWeight: FontWeight.w500,
+//  );
+//  static TextStyle noAvatarTablet = TextStyle(
+//    color: Colors.white.withOpacity(0.7),
+//    fontSize: Measurements.height * 0.025,
+//    fontWeight: FontWeight.w500,
+//  );
+//}
 
 class Measurements {
   static double height;
@@ -745,6 +745,17 @@ class GlobalUtils {
       mainWidth = isTablet ? Measurements.width * 0.7 : Measurements.width;
     }
     return isTablet;
+  }
+
+  static Color colorConvert(String color) {
+    color = color.replaceAll("#", "");
+    if (color.length == 6) {
+      return Color(int.parse("0xFF"+color));
+    } else if (color.length == 8) {
+      return Color(int.parse("0x"+color));
+    } else {
+      return Colors.white;
+    }
   }
 
   static double mainWidth = 0;
