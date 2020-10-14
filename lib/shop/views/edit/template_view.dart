@@ -28,12 +28,15 @@ class _TemplateViewState extends State<TemplateView> {
 
   @override
   Widget build(BuildContext context) {
+    if (shopPage.name != '404 1') {
+      return Container();
+    }
     List sections = [];
     template.children.forEach((child) {
-      if (child.type == 'section') {
+      if (child.type == 'section' &&
+          child.children != null &&
+          child.children.isNotEmpty) {
         sections.add(_section(child));
-      } else {
-        print('Special Section Type: ${child.type}');
       }
     });
 
@@ -60,9 +63,17 @@ class _TemplateViewState extends State<TemplateView> {
   }
 
   Widget _section(Child child) {
-    SectionStyleSheet background = getSectionStyleSheet(child.id);
-    if (background == null) {
+    dynamic obj = stylesheets[shopPage.stylesheetIds.mobile][child.id];
+    if (obj != null) {
+//      print('Section StyleSheet: ${obj.toString()}');
+    }
+
+    SectionStyleSheet styleSheet = getSectionStyleSheet(child.id);
+    if (styleSheet == null) {
       print('background NULL, Child ID: ${child.id}');
+    } else {
+//      if (styleSheet.display == 'none')
+//        return Container();
     }
 
     List widgets = [];
@@ -74,113 +85,101 @@ class _TemplateViewState extends State<TemplateView> {
       } else if (child.type == EnumToString.convertToString(ChildType.image)) {
         widgets.add(_imageWidget(child));
       } else if (child.type == EnumToString.convertToString(ChildType.shape)) {
-
       } else if (child.type == EnumToString.convertToString(ChildType.block)) {
-        widgets.add(_blockWidget(child));
+        // If Type only Block, has sub children
+//        widgets.add(_blockWidget(child));
       } else if (child.type == EnumToString.convertToString(ChildType.menu)) {
-
       } else if (child.type == EnumToString.convertToString(ChildType.logo)) {
-
       } else if (child.type == 'shop-cart') {
-
       } else if (child.type == 'shop-category') {
-
       } else if (child.type == 'shop-products') {
-
       } else {
         print('Special Child Type: ${child.type}');
       }
-      // If Type only Block, has sub children
-      if (child.children != null && child.children.isNotEmpty) {
-//        print('Special Child Type: ${child.type}');
-        if (child.type == 'logo') {
-
-          print('${child.children}');
-        }
-
-      }
     });
 
-    if (background != null &&
-        background.backgroundImage != null &&
-        background.backgroundImage.isNotEmpty) {
+    if (styleSheet != null &&
+        styleSheet.backgroundImage != null &&
+        styleSheet.backgroundImage.isNotEmpty) {
       return Stack(
         children: [
-          Container(
-            width: double.infinity,
-            alignment: Alignment.center,
-            height: background.height.toDouble(),
-            child: CachedNetworkImage(
-              imageUrl: background.backgroundImage,
-              imageBuilder: (context, imageProvider) => Container(
-                decoration: BoxDecoration(
-                  color: Colors.white /*background.backgroundColor*/,
-                  image: DecorationImage(
-                    image: imageProvider,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              placeholder: (context, url) =>
-                  Container(child: Center(child: CircularProgressIndicator())),
-              errorWidget: (context, url, error) => Icon(
-                Icons.error,
-                size: 40,
-              ),
-            ),
-          ),
-          Container(
-            child: ListView.separated(
-              physics: NeverScrollableScrollPhysics(),
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              itemCount: widgets.length,
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                return widgets[index];
-              },
-              separatorBuilder: (context, index) {
-                return Divider(
-                  height: 14,
-                  thickness: 0,
-                  color: Colors.transparent,
-                );
-              },
-            ),
-          ),
+          _sectionBgWidget(styleSheet),
+          _sectionBody(widgets, styleSheet),
         ],
       );
     } else {
-      return Container(
-        child: ListView.separated(
-          physics: NeverScrollableScrollPhysics(),
-          padding: EdgeInsets.symmetric(horizontal: 16),
-          itemCount: widgets.length,
-          shrinkWrap: true,
-          itemBuilder: (context, index) {
-            return widgets[index];
-          },
-          separatorBuilder: (context, index) {
-            return Divider(
-              height: 14,
-              thickness: 0,
-              color: Colors.transparent,
-            );
-          },
-        ),
-      );
+      return _sectionBody(widgets, styleSheet);
     }
   }
 
+  Widget _sectionBgWidget(SectionStyleSheet styleSheet) {
+    return Container(
+      width: double.infinity,
+      alignment: Alignment.center,
+      height: styleSheet.height.toDouble(),
+      child: CachedNetworkImage(
+        imageUrl: styleSheet.backgroundImage,
+        imageBuilder: (context, imageProvider) => Container(
+          decoration: BoxDecoration(
+            color: Colors.white /*background.backgroundColor*/,
+            image: DecorationImage(
+              image: imageProvider,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        placeholder: (context, url) =>
+            Container(child: Center(child: CircularProgressIndicator())),
+        errorWidget: (context, url, error) => Icon(
+          Icons.error,
+          size: 40,
+        ),
+      ),
+    );
+  }
+
+  Widget _sectionBody(List widgets, SectionStyleSheet styleSheet) {
+    return Container(
+      child: ListView.separated(
+        physics: NeverScrollableScrollPhysics(),
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        itemCount: widgets.length,
+        shrinkWrap: true,
+        itemBuilder: (context, index) {
+          return widgets[index];
+        },
+        separatorBuilder: (context, index) {
+          return Divider(
+            height: 14,
+            thickness: 0,
+            color: Colors.transparent,
+          );
+        },
+      ),
+    );
+  }
+
   Widget _blockWidget(Child child) {
+    dynamic obj = stylesheets[shopPage.stylesheetIds.mobile][child.id];
+    if (obj != null) {
+//      print('Block StyleSheet: ${obj.toString()}');
+    }
+    child.children.forEach((element) {
+      print('Block Children type: ${element.type}');
+    });
     return Container();
   }
 
   Widget _textWidget(Child child) {
+    dynamic obj = stylesheets[shopPage.stylesheetIds.mobile][child.id];
+    if (obj != null) {
+//      print('Text StyleSheet: ${obj.toString()}');
+    }
     SectionStyleSheet background = getSectionStyleSheet(child.id);
     if (background == null) {
-
     } else {
-
+//      if (background.display != null && background.display == 'none')
+//        return Container();
     }
 
     String txt = '';
@@ -194,15 +193,13 @@ class _TemplateViewState extends State<TemplateView> {
         txt.contains('<span') ||
         txt.contains('<font')) {
       return Center(
-        child: SingleChildScrollView(
-          child: Html(
-            data: """
-                $txt
-                """,
-            onLinkTap: (url) {
-              print("Opening $url...");
-            },
-          ),
+        child: Html(
+          data: """
+              $txt
+              """,
+          onLinkTap: (url) {
+            print("Opening $url...");
+          },
         ),
       );
     }
@@ -217,22 +214,18 @@ class _TemplateViewState extends State<TemplateView> {
     );
   }
 
-
   Widget _buttonWidget(Child child) {
-    if (shopPage.name == 'ABOUT 2')
-      print('Button: ${child.id}');
+//    print('Button: ${child.id}');
     ButtonStyleSheet styleSheet = getButtonStyleSheet(child.id);
-
     if (styleSheet != null) {
-      dynamic obj = stylesheets[shopPage.stylesheetIds.mobile][child.id];
-      if (styleSheet.display != 'none')
+      try {
         return Align(
           alignment: Alignment.center,
           child: Container(
             width: 200,
             height: 60,
             alignment: Alignment.center,
-            color: colorConvert(styleSheet.background),
+            color: Colors.red/*colorConvert(styleSheet.background)*/,
             child: Text(
               Data.fromJson(child.data).text,
               style: TextStyle(
@@ -241,15 +234,32 @@ class _TemplateViewState extends State<TemplateView> {
             ),
           ),
         );
-//      print('Button Background : ${obj.toString()}');
+      } catch (e) {
+        return Container(
+          width: 200,
+          height: 60,
+          color: Colors.blue,
+          alignment: Alignment.center,
+          child: Text(Data.fromJson(child.data).text,
+              style: TextStyle(
+                color: Colors.black,
+              )),
+        );
+      }
     } else {
-      if (shopPage.name == 'ABOUT 2')
-        print('Button Background NULL: ${child.id}');
-      return Container();
+      print('Button Data: ${child.data.toString()}');
+      return Container(
+        width: 200,
+        height: 60,
+        color: Colors.amber,
+        alignment: Alignment.center,
+        child: Text(Data.fromJson(child.data).text,
+            style: TextStyle(
+              color: Colors.black,
+            )),
+      );
     }
-
-
-}
+  }
 
   Widget _imageWidget(Child child) {
     Styles styles = child.styles;
