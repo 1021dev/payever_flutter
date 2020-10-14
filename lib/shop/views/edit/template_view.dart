@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 class TemplateView extends StatefulWidget {
   final ShopPage shopPage;
@@ -37,7 +38,7 @@ class _TemplateViewState extends State<TemplateView> {
     return InkWell(
       onTap: widget.onTap,
       child: Container(
-        color: Colors.white,
+        color: Colors.grey,
         child: ListView.separated(
           itemCount: sections.length,
           shrinkWrap: true,
@@ -144,9 +145,9 @@ class _TemplateViewState extends State<TemplateView> {
   Widget _textWidget(Child child) {
     Background background = getBackground(child);
     if (background == null) {
-      print('Text background NULL, Child ID: ${child.id}');
+
     } else {
-      print('Text background Valid, Child ID: ${child.id}');
+
     }
 
     String txt = '';
@@ -156,7 +157,22 @@ class _TemplateViewState extends State<TemplateView> {
     } else {
       print('Data is not Map: ${child.data}');
     }
-
+    if (txt.contains('<div') ||
+        txt.contains('<span') ||
+        txt.contains('<font')) {
+      return Center(
+        child: SingleChildScrollView(
+          child: Html(
+            data: """
+                $txt
+                """,
+            onLinkTap: (url) {
+              print("Opening $url...");
+            },
+          ),
+        ),
+      );
+    }
     return Align(
       alignment: Alignment.center,
       child: Container(
