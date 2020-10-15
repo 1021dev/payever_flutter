@@ -358,9 +358,7 @@ Child _$ChildFromJson(Map<String, dynamic> json) {
     ..parent = json['parent'] == null
         ? null
         : Parent.fromJson(json['parent'] as Map<String, dynamic>)
-    ..styles = json['styles'] == null
-        ? null
-        : Styles.fromJson(json['styles'] as Map<String, dynamic>)
+    ..styles = json['styles'] as Map<String, dynamic>
     ..type = json['type'] as String
     ..data = json['data'];
 }
@@ -407,37 +405,53 @@ Map<String, dynamic> _$ParentToJson(Parent instance) => <String, dynamic>{
       'slot': instance.slot,
     };
 
-Styles _$StylesFromJson(Map<String, dynamic> json) {
-  return Styles()
-    ..backgroundColor = json['backgroundColor'] as String
-    ..borderColor = json['borderColor'] as String
-    ..borderStyle = json['borderStyle']
-    ..borderWidth = json['borderWidth'] as num
-    ..gridColumn = json['gridColumn'] as String
-    ..gridRow = json['gridRow'] as String
-    ..height = json['height'] as num
-    ..margin = json['margin'] as String
-    ..marginBottom = json['marginBottom'] as num
-    ..marginLeft = json['marginLeft'] as num
-    ..marginRight = json['marginRight'] as num
-    ..marginTop = json['marginTop'] as num
-    ..width = json['width'];
+TextStyles _$TextStylesFromJson(Map<String, dynamic> json) {
+  return TextStyles()
+    ..color = json['color'] as String ?? '#000000'
+    ..fontSize = (json['fontSize'] as num)?.toDouble() ?? 0
+    ..fontWeight = json['fontWeight'] as String ?? 'bold'
+    ..fontFamily = json['fontFamily'] as String ??
+        'Helvetica Neue,Helvetica,Arial,sans-serif'
+    ..gridColumn = json['gridColumn'] as String ?? '1 / span 1'
+    ..gridRow = json['gridRow'] as String ?? '1 / span 1'
+    ..gridArea = json['gridArea']
+    ..width = (json['width'] as num)?.toDouble() ?? 0
+    ..height = (json['height'] as num)?.toDouble() ?? 0
+    ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
+    ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
+    ..margin = json['margin'] as String ?? '0 0 0 0'
+    ..padding = json['padding'] as String ?? '8 28'
+    ..position = json['position'] as String ?? 'absolute'
+    ..marginBottom = (json['marginBottom'] as num)?.toDouble() ?? 0
+    ..marginLeft = (json['marginLeft'] as num)?.toDouble() ?? 0
+    ..marginRight = (json['marginRight'] as num)?.toDouble() ?? 0
+    ..marginTop = (json['marginTop'] as num)?.toDouble() ?? 0
+    ..top = (json['top'] as num)?.toDouble() ?? 0
+    ..left = (json['left'] as num)?.toDouble() ?? 0;
 }
 
-Map<String, dynamic> _$StylesToJson(Styles instance) => <String, dynamic>{
-      'backgroundColor': instance.backgroundColor,
-      'borderColor': instance.borderColor,
-      'borderStyle': instance.borderStyle,
-      'borderWidth': instance.borderWidth,
+Map<String, dynamic> _$TextStylesToJson(TextStyles instance) =>
+    <String, dynamic>{
+      'color': instance.color,
+      'fontSize': instance.fontSize,
+      'fontWeight': instance.fontWeight,
+      'fontFamily': instance.fontFamily,
       'gridColumn': instance.gridColumn,
       'gridRow': instance.gridRow,
+      'gridArea': instance.gridArea,
+      'width': instance.width,
       'height': instance.height,
+      'minWidth': instance.minWidth,
+      'minHeight': instance.minHeight,
       'margin': instance.margin,
+      'padding': instance.padding,
+      'position': instance.position,
       'marginBottom': instance.marginBottom,
       'marginLeft': instance.marginLeft,
       'marginRight': instance.marginRight,
       'marginTop': instance.marginTop,
-      'width': instance.width,
+      'top': instance.top,
+      'left': instance.left,
     };
 
 ButtonStyles _$ButtonStylesFromJson(Map<String, dynamic> json) {
@@ -580,28 +594,4 @@ Map<String, dynamic> _$SectionStyleSheetToJson(SectionStyleSheet instance) =>
       'position': instance.position,
       'top': instance.top,
       'zIndex': instance.zIndex,
-    };
-
-ButtonStyleSheet _$ButtonStyleSheetFromJson(Map<String, dynamic> json) {
-  return ButtonStyleSheet()
-    ..background = json['background'] as String
-    ..borderRadius = json['borderRadius'] as num
-    ..padding = json['padding'] as String
-    ..fontSize = json['fontSize'] as num
-    ..color = json['color'] as String
-    ..fontFamily = json['fontFamily'] as String
-    ..margin = json['margin'] as String
-    ..display = json['display'] as String;
-}
-
-Map<String, dynamic> _$ButtonStyleSheetToJson(ButtonStyleSheet instance) =>
-    <String, dynamic>{
-      'background': instance.background,
-      'borderRadius': instance.borderRadius,
-      'padding': instance.padding,
-      'fontSize': instance.fontSize,
-      'color': instance.color,
-      'fontFamily': instance.fontFamily,
-      'margin': instance.margin,
-      'display': instance.display,
     };
