@@ -315,11 +315,19 @@ class TextStyles {
   // Text
   @JsonKey(name: 'color', defaultValue: '#000000')
   String color;
+  // String or double
   @JsonKey(name: 'fontSize', defaultValue: 0)
-  double fontSize;
-  // bold, 200...
-  @JsonKey(name: 'fontWeight')
+  dynamic fontSize;
+  double textFontSize() {
+    return (fontSize is double) ? fontSize as double : 0;
+  }
+  // String(bold) or double
+  @JsonKey(name: 'fontWeight', defaultValue: 400)
   dynamic fontWeight;
+  double textFontWeight() {
+    return (fontWeight is double) ? fontWeight as double : 600;
+  }
+
   @JsonKey(
       name: "fontFamily",
       defaultValue: "Helvetica Neue,Helvetica,Arial,sans-serif")
@@ -333,9 +341,13 @@ class TextStyles {
   @JsonKey(name: 'gridArea')
   dynamic gridArea;
 
-  // Size
+  // Size String('100%') or double
   @JsonKey(name: 'width', defaultValue: 0)
-  double width;
+  dynamic width;
+  double textWidth() {
+    return (width is double) ? width as double : double.infinity;
+  }
+
   @JsonKey(name: 'height', defaultValue: 0)
   double height;
   @JsonKey(name: 'minWidth', defaultValue: 0)
@@ -391,8 +403,13 @@ class ButtonStyles {
   String fontFamily;
 
   // Border
+  // String('0') or double
   @JsonKey(name: 'borderRadius', defaultValue: 0)
-  double borderRadius;
+  dynamic borderRadius;
+  double buttonBorderRadius() {
+    return (borderRadius is double) ? borderRadius as double : 0;
+  }
+
   @JsonKey(name: 'borderColor', defaultValue: '#ffffff')
   String borderColor;
   @JsonKey(name: 'borderWidth', defaultValue: 0)
@@ -555,26 +572,53 @@ class ChildAction {
 @JsonSerializable()
 class SectionStyleSheet {
   SectionStyleSheet();
-  @JsonKey(name: 'display')               String display;
-  @JsonKey(name: 'gridTemplateRows')      dynamic gridTemplateRows;
-  @JsonKey(name: 'gridTemplateColumns')   dynamic gridTemplateColumns;
-  @JsonKey(name: 'backgroundColor')       String backgroundColor;
-  @JsonKey(name: 'backgroundImage')       String backgroundImage;
-  @JsonKey(name: 'backgroundSize')        String backgroundSize;
-  @JsonKey(name: 'backgroundPosition')    String backgroundPosition;
-  @JsonKey(name: 'backgroundRepeat')      String backgroundRepeat;
-  @JsonKey(name: 'gridRow')               String gridRow;
-  @JsonKey(name: 'gridColumn')            String gridColumn;
-  @JsonKey(name: 'width')                 double width;
-  @JsonKey(name: 'height')                double height;
-  @JsonKey(name: 'marginTop')             double marginTop;
-  @JsonKey(name: 'marginRight')           double marginRight;
-  @JsonKey(name: 'marginBottom')          double marginBottom;
-  @JsonKey(name: 'marginLeft')            double marginLeft;
-  @JsonKey(name: 'margin')                String margin;
-  @JsonKey(name: 'position')              String position;
-  @JsonKey(name: 'top')                   dynamic top;
-  @JsonKey(name: 'zIndex')                dynamic zIndex;
+  // Display
+  @JsonKey(name: 'display', defaultValue: 'flex')
+  String display;
+  // Background
+  @JsonKey(name: 'backgroundColor', defaultValue: '#ffffff')
+  String backgroundColor;
+  @JsonKey(name: 'backgroundImage', defaultValue: '')
+  String backgroundImage;
+  @JsonKey(name: 'backgroundSize', defaultValue: '100%')
+  String backgroundSize;
+  @JsonKey(name: 'backgroundPosition', defaultValue: '')
+  String backgroundPosition;
+  @JsonKey(name: 'backgroundRepeat', defaultValue: '')
+  String backgroundRepeat;
+
+  @JsonKey(name: 'gridTemplateRows', defaultValue: '0 0 0')
+  String gridTemplateRows;
+  @JsonKey(name: 'gridTemplateColumns', defaultValue: '0 0 0')
+  dynamic gridTemplateColumns;
+  @JsonKey(name: 'gridRow', defaultValue: '1 / span 1')
+  String gridRow;
+  @JsonKey(name: 'gridColumn', defaultValue: '1 / span 1')
+  String gridColumn;
+
+  // Size
+  @JsonKey(name: 'width', defaultValue: 0)
+  double width;
+  @JsonKey(name: 'height', defaultValue: 0)
+  double height;
+
+  @JsonKey(name: 'margin', defaultValue: '0 0 0 0')
+  String margin;
+  @JsonKey(name: 'marginTop', defaultValue: 0)
+  double marginTop;
+  @JsonKey(name: 'marginRight', defaultValue: 0)
+  double marginRight;
+  @JsonKey(name: 'marginBottom', defaultValue: 0)
+  double marginBottom;
+  @JsonKey(name: 'marginLeft', defaultValue: 0)
+  double marginLeft;
+
+  @JsonKey(name: 'position', defaultValue: 'absolute')
+  String position;
+  @JsonKey(name: 'top', defaultValue: 0)
+  double top;
+  @JsonKey(name: 'zIndex')
+  dynamic zIndex;
 
   factory SectionStyleSheet.fromJson(Map<String, dynamic> json) => _$SectionStyleSheetFromJson(json);
   Map<String, dynamic> toJson() => _$SectionStyleSheetToJson(this);

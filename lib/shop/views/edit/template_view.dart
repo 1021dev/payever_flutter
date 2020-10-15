@@ -95,49 +95,47 @@ class _TemplateViewState extends State<TemplateView> {
       }
     });
 
-//    if (styleSheet != null &&
-//        styleSheet.backgroundImage != null &&
-//        styleSheet.backgroundImage.isNotEmpty) {
-      return Stack(
-        children: [
-          _sectionBgWidget(styleSheet),
-          _sectionBody(widgets, styleSheet),
-        ],
-      );
-//    } else {
-//      return _sectionBody(widgets, styleSheet);
-//    }
+    return Stack(
+      children: [
+        _sectionBackgroundWidget(styleSheet),
+        _sectionBody(widgets, styleSheet),
+      ],
+    );
   }
 
-  Widget _sectionBgWidget(SectionStyleSheet styleSheet) {
+  Widget _sectionBackgroundWidget(SectionStyleSheet styleSheet) {
     return Container(
-      width: double.infinity,
-      alignment: Alignment.center,
+      width: styleSheet.width,
       height: styleSheet.height,
+      alignment: Alignment.center,
       color: colorConvert(styleSheet.backgroundColor),
-      child: CachedNetworkImage(
-        imageUrl: styleSheet.backgroundImage,
-        imageBuilder: (context, imageProvider) => Container(
-          decoration: BoxDecoration(
-            color: Colors.transparent /*background.backgroundColor*/,
-            image: DecorationImage(
-              image: imageProvider,
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
-        placeholder: (context, url) =>
-            Container(child: Center(child: CircularProgressIndicator())),
-        errorWidget: (context, url, error) => Icon(
-          Icons.error,
-          size: 40,
-        ),
-      ),
+      child: styleSheet.backgroundImage.isNotEmpty
+          ? CachedNetworkImage(
+              imageUrl: styleSheet.backgroundImage,
+              imageBuilder: (context, imageProvider) => Container(
+                decoration: BoxDecoration(
+                  color: Colors.transparent /*background.backgroundColor*/,
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              placeholder: (context, url) =>
+                  Container(child: Center(child: CircularProgressIndicator())),
+              errorWidget: (context, url, error) => Icon(
+                Icons.error,
+                size: 40,
+              ),
+            )
+          : Container(),
     );
   }
 
   Widget _sectionBody(List widgets, SectionStyleSheet styleSheet) {
     return Container(
+      width: styleSheet.width,
+      height: styleSheet.height,
       child: ListView.separated(
         physics: NeverScrollableScrollPhysics(),
         padding: EdgeInsets.symmetric(horizontal: 16),

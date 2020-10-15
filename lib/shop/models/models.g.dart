@@ -408,14 +408,14 @@ Map<String, dynamic> _$ParentToJson(Parent instance) => <String, dynamic>{
 TextStyles _$TextStylesFromJson(Map<String, dynamic> json) {
   return TextStyles()
     ..color = json['color'] as String ?? '#000000'
-    ..fontSize = (json['fontSize'] is String) ? 0 : (json['fontSize'] as num)?.toDouble() ?? 0
-    ..fontWeight = json['fontWeight']
+    ..fontSize = json['fontSize'] ?? 0
+    ..fontWeight = json['fontWeight'] ?? 400
     ..fontFamily = json['fontFamily'] as String ??
         'Helvetica Neue,Helvetica,Arial,sans-serif'
     ..gridColumn = json['gridColumn'] as String ?? '1 / span 1'
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea']
-    ..width = (json['width'] == '100%') ? double.infinity: (json['width'] as num)?.toDouble() ?? 0
+    ..width = json['width'] ?? 0
     ..height = (json['height'] as num)?.toDouble() ?? 0
     ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
     ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
@@ -464,7 +464,7 @@ ButtonStyles _$ButtonStylesFromJson(Map<String, dynamic> json) {
     ..fontWeight = json['fontWeight'] as String ?? 'bold'
     ..fontFamily = json['fontFamily'] as String ??
         'Helvetica Neue,Helvetica,Arial,sans-serif'
-    ..borderRadius = (json['borderRadius'] is String) ? 0 : (json['borderRadius'] as num)?.toDouble() ?? 0
+    ..borderRadius = json['borderRadius'] ?? 0
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
     ..borderWidth = (json['borderWidth'] as num)?.toDouble() ?? 0
     ..gridColumn = json['gridColumn'] as String ?? '1 / span 1'
@@ -618,47 +618,47 @@ Map<String, dynamic> _$ChildActionToJson(ChildAction instance) =>
 
 SectionStyleSheet _$SectionStyleSheetFromJson(Map<String, dynamic> json) {
   return SectionStyleSheet()
-    ..display = json['display'] as String
-    ..gridTemplateRows = json['gridTemplateRows']
-    ..gridTemplateColumns = json['gridTemplateColumns']
-    ..backgroundColor = json['backgroundColor'] as String
-    ..backgroundImage = json['backgroundImage'] as String
-    ..backgroundSize = json['backgroundSize'] as String
-    ..backgroundPosition = json['backgroundPosition'] as String
-    ..backgroundRepeat = json['backgroundRepeat'] as String
-    ..gridRow = json['gridRow'] as String
-    ..gridColumn = json['gridColumn'] as String
-    ..width = (json['width'] as num)?.toDouble()
-    ..height = (json['height'] as num)?.toDouble()
-    ..marginTop = (json['marginTop'] as num)?.toDouble()
-    ..marginRight = (json['marginRight'] as num)?.toDouble()
-    ..marginBottom = (json['marginBottom'] as num)?.toDouble()
-    ..marginLeft = (json['marginLeft'] as num)?.toDouble()
-    ..margin = json['margin'] as String
-    ..position = json['position'] as String
-    ..top = json['top']
+    ..display = json['display'] as String ?? 'flex'
+    ..backgroundColor = json['backgroundColor'] as String ?? '#ffffff'
+    ..backgroundImage = json['backgroundImage'] as String ?? ''
+    ..backgroundSize = json['backgroundSize'] as String ?? '100%'
+    ..backgroundPosition = json['backgroundPosition'] as String ?? ''
+    ..backgroundRepeat = json['backgroundRepeat'] as String ?? ''
+    ..gridTemplateRows = json['gridTemplateRows'] as String ?? '0 0 0'
+    ..gridTemplateColumns = json['gridTemplateColumns'] ?? '0 0 0'
+    ..gridRow = json['gridRow'] as String ?? '1 / span 1'
+    ..gridColumn = json['gridColumn'] as String ?? '1 / span 1'
+    ..width = (json['width'] as num)?.toDouble() ?? 0
+    ..height = (json['height'] as num)?.toDouble() ?? 0
+    ..margin = json['margin'] as String ?? '0 0 0 0'
+    ..marginTop = (json['marginTop'] as num)?.toDouble() ?? 0
+    ..marginRight = (json['marginRight'] as num)?.toDouble() ?? 0
+    ..marginBottom = (json['marginBottom'] as num)?.toDouble() ?? 0
+    ..marginLeft = (json['marginLeft'] as num)?.toDouble() ?? 0
+    ..position = json['position'] as String ?? 'absolute'
+    ..top = (json['top'] as num)?.toDouble() ?? 0
     ..zIndex = json['zIndex'];
 }
 
 Map<String, dynamic> _$SectionStyleSheetToJson(SectionStyleSheet instance) =>
     <String, dynamic>{
       'display': instance.display,
-      'gridTemplateRows': instance.gridTemplateRows,
-      'gridTemplateColumns': instance.gridTemplateColumns,
       'backgroundColor': instance.backgroundColor,
       'backgroundImage': instance.backgroundImage,
       'backgroundSize': instance.backgroundSize,
       'backgroundPosition': instance.backgroundPosition,
       'backgroundRepeat': instance.backgroundRepeat,
+      'gridTemplateRows': instance.gridTemplateRows,
+      'gridTemplateColumns': instance.gridTemplateColumns,
       'gridRow': instance.gridRow,
       'gridColumn': instance.gridColumn,
       'width': instance.width,
       'height': instance.height,
+      'margin': instance.margin,
       'marginTop': instance.marginTop,
       'marginRight': instance.marginRight,
       'marginBottom': instance.marginBottom,
       'marginLeft': instance.marginLeft,
-      'margin': instance.margin,
       'position': instance.position,
       'top': instance.top,
       'zIndex': instance.zIndex,
