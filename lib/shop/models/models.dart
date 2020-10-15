@@ -317,8 +317,9 @@ class TextStyles {
   String color;
   @JsonKey(name: 'fontSize', defaultValue: 0)
   double fontSize;
-  @JsonKey(name: 'fontWeight', defaultValue: 'bold')
-  String fontWeight;
+  // bold, 200...
+  @JsonKey(name: 'fontWeight')
+  dynamic fontWeight;
   @JsonKey(
       name: "fontFamily",
       defaultValue: "Helvetica Neue,Helvetica,Arial,sans-serif")

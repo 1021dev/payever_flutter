@@ -95,18 +95,18 @@ class _TemplateViewState extends State<TemplateView> {
       }
     });
 
-    if (styleSheet != null &&
-        styleSheet.backgroundImage != null &&
-        styleSheet.backgroundImage.isNotEmpty) {
+//    if (styleSheet != null &&
+//        styleSheet.backgroundImage != null &&
+//        styleSheet.backgroundImage.isNotEmpty) {
       return Stack(
         children: [
           _sectionBgWidget(styleSheet),
           _sectionBody(widgets, styleSheet),
         ],
       );
-    } else {
-      return _sectionBody(widgets, styleSheet);
-    }
+//    } else {
+//      return _sectionBody(widgets, styleSheet);
+//    }
   }
 
   Widget _sectionBgWidget(SectionStyleSheet styleSheet) {
@@ -114,11 +114,12 @@ class _TemplateViewState extends State<TemplateView> {
       width: double.infinity,
       alignment: Alignment.center,
       height: styleSheet.height,
+      color: colorConvert(styleSheet.backgroundColor),
       child: CachedNetworkImage(
         imageUrl: styleSheet.backgroundImage,
         imageBuilder: (context, imageProvider) => Container(
           decoration: BoxDecoration(
-            color: Colors.white /*background.backgroundColor*/,
+            color: Colors.transparent /*background.backgroundColor*/,
             image: DecorationImage(
               image: imageProvider,
               fit: BoxFit.cover,
@@ -162,23 +163,16 @@ class _TemplateViewState extends State<TemplateView> {
 //      print('Block StyleSheet: ${obj.toString()}');
     }
     child.children.forEach((element) {
-      print('Block Children type: ${element.type}');
+//      print('Block Children type: ${element.type}');
     });
     return Container();
   }
 
   Widget _textWidget(Child child) {
-    dynamic obj = stylesheets[shopPage.stylesheetIds.mobile][child.id];
-    if (obj != null) {
-//      print('Text StyleSheet: ${obj.toString()}');
+    if (child.styles == null || child.styles.isEmpty) {
+      return null;
     }
-    SectionStyleSheet background = getSectionStyleSheet(child.id);
-    if (background == null) {
-    } else {
-//      if (background.display != null && background.display == 'none')
-//        return Container();
-    }
-
+    TextStyles styles = TextStyles.fromJson(child.styles);
     String txt = '';
     if (child.data is Map) {
       Data data = Data.fromJson(child.data);
@@ -189,25 +183,25 @@ class _TemplateViewState extends State<TemplateView> {
     if (txt.contains('<div') ||
         txt.contains('<span') ||
         txt.contains('<font')) {
-      return Center(
-        child: Html(
-          data: """
-              $txt
-              """,
-          onLinkTap: (url) {
-            print("Opening $url...");
-          },
-        ),
+      return Html(
+        data: """
+            $txt
+            """,
+        onLinkTap: (url) {
+          print("Opening $url...");
+        },
       );
     }
-    return Align(
+    return Container(
+      margin: EdgeInsets.only(
+          left: styles.marginLeft,
+          right: styles.marginRight,
+          top: styles.marginTop,
+          bottom: styles.marginBottom),
       alignment: Alignment.center,
-      child: Container(
-//        height: background.height,
-//        width: background.width,
-        alignment: Alignment.center,
-        child: Text(txt, style: TextStyle(color: Colors.black54)),
-      ),
+      child: Text(txt,
+          style: TextStyle(
+              color: colorConvert(styles.color), fontSize: styles.fontSize)),
     );
   }
 
@@ -221,6 +215,7 @@ class _TemplateViewState extends State<TemplateView> {
         height: styles.height,
         decoration: BoxDecoration(
           color: colorConvert(styles.backgroundColor),
+          borderRadius: BorderRadius.circular(styles.borderRadius),
         ),
         margin: EdgeInsets.only(
             left: styles.marginLeft,
@@ -230,19 +225,23 @@ class _TemplateViewState extends State<TemplateView> {
         alignment: Alignment.center,
         child: Text(Data.fromJson(child.data).text,
             style: TextStyle(
-              color: Colors.black,
+              color: colorConvert(styles.color),
+              fontSize: styles.fontSize
             )),
       );
   }
 
   Widget _imageWidget(Child child) {
+    if (child.styles == null || child.styles.isEmpty) {
+      return null;
+    }
     ImageStyles styles = ImageStyles.fromJson(child.styles) ;
     Data data;
     try {
       data = Data.fromJson(child.data);
     } catch (e) {}
     if (data == null || data.src == null || data.src.isEmpty)
-      return Container();
+      return null;
 
     return Container(
       height: styles.height,

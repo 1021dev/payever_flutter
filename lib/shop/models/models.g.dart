@@ -408,14 +408,14 @@ Map<String, dynamic> _$ParentToJson(Parent instance) => <String, dynamic>{
 TextStyles _$TextStylesFromJson(Map<String, dynamic> json) {
   return TextStyles()
     ..color = json['color'] as String ?? '#000000'
-    ..fontSize = (json['fontSize'] as num)?.toDouble() ?? 0
-    ..fontWeight = json['fontWeight'] as String ?? 'bold'
+    ..fontSize = (json['fontSize'] is String) ? 0 : (json['fontSize'] as num)?.toDouble() ?? 0
+    ..fontWeight = json['fontWeight']
     ..fontFamily = json['fontFamily'] as String ??
         'Helvetica Neue,Helvetica,Arial,sans-serif'
     ..gridColumn = json['gridColumn'] as String ?? '1 / span 1'
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea']
-    ..width = (json['width'] as num)?.toDouble() ?? 0
+    ..width = (json['width'] == '100%') ? double.infinity: (json['width'] as num)?.toDouble() ?? 0
     ..height = (json['height'] as num)?.toDouble() ?? 0
     ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
     ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
@@ -464,7 +464,7 @@ ButtonStyles _$ButtonStylesFromJson(Map<String, dynamic> json) {
     ..fontWeight = json['fontWeight'] as String ?? 'bold'
     ..fontFamily = json['fontFamily'] as String ??
         'Helvetica Neue,Helvetica,Arial,sans-serif'
-    ..borderRadius = (json['borderRadius'] as num)?.toDouble() ?? 0
+    ..borderRadius = (json['borderRadius'] is String) ? 0 : (json['borderRadius'] as num)?.toDouble() ?? 0
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
     ..borderWidth = (json['borderWidth'] as num)?.toDouble() ?? 0
     ..gridColumn = json['gridColumn'] as String ?? '1 / span 1'
