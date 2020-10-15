@@ -72,13 +72,20 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
           if (slideOpened) Expanded(flex: (isTablet || !isPortrait) ? 6 : 10, child: _slidBar(state)),
           if (slideOpened)
             VerticalDivider(),
-          Expanded(flex: 23, child: _mainBody()),
+          Expanded(flex: 23, child: _mainBody(state)),
         ],
       ),
     );
   }
 
-  Widget _mainBody() {
+  Widget _mainBody(ShopEditScreenState state) {
+    List<ShopPage> pages = state.pages
+        .where((page) => page.type == 'replica')
+        .toList();
+    ShopPage homePage;
+    if (pages != null && pages.isNotEmpty) {
+      homePage = pages.firstWhere((page) => page.variant == 'front');
+    }
     return Stack(
       children: [
         Center(
@@ -88,6 +95,9 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
               width: double.infinity,
               padding: EdgeInsets.all(6),
               color: Colors.white,
+              child: homePage != null
+                  ? _templateItem(homePage, showName: false)
+                  : Container(),
             ),
           ),
         ),
@@ -113,9 +123,9 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
     List<ShopPage> pages = state.pages
         .where((page) => page.type == 'replica')
         .toList();
-    bool activeMode = true;
+    bool activeMode = false;
     int length = activeMode ? pages.length : state.previews.length;
-    double aspectRatio = activeMode ? 1 : 0.5;
+    double aspectRatio = activeMode ? 1 : 2/1;
     return Container(
       padding: EdgeInsets.all(4),
       child: Column(
@@ -233,47 +243,52 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
     );
   }
 
-  Widget _templateItem(ShopPage page) {
+  Widget _templateItem(ShopPage page, {bool showName = true}) {
     Template template = page != null
         ? Template.fromJson(screenBloc.state.templates[page.templateId])
         : null;
     String pageName = page == null ? 'Empty' : page.name;
 
-    return Column(
-      children: [
-        Expanded(
-            child: (template != null)
-                ? TemplateView(
-              shopPage: page,
-              template: template,
-              stylesheets: screenBloc.state.stylesheets,
-              onTap: () {
-                Navigator.push(
-                    context,
-                    PageTransition(
-                        child: TemplateDetailScreen(
-                          shopPage: page,
-                          template: template,
-                          stylesheets: screenBloc.state.stylesheets,
-                        ),
-                        type: PageTransitionType.fade));
-              },
-            )
-                : Container(
-              color: Colors.white,
-            )),
-        SizedBox(
-          height: 5,
-        ),
-        Flexible(
-          child: Text(
-            pageName,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-          ),
-        ),
-      ],
+    return Container(
+      color: (showName && page.variant == 'front') ? Colors.blue : Colors.transparent,
+      padding: EdgeInsets.all(4),
+      child: Column(
+        children: [
+          Expanded(
+              child: (template != null)
+                  ? TemplateView(
+                shopPage: page,
+                template: template,
+                scrollable: !showName,
+                stylesheets: screenBloc.state.stylesheets,
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          child: TemplateDetailScreen(
+                            shopPage: page,
+                            template: template,
+                            stylesheets: screenBloc.state.stylesheets,
+                          ),
+                          type: PageTransitionType.fade));
+                },
+              )
+                  : Container(
+                color: Colors.white,
+              )),
+          if (showName)
+            SizedBox(
+              height: 5,
+            ),
+          if (showName)
+            Text(
+              pageName,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+            ),
+        ],
+      ),
     );
   }
 

@@ -12,7 +12,7 @@ class TemplateView extends StatefulWidget {
   final Function onTap;
   final bool scrollable;
   const TemplateView(
-      {this.shopPage, this.template, this.stylesheets, this.onTap, this.scrollable = false});
+      {this.shopPage, this.template, this.stylesheets, this.onTap, this.scrollable = true});
 
   @override
   _TemplateViewState createState() =>
