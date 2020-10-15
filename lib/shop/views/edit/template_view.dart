@@ -10,9 +10,9 @@ class TemplateView extends StatefulWidget {
   final Template template;
   final Map<String, dynamic> stylesheets;
   final Function onTap;
-
+  final bool scrollable;
   const TemplateView(
-      {this.shopPage, this.template, this.stylesheets, this.onTap});
+      {this.shopPage, this.template, this.stylesheets, this.onTap, this.scrollable = false});
 
   @override
   _TemplateViewState createState() =>
@@ -34,6 +34,9 @@ class _TemplateViewState extends State<TemplateView> {
     List sections = [];
     template.children.forEach((child) {
       SectionStyleSheet styleSheet = getSectionStyleSheet(child.id);
+      if (styleSheet == null) {
+        return Container();
+      }
       if (child.type == 'section' &&
           child.children != null &&
           child.children.isNotEmpty &&
@@ -47,6 +50,9 @@ class _TemplateViewState extends State<TemplateView> {
       child: Container(
         color: Colors.grey,
         child: ListView.separated(
+          physics: widget.scrollable
+              ? AlwaysScrollableScrollPhysics()
+              : NeverScrollableScrollPhysics(),
           itemCount: sections.length,
           shrinkWrap: true,
           itemBuilder: (context, index) {

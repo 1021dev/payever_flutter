@@ -8,6 +8,7 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/shop_edit_templetes_screen.dart';
 import 'package:payever/shop/views/edit/template_detail_screen.dart';
+import 'package:payever/shop/views/edit/template_view.dart';
 
 class ShopEditScreen extends StatefulWidget {
   final ShopScreenBloc shopScreenBloc;
@@ -109,6 +110,12 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
   }
 
   Widget _slidBar(ShopEditScreenState state) {
+    List<ShopPage> pages = state.pages
+        .where((page) => page.type == 'replica')
+        .toList();
+    bool activeMode = true;
+    int length = activeMode ? pages.length : state.previews.length;
+    double aspectRatio = activeMode ? 1 : 0.5;
     return Container(
       padding: EdgeInsets.all(4),
       child: Column(
@@ -116,70 +123,14 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
           Expanded(
             child: ListView.separated(
                 itemBuilder: (context, index) {
-                  Preview preview = state.previews[index];
                   return AspectRatio(
-                      aspectRatio: 2 / 1,
-                      child: Container(
-                        padding: EdgeInsets.only(left: 10, right: 4),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Row(
-                          children: [
-                            Align(
-                                alignment: Alignment.bottomCenter,
-                                child: Text('${index + 1}')),
-                            SizedBox(
-                              width: 3,
-                            ),
-                            Expanded(
-                                child: CachedNetworkImage(
-                              imageUrl: '${preview.previewUrl}',
-                              imageBuilder: (context, imageProvider) =>
-                                  Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(4),
-                                  image: DecorationImage(
-                                    image: imageProvider,
-                                    fit: BoxFit.contain,
-                                  ),
-                                ),
-                              ),
-                              color: Colors.white,
-                              placeholder: (context, url) => Container(
-                                color: Colors.white,
-                                child: Center(
-                                  child: Container(
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              errorWidget: (context, url, error) => Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: Center(
-                                  child: AspectRatio(
-                                    aspectRatio: 0.8,
-                                    child: SvgPicture.asset(
-                                      'assets/images/no_image.svg',
-                                      color: Colors.black54,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ))
-                          ],
-                        ),
-                      ));
+                      aspectRatio: aspectRatio,
+                      child: activeMode
+                          ? _templateItem(pages[index])
+                          :_previewItem(index));
                 },
                 separatorBuilder: (index, context) => Divider(color: Colors.transparent,),
-                itemCount: state.previews.length),
+                itemCount: length),
           ),
           Container(
             width: double.infinity,
@@ -217,6 +168,112 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
           )
         ],
       ),
+    );
+  }
+
+  Widget _previewItem(int index) {
+    Preview preview = screenBloc.state.previews[index];
+    return Container(
+      padding: EdgeInsets.only(left: 10, right: 4),
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Align(
+              alignment: Alignment.bottomCenter,
+              child: Text('${index + 1}')),
+          SizedBox(
+            width: 3,
+          ),
+          Expanded(
+              child: CachedNetworkImage(
+                imageUrl: '${preview.previewUrl}',
+                imageBuilder: (context, imageProvider) =>
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(4),
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+                color: Colors.white,
+                placeholder: (context, url) => Container(
+                  color: Colors.white,
+                  child: Center(
+                    child: Container(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                      ),
+                    ),
+                  ),
+                ),
+                errorWidget: (context, url, error) => Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Center(
+                    child: AspectRatio(
+                      aspectRatio: 0.8,
+                      child: SvgPicture.asset(
+                        'assets/images/no_image.svg',
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ),
+                ),
+              ))
+        ],
+      ),
+    );
+  }
+
+  Widget _templateItem(ShopPage page) {
+    Template template = page != null
+        ? Template.fromJson(screenBloc.state.templates[page.templateId])
+        : null;
+    String pageName = page == null ? 'Empty' : page.name;
+
+    return Column(
+      children: [
+        Expanded(
+            child: (template != null)
+                ? TemplateView(
+              shopPage: page,
+              template: template,
+              stylesheets: screenBloc.state.stylesheets,
+              onTap: () {
+                Navigator.push(
+                    context,
+                    PageTransition(
+                        child: TemplateDetailScreen(
+                          shopPage: page,
+                          template: template,
+                          stylesheets: screenBloc.state.stylesheets,
+                        ),
+                        type: PageTransitionType.fade));
+              },
+            )
+                : Container(
+              color: Colors.white,
+            )),
+        SizedBox(
+          height: 5,
+        ),
+        Flexible(
+          child: Text(
+            pageName,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+          ),
+        ),
+      ],
     );
   }
 

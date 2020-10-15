@@ -58,19 +58,23 @@ class _ShopEditTemplatesScreenState extends State<ShopEditTemplatesScreen> {
         crossAxisSpacing: isTablet ? 12 : (isPortrait ? 6 : 12),
         mainAxisSpacing: 12,
         children: List.generate(
-          pages.length,
+          pages.length + 1,
           (index) {
-            return _templateItem(pages[index], state);
+            return _templateItem(index == 0 ? null : pages[index -1]);
           },
         ),
       ),
     );
   }
 
-  Widget _templateItem(ShopPage page, ShopEditScreenState state) {
+  Widget _templateItem(ShopPage page) {
 //    RenderRepaintBoundary boundary = _globalKey.currentContext.findRenderObject();
 //    boundary.toImage(pixelRatio: 3.0).then((value) => null);
-    Template template = Template.fromJson(screenBloc.state.templates[page.templateId]);
+    Template template = page != null
+        ? Template.fromJson(screenBloc.state.templates[page.templateId])
+        : null;
+    String pageName = page == null ? 'Empty' : page.name;
+
     return Column(
       children: [
         Expanded(
@@ -78,7 +82,7 @@ class _ShopEditTemplatesScreenState extends State<ShopEditTemplatesScreen> {
                 ? TemplateView(
                     shopPage: page,
                     template: template,
-                    stylesheets: state.stylesheets,
+                    stylesheets: screenBloc.state.stylesheets,
                     onTap: () {
                       Navigator.push(
                           context,
@@ -86,7 +90,7 @@ class _ShopEditTemplatesScreenState extends State<ShopEditTemplatesScreen> {
                               child: TemplateDetailScreen(
                                 shopPage: page,
                                 template: template,
-                                stylesheets: state.stylesheets,
+                                stylesheets: screenBloc.state.stylesheets,
                               ),
                               type: PageTransitionType.fade));
                     },
@@ -98,7 +102,7 @@ class _ShopEditTemplatesScreenState extends State<ShopEditTemplatesScreen> {
           height: 5,
         ),
         Text(
-          page.name,
+          pageName,
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
       ],
