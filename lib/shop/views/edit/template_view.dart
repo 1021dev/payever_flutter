@@ -3,7 +3,7 @@ import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:flutter_html/flutter_html.dart';
-import '../../../theme.dart';
+import 'package:payever/theme.dart';
 
 class TemplateView extends StatefulWidget {
   final ShopPage shopPage;
@@ -33,9 +33,11 @@ class _TemplateViewState extends State<TemplateView> {
     }
     List sections = [];
     template.children.forEach((child) {
+      SectionStyleSheet styleSheet = getSectionStyleSheet(child.id);
       if (child.type == 'section' &&
           child.children != null &&
-          child.children.isNotEmpty) {
+          child.children.isNotEmpty &&
+          styleSheet.display != 'none') {
         sections.add(_section(child));
       }
     });
@@ -63,31 +65,26 @@ class _TemplateViewState extends State<TemplateView> {
   }
 
   Widget _section(Child child) {
-    dynamic obj = stylesheets[shopPage.stylesheetIds.mobile][child.id];
-    if (obj != null) {
-//      print('Section StyleSheet: ${obj.toString()}');
-    }
-
     SectionStyleSheet styleSheet = getSectionStyleSheet(child.id);
     if (styleSheet == null) {
       print('background NULL, Child ID: ${child.id}');
-    } else {
-//      if (styleSheet.display == 'none')
-//        return Container();
     }
 
     List widgets = [];
     child.children.forEach((child) {
       if (child.type == EnumToString.convertToString(ChildType.text)) {
-        widgets.add(_textWidget(child));
+        Widget text = _textWidget(child);
+        if (text != null) widgets.add(text);
       } else if (child.type == EnumToString.convertToString(ChildType.button)) {
-        widgets.add(_buttonWidget(child));
+        Widget button = _buttonWidget(child);
+        if (button != null) widgets.add(_buttonWidget(child));
       } else if (child.type == EnumToString.convertToString(ChildType.image)) {
-        widgets.add(_imageWidget(child));
+        Widget image = _imageWidget(child);
+        if (image != null) widgets.add(image);
       } else if (child.type == EnumToString.convertToString(ChildType.shape)) {
       } else if (child.type == EnumToString.convertToString(ChildType.block)) {
         // If Type only Block, has sub children
-//        widgets.add(_blockWidget(child));
+        widgets.add(_blockWidget(child));
       } else if (child.type == EnumToString.convertToString(ChildType.menu)) {
       } else if (child.type == EnumToString.convertToString(ChildType.logo)) {
       } else if (child.type == 'shop-cart') {
@@ -215,26 +212,9 @@ class _TemplateViewState extends State<TemplateView> {
   }
 
   Widget _buttonWidget(Child child) {
-//    print('Button: ${child.id}');
     ButtonStyleSheet styleSheet = getButtonStyleSheet(child.id);
     if (styleSheet != null) {
-      try {
-        return Align(
-          alignment: Alignment.center,
-          child: Container(
-            width: 200,
-            height: 60,
-            alignment: Alignment.center,
-            color: Colors.red/*colorConvert(styleSheet.background)*/,
-            child: Text(
-              Data.fromJson(child.data).text,
-              style: TextStyle(
-                  color: colorConvert(styleSheet.color),
-                  fontSize: styleSheet.fontSize.toDouble()),
-            ),
-          ),
-        );
-      } catch (e) {
+      if (styleSheet.display != 'none') {
         return Container(
           width: 200,
           height: 60,
@@ -245,13 +225,21 @@ class _TemplateViewState extends State<TemplateView> {
                 color: Colors.black,
               )),
         );
+      } else {
+        return null;
       }
     } else {
-      print('Button Data: ${child.data.toString()}');
+      print('Button Styles: ${child.styles.toJson().toString()}');
+      Styles styles = child.styles;
       return Container(
-        width: 200,
-        height: 60,
-        color: Colors.amber,
+        width: styles.width,
+        height: styles.height,
+        margin: EdgeInsets.only(
+            left: styles.marginLeft ?? 0,
+            right: styles.marginRight ?? 0,
+            top: styles.marginTop ?? 0,
+            bottom: styles.marginBottom ?? 0),
+        color: colorConvert(styles.backgroundColor),
         alignment: Alignment.center,
         child: Text(Data.fromJson(child.data).text,
             style: TextStyle(
