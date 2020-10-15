@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'models.g.dart';
@@ -324,8 +325,19 @@ class TextStyles {
   // String(bold) or double
   @JsonKey(name: 'fontWeight', defaultValue: 400)
   dynamic fontWeight;
-  double textFontWeight() {
-    return (fontWeight is double) ? fontWeight as double : 600;
+  FontWeight textFontWeight() {
+    if (fontWeight == 'bold') {
+      return FontWeight.bold;
+    }
+    if (fontWeight < 200) return FontWeight.w100;
+    if (fontWeight < 300) return FontWeight.w200;
+    if (fontWeight < 400) return FontWeight.w300;
+    if (fontWeight < 500) return FontWeight.w400;
+    if (fontWeight < 600) return FontWeight.w500;
+    if (fontWeight < 700) return FontWeight.w600;
+    if (fontWeight < 800) return FontWeight.w700;
+    if (fontWeight < 900) return FontWeight.w800;
+    return FontWeight.w900;
   }
 
   @JsonKey(
@@ -578,11 +590,13 @@ class SectionStyleSheet {
   // Background
   @JsonKey(name: 'backgroundColor', defaultValue: '#ffffff')
   String backgroundColor;
+
+  // Image URL or Linear gradient(linear-gradient(90deg, #fffa7e, #B51700))
   @JsonKey(name: 'backgroundImage', defaultValue: '')
   String backgroundImage;
   @JsonKey(name: 'backgroundSize', defaultValue: '100%')
   String backgroundSize;
-  @JsonKey(name: 'backgroundPosition', defaultValue: '')
+  @JsonKey(name: 'backgroundPosition', defaultValue: 'center')
   String backgroundPosition;
   @JsonKey(name: 'backgroundRepeat', defaultValue: '')
   String backgroundRepeat;

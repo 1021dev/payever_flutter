@@ -38,7 +38,7 @@ class _TemplateViewState extends State<TemplateView> {
           child.children != null &&
           child.children.isNotEmpty &&
           styleSheet.display != 'none') {
-        sections.add(_section(child));
+        sections.add(_section(child, styleSheet));
       }
     });
 
@@ -64,12 +64,7 @@ class _TemplateViewState extends State<TemplateView> {
     );
   }
 
-  Widget _section(Child child) {
-    SectionStyleSheet styleSheet = getSectionStyleSheet(child.id);
-    if (styleSheet == null) {
-      print('background NULL, Child ID: ${child.id}');
-    }
-
+  Widget _section(Child child, SectionStyleSheet styleSheet) {
     List widgets = [];
     child.children.forEach((child) {
       if (child.type == EnumToString.convertToString(ChildType.text)) {
@@ -105,7 +100,7 @@ class _TemplateViewState extends State<TemplateView> {
 
   Widget _sectionBackgroundWidget(SectionStyleSheet styleSheet) {
     return Container(
-      width: styleSheet.width,
+      width: double.infinity, //styleSheet.width,
       height: styleSheet.height,
       alignment: Alignment.center,
       color: colorConvert(styleSheet.backgroundColor),
@@ -134,7 +129,7 @@ class _TemplateViewState extends State<TemplateView> {
 
   Widget _sectionBody(List widgets, SectionStyleSheet styleSheet) {
     return Container(
-      width: styleSheet.width,
+      width: double.infinity /*styleSheet.width*/,
       height: styleSheet.height,
       child: ListView.separated(
         physics: NeverScrollableScrollPhysics(),
@@ -191,6 +186,8 @@ class _TemplateViewState extends State<TemplateView> {
       );
     }
     return Container(
+      width: styles.textWidth(),
+      height: styles.height,
       margin: EdgeInsets.only(
           left: styles.marginLeft,
           right: styles.marginRight,
@@ -199,7 +196,9 @@ class _TemplateViewState extends State<TemplateView> {
       alignment: Alignment.center,
       child: Text(txt,
           style: TextStyle(
-              color: colorConvert(styles.color), fontSize: styles.fontSize)),
+              color: colorConvert(styles.color),
+              fontWeight: styles.textFontWeight(),
+              fontSize: styles.textFontSize())),
     );
   }
 
@@ -213,7 +212,7 @@ class _TemplateViewState extends State<TemplateView> {
         height: styles.height,
         decoration: BoxDecoration(
           color: colorConvert(styles.backgroundColor),
-          borderRadius: BorderRadius.circular(styles.borderRadius),
+          borderRadius: BorderRadius.circular(styles.buttonBorderRadius()),
         ),
         margin: EdgeInsets.only(
             left: styles.marginLeft,

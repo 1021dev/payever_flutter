@@ -48,6 +48,9 @@ class _ShopEditTemplatesScreenState extends State<ShopEditTemplatesScreen> {
   }
 
   Widget _body(ShopEditScreenState state) {
+    List<ShopPage> pages = state.pages
+        .where((page) => page.variant == 'default' && page.type == 'master')
+        .toList();
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 18),
       child: GridView.count(
@@ -55,9 +58,9 @@ class _ShopEditTemplatesScreenState extends State<ShopEditTemplatesScreen> {
         crossAxisSpacing: isTablet ? 12 : (isPortrait ? 6 : 12),
         mainAxisSpacing: 12,
         children: List.generate(
-          state.pages.length,
+          pages.length,
           (index) {
-            return _templateItem(state.pages[index], state);
+            return _templateItem(pages[index], state);
           },
         ),
       ),
