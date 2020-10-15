@@ -564,12 +564,12 @@ class SectionStyleSheet {
   @JsonKey(name: 'backgroundRepeat')      String backgroundRepeat;
   @JsonKey(name: 'gridRow')               String gridRow;
   @JsonKey(name: 'gridColumn')            String gridColumn;
-  @JsonKey(name: 'width')                 num width;
-  @JsonKey(name: 'height')                num height;
-  @JsonKey(name: 'marginTop')             num marginTop;
-  @JsonKey(name: 'marginRight')           num marginRight;
-  @JsonKey(name: 'marginBottom')          num marginBottom;
-  @JsonKey(name: 'marginLeft')            num marginLeft;
+  @JsonKey(name: 'width')                 double width;
+  @JsonKey(name: 'height')                double height;
+  @JsonKey(name: 'marginTop')             double marginTop;
+  @JsonKey(name: 'marginRight')           double marginRight;
+  @JsonKey(name: 'marginBottom')          double marginBottom;
+  @JsonKey(name: 'marginLeft')            double marginLeft;
   @JsonKey(name: 'margin')                String margin;
   @JsonKey(name: 'position')              String position;
   @JsonKey(name: 'top')                   dynamic top;

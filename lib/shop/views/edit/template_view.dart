@@ -28,9 +28,9 @@ class _TemplateViewState extends State<TemplateView> {
 
   @override
   Widget build(BuildContext context) {
-    if (shopPage.name != '404 1') {
-      return Container();
-    }
+//    if (shopPage.name != '404 1') {
+//      return Container();
+//    }
     List sections = [];
     template.children.forEach((child) {
       SectionStyleSheet styleSheet = getSectionStyleSheet(child.id);
@@ -113,7 +113,7 @@ class _TemplateViewState extends State<TemplateView> {
     return Container(
       width: double.infinity,
       alignment: Alignment.center,
-      height: styleSheet.height.toDouble(),
+      height: styleSheet.height,
       child: CachedNetworkImage(
         imageUrl: styleSheet.backgroundImage,
         imageBuilder: (context, imageProvider) => Container(
@@ -212,49 +212,31 @@ class _TemplateViewState extends State<TemplateView> {
   }
 
   Widget _buttonWidget(Child child) {
-    ButtonStyleSheet styleSheet = getButtonStyleSheet(child.id);
-    if (styleSheet != null) {
-      if (styleSheet.display != 'none') {
-        return Container(
-          width: 200,
-          height: 60,
-          color: Colors.blue,
-          alignment: Alignment.center,
-          child: Text(Data.fromJson(child.data).text,
-              style: TextStyle(
-                color: Colors.black,
-              )),
-        );
-      } else {
+      if (child.styles == null || child.styles.isEmpty) {
         return null;
       }
-    } else {
-      print('Button Styles: ${child.styles.toJson().toString()}');
-      Styles styles = child.styles;
+      ButtonStyles styles = ButtonStyles.fromJson(child.styles);
       return Container(
-        width: (styles.width is num)
-            ? (styles.width as num).toDouble()
-            : double.infinity,
-        height: styles.height.toDouble(),
+        width: styles.width,
+        height: styles.height,
         decoration: BoxDecoration(
           color: colorConvert(styles.backgroundColor),
         ),
         margin: EdgeInsets.only(
-            left: styles.marginLeft.toDouble() ?? 0,
-            right: styles.marginRight.toDouble() ?? 0,
-            top: styles.marginTop.toDouble() ?? 0,
-            bottom: styles.marginBottom.toDouble() ?? 0),
+            left: styles.marginLeft,
+            right: styles.marginRight,
+            top: styles.marginTop,
+            bottom: styles.marginBottom),
         alignment: Alignment.center,
         child: Text(Data.fromJson(child.data).text,
             style: TextStyle(
               color: Colors.black,
             )),
       );
-    }
   }
 
   Widget _imageWidget(Child child) {
-    Styles styles = child.styles;
+    ImageStyles styles = ImageStyles.fromJson(child.styles) ;
     Data data;
     try {
       data = Data.fromJson(child.data);
@@ -263,8 +245,8 @@ class _TemplateViewState extends State<TemplateView> {
       return Container();
 
     return Container(
-      height: styles.height.toDouble(),
-      width: styles.width.toDouble(),
+      height: styles.height,
+      width: styles.width,
       child: CachedNetworkImage(
         imageUrl: '${data.src}',
         imageBuilder: (context, imageProvider) => Container(
@@ -296,9 +278,9 @@ class _TemplateViewState extends State<TemplateView> {
     }
   }
 
-  ButtonStyleSheet getButtonStyleSheet(String childId) {
+  ButtonStyles getButtonStyleSheet(String childId) {
     try {
-      return ButtonStyleSheet.fromJson(
+      return ButtonStyles.fromJson(
           stylesheets[shopPage.stylesheetIds.mobile][childId]);
     } catch (e) {
       return null;
