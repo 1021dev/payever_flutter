@@ -515,6 +515,74 @@ Map<String, dynamic> _$ButtonStylesToJson(ButtonStyles instance) =>
       'left': instance.left,
     };
 
+ImageStyles _$ImageStylesFromJson(Map<String, dynamic> json) {
+  return ImageStyles()
+    ..backgroundColor = json['backgroundColor'] as String ?? '#ffffff'
+    ..border = json['border']
+    ..borderType = json['borderType'] as String ?? 'solid'
+    ..borderRadius = (json['borderRadius'] as num)?.toDouble() ?? 0
+    ..borderColor = json['borderColor'] as String ?? '#000000'
+    ..borderSize = (json['borderSize'] as num)?.toDouble() ?? 0
+    ..opacity = (json['opacity'] as num)?.toDouble() ?? 1
+    ..boxShadow = json['boxShadow']
+    ..shadowAngle = (json['shadowAngle'] as num)?.toDouble() ?? 0
+    ..shadowBlur = (json['shadowBlur'] as num)?.toDouble() ?? 0
+    ..shadowColor = json['shadowColor'] as String ?? 'rgba(0, 0, NaN, 0, 0)'
+    ..shadowFormColor = json['shadowFormColor'] as String ?? '0, 0, 0'
+    ..shadowOffset = (json['shadowOffset'] as num)?.toDouble() ?? 0
+    ..shadowOpacity = (json['shadowOpacity'] as num)?.toDouble() ?? 0
+    ..gridColumn = json['gridColumn'] as String ?? '1 / span 1'
+    ..gridRow = json['gridRow'] as String ?? '1 / span 1'
+    ..gridArea = json['gridArea']
+    ..width = (json['width'] as num)?.toDouble() ?? 0
+    ..height = (json['height'] as num)?.toDouble() ?? 0
+    ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
+    ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
+    ..margin = json['margin'] as String ?? '0 0 0 0'
+    ..padding = json['padding'] as String ?? '8 28'
+    ..position = json['position'] as String ?? 'absolute'
+    ..marginBottom = (json['marginBottom'] as num)?.toDouble() ?? 0
+    ..marginLeft = (json['marginLeft'] as num)?.toDouble() ?? 0
+    ..marginRight = (json['marginRight'] as num)?.toDouble() ?? 0
+    ..marginTop = (json['marginTop'] as num)?.toDouble() ?? 0
+    ..top = (json['top'] as num)?.toDouble() ?? 0
+    ..left = (json['left'] as num)?.toDouble() ?? 0;
+}
+
+Map<String, dynamic> _$ImageStylesToJson(ImageStyles instance) =>
+    <String, dynamic>{
+      'backgroundColor': instance.backgroundColor,
+      'border': instance.border,
+      'borderType': instance.borderType,
+      'borderRadius': instance.borderRadius,
+      'borderColor': instance.borderColor,
+      'borderSize': instance.borderSize,
+      'opacity': instance.opacity,
+      'boxShadow': instance.boxShadow,
+      'shadowAngle': instance.shadowAngle,
+      'shadowBlur': instance.shadowBlur,
+      'shadowColor': instance.shadowColor,
+      'shadowFormColor': instance.shadowFormColor,
+      'shadowOffset': instance.shadowOffset,
+      'shadowOpacity': instance.shadowOpacity,
+      'gridColumn': instance.gridColumn,
+      'gridRow': instance.gridRow,
+      'gridArea': instance.gridArea,
+      'width': instance.width,
+      'height': instance.height,
+      'minWidth': instance.minWidth,
+      'minHeight': instance.minHeight,
+      'margin': instance.margin,
+      'padding': instance.padding,
+      'position': instance.position,
+      'marginBottom': instance.marginBottom,
+      'marginLeft': instance.marginLeft,
+      'marginRight': instance.marginRight,
+      'marginTop': instance.marginTop,
+      'top': instance.top,
+      'left': instance.left,
+    };
+
 Data _$DataFromJson(Map<String, dynamic> json) {
   return Data()
     ..text = json['text'] as String

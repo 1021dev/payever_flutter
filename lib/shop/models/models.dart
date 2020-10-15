@@ -1,6 +1,5 @@
 import 'package:payever/commons/commons.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:enum_to_string/enum_to_string.dart';
 part 'models.g.dart';
 
 @JsonSerializable()
@@ -438,6 +437,92 @@ class ButtonStyles {
 
   factory ButtonStyles.fromJson(Map<String, dynamic> json) => _$ButtonStylesFromJson(json);
   Map<String, dynamic> toJson() => _$ButtonStylesToJson(this);
+}
+
+@JsonSerializable()
+class ImageStyles {
+  ImageStyles();
+
+  @JsonKey(name: 'backgroundColor', defaultValue: '#ffffff')
+  String backgroundColor;
+
+  // Border
+  // Bool or String
+  // if bool(always false) all border attributes are disabled
+  // if String border is active in case default value is '0px solid #000000'
+  @JsonKey(name: 'border')
+  dynamic border;
+  @JsonKey(name: 'borderType', defaultValue: 'solid')
+  String borderType;
+  @JsonKey(name: 'borderRadius', defaultValue: 0)
+  double borderRadius;
+  @JsonKey(name: 'borderColor', defaultValue: '#000000')
+  String borderColor;
+  @JsonKey(name: 'borderSize', defaultValue: 0)
+  double borderSize;
+  @JsonKey(name: 'opacity', defaultValue: 1)
+  double opacity;
+
+  // Shadow
+  // Bool or String
+  // if bool(always false) all Shadow attributes are disabled
+  // if String shadow is active in case default value is '0px 0px 0px rgba(0, 0, NaN, 0, 0)'
+  @JsonKey(name: 'boxShadow')
+  dynamic boxShadow;
+
+  @JsonKey(name: 'shadowAngle', defaultValue: 0)
+  double shadowAngle;
+  @JsonKey(name: 'shadowBlur', defaultValue: 0)
+  double shadowBlur;
+  @JsonKey(name: 'shadowColor', defaultValue: 'rgba(0, 0, NaN, 0, 0)')
+  String shadowColor;
+  @JsonKey(name: 'shadowFormColor', defaultValue: '0, 0, 0')
+  String shadowFormColor;
+  @JsonKey(name: 'shadowOffset', defaultValue: 0)
+  double shadowOffset;
+  @JsonKey(name: 'shadowOpacity', defaultValue: 0)
+  double shadowOpacity;
+
+  // Grid
+  @JsonKey(name: 'gridColumn', defaultValue: '1 / span 1')
+  String gridColumn;
+  @JsonKey(name: 'gridRow', defaultValue: '1 / span 1')
+  String gridRow;
+  @JsonKey(name: 'gridArea')
+  dynamic gridArea;
+
+  // Size
+  @JsonKey(name: 'width', defaultValue: 0)
+  double width;
+  @JsonKey(name: 'height', defaultValue: 0)
+  double height;
+  @JsonKey(name: 'minWidth', defaultValue: 0)
+  double minWidth;
+  @JsonKey(name: 'minHeight', defaultValue: 0)
+  double minHeight;
+
+  // Relative
+  @JsonKey(name: 'margin', defaultValue: '0 0 0 0')
+  String margin;
+  @JsonKey(name: 'padding', defaultValue: '8 28')
+  String padding;
+  @JsonKey(name: 'position', defaultValue: 'absolute')
+  String position;
+  @JsonKey(name: 'marginBottom', defaultValue: 0)
+  double marginBottom;
+  @JsonKey(name: 'marginLeft', defaultValue: 0)
+  double marginLeft;
+  @JsonKey(name: 'marginRight', defaultValue: 0)
+  double marginRight;
+  @JsonKey(name: 'marginTop', defaultValue: 0)
+  double marginTop;
+  @JsonKey(name: 'top', defaultValue: 0)
+  double top;
+  @JsonKey(name: 'left', defaultValue: 0)
+  double left;
+
+  factory ImageStyles.fromJson(Map<String, dynamic> json) => _$ImageStylesFromJson(json);
+  Map<String, dynamic> toJson() => _$ImageStylesToJson(this);
 }
 
 @JsonSerializable()
