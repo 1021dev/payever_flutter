@@ -325,11 +325,84 @@ class Styles {
   @JsonKey(name: 'marginBottom')      num marginBottom;
   @JsonKey(name: 'marginLeft')        num marginLeft;
   @JsonKey(name: 'marginRight')       num marginRight;
-  @JsonKey(name: 'marginTop')         num  marginTop;
+  @JsonKey(name: 'marginTop')         num marginTop;
   @JsonKey(name: 'width')             dynamic width;
 
   factory Styles.fromJson(Map<String, dynamic> json) => _$StylesFromJson(json);
   Map<String, dynamic> toJson() => _$StylesToJson(this);
+}
+
+@JsonSerializable()
+class ButtonStyles {
+  ButtonStyles();
+
+  @JsonKey(name: 'background', defaultValue: '#ffffff')
+  String background;
+  @JsonKey(name: 'backgroundColor', defaultValue: '#ffffff')
+  String backgroundColor;
+  @JsonKey(name: 'backgroundImage', defaultValue: '')
+  String backgroundImage;
+
+  // Title
+  @JsonKey(name: 'color', defaultValue: '#000000')
+  String color;
+  @JsonKey(name: 'fontSize', defaultValue: 0)
+  double fontSize;
+  @JsonKey(name: 'fontWeight', defaultValue: 'bold')
+  String fontWeight;
+  @JsonKey(
+      name: "fontFamily",
+      defaultValue: "Helvetica Neue,Helvetica,Arial,sans-serif")
+  String fontFamily;
+
+  // Border
+  @JsonKey(name: 'borderRadius', defaultValue: 0)
+  double borderRadius;
+  @JsonKey(name: 'borderColor', defaultValue: '#ffffff')
+  String borderColor;
+  @JsonKey(name: 'borderWidth', defaultValue: 0)
+  double borderWidth;
+
+  // Grid
+  @JsonKey(name: 'gridColumn', defaultValue: '1 / span 1')
+  String gridColumn;
+  @JsonKey(name: 'gridRow', defaultValue: '1 / span 1')
+  String gridRow;
+  @JsonKey(name: 'gridArea')
+  dynamic gridArea;
+
+  // Size
+  @JsonKey(name: 'width', defaultValue: 0)
+  double width;
+  @JsonKey(name: 'height', defaultValue: 0)
+  double height;
+  @JsonKey(name: 'minWidth', defaultValue: 0)
+  double minWidth;
+  @JsonKey(name: 'minHeight', defaultValue: 0)
+  double minHeight;
+
+  // Relative
+  @JsonKey(name: 'margin', defaultValue: '0 0 0 0')
+  String margin;
+  @JsonKey(name: 'padding', defaultValue: '8 28')
+  String padding;
+  @JsonKey(name: 'position', defaultValue: 'absolute')
+  String position;
+  @JsonKey(name: 'marginBottom', defaultValue: 0)
+  double marginBottom;
+  @JsonKey(name: 'marginLeft', defaultValue: 0)
+  double marginLeft;
+  @JsonKey(name: 'marginRight', defaultValue: 0)
+  double marginRight;
+  @JsonKey(name: 'marginTop', defaultValue: 0)
+  double marginTop;
+  @JsonKey(name: 'top', defaultValue: 0)
+  double top;
+  @JsonKey(name: 'left', defaultValue: 0)
+  double left;
+
+  factory ButtonStyles.fromJson(Map<String, dynamic> json) => _$ButtonStylesFromJson(json);
+  Map<String, dynamic> toJson() => _$ButtonStylesToJson(this);
 }
 
 @JsonSerializable()
@@ -398,8 +471,11 @@ class ButtonStyleSheet {
   @JsonKey(name: 'margin')          String margin;
   @JsonKey(name: 'display')         String display;
 
+
+
   factory ButtonStyleSheet.fromJson(Map<String, dynamic> json) => _$ButtonStyleSheetFromJson(json);
   Map<String, dynamic> toJson() => _$ButtonStyleSheetToJson(this);
 }
 
 enum ChildType { text, button, image, block, menu, logo, shape, shopCart, shopCategory, shopProducts }
+

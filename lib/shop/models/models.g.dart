@@ -440,6 +440,67 @@ Map<String, dynamic> _$StylesToJson(Styles instance) => <String, dynamic>{
       'width': instance.width,
     };
 
+ButtonStyles _$ButtonStylesFromJson(Map<String, dynamic> json) {
+  return ButtonStyles()
+    ..background = json['background'] as String ?? '#ffffff'
+    ..backgroundColor = json['backgroundColor'] as String ?? '#ffffff'
+    ..backgroundImage = json['backgroundImage'] as String ?? ''
+    ..color = json['color'] as String ?? '#000000'
+    ..fontSize = (json['fontSize'] as num)?.toDouble() ?? 0
+    ..fontWeight = json['fontWeight'] as String ?? 'bold'
+    ..fontFamily = json['fontFamily'] as String ??
+        'Helvetica Neue,Helvetica,Arial,sans-serif'
+    ..borderRadius = (json['borderRadius'] as num)?.toDouble() ?? 0
+    ..borderColor = json['borderColor'] as String ?? '#ffffff'
+    ..borderWidth = (json['borderWidth'] as num)?.toDouble() ?? 0
+    ..gridColumn = json['gridColumn'] as String ?? '1 / span 1'
+    ..gridRow = json['gridRow'] as String ?? '1 / span 1'
+    ..gridArea = json['gridArea']
+    ..width = (json['width'] as num)?.toDouble() ?? 0
+    ..height = (json['height'] as num)?.toDouble() ?? 0
+    ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
+    ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
+    ..margin = json['margin'] as String ?? '0 0 0 0'
+    ..padding = json['padding'] as String ?? '8 28'
+    ..position = json['position'] as String ?? 'absolute'
+    ..marginBottom = (json['marginBottom'] as num)?.toDouble() ?? 0
+    ..marginLeft = (json['marginLeft'] as num)?.toDouble() ?? 0
+    ..marginRight = (json['marginRight'] as num)?.toDouble() ?? 0
+    ..marginTop = (json['marginTop'] as num)?.toDouble() ?? 0
+    ..top = (json['top'] as num)?.toDouble() ?? 0
+    ..left = (json['left'] as num)?.toDouble() ?? 0;
+}
+
+Map<String, dynamic> _$ButtonStylesToJson(ButtonStyles instance) =>
+    <String, dynamic>{
+      'background': instance.background,
+      'backgroundColor': instance.backgroundColor,
+      'backgroundImage': instance.backgroundImage,
+      'color': instance.color,
+      'fontSize': instance.fontSize,
+      'fontWeight': instance.fontWeight,
+      'fontFamily': instance.fontFamily,
+      'borderRadius': instance.borderRadius,
+      'borderColor': instance.borderColor,
+      'borderWidth': instance.borderWidth,
+      'gridColumn': instance.gridColumn,
+      'gridRow': instance.gridRow,
+      'gridArea': instance.gridArea,
+      'width': instance.width,
+      'height': instance.height,
+      'minWidth': instance.minWidth,
+      'minHeight': instance.minHeight,
+      'margin': instance.margin,
+      'padding': instance.padding,
+      'position': instance.position,
+      'marginBottom': instance.marginBottom,
+      'marginLeft': instance.marginLeft,
+      'marginRight': instance.marginRight,
+      'marginTop': instance.marginTop,
+      'top': instance.top,
+      'left': instance.left,
+    };
+
 Data _$DataFromJson(Map<String, dynamic> json) {
   return Data()
     ..text = json['text'] as String

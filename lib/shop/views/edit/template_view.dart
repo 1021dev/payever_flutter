@@ -232,14 +232,18 @@ class _TemplateViewState extends State<TemplateView> {
       print('Button Styles: ${child.styles.toJson().toString()}');
       Styles styles = child.styles;
       return Container(
-        width: styles.width,
-        height: styles.height,
+        width: (styles.width is num)
+            ? (styles.width as num).toDouble()
+            : double.infinity,
+        height: styles.height.toDouble(),
+        decoration: BoxDecoration(
+          color: colorConvert(styles.backgroundColor),
+        ),
         margin: EdgeInsets.only(
-            left: styles.marginLeft ?? 0,
-            right: styles.marginRight ?? 0,
-            top: styles.marginTop ?? 0,
-            bottom: styles.marginBottom ?? 0),
-        color: colorConvert(styles.backgroundColor),
+            left: styles.marginLeft.toDouble() ?? 0,
+            right: styles.marginRight.toDouble() ?? 0,
+            top: styles.marginTop.toDouble() ?? 0,
+            bottom: styles.marginBottom.toDouble() ?? 0),
         alignment: Alignment.center,
         child: Text(Data.fromJson(child.data).text,
             style: TextStyle(
