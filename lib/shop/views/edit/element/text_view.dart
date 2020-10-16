@@ -69,11 +69,18 @@ class _TextViewState extends State<TextView> {
         )*/,
       );
     }
-
-    if (child.styles == null || child.styles.isEmpty) {
-      return Container();
+    TextStyles styles;
+    if (child.styles != null && child.styles.isNotEmpty) {
+      styles = TextStyles.fromJson(child.styles);
+    } else {
+      styles = getStyles();
+//      if (styles != null) {
+//        print(
+//            'Html Text Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
+//      }
     }
-    TextStyles styles = TextStyles.fromJson(child.styles);
+    if (styles == null || styles.display == 'none')
+      return Container();
 
     return Container(
       width: styles.textWidth(),

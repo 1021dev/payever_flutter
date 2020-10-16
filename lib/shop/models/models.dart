@@ -418,9 +418,9 @@ class ButtonStyles {
   String backgroundImage;
 
   // Title
-  @JsonKey(name: 'color', defaultValue: '#000000')
+  @JsonKey(name: 'color', defaultValue: '#ffffff')
   String color;
-  @JsonKey(name: 'fontSize', defaultValue: 0)
+  @JsonKey(name: 'fontSize', defaultValue: 15)
   double fontSize;
   // String(bold) or double
   @JsonKey(name: 'fontWeight', defaultValue: 400)
@@ -449,7 +449,16 @@ class ButtonStyles {
   @JsonKey(name: 'borderRadius', defaultValue: 0)
   dynamic borderRadius;
   double buttonBorderRadius() {
-    return (borderRadius is num) ? (borderRadius as num).toDouble() : 0;
+    if (borderRadius is num)
+      return (borderRadius as num).toDouble();
+    if (borderRadius is String) {
+      try{
+        return double.parse(borderRadius as String);
+      } catch(e) {
+        return 0;
+      }
+    }
+    return 0;
   }
 
   @JsonKey(name: 'borderColor', defaultValue: '#ffffff')

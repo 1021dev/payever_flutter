@@ -468,8 +468,8 @@ ButtonStyles _$ButtonStylesFromJson(Map<String, dynamic> json) {
     ..background = json['background'] as String ?? '#ffffff'
     ..backgroundColor = json['backgroundColor'] as String ?? '#ffffff'
     ..backgroundImage = json['backgroundImage'] as String ?? ''
-    ..color = json['color'] as String ?? '#000000'
-    ..fontSize = (json['fontSize'] as num)?.toDouble() ?? 0
+    ..color = json['color'] as String ?? '#ffffff'
+    ..fontSize = (json['fontSize'] as num)?.toDouble() ?? 15
     ..fontWeight = json['fontWeight'] ?? 400
     ..fontFamily = json['fontFamily'] as String ??
         'Helvetica Neue,Helvetica,Arial,sans-serif'

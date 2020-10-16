@@ -32,6 +32,10 @@ class _ButtonViewState extends State<ButtonView> {
       styles = styleSheet();
     }
 
+//    if (styleSheet() != null) {
+//      print(
+//          'Button Styles Sheets: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
+//    }
     if (styles == null ||
         styles.display == 'none' ||
         (styleSheet() != null && styleSheet().display == 'none'))
