@@ -28,36 +28,39 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
     return Scaffold(
         appBar: Appbar(shopPage.name),
         body: SafeArea(
-          child: _draggable()/*TemplateView(
+          child: TemplateView(
             shopPage: shopPage,
             template: template,
             stylesheets: stylesheets,
-          ),*/
+          ),
         ));
   }
 
   Widget _draggable() {
-    return Stack(
-        children:[
-          // other widgets...
-          DraggableWidget(
-            bottomMargin: 80,
-            topMargin: 80,
-            intialVisibility: true,
-            horizontalSapce: 20,
-            shadowBorderRadius: 50,
-            child: Container(
-              height: 50,
-              width: 50,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.blue,
+    return Container(
+      color: Colors.white,
+      child: Stack(
+          children:[
+            // other widgets...
+            DraggableWidget(
+              bottomMargin: 80,
+              topMargin: 80,
+              intialVisibility: true,
+              horizontalSapce: 20,
+              shadowBorderRadius: 50,
+              child: Container(
+                height: 50,
+                width: 50,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.blue,
+                ),
               ),
-            ),
-            initialPosition: AnchoringPosition.topLeft,
-            dragController: dragController,
-          )
-        ]
+              initialPosition: AnchoringPosition.topLeft,
+              dragController: dragController,
+            )
+          ]
+      ),
     );
   }
   Widget _body() {

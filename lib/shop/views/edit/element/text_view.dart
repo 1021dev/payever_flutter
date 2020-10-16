@@ -37,9 +37,9 @@ class _TextViewState extends State<TextView> {
         txt.contains('<span') ||
         txt.contains('<font')) {
       TextStyles styles = getStyles();
-      if (styles != null) {
-        print('Html Text Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
-      }
+//      if (styles != null) {
+//        print('Html Text Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
+//      }
       return Container(
         color: colorConvert(styles.backgroundColor, emptyColor: true),
         width: styles.textWidth(),

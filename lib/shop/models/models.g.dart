@@ -523,6 +523,7 @@ Map<String, dynamic> _$ButtonStylesToJson(ButtonStyles instance) =>
 
 ImageStyles _$ImageStylesFromJson(Map<String, dynamic> json) {
   return ImageStyles()
+    ..background = json['background'] as String ?? ''
     ..backgroundColor = json['backgroundColor'] as String ?? '#ffffff'
     ..border = json['border']
     ..borderType = json['borderType'] as String ?? 'solid'

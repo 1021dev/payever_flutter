@@ -32,30 +32,7 @@ class _TemplateViewState extends State<TemplateView> {
   @override
   Widget build(BuildContext context) {
 //    if (shopPage.name != '404 1') {
-//      return Center(
-//        child: Stack(
-//            children:[
-//              // other widgets...
-//              DraggableWidget(
-//                bottomMargin: 80,
-//                topMargin: 80,
-//                intialVisibility: true,
-//                horizontalSapce: 20,
-//                shadowBorderRadius: 50,
-//                child: Container(
-//                  height: 50,
-//                  width: 50,
-//                  decoration: BoxDecoration(
-//                    shape: BoxShape.circle,
-//                    color: Colors.blue,
-//                  ),
-//                ),
-//                initialPosition: AnchoringPosition.topLeft,
-//                dragController: dragController,
-//              )
-//            ]
-//        )
-//      );
+//      return Container();
 //    }
     List sections = [];
     template.children.forEach((child) {
@@ -65,7 +42,7 @@ class _TemplateViewState extends State<TemplateView> {
       }
       if (child.type == 'section' &&
           child.children != null &&
-          child.children.isNotEmpty &&
+          /*child.children.isNotEmpty &&*/
           styleSheet.display != 'none') {
         sections.add(_section(child, styleSheet));
       }
@@ -105,6 +82,7 @@ class _TemplateViewState extends State<TemplateView> {
         if (text != null) widgets.add(text);
       } else if (child.type == EnumToString.convertToString(ChildType.button)) {
         Widget button = ButtonView(child:child, stylesheets: stylesheets, deviceTypeId: shopPage.stylesheetIds.mobile,);
+
         if (button != null) widgets.add(button);
       } else if (child.type == EnumToString.convertToString(ChildType.image)) {
         Widget image = ImageView(child);
@@ -125,11 +103,6 @@ class _TemplateViewState extends State<TemplateView> {
 
     return Stack(
       children: widgets,
-//      children: [
-//        _sectionBackgroundWidget(styleSheet),
-//        _sectionBody(widgets, styleSheet),
-//        widgets.toList(),
-//      ],
     );
   }
 
@@ -137,7 +110,7 @@ class _TemplateViewState extends State<TemplateView> {
     return Container(
       width: double.infinity, //styleSheet.width,
       height: styleSheet.height,
-      alignment: Alignment.center,
+//      alignment: Alignment.center,
       color: colorConvert(styleSheet.backgroundColor),
       child: styleSheet.backgroundImage.isNotEmpty
           ? CachedNetworkImage(
@@ -147,7 +120,7 @@ class _TemplateViewState extends State<TemplateView> {
                   color: Colors.transparent /*background.backgroundColor*/,
                   image: DecorationImage(
                     image: imageProvider,
-                    fit: BoxFit.cover,
+                    fit: BoxFit.contain,
                   ),
                 ),
               ),
@@ -159,29 +132,6 @@ class _TemplateViewState extends State<TemplateView> {
               ),
             )
           : Container(),
-    );
-  }
-
-  Widget _sectionBody(List widgets, SectionStyleSheet styleSheet) {
-    return Container(
-      width: double.infinity /*styleSheet.width*/,
-      height: styleSheet.height,
-      child: ListView.separated(
-        physics: NeverScrollableScrollPhysics(),
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        itemCount: widgets.length,
-        shrinkWrap: true,
-        itemBuilder: (context, index) {
-          return widgets[index];
-        },
-        separatorBuilder: (context, index) {
-          return Divider(
-            height: 14,
-            thickness: 0,
-            color: Colors.transparent,
-          );
-        },
-      ),
     );
   }
 
@@ -198,21 +148,11 @@ class _TemplateViewState extends State<TemplateView> {
 
   SectionStyleSheet getSectionStyleSheet(String childId) {
     try {
+      print('Section StyleSheet: ${stylesheets[shopPage.stylesheetIds.mobile][childId]}');
       return SectionStyleSheet.fromJson(
           stylesheets[shopPage.stylesheetIds.mobile][childId]);
     } catch (e) {
       return null;
     }
   }
-
-  ButtonStyles getButtonStyleSheet(String childId) {
-    try {
-      return ButtonStyles.fromJson(
-          stylesheets[shopPage.stylesheetIds.mobile][childId]);
-    } catch (e) {
-      return null;
-    }
-  }
 }
-//Logo Image
-//https://payeverproduction.blob.core.windows.net/builder/24b4e49a-33d3-4b59-8366-3f0e49ac07d7-0-2.jpeg

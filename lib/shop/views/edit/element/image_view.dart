@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/theme.dart';
 
 class ImageView extends StatefulWidget {
   final Child child;
@@ -29,14 +30,27 @@ class _ImageViewState extends State<ImageView> {
     try {
       data = Data.fromJson(child.data);
     } catch (e) {}
-    if (data == null || data.src == null || data.src.isEmpty)
-      return Container();
 
+
+    String url;
+    if (styles.background.isNotEmpty) {
+      url = styles.background;
+    } else {
+      if (data == null || data.src == null || data.src.isEmpty)
+        return Container();
+      url = data.src;
+    }
     return Container(
       height: styles.height,
       width: styles.width,
+      color: colorConvert(styles.backgroundColor),
+      margin: EdgeInsets.only(
+          left: styles.marginLeft,
+          right: styles.marginRight,
+          top: styles.marginTop,
+          bottom: styles.marginBottom),
       child: CachedNetworkImage(
-        imageUrl: '${data.src}',
+        imageUrl: url,
         imageBuilder: (context, imageProvider) => Container(
           decoration: BoxDecoration(
             color: Colors.white /*background.backgroundColor*/,

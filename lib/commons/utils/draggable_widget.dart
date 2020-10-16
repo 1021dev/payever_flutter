@@ -59,7 +59,7 @@ class DraggableWidget extends StatefulWidget {
   ///    blurRadius: 10,
   ///  ),
   /// ```
-  final BoxShadow draggingShadow;
+//  final BoxShadow draggingShadow;
 
   /// How much should the [DraggableWidget] be scaled when it is being dragged, default to 1.1
   final double dragAnimationScale;
@@ -73,23 +73,23 @@ class DraggableWidget extends StatefulWidget {
     this.intialVisibility = true,
     this.bottomMargin = 0,
     this.topMargin = 0,
-    this.statusBarHeight = 24,
-    this.shadowBorderRadius = 10,
+    this.statusBarHeight = 0,
+    this.shadowBorderRadius = 0,
     this.dragController,
-    this.dragAnimationScale = 1.1,
+    this.dragAnimationScale = 1,
     this.normalShadow = const BoxShadow(
       color: Colors.black38,
       offset: Offset(0, 4),
       blurRadius: 2,
     ),
-    this.draggingShadow = const BoxShadow(
-      color: Colors.black38,
-      offset: Offset(0, 10),
-      blurRadius: 10,
-    ),
+//    this.draggingShadow = const BoxShadow(
+//      color: Colors.black38,
+//      offset: Offset(0, 10),
+//      blurRadius: 10,
+//    ),
   })  : assert(dragAnimationScale != null),
         assert(normalShadow != null),
-        assert(draggingShadow != null),
+//        assert(draggingShadow != null),
         assert(statusBarHeight != null && statusBarHeight >= 0),
         assert(horizontalSapce >= 0 && horizontalSapce != null),
         assert(verticalSpace >= 0 && verticalSpace != null),
@@ -110,7 +110,7 @@ class _DraggableWidgetState extends State<DraggableWidget>
   double hardLeft = 0, hardTop = 0;
   bool offstage = true;
 
-  AnchoringPosition currentDocker;
+//  AnchoringPosition currentDocker;
 
   double widgetHeight = 18;
   double widgetWidth = 50;
@@ -135,7 +135,7 @@ class _DraggableWidgetState extends State<DraggableWidget>
       duration: Duration(milliseconds: 150),
     )
       ..addListener(() {
-        if (currentDocker != null) animateWidget(currentDocker);
+//        if (currentDocker != null) animateWidget(currentDocker);
       })
       ..addStatusListener(
         (status) {
@@ -162,6 +162,7 @@ class _DraggableWidgetState extends State<DraggableWidget>
         setState(() {
           widgetHeight = widgetSize.height;
           widgetWidth = widgetSize.width;
+          print('widgetWidth: $widgetWidth , widgetHeight: $widgetHeight');
         });
       }
 
@@ -228,8 +229,6 @@ class _DraggableWidgetState extends State<DraggableWidget>
             ? Container()
             : Listener(
                 onPointerUp: (v) {
-                  final p = v.position;
-                  currentDocker = determineDocker(p.dx, p.dy);
                   setState(() {
                     dragging = false;
                   });
@@ -271,16 +270,6 @@ class _DraggableWidgetState extends State<DraggableWidget>
                         decoration: BoxDecoration(
                           borderRadius:
                               BorderRadius.circular(widget.shadowBorderRadius),
-                          boxShadow: [
-                            dragging
-                                ? widget.draggingShadow
-                                : widget.normalShadow
-                            // BoxShadow(
-                            //   color: Colors.black38,
-                            //   offset: dragging ? Offset(0, 10) : Offset(0, 4),
-                            //   blurRadius: dragging ? 10 : 2,
-                            // )
-                          ],
                         ),
                         child: Transform.scale(
                             scale: dragging ? widget.dragAnimationScale : 1,
@@ -290,21 +279,6 @@ class _DraggableWidgetState extends State<DraggableWidget>
               ),
       ),
     );
-  }
-
-  AnchoringPosition determineDocker(double x, double y) {
-    final double totalHeight = boundary;
-    final double totalWidth = MediaQuery.of(context).size.width;
-
-    if (x <= totalWidth / 2 && y <= totalHeight / 2) {
-      return AnchoringPosition.topLeft;
-    } else if (x < totalWidth / 2 && y > totalHeight / 2) {
-      return AnchoringPosition.bottomLeft;
-    } else if (x > totalWidth / 2 && y < totalHeight / 2) {
-      return AnchoringPosition.topRight;
-    } else {
-      return AnchoringPosition.bottomRight;
-    }
   }
 
   void animateWidget(AnchoringPosition docker) {
@@ -390,7 +364,7 @@ class _DraggableWidgetState extends State<DraggableWidget>
       animationController.stop();
     }
     animationController.reset();
-    currentDocker = anchoringPosition;
+//    currentDocker = anchoringPosition;
     animationController.forward();
   }
 

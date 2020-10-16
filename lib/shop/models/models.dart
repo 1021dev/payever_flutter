@@ -494,7 +494,9 @@ class ButtonStyles {
 @JsonSerializable()
 class ImageStyles {
   ImageStyles();
-
+  // Image URL
+  @JsonKey(name: 'background', defaultValue: '')
+  String background;
   @JsonKey(name: 'backgroundColor', defaultValue: '#ffffff')
   String backgroundColor;
 
@@ -620,7 +622,7 @@ class SectionStyleSheet {
   String backgroundSize;
   @JsonKey(name: 'backgroundPosition', defaultValue: 'center')
   String backgroundPosition;
-  @JsonKey(name: 'backgroundRepeat', defaultValue: '')
+  @JsonKey(name: 'backgroundRepeat', defaultValue: 'no-repeat')
   String backgroundRepeat;
 
   @JsonKey(name: 'gridTemplateRows', defaultValue: '0 0 0')
