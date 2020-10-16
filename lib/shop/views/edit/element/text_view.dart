@@ -34,6 +34,8 @@ class _TextViewState extends State<TextView> {
     if (txt.contains('<div') ||
         txt.contains('<span') ||
         txt.contains('<font')) {
+      
+
       return Html(
         data: """
             $txt

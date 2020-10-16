@@ -6,6 +6,7 @@ import 'package:payever/shop/views/edit/element/button_view.dart';
 import 'package:payever/shop/views/edit/element/image_view.dart';
 import 'package:payever/shop/views/edit/element/text_view.dart';
 import 'package:payever/theme.dart';
+import 'package:draggable_widget/draggable_widget.dart';
 
 class TemplateView extends StatefulWidget {
   final ShopPage shopPage;
@@ -25,13 +26,36 @@ class _TemplateViewState extends State<TemplateView> {
   final ShopPage shopPage;
   final Template template;
   final Map<String, dynamic> stylesheets;
-
+  DragController dragController = DragController();
   _TemplateViewState(this.shopPage, this.template, this.stylesheets);
 
   @override
   Widget build(BuildContext context) {
 //    if (shopPage.name != '404 1') {
-//      return Container();
+//      return Center(
+//        child: Stack(
+//            children:[
+//              // other widgets...
+//              DraggableWidget(
+//                bottomMargin: 80,
+//                topMargin: 80,
+//                intialVisibility: true,
+//                horizontalSapce: 20,
+//                shadowBorderRadius: 50,
+//                child: Container(
+//                  height: 50,
+//                  width: 50,
+//                  decoration: BoxDecoration(
+//                    shape: BoxShape.circle,
+//                    color: Colors.blue,
+//                  ),
+//                ),
+//                initialPosition: AnchoringPosition.topLeft,
+//                dragController: dragController,
+//              )
+//            ]
+//        )
+//      );
 //    }
     List sections = [];
     template.children.forEach((child) {
@@ -73,13 +97,14 @@ class _TemplateViewState extends State<TemplateView> {
   }
 
   Widget _section(Child child, SectionStyleSheet styleSheet) {
-    List widgets = [];
+    List<Widget> widgets = [];
+    widgets.add(_sectionBackgroundWidget(styleSheet));
     child.children.forEach((child) {
       if (child.type == EnumToString.convertToString(ChildType.text)) {
         Widget text = TextView(child);
         if (text != null) widgets.add(text);
       } else if (child.type == EnumToString.convertToString(ChildType.button)) {
-        Widget button = ButtonView(child);
+        Widget button = ButtonView(child:child, stylesheets: stylesheets, deviceTypeId: shopPage.stylesheetIds.mobile,);
         if (button != null) widgets.add(button);
       } else if (child.type == EnumToString.convertToString(ChildType.image)) {
         Widget image = ImageView(child);
@@ -99,10 +124,12 @@ class _TemplateViewState extends State<TemplateView> {
     });
 
     return Stack(
-      children: [
-        _sectionBackgroundWidget(styleSheet),
-        _sectionBody(widgets, styleSheet),
-      ],
+      children: widgets,
+//      children: [
+//        _sectionBackgroundWidget(styleSheet),
+//        _sectionBody(widgets, styleSheet),
+//        widgets.toList(),
+//      ],
     );
   }
 

@@ -320,7 +320,7 @@ class TextStyles {
   @JsonKey(name: 'fontSize', defaultValue: 0)
   dynamic fontSize;
   double textFontSize() {
-    return (fontSize is double) ? fontSize as double : 0;
+    return (fontSize is num) ? (fontSize as num).toDouble() : 0;
   }
   // String(bold) or double
   @JsonKey(name: 'fontWeight', defaultValue: 400)
@@ -357,7 +357,7 @@ class TextStyles {
   @JsonKey(name: 'width', defaultValue: 0)
   dynamic width;
   double textWidth() {
-    return (width is double) ? width as double : double.infinity;
+    return (width is num) ? (width as num).toDouble() : double.infinity;
   }
 
   @JsonKey(name: 'height', defaultValue: 0)
@@ -407,8 +407,23 @@ class ButtonStyles {
   String color;
   @JsonKey(name: 'fontSize', defaultValue: 0)
   double fontSize;
-  @JsonKey(name: 'fontWeight', defaultValue: 'bold')
-  String fontWeight;
+  // String(bold) or double
+  @JsonKey(name: 'fontWeight', defaultValue: 400)
+  dynamic fontWeight;
+  FontWeight textFontWeight() {
+    if (fontWeight == 'bold') {
+      return FontWeight.bold;
+    }
+    if (fontWeight < 200) return FontWeight.w100;
+    if (fontWeight < 300) return FontWeight.w200;
+    if (fontWeight < 400) return FontWeight.w300;
+    if (fontWeight < 500) return FontWeight.w400;
+    if (fontWeight < 600) return FontWeight.w500;
+    if (fontWeight < 700) return FontWeight.w600;
+    if (fontWeight < 800) return FontWeight.w700;
+    if (fontWeight < 900) return FontWeight.w800;
+    return FontWeight.w900;
+  }
   @JsonKey(
       name: "fontFamily",
       defaultValue: "Helvetica Neue,Helvetica,Arial,sans-serif")
@@ -419,7 +434,7 @@ class ButtonStyles {
   @JsonKey(name: 'borderRadius', defaultValue: 0)
   dynamic borderRadius;
   double buttonBorderRadius() {
-    return (borderRadius is double) ? borderRadius as double : 0;
+    return (borderRadius is num) ? (borderRadius as num).toDouble() : 0;
   }
 
   @JsonKey(name: 'borderColor', defaultValue: '#ffffff')

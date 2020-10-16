@@ -5,8 +5,11 @@ import '../../../../theme.dart';
 
 class ButtonView extends StatefulWidget {
   final Child child;
+  final Map<String, dynamic> stylesheets;
+  final String deviceTypeId;
 
-  const ButtonView(this.child);
+  const ButtonView({this.child, this.stylesheets, this.deviceTypeId});
+
   @override
   _ButtonViewState createState() => _ButtonViewState(child);
 }
@@ -22,10 +25,14 @@ class _ButtonViewState extends State<ButtonView> {
   }
 
   Widget _body() {
-    if (child.styles == null || child.styles.isEmpty) {
-      return Container();
+    ButtonStyles styles;
+    if (child.styles != null && child.styles.isNotEmpty) {
+      styles = ButtonStyles.fromJson(child.styles);
+    } else {
+      styles = getButtonStyleSheet();
     }
-    ButtonStyles styles = ButtonStyles.fromJson(child.styles);
+    if (styles == null) return Container();
+
     return Container(
       width: styles.width,
       height: styles.height,
@@ -39,12 +46,22 @@ class _ButtonViewState extends State<ButtonView> {
           top: styles.marginTop,
           bottom: styles.marginBottom),
       alignment: Alignment.center,
-      child: Text(Data.fromJson(child.data).text,
-          style: TextStyle(
-              color: colorConvert(styles.color),
-              fontSize: styles.fontSize
-          )),
+      child: Text(
+        Data.fromJson(child.data).text,
+        style: TextStyle(
+            color: colorConvert(styles.color),
+            fontSize: styles.fontSize,
+            fontWeight: styles.textFontWeight()),
+      ),
     );
   }
 
+  ButtonStyles getButtonStyleSheet() {
+    try {
+      return ButtonStyles.fromJson(
+          widget.stylesheets[widget.deviceTypeId][child.id]);
+    } catch (e) {
+      return null;
+    }
+  }
 }
