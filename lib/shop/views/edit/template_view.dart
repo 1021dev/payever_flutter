@@ -1,12 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
+import 'package:payever/commons/utils/draggable_widget.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/element/button_view.dart';
 import 'package:payever/shop/views/edit/element/image_view.dart';
 import 'package:payever/shop/views/edit/element/text_view.dart';
 import 'package:payever/theme.dart';
-import 'package:draggable_widget/draggable_widget.dart';
 
 class TemplateView extends StatefulWidget {
   final ShopPage shopPage;
