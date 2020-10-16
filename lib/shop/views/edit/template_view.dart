@@ -2,7 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/models.dart';
-import 'package:flutter_html/flutter_html.dart';
+import 'package:payever/shop/views/edit/element/button_view.dart';
+import 'package:payever/shop/views/edit/element/image_view.dart';
+import 'package:payever/shop/views/edit/element/text_view.dart';
 import 'package:payever/theme.dart';
 
 class TemplateView extends StatefulWidget {
@@ -74,13 +76,13 @@ class _TemplateViewState extends State<TemplateView> {
     List widgets = [];
     child.children.forEach((child) {
       if (child.type == EnumToString.convertToString(ChildType.text)) {
-        Widget text = _textWidget(child);
+        Widget text = TextView(child);
         if (text != null) widgets.add(text);
       } else if (child.type == EnumToString.convertToString(ChildType.button)) {
-        Widget button = _buttonWidget(child);
-        if (button != null) widgets.add(_buttonWidget(child));
+        Widget button = ButtonView(child);
+        if (button != null) widgets.add(button);
       } else if (child.type == EnumToString.convertToString(ChildType.image)) {
-        Widget image = _imageWidget(child);
+        Widget image = ImageView(child);
         if (image != null) widgets.add(image);
       } else if (child.type == EnumToString.convertToString(ChildType.shape)) {
       } else if (child.type == EnumToString.convertToString(ChildType.block)) {
@@ -165,110 +167,6 @@ class _TemplateViewState extends State<TemplateView> {
 //      print('Block Children type: ${element.type}');
     });
     return Container();
-  }
-
-  Widget _textWidget(Child child) {
-    if (child.styles == null || child.styles.isEmpty) {
-      return null;
-    }
-    TextStyles styles = TextStyles.fromJson(child.styles);
-    String txt = '';
-    if (child.data is Map) {
-      Data data = Data.fromJson(child.data);
-      if (data.text != null) txt = data.text;
-    } else {
-      print('Data is not Map: ${child.data}');
-    }
-    if (txt.contains('<div') ||
-        txt.contains('<span') ||
-        txt.contains('<font')) {
-      return Html(
-        data: """
-            $txt
-            """,
-        onLinkTap: (url) {
-          print("Opening $url...");
-        },
-      );
-    }
-    return Container(
-      width: styles.textWidth(),
-      height: styles.height,
-      margin: EdgeInsets.only(
-          left: styles.marginLeft,
-          right: styles.marginRight,
-          top: styles.marginTop,
-          bottom: styles.marginBottom),
-      alignment: Alignment.center,
-      child: Text(txt,
-          style: TextStyle(
-              color: colorConvert(styles.color),
-              fontWeight: styles.textFontWeight(),
-              fontSize: styles.textFontSize())),
-    );
-  }
-
-  Widget _buttonWidget(Child child) {
-      if (child.styles == null || child.styles.isEmpty) {
-        return null;
-      }
-      ButtonStyles styles = ButtonStyles.fromJson(child.styles);
-      return Container(
-        width: styles.width,
-        height: styles.height,
-        decoration: BoxDecoration(
-          color: colorConvert(styles.backgroundColor),
-          borderRadius: BorderRadius.circular(styles.buttonBorderRadius()),
-        ),
-        margin: EdgeInsets.only(
-            left: styles.marginLeft,
-            right: styles.marginRight,
-            top: styles.marginTop,
-            bottom: styles.marginBottom),
-        alignment: Alignment.center,
-        child: Text(Data.fromJson(child.data).text,
-            style: TextStyle(
-              color: colorConvert(styles.color),
-              fontSize: styles.fontSize
-            )),
-      );
-  }
-
-  Widget _imageWidget(Child child) {
-    if (child.styles == null || child.styles.isEmpty) {
-      return null;
-    }
-    ImageStyles styles = ImageStyles.fromJson(child.styles) ;
-    Data data;
-    try {
-      data = Data.fromJson(child.data);
-    } catch (e) {}
-    if (data == null || data.src == null || data.src.isEmpty)
-      return null;
-
-    return Container(
-      height: styles.height,
-      width: styles.width,
-      child: CachedNetworkImage(
-        imageUrl: '${data.src}',
-        imageBuilder: (context, imageProvider) => Container(
-          decoration: BoxDecoration(
-            color: Colors.white /*background.backgroundColor*/,
-            borderRadius: BorderRadius.circular(4),
-            image: DecorationImage(
-              image: imageProvider,
-              fit: BoxFit.contain,
-            ),
-          ),
-        ),
-        placeholder: (context, url) =>
-            Container(child: Center(child: CircularProgressIndicator())),
-        errorWidget: (context, url, error) => Icon(
-          Icons.error,
-          size: 80,
-        ),
-      ),
-    );
   }
 
   SectionStyleSheet getSectionStyleSheet(String childId) {
