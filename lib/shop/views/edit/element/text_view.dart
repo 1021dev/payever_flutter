@@ -40,6 +40,10 @@ class _TextViewState extends State<TextView> {
 //      if (styles != null) {
 //        print('Html Text Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
 //      }
+      if (styles == null || styles.display == 'none') {
+        return Container();
+      }
+
       return Container(
         color: colorConvert(styles.backgroundColor, emptyColor: true),
         width: styles.textWidth(),
@@ -54,22 +58,8 @@ class _TextViewState extends State<TextView> {
           '''
             $txt
            ''',
-
-          // all other parameters are optional, a few notable params:
-
-          // specify custom styling for an element
-          // see supported inline styling below
-//          customStylesBuilder: (element) {
-//            if (element.classes.contains('foo')) {
-//              return {'color': 'red'};
-//            }
-//
-//            return null;
-//          },
-//          textStyle: TextStyle(fontSize: 14),
-//
-//          webView: true,
-        )/*Html(
+        )
+        /*Html(
           data: """
               $txt
               """,

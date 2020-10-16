@@ -407,6 +407,7 @@ Map<String, dynamic> _$ParentToJson(Parent instance) => <String, dynamic>{
 
 TextStyles _$TextStylesFromJson(Map<String, dynamic> json) {
   return TextStyles()
+    ..display = json['display'] as String ?? 'flex'
     ..color = json['color'] as String ?? '#000000'
     ..fontSize = json['fontSize'] ?? 0
     ..fontWeight = json['fontWeight'] ?? 400
@@ -435,6 +436,7 @@ TextStyles _$TextStylesFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$TextStylesToJson(TextStyles instance) =>
     <String, dynamic>{
+      'display': instance.display,
       'color': instance.color,
       'fontSize': instance.fontSize,
       'fontWeight': instance.fontWeight,
@@ -462,6 +464,7 @@ Map<String, dynamic> _$TextStylesToJson(TextStyles instance) =>
 
 ButtonStyles _$ButtonStylesFromJson(Map<String, dynamic> json) {
   return ButtonStyles()
+    ..display = json['display'] as String ?? 'flex'
     ..background = json['background'] as String ?? '#ffffff'
     ..backgroundColor = json['backgroundColor'] as String ?? '#ffffff'
     ..backgroundImage = json['backgroundImage'] as String ?? ''
@@ -493,6 +496,7 @@ ButtonStyles _$ButtonStylesFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$ButtonStylesToJson(ButtonStyles instance) =>
     <String, dynamic>{
+      'display': instance.display,
       'background': instance.background,
       'backgroundColor': instance.backgroundColor,
       'backgroundImage': instance.backgroundImage,
@@ -523,6 +527,7 @@ Map<String, dynamic> _$ButtonStylesToJson(ButtonStyles instance) =>
 
 ImageStyles _$ImageStylesFromJson(Map<String, dynamic> json) {
   return ImageStyles()
+    ..display = json['display'] as String ?? 'flex'
     ..background = json['background'] as String ?? ''
     ..backgroundColor = json['backgroundColor'] as String ?? '#ffffff'
     ..border = json['border']
@@ -558,6 +563,8 @@ ImageStyles _$ImageStylesFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$ImageStylesToJson(ImageStyles instance) =>
     <String, dynamic>{
+      'display': instance.display,
+      'background': instance.background,
       'backgroundColor': instance.backgroundColor,
       'border': instance.border,
       'borderType': instance.borderType,
@@ -630,7 +637,7 @@ SectionStyleSheet _$SectionStyleSheetFromJson(Map<String, dynamic> json) {
     ..backgroundImage = json['backgroundImage'] as String ?? ''
     ..backgroundSize = json['backgroundSize'] as String ?? '100%'
     ..backgroundPosition = json['backgroundPosition'] as String ?? 'center'
-    ..backgroundRepeat = json['backgroundRepeat'] as String ?? ''
+    ..backgroundRepeat = json['backgroundRepeat'] as String ?? 'no-repeat'
     ..gridTemplateRows = json['gridTemplateRows'] as String ?? '0 0 0'
     ..gridTemplateColumns = json['gridTemplateColumns'] ?? '0 0 0'
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'

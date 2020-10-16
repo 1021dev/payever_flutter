@@ -29,9 +29,13 @@ class _ButtonViewState extends State<ButtonView> {
     if (child.styles != null && child.styles.isNotEmpty) {
       styles = ButtonStyles.fromJson(child.styles);
     } else {
-      styles = getButtonStyleSheet();
+      styles = styleSheet();
     }
-    if (styles == null) return Container();
+
+    if (styles == null ||
+        styles.display == 'none' ||
+        (styleSheet() != null && styleSheet().display == 'none'))
+      return Container();
 
     return Container(
       width: styles.width,
@@ -56,7 +60,7 @@ class _ButtonViewState extends State<ButtonView> {
     );
   }
 
-  ButtonStyles getButtonStyleSheet() {
+  ButtonStyles styleSheet() {
     try {
       return ButtonStyles.fromJson(
           widget.stylesheets[widget.deviceTypeId][child.id]);

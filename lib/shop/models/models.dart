@@ -313,6 +313,9 @@ class Parent {
 @JsonSerializable()
 class TextStyles {
   TextStyles();
+  // if display is `none`, the element is hidden
+  @JsonKey(name: 'display', defaultValue: 'flex')
+  String display;
   // Text
   @JsonKey(name: 'color', defaultValue: '#000000')
   String color;
@@ -401,6 +404,11 @@ class TextStyles {
 @JsonSerializable()
 class ButtonStyles {
   ButtonStyles();
+
+  // if display is `none`, the element is hidden
+  @JsonKey(name: 'display', defaultValue: 'flex')
+  String display;
+
   // Background
   @JsonKey(name: 'background', defaultValue: '#ffffff')
   String background;
@@ -494,6 +502,10 @@ class ButtonStyles {
 @JsonSerializable()
 class ImageStyles {
   ImageStyles();
+  // if display is `none`, the element is hidden
+  @JsonKey(name: 'display', defaultValue: 'flex')
+  String display;
+
   // Image URL
   @JsonKey(name: 'background', defaultValue: '')
   String background;

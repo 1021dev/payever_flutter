@@ -63,7 +63,7 @@ class _TemplateViewState extends State<TemplateView> {
           },
           separatorBuilder: (context, index) {
             return Divider(
-              height: 14,
+              height: 0,
               thickness: 0,
               color: Colors.transparent,
             );
@@ -82,7 +82,6 @@ class _TemplateViewState extends State<TemplateView> {
         if (text != null) widgets.add(text);
       } else if (child.type == EnumToString.convertToString(ChildType.button)) {
         Widget button = ButtonView(child:child, stylesheets: stylesheets, deviceTypeId: shopPage.stylesheetIds.mobile,);
-
         if (button != null) widgets.add(button);
       } else if (child.type == EnumToString.convertToString(ChildType.image)) {
         Widget image = ImageView(child);
@@ -90,7 +89,7 @@ class _TemplateViewState extends State<TemplateView> {
       } else if (child.type == EnumToString.convertToString(ChildType.shape)) {
       } else if (child.type == EnumToString.convertToString(ChildType.block)) {
         // If Type only Block, has sub children
-        widgets.add(_blockWidget(child));
+//        widgets.add(_blockWidget(child));
       } else if (child.type == EnumToString.convertToString(ChildType.menu)) {
       } else if (child.type == EnumToString.convertToString(ChildType.logo)) {
       } else if (child.type == 'shop-cart') {
@@ -110,7 +109,7 @@ class _TemplateViewState extends State<TemplateView> {
     return Container(
       width: double.infinity, //styleSheet.width,
       height: styleSheet.height,
-//      alignment: Alignment.center,
+      alignment: Alignment.topLeft,
       color: colorConvert(styleSheet.backgroundColor),
       child: styleSheet.backgroundImage.isNotEmpty
           ? CachedNetworkImage(
