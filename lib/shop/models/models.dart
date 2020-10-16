@@ -345,6 +345,13 @@ class TextStyles {
       defaultValue: "Helvetica Neue,Helvetica,Arial,sans-serif")
   String fontFamily;
 
+  // Background
+  @JsonKey(name: 'background', defaultValue: '')
+  String background;
+  @JsonKey(name: 'backgroundColor', defaultValue: '')
+  String backgroundColor;
+  @JsonKey(name: 'backgroundImage', defaultValue: '')
+  String backgroundImage;
   // Grid
   @JsonKey(name: 'gridColumn', defaultValue: '1 / span 1')
   String gridColumn;
@@ -394,7 +401,7 @@ class TextStyles {
 @JsonSerializable()
 class ButtonStyles {
   ButtonStyles();
-
+  // Background
   @JsonKey(name: 'background', defaultValue: '#ffffff')
   String background;
   @JsonKey(name: 'backgroundColor', defaultValue: '#ffffff')

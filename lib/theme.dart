@@ -228,7 +228,7 @@ String iconString() {
   return '${Env.cdnIcon}icons-apps-${GlobalUtils.theme == 'light' ? 'black' : 'white'}/icon-apps-${GlobalUtils.theme == 'light' ? 'black' : 'white'}-';
 }
 
-Color colorConvert(String color) {
+Color colorConvert(String color, {bool emptyColor = false}) {
   if (color == null)
     return Colors.white;
 
@@ -238,6 +238,6 @@ Color colorConvert(String color) {
   } else if (color.length == 8) {
     return Color(int.parse("0x"+color));
   } else {
-    return Colors.white;
+    return emptyColor ? Colors.transparent :Colors.white;
   }
 }

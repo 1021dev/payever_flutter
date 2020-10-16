@@ -101,7 +101,7 @@ class _TemplateViewState extends State<TemplateView> {
     widgets.add(_sectionBackgroundWidget(styleSheet));
     child.children.forEach((child) {
       if (child.type == EnumToString.convertToString(ChildType.text)) {
-        Widget text = TextView(child);
+        Widget text = TextView(child: child, stylesheets: stylesheets, deviceTypeId: shopPage.stylesheetIds.mobile,);
         if (text != null) widgets.add(text);
       } else if (child.type == EnumToString.convertToString(ChildType.button)) {
         Widget button = ButtonView(child:child, stylesheets: stylesheets, deviceTypeId: shopPage.stylesheetIds.mobile,);

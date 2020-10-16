@@ -5,8 +5,9 @@ import '../../../../theme.dart';
 
 class TextView extends StatefulWidget {
   final Child child;
-
-  const TextView(this.child);
+  final Map<String, dynamic> stylesheets;
+  final String deviceTypeId;
+  const TextView({this.child, this.stylesheets, this.deviceTypeId});
   @override
   _TextViewState createState() => _TextViewState(child);
 }
@@ -29,20 +30,30 @@ class _TextViewState extends State<TextView> {
     } else {
       print('Data is not Map: ${child.data}');
     }
-    print('text value: $txt');
+//    print('text value: $txt');
 
     if (txt.contains('<div') ||
         txt.contains('<span') ||
         txt.contains('<font')) {
-      
-
-      return Html(
-        data: """
-            $txt
-            """,
-        onLinkTap: (url) {
-          print("Opening $url...");
-        },
+      TextStyles styles = getStyles();
+      if (styles != null) {
+        print('Html Text Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
+      }
+      return Container(
+        color: colorConvert(styles.backgroundColor, emptyColor: true),
+        margin: EdgeInsets.only(
+            left: styles.marginLeft,
+            right: styles.marginRight,
+            top: styles.marginTop,
+            bottom: styles.marginBottom),
+        child: Html(
+          data: """
+              $txt
+              """,
+          onLinkTap: (url) {
+            print("Opening $url...");
+          },
+        ),
       );
     }
 
@@ -66,5 +77,14 @@ class _TextViewState extends State<TextView> {
               fontWeight: styles.textFontWeight(),
               fontSize: styles.textFontSize())),
     );
+  }
+
+  TextStyles getStyles() {
+    try {
+      return TextStyles.fromJson(
+          widget.stylesheets[widget.deviceTypeId][child.id]);
+    } catch (e) {
+      return null;
+    }
   }
 }

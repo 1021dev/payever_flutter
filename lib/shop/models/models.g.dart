@@ -412,6 +412,9 @@ TextStyles _$TextStylesFromJson(Map<String, dynamic> json) {
     ..fontWeight = json['fontWeight'] ?? 400
     ..fontFamily = json['fontFamily'] as String ??
         'Helvetica Neue,Helvetica,Arial,sans-serif'
+    ..background = json['background'] as String ?? ''
+    ..backgroundColor = json['backgroundColor'] as String ?? ''
+    ..backgroundImage = json['backgroundImage'] as String ?? ''
     ..gridColumn = json['gridColumn'] as String ?? '1 / span 1'
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea']
@@ -436,6 +439,9 @@ Map<String, dynamic> _$TextStylesToJson(TextStyles instance) =>
       'fontSize': instance.fontSize,
       'fontWeight': instance.fontWeight,
       'fontFamily': instance.fontFamily,
+      'background': instance.background,
+      'backgroundColor': instance.backgroundColor,
+      'backgroundImage': instance.backgroundImage,
       'gridColumn': instance.gridColumn,
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
@@ -461,7 +467,7 @@ ButtonStyles _$ButtonStylesFromJson(Map<String, dynamic> json) {
     ..backgroundImage = json['backgroundImage'] as String ?? ''
     ..color = json['color'] as String ?? '#000000'
     ..fontSize = (json['fontSize'] as num)?.toDouble() ?? 0
-    ..fontWeight = json['fontWeight'] as String ?? 'bold'
+    ..fontWeight = json['fontWeight'] ?? 400
     ..fontFamily = json['fontFamily'] as String ??
         'Helvetica Neue,Helvetica,Arial,sans-serif'
     ..borderRadius = json['borderRadius'] ?? 0
@@ -622,7 +628,7 @@ SectionStyleSheet _$SectionStyleSheetFromJson(Map<String, dynamic> json) {
     ..backgroundColor = json['backgroundColor'] as String ?? '#ffffff'
     ..backgroundImage = json['backgroundImage'] as String ?? ''
     ..backgroundSize = json['backgroundSize'] as String ?? '100%'
-    ..backgroundPosition = json['backgroundPosition'] as String ?? ''
+    ..backgroundPosition = json['backgroundPosition'] as String ?? 'center'
     ..backgroundRepeat = json['backgroundRepeat'] as String ?? ''
     ..gridTemplateRows = json['gridTemplateRows'] as String ?? '0 0 0'
     ..gridTemplateColumns = json['gridTemplateColumns'] ?? '0 0 0'
