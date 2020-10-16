@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:payever/shop/models/models.dart';
 import '../../../../theme.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 class TextView extends StatefulWidget {
   final Child child;
@@ -41,19 +42,41 @@ class _TextViewState extends State<TextView> {
       }
       return Container(
         color: colorConvert(styles.backgroundColor, emptyColor: true),
+        width: styles.textWidth(),
+        height: styles.height,
         margin: EdgeInsets.only(
             left: styles.marginLeft,
             right: styles.marginRight,
             top: styles.marginTop,
             bottom: styles.marginBottom),
-        child: Html(
+        child: HtmlWidget(
+          // the first parameter (`html`) is required
+          '''
+            $txt
+           ''',
+
+          // all other parameters are optional, a few notable params:
+
+          // specify custom styling for an element
+          // see supported inline styling below
+//          customStylesBuilder: (element) {
+//            if (element.classes.contains('foo')) {
+//              return {'color': 'red'};
+//            }
+//
+//            return null;
+//          },
+//          textStyle: TextStyle(fontSize: 14),
+//
+//          webView: true,
+        )/*Html(
           data: """
               $txt
               """,
           onLinkTap: (url) {
             print("Opening $url...");
           },
-        ),
+        )*/,
       );
     }
 
