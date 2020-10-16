@@ -14,8 +14,13 @@ class TemplateView extends StatefulWidget {
   final Map<String, dynamic> stylesheets;
   final Function onTap;
   final bool scrollable;
+
   const TemplateView(
-      {this.shopPage, this.template, this.stylesheets, this.onTap, this.scrollable = true});
+      {this.shopPage,
+      this.template,
+      this.stylesheets,
+      this.onTap,
+      this.scrollable = true});
 
   @override
   _TemplateViewState createState() =>
@@ -27,6 +32,7 @@ class _TemplateViewState extends State<TemplateView> {
   final Template template;
   final Map<String, dynamic> stylesheets;
   DragController dragController = DragController();
+
   _TemplateViewState(this.shopPage, this.template, this.stylesheets);
 
   @override
@@ -78,13 +84,28 @@ class _TemplateViewState extends State<TemplateView> {
     widgets.add(_sectionBackgroundWidget(styleSheet));
     child.children.forEach((child) {
       if (child.type == EnumToString.convertToString(ChildType.text)) {
-        Widget text = TextView(child: child, stylesheets: stylesheets, deviceTypeId: shopPage.stylesheetIds.mobile,);
+        Widget text = TextView(
+          child: child,
+          stylesheets: stylesheets,
+          deviceTypeId: shopPage.stylesheetIds.mobile,
+          sectionStyleSheet: styleSheet,
+        );
         if (text != null) widgets.add(text);
       } else if (child.type == EnumToString.convertToString(ChildType.button)) {
-        Widget button = ButtonView(child:child, stylesheets: stylesheets, deviceTypeId: shopPage.stylesheetIds.mobile,);
+        Widget button = ButtonView(
+          child: child,
+          stylesheets: stylesheets,
+          deviceTypeId: shopPage.stylesheetIds.mobile,
+          sectionStyleSheet: styleSheet,
+        );
         if (button != null) widgets.add(button);
       } else if (child.type == EnumToString.convertToString(ChildType.image)) {
-        Widget image = ImageView(child);
+        Widget image = ImageView(
+          child: child,
+          stylesheets: stylesheets,
+          deviceTypeId: shopPage.stylesheetIds.mobile,
+          sectionStyleSheet: styleSheet,
+        );
         if (image != null) widgets.add(image);
       } else if (child.type == EnumToString.convertToString(ChildType.shape)) {
       } else if (child.type == EnumToString.convertToString(ChildType.block)) {
@@ -107,7 +128,8 @@ class _TemplateViewState extends State<TemplateView> {
 
   Widget _sectionBackgroundWidget(SectionStyleSheet styleSheet) {
     return Container(
-      width: double.infinity, //styleSheet.width,
+      width: double.infinity,
+      //styleSheet.width,
       height: styleSheet.height,
       alignment: Alignment.topLeft,
       color: colorConvert(styleSheet.backgroundColor),
@@ -147,7 +169,8 @@ class _TemplateViewState extends State<TemplateView> {
 
   SectionStyleSheet getSectionStyleSheet(String childId) {
     try {
-//      print('Section StyleSheet: ${stylesheets[shopPage.stylesheetIds.mobile][childId]}');
+      print(
+          'Section StyleSheet: ${stylesheets[shopPage.stylesheetIds.mobile][childId]}');
       return SectionStyleSheet.fromJson(
           stylesheets[shopPage.stylesheetIds.mobile][childId]);
     } catch (e) {

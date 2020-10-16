@@ -8,7 +8,9 @@ class TextView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
   final String deviceTypeId;
-  const TextView({this.child, this.stylesheets, this.deviceTypeId});
+  final SectionStyleSheet sectionStyleSheet;
+
+  const TextView({this.child, this.stylesheets, this.deviceTypeId, this.sectionStyleSheet});
   @override
   _TextViewState createState() => _TextViewState(child);
 }
@@ -37,21 +39,21 @@ class _TextViewState extends State<TextView> {
         txt.contains('<span') ||
         txt.contains('<font')) {
       TextStyles styles = getStyles();
-//      if (styles != null) {
-//        print('Html Text Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
-//      }
+
       if (styles == null || styles.display == 'none') {
         return Container();
       }
+
+//      print('Html Text Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
 
       return Container(
         color: colorConvert(styles.backgroundColor, emptyColor: true),
         width: styles.textWidth(),
         height: styles.height,
         margin: EdgeInsets.only(
-            left: styles.marginLeft,
+            left: marginLeft(styles),
             right: styles.marginRight,
-            top: styles.marginTop,
+            top: marginTop(styles),
             bottom: styles.marginBottom),
         child: HtmlWidget(
           // the first parameter (`html`) is required
@@ -74,21 +76,19 @@ class _TextViewState extends State<TextView> {
       styles = TextStyles.fromJson(child.styles);
     } else {
       styles = getStyles();
-//      if (styles != null) {
-//        print(
-//            'Html Text Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
-//      }
     }
     if (styles == null || styles.display == 'none')
       return Container();
+
+    print('Html Text Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
 
     return Container(
       width: styles.textWidth(),
       height: styles.height,
       margin: EdgeInsets.only(
-          left: styles.marginLeft,
+          left: marginLeft(styles),
           right: styles.marginRight,
-          top: styles.marginTop,
+          top: marginTop(styles),
           bottom: styles.marginBottom),
       alignment: Alignment.center,
       child: Text(txt,
@@ -97,6 +97,28 @@ class _TextViewState extends State<TextView> {
               fontWeight: styles.textFontWeight(),
               fontSize: styles.textFontSize())),
     );
+  }
+
+  double marginTop(TextStyles styles) {
+    int row = gridColumn(styles.gridRow);
+    print('row: $row');
+    if (row == 1) return styles.marginTop;
+    return styles.marginTop + double.parse(widget.sectionStyleSheet.gridTemplateRows.split(' ')[row - 2]);
+  }
+
+
+  double marginLeft(TextStyles styles) {
+    int column = gridColumn(styles.gridColumn);
+    if (column == 1) return styles.marginLeft;
+    return styles.marginLeft + double.parse(widget.sectionStyleSheet.gridTemplateColumns.split(' ')[column - 2]);
+  }
+
+  int gridRow(String _gridRow) {
+    return int.parse(_gridRow.split(' ').first);
+  }
+
+  int gridColumn(String _gridColumn) {
+    return int.parse(_gridColumn.split(' ').first);
   }
 
   TextStyles getStyles() {

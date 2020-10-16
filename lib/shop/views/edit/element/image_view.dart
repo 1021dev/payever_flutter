@@ -5,8 +5,12 @@ import 'package:payever/theme.dart';
 
 class ImageView extends StatefulWidget {
   final Child child;
+  final Map<String, dynamic> stylesheets;
+  final String deviceTypeId;
+  final SectionStyleSheet sectionStyleSheet;
 
-  const ImageView(this.child);
+  const ImageView({this.child, this.stylesheets, this.deviceTypeId, this.sectionStyleSheet});
+
   @override
   _ImageViewState createState() => _ImageViewState(child);
 }
@@ -43,17 +47,17 @@ class _ImageViewState extends State<ImageView> {
     return Container(
       height: styles.height,
       width: styles.width,
-      color: colorConvert(styles.backgroundColor),
+//      color: colorConvert(styles.backgroundColor),
       margin: EdgeInsets.only(
-          left: styles.marginLeft,
+          left: marginLeft(styles),
           right: styles.marginRight,
-          top: styles.marginTop,
+          top: marginTop(styles),
           bottom: styles.marginBottom),
       child: CachedNetworkImage(
         imageUrl: url,
         imageBuilder: (context, imageProvider) => Container(
           decoration: BoxDecoration(
-            color: Colors.white /*background.backgroundColor*/,
+            color: Colors.transparent,
             borderRadius: BorderRadius.circular(4),
             image: DecorationImage(
               image: imageProvider,
@@ -71,4 +75,31 @@ class _ImageViewState extends State<ImageView> {
     );
   }
 
+  double marginTop(ImageStyles styles) {
+    double margin = styles.marginTop;
+    int row = gridColumn(styles.gridRow);
+    if (row == 1) return margin;
+    List<String>rows = widget.sectionStyleSheet.gridTemplateRows.split(' ');
+    for (int i = 0; i < row - 1; i ++)
+      margin += double.parse(rows[i]);
+    return margin;
+  }
+
+  double marginLeft(ImageStyles styles) {
+    double margin = styles.marginLeft;
+    int column = gridColumn(styles.gridColumn);
+    if (column == 1) return margin;
+    List<String>columns = widget.sectionStyleSheet.gridTemplateColumns.split(' ');
+    for (int i = 0; i < column - 1; i ++)
+      margin += double.parse(columns[i]);
+    return margin;
+  }
+
+  int gridRow(String _gridRow) {
+    return int.parse(_gridRow.split(' ').first);
+  }
+
+  int gridColumn(String _gridColumn) {
+    return int.parse(_gridColumn.split(' ').first);
+  }
 }

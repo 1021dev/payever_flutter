@@ -649,7 +649,7 @@ class SectionStyleSheet {
   @JsonKey(name: 'gridTemplateRows', defaultValue: '0 0 0')
   String gridTemplateRows;
   @JsonKey(name: 'gridTemplateColumns', defaultValue: '0 0 0')
-  dynamic gridTemplateColumns;
+  String gridTemplateColumns;
   @JsonKey(name: 'gridRow', defaultValue: '1 / span 1')
   String gridRow;
   @JsonKey(name: 'gridColumn', defaultValue: '1 / span 1')

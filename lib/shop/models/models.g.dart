@@ -639,7 +639,7 @@ SectionStyleSheet _$SectionStyleSheetFromJson(Map<String, dynamic> json) {
     ..backgroundPosition = json['backgroundPosition'] as String ?? 'center'
     ..backgroundRepeat = json['backgroundRepeat'] as String ?? 'no-repeat'
     ..gridTemplateRows = json['gridTemplateRows'] as String ?? '0 0 0'
-    ..gridTemplateColumns = json['gridTemplateColumns'] ?? '0 0 0'
+    ..gridTemplateColumns = json['gridTemplateColumns'] as String ?? '0 0 0'
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridColumn = json['gridColumn'] as String ?? '1 / span 1'
     ..width = (json['width'] as num)?.toDouble() ?? 0
