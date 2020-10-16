@@ -62,9 +62,6 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
     if (state.isLoading) {
       return Center(child: CircularProgressIndicator());
     }
-    print('Pages Length: ${state.pages.length}');
-    print('Template Length: ${state.templates.length}');
-    print('Action Count: ${state.actions.length}');
     return Container(
       padding: EdgeInsets.all(6),
       child: Row(
@@ -123,7 +120,7 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
     List<ShopPage> pages = state.pages
         .where((page) => page.type == 'replica')
         .toList();
-    bool activeMode = false;
+    bool activeMode = true;
     int length = activeMode ? pages.length : state.previews.length;
     double aspectRatio = activeMode ? 1 : 2/1;
     return Container(

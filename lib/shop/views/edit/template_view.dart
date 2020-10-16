@@ -141,7 +141,7 @@ class _TemplateViewState extends State<TemplateView> {
                   color: Colors.transparent /*background.backgroundColor*/,
                   image: DecorationImage(
                     image: imageProvider,
-                    fit: BoxFit.contain,
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
