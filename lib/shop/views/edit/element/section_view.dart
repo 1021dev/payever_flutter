@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:enum_to_string/enum_to_string.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/element/text_view.dart';
@@ -96,32 +97,70 @@ class _SectionViewState extends State<SectionView> {
       height: styleSheet.height,
       alignment: styleSheet.getBackgroundImageAlignment(),
       color: colorConvert(styleSheet.backgroundColor),
-      child: styleSheet.backgroundImage.isNotEmpty
-          ? styleSheet.backgroundImage.contains('linear-gradient')
-              ? Container(
-                  width: double.infinity,
-                  height: styleSheet.height,
-                  decoration: styleSheet.getDecoration(),
-                )
-              : CachedNetworkImage(
-                  imageUrl: styleSheet.backgroundImage,
-                  imageBuilder: (context, imageProvider) => Container(
-                    decoration: BoxDecoration(
-                      color: Colors.transparent /*background.backgroundColor*/,
-                      image: DecorationImage(
-                        image: imageProvider,
-                        fit: imageFit(styleSheet.backgroundSize),
-                      ),
-                    ),
-                  ),
-                  placeholder: (context, url) => Container(
-                      child: Center(child: CircularProgressIndicator())),
-                  errorWidget: (context, url, error) => Icon(
-                    Icons.error,
-                    size: 40,
-                  ),
-                )
-          : Container(),
+      child: background(),
+    );
+  }
+
+  Widget background() {
+    if (styleSheet.backgroundImage == null ||
+        styleSheet.backgroundImage.isEmpty) return Container();
+    // Gradient
+    if (styleSheet.backgroundImage.contains('linear-gradient')) {
+      return Container(
+        width: double.infinity,
+        height: styleSheet.height,
+        decoration: styleSheet.getDecoration(),
+      );
+    }
+
+    // Image
+    if (styleSheet.backgroundSize == null) {
+      return CachedNetworkImage(
+        imageUrl: styleSheet.backgroundImage,
+        height: double.infinity,
+        repeat: imageRepeat ? ImageRepeat.repeat : ImageRepeat.noRepeat,
+        placeholder: (context, url) =>
+            Container(child: Center(child: CircularProgressIndicator())),
+        errorWidget: (context, url, error) => Icon(
+          Icons.error,
+          size: 40,
+        ),
+      );
+    }
+
+    if (styleSheet.backgroundPosition == 'initial') {
+      return CachedNetworkImage(
+        width: double.infinity,
+        height: double.infinity,
+        imageUrl: styleSheet.backgroundImage,
+        alignment: Alignment.topLeft,
+        fit: imageFit(styleSheet.backgroundSize),
+        placeholder: (context, url) =>
+            Container(child: Center(child: CircularProgressIndicator())),
+        errorWidget: (context, url, error) => Icon(
+          Icons.error,
+          size: 40,
+        ),
+      );
+    }
+
+    return CachedNetworkImage(
+      imageUrl: styleSheet.backgroundImage,
+      imageBuilder: (context, imageProvider) => Container(
+        decoration: BoxDecoration(
+          color: Colors.transparent /*background.backgroundColor*/,
+          image: DecorationImage(
+            image: imageProvider,
+            fit: imageFit(styleSheet.backgroundSize),
+          ),
+        ),
+      ),
+      placeholder: (context, url) =>
+          Container(child: Center(child: CircularProgressIndicator())),
+      errorWidget: (context, url, error) => Icon(
+        Icons.error,
+        size: 40,
+      ),
     );
   }
 
@@ -150,5 +189,7 @@ class _SectionViewState extends State<SectionView> {
 
   }
 
-
+  get imageRepeat {
+    return styleSheet.backgroundRepeat == 'repeat' || styleSheet.backgroundRepeat == 'space';
+  }
 }

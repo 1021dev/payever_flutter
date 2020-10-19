@@ -685,7 +685,7 @@ class SectionStyleSheet {
         ]));
   }
 
-  @JsonKey(name: 'backgroundSize', defaultValue: '100%')
+  @JsonKey(name: 'backgroundSize')
   String backgroundSize;
 
   @JsonKey(name: 'backgroundPosition', defaultValue: 'center')
@@ -705,7 +705,7 @@ class SectionStyleSheet {
   }
 
   @JsonKey(name: 'backgroundRepeat', defaultValue: 'no-repeat')
-  String backgroundRepeat;//repeat, no-repeat
+  String backgroundRepeat;//repeat, no-repeat, space
 
   @JsonKey(name: 'gridTemplateRows', defaultValue: '0 0 0')
   String gridTemplateRows;

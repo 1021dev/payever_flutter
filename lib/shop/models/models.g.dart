@@ -635,7 +635,7 @@ SectionStyleSheet _$SectionStyleSheetFromJson(Map<String, dynamic> json) {
     ..display = json['display'] as String ?? 'flex'
     ..backgroundColor = json['backgroundColor'] as String ?? '#ffffff'
     ..backgroundImage = json['backgroundImage'] as String ?? ''
-    ..backgroundSize = json['backgroundSize'] as String ?? '100%'
+    ..backgroundSize = json['backgroundSize'] as String
     ..backgroundPosition = json['backgroundPosition'] as String ?? 'center'
     ..backgroundRepeat = json['backgroundRepeat'] as String ?? 'no-repeat'
     ..gridTemplateRows = json['gridTemplateRows'] as String ?? '0 0 0'
