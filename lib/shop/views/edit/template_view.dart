@@ -134,7 +134,13 @@ class _TemplateViewState extends State<TemplateView> {
       alignment: Alignment.topLeft,
       color: colorConvert(styleSheet.backgroundColor),
       child: styleSheet.backgroundImage.isNotEmpty
-          ? CachedNetworkImage(
+        ? styleSheet.backgroundImage.contains('linear-gradient')
+          ? Container(
+              width: double.infinity,
+              height: styleSheet.height,
+              decoration: styleSheet.getDecoration(),
+            )
+          : CachedNetworkImage(
               imageUrl: styleSheet.backgroundImage,
               imageBuilder: (context, imageProvider) => Container(
                 decoration: BoxDecoration(

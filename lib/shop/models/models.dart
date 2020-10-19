@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:payever/theme.dart';
 part 'models.g.dart';
 
 @JsonSerializable()
@@ -652,7 +655,7 @@ class ChildAction {
 @JsonSerializable()
 class SectionStyleSheet {
   SectionStyleSheet();
-  // Display
+  // Display: none, flex,
   @JsonKey(name: 'display', defaultValue: 'flex')
   String display;
   // Background
@@ -662,12 +665,34 @@ class SectionStyleSheet {
   // Image URL or Linear gradient(linear-gradient(90deg, #fffa7e, #B51700))
   @JsonKey(name: 'backgroundImage', defaultValue: '')
   String backgroundImage;
+
+  BoxDecoration getDecoration() {
+    String txt = backgroundImage
+        .replaceAll('linear-gradient', '')
+        .replaceAll(RegExp(r"[^\s\w]"), '');
+    print('sin:$txt');
+    List<String> txts = txt.split(' ');
+    double degree = double.parse(txts[0].replaceAll('deg', ''));
+    String color1 = txts[1];
+    String color2 = txts[2];
+    double deg = degree * pi / 180;
+
+    return BoxDecoration(
+        gradient: LinearGradient(
+            begin: Alignment(-sin(deg), cos(deg)),
+            end: Alignment(sin(deg), -cos(deg)),
+            colors: <Color>[
+          colorConvert(color1),
+          colorConvert(color2),
+        ]));
+  }
+
   @JsonKey(name: 'backgroundSize', defaultValue: '100%')
   String backgroundSize;
   @JsonKey(name: 'backgroundPosition', defaultValue: 'center')
-  String backgroundPosition;
+  String backgroundPosition;// initial, center
   @JsonKey(name: 'backgroundRepeat', defaultValue: 'no-repeat')
-  String backgroundRepeat;
+  String backgroundRepeat;//repeat, no-repeat
 
   @JsonKey(name: 'gridTemplateRows', defaultValue: '0 0 0')
   String gridTemplateRows;
