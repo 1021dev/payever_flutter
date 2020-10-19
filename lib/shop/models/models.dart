@@ -344,10 +344,33 @@ class TextStyles {
   }
 
   @JsonKey(
-      name: "fontFamily",
-      defaultValue: "Helvetica Neue,Helvetica,Arial,sans-serif")
+      name: 'fontFamily',
+      defaultValue: 'Helvetica Neue,Helvetica,Arial,sans-serif')
   String fontFamily;
+  @JsonKey(name: 'textAlign', defaultValue: 'center')
+  String textAlign;
 
+  TextAlign getTextAlign() {
+    if (textAlign == 'center')
+      return TextAlign.center;
+    if (textAlign == 'left')
+      return TextAlign.left;
+    if (textAlign == 'right')
+      return TextAlign.right;
+
+    return TextAlign.center;
+  }
+
+  Alignment getTextContainAlign() {
+    if (textAlign == 'center')
+      return Alignment.center;
+    if (textAlign == 'left')
+      return Alignment.centerLeft;
+    if (textAlign == 'right')
+      return Alignment.centerRight;
+
+    return Alignment.center;
+  }
   // Background
   @JsonKey(name: 'background', defaultValue: '')
   String background;

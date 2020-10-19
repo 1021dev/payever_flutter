@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:payever/shop/models/models.dart';
 import '../../../../theme.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
@@ -48,8 +47,9 @@ class _TextViewState extends State<TextView> {
 
       return Container(
         color: colorConvert(styles.backgroundColor, emptyColor: true),
-//        width: styles.textWidth(),
+        width: styles.textWidth(),
         height: styles.height,
+        alignment: styles.getTextContainAlign(),
         margin: EdgeInsets.only(
             left: marginLeft(styles),
             right: styles.marginRight,

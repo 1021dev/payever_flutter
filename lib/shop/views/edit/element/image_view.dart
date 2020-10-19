@@ -44,6 +44,10 @@ class _ImageViewState extends State<ImageView> {
         return Container();
       url = data.src;
     }
+
+    if (styleSheet() != null && styleSheet().display == 'none')
+      return Container();
+
     return Container(
       height: styles.height,
       width: styles.width,
@@ -101,5 +105,14 @@ class _ImageViewState extends State<ImageView> {
 
   int gridColumn(String _gridColumn) {
     return int.parse(_gridColumn.split(' ').first);
+  }
+
+  ImageStyles styleSheet() {
+    try {
+      return ImageStyles.fromJson(
+          widget.stylesheets[widget.deviceTypeId][child.id]);
+    } catch (e) {
+      return null;
+    }
   }
 }
