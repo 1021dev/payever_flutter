@@ -670,13 +670,11 @@ class SectionStyleSheet {
     String txt = backgroundImage
         .replaceAll('linear-gradient', '')
         .replaceAll(RegExp(r"[^\s\w]"), '');
-    print('sin:$txt');
     List<String> txts = txt.split(' ');
     double degree = double.parse(txts[0].replaceAll('deg', ''));
     String color1 = txts[1];
     String color2 = txts[2];
     double deg = degree * pi / 180;
-
     return BoxDecoration(
         gradient: LinearGradient(
             begin: Alignment(-sin(deg), cos(deg)),
@@ -689,8 +687,23 @@ class SectionStyleSheet {
 
   @JsonKey(name: 'backgroundSize', defaultValue: '100%')
   String backgroundSize;
+
   @JsonKey(name: 'backgroundPosition', defaultValue: 'center')
   String backgroundPosition;// initial, center
+  Alignment getBackgroundImageAlignment() {
+    if (backgroundPosition == 'center')
+      return Alignment.center;
+    if (backgroundPosition == 'top')
+      return Alignment.topCenter;
+    if (backgroundPosition == 'bottom')
+      return Alignment.bottomCenter;
+    if (backgroundPosition == 'right')
+      return Alignment.centerRight;
+    if (backgroundPosition == 'left')
+      return Alignment.centerLeft;
+    return Alignment.topLeft;
+  }
+
   @JsonKey(name: 'backgroundRepeat', defaultValue: 'no-repeat')
   String backgroundRepeat;//repeat, no-repeat
 

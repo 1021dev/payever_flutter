@@ -43,7 +43,7 @@ class _TextViewState extends State<TextView> {
         return Container();
       }
 
-      print('Html Text Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
+//      print('Html Text Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
 
       return Container(
         color: colorConvert(styles.backgroundColor, emptyColor: true),
