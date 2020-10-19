@@ -62,11 +62,7 @@ class _TemplateViewState extends State<TemplateView> {
             return sections[index];
           },
           separatorBuilder: (context, index) {
-            return Divider(
-              height: 0,
-              thickness: 0,
-              color: Colors.transparent,
-            );
+            return Container();
           },
         ),
       ),

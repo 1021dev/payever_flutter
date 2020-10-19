@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:payever/commons/utils/draggable_widget.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
@@ -22,18 +24,42 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
   DragController dragController = DragController();
   int count = 0;
   _TemplateDetailScreenState(this.shopPage, this.template, this.stylesheets);
-
+  StreamController<double> controller = StreamController.broadcast();
+  double position;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: Appbar(shopPage.name),
         body: SafeArea(
-          child: TemplateView(
+          child: /*_dragSize()*/TemplateView(
             shopPage: shopPage,
             template: template,
             stylesheets: stylesheets,
           ),
         ));
+  }
+
+  Widget _dragSize() {
+    return StreamBuilder(
+      stream: controller.stream,
+      builder: (context, snapshot) => Container(
+        alignment: Alignment.bottomCenter,
+        color: Colors.red,
+        height: snapshot.hasData ? snapshot.data : 200.0,
+        width: double.infinity,
+        child: GestureDetector(
+            onVerticalDragUpdate: (DragUpdateDetails details) {
+              position = /*MediaQuery.of(context).size.height -*/
+              details.globalPosition.dy;
+              print('position dy = ${position}');
+              position.isNegative
+                  ? Navigator.pop(context)
+                  : controller.add(position);
+            },
+            behavior: HitTestBehavior.translucent,
+            child: Text('Child')),
+      ),
+    );
   }
 
   Widget _draggable() {
@@ -63,6 +89,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
       ),
     );
   }
+
   Widget _body() {
     return Center(
       child: Column(
