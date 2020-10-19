@@ -1002,6 +1002,20 @@ class ApiService {
     }
   }
 
+  Future<dynamic> shopEditAction(String token, String themeId, Map<String, dynamic>body) async {
+    try {
+      print('$TAG - shopEditAction()');
+      dynamic response = await _client.postTypeLess(
+        '${Env.builderShop}/api/theme/$themeId/action',
+        body: body,
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> deleteTransactionList(String id, String token, String query) async {
     try {
       print('$TAG - deleteTransactionList()');

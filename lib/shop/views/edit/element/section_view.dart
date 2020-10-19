@@ -1,9 +1,11 @@
 import 'dart:async';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:payever/apis/api_service.dart';
+import 'package:payever/commons/commons.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/element/text_view.dart';
 import 'package:payever/commons/utils/draggable_widget.dart';
@@ -27,15 +29,18 @@ class _SectionViewState extends State<SectionView> {
   final ShopPage shopPage;
   final Child child;
   final Map<String, dynamic> stylesheets;
+
+  ApiService api = ApiService();
   DragController dragController = DragController();
   SectionStyleSheet styleSheet;
 
   StreamController<double> controller = StreamController.broadcast();
-  double position = 0;
+  double widgetHeight = 0;
+  GlobalKey key = GlobalKey();
 
   _SectionViewState({this.shopPage, this.child, this.stylesheets}) {
     styleSheet = getSectionStyleSheet(child.id);
-    position = styleSheet.height;
+    widgetHeight = styleSheet.height;
   }
 
   @override
@@ -100,13 +105,27 @@ class _SectionViewState extends State<SectionView> {
             child: GestureDetector(
                 onVerticalDragUpdate: (DragUpdateDetails details) {
                   setState(() {
-                    position = details.globalPosition.dy;
-                    position.isNegative
+                    double newHeight = details.globalPosition.dy;
+                    RenderBox box = key.currentContext.findRenderObject();
+                    Offset position1 = box
+                        .localToGlobal(Offset.zero); //this is global position
+
+                    widgetHeight = newHeight - position1.dy;
+                    widgetHeight.isNegative
                         ? Navigator.pop(context)
-                        : controller.add(position);
+                        : controller.add(widgetHeight);
                   });
                 },
                 behavior: HitTestBehavior.translucent,
+                onVerticalDragDown: (details) {
+                  print('onVerticalDragDown dy = ${details.globalPosition.dy}');
+                },
+                onVerticalDragEnd: (DragEndDetails details) {
+                  print('onVerticalDragEnd ');
+                },
+                onVerticalDragStart: (details) {
+                  print('onVerticalDragDown dy = ${details.globalPosition.dy}');
+                },
                 child: Icon(
                   Icons.arrow_drop_up,
                   color: Colors.black,
@@ -117,6 +136,7 @@ class _SectionViewState extends State<SectionView> {
     return StreamBuilder(
       stream: controller.stream,
       builder: (context, snapshot) => Container(
+        key: key,
         height: snapshot.hasData ? snapshot.data : styleSheet.height,
         width: double.infinity,
         child: Stack(
@@ -130,7 +150,7 @@ class _SectionViewState extends State<SectionView> {
     return Container(
       width: double.infinity,
       //styleSheet.width,
-      height: position,
+      height: widgetHeight,
       alignment: styleSheet.getBackgroundImageAlignment(),
       color: colorConvert(styleSheet.backgroundColor),
       child: background(),
@@ -144,7 +164,7 @@ class _SectionViewState extends State<SectionView> {
     if (styleSheet.backgroundImage.contains('linear-gradient')) {
       return Container(
         width: double.infinity,
-        height: position,
+        height: widgetHeight,
         decoration: styleSheet.getDecoration(),
       );
     }
@@ -202,8 +222,8 @@ class _SectionViewState extends State<SectionView> {
 
   SectionStyleSheet getSectionStyleSheet(String childId) {
     try {
-      print(
-          'Section StyleSheet: ${stylesheets[shopPage.stylesheetIds.mobile][childId]}');
+//      print(
+//          'Section StyleSheet: ${stylesheets[shopPage.stylesheetIds.mobile][childId]}');
       return SectionStyleSheet.fromJson(
           stylesheets[shopPage.stylesheetIds.mobile][childId]);
     } catch (e) {
@@ -224,4 +244,29 @@ class _SectionViewState extends State<SectionView> {
     return styleSheet.backgroundRepeat == 'repeat' ||
         styleSheet.backgroundRepeat == 'space';
   }
+
+  void editAction() {
+    Map payload = {
+      '4ac8d549-460c-4511-9a16-18d3935bf8bd': {'height': widgetHeight}
+    };
+    Map effect = {
+      'payload': payload,
+      'target': "stylesheets:1b8d6841-84b1-469c-9fcf-6881a4efb8b3",
+      'type': "stylesheet:update",
+    };
+    Map<String, dynamic> body = {
+      'affectedPageIds': [''],
+      'createdAt': '',
+      'effects': [effect],
+      'id': '',
+      'targetPageId': ''
+    };
+    api.shopEditAction(GlobalUtils.activeToken.accessToken, 'themeId', body);
+  }
+
+//  affectedPageIds: ["269bf4d2-5fe5-48fe-8ce1-2560c2bd4f57"]
+//  createdAt: "2020-10-19T15:28:12.831Z"
+//  effects: [{type: "stylesheet:update", target: "stylesheets:1b8d6841-84b1-469c-9fcf-6881a4efb8b3",…}]
+//  id: "40932d85-f984-45f8-adbe-f1b61031b615"
+//  targetPageId: "269bf4d2-5fe5-48fe-8ce1-2560c2bd4f57"
 }
