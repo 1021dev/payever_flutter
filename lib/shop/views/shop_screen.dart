@@ -207,6 +207,7 @@ class _ShopScreenState extends State<ShopScreen> {
                         ),
                       ),
                     divider,
+                    if (state.activeShop != null)
                     Container(
                       height: 61,
                       padding: EdgeInsets.only(left: 14, right: 14),
@@ -278,6 +279,7 @@ class _ShopScreenState extends State<ShopScreen> {
                       ),
                     ),
                     divider,
+                    if (state.activeShop != null)
                     Container(
                       height: 61,
                       padding: EdgeInsets.only(left: 14, right: 14),

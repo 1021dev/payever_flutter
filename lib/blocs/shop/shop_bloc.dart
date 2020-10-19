@@ -84,14 +84,15 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
       });
     }
 
-
     List<ThemeModel> myThemes = [];
-    dynamic themeObj = await api.getMyThemes(token, activeBusinessId, activeShop.id);
-    if (themeObj is List) {
-      themeObj.forEach((element) {
-        myThemes.add(ThemeModel.fromJson(element['theme']));
-        myThemeListModes.add(ThemeListModel(themeModel: ThemeModel.fromJson(element['theme']), isChecked: false));
-      });
+    if (activeShop != null) {
+      dynamic themeObj = await api.getMyThemes(token, activeBusinessId, activeShop.id);
+      if (themeObj is List) {
+        themeObj.forEach((element) {
+          myThemes.add(ThemeModel.fromJson(element['theme']));
+          myThemeListModes.add(ThemeListModel(themeModel: ThemeModel.fromJson(element['theme']), isChecked: false));
+        });
+      }
     }
 
     yield state.copyWith(
