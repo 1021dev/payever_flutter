@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:payever/commons/utils/draggable_widget.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/element/section_view.dart';
 
@@ -26,7 +25,7 @@ class _TemplateViewState extends State<TemplateView> {
   final ShopPage shopPage;
   final Template template;
   final Map<String, dynamic> stylesheets;
-  DragController dragController = DragController();
+
 
   _TemplateViewState(this.shopPage, this.template, this.stylesheets);
 

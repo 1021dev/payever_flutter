@@ -3,7 +3,7 @@ import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/element/text_view.dart';
-
+import 'package:payever/commons/utils/draggable_widget.dart';
 import '../../../../theme.dart';
 import 'button_view.dart';
 import 'image_view.dart';
@@ -27,7 +27,7 @@ class _SectionViewState extends State<SectionView> {
   final ShopPage shopPage;
   final Child child;
   final Map<String, dynamic> stylesheets;
-
+  DragController dragController = DragController();
   SectionStyleSheet styleSheet;
   _SectionViewState(
       {this.shopPage, this.child, this.stylesheets}){
@@ -110,7 +110,7 @@ class _SectionViewState extends State<SectionView> {
                       color: Colors.transparent /*background.backgroundColor*/,
                       image: DecorationImage(
                         image: imageProvider,
-                        fit: BoxFit.contain,
+                        fit: imageFit(styleSheet.backgroundSize),
                       ),
                     ),
                   ),
@@ -135,4 +135,20 @@ class _SectionViewState extends State<SectionView> {
       return null;
     }
   }
+
+  BoxFit imageFit(String backgroundSize) {
+    if (backgroundSize == '100%')
+      return BoxFit.fitWidth;
+    if (backgroundSize == '100% 100%')
+      return BoxFit.fill;
+    if (backgroundSize == 'cover')
+      return BoxFit.cover;
+    if (backgroundSize == 'contain')
+      return BoxFit.contain;
+
+    return BoxFit.contain;
+
+  }
+
+
 }
