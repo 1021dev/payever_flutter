@@ -26,8 +26,6 @@ class _ShapeViewState extends State<ShapeView> {
   }
 
   Widget _body() {
-    String variant = child.data['variant'];
-
     ButtonStyles styles;
     if (child.styles != null && child.styles.isNotEmpty) {
       styles = ButtonStyles.fromJson(child.styles);
@@ -44,12 +42,23 @@ class _ShapeViewState extends State<ShapeView> {
         (styleSheet() != null && styleSheet().display == 'none'))
       return Container();
 
+    switch(child.data['variant']) {
+      case 'circle':
+        return circleShape(styles);
+      case 'triangle':
+        return triangleShape(styles);
+      default:
+        return Container();
+    }
+  }
+
+  Widget circleShape(ButtonStyles styles) {
     return Container(
       width: styles.width,
       height: styles.height,
       decoration: BoxDecoration(
         color: colorConvert(styles.backgroundColor),
-        borderRadius: BorderRadius.circular(styles.buttonBorderRadius()),
+        borderRadius: BorderRadius.all(Radius.elliptical(styles.width, styles.height)),
       ),
       margin: EdgeInsets.only(
           left: marginLeft(styles),
@@ -63,6 +72,30 @@ class _ShapeViewState extends State<ShapeView> {
             color: colorConvert(styles.color),
             fontSize: styles.fontSize,
             fontWeight: styles.textFontWeight()),
+      ),
+    );
+  }
+
+  Widget triangleShape(ButtonStyles styles) {
+    return Container(
+      width: styles.width,
+      height: styles.height,
+      margin: EdgeInsets.only(
+          left: marginLeft(styles),
+          right: styles.marginRight,
+          top: marginTop(styles),
+          bottom: styles.marginBottom),
+      alignment: Alignment.center,
+      child: CustomPaint(
+        painter: TrianglePainter(
+          strokeColor: colorConvert(styles.backgroundColor),
+          strokeWidth: 10,
+          paintingStyle: PaintingStyle.fill,
+        ),
+        child: Container(
+          height: styles.height,
+          width: styles.width,
+        ),
       ),
     );
   }
@@ -103,5 +136,37 @@ class _ShapeViewState extends State<ShapeView> {
     } catch (e) {
       return null;
     }
+  }
+}
+
+class TrianglePainter extends CustomPainter {
+  final Color strokeColor;
+  final PaintingStyle paintingStyle;
+  final double strokeWidth;
+
+  TrianglePainter({this.strokeColor = Colors.black, this.strokeWidth = 3, this.paintingStyle = PaintingStyle.stroke});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint paint = Paint()
+      ..color = strokeColor
+      ..strokeWidth = strokeWidth
+      ..style = paintingStyle;
+    canvas.drawPath(getTrianglePath(size.width, size.height), paint);
+  }
+
+  Path getTrianglePath(double x, double y) {
+    return Path()
+      ..moveTo(0, y)
+      ..lineTo(x / 2, 0)
+      ..lineTo(x, y)
+      ..lineTo(0, y);
+  }
+
+  @override
+  bool shouldRepaint(TrianglePainter oldDelegate) {
+    return oldDelegate.strokeColor != strokeColor ||
+        oldDelegate.paintingStyle != paintingStyle ||
+        oldDelegate.strokeWidth != strokeWidth;
   }
 }
