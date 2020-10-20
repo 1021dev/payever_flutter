@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:payever/shop/models/models.dart';
@@ -18,14 +19,14 @@ class ShopCartView extends StatefulWidget {
 class _ShopCartViewState extends State<ShopCartView> {
   final Child child;
   final SectionStyleSheet sectionStyleSheet;
-  ShapeStyles styles;
+  ShopCartStyles styles;
 
   _ShopCartViewState(this.child, this.sectionStyleSheet);
 
   @override
   Widget build(BuildContext context) {
     if (child.styles != null && child.styles.isNotEmpty) {
-      styles = ShapeStyles.fromJson(child.styles);
+      styles = ShopCartStyles.fromJson(child.styles);
     } else {
       styles = styleSheet();
     }
@@ -69,18 +70,26 @@ class _ShopCartViewState extends State<ShopCartView> {
             top: styles.getMarginTop(sectionStyleSheet),
             bottom: styles.marginBottom),
         alignment: Alignment.center,
-        child: SvgPicture.asset(
-          'assets/images/shop-edit-cart2.svg',
-          color: colorConvert(styles.backgroundColor),
-          width: styles.width,
-          height: styles.height,
+        child: Badge(
+          padding: EdgeInsets.all(10),
+          badgeColor: colorConvert(styles.badgeBackground),
+          badgeContent: Text(
+            '3',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: colorConvert(styles.badgeColor)),
+          ),
+          child: SvgPicture.asset(
+            asset,
+            color: colorConvert(styles.backgroundColor),
+            width: styles.width,
+            height: styles.height,
+          ),
         ));
   }
 
-  ShapeStyles styleSheet() {
+  ShopCartStyles styleSheet() {
     try {
       print('Shop Styles: ${ widget.stylesheets[widget.deviceTypeId][child.id]}');
-      return ShapeStyles.fromJson(
+      return ShopCartStyles.fromJson(
           widget.stylesheets[widget.deviceTypeId][child.id]);
     } catch (e) {
       return null;

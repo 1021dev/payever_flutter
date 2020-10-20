@@ -8,10 +8,4 @@
         <path _ngcontent-xqn-c287="" d="M26 7c0-3.866-3.134-7-7-7s-7 3.134-7 7" transform="translate(0 2)" stroke="#d4d4d4" style="stroke-linecap: butt; stroke-width: 1px;"></path>
       </g>
       <!---->
-      <g _ngcontent-xqn-c287="">
-        <circle _ngcontent-xqn-c287="" cx="33" cy="8" r="8" style="fill: red; stroke-linecap: butt;"></circle>
-        <text _ngcontent-xqn-c287="" dominant-baseline="middle" text-anchor="middle" x="33" y="9" font-size="15" style="fill: white;">
-          3
-        </text>
-      </g>
     </svg>

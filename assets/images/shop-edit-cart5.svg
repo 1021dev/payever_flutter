@@ -6,10 +6,4 @@
         <path _ngcontent-xqn-c287="" d="M9.063 7h19.874c2.478 0 4.582 1.815 4.946 4.266l3.266 22c.405 2.731-1.48 5.274-4.212 5.68-.243.036-.488.054-.734.054H5.797c-2.761 0-5-2.239-5-5 0-.246.018-.491.054-.734l3.266-22C4.48 8.815 6.585 7 9.063 7zM26 7c0-3.866-3.134-7-7-7s-7 3.134-7 7" transform="translate(1 2)"></path>
       </g>
       <!---->
-      <g _ngcontent-xqn-c287="">
-        <circle _ngcontent-xqn-c287="" cx="33" cy="8" r="8" style="fill: red; stroke-linecap: butt;"></circle>
-        <text _ngcontent-xqn-c287="" dominant-baseline="middle" text-anchor="middle" x="33" y="9" font-size="15" style="fill: white;">
-          3
-        </text>
-      </g>
     </svg>

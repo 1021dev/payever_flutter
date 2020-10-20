@@ -590,6 +590,28 @@ class ButtonStyles extends BaseStyles{
 }
 
 @JsonSerializable()
+class ShopCartStyles extends BaseStyles{
+  ShopCartStyles();
+
+  @JsonKey(name: 'width', defaultValue: 0)
+  double width;
+  // Badge
+  @JsonKey(name: 'badgeColor', defaultValue: '#FFFFFF')
+  String badgeColor;
+  @JsonKey(name: 'badgeBackground', defaultValue: '#FF0000')
+  String badgeBackground;
+  @JsonKey(name: 'badgeBorderWidth', defaultValue: 0)
+  double badgeBorderWidth;
+  @JsonKey(name: 'badgeBorderColor', defaultValue: '#FFFFFF')
+  String badgeBorderColor;
+  @JsonKey(name: 'badgeBorderStyle', defaultValue: 'solid')
+  String badgeBorderStyle;
+
+  factory ShopCartStyles.fromJson(Map<String, dynamic> json) => _$ShopCartStylesFromJson(json);
+  Map<String, dynamic> toJson() => _$ShopCartStylesToJson(this);
+}
+
+@JsonSerializable()
 class ShapeStyles extends ButtonStyles {
   ShapeStyles();
 
