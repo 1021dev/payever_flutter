@@ -496,6 +496,25 @@ class BaseStyles {
       defaultValue: "Helvetica Neue,Helvetica,Arial,sans-serif")
   String fontFamily;
   // ------------------------------------------------------
+  double getMarginTop(SectionStyleSheet sectionStyleSheet) {
+    double margin = marginTop;
+    int row =  int.parse(gridRow.split(' ').first);
+    if (row == 1) return margin;
+    List<String>rows = sectionStyleSheet.gridTemplateRows.split(' ');
+    for (int i = 0; i < row - 1; i ++)
+      margin += double.parse(rows[i]);
+    return margin;
+  }
+
+  double getMarginLeft(SectionStyleSheet sectionStyleSheet) {
+    double margin = marginLeft;
+    int column = int.parse(gridColumn.split(' ').first);
+    if (column == 1) return margin;
+    List<String>columns = sectionStyleSheet.gridTemplateColumns.split(' ');
+    for (int i = 0; i < column - 1; i ++)
+      margin += double.parse(columns[i]);
+    return margin;
+  }
 
   factory BaseStyles.fromJson(Map<String, dynamic> json) => _$BaseStylesFromJson(json);
   Map<String, dynamic> toJson() => _$BaseStylesToJson(this);

@@ -1,10 +1,6 @@
-import 'dart:math';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/element/sub_element/background_view.dart';
-
 import '../../../../theme.dart';
 
 class ShapeView extends StatefulWidget {
@@ -16,13 +12,15 @@ class ShapeView extends StatefulWidget {
   const ShapeView({this.child, this.stylesheets, this.deviceTypeId, this.sectionStyleSheet});
 
   @override
-  _ShapeViewState createState() => _ShapeViewState(child);
+  _ShapeViewState createState() => _ShapeViewState(child, sectionStyleSheet);
 }
 
 class _ShapeViewState extends State<ShapeView> {
   final Child child;
+  final SectionStyleSheet sectionStyleSheet;
   ShapeStyles styles;
-  _ShapeViewState(this.child);
+
+  _ShapeViewState(this.child, this.sectionStyleSheet);
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +44,7 @@ class _ShapeViewState extends State<ShapeView> {
       case 'triangle':
         return triangleShape();
       case 'square':
-        return triangleShape();
+        return squareShape();
       default:
         print('special variant: ${child.data['variant']}');
         return triangleShape();
@@ -59,9 +57,9 @@ class _ShapeViewState extends State<ShapeView> {
       height: styles.height,
       color: colorConvert(styles.backgroundColor),
       margin: EdgeInsets.only(
-          left: marginLeft(styles),
+          left: styles.getMarginLeft(sectionStyleSheet),
           right: styles.marginRight,
-          top: marginTop(styles),
+          top: styles.getMarginTop(sectionStyleSheet),
           bottom: styles.marginBottom),
       alignment: Alignment.center,
       child: ClipRRect(
@@ -70,49 +68,14 @@ class _ShapeViewState extends State<ShapeView> {
     );
   }
 
-  BoxDecoration gradientDecoration() {
-    String txt = styles.backgroundImage
-        .replaceAll('linear-gradient', '')
-        .replaceAll(RegExp(r"[^\s\w]"), '');
-    List<String> txts = txt.split(' ');
-    double degree = double.parse(txts[0].replaceAll('deg', ''));
-    String color1 = txts[1];
-    String color2 = txts[2];
-    double deg = degree * pi / 180;
-    return BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.elliptical(styles.width, styles.height)),
-        gradient: LinearGradient(
-            begin: Alignment(-sin(deg), cos(deg)),
-            end: Alignment(sin(deg), -cos(deg)),
-            colors: <Color>[
-              colorConvert(color1),
-              colorConvert(color2),
-            ]));
-  }
-
-  BoxFit imageFit(String backgroundSize) {
-    if (backgroundSize == '100%') return BoxFit.fitWidth;
-    if (backgroundSize == '100% 100%') return BoxFit.fill;
-    if (backgroundSize == 'cover') return BoxFit.cover;
-    if (backgroundSize == 'contain') return BoxFit.contain;
-
-    return BoxFit.contain;
-  }
-
-  get imageRepeat {
-    return styles.backgroundRepeat == 'repeat' ||
-        styles.backgroundRepeat == 'space';
-  }
-
   Widget triangleShape() {
-
     return Container(
       width: styles.width,
       height: styles.height,
       margin: EdgeInsets.only(
-          left: marginLeft(styles),
+          left: styles.getMarginLeft(sectionStyleSheet),
           right: styles.marginRight,
-          top: marginTop(styles),
+          top: styles.getMarginTop(sectionStyleSheet),
           bottom: styles.marginBottom),
       alignment: Alignment.center,
       child: CustomPaint(
@@ -129,32 +92,21 @@ class _ShapeViewState extends State<ShapeView> {
     );
   }
 
-  double marginTop(ButtonStyles styles) {
-    double margin = styles.marginTop;
-    int row = gridColumn(styles.gridRow);
-    if (row == 1) return margin;
-    List<String>rows = widget.sectionStyleSheet.gridTemplateRows.split(' ');
-    for (int i = 0; i < row - 1; i ++)
-      margin += double.parse(rows[i]);
-    return margin;
-  }
-
-  double marginLeft(ButtonStyles styles) {
-    double margin = styles.marginLeft;
-    int column = gridColumn(styles.gridColumn);
-    if (column == 1) return margin;
-    List<String>columns = widget.sectionStyleSheet.gridTemplateColumns.split(' ');
-    for (int i = 0; i < column - 1; i ++)
-      margin += double.parse(columns[i]);
-    return margin;
-  }
-
-  int gridRow(String _gridRow) {
-    return int.parse(_gridRow.split(' ').first);
-  }
-
-  int gridColumn(String _gridColumn) {
-    return int.parse(_gridColumn.split(' ').first);
+  Widget squareShape() {
+    return Container(
+      width: styles.width,
+      height: styles.height,
+      color: colorConvert(styles.backgroundColor),
+      margin: EdgeInsets.only(
+          left: styles.getMarginLeft(sectionStyleSheet),
+          right: styles.marginRight,
+          top: styles.getMarginTop(sectionStyleSheet),
+          bottom: styles.marginBottom),
+      alignment: Alignment.center,
+      child: ClipRRect(
+          borderRadius: BorderRadius.all(Radius.elliptical(styles.width, styles.height)),
+          child: BackgroundView(styles: styles,)),
+    );
   }
 
   ShapeStyles styleSheet() {

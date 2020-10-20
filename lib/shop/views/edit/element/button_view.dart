@@ -12,13 +12,14 @@ class ButtonView extends StatefulWidget {
   const ButtonView({this.child, this.stylesheets, this.deviceTypeId, this.sectionStyleSheet});
 
   @override
-  _ButtonViewState createState() => _ButtonViewState(child);
+  _ButtonViewState createState() => _ButtonViewState(child, sectionStyleSheet);
 }
 
 class _ButtonViewState extends State<ButtonView> {
   final Child child;
+  final SectionStyleSheet sectionStyleSheet;
 
-  _ButtonViewState(this.child);
+  _ButtonViewState(this.child, this.sectionStyleSheet);
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +51,9 @@ class _ButtonViewState extends State<ButtonView> {
         borderRadius: BorderRadius.circular(styles.buttonBorderRadius()),
       ),
       margin: EdgeInsets.only(
-          left: marginLeft(styles),
+          left: styles.getMarginLeft(sectionStyleSheet),
           right: styles.marginRight,
-          top: marginTop(styles),
+          top: styles.getMarginTop(sectionStyleSheet),
           bottom: styles.marginBottom),
       alignment: Alignment.center,
       child: Text(
@@ -63,34 +64,6 @@ class _ButtonViewState extends State<ButtonView> {
             fontWeight: styles.textFontWeight()),
       ),
     );
-  }
-
-  double marginTop(ButtonStyles styles) {
-    double margin = styles.marginTop;
-    int row = gridColumn(styles.gridRow);
-    if (row == 1) return margin;
-    List<String>rows = widget.sectionStyleSheet.gridTemplateRows.split(' ');
-    for (int i = 0; i < row - 1; i ++)
-      margin += double.parse(rows[i]);
-    return margin;
-  }
-
-  double marginLeft(ButtonStyles styles) {
-    double margin = styles.marginLeft;
-    int column = gridColumn(styles.gridColumn);
-    if (column == 1) return margin;
-    List<String>columns = widget.sectionStyleSheet.gridTemplateColumns.split(' ');
-    for (int i = 0; i < column - 1; i ++)
-      margin += double.parse(columns[i]);
-    return margin;
-  }
-
-  int gridRow(String _gridRow) {
-    return int.parse(_gridRow.split(' ').first);
-  }
-
-  int gridColumn(String _gridColumn) {
-    return int.parse(_gridColumn.split(' ').first);
   }
 
   ButtonStyles styleSheet() {

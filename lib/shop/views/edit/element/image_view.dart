@@ -12,13 +12,14 @@ class ImageView extends StatefulWidget {
   const ImageView({this.child, this.stylesheets, this.deviceTypeId, this.sectionStyleSheet});
 
   @override
-  _ImageViewState createState() => _ImageViewState(child);
+  _ImageViewState createState() => _ImageViewState(child, sectionStyleSheet);
 }
 
 class _ImageViewState extends State<ImageView> {
   final Child child;
+  final SectionStyleSheet sectionStyleSheet;
 
-  _ImageViewState(this.child);
+  _ImageViewState(this.child, this.sectionStyleSheet);
 
   @override
   Widget build(BuildContext context) {
@@ -53,9 +54,9 @@ class _ImageViewState extends State<ImageView> {
       width: styles.width,
 //      color: colorConvert(styles.backgroundColor),
       margin: EdgeInsets.only(
-          left: marginLeft(styles),
+          left: styles.getMarginLeft(sectionStyleSheet),
           right: styles.marginRight,
-          top: marginTop(styles),
+          top: styles.getMarginTop(sectionStyleSheet),
           bottom: styles.marginBottom),
       child: CachedNetworkImage(
         imageUrl: url,
@@ -77,34 +78,6 @@ class _ImageViewState extends State<ImageView> {
         ),
       ),
     );
-  }
-
-  double marginTop(ImageStyles styles) {
-    double margin = styles.marginTop;
-    int row = gridColumn(styles.gridRow);
-    if (row == 1) return margin;
-    List<String>rows = widget.sectionStyleSheet.gridTemplateRows.split(' ');
-    for (int i = 0; i < row - 1; i ++)
-      margin += double.parse(rows[i]);
-    return margin;
-  }
-
-  double marginLeft(ImageStyles styles) {
-    double margin = styles.marginLeft;
-    int column = gridColumn(styles.gridColumn);
-    if (column == 1) return margin;
-    List<String>columns = widget.sectionStyleSheet.gridTemplateColumns.split(' ');
-    for (int i = 0; i < column - 1; i ++)
-      margin += double.parse(columns[i]);
-    return margin;
-  }
-
-  int gridRow(String _gridRow) {
-    return int.parse(_gridRow.split(' ').first);
-  }
-
-  int gridColumn(String _gridColumn) {
-    return int.parse(_gridColumn.split(' ').first);
   }
 
   ImageStyles styleSheet() {

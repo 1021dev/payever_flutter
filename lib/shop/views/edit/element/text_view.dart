@@ -11,13 +11,14 @@ class TextView extends StatefulWidget {
 
   const TextView({this.child, this.stylesheets, this.deviceTypeId, this.sectionStyleSheet});
   @override
-  _TextViewState createState() => _TextViewState(child);
+  _TextViewState createState() => _TextViewState(child, sectionStyleSheet);
 }
 
 class _TextViewState extends State<TextView> {
   final Child child;
+  final SectionStyleSheet sectionStyleSheet;
 
-  _TextViewState(this.child);
+  _TextViewState(this.child, this.sectionStyleSheet);
 
   @override
   Widget build(BuildContext context) {
@@ -51,9 +52,9 @@ class _TextViewState extends State<TextView> {
         height: styles.height,
         alignment: styles.getTextContainAlign(),
         margin: EdgeInsets.only(
-            left: marginLeft(styles),
+            left: styles.getMarginLeft(sectionStyleSheet),
             right: styles.marginRight,
-            top: marginTop(styles),
+            top: styles.getMarginTop(sectionStyleSheet),
             bottom: styles.marginBottom),
         child: HtmlWidget(
           // the first parameter (`html`) is required
@@ -89,9 +90,9 @@ class _TextViewState extends State<TextView> {
       width: styles.textWidth(),
       height: styles.height,
       margin: EdgeInsets.only(
-          left: marginLeft(styles),
+          left: styles.getMarginLeft(sectionStyleSheet),
           right: styles.marginRight,
-          top: marginTop(styles),
+          top: styles.getMarginTop(sectionStyleSheet),
           bottom: styles.marginBottom),
       alignment: Alignment.center,
       child: Text(txt,
@@ -100,34 +101,6 @@ class _TextViewState extends State<TextView> {
               fontWeight: styles.textFontWeight(),
               fontSize: styles.textFontSize())),
     );
-  }
-
-  double marginTop(TextStyles styles) {
-    double margin = styles.marginTop;
-    int row = gridColumn(styles.gridRow);
-    if (row == 1) return margin;
-    List<String>rows = widget.sectionStyleSheet.gridTemplateRows.split(' ');
-    for (int i = 0; i < row - 1; i ++)
-      margin += double.parse(rows[i]);
-    return margin;
-  }
-
-  double marginLeft(TextStyles styles) {
-    double margin = styles.marginLeft;
-    int column = gridColumn(styles.gridColumn);
-    if (column == 1) return margin;
-    List<String>columns = widget.sectionStyleSheet.gridTemplateColumns.split(' ');
-    for (int i = 0; i < column - 1; i ++)
-      margin += double.parse(columns[i]);
-    return margin;
-  }
-
-  int gridRow(String _gridRow) {
-    return int.parse(_gridRow.split(' ').first);
-  }
-
-  int gridColumn(String _gridColumn) {
-    return int.parse(_gridColumn.split(' ').first);
   }
 
   TextStyles getStyles() {
