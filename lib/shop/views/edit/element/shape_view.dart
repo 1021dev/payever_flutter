@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/element/sub_element/background_view.dart';
 import '../../../../theme.dart';
+import 'package:shape_of_view/shape_of_view.dart';
 
 class ShapeView extends StatefulWidget {
   final Child child;
@@ -78,19 +81,40 @@ class _ShapeViewState extends State<ShapeView> {
           top: styles.getMarginTop(sectionStyleSheet),
           bottom: styles.marginBottom),
       alignment: Alignment.center,
-      child: CustomPaint(
-        painter: TrianglePainter(
-          strokeColor: colorConvert(styles.backgroundColor),
-          strokeWidth: 10,
-          paintingStyle: PaintingStyle.fill,
-        ),
-        child: Container(
-          height: styles.height,
-          width: styles.width,
-        ),
+      child: Transform.rotate(
+        angle: pi,
+        child: ShapeOfView(
+            shape: TriangleShape(
+                percentBottom: 0.5, percentLeft: 0, percentRight: 0),
+            child: BackgroundView(styles: styles,)),
       ),
     );
   }
+
+//  Widget triangleShape() {
+//    return Container(
+//      width: styles.width,
+//      height: styles.height,
+//      margin: EdgeInsets.only(
+//          left: styles.getMarginLeft(sectionStyleSheet),
+//          right: styles.marginRight,
+//          top: styles.getMarginTop(sectionStyleSheet),
+//          bottom: styles.marginBottom),
+//      alignment: Alignment.center,
+//      child: CustomPaint(
+//        painter: TrianglePainter(
+//          strokeColor: colorConvert(styles.backgroundColor),
+//          strokeWidth: 10,
+//          paintingStyle: PaintingStyle.fill,
+//        ),
+//        child: Container(
+//          height: styles.height,
+//          width: styles.width,
+//            child: BackgroundView(styles: styles,)
+//        ),
+//      ),
+//    );
+//  }
 
   Widget squareShape() {
     return Container(
@@ -104,7 +128,6 @@ class _ShapeViewState extends State<ShapeView> {
           bottom: styles.marginBottom),
       alignment: Alignment.center,
       child: ClipRRect(
-          borderRadius: BorderRadius.all(Radius.elliptical(styles.width, styles.height)),
           child: BackgroundView(styles: styles,)),
     );
   }
