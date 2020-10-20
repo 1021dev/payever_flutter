@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
 
 import '../../../../theme.dart';
@@ -21,10 +20,10 @@ class ShapeView extends StatefulWidget {
 
 class _ShapeViewState extends State<ShapeView> {
   final Child child;
-  ButtonStyles styles;
+  ShapeStyles styles;
   _ShapeViewState(this.child){
     if (child.styles != null && child.styles.isNotEmpty) {
-      styles = ButtonStyles.fromJson(child.styles);
+      styles = ShapeStyles.fromJson(child.styles);
     } else {
       styles = styleSheet();
     }
@@ -52,7 +51,7 @@ class _ShapeViewState extends State<ShapeView> {
       case 'triangle':
         return triangleShape();
       default:
-        return Container();
+        return triangleShape();
     }
   }
 
@@ -194,10 +193,10 @@ class _ShapeViewState extends State<ShapeView> {
     return int.parse(_gridColumn.split(' ').first);
   }
 
-  ButtonStyles styleSheet() {
+  ShapeStyles styleSheet() {
     try {
       print('Shape Styles: ${ widget.stylesheets[widget.deviceTypeId][child.id]}');
-      return ButtonStyles.fromJson(
+      return ShapeStyles.fromJson(
           widget.stylesheets[widget.deviceTypeId][child.id]);
     } catch (e) {
       return null;

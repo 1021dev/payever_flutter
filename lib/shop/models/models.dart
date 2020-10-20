@@ -535,6 +535,36 @@ class ButtonStyles {
 }
 
 @JsonSerializable()
+class ShapeStyles extends ButtonStyles {
+  ShapeStyles();
+
+  @JsonKey(name: 'backgroundSize')
+  String backgroundSize;
+
+  @JsonKey(name: 'backgroundPosition', defaultValue: 'center')
+  String backgroundPosition;// initial, center
+  Alignment getBackgroundImageAlignment() {
+    if (backgroundPosition == 'center')
+      return Alignment.center;
+    if (backgroundPosition == 'top')
+      return Alignment.topCenter;
+    if (backgroundPosition == 'bottom')
+      return Alignment.bottomCenter;
+    if (backgroundPosition == 'right')
+      return Alignment.centerRight;
+    if (backgroundPosition == 'left')
+      return Alignment.centerLeft;
+    return Alignment.topLeft;
+  }
+
+  @JsonKey(name: 'backgroundRepeat', defaultValue: 'no-repeat')
+  String backgroundRepeat;//repeat, no-repeat, space
+
+  factory ShapeStyles.fromJson(Map<String, dynamic> json) => _$ShapeStylesFromJson(json);
+  Map<String, dynamic> toJson() => _$ShapeStylesToJson(this);
+}
+
+@JsonSerializable()
 class ImageStyles {
   ImageStyles();
   // if display is `none`, the element is hidden

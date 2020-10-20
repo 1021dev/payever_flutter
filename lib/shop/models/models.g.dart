@@ -413,6 +413,7 @@ TextStyles _$TextStylesFromJson(Map<String, dynamic> json) {
     ..fontWeight = json['fontWeight'] ?? 400
     ..fontFamily = json['fontFamily'] as String ??
         'Helvetica Neue,Helvetica,Arial,sans-serif'
+    ..textAlign = json['textAlign'] as String ?? 'center'
     ..background = json['background'] as String ?? ''
     ..backgroundColor = json['backgroundColor'] as String ?? ''
     ..backgroundImage = json['backgroundImage'] as String ?? ''
@@ -441,6 +442,7 @@ Map<String, dynamic> _$TextStylesToJson(TextStyles instance) =>
       'fontSize': instance.fontSize,
       'fontWeight': instance.fontWeight,
       'fontFamily': instance.fontFamily,
+      'textAlign': instance.textAlign,
       'background': instance.background,
       'backgroundColor': instance.backgroundColor,
       'backgroundImage': instance.backgroundImage,
@@ -523,6 +525,75 @@ Map<String, dynamic> _$ButtonStylesToJson(ButtonStyles instance) =>
       'marginTop': instance.marginTop,
       'top': instance.top,
       'left': instance.left,
+    };
+
+ShapeStyles _$ShapeStylesFromJson(Map<String, dynamic> json) {
+  return ShapeStyles()
+    ..display = json['display'] as String ?? 'flex'
+    ..background = json['background'] as String ?? '#ffffff'
+    ..backgroundColor = json['backgroundColor'] as String ?? '#ffffff'
+    ..backgroundImage = json['backgroundImage'] as String ?? ''
+    ..color = json['color'] as String ?? '#ffffff'
+    ..fontSize = (json['fontSize'] as num)?.toDouble() ?? 15
+    ..fontWeight = json['fontWeight'] ?? 400
+    ..fontFamily = json['fontFamily'] as String ??
+        'Helvetica Neue,Helvetica,Arial,sans-serif'
+    ..borderRadius = json['borderRadius'] ?? 0
+    ..borderColor = json['borderColor'] as String ?? '#ffffff'
+    ..borderWidth = (json['borderWidth'] as num)?.toDouble() ?? 0
+    ..gridColumn = json['gridColumn'] as String ?? '1 / span 1'
+    ..gridRow = json['gridRow'] as String ?? '1 / span 1'
+    ..gridArea = json['gridArea']
+    ..width = (json['width'] as num)?.toDouble() ?? 0
+    ..height = (json['height'] as num)?.toDouble() ?? 0
+    ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
+    ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
+    ..margin = json['margin'] as String ?? '0 0 0 0'
+    ..padding = json['padding'] as String ?? '8 28'
+    ..position = json['position'] as String ?? 'absolute'
+    ..marginBottom = (json['marginBottom'] as num)?.toDouble() ?? 0
+    ..marginLeft = (json['marginLeft'] as num)?.toDouble() ?? 0
+    ..marginRight = (json['marginRight'] as num)?.toDouble() ?? 0
+    ..marginTop = (json['marginTop'] as num)?.toDouble() ?? 0
+    ..top = (json['top'] as num)?.toDouble() ?? 0
+    ..left = (json['left'] as num)?.toDouble() ?? 0
+    ..backgroundSize = json['backgroundSize'] as String
+    ..backgroundPosition = json['backgroundPosition'] as String ?? 'center'
+    ..backgroundRepeat = json['backgroundRepeat'] as String ?? 'no-repeat';
+}
+
+Map<String, dynamic> _$ShapeStylesToJson(ShapeStyles instance) =>
+    <String, dynamic>{
+      'display': instance.display,
+      'background': instance.background,
+      'backgroundColor': instance.backgroundColor,
+      'backgroundImage': instance.backgroundImage,
+      'color': instance.color,
+      'fontSize': instance.fontSize,
+      'fontWeight': instance.fontWeight,
+      'fontFamily': instance.fontFamily,
+      'borderRadius': instance.borderRadius,
+      'borderColor': instance.borderColor,
+      'borderWidth': instance.borderWidth,
+      'gridColumn': instance.gridColumn,
+      'gridRow': instance.gridRow,
+      'gridArea': instance.gridArea,
+      'width': instance.width,
+      'height': instance.height,
+      'minWidth': instance.minWidth,
+      'minHeight': instance.minHeight,
+      'margin': instance.margin,
+      'padding': instance.padding,
+      'position': instance.position,
+      'marginBottom': instance.marginBottom,
+      'marginLeft': instance.marginLeft,
+      'marginRight': instance.marginRight,
+      'marginTop': instance.marginTop,
+      'top': instance.top,
+      'left': instance.left,
+      'backgroundSize': instance.backgroundSize,
+      'backgroundPosition': instance.backgroundPosition,
+      'backgroundRepeat': instance.backgroundRepeat,
     };
 
 ImageStyles _$ImageStylesFromJson(Map<String, dynamic> json) {
