@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/element/shap_view.dart';
 import 'package:payever/shop/views/edit/element/text_view.dart';
 import 'package:payever/commons/utils/draggable_widget.dart';
 import '../../../../theme.dart';
@@ -80,6 +81,13 @@ class _SectionViewState extends State<SectionView> {
         );
         if (image != null) widgets.add(image);
       } else if (child.type == EnumToString.convertToString(ChildType.shape)) {
+        Widget shape = ShapeView(
+          child: child,
+          stylesheets: stylesheets,
+          deviceTypeId: shopPage.stylesheetIds.mobile,
+          sectionStyleSheet: styleSheet,
+        );
+        if (shape != null) widgets.add(shape);
       } else if (child.type == EnumToString.convertToString(ChildType.block)) {
         // If Type only Block, has sub children
 //        widgets.add(_blockWidget(child));
