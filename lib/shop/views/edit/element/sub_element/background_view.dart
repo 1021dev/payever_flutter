@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/models.dart';
 
+import '../../../../../theme.dart';
+
 class BackgroundView extends StatefulWidget {
   final BaseStyles styles;
 
@@ -22,8 +24,12 @@ class _BackgroundViewState extends State<BackgroundView> {
   }
 
   Widget background() {
-    if (styles.backgroundImage == null ||
-        styles.backgroundImage.isEmpty) return Container();
+    if (styles.backgroundImage == null || styles.backgroundImage.isEmpty)
+      return Container(
+        width: double.infinity,
+        height: double.infinity,
+        color: colorConvert(styles.backgroundColor),
+      );
     // Gradient
     if (styles.backgroundImage.contains('linear-gradient')) {
       return Container(

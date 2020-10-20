@@ -86,35 +86,14 @@ class _ShapeViewState extends State<ShapeView> {
         child: ShapeOfView(
             shape: TriangleShape(
                 percentBottom: 0.5, percentLeft: 0, percentRight: 0),
-            child: BackgroundView(styles: styles,)),
+            child: Transform.rotate(
+                angle: pi,
+                child: BackgroundView(
+                  styles: styles,
+                ))),
       ),
     );
   }
-
-//  Widget triangleShape() {
-//    return Container(
-//      width: styles.width,
-//      height: styles.height,
-//      margin: EdgeInsets.only(
-//          left: styles.getMarginLeft(sectionStyleSheet),
-//          right: styles.marginRight,
-//          top: styles.getMarginTop(sectionStyleSheet),
-//          bottom: styles.marginBottom),
-//      alignment: Alignment.center,
-//      child: CustomPaint(
-//        painter: TrianglePainter(
-//          strokeColor: colorConvert(styles.backgroundColor),
-//          strokeWidth: 10,
-//          paintingStyle: PaintingStyle.fill,
-//        ),
-//        child: Container(
-//          height: styles.height,
-//          width: styles.width,
-//            child: BackgroundView(styles: styles,)
-//        ),
-//      ),
-//    );
-//  }
 
   Widget squareShape() {
     return Container(

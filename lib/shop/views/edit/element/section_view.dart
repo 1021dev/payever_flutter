@@ -169,7 +169,6 @@ class _SectionViewState extends State<SectionView> {
       //styleSheet.width,
       height: widgetHeight,
       alignment: styleSheet.getBackgroundImageAlignment(),
-      color: colorConvert(styleSheet.backgroundColor),
       child: BackgroundView(styles: styleSheet),
     );
   }
