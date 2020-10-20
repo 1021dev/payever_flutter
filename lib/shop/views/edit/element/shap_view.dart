@@ -1,4 +1,8 @@
+import 'dart:math';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
 
 import '../../../../theme.dart';
@@ -17,8 +21,14 @@ class ShapeView extends StatefulWidget {
 
 class _ShapeViewState extends State<ShapeView> {
   final Child child;
-
-  _ShapeViewState(this.child);
+  ButtonStyles styles;
+  _ShapeViewState(this.child){
+    if (child.styles != null && child.styles.isNotEmpty) {
+      styles = ButtonStyles.fromJson(child.styles);
+    } else {
+      styles = styleSheet();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,17 +36,11 @@ class _ShapeViewState extends State<ShapeView> {
   }
 
   Widget _body() {
-    ButtonStyles styles;
-    if (child.styles != null && child.styles.isNotEmpty) {
-      styles = ButtonStyles.fromJson(child.styles);
-    } else {
-      styles = styleSheet();
-    }
-
     if (styleSheet() != null) {
 //      print(
 //          'Button Styles Sheets: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
     }
+
     if (styles == null ||
         styles.display == 'none' ||
         (styleSheet() != null && styleSheet().display == 'none'))
@@ -44,15 +48,43 @@ class _ShapeViewState extends State<ShapeView> {
 
     switch(child.data['variant']) {
       case 'circle':
-        return circleShape(styles);
+        return circleShape();
       case 'triangle':
-        return triangleShape(styles);
+        return triangleShape();
       default:
         return Container();
     }
   }
 
-  Widget circleShape(ButtonStyles styles) {
+  Widget circleShape() {
+    // Gradient
+    if (styles.backgroundImage.contains('linear-gradient')) {
+      return Container(
+        width: styles.width,
+        height: styles.height,
+        decoration: gradientDecoration(),
+      );
+    }
+    if (styles.backgroundImage != null && styles.backgroundImage.isNotEmpty)
+    return CachedNetworkImage(
+      imageUrl: styles.backgroundImage,
+      imageBuilder: (context, imageProvider) => Container(
+        decoration: BoxDecoration(
+          color: Colors.transparent /*background.backgroundColor*/,
+          image: DecorationImage(
+            image: imageProvider,
+            fit: BoxFit.contain/*imageFit(styles.backgroundSize)*/,
+          ),
+        ),
+      ),
+      placeholder: (context, url) =>
+          Container(child: Center(child: CircularProgressIndicator())),
+      errorWidget: (context, url, error) => Icon(
+        Icons.error,
+        size: 40,
+      ),
+    );
+
     return Container(
       width: styles.width,
       height: styles.height,
@@ -76,7 +108,41 @@ class _ShapeViewState extends State<ShapeView> {
     );
   }
 
-  Widget triangleShape(ButtonStyles styles) {
+  BoxDecoration gradientDecoration() {
+    String txt = styles.backgroundImage
+        .replaceAll('linear-gradient', '')
+        .replaceAll(RegExp(r"[^\s\w]"), '');
+    List<String> txts = txt.split(' ');
+    double degree = double.parse(txts[0].replaceAll('deg', ''));
+    String color1 = txts[1];
+    String color2 = txts[2];
+    double deg = degree * pi / 180;
+    return BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.elliptical(styles.width, styles.height)),
+        gradient: LinearGradient(
+            begin: Alignment(-sin(deg), cos(deg)),
+            end: Alignment(sin(deg), -cos(deg)),
+            colors: <Color>[
+              colorConvert(color1),
+              colorConvert(color2),
+            ]));
+  }
+
+  BoxFit imageFit(String backgroundSize) {
+    if (backgroundSize == '100%') return BoxFit.fitWidth;
+    if (backgroundSize == '100% 100%') return BoxFit.fill;
+    if (backgroundSize == 'cover') return BoxFit.cover;
+    if (backgroundSize == 'contain') return BoxFit.contain;
+
+    return BoxFit.contain;
+  }
+
+//  get imageRepeat {
+//    return styles.backgroundRepeat == 'repeat' ||
+//        styles.backgroundRepeat == 'space';
+//  }
+
+  Widget triangleShape() {
     return Container(
       width: styles.width,
       height: styles.height,
