@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:payever/shop/models/models.dart';
 
 class BackgroundView extends StatefulWidget {
-  final SectionStyleSheet styles;
+  final BaseStyles styles;
 
   const BackgroundView({this.styles});
 

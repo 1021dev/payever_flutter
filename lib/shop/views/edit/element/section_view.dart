@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -56,50 +55,60 @@ class _SectionViewState extends State<SectionView> {
     List<Widget> widgets = [];
     widgets.add(_sectionBackgroundWidget(styleSheet));
     child.children.forEach((child) {
-      if (child.type == EnumToString.convertToString(ChildType.text)) {
-        Widget text = TextView(
-          child: child,
-          stylesheets: stylesheets,
-          deviceTypeId: shopPage.stylesheetIds.mobile,
-          sectionStyleSheet: styleSheet,
-        );
-        if (text != null) widgets.add(text);
-      } else if (child.type == EnumToString.convertToString(ChildType.button)) {
-        Widget button = ButtonView(
-          child: child,
-          stylesheets: stylesheets,
-          deviceTypeId: shopPage.stylesheetIds.mobile,
-          sectionStyleSheet: styleSheet,
-        );
-        if (button != null) widgets.add(button);
-      } else if (child.type == EnumToString.convertToString(ChildType.image)) {
-        Widget image = ImageView(
-          child: child,
-          stylesheets: stylesheets,
-          deviceTypeId: shopPage.stylesheetIds.mobile,
-          sectionStyleSheet: styleSheet,
-        );
-        if (image != null) widgets.add(image);
-      } else if (child.type == EnumToString.convertToString(ChildType.shape)) {
-        Widget shape = ShapeView(
-          child: child,
-          stylesheets: stylesheets,
-          deviceTypeId: shopPage.stylesheetIds.mobile,
-          sectionStyleSheet: styleSheet,
-        );
-        if (shape != null) widgets.add(shape);
-      } else if (child.type == EnumToString.convertToString(ChildType.block)) {
-        // If Type only Block, has sub children
-//        widgets.add(_blockWidget(child));
-      } else if (child.type == EnumToString.convertToString(ChildType.menu)) {
-      } else if (child.type == EnumToString.convertToString(ChildType.logo)) {
-      } else if (child.type == 'shop-cart') {
-      } else if (child.type == 'shop-category') {
-      } else if (child.type == 'shop-products') {
-      } else {
-        print('Special Child Type: ${child.type}');
+      Widget widget;
+      switch(child.type) {
+        case 'text':
+          widget = TextView(
+            child: child,
+            stylesheets: stylesheets,
+            deviceTypeId: shopPage.stylesheetIds.mobile,
+            sectionStyleSheet: styleSheet,
+          );
+          break;
+        case 'button':
+          widget = ButtonView(
+            child: child,
+            stylesheets: stylesheets,
+            deviceTypeId: shopPage.stylesheetIds.mobile,
+            sectionStyleSheet: styleSheet,
+          );
+          break;
+        case 'image':
+          widget = ImageView(
+            child: child,
+            stylesheets: stylesheets,
+            deviceTypeId: shopPage.stylesheetIds.mobile,
+            sectionStyleSheet: styleSheet,
+          );
+          break;
+        case 'shape':
+          widget = ShapeView(
+            child: child,
+            stylesheets: stylesheets,
+            deviceTypeId: shopPage.stylesheetIds.mobile,
+            sectionStyleSheet: styleSheet,
+          );
+          break;
+        case 'block':
+          break;
+        case 'menu':
+          break;
+        case 'logo':
+          break;
+        case 'shop-cart':
+          break;
+        case 'shop-category':
+          break;
+        case 'shop-products':
+          break;
+        case 'logo':
+          break;
+        default:
+          print('Special Child Type: ${child.type}');
       }
+      if (widget != null) widgets.add(widget);
     });
+
     // Add Drag Buttons
     if (widgets.isNotEmpty) {
       widgets.add(Positioned(

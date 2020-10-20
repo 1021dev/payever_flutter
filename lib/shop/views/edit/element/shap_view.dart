@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/element/sub_element/background_view.dart';
 
 import '../../../../theme.dart';
 
@@ -44,60 +45,28 @@ class _ShapeViewState extends State<ShapeView> {
         return circleShape();
       case 'triangle':
         return triangleShape();
+      case 'square':
+        return triangleShape();
       default:
+        print('special variant: ${child.data['variant']}');
         return triangleShape();
     }
   }
 
   Widget circleShape() {
-    // Gradient
-    if (styles.backgroundImage.contains('linear-gradient')) {
-      return Container(
-        width: styles.width,
-        height: styles.height,
-        decoration: gradientDecoration(),
-      );
-    }
-    if (styles.backgroundImage != null && styles.backgroundImage.isNotEmpty)
-    return CachedNetworkImage(
-      imageUrl: styles.backgroundImage,
-      imageBuilder: (context, imageProvider) => Container(
-        decoration: BoxDecoration(
-          color: Colors.transparent /*background.backgroundColor*/,
-          image: DecorationImage(
-            image: imageProvider,
-            fit: BoxFit.contain/*imageFit(styles.backgroundSize)*/,
-          ),
-        ),
-      ),
-      placeholder: (context, url) =>
-          Container(child: Center(child: CircularProgressIndicator())),
-      errorWidget: (context, url, error) => Icon(
-        Icons.error,
-        size: 40,
-      ),
-    );
-
     return Container(
       width: styles.width,
       height: styles.height,
-      decoration: BoxDecoration(
-        color: colorConvert(styles.backgroundColor),
-        borderRadius: BorderRadius.all(Radius.elliptical(styles.width, styles.height)),
-      ),
+      color: colorConvert(styles.backgroundColor),
       margin: EdgeInsets.only(
           left: marginLeft(styles),
           right: styles.marginRight,
           top: marginTop(styles),
           bottom: styles.marginBottom),
       alignment: Alignment.center,
-      child: Text(
-        Data.fromJson(child.data).text,
-        style: TextStyle(
-            color: colorConvert(styles.color),
-            fontSize: styles.textFontSize(),
-            fontWeight: styles.textFontWeight()),
-      ),
+      child: ClipRRect(
+          borderRadius: BorderRadius.all(Radius.elliptical(styles.width, styles.height)),
+          child: BackgroundView(styles: styles,)),
     );
   }
 
