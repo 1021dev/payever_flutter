@@ -173,7 +173,10 @@ class _SectionViewState extends State<SectionView> {
       return Container(
         width: double.infinity,
         height: widgetHeight,
-        decoration: styleSheet.getDecoration(),
+        decoration: BoxDecoration(
+          gradient: styleSheet.getGradient(),
+        )
+
       );
     }
 

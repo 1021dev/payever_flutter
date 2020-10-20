@@ -21,25 +21,19 @@ class ShapeView extends StatefulWidget {
 class _ShapeViewState extends State<ShapeView> {
   final Child child;
   ShapeStyles styles;
-  _ShapeViewState(this.child){
+  _ShapeViewState(this.child);
+
+  @override
+  Widget build(BuildContext context) {
     if (child.styles != null && child.styles.isNotEmpty) {
       styles = ShapeStyles.fromJson(child.styles);
     } else {
       styles = styleSheet();
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return _body();
   }
 
   Widget _body() {
-    if (styleSheet() != null) {
-//      print(
-//          'Button Styles Sheets: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
-    }
-
     if (styles == null ||
         styles.display == 'none' ||
         (styleSheet() != null && styleSheet().display == 'none'))
@@ -142,6 +136,7 @@ class _ShapeViewState extends State<ShapeView> {
 //  }
 
   Widget triangleShape() {
+
     return Container(
       width: styles.width,
       height: styles.height,

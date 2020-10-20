@@ -59,7 +59,7 @@ class _ButtonViewState extends State<ButtonView> {
         Data.fromJson(child.data).text,
         style: TextStyle(
             color: colorConvert(styles.color),
-            fontSize: styles.fontSize,
+            fontSize: styles.textFontSize(),
             fontWeight: styles.textFontWeight()),
       ),
     );
