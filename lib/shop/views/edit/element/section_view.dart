@@ -6,6 +6,7 @@ import 'package:payever/apis/api_service.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/element/shape_view.dart';
+import 'package:payever/shop/views/edit/element/shop_cart_view.dart';
 import 'package:payever/shop/views/edit/element/sub_element/background_view.dart';
 import 'package:payever/shop/views/edit/element/text_view.dart';
 import 'package:payever/commons/utils/draggable_widget.dart';
@@ -96,6 +97,12 @@ class _SectionViewState extends State<SectionView> {
         case 'logo':
           break;
         case 'shop-cart':
+          widget = ShopCartView(
+            child: child,
+            stylesheets: stylesheets,
+            deviceTypeId: shopPage.stylesheetIds.mobile,
+            sectionStyleSheet: styleSheet,
+          );
           break;
         case 'shop-category':
           break;
@@ -105,6 +112,7 @@ class _SectionViewState extends State<SectionView> {
           break;
         default:
           print('Special Child Type: ${child.type}');
+          print('Special Styles: ${ stylesheets[shopPage.stylesheetIds.mobile][child.id]}');
       }
       if (widget != null) widgets.add(widget);
     });

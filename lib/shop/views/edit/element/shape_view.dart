@@ -113,7 +113,7 @@ class _ShapeViewState extends State<ShapeView> {
 
   ShapeStyles styleSheet() {
     try {
-      print('Shape Styles: ${ widget.stylesheets[widget.deviceTypeId][child.id]}');
+//      print('Shape Styles: ${ widget.stylesheets[widget.deviceTypeId][child.id]}');
       return ShapeStyles.fromJson(
           widget.stylesheets[widget.deviceTypeId][child.id]);
     } catch (e) {

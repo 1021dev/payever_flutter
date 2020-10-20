@@ -6,6 +6,8 @@ import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/template_view.dart';
 
+import 'element/sub_element/resizeable_widget.dart';
+
 class TemplateDetailScreen extends StatefulWidget {
   final ShopPage shopPage;
   final Template template;
@@ -31,7 +33,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
     return Scaffold(
         appBar: Appbar(shopPage.name),
         body: SafeArea(
-          child: /*_dragSize()*/TemplateView(
+          child: TemplateView(
             shopPage: shopPage,
             template: template,
             stylesheets: stylesheets,
@@ -39,6 +41,13 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
         ));
   }
 
+  Widget demo() {
+    return Container(
+      child: ResizeableWidget(
+        child: Container(color: Colors.red, width: 500, height: 200,),
+      ),
+    );
+  }
   Widget _dragSize() {
     return StreamBuilder(
       stream: controller.stream,

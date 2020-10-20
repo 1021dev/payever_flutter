@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 
-class ResizebleWidget extends StatefulWidget {
-  ResizebleWidget({this.child, this.height, this.width});
+class ResizeableWidget extends StatefulWidget {
+  ResizeableWidget({this.child, this.height = 400, this.width = 200});
 
   final Widget child;
   final double height;
   final double width;
 
   @override
-  _ResizebleWidgetState createState() => _ResizebleWidgetState(width: width, height: height);
+  _ResizeableWidgetState createState() => _ResizeableWidgetState(width: width, height: height);
 }
 
-const ballDiameter = 10.0;
+const ballDiameter = 30.0;
 
-class _ResizebleWidgetState extends State<ResizebleWidget> {
+class _ResizeableWidgetState extends State<ResizeableWidget> {
   double width;
   double height;
 
   double top = 0;
   double left = 0;
 
-  _ResizebleWidgetState({this.width, this.height});
+  _ResizeableWidgetState({this.width, this.height});
 
   void onDrag(double dx, double dy) {
     var newHeight = height + dy;

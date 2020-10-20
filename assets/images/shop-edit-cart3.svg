@@ -1,0 +1,23 @@
+<svg _ngcontent-xqn-c287="" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 48 29" class="ng-star-inserted">
+      <g _ngcontent-xqn-c287="" fill="none" fill-rule="evenodd" style="stroke-linecap: butt;">
+        <path _ngcontent-xqn-c287="" d="M4.407 7h39.186c1.657 0 3 1.343 3 3 0 .377-.07.75-.209 1.1l-5.412 13.733C40.22 26.744 38.374 28 36.32 28H11.68c-2.054 0-3.9-1.256-4.652-3.167L1.616 11.1c-.608-1.542.15-3.284 1.69-3.891C3.658 7.07 4.03 7 4.407 7z" transform="translate(0 1)"></path>
+        <g _ngcontent-xqn-c287="" style="stroke-linecap: butt;">
+          <path _ngcontent-xqn-c287="" d="M0.5 7.5L7.5 0.5" transform="translate(0 1) translate(12)"></path>
+          <path _ngcontent-xqn-c287="" d="M18 7.5L25 0.5" transform="translate(0 1) translate(12) matrix(-1 0 0 1 43 0)"></path>
+        </g>
+      </g>
+      <g _ngcontent-xqn-c287="" fill="none" fill-rule="evenodd">
+        <path _ngcontent-xqn-c287="" d="M4.407 7h39.186c1.657 0 3 1.343 3 3 0 .377-.07.75-.209 1.1l-5.412 13.733C40.22 26.744 38.374 28 36.32 28H11.68c-2.054 0-3.9-1.256-4.652-3.167L1.616 11.1c-.608-1.542.15-3.284 1.69-3.891C3.658 7.07 4.03 7 4.407 7z" transform="translate(0 1)" fill="#d4d4d4"></path>
+        <g _ngcontent-xqn-c287="" stroke="#d4d4d4" style="stroke-width: 1px; stroke-linecap: butt;">
+          <path _ngcontent-xqn-c287="" d="M0.5 7.5L7.5 0.5" transform="translate(0 1) translate(12)"></path>
+          <path _ngcontent-xqn-c287="" d="M18 7.5L25 0.5" transform="translate(0 1) translate(12) matrix(-1 0 0 1 43 0)"></path>
+        </g>
+      </g>
+      <!---->
+      <g _ngcontent-xqn-c287="" transform="translate(0 -10) translate(8)">
+        <circle _ngcontent-xqn-c287="" cx="33" cy="8" r="8" style="fill: red; stroke-linecap: butt;"></circle>
+        <text _ngcontent-xqn-c287="" dominant-baseline="middle" text-anchor="middle" x="33" y="9" font-size="15" style="fill: white;">
+          3
+        </text>
+      </g>
+    </svg>
