@@ -513,6 +513,7 @@ class SectionStyleSheet extends BaseStyles {
   @JsonKey(name: 'gridTemplateColumns', defaultValue: '0 0 0')
   String gridTemplateColumns;
 
+  @JsonKey(name: 'zIndex')
   dynamic zIndex;
 
   factory SectionStyleSheet.fromJson(Map<String, dynamic> json) => _$SectionStyleSheetFromJson(json);

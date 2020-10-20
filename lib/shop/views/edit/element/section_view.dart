@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -8,6 +7,7 @@ import 'package:payever/apis/api_service.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/element/shap_view.dart';
+import 'package:payever/shop/views/edit/element/sub_element/background_view.dart';
 import 'package:payever/shop/views/edit/element/text_view.dart';
 import 'package:payever/commons/utils/draggable_widget.dart';
 import '../../../../theme.dart';
@@ -161,73 +161,7 @@ class _SectionViewState extends State<SectionView> {
       height: widgetHeight,
       alignment: styleSheet.getBackgroundImageAlignment(),
       color: colorConvert(styleSheet.backgroundColor),
-      child: background(),
-    );
-  }
-
-  Widget background() {
-    if (styleSheet.backgroundImage == null ||
-        styleSheet.backgroundImage.isEmpty) return Container();
-    // Gradient
-    if (styleSheet.backgroundImage.contains('linear-gradient')) {
-      return Container(
-        width: double.infinity,
-        height: widgetHeight,
-        decoration: BoxDecoration(
-          gradient: styleSheet.getGradient(),
-        )
-
-      );
-    }
-
-    // Image
-    if (styleSheet.backgroundSize == null) {
-      return CachedNetworkImage(
-        imageUrl: styleSheet.backgroundImage,
-        height: double.infinity,
-        repeat: imageRepeat ? ImageRepeat.repeat : ImageRepeat.noRepeat,
-        placeholder: (context, url) =>
-            Container(child: Center(child: CircularProgressIndicator())),
-        errorWidget: (context, url, error) => Icon(
-          Icons.error,
-          size: 40,
-        ),
-      );
-    }
-
-    if (styleSheet.backgroundPosition == 'initial') {
-      return CachedNetworkImage(
-        width: double.infinity,
-        height: double.infinity,
-        imageUrl: styleSheet.backgroundImage,
-        alignment: Alignment.topLeft,
-        fit: imageFit(styleSheet.backgroundSize),
-        placeholder: (context, url) =>
-            Container(child: Center(child: CircularProgressIndicator())),
-        errorWidget: (context, url, error) => Icon(
-          Icons.error,
-          size: 40,
-        ),
-      );
-    }
-
-    return CachedNetworkImage(
-      imageUrl: styleSheet.backgroundImage,
-      imageBuilder: (context, imageProvider) => Container(
-        decoration: BoxDecoration(
-          color: Colors.transparent /*background.backgroundColor*/,
-          image: DecorationImage(
-            image: imageProvider,
-            fit: imageFit(styleSheet.backgroundSize),
-          ),
-        ),
-      ),
-      placeholder: (context, url) =>
-          Container(child: Center(child: CircularProgressIndicator())),
-      errorWidget: (context, url, error) => Icon(
-        Icons.error,
-        size: 40,
-      ),
+      child: BackgroundView(styles: styleSheet),
     );
   }
 
@@ -240,20 +174,6 @@ class _SectionViewState extends State<SectionView> {
     } catch (e) {
       return null;
     }
-  }
-
-  BoxFit imageFit(String backgroundSize) {
-    if (backgroundSize == '100%') return BoxFit.fitWidth;
-    if (backgroundSize == '100% 100%') return BoxFit.fill;
-    if (backgroundSize == 'cover') return BoxFit.cover;
-    if (backgroundSize == 'contain') return BoxFit.contain;
-
-    return BoxFit.contain;
-  }
-
-  get imageRepeat {
-    return styleSheet.backgroundRepeat == 'repeat' ||
-        styleSheet.backgroundRepeat == 'space';
   }
 
   void editAction() {

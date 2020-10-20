@@ -95,7 +95,7 @@ class _ShapeViewState extends State<ShapeView> {
         Data.fromJson(child.data).text,
         style: TextStyle(
             color: colorConvert(styles.color),
-            fontSize: styles.fontSize,
+            fontSize: styles.textFontSize(),
             fontWeight: styles.textFontWeight()),
       ),
     );
@@ -130,10 +130,10 @@ class _ShapeViewState extends State<ShapeView> {
     return BoxFit.contain;
   }
 
-//  get imageRepeat {
-//    return styles.backgroundRepeat == 'repeat' ||
-//        styles.backgroundRepeat == 'space';
-//  }
+  get imageRepeat {
+    return styles.backgroundRepeat == 'repeat' ||
+        styles.backgroundRepeat == 'space';
+  }
 
   Widget triangleShape() {
 
