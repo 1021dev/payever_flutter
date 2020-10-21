@@ -11,7 +11,8 @@ import 'shop.dart';
 
 class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
   final DashboardScreenBloc dashboardScreenBloc;
-  ShopScreenBloc({this.dashboardScreenBloc});
+  final GlobalStateModel globalStateModel;
+  ShopScreenBloc({this.dashboardScreenBloc, this.globalStateModel});
   ApiService api = ApiService();
 
   @override
@@ -65,6 +66,9 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
     ShopDetailModel activeShop;
     if (shops.length > 0) {
       activeShop = shops.firstWhere((element) => element.isDefault);
+      if (activeShop != null) {
+        globalStateModel.setActiveShop(activeShop);
+      }
     }
 
     dynamic templatesObj = await api.getTemplates(token);

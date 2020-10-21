@@ -23,24 +23,18 @@ import 'package:payever/login/login_screen.dart';
 
 class ShopInitScreen extends StatelessWidget {
 
-  final List<ShopModel> shopModels;
-  final ShopModel activeShop;
   final DashboardScreenBloc dashboardScreenBloc;
 
   ShopInitScreen({
-    this.shopModels,
-    this.activeShop,
     this.dashboardScreenBloc,
   });
 
   @override
   Widget build(BuildContext context) {
     GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
-
+//    globalStateModel.setActiveShop(activeShop: activeShop, notify: true);
     return ShopScreen(
       globalStateModel: globalStateModel,
-      shopModels: shopModels,
-      activeShop: activeShop,
       dashboardScreenBloc: dashboardScreenBloc,
     );
   }
@@ -49,14 +43,10 @@ class ShopInitScreen extends StatelessWidget {
 class ShopScreen extends StatefulWidget {
 
   final GlobalStateModel globalStateModel;
-  final List<ShopModel> shopModels;
-  final ShopModel activeShop;
   final DashboardScreenBloc dashboardScreenBloc;
 
   ShopScreen({
     this.globalStateModel,
-    this.shopModels,
-    this.activeShop,
     this.dashboardScreenBloc,
   });
 
@@ -75,6 +65,7 @@ class _ShopScreenState extends State<ShopScreen> {
     super.initState();
     screenBloc = ShopScreenBloc(
       dashboardScreenBloc: widget.dashboardScreenBloc,
+      globalStateModel: widget.globalStateModel,
     )..add(ShopScreenInitEvent(
         currentBusinessId: widget.globalStateModel.currentBusiness.id,
       ));
@@ -161,88 +152,96 @@ class _ShopScreenState extends State<ShopScreen> {
                 child: Column(
                   children: [
                     if (state.activeShop != null)
-                      Container(
-                        height: 61,
-                        padding: EdgeInsets.only(left: 14, right: 14),
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              PageTransition(
-                                child: ShopDashboardScreen(state.activeShop),
-                                type: PageTransitionType.fade,
-                                duration: Duration(milliseconds: 500),
+                      Column(
+                        children: [
+                          Container(
+                            height: 61,
+                            padding: EdgeInsets.only(left: 14, right: 14),
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  PageTransition(
+                                    child: ShopDashboardScreen(state.activeShop),
+                                    type: PageTransitionType.fade,
+                                    duration: Duration(milliseconds: 500),
+                                  ),
+                                );
+                              },
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 24,
+                                    height: 24,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      gradient: LinearGradient(
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter,
+                                          colors: <Color>[
+                                            Color(0xFFa3a9b8),
+                                            Color(0xFF868a95),
+                                          ]),
+                                    ),
+                                    child: Text(
+                                      getDisplayName(state.activeShop.name),
+                                      style: TextStyle(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.white),
+                                    ),
+                                  ),
+                                  SizedBox(width: 12,),
+                                  Expanded(child: Text(state.activeShop.name, style: TextStyle(fontSize: 18),)),
+                                  Icon(Icons.arrow_forward_ios, size: 20,),
+                                ],
                               ),
-                            );
-                          },
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 24,
-                                height: 24,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  gradient: LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                      colors: <Color>[
-                                        Color(0xFFa3a9b8),
-                                        Color(0xFF868a95),
-                                      ]),
-                                ),
-                                child: Text(
-                                  getDisplayName(state.activeShop.name),
-                                  style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.white),
-                                ),
-                              ),
-                              SizedBox(width: 12,),
-                              Expanded(child: Text(state.activeShop.name, style: TextStyle(fontSize: 18),)),
-                              Icon(Icons.arrow_forward_ios, size: 20,),
-                            ],
-                          ),
-                        ),
-                      ),
-                    divider,
-                    if (state.activeShop != null)
-                    Container(
-                      height: 61,
-                      padding: EdgeInsets.only(left: 14, right: 14),
-                      child: InkWell(
-                        onTap: () async {
-                          final result = await Navigator.push(
-                            context,
-                            PageTransition(
-                              child: SwitchShopScreen(
-                                businessId: widget.globalStateModel.currentBusiness.id,
-                                screenBloc: screenBloc,
-                              ),
-                              type: PageTransitionType.fade,
-                              duration: Duration(milliseconds: 500),
                             ),
-                          );
-                          if (result == 'refresh') {
-                            screenBloc.add(
-                                ShopScreenInitEvent(
-                                  currentBusinessId: widget.globalStateModel.currentBusiness.id,
-                                )
-                            );
-                          }
-                        },
-                        child: Row(
-                          children: [
-                            SvgPicture.asset('assets/images/shop-switch.svg', width: 24, height: 24,),
-                            SizedBox(width: 12,),
-                            Expanded(child: Text('Switch shop', style: TextStyle(fontSize: 18),)),
-                            Icon(Icons.arrow_forward_ios, size: 20),
-                          ],
-                        ),
+                          ),
+                          divider,
+                        ],
                       ),
-                    ),
-                    divider,
+                    if (state.activeShop != null)
+                      Column(
+                        children: [
+                          Container(
+                            height: 61,
+                            padding: EdgeInsets.only(left: 14, right: 14),
+                            child: InkWell(
+                              onTap: () async {
+                                final result = await Navigator.push(
+                                  context,
+                                  PageTransition(
+                                    child: SwitchShopScreen(
+                                      businessId: widget.globalStateModel.currentBusiness.id,
+                                      screenBloc: screenBloc,
+                                    ),
+                                    type: PageTransitionType.fade,
+                                    duration: Duration(milliseconds: 500),
+                                  ),
+                                );
+                                if (result == 'refresh') {
+                                  screenBloc.add(
+                                      ShopScreenInitEvent(
+                                        currentBusinessId: widget.globalStateModel.currentBusiness.id,
+                                      )
+                                  );
+                                }
+                              },
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset('assets/images/shop-switch.svg', width: 24, height: 24,),
+                                  SizedBox(width: 12,),
+                                  Expanded(child: Text('Switch shop', style: TextStyle(fontSize: 18),)),
+                                  Icon(Icons.arrow_forward_ios, size: 20),
+                                ],
+                              ),
+                            ),
+                          ),
+                          divider,
+                        ],
+                      ),
                     Container(
                       height: 61,
                       padding: EdgeInsets.only(left: 14, right: 14),
@@ -278,37 +277,41 @@ class _ShopScreenState extends State<ShopScreen> {
                         ),
                       ),
                     ),
-                    divider,
                     if (state.activeShop != null)
-                    Container(
-                      height: 61,
-                      padding: EdgeInsets.only(left: 14, right: 14),
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.push(context, PageTransition(
-                            child: ShopEditScreen(screenBloc),
-                            type: PageTransitionType.fade,
-                          ));
-                        },
-                        child: Row(
-                          children: [
-                            SvgPicture.asset(
-                              'assets/images/shop-edit.svg',
-                              width: 24,
-                              height: 24,
+                    Column(
+                      children: [
+                        divider,
+                        Container(
+                          height: 61,
+                          padding: EdgeInsets.only(left: 14, right: 14),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(context, PageTransition(
+                                child: ShopEditScreen(screenBloc),
+                                type: PageTransitionType.fade,
+                              ));
+                            },
+                            child: Row(
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/images/shop-edit.svg',
+                                  width: 24,
+                                  height: 24,
+                                ),
+                                SizedBox(
+                                  width: 12,
+                                ),
+                                Expanded(
+                                    child: Text(
+                                  'Edit',
+                                  style: TextStyle(fontSize: 18),
+                                )),
+                                Icon(Icons.arrow_forward_ios, size: 20),
+                              ],
                             ),
-                            SizedBox(
-                              width: 12,
-                            ),
-                            Expanded(
-                                child: Text(
-                              'Edit',
-                              style: TextStyle(fontSize: 18),
-                            )),
-                            Icon(Icons.arrow_forward_ios, size: 20),
-                          ],
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                   ],
                 ),
@@ -370,7 +373,6 @@ class _ShopScreenState extends State<ShopScreen> {
                                   dashboardScreenBloc: widget.dashboardScreenBloc,
                                   screenBloc: screenBloc,
                                   globalStateModel: widget.globalStateModel,
-                                  activeShop: widget.activeShop,
                                 ),
                                 type: PageTransitionType.fade,
                                 duration: Duration(milliseconds: 500),

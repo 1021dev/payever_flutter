@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:payever/shop/models/models.dart';
 
 import '../models/models.dart';
 
@@ -16,6 +17,14 @@ class GlobalStateModel extends ChangeNotifier {
   bool _refresh = false;
   Business _currentBusiness;
   List<AppWidget> _appWidgets;
+  ShopDetailModel _activeShop;
+
+  ShopDetailModel get activeShop => _activeShop;
+
+  setActiveShop(ShopDetailModel activeShop, {bool notify = true}) {
+    _activeShop = activeShop;
+    if (notify ?? true) notifyListeners();
+  }
 
   String get currentWallpaper => _currentWallpaper ?? _defaultCustomWallpaper;
 

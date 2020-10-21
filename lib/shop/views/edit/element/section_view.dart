@@ -11,7 +11,6 @@ import 'package:payever/shop/views/edit/element/shop_cart_view.dart';
 import 'package:payever/shop/views/edit/element/social_icon_view.dart';
 import 'package:payever/shop/views/edit/element/sub_element/background_view.dart';
 import 'package:payever/shop/views/edit/element/text_view.dart';
-import 'package:payever/commons/utils/draggable_widget.dart';
 import 'button_view.dart';
 import 'image_view.dart';
 
@@ -31,18 +30,24 @@ class _SectionViewState extends State<SectionView> {
   final ShopPage shopPage;
   final Child child;
   final Map<String, dynamic> stylesheets;
+  final ShopDetailModel activeShop;
 
   ApiService api = ApiService();
-  DragController dragController = DragController();
   SectionStyleSheet styleSheet;
 
   StreamController<double> controller = StreamController.broadcast();
   double widgetHeight = 0;
   GlobalKey key = GlobalKey();
 
-  _SectionViewState({this.shopPage, this.child, this.stylesheets}) {
+  _SectionViewState({this.shopPage, this.child, this.stylesheets, this.activeShop}) {
     styleSheet = getSectionStyleSheet(child.id);
     widgetHeight = styleSheet.height;
+  }
+
+  @override
+  void dispose() {
+    controller.close(); //Streams must be closed when not needed
+    super.dispose();
   }
 
   @override

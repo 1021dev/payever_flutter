@@ -611,6 +611,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           return;
                         }
                         screenBloc.add(OpenAppEvent(openAppCode: ''));
+                        Provider.of<GlobalStateModel>(context, listen: false)
+                            .setCurrentBusiness(state.activeBusiness);
+                        Provider.of<GlobalStateModel>(context, listen: false)
+                            .setCurrentWallpaper(state.curWall);
                         final result = await Navigator.push(
                           context,
                           PageTransition(
@@ -673,6 +677,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           onPressed: () async {
                             FocusScope.of(context).unfocus();
                             screenBloc.add(OpenAppEvent(openAppCode: ''));
+                            Provider.of<GlobalStateModel>(context, listen: false)
+                                .setCurrentBusiness(state.activeBusiness);
+                            Provider.of<GlobalStateModel>(context, listen: false)
+                                .setCurrentWallpaper(state.curWall);
                             final result = await Navigator.push(
                               context,
                               PageTransition(
@@ -902,6 +910,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
       activeTerminal: state.activeTerminal,
       onTapEditTerminal: () async {
         screenBloc.add(OpenAppEvent(openAppCode: ''));
+        Provider.of<GlobalStateModel>(context, listen: false)
+            .setCurrentBusiness(state.activeBusiness);
+        Provider.of<GlobalStateModel>(context, listen: false)
+            .setCurrentWallpaper(state.curWall);
         final result = await Navigator.push(
           context,
           PageTransition(
@@ -1140,6 +1152,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Provider.of<GlobalStateModel>(context, listen: false)
             .setCurrentWallpaper(state.curWall);
         screenBloc.add(OpenAppEvent(openAppCode: ''));
+        Provider.of<GlobalStateModel>(context, listen: false)
+            .setCurrentBusiness(state.activeBusiness);
+        Provider.of<GlobalStateModel>(context, listen: false)
+            .setCurrentWallpaper(state.curWall);
         final result = await Navigator.push(
           context,
           PageTransition(

@@ -18,14 +18,12 @@ import 'package:payever/theme.dart';
 
 class ThemesScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
-  final ShopModel activeShop;
   final DashboardScreenBloc dashboardScreenBloc;
   final ShopScreenBloc screenBloc;
 
   ThemesScreen({
     this.globalStateModel,
     this.screenBloc,
-    this.activeShop,
     this.dashboardScreenBloc,
   });
 
