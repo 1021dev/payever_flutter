@@ -8,6 +8,7 @@ import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/element/logo_view.dart';
 import 'package:payever/shop/views/edit/element/shape_view.dart';
 import 'package:payever/shop/views/edit/element/shop_cart_view.dart';
+import 'package:payever/shop/views/edit/element/shop_product_detail_view.dart';
 import 'package:payever/shop/views/edit/element/shop_products_view.dart';
 import 'package:payever/shop/views/edit/element/social_icon_view.dart';
 import 'package:payever/shop/views/edit/element/sub_element/background_view.dart';
@@ -120,6 +121,12 @@ class _SectionViewState extends State<SectionView> {
           );
           break;
         case 'shop-product-details':
+          widget = ShopProductDetailView(
+            child: child,
+            stylesheets: stylesheets,
+            deviceTypeId: shopPage.stylesheetIds.mobile,
+            sectionStyleSheet: styleSheet,
+          );
           break;
         case 'logo':
           widget = LogoView(

@@ -472,19 +472,26 @@ class BaseStyles {
   // String or double
   @JsonKey(name: 'fontSize', defaultValue: 15)
   dynamic fontSize;
-  double textFontSize() {
-    return (fontSize is num) ? (fontSize as num).toDouble() : 0;
-  }
+  @JsonKey(name: 'fontStyle', defaultValue: 'normal')
+  String fontStyle;
   // String(bold) or double
   @JsonKey(name: 'fontWeight', defaultValue: 400)
   dynamic fontWeight;
-  FontWeight textFontWeight() {
-    return getFontWeight(fontWeight);
-  }
   @JsonKey(
       name: "fontFamily",
       defaultValue: "Helvetica Neue,Helvetica,Arial,sans-serif")
   String fontFamily;
+
+  double textFontSize() {
+    return (fontSize is num) ? (fontSize as num).toDouble() : 0;
+  }
+  FontWeight textFontWeight() {
+    return getFontWeight(fontWeight);
+  }
+  FontStyle textFontStlye() {
+    return getFontStyle(fontStyle);
+  }
+
   // ------------------------------------------------------
   double getMarginTop(SectionStyleSheet sectionStyleSheet) {
     double margin = marginTop;
@@ -730,6 +737,38 @@ class ShopProductsStyles extends BaseStyles {
 
   factory ShopProductsStyles.fromJson(Map<String, dynamic> json) => _$ShopProductsStylesFromJson(json);
   Map<String, dynamic> toJson() => _$ShopProductsStylesToJson(this);
+}
+
+@JsonSerializable()
+class ShopProductDetailStyles extends BaseStyles {
+  ShopProductDetailStyles();
+
+  @JsonKey(name: 'width', defaultValue: 0)
+  double width;
+  // Text
+  // attributes are same as parent
+
+  // Button
+  @JsonKey(name: 'buttonFontSize', defaultValue: 13)
+  double buttonFontSize;
+  @JsonKey(name: 'buttonColor', defaultValue: '#a5a5a5')
+  String buttonColor;
+  @JsonKey(name: 'buttonFontFamily', defaultValue: 'Roboto')
+  String buttonFontFamily;
+  @JsonKey(name: 'buttonFontWeight', defaultValue: 'normal')
+  String buttonFontWeight;
+  @JsonKey(name: 'buttonFontStyle', defaultValue: 'normal')
+  String buttonFontStyle;
+
+  FontWeight getButtonFontWeight() {
+    return getFontWeight(buttonFontWeight);
+  }
+  FontStyle getButtonFontStyle() {
+    return getFontStyle(buttonFontStyle);
+  }
+
+  factory ShopProductDetailStyles.fromJson(Map<String, dynamic> json) => _$ShopProductDetailStylesFromJson(json);
+  Map<String, dynamic> toJson() => _$ShopProductDetailStylesToJson(this);
 }
 
 @JsonSerializable()
