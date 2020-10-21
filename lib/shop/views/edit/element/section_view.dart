@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/element/logo_view.dart';
 import 'package:payever/shop/views/edit/element/shape_view.dart';
 import 'package:payever/shop/views/edit/element/shop_cart_view.dart';
+import 'package:payever/shop/views/edit/element/social_icon_view.dart';
 import 'package:payever/shop/views/edit/element/sub_element/background_view.dart';
 import 'package:payever/shop/views/edit/element/text_view.dart';
 import 'package:payever/commons/utils/draggable_widget.dart';
@@ -93,8 +95,6 @@ class _SectionViewState extends State<SectionView> {
           break;
         case 'menu':
           break;
-        case 'logo':
-          break;
         case 'shop-cart':
           widget = ShopCartView(
             child: child,
@@ -108,6 +108,20 @@ class _SectionViewState extends State<SectionView> {
         case 'shop-products':
           break;
         case 'logo':
+          widget = LogoView(
+            child: child,
+            stylesheets: stylesheets,
+            deviceTypeId: shopPage.stylesheetIds.mobile,
+            sectionStyleSheet: styleSheet,
+          );
+          break;
+        case 'social-icon':
+          widget = SocialIconView(
+            child: child,
+            stylesheets: stylesheets,
+            deviceTypeId: shopPage.stylesheetIds.mobile,
+            sectionStyleSheet: styleSheet,
+          );
           break;
         default:
           print('Special Child Type: ${child.type}');

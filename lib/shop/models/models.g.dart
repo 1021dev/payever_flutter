@@ -421,6 +421,9 @@ BaseStyles _$BaseStylesFromJson(Map<String, dynamic> json) {
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
     ..borderSize = (json['borderSize'] as num)?.toDouble() ?? 0
     ..opacity = (json['opacity'] as num)?.toDouble() ?? 1
+    ..stroke = json['stroke'] as String ?? '#000'
+    ..strokeDasharray = json['strokeDasharray'] as String ?? ''
+    ..strokeWidth = (json['strokeWidth'] as num)?.toDouble() ?? 0
     ..boxShadow = json['boxShadow']
     ..shadowAngle = (json['shadowAngle'] as num)?.toDouble() ?? 0
     ..shadowBlur = (json['shadowBlur'] as num)?.toDouble() ?? 0
@@ -428,6 +431,7 @@ BaseStyles _$BaseStylesFromJson(Map<String, dynamic> json) {
     ..shadowFormColor = json['shadowFormColor'] as String ?? '0, 0, 0'
     ..shadowOffset = (json['shadowOffset'] as num)?.toDouble() ?? 0
     ..shadowOpacity = (json['shadowOpacity'] as num)?.toDouble() ?? 0
+    ..filter = json['filter'] as String ?? ''
     ..gridColumn = json['gridColumn'] as String ?? '1 / span 1'
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea']
@@ -466,6 +470,9 @@ Map<String, dynamic> _$BaseStylesToJson(BaseStyles instance) =>
       'borderColor': instance.borderColor,
       'borderSize': instance.borderSize,
       'opacity': instance.opacity,
+      'stroke': instance.stroke,
+      'strokeDasharray': instance.strokeDasharray,
+      'strokeWidth': instance.strokeWidth,
       'boxShadow': instance.boxShadow,
       'shadowAngle': instance.shadowAngle,
       'shadowBlur': instance.shadowBlur,
@@ -473,6 +480,7 @@ Map<String, dynamic> _$BaseStylesToJson(BaseStyles instance) =>
       'shadowFormColor': instance.shadowFormColor,
       'shadowOffset': instance.shadowOffset,
       'shadowOpacity': instance.shadowOpacity,
+      'filter': instance.filter,
       'gridColumn': instance.gridColumn,
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
@@ -510,6 +518,9 @@ SectionStyleSheet _$SectionStyleSheetFromJson(Map<String, dynamic> json) {
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
     ..borderSize = (json['borderSize'] as num)?.toDouble() ?? 0
     ..opacity = (json['opacity'] as num)?.toDouble() ?? 1
+    ..stroke = json['stroke'] as String ?? '#000'
+    ..strokeDasharray = json['strokeDasharray'] as String ?? ''
+    ..strokeWidth = (json['strokeWidth'] as num)?.toDouble() ?? 0
     ..boxShadow = json['boxShadow']
     ..shadowAngle = (json['shadowAngle'] as num)?.toDouble() ?? 0
     ..shadowBlur = (json['shadowBlur'] as num)?.toDouble() ?? 0
@@ -517,6 +528,7 @@ SectionStyleSheet _$SectionStyleSheetFromJson(Map<String, dynamic> json) {
     ..shadowFormColor = json['shadowFormColor'] as String ?? '0, 0, 0'
     ..shadowOffset = (json['shadowOffset'] as num)?.toDouble() ?? 0
     ..shadowOpacity = (json['shadowOpacity'] as num)?.toDouble() ?? 0
+    ..filter = json['filter'] as String ?? ''
     ..gridColumn = json['gridColumn'] as String ?? '1 / span 1'
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea']
@@ -559,6 +571,9 @@ Map<String, dynamic> _$SectionStyleSheetToJson(SectionStyleSheet instance) =>
       'borderColor': instance.borderColor,
       'borderSize': instance.borderSize,
       'opacity': instance.opacity,
+      'stroke': instance.stroke,
+      'strokeDasharray': instance.strokeDasharray,
+      'strokeWidth': instance.strokeWidth,
       'boxShadow': instance.boxShadow,
       'shadowAngle': instance.shadowAngle,
       'shadowBlur': instance.shadowBlur,
@@ -566,6 +581,7 @@ Map<String, dynamic> _$SectionStyleSheetToJson(SectionStyleSheet instance) =>
       'shadowFormColor': instance.shadowFormColor,
       'shadowOffset': instance.shadowOffset,
       'shadowOpacity': instance.shadowOpacity,
+      'filter': instance.filter,
       'gridColumn': instance.gridColumn,
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
@@ -607,6 +623,9 @@ TextStyles _$TextStylesFromJson(Map<String, dynamic> json) {
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
     ..borderSize = (json['borderSize'] as num)?.toDouble() ?? 0
     ..opacity = (json['opacity'] as num)?.toDouble() ?? 1
+    ..stroke = json['stroke'] as String ?? '#000'
+    ..strokeDasharray = json['strokeDasharray'] as String ?? ''
+    ..strokeWidth = (json['strokeWidth'] as num)?.toDouble() ?? 0
     ..boxShadow = json['boxShadow']
     ..shadowAngle = (json['shadowAngle'] as num)?.toDouble() ?? 0
     ..shadowBlur = (json['shadowBlur'] as num)?.toDouble() ?? 0
@@ -614,6 +633,7 @@ TextStyles _$TextStylesFromJson(Map<String, dynamic> json) {
     ..shadowFormColor = json['shadowFormColor'] as String ?? '0, 0, 0'
     ..shadowOffset = (json['shadowOffset'] as num)?.toDouble() ?? 0
     ..shadowOpacity = (json['shadowOpacity'] as num)?.toDouble() ?? 0
+    ..filter = json['filter'] as String ?? ''
     ..gridColumn = json['gridColumn'] as String ?? '1 / span 1'
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea']
@@ -654,6 +674,9 @@ Map<String, dynamic> _$TextStylesToJson(TextStyles instance) =>
       'borderColor': instance.borderColor,
       'borderSize': instance.borderSize,
       'opacity': instance.opacity,
+      'stroke': instance.stroke,
+      'strokeDasharray': instance.strokeDasharray,
+      'strokeWidth': instance.strokeWidth,
       'boxShadow': instance.boxShadow,
       'shadowAngle': instance.shadowAngle,
       'shadowBlur': instance.shadowBlur,
@@ -661,6 +684,7 @@ Map<String, dynamic> _$TextStylesToJson(TextStyles instance) =>
       'shadowFormColor': instance.shadowFormColor,
       'shadowOffset': instance.shadowOffset,
       'shadowOpacity': instance.shadowOpacity,
+      'filter': instance.filter,
       'gridColumn': instance.gridColumn,
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
@@ -700,6 +724,9 @@ ButtonStyles _$ButtonStylesFromJson(Map<String, dynamic> json) {
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
     ..borderSize = (json['borderSize'] as num)?.toDouble() ?? 0
     ..opacity = (json['opacity'] as num)?.toDouble() ?? 1
+    ..stroke = json['stroke'] as String ?? '#000'
+    ..strokeDasharray = json['strokeDasharray'] as String ?? ''
+    ..strokeWidth = (json['strokeWidth'] as num)?.toDouble() ?? 0
     ..boxShadow = json['boxShadow']
     ..shadowAngle = (json['shadowAngle'] as num)?.toDouble() ?? 0
     ..shadowBlur = (json['shadowBlur'] as num)?.toDouble() ?? 0
@@ -707,6 +734,7 @@ ButtonStyles _$ButtonStylesFromJson(Map<String, dynamic> json) {
     ..shadowFormColor = json['shadowFormColor'] as String ?? '0, 0, 0'
     ..shadowOffset = (json['shadowOffset'] as num)?.toDouble() ?? 0
     ..shadowOpacity = (json['shadowOpacity'] as num)?.toDouble() ?? 0
+    ..filter = json['filter'] as String ?? ''
     ..gridColumn = json['gridColumn'] as String ?? '1 / span 1'
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea']
@@ -746,6 +774,9 @@ Map<String, dynamic> _$ButtonStylesToJson(ButtonStyles instance) =>
       'borderColor': instance.borderColor,
       'borderSize': instance.borderSize,
       'opacity': instance.opacity,
+      'stroke': instance.stroke,
+      'strokeDasharray': instance.strokeDasharray,
+      'strokeWidth': instance.strokeWidth,
       'boxShadow': instance.boxShadow,
       'shadowAngle': instance.shadowAngle,
       'shadowBlur': instance.shadowBlur,
@@ -753,6 +784,7 @@ Map<String, dynamic> _$ButtonStylesToJson(ButtonStyles instance) =>
       'shadowFormColor': instance.shadowFormColor,
       'shadowOffset': instance.shadowOffset,
       'shadowOpacity': instance.shadowOpacity,
+      'filter': instance.filter,
       'gridColumn': instance.gridColumn,
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
@@ -791,6 +823,9 @@ ShopCartStyles _$ShopCartStylesFromJson(Map<String, dynamic> json) {
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
     ..borderSize = (json['borderSize'] as num)?.toDouble() ?? 0
     ..opacity = (json['opacity'] as num)?.toDouble() ?? 1
+    ..stroke = json['stroke'] as String ?? '#000'
+    ..strokeDasharray = json['strokeDasharray'] as String ?? ''
+    ..strokeWidth = (json['strokeWidth'] as num)?.toDouble() ?? 0
     ..boxShadow = json['boxShadow']
     ..shadowAngle = (json['shadowAngle'] as num)?.toDouble() ?? 0
     ..shadowBlur = (json['shadowBlur'] as num)?.toDouble() ?? 0
@@ -798,6 +833,7 @@ ShopCartStyles _$ShopCartStylesFromJson(Map<String, dynamic> json) {
     ..shadowFormColor = json['shadowFormColor'] as String ?? '0, 0, 0'
     ..shadowOffset = (json['shadowOffset'] as num)?.toDouble() ?? 0
     ..shadowOpacity = (json['shadowOpacity'] as num)?.toDouble() ?? 0
+    ..filter = json['filter'] as String ?? ''
     ..gridColumn = json['gridColumn'] as String ?? '1 / span 1'
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea']
@@ -842,6 +878,9 @@ Map<String, dynamic> _$ShopCartStylesToJson(ShopCartStyles instance) =>
       'borderColor': instance.borderColor,
       'borderSize': instance.borderSize,
       'opacity': instance.opacity,
+      'stroke': instance.stroke,
+      'strokeDasharray': instance.strokeDasharray,
+      'strokeWidth': instance.strokeWidth,
       'boxShadow': instance.boxShadow,
       'shadowAngle': instance.shadowAngle,
       'shadowBlur': instance.shadowBlur,
@@ -849,6 +888,7 @@ Map<String, dynamic> _$ShopCartStylesToJson(ShopCartStyles instance) =>
       'shadowFormColor': instance.shadowFormColor,
       'shadowOffset': instance.shadowOffset,
       'shadowOpacity': instance.shadowOpacity,
+      'filter': instance.filter,
       'gridColumn': instance.gridColumn,
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
@@ -892,6 +932,9 @@ ShapeStyles _$ShapeStylesFromJson(Map<String, dynamic> json) {
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
     ..borderSize = (json['borderSize'] as num)?.toDouble() ?? 0
     ..opacity = (json['opacity'] as num)?.toDouble() ?? 1
+    ..stroke = json['stroke'] as String ?? '#000'
+    ..strokeDasharray = json['strokeDasharray'] as String ?? ''
+    ..strokeWidth = (json['strokeWidth'] as num)?.toDouble() ?? 0
     ..boxShadow = json['boxShadow']
     ..shadowAngle = (json['shadowAngle'] as num)?.toDouble() ?? 0
     ..shadowBlur = (json['shadowBlur'] as num)?.toDouble() ?? 0
@@ -899,6 +942,7 @@ ShapeStyles _$ShapeStylesFromJson(Map<String, dynamic> json) {
     ..shadowFormColor = json['shadowFormColor'] as String ?? '0, 0, 0'
     ..shadowOffset = (json['shadowOffset'] as num)?.toDouble() ?? 0
     ..shadowOpacity = (json['shadowOpacity'] as num)?.toDouble() ?? 0
+    ..filter = json['filter'] as String ?? ''
     ..gridColumn = json['gridColumn'] as String ?? '1 / span 1'
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea']
@@ -938,6 +982,9 @@ Map<String, dynamic> _$ShapeStylesToJson(ShapeStyles instance) =>
       'borderColor': instance.borderColor,
       'borderSize': instance.borderSize,
       'opacity': instance.opacity,
+      'stroke': instance.stroke,
+      'strokeDasharray': instance.strokeDasharray,
+      'strokeWidth': instance.strokeWidth,
       'boxShadow': instance.boxShadow,
       'shadowAngle': instance.shadowAngle,
       'shadowBlur': instance.shadowBlur,
@@ -945,6 +992,7 @@ Map<String, dynamic> _$ShapeStylesToJson(ShapeStyles instance) =>
       'shadowFormColor': instance.shadowFormColor,
       'shadowOffset': instance.shadowOffset,
       'shadowOpacity': instance.shadowOpacity,
+      'filter': instance.filter,
       'gridColumn': instance.gridColumn,
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
@@ -983,6 +1031,9 @@ ImageStyles _$ImageStylesFromJson(Map<String, dynamic> json) {
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
     ..borderSize = (json['borderSize'] as num)?.toDouble() ?? 0
     ..opacity = (json['opacity'] as num)?.toDouble() ?? 1
+    ..stroke = json['stroke'] as String ?? '#000'
+    ..strokeDasharray = json['strokeDasharray'] as String ?? ''
+    ..strokeWidth = (json['strokeWidth'] as num)?.toDouble() ?? 0
     ..boxShadow = json['boxShadow']
     ..shadowAngle = (json['shadowAngle'] as num)?.toDouble() ?? 0
     ..shadowBlur = (json['shadowBlur'] as num)?.toDouble() ?? 0
@@ -990,6 +1041,7 @@ ImageStyles _$ImageStylesFromJson(Map<String, dynamic> json) {
     ..shadowFormColor = json['shadowFormColor'] as String ?? '0, 0, 0'
     ..shadowOffset = (json['shadowOffset'] as num)?.toDouble() ?? 0
     ..shadowOpacity = (json['shadowOpacity'] as num)?.toDouble() ?? 0
+    ..filter = json['filter'] as String ?? ''
     ..gridColumn = json['gridColumn'] as String ?? '1 / span 1'
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea']
@@ -1029,6 +1081,9 @@ Map<String, dynamic> _$ImageStylesToJson(ImageStyles instance) =>
       'borderColor': instance.borderColor,
       'borderSize': instance.borderSize,
       'opacity': instance.opacity,
+      'stroke': instance.stroke,
+      'strokeDasharray': instance.strokeDasharray,
+      'strokeWidth': instance.strokeWidth,
       'boxShadow': instance.boxShadow,
       'shadowAngle': instance.shadowAngle,
       'shadowBlur': instance.shadowBlur,
@@ -1036,6 +1091,106 @@ Map<String, dynamic> _$ImageStylesToJson(ImageStyles instance) =>
       'shadowFormColor': instance.shadowFormColor,
       'shadowOffset': instance.shadowOffset,
       'shadowOpacity': instance.shadowOpacity,
+      'filter': instance.filter,
+      'gridColumn': instance.gridColumn,
+      'gridRow': instance.gridRow,
+      'gridArea': instance.gridArea,
+      'height': instance.height,
+      'minWidth': instance.minWidth,
+      'minHeight': instance.minHeight,
+      'margin': instance.margin,
+      'padding': instance.padding,
+      'position': instance.position,
+      'marginBottom': instance.marginBottom,
+      'marginLeft': instance.marginLeft,
+      'marginRight': instance.marginRight,
+      'marginTop': instance.marginTop,
+      'top': instance.top,
+      'left': instance.left,
+      'color': instance.color,
+      'fontSize': instance.fontSize,
+      'fontWeight': instance.fontWeight,
+      'fontFamily': instance.fontFamily,
+      'width': instance.width,
+    };
+
+SocialIconStyles _$SocialIconStylesFromJson(Map<String, dynamic> json) {
+  return SocialIconStyles()
+    ..display = json['display'] as String ?? 'flex'
+    ..background = json['background'] as String ?? '#ffffff'
+    ..backgroundColor = json['backgroundColor'] as String ?? '#ffffff'
+    ..backgroundImage = json['backgroundImage'] as String ?? ''
+    ..backgroundSize = json['backgroundSize'] as String
+    ..backgroundPosition = json['backgroundPosition'] as String ?? 'center'
+    ..backgroundRepeat = json['backgroundRepeat'] as String ?? 'no-repeat'
+    ..border = json['border']
+    ..borderType = json['borderType'] as String ?? 'solid'
+    ..borderRadius = json['borderRadius'] ?? 0
+    ..borderWidth = (json['borderWidth'] as num)?.toDouble() ?? 0
+    ..borderColor = json['borderColor'] as String ?? '#ffffff'
+    ..borderSize = (json['borderSize'] as num)?.toDouble() ?? 0
+    ..opacity = (json['opacity'] as num)?.toDouble() ?? 1
+    ..stroke = json['stroke'] as String ?? '#000'
+    ..strokeDasharray = json['strokeDasharray'] as String ?? ''
+    ..strokeWidth = (json['strokeWidth'] as num)?.toDouble() ?? 0
+    ..boxShadow = json['boxShadow']
+    ..shadowAngle = (json['shadowAngle'] as num)?.toDouble() ?? 0
+    ..shadowBlur = (json['shadowBlur'] as num)?.toDouble() ?? 0
+    ..shadowColor = json['shadowColor'] as String ?? 'rgba(0, 0, NaN, 0, 0)'
+    ..shadowFormColor = json['shadowFormColor'] as String ?? '0, 0, 0'
+    ..shadowOffset = (json['shadowOffset'] as num)?.toDouble() ?? 0
+    ..shadowOpacity = (json['shadowOpacity'] as num)?.toDouble() ?? 0
+    ..filter = json['filter'] as String ?? ''
+    ..gridColumn = json['gridColumn'] as String ?? '1 / span 1'
+    ..gridRow = json['gridRow'] as String ?? '1 / span 1'
+    ..gridArea = json['gridArea']
+    ..height = (json['height'] as num)?.toDouble() ?? 0
+    ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
+    ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
+    ..margin = json['margin'] as String ?? '0 0 0 0'
+    ..padding = json['padding'] as String ?? '8 28'
+    ..position = json['position'] as String ?? 'absolute'
+    ..marginBottom = (json['marginBottom'] as num)?.toDouble() ?? 0
+    ..marginLeft = (json['marginLeft'] as num)?.toDouble() ?? 0
+    ..marginRight = (json['marginRight'] as num)?.toDouble() ?? 0
+    ..marginTop = (json['marginTop'] as num)?.toDouble() ?? 0
+    ..top = (json['top'] as num)?.toDouble() ?? 0
+    ..left = (json['left'] as num)?.toDouble() ?? 0
+    ..color = json['color'] as String ?? '#000000'
+    ..fontSize = json['fontSize'] ?? 15
+    ..fontWeight = json['fontWeight'] ?? 400
+    ..fontFamily = json['fontFamily'] as String ??
+        'Helvetica Neue,Helvetica,Arial,sans-serif'
+    ..width = (json['width'] as num)?.toDouble() ?? 0;
+}
+
+Map<String, dynamic> _$SocialIconStylesToJson(SocialIconStyles instance) =>
+    <String, dynamic>{
+      'display': instance.display,
+      'background': instance.background,
+      'backgroundColor': instance.backgroundColor,
+      'backgroundImage': instance.backgroundImage,
+      'backgroundSize': instance.backgroundSize,
+      'backgroundPosition': instance.backgroundPosition,
+      'backgroundRepeat': instance.backgroundRepeat,
+      'border': instance.border,
+      'borderType': instance.borderType,
+      'borderRadius': instance.borderRadius,
+      'borderWidth': instance.borderWidth,
+      'borderColor': instance.borderColor,
+      'borderSize': instance.borderSize,
+      'opacity': instance.opacity,
+      'stroke': instance.stroke,
+      'strokeDasharray': instance.strokeDasharray,
+      'strokeWidth': instance.strokeWidth,
+      'boxShadow': instance.boxShadow,
+      'shadowAngle': instance.shadowAngle,
+      'shadowBlur': instance.shadowBlur,
+      'shadowColor': instance.shadowColor,
+      'shadowFormColor': instance.shadowFormColor,
+      'shadowOffset': instance.shadowOffset,
+      'shadowOpacity': instance.shadowOpacity,
+      'filter': instance.filter,
       'gridColumn': instance.gridColumn,
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,

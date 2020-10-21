@@ -407,6 +407,14 @@ class BaseStyles {
   @JsonKey(name: 'opacity', defaultValue: 1)
   double opacity;
 
+  // Stroke
+  @JsonKey(name: 'stroke', defaultValue: "#000")
+  String stroke;
+  @JsonKey(name: 'strokeDasharray', defaultValue: '')
+  String strokeDasharray;
+  @JsonKey(name: 'strokeWidth', defaultValue: 0)
+  double strokeWidth;
+
   // Shadow
   // Bool or String
   // if bool(always false) all Shadow attributes are disabled
@@ -426,6 +434,9 @@ class BaseStyles {
   double shadowOffset;
   @JsonKey(name: 'shadowOpacity', defaultValue: 0)
   double shadowOpacity;
+  @JsonKey(name: 'filter', defaultValue: '')
+  String filter;//drop-shadow(8.000000000000002pt 13.856406460551018pt 5pt rgba(26,77,124,0.47))
+
 
   // Grid
   @JsonKey(name: 'gridColumn', defaultValue: '1 / span 1')
@@ -612,7 +623,7 @@ class ShopCartStyles extends BaseStyles{
 }
 
 @JsonSerializable()
-class ShapeStyles extends ButtonStyles {
+class ShapeStyles extends BaseStyles {
   ShapeStyles();
 
   @JsonKey(name: 'width', defaultValue: 0)
@@ -631,6 +642,17 @@ class ImageStyles extends BaseStyles {
 
   factory ImageStyles.fromJson(Map<String, dynamic> json) => _$ImageStylesFromJson(json);
   Map<String, dynamic> toJson() => _$ImageStylesToJson(this);
+}
+
+@JsonSerializable()
+class SocialIconStyles extends BaseStyles {
+  SocialIconStyles();
+
+  @JsonKey(name: 'width', defaultValue: 0)
+  double width;
+
+  factory SocialIconStyles.fromJson(Map<String, dynamic> json) => _$SocialIconStylesFromJson(json);
+  Map<String, dynamic> toJson() => _$SocialIconStylesToJson(this);
 }
 
 @JsonSerializable()
