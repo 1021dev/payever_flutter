@@ -150,8 +150,9 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
 
     dynamic defaultObj = await api.getShopDetail(activeBusinessId, GlobalUtils.activeToken.accessToken, shopId);
     if (defaultObj != null) {
-      ShopDetailModel model = ShopDetailModel.fromJson(defaultObj);
-      yield state.copyWith(activeShop: model);
+      ShopDetailModel activeShop = ShopDetailModel.fromJson(defaultObj);
+      yield state.copyWith(activeShop: activeShop);
+      globalStateModel.setActiveShop(activeShop);
     }
   }
 
@@ -172,7 +173,9 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
   Stream<ShopScreenState> setDefaultShop(String businessId, String shopId) async* {
     dynamic response = await api.setDefaultShop(GlobalUtils.activeToken.accessToken, businessId, shopId);
     if (response != null) {
-      yield state.copyWith(activeShop: ShopDetailModel.fromJson(response));
+      ShopDetailModel activeShop = ShopDetailModel.fromJson(response);
+      yield state.copyWith(activeShop: activeShop);
+      globalStateModel.setActiveShop(activeShop);
     }
     yield ShopScreenStateSuccess();
   }
@@ -181,8 +184,9 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
     dynamic response = await api.updateShopConfig(GlobalUtils.activeToken.accessToken, businessId, shopId, config);
     dynamic defaultObj = await api.getShopDetail(businessId, GlobalUtils.activeToken.accessToken, shopId);
     if (defaultObj != null) {
-      ShopDetailModel model = ShopDetailModel.fromJson(defaultObj);
-      yield state.copyWith(activeShop: model);
+      ShopDetailModel activeShop = ShopDetailModel.fromJson(defaultObj);
+      yield state.copyWith(activeShop: activeShop);
+      globalStateModel.setActiveShop(activeShop);
     }
   }
 

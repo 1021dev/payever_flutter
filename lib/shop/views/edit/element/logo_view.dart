@@ -1,8 +1,10 @@
-import 'package:badges/badges.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/shop/models/models.dart';
-import '../../../../theme.dart';
+import 'package:payever/theme.dart';
+import 'package:provider/provider.dart';
 
 class LogoView extends StatefulWidget {
   final Child child;
@@ -10,7 +12,11 @@ class LogoView extends StatefulWidget {
   final String deviceTypeId;
   final SectionStyleSheet sectionStyleSheet;
 
-  const LogoView({this.child, this.stylesheets, this.deviceTypeId, this.sectionStyleSheet});
+  const LogoView(
+      {this.child,
+      this.stylesheets,
+      this.deviceTypeId,
+      this.sectionStyleSheet});
 
   @override
   _LogoViewState createState() => _LogoViewState(child, sectionStyleSheet);
@@ -20,11 +26,14 @@ class _LogoViewState extends State<LogoView> {
   final Child child;
   final SectionStyleSheet sectionStyleSheet;
   ImageStyles styles;
+  GlobalStateModel globalStateModel;
 
   _LogoViewState(this.child, this.sectionStyleSheet);
 
   @override
   Widget build(BuildContext context) {
+    globalStateModel = Provider.of<GlobalStateModel>(context, listen: true);
+
     if (child.styles != null && child.styles.isNotEmpty) {
       styles = ImageStyles.fromJson(child.styles);
     } else {
@@ -38,44 +47,50 @@ class _LogoViewState extends State<LogoView> {
         styles.display == 'none' ||
         (styleSheet() != null && styleSheet().display == 'none'))
       return Container();
-    String asset = 'assets/images/shop-edit-cart1.svg';
-    switch(child.data['variant']) {
-      case 'square-cart':
-        asset = 'assets/images/shop-edit-cart1.svg';
-        break;
-      case 'angular-cart':
-        asset = 'assets/images/shop-edit-cart2.svg';
-        break;
-      case 'flat-cart':
-        asset = 'assets/images/shop-edit-cart3.svg';
-        break;
-      case 'square-cart--empty':
-        asset = 'assets/images/shop-edit-cart4.svg';
-        break;
-      case 'angular-cart--empty':
-        asset = 'assets/images/shop-edit-cart5.svg';
-        break;
-      case 'flat-cart--empty':
-        asset = 'assets/images/shop-edit-cart6.svg';
-        break;
-      default:
-        break;
-    }
-    return Container(
+
+    return Opacity(
+      opacity: styles.opacity,
+      child: Container(
         width: styles.width,
         height: styles.height,
+        decoration: BoxDecoration(
+          color: colorConvert(styles.backgroundColor),
+          shape: BoxShape.circle,
+        ),
         margin: EdgeInsets.only(
             left: styles.getMarginLeft(sectionStyleSheet),
             right: styles.marginRight,
             top: styles.getMarginTop(sectionStyleSheet),
             bottom: styles.marginBottom),
-        alignment: Alignment.center,
-       );
+        child: CachedNetworkImage(
+          imageUrl: '${globalStateModel.activeShop.picture}',
+          imageBuilder: (context, imageProvider) => Container(
+            decoration: BoxDecoration(
+              color: Colors.transparent /*background.backgroundColor*/,
+              image: DecorationImage(
+                image: imageProvider,
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
+          errorWidget: (context, url, error) {
+            return Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.all(15),
+              child: SvgPicture.asset(
+                'assets/images/no_image.svg',
+              ),
+            );
+          },
+        ),
+      ),
+    );
   }
 
   ImageStyles styleSheet() {
     try {
-      print('Logo Styles: ${ widget.stylesheets[widget.deviceTypeId][child.id]}');
+      print(
+          'Logo Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
       return ImageStyles.fromJson(
           widget.stylesheets[widget.deviceTypeId][child.id]);
     } catch (e) {
