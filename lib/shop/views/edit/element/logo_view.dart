@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/element/sub_element/resizeable_widget.dart';
 import 'package:payever/theme.dart';
 import 'package:provider/provider.dart';
 
@@ -27,8 +28,9 @@ class _LogoViewState extends State<LogoView> {
   final SectionStyleSheet sectionStyleSheet;
   ImageStyles styles;
   GlobalStateModel globalStateModel;
-
+  GlobalKey key = GlobalKey();
   _LogoViewState(this.child, this.sectionStyleSheet);
+  bool isSelected = false;
 
   @override
   Widget build(BuildContext context) {
@@ -47,10 +49,25 @@ class _LogoViewState extends State<LogoView> {
         styles.display == 'none' ||
         (styleSheet() != null && styleSheet().display == 'none'))
       return Container();
+//    if (isSelected) {
+//      RenderBox box = key.currentContext.findRenderObject();
+//      Offset position = box.localToGlobal(Offset.zero);
+//      return ResizeableWidget(
+//        width: styles.width,
+//        height: styles.height,
+//        top: position.dy - 76,
+//        left: styles.getMarginLeft(sectionStyleSheet),
+//          child: _mainBody(),
+//      );
+//    }
+    return _mainBody();
+  }
 
+  Widget _mainBody() {
     return Opacity(
       opacity: styles.opacity,
       child: Container(
+        key: key,
         width: styles.width,
         height: styles.height,
         decoration: BoxDecoration(
@@ -86,7 +103,6 @@ class _LogoViewState extends State<LogoView> {
       ),
     );
   }
-
   ImageStyles styleSheet() {
     try {
 //      print(

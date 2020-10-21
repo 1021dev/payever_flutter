@@ -537,6 +537,12 @@ class BaseStyles {
     return FontWeight.w900;
   }
 
+  FontStyle getFontStyle(String fontStyle) {
+    if (fontStyle == 'italic')
+      return FontStyle.italic;
+    return FontStyle.normal;
+  }
+
   factory BaseStyles.fromJson(Map<String, dynamic> json) => _$BaseStylesFromJson(json);
   Map<String, dynamic> toJson() => _$BaseStylesToJson(this);
 }
@@ -691,14 +697,16 @@ class ShopProductsStyles extends BaseStyles {
   String titleFontFamily;
   @JsonKey(name: 'titleFontWeight', defaultValue: 'bold')
   String titleFontWeight;
+  @JsonKey(name: 'titleFontStyle', defaultValue: 'normal')
+  String titleFontStyle;
+  @JsonKey(name: 'titleTextDecoration')
+  dynamic titleTextDecoration;
   FontWeight getTitleFontWeight() {
     return getFontWeight(titleFontWeight);
   }
-
-  @JsonKey(name: 'titleFontStyle')
-  dynamic titleFontStyle;
-  @JsonKey(name: 'titleTextDecoration')
-  dynamic titleTextDecoration;
+  FontStyle getTitleFontStyle() {
+    return getFontStyle(titleFontStyle);
+  }
 
   // Price
   @JsonKey(name: 'priceFontSize', defaultValue: 13)
@@ -709,13 +717,16 @@ class ShopProductsStyles extends BaseStyles {
   String priceFontFamily;
   @JsonKey(name: 'priceFontWeight', defaultValue: 'normal')
   String priceFontWeight;
+  @JsonKey(name: 'priceFontStyle', defaultValue: 'normal')
+  String priceFontStyle;
+  @JsonKey(name: 'priceTextDecoration')
+  dynamic priceTextDecoration;
   FontWeight getPriceFontWeight() {
     return getFontWeight(priceFontWeight);
   }
-  @JsonKey(name: 'priceFontStyle')
-  dynamic priceFontStyle;
-  @JsonKey(name: 'priceTextDecoration')
-  dynamic priceTextDecoration;
+  FontStyle getPriceFontStyle() {
+    return getFontStyle(priceFontStyle);
+  }
 
   factory ShopProductsStyles.fromJson(Map<String, dynamic> json) => _$ShopProductsStylesFromJson(json);
   Map<String, dynamic> toJson() => _$ShopProductsStylesToJson(this);

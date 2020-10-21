@@ -98,6 +98,7 @@ class _ShopProductsViewState extends State<ShopProductsView> {
                       'Product name',
                       style: TextStyle(
                           fontSize: styles.titleFontSize,
+                          fontStyle: styles.getTitleFontStyle(),
                           fontWeight: styles.getTitleFontWeight(),
                           color: colorConvert(styles.titleColor),
                       ),
@@ -111,6 +112,7 @@ class _ShopProductsViewState extends State<ShopProductsView> {
                       '\$ 00.00',
                       style: TextStyle(
                         fontSize: styles.priceFontSize,
+                        fontStyle: styles.getPriceFontStyle(),
                         fontWeight: styles.getPriceFontWeight(),
                         color: colorConvert(styles.priceColor),
                       ),

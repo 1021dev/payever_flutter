@@ -421,7 +421,7 @@ BaseStyles _$BaseStylesFromJson(Map<String, dynamic> json) {
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
     ..borderSize = (json['borderSize'] as num)?.toDouble() ?? 0
     ..opacity = (json['opacity'] as num)?.toDouble() ?? 1
-    ..stroke = json['stroke'] as String ?? '#000'
+    ..stroke = json['stroke'] as String ?? '#000000'
     ..strokeDasharray = json['strokeDasharray'] as String ?? ''
     ..strokeWidth = (json['strokeWidth'] as num)?.toDouble() ?? 0
     ..boxShadow = json['boxShadow']
@@ -518,7 +518,7 @@ SectionStyleSheet _$SectionStyleSheetFromJson(Map<String, dynamic> json) {
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
     ..borderSize = (json['borderSize'] as num)?.toDouble() ?? 0
     ..opacity = (json['opacity'] as num)?.toDouble() ?? 1
-    ..stroke = json['stroke'] as String ?? '#000'
+    ..stroke = json['stroke'] as String ?? '#000000'
     ..strokeDasharray = json['strokeDasharray'] as String ?? ''
     ..strokeWidth = (json['strokeWidth'] as num)?.toDouble() ?? 0
     ..boxShadow = json['boxShadow']
@@ -623,7 +623,7 @@ TextStyles _$TextStylesFromJson(Map<String, dynamic> json) {
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
     ..borderSize = (json['borderSize'] as num)?.toDouble() ?? 0
     ..opacity = (json['opacity'] as num)?.toDouble() ?? 1
-    ..stroke = json['stroke'] as String ?? '#000'
+    ..stroke = json['stroke'] as String ?? '#000000'
     ..strokeDasharray = json['strokeDasharray'] as String ?? ''
     ..strokeWidth = (json['strokeWidth'] as num)?.toDouble() ?? 0
     ..boxShadow = json['boxShadow']
@@ -724,7 +724,7 @@ ButtonStyles _$ButtonStylesFromJson(Map<String, dynamic> json) {
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
     ..borderSize = (json['borderSize'] as num)?.toDouble() ?? 0
     ..opacity = (json['opacity'] as num)?.toDouble() ?? 1
-    ..stroke = json['stroke'] as String ?? '#000'
+    ..stroke = json['stroke'] as String ?? '#000000'
     ..strokeDasharray = json['strokeDasharray'] as String ?? ''
     ..strokeWidth = (json['strokeWidth'] as num)?.toDouble() ?? 0
     ..boxShadow = json['boxShadow']
@@ -823,7 +823,7 @@ ShopCartStyles _$ShopCartStylesFromJson(Map<String, dynamic> json) {
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
     ..borderSize = (json['borderSize'] as num)?.toDouble() ?? 0
     ..opacity = (json['opacity'] as num)?.toDouble() ?? 1
-    ..stroke = json['stroke'] as String ?? '#000'
+    ..stroke = json['stroke'] as String ?? '#000000'
     ..strokeDasharray = json['strokeDasharray'] as String ?? ''
     ..strokeWidth = (json['strokeWidth'] as num)?.toDouble() ?? 0
     ..boxShadow = json['boxShadow']
@@ -932,7 +932,7 @@ ShapeStyles _$ShapeStylesFromJson(Map<String, dynamic> json) {
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
     ..borderSize = (json['borderSize'] as num)?.toDouble() ?? 0
     ..opacity = (json['opacity'] as num)?.toDouble() ?? 1
-    ..stroke = json['stroke'] as String ?? '#000'
+    ..stroke = json['stroke'] as String ?? '#000000'
     ..strokeDasharray = json['strokeDasharray'] as String ?? ''
     ..strokeWidth = (json['strokeWidth'] as num)?.toDouble() ?? 0
     ..boxShadow = json['boxShadow']
@@ -1031,7 +1031,7 @@ ImageStyles _$ImageStylesFromJson(Map<String, dynamic> json) {
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
     ..borderSize = (json['borderSize'] as num)?.toDouble() ?? 0
     ..opacity = (json['opacity'] as num)?.toDouble() ?? 1
-    ..stroke = json['stroke'] as String ?? '#000'
+    ..stroke = json['stroke'] as String ?? '#000000'
     ..strokeDasharray = json['strokeDasharray'] as String ?? ''
     ..strokeWidth = (json['strokeWidth'] as num)?.toDouble() ?? 0
     ..boxShadow = json['boxShadow']
@@ -1130,7 +1130,7 @@ SocialIconStyles _$SocialIconStylesFromJson(Map<String, dynamic> json) {
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
     ..borderSize = (json['borderSize'] as num)?.toDouble() ?? 0
     ..opacity = (json['opacity'] as num)?.toDouble() ?? 1
-    ..stroke = json['stroke'] as String ?? '#000'
+    ..stroke = json['stroke'] as String ?? '#000000'
     ..strokeDasharray = json['strokeDasharray'] as String ?? ''
     ..strokeWidth = (json['strokeWidth'] as num)?.toDouble() ?? 0
     ..boxShadow = json['boxShadow']
@@ -1229,7 +1229,7 @@ ShopProductsStyles _$ShopProductsStylesFromJson(Map<String, dynamic> json) {
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
     ..borderSize = (json['borderSize'] as num)?.toDouble() ?? 0
     ..opacity = (json['opacity'] as num)?.toDouble() ?? 1
-    ..stroke = json['stroke'] as String ?? '#000'
+    ..stroke = json['stroke'] as String ?? '#000000'
     ..strokeDasharray = json['strokeDasharray'] as String ?? ''
     ..strokeWidth = (json['strokeWidth'] as num)?.toDouble() ?? 0
     ..boxShadow = json['boxShadow']
@@ -1270,13 +1270,13 @@ ShopProductsStyles _$ShopProductsStylesFromJson(Map<String, dynamic> json) {
     ..titleColor = json['titleColor'] as String ?? '#000000'
     ..titleFontFamily = json['titleFontFamily'] as String ?? 'Roboto'
     ..titleFontWeight = json['titleFontWeight'] as String ?? 'bold'
-    ..titleFontStyle = json['titleFontStyle']
+    ..titleFontStyle = json['titleFontStyle'] as String ?? 'normal'
     ..titleTextDecoration = json['titleTextDecoration']
     ..priceFontSize = (json['priceFontSize'] as num)?.toDouble() ?? 13
     ..priceColor = json['priceColor'] as String ?? '#a5a5a5'
     ..priceFontFamily = json['priceFontFamily'] as String ?? 'Roboto'
     ..priceFontWeight = json['priceFontWeight'] as String ?? 'normal'
-    ..priceFontStyle = json['priceFontStyle']
+    ..priceFontStyle = json['priceFontStyle'] as String ?? 'normal'
     ..priceTextDecoration = json['priceTextDecoration'];
 }
 
