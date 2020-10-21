@@ -80,23 +80,33 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
               ),
               SizedBox(height: 14),
               widget.lastSales != null
-                  ? Container(
-                  height: (GlobalUtils.mainWidth - 64 - 8 * 2)/ 3,
-                  child: GridView.count(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 8,
-                    physics: NeverScrollableScrollPhysics(),
-                    children: List.generate(
-                      widget.lastSales.length > 3 ? 3 : widget.lastSales.length,
-                          (index) => ProductCell(
-                        product: widget.lastSales[index],
-                        business: widget.business,
-                        onTap: (Products product) {
-                          widget.onSelect(product);
-                        },
-                      ),
-                    ).toList(),
-                  ))
+                  ? widget.lastSales.isNotEmpty
+                    ? Container(
+                          height: (GlobalUtils.mainWidth - 64 - 8 * 2) / 3,
+                          child: GridView.count(
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 8,
+                            physics: NeverScrollableScrollPhysics(),
+                            children: List.generate(
+                              widget.lastSales.length > 3
+                                  ? 3
+                                  : widget.lastSales.length,
+                              (index) => ProductCell(
+                                product: widget.lastSales[index],
+                                business: widget.business,
+                                onTap: (Products product) {
+                                  widget.onSelect(product);
+                                },
+                              ),
+                            ).toList(),
+                          ))
+                      : Container(
+                          alignment: Alignment.centerLeft,
+                          height: 50,
+                          child: Text(
+                            'You have no products',
+                          ),
+                        )
                   : Container(
                 height: 92,
                 child: Center(
