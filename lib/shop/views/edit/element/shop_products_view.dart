@@ -3,29 +3,29 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:payever/shop/models/models.dart';
 import '../../../../theme.dart';
 
-class SocialIconView extends StatefulWidget {
+class ShopProductsView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
   final String deviceTypeId;
   final SectionStyleSheet sectionStyleSheet;
 
-  const SocialIconView(
+  const ShopProductsView(
       {this.child,
       this.stylesheets,
       this.deviceTypeId,
       this.sectionStyleSheet});
 
   @override
-  _SocialIconViewState createState() =>
-      _SocialIconViewState(child, sectionStyleSheet);
+  _ShopProductsViewState createState() =>
+      _ShopProductsViewState(child, sectionStyleSheet);
 }
 
-class _SocialIconViewState extends State<SocialIconView> {
+class _ShopProductsViewState extends State<ShopProductsView> {
   final Child child;
   final SectionStyleSheet sectionStyleSheet;
   SocialIconStyles styles;
 
-  _SocialIconViewState(this.child, this.sectionStyleSheet);
+  _ShopProductsViewState(this.child, this.sectionStyleSheet);
 
   @override
   Widget build(BuildContext context) {
@@ -53,19 +53,19 @@ class _SocialIconViewState extends State<SocialIconView> {
               top: styles.getMarginTop(sectionStyleSheet),
               bottom: styles.marginBottom),
           alignment: Alignment.center,
-          child: SvgPicture.asset(
+          /*child: SvgPicture.asset(
             'assets/images/social-icon-${child.data['variant']}.svg',
             color: colorConvert(styles.backgroundColor),
             width: styles.width,
             height: styles.height,
-          )),
+          )*/),
     );
   }
 
   SocialIconStyles styleSheet() {
     try {
       print(
-          'Social Icon Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
+          'Shop Products Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
       return SocialIconStyles.fromJson(
           widget.stylesheets[widget.deviceTypeId][child.id]);
     } catch (e) {

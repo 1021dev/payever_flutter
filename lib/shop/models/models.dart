@@ -656,6 +656,27 @@ class SocialIconStyles extends BaseStyles {
 }
 
 @JsonSerializable()
+class ShopProductsStyles extends BaseStyles {
+  ShopProductsStyles();
+
+  @JsonKey(name: 'width', defaultValue: 0)
+  double width;
+
+  @JsonKey(name: 'itemWidth', defaultValue: 0)
+  double itemWidth;
+  @JsonKey(name: 'itemHeight', defaultValue: 0)
+  double itemHeight;
+
+  @JsonKey(name: 'productTemplateColumns', defaultValue: 0)
+  num productTemplateColumns;
+  @JsonKey(name: 'productTemplateRows', defaultValue: 0)
+  num productTemplateRows;
+
+  factory ShopProductsStyles.fromJson(Map<String, dynamic> json) => _$ShopProductsStylesFromJson(json);
+  Map<String, dynamic> toJson() => _$ShopProductsStylesToJson(this);
+}
+
+@JsonSerializable()
 class Data {
   Data();
 
