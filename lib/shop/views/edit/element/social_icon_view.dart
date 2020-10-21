@@ -9,10 +9,15 @@ class SocialIconView extends StatefulWidget {
   final String deviceTypeId;
   final SectionStyleSheet sectionStyleSheet;
 
-  const SocialIconView({this.child, this.stylesheets, this.deviceTypeId, this.sectionStyleSheet});
+  const SocialIconView(
+      {this.child,
+      this.stylesheets,
+      this.deviceTypeId,
+      this.sectionStyleSheet});
 
   @override
-  _SocialIconViewState createState() => _SocialIconViewState(child, sectionStyleSheet);
+  _SocialIconViewState createState() =>
+      _SocialIconViewState(child, sectionStyleSheet);
 }
 
 class _SocialIconViewState extends State<SocialIconView> {
@@ -37,25 +42,46 @@ class _SocialIconViewState extends State<SocialIconView> {
         styles.display == 'none' ||
         (styleSheet() != null && styleSheet().display == 'none'))
       return Container();
-    String asset = 'assets/images/shop-edit-cart6.svg';
-    switch(child.data['variant']) {
-      case 'square-cart':
-        asset = 'assets/images/shop-edit-cart1.svg';
+    String asset;
+    switch (child.data['variant']) {
+      case 'instagram':
+        asset = 'assets/images/social-icon-instagram.svg';
         break;
-      case 'angular-cart':
-        asset = 'assets/images/shop-edit-cart2.svg';
+      case 'facebook':
+        asset = 'assets/images/social-icon-facebook.svg';
         break;
-      case 'flat-cart':
-        asset = 'assets/images/shop-edit-cart3.svg';
+      case 'youtube':
+        asset = 'assets/images/social-icon-youtube.svg';
         break;
-      case 'square-cart--empty':
-        asset = 'assets/images/shop-edit-cart4.svg';
+      case 'linkedin':
+        asset = 'assets/images/social-icon-linkedin.svg';
         break;
-      case 'angular-cart--empty':
-        asset = 'assets/images/shop-edit-cart5.svg';
+      case 'google':
+        asset = 'assets/images/social-icon-google.svg';
         break;
-      case 'flat-cart--empty':
-        asset = 'assets/images/shop-edit-cart6.svg';
+      case 'twitter':
+        asset = 'assets/images/social-icon-twitter.svg';
+        break;
+      case 'telegram':
+        asset = 'assets/images/social-icon-telegram.svg';
+        break;
+      case 'messenger':
+        asset = 'assets/images/social-icon-messenger.svg';
+        break;
+      case 'pinterest':
+        asset = 'assets/images/social-icon-pinterest.svg';
+        break;
+      case 'dribble':
+        asset = 'assets/images/social-icon-dribble.svg';
+        break;
+      case 'tiktok':
+        asset = 'assets/images/social-icon-tiktok.svg';
+        break;
+      case 'whatsapp':
+        asset = 'assets/images/social-icon-whatsapp.svg';
+        break;
+      case 'mail':
+        asset = 'assets/images/social-icon-mail.svg';
         break;
       default:
         break;
@@ -79,7 +105,8 @@ class _SocialIconViewState extends State<SocialIconView> {
 
   SocialIconStyles styleSheet() {
     try {
-      print('Social Icon Styles: ${ widget.stylesheets[widget.deviceTypeId][child.id]}');
+      print(
+          'Social Icon Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
       return SocialIconStyles.fromJson(
           widget.stylesheets[widget.deviceTypeId][child.id]);
     } catch (e) {
