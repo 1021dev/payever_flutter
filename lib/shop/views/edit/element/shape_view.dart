@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/element/sub_element/background_view.dart';
@@ -58,7 +57,10 @@ class _ShapeViewState extends State<ShapeView> {
     return Container(
       width: styles.width,
       height: styles.height,
-      color: colorConvert(styles.backgroundColor),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.elliptical(styles.width, styles.height)),
+//        color: colorConvert(styles.backgroundColor),
+      ),
       margin: EdgeInsets.only(
           left: styles.getMarginLeft(sectionStyleSheet),
           right: styles.marginRight,

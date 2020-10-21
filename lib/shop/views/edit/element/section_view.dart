@@ -10,7 +10,6 @@ import 'package:payever/shop/views/edit/element/shop_cart_view.dart';
 import 'package:payever/shop/views/edit/element/sub_element/background_view.dart';
 import 'package:payever/shop/views/edit/element/text_view.dart';
 import 'package:payever/commons/utils/draggable_widget.dart';
-import '../../../../theme.dart';
 import 'button_view.dart';
 import 'image_view.dart';
 

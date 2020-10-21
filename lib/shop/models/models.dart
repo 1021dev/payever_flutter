@@ -658,6 +658,3 @@ class ChildAction {
   factory ChildAction.fromJson(Map<String, dynamic> json) => _$ChildActionFromJson(json);
   Map<String, dynamic> toJson() => _$ChildActionToJson(this);
 }
-
-enum ChildType { text, button, image, block, menu, logo, shape, shopCart, shopCategory, shopProducts }
-
