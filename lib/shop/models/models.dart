@@ -355,17 +355,7 @@ class BaseStyles {
   @JsonKey(name: 'backgroundPosition', defaultValue: 'center')
   String backgroundPosition;// initial, center
   Alignment getBackgroundImageAlignment() {
-    if (backgroundPosition == 'center')
-      return Alignment.center;
-    if (backgroundPosition == 'top')
-      return Alignment.topCenter;
-    if (backgroundPosition == 'bottom')
-      return Alignment.bottomCenter;
-    if (backgroundPosition == 'right')
-      return Alignment.centerRight;
-    if (backgroundPosition == 'left')
-      return Alignment.centerLeft;
-    return Alignment.topLeft;
+    return getAlign(backgroundPosition);
   }
 
   @JsonKey(name: 'backgroundRepeat', defaultValue: 'no-repeat')
@@ -408,7 +398,7 @@ class BaseStyles {
   double opacity;
 
   // Stroke
-  @JsonKey(name: 'stroke', defaultValue: "#000")
+  @JsonKey(name: 'stroke', defaultValue: "#000000")
   String stroke;
   @JsonKey(name: 'strokeDasharray', defaultValue: '')
   String strokeDasharray;
@@ -489,18 +479,7 @@ class BaseStyles {
   @JsonKey(name: 'fontWeight', defaultValue: 400)
   dynamic fontWeight;
   FontWeight textFontWeight() {
-    if (fontWeight == 'bold') {
-      return FontWeight.bold;
-    }
-    if (fontWeight < 200) return FontWeight.w100;
-    if (fontWeight < 300) return FontWeight.w200;
-    if (fontWeight < 400) return FontWeight.w300;
-    if (fontWeight < 500) return FontWeight.w400;
-    if (fontWeight < 600) return FontWeight.w500;
-    if (fontWeight < 700) return FontWeight.w600;
-    if (fontWeight < 800) return FontWeight.w700;
-    if (fontWeight < 900) return FontWeight.w800;
-    return FontWeight.w900;
+    return getFontWeight(fontWeight);
   }
   @JsonKey(
       name: "fontFamily",
@@ -525,6 +504,37 @@ class BaseStyles {
     for (int i = 0; i < column - 1; i ++)
       margin += double.parse(columns[i]);
     return margin;
+  }
+
+  Alignment getAlign(String align) {
+    if (align == 'center')
+      return Alignment.center;
+    if (align == 'top')
+      return Alignment.topCenter;
+    if (align == 'bottom')
+      return Alignment.bottomCenter;
+    if (align == 'right')
+      return Alignment.centerRight;
+    if (align == 'left')
+      return Alignment.centerLeft;
+    return Alignment.topLeft;
+  }
+
+  FontWeight getFontWeight(dynamic fontWeight) {
+    if (fontWeight == 'bold')
+      return FontWeight.bold;
+    if (fontWeight == 'normal')
+      return FontWeight.w400;
+
+    if (fontWeight < 200) return FontWeight.w100;
+    if (fontWeight < 300) return FontWeight.w200;
+    if (fontWeight < 400) return FontWeight.w300;
+    if (fontWeight < 500) return FontWeight.w400;
+    if (fontWeight < 600) return FontWeight.w500;
+    if (fontWeight < 700) return FontWeight.w600;
+    if (fontWeight < 800) return FontWeight.w700;
+    if (fontWeight < 900) return FontWeight.w800;
+    return FontWeight.w900;
   }
 
   factory BaseStyles.fromJson(Map<String, dynamic> json) => _$BaseStylesFromJson(json);
@@ -569,13 +579,7 @@ class TextStyles extends BaseStyles {
   }
 
   Alignment getTextContainAlign() {
-    if (textAlign == 'center')
-      return Alignment.center;
-    if (textAlign == 'left')
-      return Alignment.centerLeft;
-    if (textAlign == 'right')
-      return Alignment.centerRight;
-    return Alignment.center;
+    return getAlign(textAlign);
   }
 
   // Size String('100%') or double
@@ -671,6 +675,47 @@ class ShopProductsStyles extends BaseStyles {
   num productTemplateColumns;
   @JsonKey(name: 'productTemplateRows', defaultValue: 0)
   num productTemplateRows;
+
+  // Text
+  @JsonKey(name: 'textAlign', defaultValue: 'center')
+  String textAlign;
+  Alignment getTextAlign() {
+    return getAlign(textAlign);
+  }
+  // Title
+  @JsonKey(name: 'titleFontSize', defaultValue: 13)
+  double titleFontSize;
+  @JsonKey(name: 'titleColor', defaultValue: '#000000')
+  String titleColor;
+  @JsonKey(name: 'titleFontFamily', defaultValue: 'Roboto')
+  String titleFontFamily;
+  @JsonKey(name: 'titleFontWeight', defaultValue: 'bold')
+  String titleFontWeight;
+  FontWeight getTitleFontWeight() {
+    return getFontWeight(titleFontWeight);
+  }
+
+  @JsonKey(name: 'titleFontStyle')
+  dynamic titleFontStyle;
+  @JsonKey(name: 'titleTextDecoration')
+  dynamic titleTextDecoration;
+
+  // Price
+  @JsonKey(name: 'priceFontSize', defaultValue: 13)
+  double priceFontSize;
+  @JsonKey(name: 'priceColor', defaultValue: '#a5a5a5')
+  String priceColor;
+  @JsonKey(name: 'priceFontFamily', defaultValue: 'Roboto')
+  String priceFontFamily;
+  @JsonKey(name: 'priceFontWeight', defaultValue: 'normal')
+  String priceFontWeight;
+  FontWeight getPriceFontWeight() {
+    return getFontWeight(priceFontWeight);
+  }
+  @JsonKey(name: 'priceFontStyle')
+  dynamic priceFontStyle;
+  @JsonKey(name: 'priceTextDecoration')
+  dynamic priceTextDecoration;
 
   factory ShopProductsStyles.fromJson(Map<String, dynamic> json) => _$ShopProductsStylesFromJson(json);
   Map<String, dynamic> toJson() => _$ShopProductsStylesToJson(this);

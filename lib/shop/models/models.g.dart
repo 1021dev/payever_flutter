@@ -1264,7 +1264,20 @@ ShopProductsStyles _$ShopProductsStylesFromJson(Map<String, dynamic> json) {
     ..itemWidth = (json['itemWidth'] as num)?.toDouble() ?? 0
     ..itemHeight = (json['itemHeight'] as num)?.toDouble() ?? 0
     ..productTemplateColumns = json['productTemplateColumns'] as num ?? 0
-    ..productTemplateRows = json['productTemplateRows'] as num ?? 0;
+    ..productTemplateRows = json['productTemplateRows'] as num ?? 0
+    ..textAlign = json['textAlign'] as String ?? 'center'
+    ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 13
+    ..titleColor = json['titleColor'] as String ?? '#000000'
+    ..titleFontFamily = json['titleFontFamily'] as String ?? 'Roboto'
+    ..titleFontWeight = json['titleFontWeight'] as String ?? 'bold'
+    ..titleFontStyle = json['titleFontStyle']
+    ..titleTextDecoration = json['titleTextDecoration']
+    ..priceFontSize = (json['priceFontSize'] as num)?.toDouble() ?? 13
+    ..priceColor = json['priceColor'] as String ?? '#a5a5a5'
+    ..priceFontFamily = json['priceFontFamily'] as String ?? 'Roboto'
+    ..priceFontWeight = json['priceFontWeight'] as String ?? 'normal'
+    ..priceFontStyle = json['priceFontStyle']
+    ..priceTextDecoration = json['priceTextDecoration'];
 }
 
 Map<String, dynamic> _$ShopProductsStylesToJson(ShopProductsStyles instance) =>
@@ -1318,6 +1331,19 @@ Map<String, dynamic> _$ShopProductsStylesToJson(ShopProductsStyles instance) =>
       'itemHeight': instance.itemHeight,
       'productTemplateColumns': instance.productTemplateColumns,
       'productTemplateRows': instance.productTemplateRows,
+      'textAlign': instance.textAlign,
+      'titleFontSize': instance.titleFontSize,
+      'titleColor': instance.titleColor,
+      'titleFontFamily': instance.titleFontFamily,
+      'titleFontWeight': instance.titleFontWeight,
+      'titleFontStyle': instance.titleFontStyle,
+      'titleTextDecoration': instance.titleTextDecoration,
+      'priceFontSize': instance.priceFontSize,
+      'priceColor': instance.priceColor,
+      'priceFontFamily': instance.priceFontFamily,
+      'priceFontWeight': instance.priceFontWeight,
+      'priceFontStyle': instance.priceFontStyle,
+      'priceTextDecoration': instance.priceTextDecoration,
     };
 
 Data _$DataFromJson(Map<String, dynamic> json) {

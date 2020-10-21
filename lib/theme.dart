@@ -231,8 +231,14 @@ String iconString() {
 Color colorConvert(String color, {bool emptyColor = false}) {
   if (color == null)
     return Colors.white;
-
   color = color.replaceAll("#", "");
+
+  if (color.length < 6) {
+    while(color.length < 6) {
+      color = color + '0';
+    }
+  }
+
   if (color.length == 6) {
     return Color(int.parse("0xFF"+color));
   } else if (color.length == 8) {

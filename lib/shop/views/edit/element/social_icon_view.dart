@@ -64,8 +64,8 @@ class _SocialIconViewState extends State<SocialIconView> {
 
   SocialIconStyles styleSheet() {
     try {
-      print(
-          'Social Icon Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
+//      print(
+//          'Social Icon Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
       return SocialIconStyles.fromJson(
           widget.stylesheets[widget.deviceTypeId][child.id]);
     } catch (e) {
