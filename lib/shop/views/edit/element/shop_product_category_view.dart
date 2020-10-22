@@ -24,7 +24,7 @@ class _ShopProductCategoryViewState extends State<ShopProductCategoryView> {
   final Child child;
   final SectionStyleSheet sectionStyleSheet;
   ShopProductCategoryStyles styles;
-
+  CategoryData data;
   _ShopProductCategoryViewState(this.child, this.sectionStyleSheet);
 
   @override
@@ -33,6 +33,11 @@ class _ShopProductCategoryViewState extends State<ShopProductCategoryView> {
     if (styles == null && child.styles != null && child.styles.isNotEmpty) {
       styles = ShopProductCategoryStyles.fromJson(child.styles);
     }
+
+    try {
+      data = CategoryData.fromJson(child.data);
+    } catch (e) {}
+
     return _body();
   }
 
@@ -67,7 +72,12 @@ class _ShopProductCategoryViewState extends State<ShopProductCategoryView> {
             flex: 1,
             child: Text(
               'Category Title',
-              style: TextStyle(color: Colors.black, fontSize: 30),
+              style: TextStyle(
+                fontSize: styles.categoryTitleFontSize,
+                fontStyle: styles.getCategoryTitleFontStyle(),
+                fontWeight: styles.getCategoryTitleFontWeight(),
+                color: colorConvert(styles.categoryTitleColor),
+              ),
             ),
           ),
           Container(
@@ -120,6 +130,7 @@ class _ShopProductCategoryViewState extends State<ShopProductCategoryView> {
           decoration: BoxDecoration(
             border: Border.all(color: Colors.grey, width: 0.5),
           ),
+          padding: EdgeInsets.all(10),
           child: Column(
             children: [
               Expanded(
@@ -135,31 +146,37 @@ class _ShopProductCategoryViewState extends State<ShopProductCategoryView> {
               ),
               Column(
                 children: [
-                  Container(
-                    margin: EdgeInsets.only(top: 5),
-                    width: double.infinity,
-                    alignment: styles.getTextAlign(),
-                    child: Text(
-                      'Product A',
-                      style: TextStyle(
-                        fontSize: styles.titleFontSize,
-                        fontStyle: styles.getTitleFontStyle(),
-                        fontWeight: styles.getTitleFontWeight(),
-                        color: colorConvert(styles.titleColor),
+                  Visibility(
+                    visible: !data.hideProductName,
+                    child: Container(
+                      margin: EdgeInsets.only(top: 5),
+                      width: double.infinity,
+                      alignment: styles.getTextAlign(),
+                      child: Text(
+                        'Product A',
+                        style: TextStyle(
+                          fontSize: styles.titleFontSize,
+                          fontStyle: styles.getTitleFontStyle(),
+                          fontWeight: styles.getTitleFontWeight(),
+                          color: colorConvert(styles.titleColor),
+                        ),
                       ),
                     ),
                   ),
-                  Container(
-                    width: double.infinity,
-                    alignment: styles.getTextAlign(),
-                    margin: EdgeInsets.symmetric(vertical: 5),
-                    child: Text(
-                      '\$ 39.00',
-                      style: TextStyle(
-                        fontSize: styles.priceFontSize,
-                        fontStyle: styles.getPriceFontStyle(),
-                        fontWeight: styles.getPriceFontWeight(),
-                        color: colorConvert(styles.priceColor),
+                  Visibility(
+                    visible: !data.hideProductPrice,
+                    child: Container(
+                      width: double.infinity,
+                      alignment: styles.getTextAlign(),
+                      margin: EdgeInsets.symmetric(vertical: 5),
+                      child: Text(
+                        '\$ 39.00',
+                        style: TextStyle(
+                          fontSize: styles.priceFontSize,
+                          fontStyle: styles.getPriceFontStyle(),
+                          fontWeight: styles.getPriceFontWeight(),
+                          color: colorConvert(styles.priceColor),
+                        ),
                       ),
                     ),
                   )

@@ -2194,6 +2194,24 @@ Map<String, dynamic> _$VideoDataToJson(VideoData instance) => <String, dynamic>{
       'sourceType': instance.sourceType,
     };
 
+CategoryData _$CategoryDataFromJson(Map<String, dynamic> json) {
+  return CategoryData()
+    ..text = json['text'] as String
+    ..categoryIds = json['categoryIds'] as List ?? []
+    ..hideProductName = json['hideProductName'] as bool ?? false
+    ..hideProductPrice = json['hideProductPrice'] as bool ?? false
+    ..categoryType = json['categoryType'] as Map<String, dynamic>;
+}
+
+Map<String, dynamic> _$CategoryDataToJson(CategoryData instance) =>
+    <String, dynamic>{
+      'text': instance.text,
+      'categoryIds': instance.categoryIds,
+      'hideProductName': instance.hideProductName,
+      'hideProductPrice': instance.hideProductPrice,
+      'categoryType': instance.categoryType,
+    };
+
 ChildAction _$ChildActionFromJson(Map<String, dynamic> json) {
   return ChildAction()
     ..type = json['type'] as String

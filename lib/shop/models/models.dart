@@ -871,6 +871,25 @@ class VideoData {
 }
 
 @JsonSerializable()
+class CategoryData {
+  CategoryData();
+
+  @JsonKey(name: 'text')
+  String text;
+  @JsonKey(name: 'categoryIds', defaultValue: [])
+  List<dynamic> categoryIds;
+  @JsonKey(name: 'hideProductName', defaultValue: false)
+  bool hideProductName;
+  @JsonKey(name: 'hideProductPrice', defaultValue: false)
+  bool hideProductPrice;
+  @JsonKey(name: 'categoryType')
+  Map<String, dynamic> categoryType; // {name: "Custom", value: "custom"}
+
+  factory CategoryData.fromJson(Map<String, dynamic> json) => _$CategoryDataFromJson(json);
+  Map<String, dynamic> toJson() => _$CategoryDataToJson(this);
+}
+
+@JsonSerializable()
 class ChildAction {
   ChildAction();
 
