@@ -60,7 +60,7 @@ class _ShopProductDetailViewState extends State<ShopProductDetailView> {
                 'Product Title',
                 style: TextStyle(
                   fontSize: styles.textFontSize() + 10,
-                  fontStyle: styles.textFontStlye(),
+                  fontStyle: styles.textFontStyle(),
                   fontWeight: FontWeight.bold,
                   color: colorConvert(styles.color),
                 ),
@@ -70,7 +70,7 @@ class _ShopProductDetailViewState extends State<ShopProductDetailView> {
               '100.00 VAT included',
               style: TextStyle(
                 fontSize: styles.textFontSize(),
-                fontStyle: styles.textFontStlye(),
+                fontStyle: styles.textFontStyle(),
                 fontWeight: styles.textFontWeight(),
                 color: colorConvert(styles.color),
               ),
@@ -80,7 +80,7 @@ class _ShopProductDetailViewState extends State<ShopProductDetailView> {
               'Product Description',
               style: TextStyle(
                 fontSize: styles.textFontSize(),
-                fontStyle: styles.textFontStlye(),
+                fontStyle: styles.textFontStyle(),
                 color: colorConvert(styles.color),
               ),
             ),
