@@ -14,6 +14,7 @@ import 'package:payever/shop/views/edit/element/shop_products_view.dart';
 import 'package:payever/shop/views/edit/element/social_icon_view.dart';
 import 'package:payever/shop/views/edit/element/sub_element/background_view.dart';
 import 'package:payever/shop/views/edit/element/text_view.dart';
+import 'package:payever/shop/views/edit/element/video_view.dart';
 import 'button_view.dart';
 import 'image_view.dart';
 
@@ -85,6 +86,14 @@ class _SectionViewState extends State<SectionView> {
           break;
         case 'image':
           widget = ImageView(
+            child: child,
+            stylesheets: stylesheets,
+            deviceTypeId: shopPage.stylesheetIds.mobile,
+            sectionStyleSheet: styleSheet,
+          );
+          break;
+        case 'video':
+          widget = VideoView(
             child: child,
             stylesheets: stylesheets,
             deviceTypeId: shopPage.stylesheetIds.mobile,

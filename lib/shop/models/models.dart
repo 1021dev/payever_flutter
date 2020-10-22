@@ -328,10 +328,19 @@ class BaseStyles {
   String backgroundColor;
   @JsonKey(name: 'backgroundImage', defaultValue: '')
   String backgroundImage;
-
   // ------------------------------------------------------
   // ------------------------------------------------------
   // Only for Section and Shape Background
+  @JsonKey(name: 'backgroundSize')
+  String backgroundSize;
+  @JsonKey(name: 'backgroundPosition', defaultValue: 'center')
+  String backgroundPosition;// initial, center
+  @JsonKey(name: 'backgroundRepeat', defaultValue: 'no-repeat')
+  String backgroundRepeat;//repeat, no-repeat, space
+  // Section and Shape Background
+  Alignment getBackgroundImageAlignment() {
+    return getAlign(backgroundPosition);
+  }
   Gradient getGradient() {
     String txt = backgroundImage
         .replaceAll('linear-gradient', '')
@@ -349,18 +358,6 @@ class BaseStyles {
           colorConvert(color2),
         ]);
   }
-
-  @JsonKey(name: 'backgroundSize')
-  String backgroundSize;
-
-  @JsonKey(name: 'backgroundPosition', defaultValue: 'center')
-  String backgroundPosition;// initial, center
-  Alignment getBackgroundImageAlignment() {
-    return getAlign(backgroundPosition);
-  }
-
-  @JsonKey(name: 'backgroundRepeat', defaultValue: 'no-repeat')
-  String backgroundRepeat;//repeat, no-repeat, space
   // ------------------------------------------------------
   // ------------------------------------------------------
 
@@ -414,7 +411,6 @@ class BaseStyles {
   double shadowOpacity;
   @JsonKey(name: 'filter', defaultValue: '')
   String filter;//drop-shadow(8.000000000000002pt 13.856406460551018pt 5pt rgba(26,77,124,0.47))
-
 
   // Grid
   @JsonKey(name: 'gridColumn', defaultValue: '1 / span 1')
@@ -470,7 +466,12 @@ class BaseStyles {
       name: "fontFamily",
       defaultValue: "Helvetica Neue,Helvetica,Arial,sans-serif")
   String fontFamily;
-
+  // textAlign is only For Text, Shop Product, Shop Product Category
+  @JsonKey(name: 'textAlign', defaultValue: 'center')
+  String textAlign;
+  Alignment getTextAlign() {
+    return getAlign(textAlign, isTextStyle: true);
+  }
   double textFontSize() {
     return (fontSize is num) ? (fontSize as num).toDouble() : 0;
   }
@@ -497,12 +498,6 @@ class BaseStyles {
   String titleFontStyle;
   @JsonKey(name: 'titleTextDecoration')
   dynamic titleTextDecoration;
-  FontWeight getTitleFontWeight() {
-    return getFontWeight(titleFontWeight);
-  }
-  FontStyle getTitleFontStyle() {
-    return getFontStyle(titleFontStyle);
-  }
 
   // Price
   @JsonKey(name: 'priceFontSize', defaultValue: 13)
@@ -517,6 +512,13 @@ class BaseStyles {
   String priceFontStyle;
   @JsonKey(name: 'priceTextDecoration')
   dynamic priceTextDecoration;
+
+  FontWeight getTitleFontWeight() {
+    return getFontWeight(titleFontWeight);
+  }
+  FontStyle getTitleFontStyle() {
+    return getFontStyle(titleFontStyle);
+  }
   FontWeight getPriceFontWeight() {
     return getFontWeight(priceFontWeight);
   }
@@ -553,7 +555,6 @@ class BaseStyles {
   dynamic filterTextDecoration;
   // ------------------------------------------------------
   // ------------------------------------------------------
-
 
   double getMarginTop(SectionStyleSheet sectionStyleSheet) {
     double margin = marginTop;
@@ -659,20 +660,6 @@ class SectionStyleSheet extends BaseStyles {
 class TextStyles extends BaseStyles {
   TextStyles();
 
-  @JsonKey(name: 'textAlign', defaultValue: 'center')
-  String textAlign;
-
-  TextAlign getTextAlign() {
-    if (textAlign == 'center')
-      return TextAlign.center;
-    if (textAlign == 'left')
-      return TextAlign.left;
-    if (textAlign == 'right')
-      return TextAlign.right;
-
-    return TextAlign.center;
-  }
-
   Alignment getTextContainAlign() {
     return getAlign(textAlign);
   }
@@ -775,13 +762,6 @@ class ShopProductsStyles extends BaseStyles {
   @JsonKey(name: 'productTemplateRows', defaultValue: 0)
   num productTemplateRows;
 
-  // Text
-  @JsonKey(name: 'textAlign', defaultValue: 'center')
-  String textAlign;
-  Alignment getTextAlign() {
-    return getAlign(textAlign);
-  }
-
   factory ShopProductsStyles.fromJson(Map<String, dynamic> json) => _$ShopProductsStylesFromJson(json);
   Map<String, dynamic> toJson() => _$ShopProductsStylesToJson(this);
 }
@@ -826,13 +806,6 @@ class ShopProductCategoryStyles extends BaseStyles {
   @JsonKey(name: 'imageCorners', defaultValue:'rounded')
   String imageCorners;
 
-  // Text
-  @JsonKey(name: 'textAlign', defaultValue: 'center')
-  String textAlign;
-  Alignment getTextAlign() {
-    return getAlign(textAlign);
-  }
-  
   double getCategoryBorderRadius() {
     return getBorderRadius(borderRadius);
   }
@@ -866,6 +839,24 @@ class Data {
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
   Map<String, dynamic> toJson() => _$DataToJson(this);
+}
+
+@JsonSerializable()
+class VideoData {
+  VideoData();
+
+  @JsonKey(name: 'text')      String text;
+  @JsonKey(name: 'autoplay', defaultValue: false)      bool autoplay;
+  @JsonKey(name: 'controls')    dynamic controls;
+  @JsonKey(name: 'file')      dynamic file;
+  @JsonKey(name: 'loop', defaultValue: false)       bool loop;
+  @JsonKey(name: 'preview')     String preview;
+  @JsonKey(name: 'sound')      dynamic sound;
+  @JsonKey(name: 'source')      String source;
+  @JsonKey(name: 'sourceType')   Map<String, dynamic> sourceType; // {name: "My video", value: "my-video"}
+
+//  factory VideoData.fromJson(Map<String, dynamic> json) => _$VideoDataFromJson(json);
+//  Map<String, dynamic> toJson() => _$VideoDataToJson(this);
 }
 
 @JsonSerializable()
