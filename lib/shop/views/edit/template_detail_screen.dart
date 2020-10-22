@@ -41,32 +41,18 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
             stylesheets: stylesheets,
           ),
         ),
-//      floatingActionButton: FloatingActionButton(
-//        onPressed: () {
-//          setState(() {
-//            _controller.value.isPlaying
-//                ? _controller.pause()
-//                : _controller.play();
-//          });
-//        },
-//        child: Icon(
-//          _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
-//        ),
-//      ),
-
     );
   }
 
-
-
-  Widget resizeableDemo() {
+  get resizeableDemo {
     return Container(
       child: ResizeableWidget(
         child: Container(color: Colors.red, width: 500, height: 200,),
       ),
     );
   }
-  Widget _dragSize() {
+
+  get _dragSize {
     return StreamBuilder(
       stream: controller.stream,
       builder: (context, snapshot) => Container(
@@ -89,7 +75,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
     );
   }
 
-  Widget _draggable() {
+  get _draggable {
     return Container(
       color: Colors.white,
       child: Stack(
@@ -117,7 +103,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
     );
   }
 
-  Widget _body() {
+  get _body {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

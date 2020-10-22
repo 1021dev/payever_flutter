@@ -11,7 +11,11 @@ class VideoView extends StatefulWidget {
   final String deviceTypeId;
   final SectionStyleSheet sectionStyleSheet;
 
-  const VideoView({this.child, this.stylesheets, this.deviceTypeId, this.sectionStyleSheet});
+  const VideoView(
+      {this.child,
+      this.stylesheets,
+      this.deviceTypeId,
+      this.sectionStyleSheet});
 
   @override
   _VideoViewState createState() => _VideoViewState(child, sectionStyleSheet);
@@ -22,8 +26,11 @@ class _VideoViewState extends State<VideoView> {
   final SectionStyleSheet sectionStyleSheet;
   ImageStyles styles;
   VideoData data;
+
   _VideoViewState(this.child, this.sectionStyleSheet);
+
   VideoPlayerController _controller;
+  bool videoLoading = false;
 
   @override
   void initState() {
@@ -33,8 +40,7 @@ class _VideoViewState extends State<VideoView> {
   @override
   void dispose() {
     super.dispose();
-    if (data.controls)
-      _controller.dispose();
+    if (data.controls && _controller != null) _controller.dispose();
   }
 
   @override
@@ -45,16 +51,15 @@ class _VideoViewState extends State<VideoView> {
   Widget _body() {
     styles = styleSheet();
     if (styles == null && child.styles != null && child.styles.isNotEmpty) {
-      styles = ImageStyles.fromJson(child.styles) ;
+      styles = ImageStyles.fromJson(child.styles);
     }
     if (styles == null || styles.display == 'none') return Container();
-
 
     try {
       data = VideoData.fromJson(child.data);
     } catch (e) {}
 
-    if (data == null/* || data.preview == null || data.preview.isEmpty*/)
+    if (data == null /* || data.preview == null || data.preview.isEmpty*/)
       return Container();
 
     return Container(
@@ -71,32 +76,8 @@ class _VideoViewState extends State<VideoView> {
           previewView,
           videoPlayerView,
           Visibility(
-            visible: data.controls,
-            child: Positioned(
-              bottom: 10,
-              right: 10,
-              child: IconButton(
-                onPressed: () {
-                  if (_controller == null) {
-                    print('Initializing videoView...');
-                    _controller = VideoPlayerController.network('http://www.sample-videos.com/video123/mp4/720/big_buck_bunny_720p_20mb.mp4'/*data.source*/)
-                      ..initialize().then((_) {
-                        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-                        setState(() {});
-                      });
-                    return;
-                  }
-                  setState(() {
-                    _controller.value.isPlaying
-                        ? _controller.pause()
-                        : _controller.play();
-                  });
-                },
-                icon: Icon(
-                  _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
-                ),
-              )),
-          )
+              visible: data.controls,
+              child: Positioned(bottom: 10, right: 10, child: playButton))
         ],
       ),
     );
@@ -132,7 +113,6 @@ class _VideoViewState extends State<VideoView> {
               child: Center(
                 child: SvgPicture.asset(
                   'assets/images/no_video.svg',
-                  color: Colors.grey,
                   width: double.infinity,
                   height: double.infinity,
                 ),
@@ -149,23 +129,55 @@ class _VideoViewState extends State<VideoView> {
   }
 
   get videoPlayerView {
-    if (_controller == null)
-      return Container();
+    if (_controller == null) return Container();
+    if (videoLoading) return Center(child: CircularProgressIndicator());
 
     return Center(
       child: _controller.value.initialized
           ? AspectRatio(
-        aspectRatio: _controller.value.aspectRatio,
-        child: VideoPlayer(_controller),
-      )
+              aspectRatio: _controller.value.aspectRatio,
+              child: VideoPlayer(_controller),
+            )
           : Container(),
+    );
+  }
+
+  get playButton {
+    return IconButton(
+      onPressed: () {
+        if (_controller == null) {
+          print('Initializing videoView...');
+          _controller = VideoPlayerController.network(data.source)
+            ..initialize().then((_) {
+              // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+              setState(() {
+                videoLoading = false;
+                _controller.play();
+              });
+            });
+          setState(() {
+            videoLoading = true;
+          });
+          return;
+        }
+        setState(() {
+          _controller.value.isPlaying
+              ? _controller.pause()
+              : _controller.play();
+        });
+      },
+      icon: Icon(
+        _controller == null || !_controller.value.isPlaying
+            ? Icons.play_arrow
+            : Icons.pause,
+      ),
     );
   }
 
   ImageStyles styleSheet() {
     try {
-      print(
-          'Video Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
+//      print(
+//          'Video Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
       return ImageStyles.fromJson(
           widget.stylesheets[widget.deviceTypeId][child.id]);
     } catch (e) {

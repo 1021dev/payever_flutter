@@ -486,7 +486,7 @@ class BaseStyles {
 
   // ShopProductsStyles and ShopProductsCategory
   // Title
-  @JsonKey(name: 'titleFontSize', defaultValue: 13)
+  @JsonKey(name: 'titleFontSize', defaultValue: 12)
   double titleFontSize;
   @JsonKey(name: 'titleColor', defaultValue: '#000000')
   String titleColor;
@@ -500,7 +500,7 @@ class BaseStyles {
   dynamic titleTextDecoration;
 
   // Price
-  @JsonKey(name: 'priceFontSize', defaultValue: 13)
+  @JsonKey(name: 'priceFontSize', defaultValue: 12)
   double priceFontSize;
   @JsonKey(name: 'priceColor', defaultValue: '#a5a5a5')
   String priceColor;
@@ -527,7 +527,7 @@ class BaseStyles {
   }
 
   // CategoryTitle
-  @JsonKey(name: 'categoryTitleFontSize', defaultValue: 13)
+  @JsonKey(name: 'categoryTitleFontSize', defaultValue: 14)
   double categoryTitleFontSize;
   @JsonKey(name: 'categoryTitleColor', defaultValue: '#000000')
   String categoryTitleColor;
@@ -729,6 +729,9 @@ class ImageStyles extends BaseStyles {
 
   @JsonKey(name: 'width', defaultValue: 0)
   double width;
+//  saturate(100%) brightness(100%
+  @JsonKey(name: 'imageFilter', defaultValue: 0)
+  String imageFilter;
 
   factory ImageStyles.fromJson(Map<String, dynamic> json) => _$ImageStylesFromJson(json);
   Map<String, dynamic> toJson() => _$ImageStylesToJson(this);

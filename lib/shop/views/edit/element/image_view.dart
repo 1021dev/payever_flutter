@@ -20,6 +20,8 @@ class _ImageViewState extends State<ImageView> {
   final Child child;
   final SectionStyleSheet sectionStyleSheet;
   ImageStyles styles;
+  Data data;
+
   _ImageViewState(this.child, this.sectionStyleSheet);
 
   @override
@@ -28,13 +30,13 @@ class _ImageViewState extends State<ImageView> {
   }
 
   Widget _body() {
-    if (child.styles != null && child.styles.isNotEmpty) {
+    styles = styleSheet();
+    if (styles == null && child.styles != null && child.styles.isNotEmpty) {
       styles = ImageStyles.fromJson(child.styles);
-    } else {
-      styles = styleSheet();
     }
 
-    Data data;
+    if (styles == null || styles.display == 'none') return Container();
+
     try {
       data = Data.fromJson(child.data);
     } catch (e) {}
@@ -45,66 +47,121 @@ class _ImageViewState extends State<ImageView> {
     } else {
       if (data == null)
         return Container();
+      url = data.src;
     }
 
-    if (styleSheet() != null && styleSheet().display == 'none')
-      return Container();
-
-    return Container(
-      height: styles.height,
-      width: styles.width,
+    return Opacity(
+      opacity: styles.opacity,
+      child: Container(
+        height: styles.height,
+        width: styles.width,
+        decoration: decoration,
 //      color: colorConvert(styles.backgroundColor),
-      margin: EdgeInsets.only(
-          left: styles.getMarginLeft(sectionStyleSheet),
-          right: styles.marginRight,
-          top: styles.getMarginTop(sectionStyleSheet),
-          bottom: styles.marginBottom),
-      child: CachedNetworkImage(
-        imageUrl: url,
-        imageBuilder: (context, imageProvider) => Container(
-          decoration: BoxDecoration(
-            color: Colors.transparent,
-            borderRadius: BorderRadius.circular(4),
-            image: DecorationImage(
-              image: imageProvider,
-              fit: BoxFit.contain,
-            ),
+        margin: EdgeInsets.only(
+            left: styles.getMarginLeft(sectionStyleSheet),
+            right: styles.marginRight,
+            top: styles.getMarginTop(sectionStyleSheet),
+            bottom: styles.marginBottom),
+        child: getImage(url),
+      ),
+    );
+  }
+
+  Widget getImage(String url) {
+    return CachedNetworkImage(
+      imageUrl: url,
+      imageBuilder: (context, imageProvider) => Container(
+        decoration: BoxDecoration(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(4),
+          image: DecorationImage(
+            image: imageProvider,
+            fit: BoxFit.contain,
           ),
         ),
-        placeholder: (context, url) =>
-            Container(child: Center(child: CircularProgressIndicator())),
-        errorWidget: (context, url, error) => Container(
-          width: styles.width,
-          height: styles.height,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(2),
-            border: Border.all(color: Colors.grey, width: 0.5),
-            color: Color.fromRGBO(245, 245, 245, 1),
-          ),
-          padding: EdgeInsets.all(10),
-          child: Column(
-            children: [
-              Expanded(
-                child: Center(
-                  child: SvgPicture.asset(
-                    'assets/images/no_image.svg',
-                    color: Colors.grey,
-                  ),
+      ),
+      placeholder: (context, url) =>
+          Container(child: Center(child: CircularProgressIndicator())),
+      errorWidget: (context, url, error) => Container(
+        width: styles.width,
+        height: styles.height,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(2),
+          border: Border.all(color: Colors.grey, width: 0.5),
+          color: Color.fromRGBO(245, 245, 245, 1),
+        ),
+        padding: EdgeInsets.all(10),
+        child: Column(
+          children: [
+            Expanded(
+              child: Center(
+                child: SvgPicture.asset(
+                  'assets/images/no_image.svg',
+                  color: Colors.grey,
                 ),
               ),
-              Text(
-                'Add image',
-                style: TextStyle(color: Colors.grey, fontSize: 16),
-              )
-            ],
-          ),
+            ),
+            Text(
+              'Add image',
+              style: TextStyle(color: Colors.grey, fontSize: 16),
+            )
+          ],
         ),
       ),
     );
   }
 
+  get decoration {
+    return BoxDecoration(
+      border: border,
+      borderRadius: borderRadius,
+      boxShadow: boxShadow,
+    );
+  }
+
+  get border {
+    if (styles.border == false) {
+      return Border.all(color: Colors.transparent, width: 0);
+    }
+    List<String>borderAttrs = styles.border.toString().split(' ');
+    double borderWidth = double.parse(borderAttrs.first.replaceAll('px', ''));
+    String borderColor = borderAttrs.last;
+    return Border.all(color: colorConvert(borderColor), width: borderWidth);
+  }
+
+  get borderRadius {
+    return BorderRadius.only(
+        topLeft: Radius.circular(0),
+        topRight: Radius.circular(0),
+        bottomLeft: Radius.circular(0),
+        bottomRight: Radius.circular(0)
+    );
+  }
+
+  get boxShadow {
+    if (styles.boxShadow == null || styles.boxShadow == false) {
+      return [BoxShadow(
+        color: Colors.transparent,
+        spreadRadius: 0,
+        blurRadius: 0,
+        offset: Offset.zero, // changes position of shadow
+      )];
+    }
+
+    return [
+      BoxShadow(
+        color: Colors.black.withOpacity(styles.shadowOpacity/100),
+        spreadRadius: 5,
+        blurRadius: styles.shadowBlur,
+        offset: Offset(0, styles.shadowOffset), // changes position of shadow
+      ),
+    ];
+  }
+
   ImageStyles styleSheet() {
     try {
+      print(
+          'Image Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
       return ImageStyles.fromJson(
           widget.stylesheets[widget.deviceTypeId][child.id]);
     } catch (e) {
