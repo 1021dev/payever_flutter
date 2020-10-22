@@ -772,6 +772,18 @@ class ShopProductDetailStyles extends BaseStyles {
 }
 
 @JsonSerializable()
+class ShopProductCategoryStlyes extends BaseStyles {
+  ShopProductCategoryStlyes();
+
+  @JsonKey(name: 'width', defaultValue: 0)
+  double width;
+
+//  {backgroundColor: #ffffff, width: null, height: null, imageCorners: rounded, borderRadius: 50%, textAlign: left, titleFontFamily: Roboto, titleFontWeight: normal, titleFontStyle: null, titleTextDecoration: null, titleFontSize: 17, titleColor: #000, priceFontFamily: Roboto, priceFontWeight: normal, priceFontStyle: italic, priceTextDecoration: null, priceFontSize: 15, priceColor: #1a4d7c, categoryTitleFontFamily: Montserrat, categoryTitleFontWeight: bold, categoryTitleFontStyle: null, categoryTitleTextDecoration: null, categoryTitleFontSize: 45, categoryTitleColor: #000, filterFontFamily: PT Sans, filterFontWeight: normal, filterFontStyle: italic, filterTextDecoration: null, filterFontSize: 18, filterColor: #000}
+//  factory ShopProductCategoryStlyes.fromJson(Map<String, dynamic> json) => _$ShopProductCategoryStlyesFromJson(json);
+//  Map<String, dynamic> toJson() => _$ShopProductCategoryStlyesToJson(this);
+}
+
+@JsonSerializable()
 class Data {
   Data();
 
