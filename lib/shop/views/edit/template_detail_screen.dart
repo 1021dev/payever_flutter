@@ -1,11 +1,9 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:payever/commons/utils/draggable_widget.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/template_view.dart';
-
 import 'element/sub_element/resizeable_widget.dart';
 
 class TemplateDetailScreen extends StatefulWidget {
@@ -24,10 +22,14 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
   final Template template;
   final Map<String, dynamic> stylesheets;
   DragController dragController = DragController();
+
+
   int count = 0;
   _TemplateDetailScreenState(this.shopPage, this.template, this.stylesheets);
   StreamController<double> controller = StreamController.broadcast();
   double position;
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,10 +40,26 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
             template: template,
             stylesheets: stylesheets,
           ),
-        ));
+        ),
+//      floatingActionButton: FloatingActionButton(
+//        onPressed: () {
+//          setState(() {
+//            _controller.value.isPlaying
+//                ? _controller.pause()
+//                : _controller.play();
+//          });
+//        },
+//        child: Icon(
+//          _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+//        ),
+//      ),
+
+    );
   }
 
-  Widget demo() {
+
+
+  Widget resizeableDemo() {
     return Container(
       child: ResizeableWidget(
         child: Container(color: Colors.red, width: 500, height: 200,),

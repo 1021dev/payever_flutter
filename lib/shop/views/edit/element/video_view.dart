@@ -3,24 +3,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/theme.dart';
+import 'package:video_player/video_player.dart';
 
-class ImageView extends StatefulWidget {
+class VideoView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
   final String deviceTypeId;
   final SectionStyleSheet sectionStyleSheet;
 
-  const ImageView({this.child, this.stylesheets, this.deviceTypeId, this.sectionStyleSheet});
+  const VideoView({this.child, this.stylesheets, this.deviceTypeId, this.sectionStyleSheet});
 
   @override
-  _ImageViewState createState() => _ImageViewState(child, sectionStyleSheet);
+  _VideoViewState createState() => _VideoViewState(child, sectionStyleSheet);
 }
 
-class _ImageViewState extends State<ImageView> {
+class _VideoViewState extends State<VideoView> {
   final Child child;
   final SectionStyleSheet sectionStyleSheet;
   ImageStyles styles;
-  _ImageViewState(this.child, this.sectionStyleSheet);
+  _VideoViewState(this.child, this.sectionStyleSheet);
+  VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,32 +41,32 @@ class _ImageViewState extends State<ImageView> {
   }
 
   Widget _body() {
-    if (child.styles != null && child.styles.isNotEmpty) {
-      styles = ImageStyles.fromJson(child.styles);
-    } else {
-      styles = styleSheet();
+    styles = styleSheet();
+    if (styles == null && child.styles != null && child.styles.isNotEmpty) {
+      styles = ImageStyles.fromJson(child.styles) ;
     }
+    if (styles == null || styles.display == 'none') return Container();
 
-    Data data;
+    VideoData data;
     try {
-      data = Data.fromJson(child.data);
+      data = VideoData.fromJson(child.data);
     } catch (e) {}
 
-    String url = '';
-    if (styles.background.isNotEmpty) {
-      url = styles.background;
-    } else {
-      if (data == null)
-        return Container();
-    }
-
-    if (styleSheet() != null && styleSheet().display == 'none')
+    if (data == null/* || data.preview == null || data.preview.isEmpty*/)
       return Container();
+
+    String url = data.preview;
+
+    _controller = VideoPlayerController.network(data.source)
+      ..initialize().then((_) {
+        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+        setState(() {});
+      });
 
     return Container(
       height: styles.height,
       width: styles.width,
-//      color: colorConvert(styles.backgroundColor),
+      color: colorConvert(styles.backgroundColor),
       margin: EdgeInsets.only(
           left: styles.getMarginLeft(sectionStyleSheet),
           right: styles.marginRight,
@@ -87,13 +100,15 @@ class _ImageViewState extends State<ImageView> {
               Expanded(
                 child: Center(
                   child: SvgPicture.asset(
-                    'assets/images/no_image.svg',
+                    'assets/images/no_video.svg',
                     color: Colors.grey,
+                    width: double.infinity,
+                    height: double.infinity,
                   ),
                 ),
               ),
               Text(
-                'Add image',
+                'Add video',
                 style: TextStyle(color: Colors.grey, fontSize: 16),
               )
             ],
@@ -103,8 +118,21 @@ class _ImageViewState extends State<ImageView> {
     );
   }
 
+  get videoPlayerView {
+    return Center(
+      child: _controller.value.initialized
+          ? AspectRatio(
+        aspectRatio: _controller.value.aspectRatio,
+        child: VideoPlayer(_controller),
+      )
+          : Container(),
+    );
+  }
+
   ImageStyles styleSheet() {
     try {
+      print(
+          'Video Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
       return ImageStyles.fromJson(
           widget.stylesheets[widget.deviceTypeId][child.id]);
     } catch (e) {
