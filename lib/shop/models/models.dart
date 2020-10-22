@@ -805,6 +805,8 @@ class ShopProductCategoryStyles extends BaseStyles {
   // Moreover height is much greater than screen size so it can be scrolled.
   @JsonKey(name: 'imageCorners', defaultValue:'rounded')
   String imageCorners;
+  @JsonKey(name: 'columns', defaultValue: 1)
+  num columns;
 
   double getCategoryBorderRadius() {
     return getBorderRadius(borderRadius);
@@ -822,8 +824,8 @@ class ShopProductCategoryStyles extends BaseStyles {
   FontStyle getFilterFontStyle() {
     return getFontStyle(filterFontStyle);
   }
-//  factory ShopProductCategoryStlyes.fromJson(Map<String, dynamic> json) => _$ShopProductCategoryStlyesFromJson(json);
-//  Map<String, dynamic> toJson() => _$ShopProductCategoryStlyesToJson(this);
+  factory ShopProductCategoryStyles.fromJson(Map<String, dynamic> json) => _$ShopProductCategoryStylesFromJson(json);
+  Map<String, dynamic> toJson() => _$ShopProductCategoryStylesToJson(this);
 }
 
 @JsonSerializable()
@@ -845,18 +847,27 @@ class Data {
 class VideoData {
   VideoData();
 
-  @JsonKey(name: 'text')      String text;
-  @JsonKey(name: 'autoplay', defaultValue: false)      bool autoplay;
-  @JsonKey(name: 'controls')    dynamic controls;
-  @JsonKey(name: 'file')      dynamic file;
-  @JsonKey(name: 'loop', defaultValue: false)       bool loop;
-  @JsonKey(name: 'preview')     String preview;
-  @JsonKey(name: 'sound')      dynamic sound;
-  @JsonKey(name: 'source')      String source;
-  @JsonKey(name: 'sourceType')   Map<String, dynamic> sourceType; // {name: "My video", value: "my-video"}
+  @JsonKey(name: 'text')
+  String text;
+  @JsonKey(name: 'autoplay', defaultValue: false)
+  bool autoplay;
+  @JsonKey(name: 'controls', defaultValue: false)
+  bool controls;
+  @JsonKey(name: 'file')
+  dynamic file;
+  @JsonKey(name: 'loop', defaultValue: false)
+  bool loop;
+  @JsonKey(name: 'preview')
+  String preview;
+  @JsonKey(name: 'sound', defaultValue: false)
+  bool sound;
+  @JsonKey(name: 'source')
+  String source;
+  @JsonKey(name: 'sourceType')
+  Map<String, dynamic> sourceType; // {name: "My video", value: "my-video"}
 
-//  factory VideoData.fromJson(Map<String, dynamic> json) => _$VideoDataFromJson(json);
-//  Map<String, dynamic> toJson() => _$VideoDataToJson(this);
+  factory VideoData.fromJson(Map<String, dynamic> json) => _$VideoDataFromJson(json);
+  Map<String, dynamic> toJson() => _$VideoDataToJson(this);
 }
 
 @JsonSerializable()
