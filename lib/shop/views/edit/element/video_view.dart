@@ -21,6 +21,7 @@ class _VideoViewState extends State<VideoView> {
   final Child child;
   final SectionStyleSheet sectionStyleSheet;
   ImageStyles styles;
+  VideoData data;
   _VideoViewState(this.child, this.sectionStyleSheet);
   VideoPlayerController _controller;
 
@@ -32,7 +33,8 @@ class _VideoViewState extends State<VideoView> {
   @override
   void dispose() {
     super.dispose();
-    _controller.dispose();
+    if (data.controls)
+      _controller.dispose();
   }
 
   @override
@@ -47,21 +49,13 @@ class _VideoViewState extends State<VideoView> {
     }
     if (styles == null || styles.display == 'none') return Container();
 
-    VideoData data;
+
     try {
       data = VideoData.fromJson(child.data);
     } catch (e) {}
 
     if (data == null/* || data.preview == null || data.preview.isEmpty*/)
       return Container();
-
-    String url = data.preview;
-
-    _controller = VideoPlayerController.network(data.source)
-      ..initialize().then((_) {
-        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-        setState(() {});
-      });
 
     return Container(
       height: styles.height,
@@ -72,53 +66,92 @@ class _VideoViewState extends State<VideoView> {
           right: styles.marginRight,
           top: styles.getMarginTop(sectionStyleSheet),
           bottom: styles.marginBottom),
-      child: CachedNetworkImage(
-        imageUrl: url,
-        imageBuilder: (context, imageProvider) => Container(
-          decoration: BoxDecoration(
-            color: Colors.transparent,
-            borderRadius: BorderRadius.circular(4),
-            image: DecorationImage(
-              image: imageProvider,
-              fit: BoxFit.contain,
-            ),
+      child: Stack(
+        children: [
+          previewView,
+          videoPlayerView,
+          Visibility(
+            visible: data.controls,
+            child: Positioned(
+              bottom: 10,
+              right: 10,
+              child: IconButton(
+                onPressed: () {
+                  if (_controller == null) {
+                    print('Initializing videoView...');
+                    _controller = VideoPlayerController.network('http://www.sample-videos.com/video123/mp4/720/big_buck_bunny_720p_20mb.mp4'/*data.source*/)
+                      ..initialize().then((_) {
+                        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+                        setState(() {});
+                      });
+                    return;
+                  }
+                  setState(() {
+                    _controller.value.isPlaying
+                        ? _controller.pause()
+                        : _controller.play();
+                  });
+                },
+                icon: Icon(
+                  _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+                ),
+              )),
+          )
+        ],
+      ),
+    );
+  }
+
+  get previewView {
+    return CachedNetworkImage(
+      imageUrl: data.preview,
+      imageBuilder: (context, imageProvider) => Container(
+        decoration: BoxDecoration(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(4),
+          image: DecorationImage(
+            image: imageProvider,
+            fit: BoxFit.contain,
           ),
         ),
-        placeholder: (context, url) =>
-            Container(child: Center(child: CircularProgressIndicator())),
-        errorWidget: (context, url, error) => Container(
-          width: styles.width,
-          height: styles.height,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(2),
-            border: Border.all(color: Colors.grey, width: 0.5),
-            color: Color.fromRGBO(245, 245, 245, 1),
-          ),
-          padding: EdgeInsets.all(10),
-          child: Column(
-            children: [
-              Expanded(
-                child: Center(
-                  child: SvgPicture.asset(
-                    'assets/images/no_video.svg',
-                    color: Colors.grey,
-                    width: double.infinity,
-                    height: double.infinity,
-                  ),
+      ),
+      placeholder: (context, url) =>
+          Container(child: Center(child: CircularProgressIndicator())),
+      errorWidget: (context, url, error) => Container(
+        width: styles.width,
+        height: styles.height,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(2),
+          border: Border.all(color: Colors.grey, width: 0.5),
+          color: Color.fromRGBO(245, 245, 245, 1),
+        ),
+        padding: EdgeInsets.all(10),
+        child: Column(
+          children: [
+            Expanded(
+              child: Center(
+                child: SvgPicture.asset(
+                  'assets/images/no_video.svg',
+                  color: Colors.grey,
+                  width: double.infinity,
+                  height: double.infinity,
                 ),
               ),
-              Text(
-                'Add video',
-                style: TextStyle(color: Colors.grey, fontSize: 16),
-              )
-            ],
-          ),
+            ),
+            Text(
+              'Add video',
+              style: TextStyle(color: Colors.grey, fontSize: 16),
+            )
+          ],
         ),
       ),
     );
   }
 
   get videoPlayerView {
+    if (_controller == null)
+      return Container();
+
     return Center(
       child: _controller.value.initialized
           ? AspectRatio(
