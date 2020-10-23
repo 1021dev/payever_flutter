@@ -40,7 +40,9 @@ class _VideoViewState extends State<VideoView> {
   @override
   void dispose() {
     super.dispose();
-    if (data.controls != null && _controller != null) _controller.dispose();
+    try {
+      if (data.controls != null && _controller != null) _controller.dispose();
+    } catch(e) {}
   }
 
   @override

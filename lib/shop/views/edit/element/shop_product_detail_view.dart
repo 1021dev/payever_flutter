@@ -28,19 +28,19 @@ class _ShopProductDetailViewState extends State<ShopProductDetailView> {
 
   @override
   Widget build(BuildContext context) {
-    if (child.styles != null && child.styles.isNotEmpty) {
+    styles = styleSheet();
+    if (styles == null && child.styles != null && child.styles.isNotEmpty) {
       styles = ShopProductDetailStyles.fromJson(child.styles);
-    } else {
-      styles = styleSheet();
     }
+    if (styles == null ||
+        styles.display == 'none')
+      return Container();
+
     return _body();
   }
 
   Widget _body() {
-    if (styles == null ||
-        styles.display == 'none' ||
-        (styleSheet() != null && styleSheet().display == 'none'))
-      return Container();
+
 
     return Container(
         width: double.infinity,

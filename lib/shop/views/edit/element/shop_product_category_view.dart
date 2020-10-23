@@ -33,19 +33,17 @@ class _ShopProductCategoryViewState extends State<ShopProductCategoryView> {
     if (styles == null && child.styles != null && child.styles.isNotEmpty) {
       styles = ShopProductCategoryStyles.fromJson(child.styles);
     }
-
-    try {
-      data = CategoryData.fromJson(child.data);
-    } catch (e) {}
+    if (styles == null ||
+        styles.display == 'none')
+      return Container();
 
     return _body();
   }
 
   Widget _body() {
-    if (styles == null ||
-        styles.display == 'none' ||
-        (styleSheet() != null && styleSheet().display == 'none'))
-      return Container();
+    try {
+      data = CategoryData.fromJson(child.data);
+    } catch (e) {}
 
     return Container(
       width: double.infinity,

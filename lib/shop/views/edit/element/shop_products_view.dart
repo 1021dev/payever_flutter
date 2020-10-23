@@ -30,19 +30,19 @@ class _ShopProductsViewState extends State<ShopProductsView> {
 
   @override
   Widget build(BuildContext context) {
-    if (child.styles != null && child.styles.isNotEmpty) {
+    styles = styleSheet();
+    if (styles == null && child.styles != null && child.styles.isNotEmpty) {
       styles = ShopProductsStyles.fromJson(child.styles);
-    } else {
-      styles = styleSheet();
     }
+    if (styles == null ||
+        styles.display == 'none')
+      return Container();
+
     return _body();
   }
 
   Widget _body() {
-    if (styles == null ||
-        styles.display == 'none' ||
-        (styleSheet() != null && styleSheet().display == 'none'))
-      return Container();
+
     return Opacity(
       opacity: styles.opacity,
       child: Container(
