@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:intl/intl.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/connect/models/connect.dart';
-import 'package:payever/connect/widgets/connect_item_image_view.dart';
+import 'package:payever/theme.dart';
 
 import 'connect_top_button.dart';
 
@@ -61,13 +60,12 @@ class ConnectListItem extends StatelessWidget {
                 children: <Widget>[
                   Padding(
                     padding: EdgeInsets.only(right: 16),
-                    child: SvgPicture.asset(Measurements.channelIcon(iconType), width: 32, color: Colors.white70,),
+                    child: SvgPicture.asset(Measurements.channelIcon(iconType), width: 32, color: iconColor(),),
                   ),
                   Expanded(
                     child: Text(
                       Language.getPosConnectStrings(connectModel.integration.displayOptions.title),
                       style: TextStyle(
-                        color: Colors.white,
                         fontFamily: 'HelveticaNeueMed',
                         fontSize: 14,
                       ),
@@ -84,7 +82,6 @@ class ConnectListItem extends StatelessWidget {
               child: Text(
                 Language.getConnectStrings('categories.${connectModel.integration.category}.title'),
                 style: TextStyle(
-                  color: Colors.white,
                   fontFamily: 'HelveticaNeueMed',
                   fontSize: 14,
                 ),
@@ -98,7 +95,6 @@ class ConnectListItem extends StatelessWidget {
               child: Text(
                 Language.getPosConnectStrings(connectModel.integration.installationOptions.developer),
                 style: TextStyle(
-                  color: Colors.white,
                   fontFamily: 'HelveticaNeueMed',
                   fontSize: 14,
                 ),
@@ -112,7 +108,6 @@ class ConnectListItem extends StatelessWidget {
               child: Text(
                 Language.getPosConnectStrings(connectModel.integration.installationOptions.languages),
                 style: TextStyle(
-                  color: Colors.white,
                   fontFamily: 'HelveticaNeueMed',
                   fontSize: 14,
                 ),
@@ -132,7 +127,7 @@ class ConnectListItem extends StatelessWidget {
                       onPressed: () {
                         onOpen(connectModel);
                       },
-                      color: Color.fromRGBO(255, 255, 255, 0.1),
+                      color: overlayBackground(),
                       height: 26,
                       minWidth: 0,
                       shape: RoundedRectangleBorder(
@@ -145,7 +140,6 @@ class ConnectListItem extends StatelessWidget {
                       child: Text(
                         Language.getPosConnectStrings('integrations.actions.open'),
                         style: TextStyle(
-                          color: Colors.white,
                           fontFamily: 'HelveticaNeueMed',
                           fontSize: 14,
                         ),
@@ -165,14 +159,14 @@ class ConnectListItem extends StatelessWidget {
                               strokeWidth: 2,
                             ),
                           ),
-                        ) : SvgPicture.asset('assets/images/more.svg'),
+                        ) : SvgPicture.asset('assets/images/more.svg', color: iconColor(),),
                       ),
                       offset: Offset(0, 100),
                       onSelected: (ConnectPopupButton item) => item.onTap(),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      color: Colors.black87,
+                      color: overlayBackground(),
                       itemBuilder: (BuildContext context) {
                         return uninstallPopUp(context)
                             .map((ConnectPopupButton item) {
@@ -184,7 +178,6 @@ class ConnectListItem extends StatelessWidget {
                                 Text(
                                   item.title,
                                   style: TextStyle(
-                                    color: Colors.white,
                                     fontSize: 16,
                                     fontWeight: FontWeight.w400,
                                   ),
@@ -210,7 +203,7 @@ class ConnectListItem extends StatelessWidget {
                       onPressed: () {
                         onInstall(connectModel);
                       },
-                      color: Color.fromRGBO(255, 255, 255, 0.1),
+                      color: overlayBackground(),
                       height: 26,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(13),
@@ -229,7 +222,6 @@ class ConnectListItem extends StatelessWidget {
                       ) : Text(
                         Language.getPosConnectStrings('integrations.actions.install'),
                         style: TextStyle(
-                          color: Colors.white,
                           fontFamily: 'HelveticaNeueMed',
                           fontSize: 14,
                         ),

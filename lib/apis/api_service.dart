@@ -2,11 +2,13 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:dio/dio.dart';
+import 'package:intl/intl.dart';
 import 'package:payever/apis/baseClient.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/env.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:http/http.dart' as http;
 
 class ApiService {
   static final envUrl = GlobalUtils.COMMERCE_OS_URL + '/env.json';
@@ -16,11 +18,13 @@ class ApiService {
   static String widgets = Env.widgets;
 
   static String loginUrl = '$authBaseUrl/api/login';
+  static String registerUrl = '$authBaseUrl/api/register';
   static String refreshUrl = '$authBaseUrl/api/refresh';
 
   static String userUrl = '$baseUrl/api/user';
   static String businessUrl = '$baseUrl/api/business';
   static String businessApps = '${Env.commerceOsBack}/api/apps/business/';
+  static String personalApps = '${Env.commerceOsBack}/api/apps/user';
 
   static String wallpaperUrl = '$wallpaper/api/business/';
   static String wallpaperUrlPer = '$wallpaper/api/personal/wallpapers';
@@ -137,10 +141,49 @@ class ApiService {
       print('$TAG - getBusinesses()');
       dynamic response = await _client.getTypeless(
           businessUrl,
+          headers: _getHeaders(token)
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getBusiness(String token, String id) async {
+    try {
+      print('$TAG - getBusiness($id)');
+      dynamic response = await _client.getTypeless(
+          '$businessUrl/$id',
+          headers: _getHeaders(token)
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> postBusiness(String token, Map<String, dynamic> body) async {
+    try {
+      print('$TAG - postBusiness($body)');
+      dynamic response = await _client.postTypeLess(
+          businessUrl,
+          body: body,
+          headers: _getHeaders(token)
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> peAuthToken(String token) async {
+    try {
+      print('$TAG - postBusiness()');
+      dynamic response = await _client.postTypeLess(
+          'https://proxy.payever.org/api/set-cookie/pe_auth_token/$token',
           headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint,
           }
       );
       return response;
@@ -149,16 +192,99 @@ class ApiService {
     }
   }
 
-  Future<dynamic> getBusinessApps(String businessId, String accessToken) async {
+  Future<dynamic> peRefreshToken(String refreshToken) async {
+    try {
+      print('$TAG - postBusiness()');
+      dynamic response = await _client.postTypeLess(
+          'https://proxy.payever.org/api/set-cookie/pe_refresh_token/$refreshToken',
+          headers: {
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint,
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> peAuthToken1(String token) async {
+    try {
+      print('$TAG - postBusiness()');
+      dynamic response = await _client.postTypeLess(
+          'https://proxy.payever.org/api/set-cookie/pe_auth_token/',
+          headers: {
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint,
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> peRefreshToken1(String token) async {
+    try {
+      print('$TAG - postBusiness()');
+      dynamic response = await _client.postTypeLess(
+          'https://proxy.payever.org/api/set-cookie/pe_refresh_token/',
+          headers: {
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint,
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> deleteBusiness(String token, String idBusiness) async {
+    try {
+      print('$TAG - deleteBusiness()');
+      dynamic response = await _client.deleteTypeless(
+          '$businessUrl/$idBusiness',
+          headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getBusinessRegistrationFormData(String token) async {
+    try {
+      print('$TAG - getBusinessRegistrationForm()');
+      dynamic response = await _client.getTypeless(
+          '${Env.commerceOsBack}/api/business-registration/form-data',
+          headers: _getHeaders(token)
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getBusinessApps(String businessId, String token) async {
     try {
       print('$TAG - getBusinessApps()');
       dynamic response = await _client.getTypeless(
         '$businessApps$businessId',
-        headers: {
-          HttpHeaders.authorizationHeader: 'Bearer $accessToken',
-          HttpHeaders.contentTypeHeader: 'application/json',
-          HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-        }
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getPersonalApps(String token) async {
+    try {
+      print('$TAG - getPersonalApps()');
+      dynamic response = await _client.getTypeless(
+          '$personalApps',
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -173,11 +299,92 @@ class ApiService {
       print('${GlobalUtils.fingerprint}');
       dynamic response = await _client.getTypeless(
           userUrl,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> postUser(String token) async {
+    try {
+      print('TAG - postUser()');
+      print('Bearer $token');
+      print('${GlobalUtils.fingerprint}');
+      dynamic response = await _client.postTypeLess(
+          userUrl,
+          body: {'hasUnfinishedBusinessRegistration': true},
+          headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getAuthUser(String token) async {
+    try {
+      print('TAG - getAuthUser()');
+      dynamic response = await _client.getTypeless(
+          '${Env.auth}/api/user',
+          headers: _getHeaders(token)
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> putAuth(String token, String id) async {
+    try {
+      print('TAG - putAuth()');
+      dynamic response = await _client.putTypeless(
+          '${Env.auth}/api/$id',
+          body: {},
+          headers: _getHeaders(token)
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> updateAuthUser(String token, Map<String, dynamic> body) async {
+    try {
+      print('TAG - updateAuthUser()');
+      dynamic response = await _client.patchTypeless(
+          '${Env.auth}/api/user',
+          body: body,
+          headers: _getHeaders(token)
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> updatePassword(String token, Map<String, dynamic> body) async {
+    try {
+      print('TAG - updatePassword()');
+      dynamic response = await _client.postTypeLess(
+          '${Env.auth}/api/user',
+          body: body,
+          headers: _getHeaders(token)
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> updateUser(String token, Map<String, dynamic> body) async {
+    try {
+      print('TAG - updateUser()');
+      dynamic response = await _client.patchTypeless(
+          userUrl,
+          body: body,
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -190,11 +397,7 @@ class ApiService {
       print('$TAG - refreshToken()');
       dynamic response = await _client.getTypeless(
           refreshUrl,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -222,16 +425,47 @@ class ApiService {
     }
   }
 
+  Future<dynamic> putUser(String token, String userId) async {
+    try {
+      print('$TAG - putUser()');
+      dynamic response = await _client.putTypeless(
+        '$authBaseUrl/api/$userId',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> registerUser(String firstName, String lastName, String email, String password) async {
+    try {
+      print('$TAG - registerUser()');
+      dynamic response = await _client.postTypeLess(
+        registerUrl,
+        body: {
+          'first_name': firstName,
+          'last_name': lastName,
+          'email': email,
+          'password': password,
+        },
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+        },
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> getDays(String id, String token) async {
     try {
       print('$TAG - getDays()');
       dynamic response = await _client.getTypeless(
           '$transactionsUrl$id$days',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -244,11 +478,7 @@ class ApiService {
       print('$TAG - getMonths()');
       dynamic response = await _client.getTypeless(
           '$transactionsUrl$id$months',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -257,16 +487,15 @@ class ApiService {
   }
 
   Future<dynamic> getTransactionList(
-      String id, String token, String query) async {
+      String id, String token, String query,) async {
     try {
-      print('$TAG - getTransactionList()');
+      bool isBusinessMode = GlobalUtils.isBusinessMode;
+      print('$TAG - getTransactionList() : Business Mode: $isBusinessMode');
+
+      String url = isBusinessMode ? '$transactionWidUrl$id$transactionWidEnd$query' : '${Env.transactions}/api/user$transactionWidEnd$query';
       dynamic response = await _client.getTypeless(
-          '$transactionWidUrl$id$transactionWidEnd$query',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          url,
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -274,17 +503,30 @@ class ApiService {
     }
   }
 
+  Future<dynamic> getTransactionDetail(
+      String idBusiness, String token, String idTrans) async {
+    print("TAG - getTransactionDetail()");
+
+    try {
+      dynamic response = await _client.getTypeless(
+          RestDataSource.transactionWidUrl +
+              idBusiness +
+              RestDataSource.transactionWidDetails +
+              idTrans,
+          headers: _getHeaders(token)
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
 
   Future<dynamic> getWidgets(String id, String token) async {
     try {
       print('$TAG - getWidgets()');
       dynamic response = await _client.getTypeless(
           '$widgetsUrl$id$widgetsEnd',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -297,11 +539,7 @@ class ApiService {
       print('$TAG - getWidgetsPersonal()');
       dynamic response = await _client.getTypeless(
           widgetsUrlPer,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -314,11 +552,7 @@ class ApiService {
       print('$TAG - getWallpaper()');
       dynamic response = await _client.getTypeless(
           '$wallpaperUrl$id$wallpaperEnd',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -326,16 +560,26 @@ class ApiService {
     }
   }
 
-  Future<dynamic> getWallpaperPersonal(String token,) async {
+  Future<dynamic> setEnableBusiness(String id, String token,) async {
+    try {
+      print('$TAG - setEnableBusiness()');
+      dynamic response = await _client.patchTypeless(
+          '${Env.users}/api/business/$id/enable',
+          body: {},
+          headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getWallpaperPersonal(String token) async {
     try {
       print('$TAG - getWallpaperPersonal()');
       dynamic response = await _client.getTypeless(
           wallpaperUrlPer,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -348,11 +592,7 @@ class ApiService {
       print('$TAG - getMonthsPersonal()');
       dynamic response = await _client.getTypeless(
           '${transactionsUrlPer}last-monthly',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -365,11 +605,7 @@ class ApiService {
       print('$TAG - getDaysPersonal()');
       dynamic response = await _client.getTypeless(
           '${transactionsUrlPer}last-daily',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -379,14 +615,10 @@ class ApiService {
 
   Future<dynamic> getTerminal(String idBusiness, String token) async {
     try {
-      print('$TAG - geTerminal()');
+      print('$TAG - getTerminal()');
       dynamic response = await _client.getTypeless(
           '$posBusiness$idBusiness$posTerminalEnd',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -399,11 +631,7 @@ class ApiService {
       print('$TAG - getChannelSet()');
       dynamic response = await _client.getTypeless(
           '$checkoutBusiness$idBusiness$endChannelSet',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -416,11 +644,7 @@ class ApiService {
       print('$TAG - getCheckoutIntegration()');
       dynamic response = await _client.getTypeless(
           '$checkoutBusiness$idBusiness$checkout$checkoutID$endIntegration',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -433,11 +657,7 @@ class ApiService {
       print('$TAG - getLastWeek()');
       dynamic response = await _client.getTypeless(
           '$transactionsUrl$idBusiness$widgetsChannelSet$channel$days',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -450,11 +670,7 @@ class ApiService {
       print('$TAG - getPopularWeek()');
       dynamic response = await _client.getTypeless(
           '$productsUrl$idBusiness$widgetsChannelSet$channel$popularWeek',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -467,11 +683,7 @@ class ApiService {
       print('$TAG - getProductsPopularWeek()');
       dynamic response = await _client.getTypeless(
           '$productsUrl$idBusiness$popularWeek',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -484,11 +696,7 @@ class ApiService {
       print('$TAG - getProductsPopularMonth()');
       dynamic response = await _client.getTypeless(
           '$productsUrl$idBusiness$popularMonth',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -501,11 +709,7 @@ class ApiService {
       print('$TAG - getProductLastSold()');
       dynamic response = await _client.getTypeless(
           '$productsUrl$idBusiness$prodLastSold',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -518,11 +722,7 @@ class ApiService {
       print('$TAG - getProductsPopularMonthRandom()');
       dynamic response = await _client.getTypeless(
           '$productsUrl$idBusiness$popularMonth$productRandomEnd',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -537,11 +737,34 @@ class ApiService {
       dynamic response = await _client.postTypeLess(
           '${Env.products}/products',
           body: body,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> productsFilterOption(String token, String businessId) async {
+    try {
+      print('$TAG - productsFilterOption()');
+      dynamic response = await _client.postTypeLess(
+        '${Env.products}/$businessId/filter-options',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> createCategory(String token, Map<String, dynamic> body) async {
+    try {
+      print('$TAG - createCategory()');
+      dynamic response = await _client.postTypeLess(
+          '${Env.products}/products',
+          body: body,
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -555,11 +778,7 @@ class ApiService {
       dynamic response = await _client.getTypeless(
           '${Env.products}/collections/$businessId',
           queryParameters: query,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -573,11 +792,7 @@ class ApiService {
       dynamic response = await _client.postTypeLess(
           '$productBase/collections/$idBusiness',
           body: body,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -591,11 +806,7 @@ class ApiService {
       dynamic response = await _client.patchTypeless(
           '$productBase/collections/$idBusiness/$id',
           body: body,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -611,11 +822,7 @@ class ApiService {
       dynamic response = await _client.putTypeless(
           '${Env.products}/collections/$businessId/$collectionId/products/associate',
           body: body,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -628,11 +835,7 @@ class ApiService {
       dynamic response = await _client.deleteTypeless(
           '$productBase/collections/$idBusiness/list',
           body: body,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -645,11 +848,7 @@ class ApiService {
       print('$TAG - getShops()');
       dynamic response = await _client.getTypeless(
           '$shopsUrl$idBusiness$shopEnd',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -662,11 +861,7 @@ class ApiService {
       print('$TAG - getShop()');
       dynamic response = await _client.getTypeless(
           '$shopUrl$idBusiness$shopEnd',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -679,11 +874,7 @@ class ApiService {
       print('$TAG - getShopDetail()');
       dynamic response = await _client.getTypeless(
         '$shopUrl$idBusiness$shopEnd/$shopId',
-        headers: {
-          HttpHeaders.authorizationHeader: 'Bearer $token',
-          HttpHeaders.contentTypeHeader: 'application/json',
-          HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-        }
+        headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -695,12 +886,8 @@ class ApiService {
     try {
       print('$TAG - getTemplates()');
       dynamic response = await _client.getTypeless(
-          '${Env.builderShop}/templates',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          '${Env.builderShop}/api/templates',
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -708,16 +895,12 @@ class ApiService {
     }
   }
 
-  Future<dynamic> getOwnThemes(String token, String businessId, String shopId) async {
+  Future<dynamic> getMyThemes(String token, String businessId, String shopId) async {
     try {
       print('$TAG - getOwnThemes()');
       dynamic response = await _client.getTypeless(
-          '${Env.builderShop}/business/$businessId/shop/$shopId/themes',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          '${Env.builderShop}/api/business/$businessId/application/$shopId/themes',
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -725,17 +908,13 @@ class ApiService {
     }
   }
 
-  Future<dynamic> installTemplate(String token, String businessId, String shopId, String templateId) async {
+  Future<dynamic> installTheme(String token, String businessId, String shopId, String themeId) async {
     try {
-      print('$TAG - installTemplate()');
-      dynamic response = await _client.putTypeless(
-          '${Env.builderShop}/business/$businessId/shop/$shopId/template/$templateId/install',
+      print('$TAG - installTheme()');
+      dynamic response = await _client.postTypeLess(
+          '${Env.builderShop}/api/business/$businessId/application/$shopId/theme/$themeId/install',
           body: {},
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -747,12 +926,8 @@ class ApiService {
     try {
       print('$TAG - deleteTheme()');
       dynamic response = await _client.deleteTypeless(
-          '${Env.builderShop}/business/$businessId/shop/$shopId/theme/$themeId',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          '${Env.builderShop}/api/business/$businessId/application/$shopId/theme/$themeId',
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -764,12 +939,8 @@ class ApiService {
     try {
       print('$TAG - duplicateTheme()');
       dynamic response = await _client.putTypeless(
-        '${Env.builderShop}/business/$businessId/shop/$shopId/theme/$themeId/duplicate',
-        headers: {
-          HttpHeaders.authorizationHeader: 'Bearer $token',
-          HttpHeaders.contentTypeHeader: 'application/json',
-          HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-        },
+        '${Env.builderShop}/api/business/$businessId/application/$shopId/theme/$themeId/duplicate',
+        headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -779,14 +950,65 @@ class ApiService {
 
   Future<dynamic> getActiveTheme(String token, String businessId, String shopId) async {
     try {
-      print('$TAG - duplicateTheme()');
+      print('$TAG - getActiveTheme()');
       dynamic response = await _client.getTypeless(
-        '${Env.builderShop}/business/$businessId/shop/$shopId/themes/active',
-        headers: {
-          HttpHeaders.authorizationHeader: 'Bearer $token',
-          HttpHeaders.contentTypeHeader: 'application/json',
-          HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-        },
+        '${Env.builderShop}/api/business/$businessId/application/$shopId/themes/active',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+  //  https://builder-shops.payever.org/api/theme/898ab6ec-c085-460c-9cdd-d43f90cbedcb
+  Future<dynamic> getShopEditPreViews(String token, String themeId) async {
+    try {
+      print('$TAG - getShopEditPreViews()');
+      dynamic response = await _client.getTypeless(
+        '${Env.builderShop}/api/theme/$themeId',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+  //  https://builder-shops.payever.org/api/theme/898ab6ec-c085-460c-9cdd-d43f90cbedcb/snapshot
+  Future<dynamic> getShopSnapShot(String token, String themeId) async {
+    try {
+      print('$TAG - getShopSnapShot()');
+      dynamic response = await _client.getTypeless(
+        '${Env.builderShop}/api/theme/$themeId/snapshot',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+//  https://builder-shops.payever.org/api/theme/e83ba829-7e99-4af2-9d8e-869c4a2a706c/actions?limit=20&offset=0
+  Future<dynamic> getShopEditActions(String token, String themeId, Map<String, dynamic>query) async {
+    try {
+      print('$TAG - getShopEditActions()');
+      dynamic response = await _client.getTypeless(
+        '${Env.builderShop}/api/theme/$themeId/actions',
+        queryParameters: query,
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> shopEditAction(String token, String themeId, Map<String, dynamic>body) async {
+    try {
+      print('$TAG - shopEditAction()');
+      dynamic response = await _client.postTypeLess(
+        '${Env.builderShop}/api/theme/$themeId/action',
+        body: body,
+        headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -799,11 +1021,7 @@ class ApiService {
       print('$TAG - deleteTransactionList()');
       dynamic response = await _client.deleteTypeless(
           '$transactionWidUrl$id$transactionWidEnd',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -816,11 +1034,7 @@ class ApiService {
       print('$TAG - getTutorials()');
       dynamic response = await _client.getTypeless(
           '$widgetsUrl$id/widget-tutorial',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -833,11 +1047,7 @@ class ApiService {
       print('$TAG - getNotInstalledByCountry()');
       dynamic response = await _client.getTypeless(
           '${Env.connect}/api/business/$id/integration/not-installed/random/filtered-by-country',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -850,11 +1060,7 @@ class ApiService {
       print('$TAG - getConnectionIntegrations()');
       dynamic response = await _client.getTypeless(
           '${Env.connect}/api/business/$id/integration',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -867,11 +1073,7 @@ class ApiService {
       print('$TAG - getConnectIntegrationByCategory()');
       dynamic response = await _client.getTypeless(
           '${Env.connect}/api/business/$id/integration/category/$category',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -887,11 +1089,7 @@ class ApiService {
           body: {
             'rating': rate,
           },
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -909,11 +1107,7 @@ class ApiService {
             'title': title,
             'text': text,
           },
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -922,16 +1116,12 @@ class ApiService {
   }
 
 
-  Future<dynamic> getBusinessProducts(String accessToken) async {
+  Future<dynamic> getBusinessProducts(String token) async {
     try {
       print('$TAG - getBusinessApps()');
       dynamic response = await _client.getTypeless(
           '${Env.commerceOsBack}/api/business-products',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $accessToken',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -944,11 +1134,7 @@ class ApiService {
       print('$TAG - getConnectDetail()');
       dynamic response = await _client.getTypeless(
           '${Env.connect}/api/integration/$name',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -961,11 +1147,150 @@ class ApiService {
       print('$TAG - getPaymentOptions()');
       dynamic response = await _client.getTypeless(
           '${Env.checkoutPhp}/api/rest/v1/payment-options',
+          headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> addPaymentOption(String token, String business, Map body) async {
+    try {
+      print('$TAG - addPaymentOption()');
+      dynamic response = await _client.postTypeLess(
+          '${Env.checkoutPhp}/api/rest/v3/business-payment-option/$business',
+          body: body,
+          headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> checkoutEmailValidation(String token, String email) async {
+    email  = email.replaceAll('@', '%40');
+    try {
+      print('$TAG - updatePaymentOption()');
+      dynamic response = await _client.getTypeless(
+          '$authBaseUrl/api/email/$email/validate',
+          headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> updatePaymentOption(String token, String id, Map body) async {
+    try {
+      print('$TAG - updatePaymentOption()');
+      dynamic response = await _client.postTypeLess(
+          '${Env.checkoutPhp}/api/rest/v1/business-payment-option/$id',
+          body: body,
+          headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> checkoutPayWireTransfer(String token, Map body) async {
+    try {
+      print('$TAG - updatePaymentOption()');
+      dynamic response = await _client.postTypeLess(
+          '${Env.checkoutPhp}/api/rest/v1/checkout/payment',
+          body: body,
+          headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> payByThirdParty(String token, String connectionId ,Map body) async {
+    try {
+      print('$TAG - updatePaymentOption()');
+      dynamic response = await _client.postTypeLess(
+        '${Env.thirdPartyPayment}/api/connection/$connectionId/action/pay',
+        body: body,
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> payMarkAsFinished(String token, String payFlowId, String local) async {
+    try {
+      print('$TAG - payMarkAsFinished()');
+      var rand = randomString(8);
+      print(rand);
+      dynamic response = await _client.patchTypeless(
+        '$checkoutV3/$payFlowId/mark-as-finished?_locale=$local&rand=$rand',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> payUpdateStatus(String token, String connectionId ,Map<String, dynamic> body) async {
+    try {
+      print('$TAG - payUpdateStatus()');
+      dynamic response = await _client.postTypeLess(
+        '${Env.thirdPartyPayment}/api/connection/$connectionId/action/update-status',
+        body: body,
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getStripKey(String token, String payFlowId) async {
+    try {
+      print('$TAG - getStripKey()');
+      dynamic response = await _client.getTypeless(
+        '$checkoutV1/$payFlowId/stripe-key',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getStripToken(Map<String, dynamic> body, String key) async {
+    try {
+      print('$TAG - getStripToken()');
+      dynamic response = await _client.postTypeLess(
+        'https://api.stripe.com/v1/tokens',
+        body: body,
           headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.authorizationHeader: 'Bearer $key',
             HttpHeaders.contentTypeHeader: 'application/json',
             HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          },
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> deletePaymentOption(String token, String id) async {
+    try {
+      print('$TAG - deletePaymentOption()');
+      dynamic response = await _client.deleteTypeless(
+          '${Env.checkoutPhp}/api/rest/v3/business-payment-option/$id',
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -978,11 +1303,7 @@ class ApiService {
       print('$TAG - getPaymentVariants()');
       dynamic response = await _client.getTypeless(
           '${Env.checkoutPhp}/api/rest/v3/business-payment-option/$business/variants',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -996,11 +1317,7 @@ class ApiService {
       dynamic response = await _client.patchTypeless(
           '${Env.connect}/api/business/$business/integration/$name/install',
           body: {},
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -1014,11 +1331,7 @@ class ApiService {
       dynamic response = await _client.patchTypeless(
           '${Env.thirdParty}/api/business/$business/payments/$name/$variantId/credentials/reset',
           body: {},
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -1032,11 +1345,7 @@ class ApiService {
       dynamic response = await _client.patchTypeless(
           '${Env.connect}/api/business/$business/integration/$name/uninstall',
           body: {},
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -1049,11 +1358,7 @@ class ApiService {
       print('$TAG - patchTutorials()');
       dynamic response = await _client.patchTypeless(
           '$widgetsUrl$id/widget-tutorial/$video/watched',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -1061,20 +1366,44 @@ class ApiService {
     }
   }
 
-  Future<dynamic> toggleInstalled(String token, String id, String uuid) async {
+  Future<dynamic> installWidget(String token, String businessId, String widgetId, bool isInstall) async {
+    try {
+      print('$TAG - installWidget()');
+      String installEnd = isInstall ? 'install' : 'uninstall';
+      dynamic response = await _client.patchTypeless(
+          '$widgetsUrl$businessId/widget/$widgetId/$installEnd',
+          headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> watchTutorial(String token, String id, String video) async {
+    try {
+      print('$TAG - watchTutorial()');
+      dynamic response = await _client.patchTypeless(
+          '$widgets/api/business/$id/widget-tutorial/$video/watched',
+          body: {},
+          headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> toggleInstalled(String token, String id, String uuid, {bool isInstall = true}) async {
     try {
       print('$TAG - toggleInstalled()');
       dynamic response = await _client.postTypeLess(
           '${Env.commerceOs}/api/apps/business/$id/toggle-installed',
           body: {
-            'installed': true,
+            'installed': isInstall,
             'microUuid': uuid,
           },
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1084,16 +1413,14 @@ class ApiService {
   Future<dynamic> toggleSetUpStatus(String token, String id, String type) async {
     try {
       print('$TAG - toggleSetUpStatus()');
+      String url = GlobalUtils.isBusinessMode ? '${Env.commerceOsBack}/api/apps/business/$id/app/$type/toggle-setup-status'
+          : '${Env.commerceOsBack}/api/apps/user/app/$type/toggle-setup-status';
       dynamic response = await _client.patchTypeless(
-          '${Env.commerceOsBack}/api/apps/business/$id/app/$type/toggle-setup-status',
+          url,
           body: {
             'setupStatus': 'completed'
           },
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1106,11 +1433,7 @@ class ApiService {
       print('$TAG - getPosIntegrations()');
       dynamic response = await _client.getTypeless(
           '${Env.pos}/api/business/$businessId$endIntegration',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1123,11 +1446,7 @@ class ApiService {
       print('$TAG - getTerminalIntegrations()');
       dynamic response = await _client.getTypeless(
           '${Env.pos}/api/business/$businessId/terminal/$terminalId$endIntegration',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1140,11 +1459,7 @@ class ApiService {
       print('$TAG - getPosCommunications()');
       dynamic response = await _client.getTypeless(
           '${Env.connect}/api/business/$businessId$endIntegration/category/communications',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1157,11 +1472,7 @@ class ApiService {
       print('$TAG - patchPosConnectDevicePaymentInstall()');
       dynamic response = await _client.patchTypeless(
           '${Env.connect}/api/business/$businessId/integration/device-payments/install',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1174,11 +1485,7 @@ class ApiService {
       print('$TAG - patchPosConnectDevicePaymentUninstall()');
       dynamic response = await _client.patchTypeless(
           '${Env.connect}/api/business/$businessId/integration/device-payments/uninstall',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1191,11 +1498,7 @@ class ApiService {
       print('$TAG - patchPosQrInstall()');
       dynamic response = await _client.patchTypeless(
           '${Env.connect}/api/business/$businessId/integration/qr/install',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1208,11 +1511,7 @@ class ApiService {
       print('$TAG - patchPosQrUninstall()');
       dynamic response = await _client.patchTypeless(
           '${Env.connect}/api/business/$businessId/integration/qr/uninstall',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1225,11 +1524,7 @@ class ApiService {
       print('$TAG - patchPosTwilioInstall()');
       dynamic response = await _client.patchTypeless(
           '${Env.connect}/api/business/$businessId/integration/twilio/install',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1242,11 +1537,7 @@ class ApiService {
       print('$TAG - patchPosTwilioUninstall()');
       dynamic response = await _client.patchTypeless(
           '${Env.connect}/api/business/$businessId/integration/twilio/uninstall',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1259,11 +1550,7 @@ class ApiService {
       print('$TAG - patchPosTerminalDevicePaymentInstall()');
       dynamic response = await _client.patchTypeless(
           '${Env.pos}/api/business/$businessId/terminal/$terminalId/integration/$payment/install',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1276,11 +1563,7 @@ class ApiService {
       print('$TAG - patchPosTerminalDevicePaymentUninstall()');
       dynamic response = await _client.patchTypeless(
           '${Env.pos}/api/business/$businessId/terminal/$terminalId/integration/$payment/uninstall',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1294,11 +1577,7 @@ class ApiService {
       dynamic response = await _client.putTypeless(
           '${Env.shop}/api/business/$businessId/shop/$shopId/default',
           body: {},
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1311,11 +1590,7 @@ class ApiService {
       print('$TAG - getPosDevicePaymentSettings()');
       dynamic response = await _client.getTypeless(
           '${Env.devicePayments}/api/v1/$businessId/settings',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1328,12 +1603,8 @@ class ApiService {
       print('$TAG - updateShopConfig()');
       dynamic response = await _client.patchTypeless(
           '${Env.shop}/api/business/$businessId/shop/access/$shopId',
-          body: config.toData(),
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          body: config.toJson(),
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1360,11 +1631,7 @@ class ApiService {
             'id': id,
             'url': url,
           },
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1391,11 +1658,7 @@ class ApiService {
             'id': id,
             'url': url,
           },
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1414,11 +1677,7 @@ class ApiService {
       dynamic response = await _client.postTypeLess(
           '${Env.qr}/api/form/$businessId/save',
           body: data,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1435,11 +1694,7 @@ class ApiService {
       dynamic response = await _client.postTypeLess(
           '${Env.thirdPartyCommunication}/api/business/$businessId/integration/twilio/form',
           body: {},
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1461,11 +1716,7 @@ class ApiService {
             'action': action,
             'id': id,
           },
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1497,11 +1748,7 @@ class ApiService {
             'id': id,
             'phoneNumber': phoneNumber,
           },
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1527,11 +1774,7 @@ class ApiService {
             'phone': phone,
             'price': price,
           },
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1555,11 +1798,7 @@ class ApiService {
             'id': id,
             'sid': sid,
           },
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1577,11 +1816,7 @@ class ApiService {
             'secondFactor' : secondFactor,
             'verificationType' : verificationType,
           },
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1617,6 +1852,62 @@ class ApiService {
     return upload;
   }
 
+  Future<dynamic> postImageToWallpaper(
+      File logo,
+      String business,
+      String token,
+      ) async {
+    print('$TAG - postImageToWallpaper()');
+    var headers = {
+      HttpHeaders.authorizationHeader: 'Bearer $token',
+      HttpHeaders.contentTypeHeader: '*/*',
+      HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+    };
+
+    String fileName = logo.path.split('/').last;
+    FormData formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile(
+        logo.path,
+        filename: fileName,
+      ),
+    });
+
+    dynamic upload = await _client.postForm(
+        '$mediaBusiness$business$wallpaperEnd',
+        body: formData,
+        headers: headers
+    );
+    return upload;
+  }
+
+  Future<dynamic> postImageToUser(
+      File logo,
+      String userId,
+      String token,
+      ) async {
+    print('$TAG - postImageToUser()');
+    var headers = {
+      HttpHeaders.authorizationHeader: 'Bearer $token',
+      HttpHeaders.contentTypeHeader: '*/*',
+      HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+    };
+
+    String fileName = logo.path.split('/').last;
+    FormData formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile(
+        logo.path,
+        filename: fileName,
+      ),
+    });
+
+    dynamic upload = await _client.postForm(
+        '$mediaBase/api/image/user/$userId/images',
+        body: formData,
+        headers: headers
+    );
+    return upload;
+  }
+
   Future<dynamic> createShop(String token, String idBusiness, String name, String logo) async {
     try {
       print('$TAG - createShop()');
@@ -1625,11 +1916,7 @@ class ApiService {
           body: {
             'name': name,
           },
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1646,11 +1933,7 @@ class ApiService {
             'logo': logo,
             'name': name,
           },
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1667,11 +1950,7 @@ class ApiService {
             'logo': logo,
             'name': name,
           },
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1684,11 +1963,7 @@ class ApiService {
       print('$TAG - patchActiveTerminal()');
       dynamic response = await _client.patchTypeless(
           '$posBusiness$businessId/terminal/$terminalId/active',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1701,11 +1976,7 @@ class ApiService {
       print('$TAG - patchActiveTerminal()');
       dynamic response = await _client.deleteTypeless(
           '$posBusiness$businessId$posTerminalMid$terminalId',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1725,11 +1996,7 @@ class ApiService {
           body: {
             'appName': appName,
           },
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1742,11 +2009,7 @@ class ApiService {
       print('$TAG - busTest() ->> $app');
       dynamic response = await _client.postTypeLess(
           '${Env.notifications}/bus-test/notification/$kind/$entity/$app',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1759,11 +2022,7 @@ class ApiService {
       print('$TAG - getNotifications() ->> $app');
       dynamic response = await _client.getTypeless(
           '${Env.notifications}/api/notification/kind/$kind/entity/$entity/app/$app',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1776,11 +2035,7 @@ class ApiService {
       print('$TAG - deleteNotification() ->> $id');
       dynamic response = await _client.deleteTypeless(
           '${Env.notifications}/api/notification/$id',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1793,11 +2048,7 @@ class ApiService {
       print('$TAG - getInventories()');
       dynamic response = await _client.getTypeless(
           '${Env.inventory}/api/business/$businessId/inventory',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1811,11 +2062,7 @@ class ApiService {
       print('$TAG - getTaxes()');
       dynamic response = await _client.getTypeless(
           '${Env.common}/api/tax/list/$country',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1828,11 +2075,7 @@ class ApiService {
       print('$TAG - getBillingSubscription()');
       dynamic response = await _client.getTypeless(
           '${Env.connect}/api/integration/billing-subscriptions',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1845,11 +2088,7 @@ class ApiService {
       print('$TAG - getBusinessBillingSubscription()');
       dynamic response = await _client.getTypeless(
           '${Env.connect}/api/business/$businessId/integration/billing-subscriptions',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1862,11 +2101,7 @@ class ApiService {
       print('$TAG - getInventory()');
       dynamic response = await _client.getTypeless(
           '${Env.inventory}/api/business/$businessId/inventory/sku/$sku',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1880,11 +2115,7 @@ class ApiService {
       dynamic response = await _client.patchTypeless(
           '${Env.inventory}/api/business/$businessId/inventory/sku/$sku',
           body: body,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1898,11 +2129,7 @@ class ApiService {
       dynamic response = await _client.patchTypeless(
           '${Env.inventory}/api/business/$businessId/inventory/sku/$sku/$method',
           body: body,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1916,11 +2143,7 @@ class ApiService {
       dynamic response = await _client.postTypeLess(
           '${Env.products}/products',
           body: body,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1934,11 +2157,7 @@ class ApiService {
       dynamic response = await _client.postTypeLess(
           '${Env.products}/products',
           body: body,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1979,11 +2198,7 @@ class ApiService {
       print('$TAG - getCollection()');
       dynamic response = await _client.getTypeless(
           '${Env.products}/collections/$businessId/$collectionId',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -1997,11 +2212,7 @@ class ApiService {
       dynamic response = await _client.postTypeLess(
           '${Env.contacts}/graphql',
           body: body,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -2014,11 +2225,7 @@ class ApiService {
       print('$TAG - getCheckout()');
       dynamic response = await _client.getTypeless(
           '${Env.checkout}/api/business/$business/checkout',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -2033,11 +2240,7 @@ class ApiService {
       print(rand);
       dynamic response = await _client.getTypeless(
           '$checkoutFlow$channelId/checkout?rand=$rand',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -2055,11 +2258,7 @@ class ApiService {
           body: {
             'channel_set_id': channelSetId,
           },
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -2067,16 +2266,61 @@ class ApiService {
     }
   }
 
+  Future<dynamic> checkoutFlowStorage(String token, String channelSetId) async {
+    try {
+      print('$TAG - checkoutFlowStorage()');
+      dynamic response = await _client.getTypeless(
+          '$storageUrl/flow_$channelSetId',
+          headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+
+  Future<dynamic> getCheckoutChannelSetFlow(String token, String local, String checkoutFlowId) async {
+    try {
+      print('$TAG - getCheckoutChannelSetFlow()');
+      var rand = randomString(8);
+      print(rand);
+      dynamic response = await _client.getTypeless(
+        '$checkoutV3/$checkoutFlowId?_locale=$local&rand=$rand',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getChannelSetQRcode(String token, Map body) async {
+    try {
+      print('$TAG - getChannelSetQRcode()');
+      DateTime date = DateTime.now().add(Duration(days: 365));
+      String dateString = DateFormat("yyyy-MM-dd'T'hh:mm:ss").format(date);
+      dynamic response = await _client.postTypeLess(
+          '$storageUrl',
+          body: {
+            'data': body,
+            'expiresAt': dateString,
+          },
+          headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+
   Future<dynamic> getCheckoutIntegrations(String idBusiness, String token) async {
     try {
       print('$TAG - getCheckoutIntegrations()');
       dynamic response = await _client.getTypeless(
           '$checkoutBusiness$idBusiness$endIntegration',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -2089,11 +2333,7 @@ class ApiService {
       print('$TAG - getConnections()');
       dynamic response = await _client.getTypeless(
           '$checkoutBusiness$idBusiness/connection',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -2106,11 +2346,7 @@ class ApiService {
       print('$TAG - getCheckoutConnections()');
       dynamic response = await _client.getTypeless(
           '$checkoutBusiness$idBusiness$checkout$checkoutId/connection',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -2124,11 +2360,7 @@ class ApiService {
       dynamic response = await _client.postTypeLess(
           '${Env.thirdPartyCommunication}/api/business/$idBusiness/connection/$checkoutId/action/get-numbers',
           body: {},
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -2139,9 +2371,8 @@ class ApiService {
   Future<dynamic> getFinanceExpressSettings(String id, String type) async {
     try {
       print('$TAG - getCheckoutConnections()');
-      dynamic response = await _client.postTypeLess(
+      dynamic response = await _client.getTypeless(
           '${Env.financeExpressPhp}/api/settings/$id/$type',
-          body: {},
           headers: {
             HttpHeaders.contentTypeHeader: 'application/json',
             HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
@@ -2153,19 +2384,75 @@ class ApiService {
     }
   }
 
-  Future<dynamic> patchCheckoutOrder(String token, String checkoutFlowId, String local, Map<String, dynamic>body) async {
+  Future<dynamic> updateFinanceExpressSettings(String id, String type, Map<String, dynamic>body) async {
     try {
-      print('$TAG - patchCheckoutOrder()');
+      print('$TAG - getCheckoutConnections()');
+      dynamic response = await _client.putTypeless(
+          '${Env.financeExpressPhp}/api/settings/$id/$type',
+          body:body,
+          headers: {
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> patchCheckoutFlowOrder(String token, String checkoutFlowId, String local, Map<String, dynamic>body) async {
+    try {
+      print('$TAG - patchCheckoutFlowOrder()');
       var rand = randomString(8);
       print(rand);
       dynamic response = await _client.patchTypeless(
           '$checkoutV3/$checkoutFlowId?_locale=$local&rand=$rand',
           body: body,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> patchCheckoutFlowAddress(String token, String checkoutFlowId, String addressId, String local, Map<String, dynamic>body) async {
+    try {
+      print('$TAG - patchCheckoutFlowAddress()');
+      var rand = randomString(8);
+      print(rand);
+      dynamic response = await _client.patchTypeless(
+        '$checkoutV3/$checkoutFlowId/addresses/$addressId?_locale=$local&rand=$rand',
+        body: body,
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> checkoutAuthorization(String token, String checkoutFlowId) async {
+    try {
+      print('$TAG - checkoutAuthorization()');
+      dynamic response = await _client.patchTypeless(
+        '$checkoutV3/$checkoutFlowId/authorization',
+        body: {'token': token},
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> cartInventoryOrder(String token, String orderId) async {
+    try {
+      print('$TAG - checkoutAuthorization()');
+      dynamic response = await _client.getTypeless(
+        '$inventoryUrl/order/$orderId',
+        headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -2252,11 +2539,7 @@ class ApiService {
           body: {
             'checkoutId': checkoutId,
           },
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token)
       );
       return response;
     } catch (e) {
@@ -2290,6 +2573,477 @@ class ApiService {
       return response;
     } catch (e) {
       return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getConnectIntegration(String token, String id) async {
+    try {
+      print('$TAG - getConnectIntegration()');
+      dynamic response = await _client.getTypeless(
+        '${Env.connect}/api/integration/$id',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> installCheckoutPayment(String token, String business, String checkoutId, String connectionId) async {
+    try {
+      print('$TAG - installCheckoutPayment()');
+      dynamic response = await _client.patchTypeless(
+          '${Env.checkout}/api/business/$business/checkout/$checkoutId/connection/$connectionId/install',
+          body: {},
+          headers: _getHeaders(token)
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> uninstallCheckoutPayment(String token, String business, String checkoutId, String connectionId) async {
+    try {
+      print('$TAG - uninstallCheckoutPayment()');
+      dynamic response = await _client.patchTypeless(
+          '${Env.checkout}/api/business/$business/checkout/$checkoutId/connection/$connectionId/uninstall',
+          body: {},
+          headers: _getHeaders(token)
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> installCheckoutConnectIntegration(String token, String business, String checkoutId, String integrationId, bool isInstall) async {
+    try {
+      print('$TAG - installCheckoutConnect()');
+      dynamic response = await _client.patchTypeless(
+          '${Env.checkout}/api/business/$business/checkout/$checkoutId/integration/$integrationId/${isInstall ? 'install' : 'uninstall'}',
+          body: {},
+          headers: _getHeaders(token)
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+
+  Future<dynamic> getPluginShopSystem(String token, String type) async {
+    try {
+      print('$TAG - getPluginShopSystem()');
+      dynamic response = await _client.getTypeless(
+        '${Env.plugins}/api/plugin/channel/$type',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getShopSystemClients(String token, String business, String type) async {
+    try {
+      print('$TAG - getShopSystemClients()');
+      dynamic response = await _client.getTypeless(
+        '${Env.plugins}/api/business/$business/shopsystem/type/$type/api-key',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getShopSystemAPIKeys(String token, String business, List<String>clients) async {
+    try {
+      print('$TAG - getShopSystemAPIKeys()');
+      dynamic response = await _client.getTypeless(
+        '${Env.auth}/oauth/$business/clients',
+        queryParameters: {'clients': clients},
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> createShopSystemAPIkey(String token, String business, String name, String redirectUri) async {
+    try {
+      print('$TAG - createShopSystemAPIkey()');
+      dynamic response = await _client.postTypeLess(
+        '${Env.auth}/oauth/$business/clients',
+        body: {'name': name, 'redirectUri': redirectUri},
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> postShopSystemApikey(String token, String business, String apiKey, String type) async {
+    try {
+      print('$TAG - postShopSystemApikey()');
+      dynamic response = await _client.postTypeLess(
+        '${Env.plugins}/api/business/$business/shopsystem/type/$type/api-key',
+        body: {'id': apiKey},
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> deleteShopSystemAPIkey(String token, String business, String client) async {
+    try {
+      print('$TAG - deleteShopSystemAPIkey()');
+      dynamic response = await _client.deleteTypeless(
+        '${Env.auth}/oauth/$business/clients/$client',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  ///***************************************************************************
+  ///****                      Setting                                     *****
+  ///***************************************************************************
+
+  Future<dynamic> getProductWallpapers(String token, String businessId) async {
+    try {
+      print('$TAG - getProductWallpapers()');
+      print('$TAG - $wallpaperAll');
+      dynamic response = await _client.getTypeless(
+          wallpaperAll,
+          headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getMyWallpaper(String token, String businessId) async {
+    try {
+      print('$TAG - getMyWallpaper()');
+      print('$TAG - $wallpaperUrl$businessId/wallpapers');
+      dynamic response = await _client.getTypeless(
+          '$wallpaperUrl$businessId/wallpapers',
+          headers: _getHeaders(token)
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> addNewWallpaper(String token, String businessId, String theme, String wallpaper, bool isDashboardMode) async {
+    try {
+      print('$TAG - addNewWallpaper()');
+      print('$TAG - $wallpaperUrl$businessId/wallpapers');
+      String url = isDashboardMode ? '$wallpaperUrl$businessId/wallpapers' : wallpaperUrlPer;
+      dynamic response = await _client.postTypeLess(
+          '$url',
+          body: {'theme': theme, 'wallpaper': wallpaper},
+          headers: _getHeaders(token)
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> updateWallpaper(String token, String businessId, Map<String, dynamic> body, bool isDashboardMode) async {
+    try {
+      print('$TAG - updateProductWallpaper()');
+      print('$TAG - $wallpaperUrl$businessId/wallpapers/active');
+      String url = isDashboardMode ? '$wallpaperUrl$businessId/wallpapers' : wallpaperUrlPer;
+      dynamic response = await _client.postTypeLess(
+          '$url/active',
+          body: body,
+          headers: _getHeaders(token)
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> patchUpdateBusiness(
+      String token, String businessId, Map<String, dynamic> body) async {
+    try {
+      print('$TAG - patchUpdateBusiness()');
+      print('$TAG - $businessUrl/$businessId');
+      dynamic response = await _client.patchTypeless('$businessUrl/$businessId',
+          body: body, headers: _getHeaders(token));
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getEmployees(String token, String businessId, Map<String, String> query) async {
+    try {
+      print('$TAG - getEmployees()');
+      dynamic response = await _client.getTypeless(
+        '${Env.auth}/api/employees/$businessId',
+        queryParameters: query,
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getGroups(String token, String businessId, Map<String, String> query) async {
+    try {
+      print('$TAG - getEmployees()');
+      dynamic response = await _client.getTypeless(
+        '${Env.auth}/api/employee-groups/$businessId',
+        queryParameters: query,
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> createEmployee(String token, String businessId, Map<String, dynamic> body) async {
+    try {
+      print('$TAG - createEmployee() => $body');
+      dynamic response = await _client.postTypeLess(
+        '${Env.auth}/api/employees/create/$businessId?invite=true',
+        body: body,
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> updateEmployee(String token, String businessId, String employeeId, Map<String, dynamic> body) async {
+    try {
+      print('$TAG - updateEmployee() => $body');
+      dynamic response = await _client.patchTypeless(
+        '${Env.auth}/api/employees/$businessId/$employeeId',
+        body: body,
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> deleteEmployee(String token, String businessId, String employeeId) async {
+    try {
+      print('$TAG - deleteEmployee() ');
+      dynamic response = await _client.deleteTypeless(
+        '${Env.auth}/api/employees/$businessId/$employeeId',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getEmailCount(String token, String businessId, String email) async {
+    try {
+      print('$TAG - getEmailCount()');
+      dynamic response = await _client.getTypeless(
+        '${Env.auth}/api/employees/$businessId/count?email=$email',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getGroupNameCount(String token, String businessId, String groupName) async {
+    try {
+      print('$TAG - getGroupNameCount()');
+      dynamic response = await _client.getTypeless(
+        '${Env.auth}/api/employees/$businessId/count?groupName=$groupName',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getGroup(String token, String businessId, String groupId) async {
+    try {
+      print('$TAG - getEmployees()');
+      dynamic response = await _client.getTypeless(
+        '${Env.auth}/api/employee-groups/$businessId/$groupId',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> createGroup(String token, String businessId, Map<String, dynamic> body) async {
+    try {
+      print('$TAG - createGroup() => $body');
+      dynamic response = await _client.postTypeLess(
+        '${Env.auth}/api/employee-groups/$businessId',
+        body: body,
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> updateGroup(String token, String businessId, String groupId, Map<String, dynamic> body) async {
+    try {
+      print('$TAG - updateGroup() => $body');
+      dynamic response = await _client.patchTypeless(
+        '${Env.auth}/api/employee-groups/$businessId/$groupId',
+        body: body,
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> deleteGroup(String token, String businessId, String groupId) async {
+    try {
+      print('$TAG - deleteGroup() ');
+      dynamic response = await _client.deleteTypeless(
+        '${Env.auth}/api/employee-groups/$businessId/$groupId',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getGroupDetail(String token, String businessId, String groupId) async {
+    try {
+      print('$TAG - getGroupDetail() ');
+      dynamic response = await _client.getTypeless(
+        '${Env.auth}/api/employee-groups/$businessId/$groupId',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+
+  Future<dynamic> addEmployeeToGroup(String token, String businessId, String groupId, List<String> adds) async {
+    try {
+      print('$TAG - addEmployeeToGroup() => $adds');
+      dynamic response = await _client.postTypeLess(
+        '${Env.auth}/api/employee-groups/$businessId/$groupId/employees',
+        body: {
+          'employees': adds,
+        },
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> deleteEmployeeFromGroup(String token, String businessId, String groupId, List<String> deletes) async {
+    try {
+      print('$TAG - deleteEmployeeFromGroup() => $deletes');
+      dynamic response = await _client.deleteTypeless(
+        '${Env.auth}/api/employee-groups/$businessId/$groupId/employees',
+        body: {
+          'employees': deletes,
+        },
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getLegalDocument(String token, String businessId, String type) async {
+    try {
+      print('$TAG - getLegalDocument() ');
+      dynamic response = await _client.getTypeless(
+        '${Env.users}/api/business/$businessId/legal-document/$type',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> updateLegalDocument(String token, String businessId, Map<String, dynamic> body, String type) async {
+    try {
+      print('$TAG - updateLegalDocument() ');
+      dynamic response = await _client.putTypeless(
+        '${Env.users}/api/business/$businessId/legal-document/$type',
+        body: body,
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getQrcode(String token, String link, dynamic data) async {
+    if (link != null) {
+      try {
+        print('$TAG - getQrcode() ');
+        http.Response response = await http.get(
+          '$link',
+          headers: _getHeaders(token),
+        );
+        return response;
+      } catch (e) {
+        return Future.error(e);
+      }
+    } else {
+      try {
+        Map<String, String> queryParameters = {};
+        if (data is Map) {
+          data.forEach((key, value) {
+            if (value != null) {
+              queryParameters[key] = value.toString();
+            }
+          });
+          print(queryParameters);
+        }
+        var uri = Uri.https(Env.qr.replaceAll('https://', ''), '/api/download/png', queryParameters);
+        http.Response response = await http.get(
+          uri,
+          headers: _getHeaders(token),
+        );
+        return response;
+      } catch (e) {
+        return Future.error(e);
+      }
     }
   }
 

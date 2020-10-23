@@ -45,10 +45,25 @@ class SwitcherScreenBloc extends Bloc<SwitcherScreenEvent, SwitcherScreenState> 
       businesses.add(Business.map(item));
     });
 
-    yield state.copyWith(logUser: user, businesses: businesses, isLoading: false);
+    Business activeBusiness;
+    List<Business> bList = businesses.where((element) => element.active).toList();
+    if (bList.length > 0) {
+      activeBusiness = bList.first;
+    }
+    if (activeBusiness == null) {
+      add(SwitcherSetBusinessEvent(business: businesses.first));
+    } else {
+      yield state.copyWith(
+        logUser: user,
+        active: activeBusiness,
+        businesses: businesses,
+        isLoading: false,
+      );
+    }
   }
 
   Stream<SwitcherScreenState> fetchWallPaper(Business business) async* {
+    dynamic enableResponse = await api.setEnableBusiness(business.id, GlobalUtils.activeToken.accessToken);
     dynamic wallpapersObj = await api.getWallpaper(business.id, GlobalUtils.activeToken.accessToken);
     FetchWallpaper fetchWallpaper = FetchWallpaper.map(wallpapersObj);
     SharedPreferences preferences = await SharedPreferences.getInstance();

@@ -41,6 +41,7 @@ class _AddVariantColorScreenState extends State<AddVariantColorScreen> {
       backgroundColor: Colors.black,
       appBar: _appBar(),
       body: SafeArea(
+        bottom: false,
         child: BackgroundBase(
           true,
           body: Form(

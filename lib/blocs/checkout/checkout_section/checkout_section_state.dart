@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'checkout_section.dart';
 
 class CheckoutSectionScreenState {
 

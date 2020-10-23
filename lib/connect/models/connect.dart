@@ -1,5 +1,6 @@
+import 'package:json_annotation/json_annotation.dart';
 import 'package:payever/commons/utils/common_utils.dart';
-import 'package:payever/transactions/models/currency.dart';
+part 'connect.g.dart';
 
 class ConnectModel {
   String createdAt;
@@ -27,11 +28,12 @@ class ConnectModel {
 class ConnectIntegration {
   List<dynamic> allowedBusinesses = [];
   String category;
-  dynamic connect;
+  IntegrationExtension connect;
   String createdAt;
   ConnectDisplayOptions displayOptions;
   bool enabled;
   ConnectInstallationOptions installationOptions;
+  IntegrationExtension extension;
   String name;
   num order;
   List<ReviewModel> reviews = [];
@@ -72,7 +74,7 @@ class ConnectIntegration {
 
     dynamic connectObj = obj[GlobalUtils.DB_CONNECT];
     if (connectObj != null) {
-      connect = ConnectIntegration.toMap(connectObj);
+      connect = IntegrationExtension.fromMap(connectObj);
     }
 
     dynamic displayOptionsObj = obj[GlobalUtils.DB_CONNECT_DISPLAY_OPTIONS];
@@ -84,6 +86,34 @@ class ConnectIntegration {
     if (installationOptionsObj != null) {
       installationOptions = ConnectInstallationOptions.toMap(installationOptionsObj);
     }
+    dynamic extensionObj = obj['extension'];
+    if (extensionObj is Map) {
+      extension = IntegrationExtension.fromMap(extensionObj);
+    }
+  }
+}
+
+class IntegrationExtension {
+  FormAction formAction;
+  String url;
+
+  IntegrationExtension.fromMap(dynamic obj) {
+    dynamic formActionObj = obj['formAction'];
+    if (formActionObj is Map) {
+      formAction = FormAction.fromMap(formActionObj);
+    }
+    url = obj['url'];
+  }
+
+}
+
+class FormAction {
+  String endpoint;
+  String method;
+
+  FormAction.fromMap(dynamic obj) {
+    endpoint = obj['endpoint'];
+    method = obj['method'];
   }
 }
 
@@ -175,98 +205,77 @@ class LinkModel {
 
 }
 
-class Payment {
+@JsonSerializable()
+class CheckoutPaymentOption {
+  @JsonKey(name: 'accept_fee')
   bool acceptFee = false;
+  @JsonKey(name: 'contract_length')
   num contractLength;
+  @JsonKey(name: 'description_fee')
   String descriptionFee;
+  @JsonKey(name: 'description_offer')
   String descriptionOffer;
+  @JsonKey(name: 'fixed_fee')
   num fixedFee;
+  @JsonKey(name: 'id')
   num id;
+  @JsonKey(name: 'image_primary_filename')
   String imagePrimaryFilename;
+  @JsonKey(name: 'image_secondary_filename')
   String imageSecondaryFilename;
+  @JsonKey(name: 'instruction_text')
   String instructionText;
+  @JsonKey(name: 'max')
   num max;
-  List<String> merchantAllowedCountries = [];
+  @JsonKey(name: 'merchant_allowed_countries')
+  dynamic merchantAllowedCountries;
+  @JsonKey(name: 'min')
   num min;
+  @JsonKey(name: 'name')
   String name;
+  @JsonKey(name: 'options')
   CurrencyOption options;
+  @JsonKey(name: 'payment_method')
   String paymentMethod;
+  @JsonKey(name: 'related_country')
   String relatedCountry;
+  @JsonKey(name: 'related_country_name')
   String relatedCountryName;
+  @JsonKey(name: 'settings')
   dynamic settings;
+  @JsonKey(name: 'slug')
   String slug;
+  @JsonKey(name: 'status')
   String status;
+  @JsonKey(name: 'thumbnail1')
   String thumbnail1;
+  @JsonKey(name: 'thumbnail2')
   String thumbnail2;
+  @JsonKey(name: 'variable_fee')
   num variableFee;
+  @JsonKey(name: 'variants')
   List<Variant> variants = [];
 
-  Payment.fromMap(dynamic obj) {
-    acceptFee = obj['accept_fee'];
-    contractLength = obj['contract_length'];
-    descriptionFee = obj['description_fee'];
-    descriptionOffer = obj['description_offer'];
-    fixedFee = obj['fixed_fee'];
-    id = obj['id'];
-    imagePrimaryFilename = obj['image_primary_filename'];
-    imageSecondaryFilename = obj['image_secondary_filename'];
-    instructionText = obj['instruction_text'];
-    max = obj['max'];
-    if (obj['merchant_allowed_countries'] is List) {
-      List merchantAllowedCountriesObj = obj['merchant_allowed_countries'];
-      merchantAllowedCountriesObj.forEach((element) {
-        merchantAllowedCountries.add(element);
-      });
-    } else if (obj['merchant_allowed_countries'] is Map) {
-      Map merchantAllowedCountriesObj = obj['merchant_allowed_countries'];
-      if (merchantAllowedCountriesObj != null) {
-        merchantAllowedCountriesObj.keys.toList().forEach((element) {
-          merchantAllowedCountries.add(merchantAllowedCountriesObj[element]);
-        });
-      }
-    }
-    min = obj['min'];
-    name = obj['name'];
-    if (obj['options'] != null) {
-      options = CurrencyOption.fromMap(obj['options']);
-    }
-    paymentMethod = obj['payment_method'];
-    relatedCountry = obj['related_country'];
-    relatedCountryName = obj['related_country_name'];
-    settings = obj['settings'];
-    slug = obj['slug'];
-    status = obj['status'];
-    thumbnail1 = obj['thumbnail1'];
-    thumbnail2 = obj['thumbnail2'];
-    variableFee = obj['variable_fee'];
-    if (obj['variants'] != null) {
-      List listObj = obj['variants'];
-      listObj.forEach((element) {
-        variants.add(Variant.fromMap(element));
-      });
-    }
-  }
+  bool isCheckedAds = false;
+
+  CheckoutPaymentOption();
+  factory CheckoutPaymentOption.fromJson(Map<String, dynamic> json) => _$CheckoutPaymentOptionFromJson(json);
+  Map<String, dynamic> toJson() => _$CheckoutPaymentOptionToJson(this);
 
 }
 
+@JsonSerializable()
 class CurrencyOption {
+  @JsonKey(name: 'countries')
   List<String> countries = [];
+  @JsonKey(name: 'currencies')
   List<String> currencies = [];
 
-  CurrencyOption.fromMap(dynamic obj) {
-    if (obj['countries'] != null) {
-      List listObj = obj['countries'];
-      listObj.forEach((element) {
-        countries.add(element);
-      });
-    }
-    if (obj['currencies'] != null) {
-      List listObj = obj['currencies'];
-      listObj.forEach((element) {
-        currencies.add(element);
-      });
-    }
-  }
+  CurrencyOption();
+
+  factory CurrencyOption.fromJson(Map<String, dynamic> json) => _$CurrencyOptionFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CurrencyOptionToJson(this);
 }
 
 class PaymentVariant {
@@ -280,52 +289,56 @@ class PaymentVariant {
     if (obj['variants'] != null) {
       List listObj = obj['variants'];
       listObj.forEach((element) {
-        variants.add(Variant.fromMap(element));
+        variants.add(Variant.fromJson(element));
       });
     }
   }
 }
 
+@JsonSerializable()
 class Variant {
+  @JsonKey(name: 'accept_fee')
   bool acceptFee;
+  @JsonKey(name: 'completed')
   bool completed;
+  @JsonKey(name: 'credentials')
   dynamic credentials;
+  @JsonKey(name: 'credentials_valid')
   bool credentialsValid;
+  @JsonKey(name: 'default')
   bool isDefault;
+  @JsonKey(name: 'fixed_fee')
   num fixedFee;
+  @JsonKey(name: 'general_status')
   String generalStatus;
+  @JsonKey(name: 'id')
   num id;
+  @JsonKey(name: 'max')
   num max;
+  @JsonKey(name: 'min')
   num min;
+  @JsonKey(name: 'name')
   String name;
+  @JsonKey(name: 'options')
   dynamic options;
+  @JsonKey(name: 'payment_method')
   String paymentMethod;
+  @JsonKey(name: 'payment_option_id')
   num paymentOptionId;
+  @JsonKey(name: 'shop_redirect_enabled')
   bool shopRedirectEnabled;
+  @JsonKey(name: 'status')
   String status;
+  @JsonKey(name: 'uuid')
   String uuid;
+  @JsonKey(name: 'variable_fee')
   num variableFee;
 
-  Variant.fromMap(dynamic obj) {
-    acceptFee = obj['accept_fee'] ?? false;
-    completed = obj['completed'] ?? false;
-    credentials = obj['credentials'];
-    credentialsValid = obj['credentials_valid'] ?? false;
-    isDefault = obj['default'] ?? false;
-    fixedFee = obj['fixed_fee'];
-    generalStatus = obj['general_status'];
-    id = obj['id'];
-    max = obj['max'];
-    min = obj['min'];
-    name = obj['name'];
-    options = obj['accept_fee'];
-    paymentMethod = obj['payment_method'];
-    paymentOptionId = obj['payment_option_id'];
-    shopRedirectEnabled = obj['shop_redirect_enabled'] ?? false;
-    status = obj['status'];
-    uuid = obj['uuid'];
-    variableFee = obj['variable_fee'];
-  }
+  Variant();
+
+  factory Variant.fromJson(Map<String, dynamic> json) => _$VariantFromJson(json);
+
+  Map<String, dynamic> toJson() => _$VariantToJson(this);
 }
 
 class MissingStep {

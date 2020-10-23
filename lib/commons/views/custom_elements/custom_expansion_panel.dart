@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:payever/theme.dart';
 
 const double _kPanelHeaderCollapsedHeight = 25;
 const double _kPanelHeaderExpandedHeight = 25;
@@ -82,22 +83,12 @@ class CustomExpansionPanelList extends StatelessWidget {
         ],
       );
 
-//      double _radiusValue = _isChildExpanded(index) ? 0 : 20;
       items.add(
         Container(
           key: _SaltedKey<BuildContext, int>(context, index * 2),
           child: Material(
             color: Colors.transparent,
             elevation: 0,
-//            borderRadius: new BorderRadius.all(new Radius.circular(_radiusValue)),
-//              decoration: i == 0
-//                    ? BoxDecoration(
-//                    color: Colors.white.withOpacity(0.1),
-//              borderRadius: index == 0 ? BorderRadius.only(
-//                        topLeft: Radius.circular(_radiusValue),
-//                        topRight: Radius.circular(_radiusValue))
-//                    : BorderRadius.only(topLeft: Radius.circular(0),
-//                  topRight: Radius.circular(0)),
             child: Column(
               children: <Widget>[
                 InkWell(
@@ -116,11 +107,9 @@ class CustomExpansionPanelList extends StatelessWidget {
                     ? Container()
                     : _isChildExpanded(index)
                         ? Container()
-                        : Divider(
-                            color: Colors.white.withOpacity(0.5),
-                          ),
+                        : Divider(height: 0, thickness: 0.5,),
                 Container(
-                  color: Colors.black.withOpacity(0.1),
+                  color: overlayBackground(),
                   child: AnimatedCrossFade(
                     firstChild: Container(height: 0.0),
                     secondChild: Container(
@@ -269,7 +258,7 @@ class _MyCustomExpandIconState extends State<MyCustomExpandIcon>
       child: IconButton(
         //padding: widget.padding,
         //color: _iconColor,
-        color: Colors.white,
+        color: iconColor(),
         disabledColor: widget.disabledColor,
         onPressed: widget.onPressed == null ? null : _handlePressed,
         icon: widget.isExpanded ? Icon(Icons.remove) : Icon(Icons.add),

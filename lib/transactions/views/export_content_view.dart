@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../theme.dart';
+
 
 class ExportContentView extends StatefulWidget {
   final Function onSelectType;
@@ -22,10 +24,12 @@ class _ExportContentViewState extends State<ExportContentView> {
         body: Container(
               padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
               decoration: BoxDecoration(
-                  color: Color(0xFF222222),
+                  color: overlayFilterViewBackground(),
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(20.0),
-                      topRight: Radius.circular(20.0))),
+                      topRight: Radius.circular(20.0),
+                  ),
+              ),
               child: Column(
                 children: [
                   Row(

@@ -299,7 +299,7 @@ Map<String, String> filterConditionsByFilterType(String type) {
         'lessThan': 'Less than',
         'between': 'Between',
       };
-    case 'product_id':
+    case 'id':
       return {
         'is': 'Is',
         'isNot': 'Is not',
@@ -308,7 +308,7 @@ Map<String, String> filterConditionsByFilterType(String type) {
         'contains': 'Contains',
         'doesNotContain': 'Does not contain'
       };
-    case 'product_name':
+    case 'name':
       return {
         'is': 'Is',
         'isNot': 'Is not',

@@ -13,7 +13,8 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
-import 'package:payever/login/login_screen.dart';
+import 'package:payever/settings/widgets/app_bar.dart';
+import 'package:payever/theme.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -80,7 +81,7 @@ class _CreateShopScreenState extends State<CreateShopScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );
@@ -106,54 +107,13 @@ class _CreateShopScreenState extends State<CreateShopScreen> {
     );
   }
 
-  Widget _appBar(ShopScreenState state) {
-    return AppBar(
-      centerTitle: false,
-      elevation: 0,
-      automaticallyImplyLeading: false,
-      backgroundColor: Colors.black87,
-      title: Row(
-        children: <Widget>[
-          Text(
-            'Create  Shop',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-      actions: <Widget>[
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
-            Icons.close,
-            color: Colors.white,
-            size: 24,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        Padding(
-          padding: EdgeInsets.only(right: 16),
-        ),
-      ],
-    );
-  }
-
   Widget _body(ShopScreenState state) {
     return Scaffold(
       backgroundColor: Colors.black,
       resizeToAvoidBottomPadding: false,
-      appBar: _appBar(state),
+      appBar: Appbar('Create  Shop'),
       body: SafeArea(
+        bottom: false,
         child: BackgroundBase(
           true,
           body: Form(
@@ -248,8 +208,6 @@ class _CreateShopScreenState extends State<CreateShopScreen> {
               ),
             ),
             BlurEffectView(
-              color: Color.fromRGBO(50, 50, 50, 0.2),
-              blur: 5,
               radius: 12,
               padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
               child: Column(
@@ -261,7 +219,6 @@ class _CreateShopScreenState extends State<CreateShopScreen> {
                         child: Container(
                           height: 60,
                           child: BlurEffectView(
-                            color: Color.fromRGBO(100, 100, 100, 0.2),
                             blur: 15,
                             radius: 12,
                             child: TextFormField(
@@ -309,7 +266,6 @@ class _CreateShopScreenState extends State<CreateShopScreen> {
                   ),
                   Container(
                     height: 64,
-                    color: Color(0xFF222222),
                     child: SizedBox.expand(
                       child: MaterialButton(
                         onPressed: buttonEnabled ? () {
@@ -320,11 +276,11 @@ class _CreateShopScreenState extends State<CreateShopScreen> {
                         ) : Text(
                           'Create',
                           style: TextStyle(
-                            color: buttonEnabled ? Colors.white : Colors.white24,
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
+                        color: overlayBackground(),
                       ),
                     ),
                   ),

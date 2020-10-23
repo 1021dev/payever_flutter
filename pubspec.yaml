@@ -1,7 +1,7 @@
 name: payever
 description: A new Flutter project.
 
-version: 1.0.0+2
+version: 1.0.3+4
 
 environment:
   sdk: ">=2.2.2 <3.0.0"
@@ -15,59 +15,74 @@ dependencies:
   shared_preferences: ^0.5.8
   path_provider: ^1.6.11
   page_transition: ^1.1.5
-  chartjs: ^0.5.1
-  flutter_sparkline: ^0.1.0
-  flutter_svg: ^0.17.4
+  flutter_svg: ^0.18.1
   auto_size_text: ^2.1.0
   intl: ^0.16.1
   url_launcher: ^5.5.0
   #webview_flutter: ^0.3.10+3
   video_player: ^0.10.11+2
+  videos_player: ^0.1.3
   cached_network_image: ^2.2.0+1
   device_info: ^0.4.2+4
   graphql_flutter: ^3.1.0
   uuid: ^2.2.0
-  flutter_masked_text: ^0.8.0
-  autocomplete_textfield: ^1.7.3
-  numberpicker: ^1.2.1
-  cron: ^0.2.3
   flutter_webview_plugin: ^0.3.11
-  flutter_pagewise: ^1.2.3
-  carousel_slider: ^2.2.1
-  flutter_swiper: ^1.1.6
   dio: ^3.0.9
   image_picker: ^0.6.7+4
   provider: ^4.3.1
   rxdart: ^0.24.1
   oktoast: ^2.3.2
   package_info: ^0.4.1
-  flutter_html: ^1.0.0
   blurrycontainer: ^0.0.1
-  flutter_inner_drawer: ^0.5.7+1
 
+  bloc: ^4.0.0
   flutter_bloc: ^4.0.0
   equatable: ^1.2.2
   flutter_tags: ^0.4.8+2
   date_format: ^1.0.8
   flutter_inappwebview: ^4.0.0+4
-  loading_more_list: 3.0.0
   pull_to_refresh: ^1.6.1
   dropdown_formfield: 0.1.2
   image_cropper: ^1.2.3
-  flutter_reorderable_list: ^0.1.4
-  flutter_tagging: ^2.2.0+3
   flutter_colorpicker: ^0.3.4
   fluttertoast: ^7.0.2
-  flutter_rating_bar: ^3.0.1+1
   smooth_star_rating: ^1.1.1
-  date_range_picker: ^1.0.6
-  flutter_secure_storage: 3.3.3
+  iso_countries: ^1.1.1
+  dynamic_theme: ^1.0.1
+  flutter_html_editor: ^1.0.0
+  flutter_html: ^1.0.0
+  textfield_state: ^0.2.1
+  country_pickers: 1.3.0
+  flutter_typeahead_web: ^1.0.0+1
+  collection: ^1.14.12
+  the_validator: ^1.0.1
+  super_rich_text: ^0.2.1+1
+  json_annotation: ^3.1.0
+  icon_badge: ^0.0.1+5
+  data_connection_checker: ^0.3.4
+  connectivity: ^0.4.9+3
+  enum_to_string: ^1.0.13
+  flutter_widget_from_html: ^0.5.1+3
+  shape_of_view: ^1.0.2
+  badges: ^1.1.3
+  clip_shadow: ^0.2.1
+  meta: ^1.1.8
+
 dev_dependencies:
+  flutter_launcher_icons: "^0.8.0"
+  build_runner: ^1.10.3
+  json_serializable: ^3.5.0
+
   flutter_test:
     sdk: flutter
   flutter_driver:
     sdk: flutter
   test: any
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/appicon.png"
 
 flutter:
 
@@ -76,6 +91,11 @@ flutter:
   assets:
     - assets/images/
     - assets/json/currency.json
+    - assets/json/businesses_template.json
+    - assets/json/wallpapers_template.json
+    - assets/json/user_template.json
+    - assets/json/app_widgets_template.json
+    - assets/json/business_apps_template.json
     - assets/videos/phone_landscape.mp4
     - assets/videos/phone_portrait.mp4
     - assets/videos/tablet_landscape.mp4

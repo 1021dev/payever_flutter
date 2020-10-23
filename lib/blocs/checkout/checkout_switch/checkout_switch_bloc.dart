@@ -58,7 +58,7 @@ class CheckoutSwitchScreenBloc extends Bloc<CheckoutSwitchScreenEvent, CheckoutS
 //    if (response != null) {
 //      checkoutScreenBloc.state.copyWith(defaultCheckout: checkout);
 //    }
-    checkoutScreenBloc.add(CheckoutScreenInitEvent(business: businessId, defaultCheckout: checkout, checkouts: checkoutScreenBloc.state.checkouts));
+    checkoutScreenBloc.add(CheckoutScreenInitEvent(defaultCheckout: checkout));
 
     yield state.copyWith(blobName: '', isLoading: false);
   }
@@ -74,7 +74,7 @@ class CheckoutSwitchScreenBloc extends Bloc<CheckoutSwitchScreenEvent, CheckoutS
     dynamic checkoutsResponse = await api.getCheckout(token, businessId);
     if (checkoutsResponse is List) {
       checkoutsResponse.forEach((element) {
-        checkouts.add(Checkout.fromMap(element));
+        checkouts.add(Checkout.fromJson(element));
       });
     }
 
@@ -88,7 +88,7 @@ class CheckoutSwitchScreenBloc extends Bloc<CheckoutSwitchScreenEvent, CheckoutS
       }
     }
     checkoutScreenBloc.state.copyWith(checkouts: checkouts, defaultCheckout: defaultCheckout);
-    checkoutScreenBloc.add(CheckoutScreenInitEvent(business: businessId, defaultCheckout: defaultCheckout, checkouts: checkouts));
+    checkoutScreenBloc.add(CheckoutScreenInitEvent(defaultCheckout: defaultCheckout, checkouts: checkouts));
 
     yield state.copyWith(blobName: '', isUpdating: false);
     yield CheckoutSwitchScreenStateSuccess();
@@ -99,7 +99,7 @@ class CheckoutSwitchScreenBloc extends Bloc<CheckoutSwitchScreenEvent, CheckoutS
     Map<String, String>body = {'name':event.name, 'logo':event.logo,};
     dynamic response = await api.createCheckout(GlobalUtils.activeToken.accessToken, event.businessId, body);
     if (response != null && response is Map) {
-      Checkout checkout = Checkout.fromMap(response);
+      Checkout checkout = Checkout.fromJson(response);
       checkoutScreenBloc.state.checkouts.add(checkout);
       yield CheckoutSwitchScreenStateSuccess();
     } else {

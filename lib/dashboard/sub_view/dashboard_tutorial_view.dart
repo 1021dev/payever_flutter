@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:payever/commons/commons.dart';
-import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/tutorial_cell.dart';
+import 'package:payever/theme.dart';
 
 class DashboardTutorialView extends StatefulWidget {
   final List<Tutorial> tutorials;
@@ -17,12 +18,12 @@ class DashboardTutorialView extends StatefulWidget {
 }
 
 class _DashboardTutorialViewState extends State<DashboardTutorialView> {
-  String uiKit = '${Env.cdnIcon}icons-apps-white/icon-apps-white-';
   bool isExpanded = false;
   @override
   Widget build(BuildContext context) {
     return BlurEffectView(
       padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
+      isDashboard: true,
       child: Column(
         children: [
           Container(
@@ -32,25 +33,12 @@ class _DashboardTutorialViewState extends State<DashboardTutorialView> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        Container(
-                          width: 16,
-                          height: 16,
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image: NetworkImage('${uiKit}tutorial.png'),
-                                  fit: BoxFit.fitWidth)),
-                        ),
-                        SizedBox(width: 8,),
-                        Text(
-                          'TUTORIALS',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                          ),
-                        )
-                      ],
+                    Text(
+                      'TUTORIALS',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                     InkWell(
                       onTap: () {
@@ -63,13 +51,12 @@ class _DashboardTutorialViewState extends State<DashboardTutorialView> {
                         height: 21,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10.5),
-                            color: Colors.black45
+                            color: overlayDashboardButtonsBackground(),
                         ),
                         child: Center(
-                          child: Icon(
-                            isExpanded ? Icons.clear : Icons.add,
-                            color: Colors.white,
-                            size: 12,
+                          child: SvgPicture.asset(
+                            isExpanded ? 'assets/images/closeicon.svg' : 'assets/images/icon_plus.svg',
+                            width: 8,
                           ),
                         ),
                       ),
@@ -88,7 +75,8 @@ class _DashboardTutorialViewState extends State<DashboardTutorialView> {
                       },
                     );
                   }, itemCount: widget.tutorials.length > 0 ? 2: 0,
-                    physics: NeverScrollableScrollPhysics(),),
+                    physics: NeverScrollableScrollPhysics(),
+                  ),
                 ),
                 SizedBox(height: 8),
               ],
@@ -99,7 +87,7 @@ class _DashboardTutorialViewState extends State<DashboardTutorialView> {
               height: 40.0 * (widget.tutorials.length - 2),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
-                  color: Colors.black38
+                  color: overlayBackground(),
               ),
               child: ListView.builder(
                 itemBuilder: _itemBuilder,

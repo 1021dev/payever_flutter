@@ -9,6 +9,7 @@ class ProductsScreenState {
   final bool isUploading;
   final bool isSearching;
   final String businessId;
+  final bool isProductMode;
   final List<ProductsModel> products;
   final List<ProductListModel> productLists;
   final List<CollectionModel> collections;
@@ -40,6 +41,7 @@ class ProductsScreenState {
     this.isUpdating = false,
     this.isUploading = false,
     this.isSearching = false,
+    this.isProductMode = true,
     this.businessId,
     this.products = const [],
     this.collections = const [],
@@ -63,7 +65,7 @@ class ProductsScreenState {
     this.addList = const [],
     this.searchText = '',
     this.filterTypes = const [],
-    this.sortType = 'default',
+    this.sortType = 'createdAt',
     this.updateSuccess = false,
     this.addToCollection = false,
   });
@@ -73,6 +75,7 @@ class ProductsScreenState {
     this.isUpdating,
     this.isUploading,
     this.isSearching,
+    this.isProductMode,
     this.businessId,
     this.products,
     this.collections,
@@ -106,6 +109,7 @@ class ProductsScreenState {
     bool isUpdating,
     bool isUploading,
     bool isSearching,
+    bool isProductMode,
     String businessId,
     List<ProductsModel> products,
     List<CollectionModel> collections,
@@ -138,6 +142,7 @@ class ProductsScreenState {
       isUpdating: isUpdating ?? this.isUpdating,
       isUploading: isUploading ?? this.isUploading,
       isSearching: isSearching ?? this.isSearching,
+      isProductMode: isProductMode ?? this.isProductMode,
       businessId: businessId ?? this.businessId,
       products: products ?? this.products,
       collections: collections ?? this.collections,
@@ -195,3 +200,5 @@ class ProductsNotExist extends ProductsScreenState {
     return 'ProductsNotExist { error $error }';
   }
 }
+
+class CategoriesCreate extends ProductsScreenState { }

@@ -18,7 +18,7 @@ class WorkshopHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 50,
+      height: 55,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -28,7 +28,6 @@ class WorkshopHeader extends StatelessWidget {
             child: Text(
               title.toUpperCase(),
               style: TextStyle(
-                color: Colors.black54,
                 fontSize: 12,
               ),
             ),
@@ -45,7 +44,6 @@ class WorkshopHeader extends StatelessWidget {
                   child: Text(
                     subTitle,
                     style: TextStyle(
-                      color: Colors.black87,
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
                     ),
@@ -53,14 +51,13 @@ class WorkshopHeader extends StatelessWidget {
                 ),
                 Visibility(
                   visible: isApproved,
-                  child: IconButton(
-                    icon: Icon(
+                  child: InkWell(
+                    child: Icon(
                       this.isExpanded
                           ? Icons.keyboard_arrow_up
                           : Icons.keyboard_arrow_down,
-                      color: Colors.black38,
                     ),
-                    onPressed: () {
+                    onTap: () {
                       this.onTap();
                     },
                   ),

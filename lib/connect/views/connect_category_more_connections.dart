@@ -15,8 +15,10 @@ import 'package:payever/connect/models/connect.dart';
 import 'package:payever/connect/widgets/connect_grid_item.dart';
 import 'package:payever/connect/widgets/connect_list_item.dart';
 import 'package:payever/connect/widgets/connect_top_button.dart';
+import 'package:payever/theme.dart';
 
 import 'connect_detail_screen.dart';
+import 'connect_payment_settings_screen.dart';
 import 'connect_setting_screen.dart';
 
 class ConnectCategoryMoreScreen extends StatefulWidget {
@@ -38,8 +40,6 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
   bool _isPortrait;
   bool _isTablet;
 
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   double iconSize;
   double margin;
   static int selectedStyle = 1;
@@ -94,7 +94,7 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );
@@ -104,13 +104,12 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
         bloc: widget.screenBloc,
         builder: (BuildContext context, ConnectDetailScreenState state) {
           return Scaffold(
-            backgroundColor: Colors.black,
             resizeToAvoidBottomPadding: false,
             appBar: _appBar(state),
             body: SafeArea(
+              bottom: false,
               child: BackgroundBase(
                 true,
-                backgroudColor: Color.fromRGBO(0, 0, 0, 0.75),
                 body: state.isLoading ?
                 Center(
                   child: CircularProgressIndicator(),
@@ -131,7 +130,6 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
       centerTitle: true,
       elevation: 0,
       automaticallyImplyLeading: true,
-      backgroundColor: Colors.black87,
       title: Row(
         children: <Widget>[
           Padding(
@@ -160,7 +158,7 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
-            color: Colors.black87,
+            color: overlayBackground(),
             itemBuilder: (BuildContext context) {
               return appBarPopUpActions(context, state)
                   .map((ConnectPopupButton item) {
@@ -172,7 +170,6 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
                       Text(
                         item.title,
                         style: TextStyle(
-                          color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                         ),
@@ -208,7 +205,7 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
           Container(
             height: 44,
             padding: EdgeInsets.only(left: 24, right: 24),
-            color: Color(0xff3f3f3f),
+            color: overlayColor(),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -216,8 +213,7 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
                   child: Text(
                     'App Name',
                     style: TextStyle(
-                      color: Color.fromRGBO(255, 255, 255, 0.7),
-                      fontFamily: 'HelveticaNeue',
+                      fontFamily: 'Helvetica Neue',
                       fontSize: 14,
                     ),
                   ),
@@ -227,8 +223,7 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
                   child: Text(
                     'Category',
                     style: TextStyle(
-                      color: Color.fromRGBO(255, 255, 255, 0.7),
-                      fontFamily: 'HelveticaNeue',
+                      fontFamily: 'Helvetica Neue',
                       fontSize: 14,
                     ),
                   ),
@@ -238,8 +233,7 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
                   child: Text(
                     'Developer',
                     style: TextStyle(
-                      color: Color.fromRGBO(255, 255, 255, 0.7),
-                      fontFamily: 'HelveticaNeue',
+                      fontFamily: 'Helvetica Neue',
                       fontSize: 14,
                     ),
                   ),
@@ -249,8 +243,7 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
                   child: Text(
                     'Languages',
                     style: TextStyle(
-                      color: Color.fromRGBO(255, 255, 255, 0.7),
-                      fontFamily: 'HelveticaNeue',
+                      fontFamily: 'Helvetica Neue',
                       fontSize: 14,
                     ),
                   ),
@@ -261,8 +254,7 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
                   child: Text(
                     'Price',
                     style: TextStyle(
-                      color: Color.fromRGBO(255, 255, 255, 0.7),
-                      fontFamily: 'HelveticaNeue',
+                      fontFamily: 'Helvetica Neue',
                       fontSize: 14,
                     ),
                   ),
@@ -280,17 +272,31 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
                   isTablet: _isTablet,
                   installingConnect: state.categoryConnects[index].integration.name == state.installingConnect,
                   onOpen: (model) {
-                    Navigator.push(
-                      context,
-                      PageTransition(
-                        child: ConnectSettingScreen(
-                          screenBloc: widget.screenBloc.connectScreenBloc,
-                          connectIntegration: model.integration,
+                    if (model.integration.category == 'payments') {
+                      Navigator.push(
+                        context,
+                        PageTransition(
+                          child: ConnectPaymentSettingsScreen(
+                            connectScreenBloc: widget.screenBloc.connectScreenBloc,
+                            connectModel: model,
+                          ),
+                          type: PageTransitionType.fade,
+                          duration: Duration(milliseconds: 500),
                         ),
-                        type: PageTransitionType.fade,
-                        duration: Duration(milliseconds: 500),
-                      ),
-                    );
+                      );
+                    } else {
+                      Navigator.push(
+                        context,
+                        PageTransition(
+                          child: ConnectSettingScreen(
+                            screenBloc: widget.screenBloc.connectScreenBloc,
+                            connectIntegration: model.integration,
+                          ),
+                          type: PageTransitionType.fade,
+                          duration: Duration(milliseconds: 500),
+                        ),
+                      );
+                    }
                   },
                   onInstall: (model) {
                     widget.screenBloc.add(InstallMoreConnectEvent(model: model));
@@ -317,7 +323,6 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
                 return Divider(
                   height: 0,
                   thickness: 0.5,
-                  color: Color.fromRGBO(255, 255, 255, 0.2),
                 );
               },
               itemCount: widget.connections.length,

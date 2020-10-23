@@ -6,6 +6,8 @@ class TransactionsScreenState {
   final bool isSearchLoading;
   final String searchText;
   final Transaction transaction;
+  final List<Collection>collections;
+  final PaginationData paginationData;
   final String wallpaper;
   final Business currentBusiness;
   final List<FilterItem> filterTypes;
@@ -15,6 +17,8 @@ class TransactionsScreenState {
   TransactionsScreenState({
     this.isLoading = true,
     this.isSearchLoading = false,
+    this.collections = const [],
+    this.paginationData,
     this.searchText = '',
     this.transaction,
     this.wallpaper,
@@ -27,6 +31,8 @@ class TransactionsScreenState {
   List<Object> get props => [
     this.isLoading,
     this.isSearchLoading,
+    this.collections,
+    this.paginationData,
     this.searchText,
     this.transaction,
     this.wallpaper,
@@ -41,6 +47,8 @@ class TransactionsScreenState {
     bool isSearchLoading,
     String searchText,
     Transaction transaction,
+    List<Collection>collections,
+    PaginationData paginationData,
     String wallpaper,
     Business currentBusiness,
     List<FilterItem> filterTypes,
@@ -51,6 +59,8 @@ class TransactionsScreenState {
       isLoading: isLoading ?? this.isLoading,
       isSearchLoading: isSearchLoading ?? this.isSearchLoading,
       searchText: searchText ?? this.searchText,
+      collections: collections ?? this.collections,
+      paginationData: paginationData ?? this.paginationData,
       transaction: transaction ?? this.transaction,
       wallpaper: wallpaper ?? this.wallpaper,
       currentBusiness: currentBusiness ?? this.currentBusiness,

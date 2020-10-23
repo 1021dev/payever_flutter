@@ -1,6 +1,4 @@
 import 'package:payever/commons/models/fetchwallpaper.dart';
-import 'package:payever/shop/models/models.dart';
-
 import '../utils/utils.dart';
 
 class Business {
@@ -19,13 +17,15 @@ class Business {
   CompanyAddress companyAddress;
   CompanyDetails companyDetails;
   ContactDetails contactDetails;
-  BackAccount bankAccount;
-  List<dynamic> contactEmails;
-  List<dynamic> cspAllowedHosts;
+  BankAccount bankAccount;
+  List<String> contactEmails = [];
+  List<String> cspAllowedHosts = [];
   CurrentWallpaper currentWallpaper;
   Documents documents;
   ThemeSetting themeSettings;
   Taxes taxes;
+
+  Business({this.id});
 
   Business.map(dynamic obj) {
     this.id = obj[GlobalUtils.DB_BUSINESS_ID];
@@ -56,13 +56,13 @@ class Business {
     }
     if (obj['bankAccount'] != null) {
       this.bankAccount =
-          BackAccount.fromMap(obj['bankAccount']);
+          BankAccount.fromMap(obj['bankAccount']);
     }
     if (obj['contactEmails'] != null) {
       List list = obj['contactEmails'];
       if (list != null) {
         list.forEach((element) {
-          this.contactEmails.add(element);
+          this.contactEmails.add(element.toString());
         });
       }
     }
@@ -70,7 +70,7 @@ class Business {
       List list = obj['cspAllowedHosts'];
       if (list != null) {
         list.forEach((element) {
-          this.cspAllowedHosts.add(element);
+          cspAllowedHosts.add(element.toString());
         });
       }
     }
@@ -246,7 +246,7 @@ class ContactDetails {
   }
 }
 
-class BackAccount {
+class BankAccount {
   String bankName;
   String bic;
   String city;
@@ -257,7 +257,7 @@ class BackAccount {
   String updatedAt;
   String id;
 
-  BackAccount.fromMap(dynamic obj) {
+  BankAccount.fromMap(dynamic obj) {
     bankName = obj['bankName'];
     bic = obj['bic'];
     city = obj['city'];
@@ -300,14 +300,26 @@ class ThemeSetting {
   String theme;
   String updatedAt;
   String id;
+  String primaryColor;
+  String secondaryColor;
 
   ThemeSetting.fromMap(dynamic obj) {
     theme = obj['theme'];
     createdAt = obj['createdAt'];
     updatedAt = obj['updatedAt'];
+    secondaryColor = obj['secondaryColor'];
+    primaryColor = obj['primaryColor'];
     id = obj['_id'];
   }
 
+  Map<String, dynamic> toDictionary() {
+    Map<String, dynamic> map;
+    map['_id'] = id;
+    map['primaryColor'] = primaryColor;
+    map['secondaryColor'] = secondaryColor;
+
+    return map;
+  }
 }
 
 class Taxes {

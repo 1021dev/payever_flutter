@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/settings/models/models.dart';
 
 abstract class DashboardScreenEvent extends Equatable {
   DashboardScreenEvent();
@@ -22,6 +24,19 @@ class DashboardScreenInitEvent extends DashboardScreenEvent {
 }
 
 class DashboardScreenLoadDataEvent extends DashboardScreenEvent {}
+
+class AddStandardDataEvent extends DashboardScreenEvent {
+  final BuildContext context;
+  AddStandardDataEvent({
+    this.context,
+  });
+
+  @override
+  List<Object> get props => [
+    this.context,
+  ];
+
+}
 
 class FetchPosEvent extends DashboardScreenEvent {
   final Business business;
@@ -113,4 +128,66 @@ class DeleteNotification extends DashboardScreenEvent {
   List<Object> get props => [
     this.notificationId,
   ];
+}
+
+class WatchTutorials extends DashboardScreenEvent {
+  final Tutorial tutorial;
+
+  WatchTutorials({this.tutorial});
+}
+
+class UpdateBusinessUserWallpaperEvent extends DashboardScreenEvent {
+  final Business business;
+  final User user;
+  final AuthUser authUser;
+  final String curWall;
+  final MyWallpaper personalWallpaper;
+
+  UpdateBusinessUserWallpaperEvent(
+      {this.business,
+      this.curWall,
+      this.user,
+      this.authUser,
+      this.personalWallpaper});
+
+  @override
+  List<Object> get props => [
+        this.business,
+        this.curWall,
+        this.user,
+        this.authUser,
+        this.personalWallpaper,
+      ];
+}
+
+class UpdateTheme extends DashboardScreenEvent {
+  final ThemeSetting setting;
+
+  UpdateTheme({this.setting});
+}
+
+class BusinessAppInstallEvent extends DashboardScreenEvent {
+  final BusinessApps businessApp;
+  BusinessAppInstallEvent({this.businessApp,});
+
+  @override
+  List<Object> get props => [
+    this.businessApp,
+  ];
+}
+
+class WidgetInstallEvent extends DashboardScreenEvent {
+  final AppWidget appWidget;
+  WidgetInstallEvent({this.appWidget,});
+
+  @override
+  List<Object> get props => [
+    this.appWidget,
+  ];
+}
+
+class OpenAppEvent extends DashboardScreenEvent {
+  final String openAppCode;
+
+  OpenAppEvent({this.openAppCode});
 }

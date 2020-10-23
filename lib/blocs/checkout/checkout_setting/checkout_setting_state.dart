@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:payever/checkout/models/models.dart';
-import 'checkout_setting.dart';
 
 class CheckoutSettingScreenState {
 

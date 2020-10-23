@@ -12,6 +12,7 @@ import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
+import 'package:payever/theme.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -74,7 +75,7 @@ class _ExternalDomainScreenState extends State<ExternalDomainScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );
@@ -139,6 +140,7 @@ class _ExternalDomainScreenState extends State<ExternalDomainScreen> {
       resizeToAvoidBottomPadding: false,
       appBar: _appBar(state),
       body: SafeArea(
+        bottom: false,
         child: BackgroundBase(
           true,
           body: Form(
@@ -168,8 +170,6 @@ class _ExternalDomainScreenState extends State<ExternalDomainScreen> {
       child: Container(
         padding: EdgeInsets.only(left: 16, right: 16),
         child: BlurEffectView(
-          color: Color.fromRGBO(50, 50, 50, 0.2),
-          blur: 5,
           radius: 12,
           padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
           child: Wrap(
@@ -182,8 +182,6 @@ class _ExternalDomainScreenState extends State<ExternalDomainScreen> {
                       height: 50,
                       padding: EdgeInsets.only(top: 12, bottom: 12),
                       child: BlurEffectView(
-                        color: Color.fromRGBO(100, 100, 100, 0.2),
-                        blur: 15,
                         radius: 12,
                         padding: EdgeInsets.only(left: 12, right: 12),
                         child: TextFormField(
@@ -231,7 +229,6 @@ class _ExternalDomainScreenState extends State<ExternalDomainScreen> {
               ),
               Container(
                 height: 50,
-                color: Color(0xFF222222),
                 child: SizedBox.expand(
                   child: MaterialButton(
                     onPressed: buttonEnabled ? () async {
@@ -248,12 +245,12 @@ class _ExternalDomainScreenState extends State<ExternalDomainScreen> {
                         Navigator.pop(context);
                       });
                     } : null,
+                    color: overlayBackground(),
                     child: state.isUpdating ? Center(
                       child: CircularProgressIndicator(),
                     ) : Text(
                       'Done',
                       style: TextStyle(
-                        color: buttonEnabled ? Colors.white : Colors.white24,
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),

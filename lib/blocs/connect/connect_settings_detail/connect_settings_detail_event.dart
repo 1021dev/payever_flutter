@@ -24,3 +24,23 @@ class ConnectSettingsDetailScreenInitEvent extends ConnectSettingsDetailScreenEv
     this.connectModel,
   ];
 }
+
+class ConnectAddPaymentOptionEvent extends ConnectSettingsDetailScreenEvent {
+  final String name;
+  final String paymentMethod;
+
+  ConnectAddPaymentOptionEvent({this.name, this.paymentMethod,});
+}
+
+class ConnectDeletePaymentOptionEvent extends ConnectSettingsDetailScreenEvent {
+  final String id;
+
+  ConnectDeletePaymentOptionEvent({this.id});
+}
+
+class ConnectUpdatePaymentOptionEvent extends ConnectSettingsDetailScreenEvent {
+  final String id;
+  final Map<String, dynamic> body;
+
+  ConnectUpdatePaymentOptionEvent({this.id, this.body});
+}

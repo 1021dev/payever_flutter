@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,12 +8,10 @@ import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
-import 'package:http/http.dart' as http;
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
-
-bool _isPortrait;
-bool _isTablet;
+import 'package:payever/settings/widgets/app_bar.dart';
+import 'package:payever/theme.dart';
 
 List<String> dropdownItems = [
   'Verify by code',
@@ -25,11 +22,13 @@ class PosQRAppScreen extends StatefulWidget {
   final PosScreenBloc screenBloc;
   final String businessId;
   final String businessName;
+  final bool fromProductsScreen;
 
   PosQRAppScreen({
     this.screenBloc,
     this.businessId,
     this.businessName,
+    this.fromProductsScreen = false,
   });
 
   @override
@@ -38,23 +37,24 @@ class PosQRAppScreen extends StatefulWidget {
 
 class _PosQRAppScreenState extends State<PosQRAppScreen> {
 
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
-  String wallpaper;
-  String selectedState = '';
   bool isOpened = true;
 
   @override
   void initState() {
-    widget.screenBloc.add(
-      GenerateQRCodeEvent(
-        businessId: widget.businessId,
-        businessName: widget.businessName,
-        avatarUrl: '$imageBase${widget.screenBloc.state.activeTerminal.logo}',
-        id: widget.screenBloc.state.activeTerminal.id,
-        url: '${Env.checkout}/pay/create-flow-from-qr/channel-set-id/${widget.screenBloc.state.activeTerminal.channelSet}',
-      ),
-    );
+    if (widget.fromProductsScreen) {
+      widget.screenBloc.add(RestoreQrCodeEvent());
+    } else {
+      widget.screenBloc.add(
+        GenerateQRCodeEvent(
+          businessId: widget.businessId,
+          businessName: widget.businessName,
+          avatarUrl: '$imageBase${widget.screenBloc.state.activeTerminal.logo}',
+          id: widget.screenBloc.state.activeTerminal.id,
+          url: '${Env.checkout}/pay/create-flow-from-qr/channel-set-id/${widget.screenBloc.state.activeTerminal.channelSet}',
+        ),
+      );
+    }
+
     super.initState();
   }
 
@@ -65,14 +65,6 @@ class _PosQRAppScreenState extends State<PosQRAppScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
-    Measurements.height = (_isPortrait
-        ? MediaQuery.of(context).size.height
-        : MediaQuery.of(context).size.width);
-    Measurements.width = (_isPortrait
-        ? MediaQuery.of(context).size.width
-        : MediaQuery.of(context).size.height);
-    _isTablet = Measurements.width < 600 ? false : true;
 
     return BlocListener(
       bloc: widget.screenBloc,
@@ -81,7 +73,7 @@ class _PosQRAppScreenState extends State<PosQRAppScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );
@@ -96,54 +88,12 @@ class _PosQRAppScreenState extends State<PosQRAppScreen> {
     );
   }
 
-  Widget _appBar(PosScreenState state) {
-    return AppBar(
-      centerTitle: false,
-      elevation: 0,
-      automaticallyImplyLeading: false,
-      backgroundColor: Colors.black87,
-      title: Row(
-        children: <Widget>[
-          Text(
-            Language.getPosTpmStrings('tpm.communications.qr.title'),
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-      actions: <Widget>[
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
-            Icons.close,
-            color: Colors.white,
-            size: 24,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        Padding(
-          padding: EdgeInsets.only(right: 16),
-        ),
-      ],
-    );
-  }
-
   Widget _body(PosScreenState state) {
     return Scaffold(
-      backgroundColor: Colors.black,
       resizeToAvoidBottomPadding: false,
-      appBar: _appBar(state),
+      appBar: Appbar(Language.getPosTpmStrings('tpm.communications.qr.title')),
       body: SafeArea(
+        bottom: false,
         child: BackgroundBase(
           true,
           body: state.isLoading ?
@@ -167,7 +117,6 @@ class _PosQRAppScreenState extends State<PosQRAppScreen> {
     widgets.add(
       Container(
         height: 64,
-        color: Color(0xFF424141),
         child: SizedBox.expand(
           child: MaterialButton(
             onPressed: () {
@@ -184,7 +133,7 @@ class _PosQRAppScreenState extends State<PosQRAppScreen> {
                       'assets/images/qr-code.svg',
                       height: 20,
                       width: 20,
-                      color: Colors.white,
+                      color: iconColor(),
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 8),
@@ -192,7 +141,6 @@ class _PosQRAppScreenState extends State<PosQRAppScreen> {
                     Text(
                       Language.getPosTpmStrings('tpm.communications.qr.title'),
                       style: TextStyle(
-                        color: Colors.white,
                         fontSize: 16,
                       ),
                     )
@@ -244,12 +192,11 @@ class _PosQRAppScreenState extends State<PosQRAppScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        color: Colors.black26,
+                        color: overlayBackground(),
                         child: Text(
                           Language.getPosTpmStrings(w[1]['text']),
                           style: TextStyle(
                             fontSize: 10,
-                            color: Colors.white,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -269,8 +216,6 @@ class _PosQRAppScreenState extends State<PosQRAppScreen> {
         padding: EdgeInsets.only(left: 16, right: 16),
         height: isOpened ? 300.0 + 64.0 * 3.0: 64.0,
         child: BlurEffectView(
-          color: Color.fromRGBO(20, 20, 20, 0.2),
-          blur: 15,
           radius: 12,
           padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
           child: Column(

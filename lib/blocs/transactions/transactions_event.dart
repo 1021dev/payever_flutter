@@ -77,3 +77,7 @@ class UpdateSortType extends TransactionsScreenEvent {
     this.sortType,
   ];
 }
+
+class LoadMoreTransactionsEvent extends TransactionsScreenEvent{}
+
+class RefreshTransactionsEvent extends TransactionsScreenEvent{}

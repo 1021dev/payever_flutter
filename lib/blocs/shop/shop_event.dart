@@ -23,22 +23,22 @@ class ShopScreenInitEvent extends ShopScreenEvent {
   ];
 }
 
-class InstallTemplateEvent extends ShopScreenEvent {
+class InstallThemeEvent extends ShopScreenEvent {
   final String businessId;
   final String shopId;
-  final String templateId;
+  final String themeId;
 
-  InstallTemplateEvent({
+  InstallThemeEvent({
     this.businessId,
     this.shopId,
-    this.templateId,
+    this.themeId,
   });
 
   @override
   List<Object> get props => [
     this.businessId,
     this.shopId,
-    this.templateId,
+    this.themeId,
   ];
 }
 
@@ -158,5 +158,41 @@ class UpdateShopSettings extends ShopScreenEvent {
     this.config,
     this.businessId,
     this.shopId,
+  ];
+}
+
+class ShopCategorySelected extends ShopScreenEvent {
+  final String category;
+  final List<String> subCategories;
+
+  ShopCategorySelected({
+    this.category,
+    this.subCategories,
+  });
+
+  @override
+  List<Object> get props => [
+    this.category,
+    this.subCategories,
+  ];
+}
+
+class SelectThemeEvent extends ShopScreenEvent {
+  final ThemeListModel model;
+
+  SelectThemeEvent({this.model});
+
+  @override
+  List<Object> get props => [
+    this.model,
+  ];
+}
+
+class SelectAllThemesEvent extends ShopScreenEvent {
+  final bool isSelect;
+  SelectAllThemesEvent({this.isSelect});
+  @override
+  List<Object> get props => [
+    this.isSelect,
   ];
 }

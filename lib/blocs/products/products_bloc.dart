@@ -122,8 +122,12 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
         collectionProducts: [],
       );
     } else if (event is AddToCollectionEvent) {
-      yield state.copyWith(addToCollection: true);
-  }
+      yield state.copyWith(addToCollection: true, isProductMode: false);
+    } else if (event is CreateCategoryEvent) {
+      yield* createCategory(event.title);
+    } else if (event is SwitchProductCollectionMode) {
+      yield state.copyWith(isProductMode: event.isProductMode);
+    }
   }
 
   Stream<ProductsScreenState> fetchProducts(String activeBusinessId) async* {
@@ -227,7 +231,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
       orderDirection = 'asc';
     } else if (state.sortType == 'name') {
       orderBy = 'title';
-      orderDirection = 'desc';
+      orderDirection = 'asc';
     } else if (state.sortType == 'price_low') {
       orderBy = 'price';
       orderDirection = 'asc';
@@ -235,6 +239,9 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
       orderBy = 'price';
       orderDirection = 'desc';
     } else if (state.sortType == 'name') {
+      orderBy = 'createdAt';
+      orderDirection = 'desc';
+    } else {
       orderBy = 'createdAt';
       orderDirection = 'desc';
     }
@@ -319,7 +326,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     }
     List<InventoryModel> inventories = state.inventories;
     List<InventoryModel> updated = state.updatedInventories;
-    updated.forEach((update) {
+    updated.forEach((update) async {
       InventoryModel inventoryModel = inventories.singleWhere((element) => element.sku == update.sku);
       if (inventoryModel != null) {
         Map<String, dynamic> body = {
@@ -327,21 +334,26 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
           'isTrackable': update.isTrackable ?? false,
           'sku': update.sku ?? ''
         };
-        dynamic res = api.updateInventory(token, state.businessId, inventoryModel.sku, body);
+        dynamic res = await api.updateInventory(token, state.businessId, inventoryModel.sku, body);
         print(res);
-        if (update.stock != inventoryModel.stock) {
-          int increase = update.stock - inventoryModel.stock;
+        dynamic inventoryResponse = await api.getInventory(
+            token, state.businessId, inventoryModel.sku);
+        InventoryModel inventory = InventoryModel.toMap(inventoryResponse);
+
+        if (update.stock != inventory.stock) {
+          int increase = update.stock - inventory.stock;
           print('increase stock => $increase');
           Map<String, dynamic> body1 = {
             'quantity': increase > 0 ? increase : -increase,
           };
-          dynamic res1 = api.addStockToInventory(token, state.businessId, inventoryModel.sku, body1, increase > 0 ? 'add': 'subtract');
+          dynamic res1 = await api.addStockToInventory(token, state.businessId, inventoryModel.sku, body1, increase > 0 ? 'add': 'subtract');
           print(res1);
+
         }
       }
     });
     yield ProductsScreenState(businessId: businessId);
-    yield state.copyWith(updateSuccess: true, businessId: businessId);
+    yield state.copyWith(updateSuccess: true, businessId: businessId, inventories: updated);
     yield* fetchProducts(businessId);
   }
 
@@ -358,7 +370,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
       'variables': {
         'product': bodyObj,
       },
-      'query': 'mutation createProduct(\$product: ProductInput!) {\n  createProduct(product: \$product) {\n    titlen\n    id\n  }\n}\n'
+      'query': 'mutation createProduct(\$product: ProductInput!) {\n  createProduct(product: \$product) {\n    title\n    id\n  }\n}\n'
     };
     dynamic response = await api.getProducts(token, body);
     if (response != null) {
@@ -815,7 +827,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     dynamic terminalsObj = await api.getTerminal(state.businessId, token);
     if (terminalsObj != null) {
       terminalsObj.forEach((terminal) {
-        terminals.add(Terminal.toMap(terminal));
+        terminals.add(Terminal.fromJson(terminal));
       });
     }
     yield state.copyWith(terminals: terminals);
@@ -827,7 +839,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     dynamic response = await api.getShops(state.businessId, token);
     if (response is List) {
       response.forEach((element) {
-        shops.add(ShopModel.toMap(element));
+        shops.add(ShopModel.fromJson(element));
       });
     }
     yield state.copyWith(shops: shops, isLoading: false);
@@ -966,5 +978,34 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     Map<String, dynamic> body = {'ids': list};
     dynamic response = await api.deleteCollections(token, state.businessId, body);
     yield* reloadCollections();
+  }
+
+  Stream<ProductsScreenState> createCategory(String title) async* {
+    yield state.copyWith(isUpdating: true);
+    String businessUuid = state.businessId;
+    Map<String, dynamic> body = {
+      'operationName': 'createCategory',
+      'variables': {
+        'businessUuid': businessUuid,
+        'title': title,
+      },
+      'query': 'mutation createCategory(\$businessUuid: String!, \$title: String!) {\n  createCategory(category: {businessUuid: \$businessUuid, title: \$title}) {\n    id\n    businessUuid\n    title\n  slug\n  }\n}\n'
+    };
+    dynamic response = await api.createCategory(token, body);
+    if (response is Map) {
+      dynamic data = response['data'];
+      if (data != null) {
+        dynamic categoryObj = data['data'];
+        if (categoryObj != null) {
+          Categories categories = Categories.toMap(categoryObj);
+          List<Categories>categoriesList = state.categories;
+          categoriesList.add(categories);
+          yield state.copyWith(categories: categoriesList, isUpdating: false);
+          yield CategoriesCreate();
+        }
+      }
+    } else {
+
+    }
   }
 }

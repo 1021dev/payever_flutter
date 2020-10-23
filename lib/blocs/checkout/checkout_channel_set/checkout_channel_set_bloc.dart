@@ -2,7 +2,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/bloc.dart';
-import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 
@@ -57,7 +56,7 @@ class CheckoutChannelSetScreenBloc extends Bloc<CheckoutChannelSetScreenEvent, C
     dynamic channelSetResponse = await api.getChannelSet(state.business, token);
     if (channelSetResponse is List) {
       channelSetResponse.forEach((element) {
-        channelSets.add(ChannelSet.toMap(element));
+        channelSets.add(ChannelSet.fromJson(element));
       });
     }
     List<ChannelSet> typeChannelSets = channelSets.where((element) => element.type == state.type).toList();

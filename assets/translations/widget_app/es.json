@@ -2,6 +2,7 @@
     "widgets.actions.less": "Less",
     "widgets.actions.more": "More",
     "widgets.actions.close": "Close",
+    "widgets.actions.continue-setup": "Continue setup process",
     "widgets.marketing.title": "Mail",
     "widgets.marketing.new-campaign": "New<span class=\"hidden-xs\"> campaign<\/span>",
     "widgets.marketing.users": "Users",

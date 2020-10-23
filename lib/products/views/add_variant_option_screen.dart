@@ -32,6 +32,7 @@ class _AddVariantOptionScreenState extends State<AddVariantOptionScreen> {
       resizeToAvoidBottomPadding: false,
       appBar: _appBar(),
       body: SafeArea(
+        bottom: false,
         child: BackgroundBase(
           true,
           body: Container(

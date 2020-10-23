@@ -10,20 +10,15 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
+import 'package:payever/theme.dart';
 
 import 'pos_create_terminal_screen.dart';
 
-bool _isPortrait;
-bool _isTablet;
-
 class PosSwitchTerminalsScreen extends StatefulWidget {
-
   final PosScreenBloc screenBloc;
-  final String businessId;
 
   PosSwitchTerminalsScreen({
     this.screenBloc,
-    this.businessId,
   });
 
   @override
@@ -31,6 +26,8 @@ class PosSwitchTerminalsScreen extends StatefulWidget {
 }
 
 class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
+  bool _isPortrait;
+  bool _isTablet;
   String imageBase = Env.storage + '/images/';
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -46,7 +43,7 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
     List<Terminal> terminals = widget.screenBloc.state.terminals;
     defaultTerminal = terminals.where((element) => element.active).first;
 
-    widget.screenBloc.add(GetPosTerminalsEvent(businessId: widget.businessId));
+    widget.screenBloc.add(GetPosTerminalsEvent());
     super.initState();
   }
 
@@ -73,7 +70,7 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );
@@ -134,11 +131,11 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
 
   Widget _body(PosScreenState state) {
     return Scaffold(
-      key: scaffoldKey,
       backgroundColor: Colors.black,
       resizeToAvoidBottomPadding: false,
       appBar: _appBar(state),
       body: SafeArea(
+        bottom: false,
         child: BackgroundBase(
           true,
           body: state.isLoading ?
@@ -169,7 +166,6 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
           Text(
             'Further Terminals',
             style: TextStyle(
-              color: Colors.white,
               fontSize: 18,
               fontWeight: FontWeight.w500,
             ),
@@ -242,7 +238,6 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
                   context,
                   PageTransition(
                     child: PosCreateTerminalScreen(
-                      businessId: widget.businessId,
                       screenBloc: widget.screenBloc,
                     ),
                     type: PageTransitionType.fade,
@@ -254,12 +249,11 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
-              color: Colors.black26,
+              color: overlayBackground(),
               child: Text(
                 '+ Add Terminal',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.white,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -305,7 +299,7 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
           );
         },
         onOpen: (Terminal tn) {
-          widget.screenBloc.add(SetActiveTerminalEvent(activeTerminal: tn, businessId: widget.businessId));
+          widget.screenBloc.add(SetActiveTerminalEvent(activeTerminal: tn));
           Navigator.pop(context);
         },
       )).toList(),
@@ -325,7 +319,6 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
                 context,
                 PageTransition(
                   child: PosCreateTerminalScreen(
-                    businessId: widget.businessId,
                     screenBloc: widget.screenBloc,
                     editTerminal: terminal,
                   ),
@@ -344,7 +337,7 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
           child: MaterialButton(
             onPressed: () {
               Navigator.pop(context);
-              widget.screenBloc.add(SetDefaultTerminalEvent(activeTerminal: terminal, businessId: widget.businessId));
+              widget.screenBloc.add(SetDefaultTerminalEvent(activeTerminal: terminal));
             },
             child: Text('Set as Default'),
           ),
@@ -412,7 +405,7 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
                                 MaterialButton(
                                   onPressed: () {
                                     Navigator.pop(context);
-                                    widget.screenBloc.add(DeleteTerminalEvent(businessId: widget.businessId, activeTerminal: terminal));
+                                    widget.screenBloc.add(DeleteTerminalEvent(activeTerminal: terminal));
                                   },
                                   child: Text(
                                     'Yes',
@@ -470,7 +463,7 @@ class TerminalCell extends StatelessWidget {
       focusElevation: 0,
       hoverElevation: 0,
       highlightElevation: 0,
-      color: selected.id == terminal.id ? Colors.white24 : Colors.transparent.withOpacity(0),
+      color: selected.id == terminal.id ? overlayBackground().withOpacity(0.5) : Colors.transparent.withOpacity(0),
       onPressed: () {
         onTap(terminal);
       },
@@ -516,7 +509,6 @@ class TerminalCell extends StatelessWidget {
               maxLines: 2,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.white,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
@@ -524,34 +516,36 @@ class TerminalCell extends StatelessWidget {
             Container(
               height: 36,
               child: selected.id == terminal.id ? Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  MaterialButton(
-                    minWidth: 0,
-                    onPressed: () {
+                  InkWell(
+                    onTap: () {
                       onOpen(terminal);
                     },
-                    height: 20,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    color: Colors.black26,
-                    child: Text(
-                      'Open',
-                      style: TextStyle(
-                        fontSize: 10,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
+                    child: Container(
+                      height: 20,
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: overlayBackground(),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(
+                        'Open',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ),
-                  Flexible(
-                    child: MaterialButton(
-                      onPressed: () {
-                        onMore(terminal);
-                      },
-                      minWidth: 0,
+                  InkWell(
+                    onTap: () {
+                      onMore(terminal);
+                    },
+                    child: Container(
                       height: 20,
-                      shape: RoundedRectangleBorder(
+                      decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Icon(

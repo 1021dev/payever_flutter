@@ -12,11 +12,9 @@ import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/pos/views/pos_qr_settings.dart';
 import 'package:payever/pos/views/pos_twillo_settings.dart';
+import 'package:payever/theme.dart';
 
 import 'pos_device_payment_settings.dart';
-
-bool _isPortrait;
-bool _isTablet;
 
 Map<String, String> icons = {
   'device-payments': 'assets/images/device.svg',
@@ -27,11 +25,11 @@ Map<String, String> icons = {
 class PosConnectScreen extends StatefulWidget {
 
   final PosScreenBloc screenBloc;
-  final GlobalStateModel globalStateModel;
+  final Business activeBusiness;
 
   PosConnectScreen({
     this.screenBloc,
-    this.globalStateModel,
+    this.activeBusiness,
   });
 
   @override
@@ -57,14 +55,6 @@ class _PosConnectScreenState extends State<PosConnectScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
-    Measurements.height = (_isPortrait
-        ? MediaQuery.of(context).size.height
-        : MediaQuery.of(context).size.width);
-    Measurements.width = (_isPortrait
-        ? MediaQuery.of(context).size.width
-        : MediaQuery.of(context).size.height);
-    _isTablet = Measurements.width < 600 ? false : true;
 
     return BlocListener(
       bloc: widget.screenBloc,
@@ -73,7 +63,7 @@ class _PosConnectScreenState extends State<PosConnectScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );
@@ -151,6 +141,7 @@ class _PosConnectScreenState extends State<PosConnectScreen> {
       resizeToAvoidBottomPadding: false,
       appBar: _appBar(state),
       body: SafeArea(
+        bottom: false,
         child: BackgroundBase(
           true,
           body: state.isLoading ?
@@ -183,14 +174,12 @@ class _PosConnectScreenState extends State<PosConnectScreen> {
 
   Widget _connectWidget(PosScreenState state) {
     if (state.communications.length == 0) {
-      widget.screenBloc.add(GetPosCommunications(businessId: widget.globalStateModel.currentBusiness.id));
+      widget.screenBloc.add(GetPosCommunications(businessId: widget.activeBusiness.id));
     }
     List<Communication> communications = state.communications;
     return Container(
       margin: EdgeInsets.all(12),
       child: BlurEffectView(
-        color: Color.fromRGBO(20, 20, 20, 0.2),
-        blur: 15,
         radius: 12,
         padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
         child: Column(
@@ -199,8 +188,6 @@ class _PosConnectScreenState extends State<PosConnectScreen> {
               padding: EdgeInsets.only(left: 16, right: 16),
               height: (communications.length * 50).toDouble(),
               child: BlurEffectView(
-                color: Color.fromRGBO(20, 20, 20, 0.2),
-                blur: 15,
                 radius: 12,
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                 child: Column(
@@ -224,6 +211,7 @@ class _PosConnectScreenState extends State<PosConnectScreen> {
                                             icons[communications[index].integration.name],
                                             height: 16,
                                             width: 16,
+                                            color: iconColor(),
                                           ),
                                           Padding(
                                             padding: EdgeInsets.only(left: 8),
@@ -233,7 +221,6 @@ class _PosConnectScreenState extends State<PosConnectScreen> {
                                               Language.getPosConnectStrings(communications[index].integration.displayOptions.title),
                                               maxLines: 1,
                                               style: TextStyle(
-                                                color: Colors.white,
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w500,
                                               ),
@@ -249,7 +236,7 @@ class _PosConnectScreenState extends State<PosConnectScreen> {
                                               context,
                                               PageTransition(
                                                 child: PosDevicePaymentSettings(
-                                                  businessId: widget.globalStateModel.currentBusiness.id,
+                                                  businessId: widget.activeBusiness.id,
                                                   screenBloc: widget.screenBloc,
                                                   installed: communications[index].installed,
                                                 ),
@@ -262,9 +249,9 @@ class _PosConnectScreenState extends State<PosConnectScreen> {
                                               context,
                                               PageTransition(
                                                 child: PosQRSettings(
-                                                  businessId: widget.globalStateModel.currentBusiness.id,
+                                                  businessId: widget.activeBusiness.id,
                                                   screenBloc: widget.screenBloc,
-                                                  businessName: widget.globalStateModel.currentBusiness.name,
+                                                  businessName: widget.activeBusiness.name,
                                                   installed: communications[index].installed,
                                                 ),
                                                 type: PageTransitionType.fade,
@@ -276,9 +263,9 @@ class _PosConnectScreenState extends State<PosConnectScreen> {
                                               context,
                                               PageTransition(
                                                 child: PosTwilioScreen(
-                                                  businessId: widget.globalStateModel.currentBusiness.id,
+                                                  businessId: widget.activeBusiness.id,
                                                   screenBloc: widget.screenBloc,
-                                                  businessName: widget.globalStateModel.currentBusiness.name,
+                                                  businessName: widget.activeBusiness.name,
                                                   installed: communications[index].installed,
                                                 ),
                                                 type: PageTransitionType.fade,
@@ -292,14 +279,13 @@ class _PosConnectScreenState extends State<PosConnectScreen> {
                                         width: 40,
                                         decoration: BoxDecoration(
                                             borderRadius: BorderRadius.circular(10),
-                                            color: Colors.black.withOpacity(0.4)
+                                            color: overlayBackground()
                                         ),
                                         child: Center(
                                           child: Text(
                                             communications[index].installed ? 'Open': 'Install',
                                             style: TextStyle(
                                                 fontSize: 10,
-                                                color: Colors.white
                                             ),
                                           ),
                                         ),
@@ -335,7 +321,7 @@ class _PosConnectScreenState extends State<PosConnectScreen> {
 
   Widget showDevicePaymentSettings(PosScreenState state) {
     if (state.devicePaymentSettings == null) {
-      widget.screenBloc.add(GetPosDevicePaymentSettings(businessId: widget.globalStateModel.currentBusiness.id));
+      widget.screenBloc.add(GetPosDevicePaymentSettings(businessId: widget.activeBusiness.id));
     }
 
     return  Container();
@@ -346,14 +332,12 @@ class _PosConnectScreenState extends State<PosConnectScreen> {
 
   Widget showCommunications(PosScreenState state) {
     if (state.communications.length == 0) {
-      widget.screenBloc.add(GetPosCommunications(businessId: widget.globalStateModel.currentBusiness.id));
+      widget.screenBloc.add(GetPosCommunications(businessId: widget.activeBusiness.id));
     }
     List<Communication> communications = state.communications;
     return Container(
       padding: EdgeInsets.only(left: 16, right: 16),
       child: BlurEffectView(
-        color: Color.fromRGBO(20, 20, 20, 0.2),
-        blur: 15,
         radius: 12,
         padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
         child: Column(

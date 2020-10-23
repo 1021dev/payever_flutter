@@ -9,6 +9,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
+import 'package:payever/theme.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -74,7 +75,7 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );
@@ -137,6 +138,7 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
       resizeToAvoidBottomPadding: false,
       appBar: _appBar(state),
       body: SafeArea(
+        bottom: false,
         child: BackgroundBase(
           true,
           body: state.isLoading ?
@@ -174,15 +176,12 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
         padding: EdgeInsets.only(left: 16, right: 16),
         height: isOpened ? 64 * 5.0: 64.0,
         child: BlurEffectView(
-          color: Color.fromRGBO(20, 20, 20, 0.2),
-          blur: 15,
           radius: 12,
           padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
           child: Column(
             children: <Widget>[
               Container(
                 height: 64,
-                color: Color(0xFF424141),
                 child: SizedBox.expand(
                   child: MaterialButton(
                     onPressed: () {
@@ -190,6 +189,7 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
                         isOpened = !isOpened;
                       });
                     },
+                    color: overlayBackground(),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -205,10 +205,9 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
                             Text(
                               'Settings',
                               style: TextStyle(
-                                color: Colors.white,
                                 fontSize: 16,
                               ),
-                            )
+                            ),
                           ],
                         ),
                         Icon(
@@ -235,18 +234,20 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
                         Text(
                           'Two Factor Authentication',//displayOptions.title,
                           style: TextStyle(
-                            color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.w200,
                           ),
                         ),
-                        CupertinoSwitch(
-                          value: state.devicePaymentSettings.secondFactor,
-                          onChanged: (value) {
-                            DevicePaymentSettings settings = state.devicePaymentSettings;
-                            settings.secondFactor = value;
-                            widget.screenBloc.add(UpdateDevicePaymentSettings(settings: settings));
-                          },
+                        Transform.scale(
+                          scale: 0.8,
+                          child: CupertinoSwitch(
+                            value: state.devicePaymentSettings.secondFactor,
+                            onChanged: (value) {
+                              DevicePaymentSettings settings = state.devicePaymentSettings;
+                              settings.secondFactor = value;
+                              widget.screenBloc.add(UpdateDevicePaymentSettings(settings: settings));
+                            },
+                          ),
                         ),
                       ],
                     ),
@@ -265,20 +266,22 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text(
-                          'Autoresponder',//displayOptions.title,
+                          Language.getConnectStrings('categories.communications.form.autoresponderEnabled.label'),
                           style: TextStyle(
-                            color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.w200,
                           ),
                         ),
-                        CupertinoSwitch(
-                          value: state.devicePaymentSettings.autoresponderEnabled,
-                          onChanged: (value) {
-                            DevicePaymentSettings settings = state.devicePaymentSettings;
-                            settings.autoresponderEnabled = value;
-                            widget.screenBloc.add(UpdateDevicePaymentSettings(settings: settings));
-                          },
+                        Transform.scale(
+                          scale: 0.8,
+                          child: CupertinoSwitch(
+                            value: state.devicePaymentSettings.autoresponderEnabled,
+                            onChanged: (value) {
+                              DevicePaymentSettings settings = state.devicePaymentSettings;
+                              settings.autoresponderEnabled = value;
+                              widget.screenBloc.add(UpdateDevicePaymentSettings(settings: settings));
+                            },
+                          ),
                         ),
                       ],
                     ),
@@ -303,7 +306,6 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
                         Text(
                           'verify type:',
                           style: TextStyle(
-                            color: Colors.white70,
                             fontSize: 12,
                           ),
                         ),
@@ -322,7 +324,6 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
                               child: Text(
                                 label,
                                 style: TextStyle(
-                                  color: Colors.white,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w300,
                                 ),
@@ -343,7 +344,6 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
               ): Container(),
               isOpened ? Container(
                 height: 64,
-                color: Color(0xFF424141),
                 child: SizedBox.expand(
                   child: MaterialButton(
                     onPressed: () {
@@ -355,12 +355,12 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
                         verificationType: settings.verificationType,
                       ));
                     },
+                    color: overlayBackground(),
                     child: state.isUpdating ? Container(
                       child: CircularProgressIndicator(),
                     ) : Text(
                       'Save',
                       style: TextStyle(
-                        color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),

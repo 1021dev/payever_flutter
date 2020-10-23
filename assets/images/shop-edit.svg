@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="24" viewBox="0 0 20 24">
+    <defs>
+        <linearGradient id="pj87w75nna" x1="-41.27%" x2="100%" y1="50%" y2="50%">
+            <stop offset="0%" stop-color="#262626"/>
+            <stop offset="100%" stop-color="#5E5E5E"/>
+        </linearGradient>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <g>
+            <g>
+                <path fill="url(#pj87w75nna)" fill-rule="nonzero" d="M17.165 5.243h-1.168C15.53 2.213 12.961 0 9.808 0 6.656 0 4.087 2.33 3.62 5.243H2.452C1.168 5.243 0 6.29 0 7.689v13.864C0 22.835 1.05 24 2.452 24h14.596c1.284 0 2.452-1.049 2.452-2.447V7.573c0-1.282-1.05-2.33-2.335-2.33zM9.808 1.282c2.336 0 4.32 1.747 4.788 3.96H5.02c.467-2.33 2.452-3.96 4.787-3.96z" transform="translate(-32 -297) translate(32.25 297)"/>
+                <g fill="#FFF" transform="translate(-32 -297) translate(32.25 297) translate(3.75 9)">
+                    <path d="M2.54 9.092l1.746-.467L2.09 6.429l-.468 1.745c-.107.4.13.811.53.918.127.034.261.034.389 0zM10.709.41c.538.524.609 1.515.025 2.084L5.14 7.714 3 5.631 8.594.41c.584-.569 1.577-.524 2.115 0z"/>
+                    <rect width="12" height="1.714" y="10.286" rx=".75"/>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

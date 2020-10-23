@@ -36,18 +36,24 @@ class AppWidget {
     this._type = obj[GlobalUtils.APP_WID_TYPE];
     this._help = obj[GlobalUtils.APP_WID_HELP];
   }
+
+  set installed(bool value) {
+    _installed = value;
+  }
 }
 
 class FilterItem {
   final String type;
   final String condition;
   final String value;
+  final String value1;
   final String disPlayName;
 
   FilterItem({
     this.type,
     this.condition,
     this.value,
+    this.value1,
     this.disPlayName,
   });
 }

@@ -1,26 +1,29 @@
 import 'dart:convert';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:iso_countries/iso_countries.dart';
+import 'package:payever/blocs/bloc.dart';
+import 'package:payever/commons/models/token.dart';
+import 'package:payever/theme.dart';
+import 'package:payever/transactions/models/transaction.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../models/models.dart';
 import 'utils.dart';
 
-class Styles {
-  static TextStyle noAvatarPhone = TextStyle(
-    color: Colors.white.withOpacity(0.7),
-    fontSize: Measurements.height * 0.035,
-    fontWeight: FontWeight.w500,
-  );
-  static TextStyle noAvatarTablet = TextStyle(
-    color: Colors.white.withOpacity(0.7),
-    fontSize: Measurements.height * 0.025,
-    fontWeight: FontWeight.w500,
-  );
-}
+//class Styles {
+//  static TextStyle noAvatarPhone = TextStyle(
+//    color: Colors.white.withOpacity(0.7),
+//    fontSize: Measurements.height * 0.035,
+//    fontWeight: FontWeight.w500,
+//  );
+//  static TextStyle noAvatarTablet = TextStyle(
+//    color: Colors.white.withOpacity(0.7),
+//    fontSize: Measurements.height * 0.025,
+//    fontWeight: FontWeight.w500,
+//  );
+//}
 
 class Measurements {
   static double height;
@@ -257,11 +260,10 @@ class Measurements {
   static paymentTypeIcon(String type, bool isTablet) {
     double size = Measurements.width * (isTablet ? 0.03 : 0.055);
     print(size);
-    Color _color = Colors.white.withOpacity(0.7);
     return SvgPicture.asset(
       Measurements.paymentType(type),
       height: AppStyle.iconDashboardCardSize(isTablet),
-      color: _color,
+      color: iconColor(),
     );
   }
 
@@ -310,8 +312,15 @@ class Measurements {
     return displayName = displayName.toUpperCase();
   }
 }
+
 Color hexToColor(String code) {
   return new Color(int.parse(code.substring(1, 9), radix: 16) + 0xFF000000);
+}
+
+enum Appearance {
+  Light,
+  Dark,
+  Default
 }
 
 class GlobalUtils {
@@ -320,7 +329,23 @@ class GlobalUtils {
   static bool isLoaded = false;
   static var isDashboardLoaded = false;
   static String fingerprint = '';
-
+  static String theme = changeThemeBloc.state.theme;
+  static bool isConnected = true;
+  static bool isBusinessMode = true;
+  static Appearance appearance = Appearance.Default;
+  // Global Params
+  // static User user;
+  // static Business currentBusiness;
+  // static String wallpaper;
+  //
+  // static List<Terminal> terminals;
+  // static Terminal activeTerminal;
+  //
+  // static List<ChannelSet> channelSets;
+  // static Checkout defaultCheckout;
+  //
+  // static List<ProductsModel> products;
+  // static List<CollectionModel> collections;
   //URLS
   //static String  pass= 'P@ssword123';//test 1
   // static String  pass= 'Test1234!';//staging 1
@@ -337,7 +362,7 @@ class GlobalUtils {
   //static String  mail= 'service@payever.de';//staging 2
 
   //static const String COMMERCE_OS_URL = 'https://commerceos.test.devpayever.com';//test
-//  static const String COMMERCE_OS_URL = 'https://commerceos.staging.devpayever.com';//staging
+  // static const String COMMERCE_OS_URL = 'https://commerceos.staging.devpayever.com';//staging
   static const String COMMERCE_OS_URL = 'https://commerceos.payever.org'; //live
 
   static const String POS_URL = 'https://getpayever.com/pos';
@@ -347,9 +372,14 @@ class GlobalUtils {
   //static const String SIGN_UP = COMMERCE_OS_URL+'/entry/registration/business';
   static const String SIGN_UP = 'https://getpayever.com/business/trial';
 
+  static const String termsLink = 'https://getpayever.com/agb?_ga=2.220255708.595830855.1600031280-238550036.1593180292';
+  static const String privacyLink = 'https://getpayever.com/about/privacy?_ga=2.155685503.595830855.1600031280-238550036.1593180292';
+
+  static const String googleMapAPIKey = 'AIzaSyDB-7kzuFYxb8resf60yF21TKUkTbGhljc';
   //Preferences Keys
   static const String EMAIL = 'email';
   static const String PASSWORD = 'password';
+  static const String USER_ID = 'user_id';
   static const String DEVICE_ID = 'id';
   static const String FINGERPRINT = 'fingerPrint';
   static const String WALLPAPER = 'wallpaper';
@@ -360,20 +390,10 @@ class GlobalUtils {
   static const String LAST_OPEN = 'lastOpen';
   static const String EVENTS_KEY = 'fetch_events';
   static const String LANGUAGE = 'language';
-
-  // static Channels
-
-  static const String CHANNEL_POS = 'pos';
-  static const String CHANNEL_SHOP = 'shop';
-
   // token__
-  static const String DB_TOKEN = 'Token';
+
   static const String DB_TOKEN_ACC = 'accessToken';
   static const String DB_TOKEN_RFS = 'refreshToken';
-
-  // tables__
-  static const String DB_USER = 'User';
-  static const String DB_BUSINESS = 'Business';
 
   // user__
   static const String DB_USER_ID = '_id';
@@ -384,7 +404,7 @@ class GlobalUtils {
   static const String DB_USER_CREATED_AT = 'createdAt';
   static const String DB_USER_UPDATED_AT = 'updatedAt';
   static const String DB_USER_BIRTHDAY = 'birthday';
-  static const String DB_USER_SALUTATION = 'salut ation';
+  static const String DB_USER_SALUTATION = 'salutation';
   static const String DB_USER_PHONE = 'phone';
   static const String DB_USER_LOGO = 'logo';
 
@@ -438,206 +458,6 @@ class GlobalUtils {
   static const String DB_BUSINESS_CMDT_SALES_RANGE_MAX = 'max';
   static const String DB_BUSINESS_CMDT_SALES_RANGE_ID = '_id';
 
-  // transactions__
-  static const String DB_TRANSACTIONS_COLLECTION = 'collection';
-  static const String DB_TRANSACTIONS_FILTER = 'filters';
-  static const String DB_TRANSACTIONS_PAGINATION = 'pagination_data';
-  static const String DB_TRANSACTIONS_USAGES = 'usage';
-
-  static const String DB_TRANSACTIONS_C_ACTION_R = 'action_running';
-  static const String DB_TRANSACTIONS_C_AMOUNT = 'amount';
-  static const String DB_TRANSACTIONS_C_BILLING = 'billing_address';
-  static const String DB_TRANSACTIONS_C_BUS_OPT = 'business_option_id';
-  static const String DB_TRANSACTIONS_C_BUS_UUID = 'business_uuid';
-  static const String DB_TRANSACTIONS_C_CHANNEL = 'channel';
-  static const String DB_TRANSACTIONS_C_CH_SET = 'channel_set_uuid';
-  static const String DB_TRANSACTIONS_C_CREATED_AT = 'created_at';
-  static const String DB_TRANSACTIONS_C_CURRENCY = 'currency';
-  static const String DB_TRANSACTIONS_C_CUSTOMER_E = 'customer_email';
-  static const String DB_TRANSACTIONS_C_CUSTOMER_N = 'customer_name';
-  static const String DB_TRANSACTIONS_C_HISTORY = 'history';
-  static const String DB_TRANSACTIONS_C_ITEMS = 'items';
-  static const String DB_TRANSACTIONS_C_MERCHANT_E = 'merchant_email';
-  static const String DB_TRANSACTIONS_C_MERCHANT_N = 'merchant_name';
-  static const String DB_TRANSACTIONS_C_ORIGINAL_ID = 'original_id';
-  static const String DB_TRANSACTIONS_C_PAYMENT_DET = 'payment_details';
-  static const String DB_TRANSACTIONS_C_PAYMENT_FLO = 'payment_flow_id';
-  static const String DB_TRANSACTIONS_C_PLACE = 'place';
-  static const String DB_TRANSACTIONS_C_REFERENCE = 'reference';
-  static const String DB_TRANSACTIONS_C_SANTANDER = 'santander_applications';
-  static const String DB_TRANSACTIONS_C_STATUS = 'status';
-  static const String DB_TRANSACTIONS_C_TOTAL = 'total';
-  static const String DB_TRANSACTIONS_C_TYPE = 'type';
-  static const String DB_TRANSACTIONS_C_UPDATED_AT = 'updated_at';
-  static const String DB_TRANSACTIONS_C_UUID = 'uuid';
-  static const String DB_TRANSACTIONS_C_ID = '_id';
-
-  static const String DB_TRANSACTIONS_P_PAGE = 'page';
-  static const String DB_TRANSACTIONS_P_CURRENT = 'current';
-  static const String DB_TRANSACTIONS_P_TOTAL = 'total';
-  static const String DB_TRANSACTIONS_P_TOTAL_COUNT = 'totalCount';
-  static const String DB_TRANSACTIONS_P_AMOUNT = 'amount';
-
-  static const String DB_TRANSACTIONS_U_SPECIFIC = 'specific_statuses';
-  static const String DB_TRANSACTIONS_U_STATUS = 'statuses';
-
-  static const String DB_TRANSACTIONS_C_B_CITY = 'city';
-  static const String DB_TRANSACTIONS_C_B_COUNTRY = 'country';
-  static const String DB_TRANSACTIONS_C_B_COUNTRY_N = 'country_name';
-  static const String DB_TRANSACTIONS_C_B_EMAIL = 'email';
-  static const String DB_TRANSACTIONS_C_B_FIRST_NAME = 'first_name';
-  static const String DB_TRANSACTIONS_C_B_LAST_NAME = 'last_name';
-  static const String DB_TRANSACTIONS_C_B_SALUTATION = 'salutation';
-  static const String DB_TRANSACTIONS_C_B_STREET = 'street';
-  static const String DB_TRANSACTIONS_C_B_ZIP_CODE = 'zip_code';
-  static const String DB_TRANSACTIONS_C_B_ID = '_id';
-
-  static const String DB_TRANSACTIONS_C_H_ACTION = 'action';
-  static const String DB_TRANSACTIONS_C_H_CREATED_AT = 'created_at';
-  static const String DB_TRANSACTIONS_C_H_PAYMENT_ST = 'payment_status';
-  static const String DB_TRANSACTIONS_C_H_REFUNDS = 'refund_items';
-  static const String DB_TRANSACTIONS_C_H_UPLOAD = 'upload_items';
-  static const String DB_TRANSACTIONS_C_H_ID = '_id';
-
-  static const String DB_TRANS_DETAIL_ACTIONS = 'actions';
-  static const String DB_TRANS_DETAIL_ACT_ACTION = 'action';
-  static const String DB_TRANS_DETAIL_ACT_ENABLED = 'enabled';
-  static const String DB_TRANS_DETAIL_BILLING_ADDRESS = 'billing_address';
-  static const String DB_TRANS_DETAIL_BA_CITY = 'city';
-  static const String DB_TRANS_DETAIL_BA_COUNTRY = 'country';
-  static const String DB_TRANS_DETAIL_BA_COUNTRY_NAME = 'country_name';
-  static const String DB_TRANS_DETAIL_BA_EMAIL = 'email';
-  static const String DB_TRANS_DETAIL_BA_FIRST_NAME = 'first_name';
-  static const String DB_TRANS_DETAIL_BA_LAST_NAME = 'last_name';
-  static const String DB_TRANS_DETAIL_BA_ID = 'id';
-  static const String DB_TRANS_DETAIL_BA_SALUTATION = 'salutation';
-  static const String DB_TRANS_DETAIL_BA_STREET = 'street';
-  static const String DB_TRANS_DETAIL_BA_ZIP_CODE = 'zip_code';
-  static const String DB_TRANS_DETAIL_BA__ID = '_id';
-  static const String DB_TRANS_DETAIL_BUSINESS = 'business';
-  static const String DB_TRANS_DETAIL_BUSINESS_UUID = 'uuid';
-  static const String DB_TRANS_DETAIL_CART = 'cart';
-  static const String DB_TRANS_DETAIL_ITEMS = 'items';
-  static const String DB_TRANS_DETAIL_IT_CREATED_AT = 'created_at';
-  static const String DB_TRANS_DETAIL_IT_ID = 'id';
-  static const String DB_TRANS_DETAIL_IT_IDENTIFIER = 'identifier';
-  static const String DB_TRANS_DETAIL_IT_NAME = 'name';
-  static const String DB_TRANS_DETAIL_IT_PRICE = 'price';
-  static const String DB_TRANS_DETAIL_IT_PRICE_NET = 'price_net';
-  static const String DB_TRANS_DETAIL_IT_QUANTITY = 'quantity';
-  static const String DB_TRANS_DETAIL_IT_THUMBNAIL = 'thumbnail';
-  static const String DB_TRANS_DETAIL_IT_UPDATED_AT = 'upadated_at';
-  static const String DB_TRANS_DETAIL_IT_VAT_RATE = 'vat_rate';
-  static const String DB_TRANS_DETAIL_IT__ID = '_id';
-  static const String DB_TRANS_DETAIL_ITEMS_AVAIL_REF =
-      'available_refund_items';
-  static const String DB_TRANS_DETAIL_IT_REF_COUNT = 'count';
-  static const String DB_TRANS_DETAIL_IT_REF_UUID = 'item_uuid';
-  static const String DB_TRANS_DETAIL_CHANNEL = 'channel';
-  static const String DB_TRANS_DETAIL_CHANNEL_NAME = 'name';
-  static const String DB_TRANS_DETAIL_CHANNEL_SET = 'channel_set';
-  static const String DB_TRANS_DETAIL_CHANNEL_SET_UUID = 'uuid';
-  static const String DB_TRANS_DETAIL_CUSTOMER = 'customer';
-  static const String DB_TRANS_DETAIL_CUSTOMER_EMAIL = 'email';
-  static const String DB_TRANS_DETAIL_CUSTOMER_NAME = 'name';
-  static const String DB_TRANS_DETAIL_HISTORY = 'history';
-  static const String DB_TRANS_DETAIL_HIST_ACTION = 'action';
-  static const String DB_TRANS_DETAIL_HIST_CREATED_AT = 'created_at';
-  static const String DB_TRANS_DETAIL_HIST_ID = 'id';
-  static const String DB_TRANS_DETAIL_HIST_REFUND_IT = 'refund_items';
-  static const String DB_TRANS_DETAIL_HIST_UPLOAD_IT = 'upload_items';
-  static const String DB_TRANS_DETAIL_HIST__ID = '_id';
-  static const String DB_TRANS_DETAIL_HIST_AMOUNT = 'amount';
-  static const String DB_TRANS_DETAIL_HIST_PAY_STATUS = 'payment_status';
-  static const String DB_TRANS_DETAIL_MERCHANT = 'merchant';
-  static const String DB_TRANS_DETAIL_MERC_EMAIL = 'email';
-  static const String DB_TRANS_DETAIL_MERC_NAME = 'name';
-  static const String DB_TRANS_DETAIL_PAYMENT_FLOW = 'payment_flow';
-  static const String DB_TRANS_DETAIL_PAYMENT_FLOW_ID = 'id';
-  static const String DB_TRANS_DETAIL_PAYMENT_OPTION = 'payment_option';
-  static const String DB_TRANS_DETAIL_PAY_OPT_DOWN_PAY = 'down_payment';
-  static const String DB_TRANS_DETAIL_PAY_OPT_FEE = 'payment_fee';
-  static const String DB_TRANS_DETAIL_PAY_OPT_ID = 'id';
-  static const String DB_TRANS_DETAIL_PAY_OPT_TYPE = 'type';
-  static const String DB_TRANS_DETAIL_SHIPPING = 'shipping';
-  static const String DB_TRANS_DETAIL_SHIPPING_METHOD = 'method_name';
-  static const String DB_TRANS_DETAIL_SHIPPING_FEE = 'delivery_fee';
-  static const String DB_TRANS_DETAIL_STATUS = 'status';
-  static const String DB_TRANS_DETAIL_STATUS_GENERAL = 'general';
-  static const String DB_TRANS_DETAIL_STATUS_PLACE = 'place';
-  static const String DB_TRANS_DETAIL_STATUS_SPECIFIC = 'specific';
-  static const String DB_TRANS_DETAIL_STORE = 'store';
-  static const String DB_TRANS_DETAIL_TRANSACTION = 'transaction';
-  static const String DB_TRANS_DETAIL_TRANS_AMOUNT = 'amount';
-  static const String DB_TRANS_DETAIL_TRANS_AMOUNT_REF = 'amount_refunded';
-  static const String DB_TRANS_DETAIL_TRANS_AMOUNT_REST = 'amount_rest';
-  static const String DB_TRANS_DETAIL_TRANS_CREATED_AT = 'created_at';
-  static const String DB_TRANS_DETAIL_TRANS_CURRENCY = 'currency';
-  static const String DB_TRANS_DETAIL_TRANS_ID = 'id';
-  static const String DB_TRANS_DETAIL_TRANS_ORIGINAL_ID = 'original_id';
-  static const String DB_TRANS_DETAIL_TRANS_REFERENCE = 'reference';
-  static const String DB_TRANS_DETAIL_TRANS_TOTAL = 'total';
-  static const String DB_TRANS_DETAIL_TRANS_UPDATED_AT = 'updated_at';
-  static const String DB_TRANS_DETAIL_TRANS_UUID = 'uuid';
-  static const String DB_TRANS_DETAIL_USER = 'user';
-  static const String DB_TRANS_DETAIL_ORDER = 'order';
-  static const String DB_TRANS_DETAIL_DETAILS = 'details';
-  static const String DB_TRANS_DETAIL_OR_FINANCE_ID = 'finance_id';
-  static const String DB_TRANS_DETAIL_OR_APPLICATION_NO = 'application_no';
-  static const String DB_TRANS_DETAIL_OR_APPLICATION_NU = 'application_number';
-  static const String DB_TRANS_DETAIL_OR_USAGE_TEXT = 'usage_text';
-  static const String DB_TRANS_DETAIL_OR_PAN_ID = 'pan_id';
-  static const String DB_TRANS_DETAIL_OR_REFERENCE = 'reference';
-  static const String DB_TRANS_DETAIL_OR_IBAN = 'iban';
-  static const String DB_TRANS_DETAIL_OR__IBAN = 'bank_i_b_a_n';
-  static const String DB_TRANS_DETAIL_ITEM_OPTIONS = 'options';
-  static const String DB_TRANS_DETAIL_ITEM_OPTION_ID = 'id';
-  static const String DB_TRANS_DETAIL_ITEM_OPTION_NAME = 'name';
-  static const String DB_TRANS_DETAIL_ITEM_OPTION_VALUE = 'value';
-
-  //POS
-  static const String DB_POS_TERMINAL_ACTIVE = 'active';
-  static const String DB_POS_TERMINAL_BUSINESS = 'business';
-  static const String DB_POS_TERMINAL_CHANNEL_SET = 'channelSet';
-  static const String DB_POS_TERMINAL_CREATED_AT = 'createdAt';
-  static const String DB_POS_TERMINAL_DEFAULT_LOCALE = 'defaultLocale';
-  static const String DB_POS_TERMINAL_INTEGRATION_SUB =
-      'integrationSubscriptions';
-  static const String DB_POS_TERMINAL_LOCALES = 'locales';
-  static const String DB_POS_TERMINAL_LOGO = 'logo';
-  static const String DB_POS_TERMINAL_NAME = 'name';
-  static const String DB_POS_TERMINAL_THEME = 'theme';
-  static const String DB_POS_TERMINAL_UPDATED_AT = 'updatedAt';
-  static const String DB_POS_TERMINAL_V = '__v';
-  static const String DB_POS_TERMINAL_ID = '_id';
-
-  static const String DB_POS_CHANNEL_SET_CHECKOUT = 'checkout';
-  static const String DB_POS_CHANNEL_SET_ID = 'id';
-  static const String DB_POS_CHANNEL_SET_NAME = 'name';
-  static const String DB_POS_CHANNEL_SET_TYPE = 'type';
-
-  static const String DB_POS_TERM_PRODUCT_CHANNEL_SET = 'channelSet';
-  static const String DB_POS_TERM_PRODUCT_ID = 'id';
-  static const String DB_POS_TERM_PRODUCT_LAST_SELL = 'lastSell';
-  static const String DB_POS_TERM_PRODUCT_NAME = 'name';
-  static const String DB_POS_TERM_PRODUCT_QUANTITY = 'quantity';
-  static const String DB_POS_TERM_PRODUCT_THUMBNAIL = 'thumbnail';
-  static const String DB_POS_TERM_PRODUCT_UUID = 'uuid';
-  static const String DB_POS_TERM_PRODUCT_V = '__v';
-  static const String DB_POS_TERM_PRODUCT__ID = '_id';
-
-  static const String DB_POS_CART = 'cart';
-  static const String DB_POS_CART_CART_ID = 'id';
-  static const String DB_POS_CART_CART_IDENTIFIER = 'identifier';
-  static const String DB_POS_CART_CART_IMAGE = 'image';
-  static const String DB_POS_CART_CART_NAME = 'name';
-  static const String DB_POS_CART_CART_PRICE = 'price';
-  static const String DB_POS_CART_CART_QTY = 'quantity';
-  static const String DB_POS_CART_CART_SKU = 'sku';
-  static const String DB_POS_CART_CART_UUID = 'uuid';
-  static const String DB_POS_CART_CART_VAT = 'vat';
-  static const String DB_POS_CART_ID = 'id';
-  static const String DB_POS_CART_TOTAL = 'total';
 
   static const String DB_PROD_BUSINESS = 'business';
   static const String DB_PROD_ID = 'id';
@@ -710,29 +530,6 @@ class GlobalUtils {
   static const String DB_PROD_INFO_ITEM_PAGE_COUNT = 'page_count';
   static const String DB_PROD_INFO_ITEM_PER_PAGE = 'per_page';
 
-  static const String DB_SHOP_ACTIVE = 'active';
-  static const String DB_SHOP_BUSINESS = 'business';
-  static const String DB_SHOP_CHANNEL_SET = 'channelSet';
-  static const String DB_SHOP_CREATED_AT = 'createdAt';
-  static const String DB_SHOP_DEFAULT_LOCALE = 'defaultLocale';
-  static const String DB_SHOP_LIVE = 'live';
-  static const String DB_SHOP_LOCALES = 'locales';
-  static const String DB_SHOP_LOGO = 'logo';
-  static const String DB_SHOP_NAME = 'name';
-  static const String DB_SHOP_THEME = 'theme';
-  static const String DB_SHOP_UPDATED_AT = 'updatedAt';
-  static const String DB_SHOP__v = '__v';
-  static const String DB_SHOP_ID = '_id';
-
-  static const String DB_CHECKOUT_SECTIONS = 'sections';
-  static const String DB_CHECKOUT_SECTIONS_CODE = 'code';
-  static const String DB_CHECKOUT_SECTIONS_ENABLED = 'enabled';
-  static const String DB_CHECKOUT_SECTIONS_DEFAULT_ENABLED = 'defaultEnabled';
-  static const String DB_CHECKOUT_SECTIONS_FIXED = 'fixed';
-  static const String DB_CHECKOUT_SECTIONS_ORDER = 'order';
-  static const String DB_CHECKOUT_SECTIONS_EXCLUDED = 'excluded_channels';
-  static const String DB_CHECKOUT_SECTIONS_SUB_SEC = 'subsections';
-
   static const String DB_TUTORIAL_INIT = '\$init';
   static const String DB_TUTORIAL_ICON = 'icon';
   static const String DB_TUTORIAL_ORDER = 'order';
@@ -793,6 +590,7 @@ class GlobalUtils {
   static const String ENV_NOTIFICATIONS = 'notifications';
   static const String ENV_CONTACTS = 'contacts';
   static const String ENV_FINANCE_EXPRESS = 'financeExpress';
+  static const String ENV_BACKEND_PLUGINS = 'plugins';
 
   // dashboard_
   static const String CURRENT_WALLPAPER = 'currentWallpaper';
@@ -873,12 +671,35 @@ class GlobalUtils {
   static const String APP_WID_LAST_DATE = 'date';
   static const String APP_WID_LAST_AMOUNT = 'amount';
 
-  static void clearCredentials() async {
-    FlutterSecureStorage storage = FlutterSecureStorage();
-    await storage.delete(key: GlobalUtils.TOKEN);
-    await storage.delete(key: GlobalUtils.BUSINESS);
-    await storage.delete(key: GlobalUtils.REFRESH_TOKEN);
+  static const String PAYMENT_CASH = 'cash';
+  static const String PAYMENT_PAYPAL = 'paypal';
+  static const String PAYMENT_STRIPE = 'stripe';
+  static const String PAYMENT_STRIPE_DIRECT = 'stripe_directdebit';
+  static const String PAYMENT_INSTANT = 'instant_payment';
+  static const String PAYMENT_SANTANDER_POS_INSTALLMENT = 'santander_pos_installment';
+  static const String PAYMENT_SANTANDER_FACTORING = 'santander_pos_factoring';
+  static const String PAYMENT_SANTANDER_INVOICE = 'santander_invoice';
+  static const String PAYMENT_SANTANDER_POS_INVOICE = 'santander_pos_invoice';
+  static const String PAYMENT_SANTANDER_INSTALLMENT = 'santander_installment';
+  static const String PAYMENT_SANTANDER_CCP_INSTALLMANT = 'santander_ccp_installment';
+  static const String PAYMENT_PAYEX_FAKTURA = 'payex_faktura';
 
+  static void setCredentials({String email, String password, Token tokenData}) async {
+    GlobalUtils.activeToken = tokenData;
+    SharedPreferences.getInstance().then((p) {
+      if (email != null && email.isNotEmpty)
+        p.setString(GlobalUtils.EMAIL, email);
+
+      if (password != null && password.isNotEmpty)
+        p.setString(GlobalUtils.PASSWORD, password);
+
+      p.setString(GlobalUtils.TOKEN, tokenData.accessToken);
+      p.setString(GlobalUtils.REFRESH_TOKEN, tokenData.refreshToken);
+    });
+    print('REFRESH TOKEN = ${tokenData.refreshToken}');
+  }
+
+  static void clearCredentials() async {
     SharedPreferences.getInstance().then((p) {
       p.setString(GlobalUtils.BUSINESS, '');
       p.setString(GlobalUtils.WALLPAPER, '');
@@ -900,7 +721,181 @@ class GlobalUtils {
     positions.add('Others');
     return positions;
   }
+
+  static bool isPortrait(BuildContext context) {
+    bool _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
+    Measurements.height = (_isPortrait
+        ? MediaQuery.of(context).size.height
+        : MediaQuery.of(context).size.width);
+    Measurements.width = (_isPortrait
+        ? MediaQuery.of(context).size.width
+        : MediaQuery.of(context).size.height);
+    return _isPortrait;
+  }
+
+  static bool isTablet(BuildContext context) {
+    bool _isPortrait = GlobalUtils.isPortrait(context);
+    bool isTablet;
+
+    if (_isPortrait)
+      isTablet = MediaQuery.of(context).size.width > 600;
+    else
+      isTablet = MediaQuery.of(context).size.height > 600;
+    if (mainWidth == 0) {
+      mainWidth = isTablet ? Measurements.width * 0.7 : Measurements.width;
+    }
+    return isTablet;
+  }
+  static double mainWidth = 0;
 }
 
 String imageBase = Env.storage + '/images/';
 String wallpaperBase = Env.storage + '/wallpapers/';
+
+
+Future<List<Country>> prepareDefaultCountries() async {
+  List<Country> countries;
+  try {
+    countries = await IsoCountries.iso_countries;
+  } on PlatformException {
+    countries = null;
+  }
+  return countries;
+}
+
+Future<Country> getCountryForCodeWithIdentifier(
+    String code, String localeIdentifier) async {
+  Country _country;
+  try {
+    _country = await IsoCountries.iso_country_for_code_for_locale(code,
+        locale_identifier: localeIdentifier);
+  } on PlatformException {
+    _country = null;
+  }
+  return _country;
+}
+
+String getCountryCode(String countryName, List<Country> countryList) {
+  return countryList.where((element) => element.name == countryName).toList().first.countryCode;
+}
+
+Color authScreenBgColor() {
+  return GlobalUtils.theme == 'light'
+      ? Colors.white
+      : Colors.black.withOpacity(0.7);
+}
+
+BoxDecoration authBtnDecoration() {
+  return BoxDecoration(
+    shape: BoxShape.rectangle,
+    gradient: LinearGradient(
+      colors: [
+        Color.fromRGBO(31, 31, 31, 1),
+        Color.fromRGBO(15, 15, 15, 1)
+      ],
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+    ),
+    borderRadius: BorderRadius.only(
+      bottomLeft: Radius.circular(8.0),
+      bottomRight: Radius.circular(8.0),
+    ),
+  );
+}
+
+class MenuItem {
+  final String title;
+  final Color textColor;
+  final Widget icon;
+  final Function onTap;
+
+  MenuItem({
+    this.title,
+    this.icon,
+    this.textColor = Colors.black,
+    this.onTap,
+  });
+}
+
+List<MenuItem> gridListPopUpActions(Function onTapGrid) {
+  return [
+    MenuItem(
+      title: 'List',
+      icon: SvgPicture.asset(
+        'assets/images/list.svg',
+        color: iconColor(),
+      ),
+      onTap:() {onTapGrid(false);}
+    ),
+    MenuItem(
+      title: 'Grid',
+      icon: SvgPicture.asset(
+        'assets/images/grid.svg',
+        color: iconColor(),
+      ),
+      onTap: () {onTapGrid(true);},
+    ),
+  ];
+}
+
+bool isNumeric(String s) {
+  if(s == null) {
+    return false;
+  }
+  return double.parse(s, (e) => null) != null;
+}
+
+// TextField Attributes
+TextStyle textFieldStyle = TextStyle(fontSize: 13,fontWeight: FontWeight.w500,);
+
+TextStyle errorTextFieldColor = TextStyle(color: Colors.redAccent);
+
+InputDecoration textFieldDecoration(String label, {Widget prefixIcon}) {
+  if (prefixIcon != null) {
+    return InputDecoration(
+      prefixIcon: prefixIcon,
+      contentPadding:
+      EdgeInsets.symmetric(horizontal: 16, vertical: 11),
+      labelText: label,
+      labelStyle: TextStyle(
+        color: Colors.grey,
+        fontSize: 12,
+      ),
+      border: InputBorder.none,
+      focusedBorder: InputBorder.none,
+      enabledBorder: InputBorder.none,
+      errorBorder: InputBorder.none,
+      disabledBorder: InputBorder.none,
+      errorStyle: errorTextFieldColor,
+    );
+  }
+  return InputDecoration(
+    contentPadding:
+    EdgeInsets.symmetric(horizontal: 16, vertical: 11),
+    labelText: label,
+    labelStyle: TextStyle(
+      color: Colors.grey,
+      fontSize: 12,
+    ),
+    border: InputBorder.none,
+    focusedBorder: InputBorder.none,
+    enabledBorder: InputBorder.none,
+    errorBorder: InputBorder.none,
+    disabledBorder: InputBorder.none,
+    errorStyle: errorTextFieldColor,
+  );
+}
+
+final formatter = new NumberFormat('###,###,###.00', 'en_US');
+
+String getDisplayName(String name) {
+  String displayName;
+  if (name.contains(' ')) {
+    displayName = name.substring(0, 1);
+    displayName = displayName + name.split(' ')[1].substring(0, 1);
+  } else {
+    displayName = name.substring(0, 1) + name.substring(name.length - 1);
+    displayName = displayName.toUpperCase();
+  }
+  return displayName;
+}

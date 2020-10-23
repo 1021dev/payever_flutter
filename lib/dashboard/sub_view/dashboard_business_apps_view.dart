@@ -1,23 +1,29 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/commons/commons.dart';
-import 'package:payever/commons/utils/env.dart';
-import 'package:payever/commons/views/custom_elements/BusinessAppCell.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
+import 'package:payever/theme.dart';
 
 class DashboardBusinessAppsView extends StatefulWidget {
   final List<BusinessApps> businessApps;
   final List<AppWidget> appWidgets;
   final Function onTapEdit;
   final Function onTapWidget;
+  final bool isTablet;
+  final String openAppCode;
+
   DashboardBusinessAppsView({
     this.businessApps,
     this.appWidgets,
     this.onTapEdit,
     this.onTapWidget,
+    this.isTablet,
+    this.openAppCode,
   });
+
   @override
-  _DashboardBusinessAppsViewState createState() => _DashboardBusinessAppsViewState();
+  _DashboardBusinessAppsViewState createState() =>
+      _DashboardBusinessAppsViewState();
 }
 
 class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
@@ -25,80 +31,167 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
   Widget build(BuildContext context) {
     List<BusinessApps> businessApps = widget.businessApps.where((element) {
       String title = element.dashboardInfo.title ?? '';
-      if (element.installed && title != '') {
-        return true;
+      if (title != '') {
+        if (title.contains('store') ||
+            title.contains('transactions') ||
+            title.contains('connect') ||
+            title.contains('checkout') ||
+            title.contains('contacts') ||
+            title.contains('products') ||
+            title.contains('setting') ||
+            title.contains('pos')) {
+          return true;
+        }
+        return false;
       } else {
         return false;
       }
     }).toList();
+    businessApps.sort((b1, b2) {
+      if (b2.installed) {
+        return 1;
+      }
+      return -1;
+    });
+    BusinessApps setting = businessApps.firstWhere(
+        (element) => element.dashboardInfo.title.contains('setting'));
+    businessApps.remove(setting);
+    businessApps.add(setting);
     return BlurEffectView(
-      padding: EdgeInsets.fromLTRB(14, 12, 14, 0),
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+      isDashboard: true,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          InkWell(
+            onTap: widget.onTapEdit,
+            child: Container(
+              width: double.infinity,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'APPS',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 14,
+          ),
+          if (businessApps != null)
+            _gridView(businessApps),
+        ],
+      ),
+    );
+  }
+
+  Widget _gridView(List<BusinessApps> businessApps) {
+    int crossAxisCount = widget.isTablet ? 6 : 4;
+    int columnCount = businessApps.length ~/ crossAxisCount + ((businessApps.length % crossAxisCount == 0) ? 0 : 1);
+    double height = columnCount * 86.0 + (columnCount - 1) * 30.0;
+    return Container(
+      height: height,
+      child: GridView.count(
+        crossAxisCount: crossAxisCount,
+        mainAxisSpacing: 0,
+        crossAxisSpacing: (GlobalUtils.mainWidth - 64 - 68 * crossAxisCount) / (crossAxisCount - 1),
+        controller: new ScrollController(keepScrollOffset: false),
+        shrinkWrap: true,
+        scrollDirection: Axis.vertical,
+        childAspectRatio: 10 / 16,
+        children: businessApps.map((e) => _itemBuilder(e)).toList(),
+        physics: NeverScrollableScrollPhysics(),
+      ),
+    );
+  }
+
+  Widget _itemBuilder(BusinessApps currentApp) {
+    String icon = currentApp.dashboardInfo.icon;
+    icon = icon.replaceAll('32', '64');
+    String code = currentApp.code;
+    if (code == 'products') {
+      code = 'product';
+    }
+    String title = currentApp.dashboardInfo.title;
+    if (title.contains('setting')) {
+      title = 'info_boxes.settings.heading';
+    }
+    return GestureDetector(
+      onTap: () {
+        widget.onTapWidget(currentApp);
+      },
       child: Container(
-        height: 56 + (businessApps.length / 4).ceilToDouble() * 86,
+        width: 68,
+        height: 86,
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Stack(
               children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 20,
-                      height: 20,
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: NetworkImage('${Env.cdnIcon}icons-apps-white/icon-apps-white-dashboard.png'),
-                              fit: BoxFit.scaleDown)),
-                    ),
-                    SizedBox(width: 8,),
-                    Text(
-                      'BUSINESS APPS',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                      ),
-                    )
-                  ],
-                ),
-                InkWell(
-                  onTap: widget.onTapEdit,
+                Container(
+                  width: 68,
+                  height: 68,
+                  alignment: Alignment.center,
                   child: Container(
-                    height: 20,
-                    width: 40,
+                    width: 44,
+                    height: 44,
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.black.withAlpha(100)
-                    ),
-                    child: Center(
-                      child: Text(
-                        Language.getCommerceOSStrings('Edit'),
-                        style: TextStyle(
-                            fontSize: 10,
-                            color: Colors.white
+                      image: DecorationImage(
+                        image: NetworkImage(
+                          '${Env.cdnIcon}icon-comerceos-$code-not-installed.png',
                         ),
+                        fit: BoxFit.contain,
                       ),
                     ),
                   ),
+                  decoration: BoxDecoration(
+                    color: overlayDashboardAppsBackground(),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
+                if (widget.openAppCode == currentApp.code)
+                  Container(
+                      width: 68,
+                      height: 68,
+                      padding: EdgeInsets.all(10),
+                      child: Center(child: CircularProgressIndicator()))
               ],
             ),
-            Padding(
-              padding: EdgeInsets.only(top: 8),
-            ),
-            if (businessApps != null) Expanded(
-              child: GridView.count(
-                crossAxisCount: 4,
-                children: businessApps.map((e) => BusinessAppCell(
-                  onTap: (){
-                    widget.onTapWidget(e);
-                  },
-                  currentApp: e,
-                )).toList(),
-                physics: NeverScrollableScrollPhysics(),
+            SizedBox(height: 4),
+            Container(
+              height: 14,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  !currentApp.dashboardInfo.title.contains('setting') &&
+                          currentApp.setupStatus != 'completed'
+                      ? Container(
+                          width: 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: currentApp.installed
+                                ? Color(0xFF0084FF)
+                                : Color(0xFFC02F1D),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        )
+                      : Container(),
+                  SizedBox(
+                    width: 4,
+                  ),
+                  Flexible(
+                    child: Text(
+                      Language.getCommerceOSStrings(title),
+                      style: TextStyle(
+                        fontSize: 11,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 16),
             ),
           ],
         ),

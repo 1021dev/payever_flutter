@@ -1,5 +1,3 @@
-import 'dart:async';
-import 'dart:io';
 import 'dart:ui';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,159 +5,81 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:flutter_inner_drawer/inner_drawer.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
-import 'package:payever/dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/login/login_screen.dart';
-import 'package:payever/notifications/notifications_screen.dart';
+import 'package:payever/pos/views/pos_connect_init_screen.dart';
 import 'package:payever/pos/views/pos_connect_screen.dart';
 import 'package:payever/pos/views/pos_create_terminal_screen.dart';
 import 'package:payever/pos/views/pos_qr_app.dart';
+import 'package:payever/pos/views/pos_setting_screen.dart';
 import 'package:payever/pos/views/pos_switch_terminals_screen.dart';
 import 'package:payever/pos/views/pos_twillo_settings.dart';
+import 'package:payever/pos/views/products_screen/pos_products_screen.dart';
 import 'package:payever/pos/widgets/pos_top_button.dart';
-import 'package:payever/switcher/switcher_page.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:payever/products/models/models.dart';
+import 'package:payever/theme.dart';
+import 'package:payever/widgets/main_app_bar.dart';
 import 'pos_device_payment_settings.dart';
-
-bool _isPortrait;
-bool _isTablet;
-
 
 class PosInitScreen extends StatelessWidget {
 
-  final List<Terminal> terminals;
-  final Terminal activeTerminal;
   final DashboardScreenBloc dashboardScreenBloc;
 
   PosInitScreen({
-    this.terminals,
-    this.activeTerminal,
     this.dashboardScreenBloc,
   });
 
   @override
   Widget build(BuildContext context) {
-    GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
-
-    return PosScreen(
-      dashboardScreenBloc: dashboardScreenBloc,
-      globalStateModel: globalStateModel,
-      terminals: terminals,
-      activeTerminal: activeTerminal,
-    );
+    return PosScreen(dashboardScreenBloc);
   }
 }
 
 class PosScreen extends StatefulWidget {
 
-  final GlobalStateModel globalStateModel;
-  final List<Terminal> terminals;
-  final Terminal activeTerminal;
   final DashboardScreenBloc dashboardScreenBloc;
+  List<ProductsModel>products = [];
+  Business currentBusiness;
 
-  PosScreen({
-    this.globalStateModel,
-    this.terminals,
-    this.activeTerminal,
-    this.dashboardScreenBloc,
-  });
+  PosScreen(this.dashboardScreenBloc) {
+    if (dashboardScreenBloc.state.posProducts != null &&
+        dashboardScreenBloc.state.posProducts.isNotEmpty)
+      products.addAll(dashboardScreenBloc.state.posProducts);
+    currentBusiness = dashboardScreenBloc.state.activeBusiness;
+  }
 
   @override
   createState() => _PosScreenState();
 }
 
 class _PosScreenState extends State<PosScreen> {
+
   static const platform = const MethodChannel('payever.flutter.dev/tapthephone');
-
-  final GlobalKey<InnerDrawerState> _innerDrawerKey = GlobalKey<InnerDrawerState>();
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
-  InAppWebViewController webView;
-  double progress = 0;
-  String url = '';
-
   PosScreenBloc screenBloc;
-  String wallpaper;
   int selectedIndex = 0;
-  bool isShowCommunications = false;
-
-  List<OverflowMenuItem> appBarPopUpActions(BuildContext context, PosScreenState state) {
-    return [
-      OverflowMenuItem(
-        title: 'Switch terminal',
-        onTap: () async {
-          Navigator.push(
-            context,
-            PageTransition(
-              child: PosSwitchTerminalsScreen(
-                businessId: widget.globalStateModel.currentBusiness.id,
-                screenBloc: screenBloc,
-              ),
-              type: PageTransitionType.fade,
-              duration: Duration(milliseconds: 500),
-            ),
-          );
-        },
-      ),
-      OverflowMenuItem(
-        title: 'Add new terminal',
-        onTap: () async {
-          Navigator.push(
-            context,
-            PageTransition(
-              child: PosCreateTerminalScreen(
-                businessId: widget.globalStateModel.currentBusiness.id,
-                screenBloc: screenBloc,
-              ),
-              type: PageTransitionType.fade,
-              duration: Duration(milliseconds: 500),
-            ),
-          );
-        },
-      ),
-      OverflowMenuItem(
-        title: 'Edit',
-        onTap: () {
-          Navigator.push(
-            context,
-            PageTransition(
-              child: PosCreateTerminalScreen(
-                businessId: widget.globalStateModel.currentBusiness.id,
-                screenBloc: screenBloc,
-                editTerminal: state.activeTerminal,
-              ),
-              type: PageTransitionType.fade,
-              duration: Duration(milliseconds: 500),
-            ),
-          );
-        },
-      ),
-    ];
-  }
+  PosProductsScreen posProductScreen;
+  double mainWidth = 0;
 
   @override
   void initState() {
-    super.initState();
     screenBloc = PosScreenBloc(
       dashboardScreenBloc: widget.dashboardScreenBloc,
-    );
-    screenBloc.add(
-        PosScreenInitEvent(
-          currentBusiness: widget.globalStateModel.currentBusiness,
-          terminals: widget.terminals,
-          activeTerminal: widget.activeTerminal,
-        )
-    );
+    )
+      ..add(PosScreenInitEvent(
+          currentBusiness: widget.dashboardScreenBloc.state.activeBusiness,
+          terminals: widget.dashboardScreenBloc.state.terminalList,
+          activeTerminal: widget.dashboardScreenBloc.state.activeTerminal,
+          defaultCheckout: widget.dashboardScreenBloc.state.defaultCheckout,
+          channelSets: widget.dashboardScreenBloc.state.channelSets,
+          products: widget.products
+      ));
+
+    super.initState();
   }
 
   @override
@@ -168,20 +88,12 @@ class _PosScreenState extends State<PosScreen> {
     super.dispose();
   }
 
-  Future<Null> _showNativeView() async {
-    await platform.invokeMethod('showNativeView');
-  }
-
   @override
   Widget build(BuildContext context) {
-    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
-    Measurements.height = (_isPortrait
-        ? MediaQuery.of(context).size.height
-        : MediaQuery.of(context).size.width);
-    Measurements.width = (_isPortrait
-        ? MediaQuery.of(context).size.width
-        : MediaQuery.of(context).size.height);
-    _isTablet = Measurements.width < 600 ? false : true;
+
+    if (mainWidth == 0) {
+      mainWidth = GlobalUtils.isTablet(context) ? Measurements.width * 0.7 : Measurements.width;
+    }
 
     return BlocListener(
       bloc: screenBloc,
@@ -190,7 +102,7 @@ class _PosScreenState extends State<PosScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );
@@ -199,193 +111,9 @@ class _PosScreenState extends State<PosScreen> {
       child: BlocBuilder<PosScreenBloc, PosScreenState>(
         bloc: screenBloc,
         builder: (BuildContext context, PosScreenState state) {
-          return DashboardMenuView(
-            innerDrawerKey: _innerDrawerKey,
-            onLogout: () async {
-              FlutterSecureStorage storage = FlutterSecureStorage();
-              await storage.delete(key: GlobalUtils.TOKEN);
-              await storage.delete(key: GlobalUtils.BUSINESS);
-              await storage.delete(key: GlobalUtils.REFRESH_TOKEN);
-              SharedPreferences.getInstance().then((p) {
-                p.setString(GlobalUtils.BUSINESS, '');
-                p.setString(GlobalUtils.DEVICE_ID, '');
-              });
-              Navigator.pushReplacement(
-                  context,
-                  PageTransition(
-                      child: LoginScreen(),
-                    type: PageTransitionType.fade,
-                  )
-              );
-            },
-            onSwitchBusiness: () {
-              Navigator.pushReplacement(
-                  context,
-                  PageTransition(
-                      child: SwitcherScreen(),
-                      type: PageTransitionType.fade,
-                  )
-              );
-            },
-            onPersonalInfo: () {
-
-            },
-            onAddBusiness: () {
-
-            },
-            onClose: () {
-              _innerDrawerKey.currentState.toggle();
-            },
-            scaffold: _body(state),
-          );
+          return _body(state);
         },
       ),
-    );
-  }
-
-  Widget _appBar(PosScreenState state) {
-    return AppBar(
-      centerTitle: false,
-      elevation: 0,
-      automaticallyImplyLeading: false,
-      backgroundColor: Colors.black87,
-      title: Row(
-        children: <Widget>[
-          Container(
-            child: Center(
-              child: Container(
-                  child: SvgPicture.asset(
-                    'assets/images/pos.svg',
-                    color: Colors.white,
-                    height: 16,
-                    width: 24,
-                  )
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 8),
-          ),
-          Text(
-            Language.getWidgetStrings('widgets.pos.title'),
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-      actions: <Widget>[
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
-            Icons.person_pin,
-            color: Colors.white,
-            size: 24,
-          ),
-          onPressed: () {
-          },
-        ),
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
-            Icons.search,
-            color: Colors.white,
-            size: 24,
-          ),
-          onPressed: () {
-
-          },
-        ),
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
-            Icons.notifications,
-            color: Colors.white,
-            size: 24,
-          ),
-          onPressed: () async{
-            Provider.of<GlobalStateModel>(context,listen: false)
-                .setCurrentBusiness(widget.dashboardScreenBloc.state.activeBusiness);
-            Provider.of<GlobalStateModel>(context,listen: false)
-                .setCurrentWallpaper(widget.dashboardScreenBloc.state.curWall);
-
-            await showGeneralDialog(
-              barrierColor: null,
-              transitionBuilder: (context, a1, a2, wg) {
-                final curvedValue = Curves.ease.transform(a1.value) -   1.0;
-                return Transform(
-                  transform: Matrix4.translationValues(-curvedValue * 200, 0.0, 0),
-                  child: NotificationsScreen(
-                    business: widget.dashboardScreenBloc.state.activeBusiness,
-                    businessApps: widget.dashboardScreenBloc.state.businessWidgets,
-                    dashboardScreenBloc: widget.dashboardScreenBloc,
-                    type: 'pos',
-                  ),
-                );
-              },
-              transitionDuration: Duration(milliseconds: 200),
-              barrierDismissible: true,
-              barrierLabel: '',
-              context: context,
-              pageBuilder: (context, animation1, animation2) {
-                return null;
-              },
-            );
-          },
-        ),
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
-            Icons.menu,
-            color: Colors.white,
-            size: 24,
-          ),
-          onPressed: () {
-            _innerDrawerKey.currentState.toggle();
-          },
-        ),
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
-            Icons.close,
-            color: Colors.white,
-            size: 24,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        Padding(
-          padding: EdgeInsets.only(right: 16),
-        ),
-      ],
     );
   }
 
@@ -393,163 +121,298 @@ class _PosScreenState extends State<PosScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       resizeToAvoidBottomPadding: false,
-      appBar: _appBar(state),
+      appBar: MainAppbar(
+        dashboardScreenBloc: widget.dashboardScreenBloc,
+        dashboardScreenState: widget.dashboardScreenBloc.state,
+        title:
+        Language.getWidgetStrings('widgets.pos.title'),
+        icon: SvgPicture.asset(
+          'assets/images/pos.svg',
+          color: Colors.white,
+          height: 20,
+          width: 20,
+        ),
+      ),
       body: SafeArea(
+        bottom: false,
         child: BackgroundBase(
           true,
           body: state.isLoading ?
           Center(
             child: CircularProgressIndicator(),
-          ): Center(
-            child: Column(
-              children: <Widget>[
-                _toolBar(state),
-                Expanded(
-                  child: _getBody(state),
-                ),
-              ],
-            ),
+          ): Column(
+            children: <Widget>[
+              // _toolBar(state),
+              Expanded(
+                child: _body1(state),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  Widget _toolBar(PosScreenState state) {
-    return Container(
-      height: 44,
-      color: Colors.black87,
-      child: Row(
-        children: <Widget>[
-          PosTopButton(
-            title: state.activeTerminal != null ? state.activeTerminal.name : '',
-            selectedIndex: selectedIndex,
-            index: 0,
-            onTap: () {
-              setState(() {
-                selectedIndex = 0;
-              });
-            },
-          ),
-          PosTopButton(
-            title: 'Connect',
-            selectedIndex: selectedIndex,
-            index: 1,
-            onTap: () {
-              setState(() {
-                selectedIndex = 1;
-              });
-            },
-          ),
-          PosTopButton(
-            title: 'Settings',
-            index: 2,
-            selectedIndex: selectedIndex,
-            onTap: () {
-              setState(() {
-                selectedIndex = 2;
-              });
-            },
-          ),
-          PosTopButton(
-            title: 'Open',
-            selectedIndex: selectedIndex,
-            index: 3,
-            onTap: () {
-              if (Platform.isAndroid) {
-                _showNativeView();
-              }
-            },
-          ),
-          PopupMenuButton<OverflowMenuItem>(
-            icon: Icon(Icons.more_horiz),
-            offset: Offset(0, 100),
-            onSelected: (OverflowMenuItem item) => item.onTap(),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-            color: Colors.black87,
-            itemBuilder: (BuildContext context) {
-              return appBarPopUpActions(context, state)
-                  .map((OverflowMenuItem item) {
-                return PopupMenuItem<OverflowMenuItem>(
-                  value: item,
-                  child: Text(
-                    item.title,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w300,
+  Widget _body1(PosScreenState state) {
+    return Align(
+      alignment: Alignment.center,
+      child: SingleChildScrollView(
+        child: Container(
+          width: mainWidth,
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+          child: Column(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: overlayBackground(),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  children: [
+                    if (state.activeTerminal != null)
+                      Container(
+                        height: 61,
+                        padding: EdgeInsets.only(left: 14, right: 14),
+                        child: InkWell(
+                          onTap: () {
+                            List<ProductsModel>products = [];
+                            products.addAll(widget.products);
+                            Navigator.push(
+                              context,
+                              PageTransition(
+                                child: PosProductsScreen(
+                                  state.businessId,
+                                  screenBloc,
+                                  products,
+                                  widget.dashboardScreenBloc.state.posProductsInfo,),
+                                type: PageTransitionType.fade,
+                                duration: Duration(milliseconds: 500),
+                              ),
+                            );
+                          },
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 24,
+                                height: 24,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: <Color>[
+                                        Color(0xFFa3a9b8),
+                                        Color(0xFF868a95),
+                                      ]),
+                                ),
+                                child: Text(
+                                  getDisplayName(state.activeTerminal.name),
+                                  style: TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white),
+                                ),
+                              ),
+                              SizedBox(width: 12,),
+                              Expanded(child: Text(state.activeTerminal.name, style: TextStyle(fontSize: 18),)),
+                              Icon(Icons.arrow_forward_ios, size: 20,),
+                            ],
+                          ),
+                        ),
+                      ),
+                    divider,
+                    Container(
+                      height: 61,
+                      padding: EdgeInsets.only(left: 14, right: 14),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            PageTransition(
+                              child: PosSwitchTerminalsScreen(
+                                screenBloc: screenBloc,
+                              ),
+                              type: PageTransitionType.fade,
+                              duration: Duration(milliseconds: 500),
+                            ),
+                          );
+                        },
+                        child: Row(
+                          children: [
+                            SvgPicture.asset('assets/images/switch-terminal.svg', width: 24, height: 24,),
+                            SizedBox(width: 12,),
+                            Expanded(child: Text('Switch terminal', style: TextStyle(fontSize: 18),)),
+                            Icon(Icons.arrow_forward_ios, size: 20),
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
-                );
-              }).toList();
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _getBody(PosScreenState state) {
-    switch(selectedIndex) {
-      case 0:
-        return _defaultTerminalWidget(state);
-      case 1:
-        return _connectWidget(state);
-      case 2:
-        return _settingsWidget(state);
-      default:
-        return Container();
-    }
-  }
-
-  Widget _defaultTerminalWidget(PosScreenState state) {
-    if (state.activeTerminal == null) {
-      return Center(
-        child: CircularProgressIndicator(),
-      );
-    }
-    return Container(
-      color: Colors.white,
-      child: Column(
-        children: <Widget>[
-          Container(
-              padding: EdgeInsets.all(0.0),
-              child: progress < 1.0
-                  ? LinearProgressIndicator(value: progress)
-                  : Container()
-          ),
-          Expanded(
-            child: InAppWebView(
-              initialUrl: "https://${state.activeTerminal.id}.payever.business",
-              initialHeaders: {},
-              initialOptions: InAppWebViewGroupOptions(
-                  crossPlatform: InAppWebViewOptions(
-                    debuggingEnabled: true,
-                  )
+                    divider,
+                    Container(
+                      height: 61,
+                      padding: EdgeInsets.only(left: 14, right: 14),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            PageTransition(
+                              child: PosCreateTerminalScreen(
+                                screenBloc: screenBloc,
+                              ),
+                              type: PageTransitionType.fade,
+                              duration: Duration(milliseconds: 500),
+                            ),
+                          );
+                        },
+                        child: Row(
+                          children: [
+                            SvgPicture.asset('assets/images/add-terminal.svg', width: 24, height: 24,),
+                            SizedBox(width: 12,),
+                            Expanded(child: Text('Add new terminal', style: TextStyle(fontSize: 18),)),
+                            Icon(Icons.arrow_forward_ios, size: 20),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              onWebViewCreated: (InAppWebViewController controller) {
-                webView = controller;
-              },
-              onLoadStart: (InAppWebViewController controller, String url) {
-                setState(() {
-                  this.url = url;
-                });
-              },
-              onLoadStop: (InAppWebViewController controller, String url) async {
-                setState(() {
-                  this.url = url;
-                });
-              },
-              onProgressChanged: (InAppWebViewController controller, int progress) {
-                setState(() {
-                  this.progress = progress / 100;
-                });
-              },
-            ),
+              SizedBox(height: 16,),
+              if (state.activeTerminal != null)
+                Container(
+                decoration: BoxDecoration(
+                  color: overlayBackground(),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  children: [
+                    Container(
+                      height: 61,
+                      padding: EdgeInsets.only(left: 14, right: 14),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            PageTransition(
+                              child: PosQRAppScreen(
+                                businessId: screenBloc.state.activeBusiness.id,
+                                screenBloc: screenBloc,
+                                businessName: screenBloc.state.activeBusiness.name,
+                              ),
+                              type: PageTransitionType.fade,
+                              duration: Duration(milliseconds: 500),
+                            ),
+                          );
+                        },
+                        child: Row(
+                          children: [
+                            SvgPicture.asset(
+                              'assets/images/qr-generator.svg',
+                              width: 24,
+                              height: 24,
+                              color: iconColor(),
+                            ),
+                            SizedBox(width: 12,),
+                            Expanded(child: Text('QR Generator', style: TextStyle(fontSize: 18),)),
+                            Icon(Icons.arrow_forward_ios, size: 20),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 16,),
+              if (state.activeTerminal != null)
+                Container(
+                  decoration: BoxDecoration(
+                    color: overlayBackground(),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                          height: 61,
+                          padding: EdgeInsets.only(left: 14, right: 14),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                PageTransition(
+                                  child: PosSettingScreen(
+                                    screenBloc: screenBloc,
+                                  ),
+                                  type: PageTransitionType.fade,
+                                  duration: Duration(milliseconds: 500),
+                                ),
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 24,
+                                  height: 24,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: NetworkImage(
+                                        '${Env.cdnIcon}icon-comerceos-settings-not-installed.png',
+                                      ),
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 12,),
+                                Expanded(child: Text('Settings', style: TextStyle(fontSize: 18),)),
+                                Icon(Icons.arrow_forward_ios, size: 20),
+                              ],
+                            ),
+                          ),
+                        ),
+                      divider,
+                      Container(
+                        height: 61,
+                        padding: EdgeInsets.only(left: 14, right: 14),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              PageTransition(
+                                child: PosConnectInitScreen(
+                                  screenBloc: screenBloc,
+                                ),
+                                type: PageTransitionType.fade,
+                                duration: Duration(milliseconds: 500),
+                              ),
+                            );
+                          },
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 24,
+                                height: 24,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: NetworkImage(
+                                      '${Env.cdnIcon}icon-comerceos-connect-not-installed.png',
+                                    ),
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 12,),
+                              Expanded(child: Text('Connect', style: TextStyle(fontSize: 18),)),
+                              Icon(Icons.arrow_forward_ios, size: 20),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -563,8 +426,6 @@ class _PosScreenState extends State<PosScreen> {
         padding: EdgeInsets.only(left: 16, right: 16),
         height: (state.integrations.length * 50).toDouble() + 50,
         child: BlurEffectView(
-          color: Color.fromRGBO(20, 20, 20, 0.2),
-          blur: 15,
           radius: 12,
           padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
           child: Column(
@@ -584,26 +445,28 @@ class _PosScreenState extends State<PosScreen> {
                               Text(
                                 Language.getPosConnectStrings(integrations[index].integration.displayOptions.title),
                                 style: TextStyle(
-                                  color: Colors.white,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
                               Row(
                                 children: <Widget>[
-                                  CupertinoSwitch(
-                                    value: terminalIntegrations.contains(integrations[index].integration.name),
-                                    onChanged: (value) {
-                                      screenBloc.add(value ? InstallTerminalDevicePaymentEvent(
-                                        payment: integrations[index].integration.name,
-                                        businessId: widget.globalStateModel.currentBusiness.id,
-                                        terminalId: state.activeTerminal.id,
-                                      ): UninstallTerminalDevicePaymentEvent(
-                                        payment: integrations[index].integration.name,
-                                        businessId: widget.globalStateModel.currentBusiness.id,
-                                        terminalId: state.activeTerminal.id,
-                                      ));
-                                    },
+                                  Transform.scale(
+                                    scale: 0.8,
+                                    child: CupertinoSwitch(
+                                      value: terminalIntegrations.contains(integrations[index].integration.name),
+                                      onChanged: (value) {
+                                        screenBloc.add(value ? InstallTerminalDevicePaymentEvent(
+                                          payment: integrations[index].integration.name,
+                                          businessId: widget.currentBusiness.id,
+                                          terminalId: state.activeTerminal.id,
+                                        ): UninstallTerminalDevicePaymentEvent(
+                                          payment: integrations[index].integration.name,
+                                          businessId: widget.currentBusiness.id,
+                                          terminalId: state.activeTerminal.id,
+                                        ));
+                                      },
+                                    ),
                                   ),
                                   Padding(
                                     padding: EdgeInsets.only(left: 8),
@@ -615,21 +478,22 @@ class _PosScreenState extends State<PosScreen> {
                                           context,
                                           PageTransition(
                                             child: PosDevicePaymentSettings(
-                                              businessId: widget.globalStateModel.currentBusiness.id,
+                                              businessId: widget.currentBusiness.id,
                                               screenBloc: screenBloc,
                                             ),
                                             type: PageTransitionType.fade,
                                             duration: Duration(milliseconds: 500),
                                           ),
                                         );
-                                      } else if (state.integrations[index].integration.name == 'qr') {
+                                      }
+                                      else if (state.integrations[index].integration.name == 'qr') {
                                         Navigator.push(
                                           context,
                                           PageTransition(
                                             child: PosQRAppScreen(
-                                              businessId: widget.globalStateModel.currentBusiness.id,
+                                              businessId: widget.currentBusiness.id,
                                               screenBloc: screenBloc,
-                                              businessName: widget.globalStateModel.currentBusiness.name,
+                                              businessName: widget.currentBusiness.name,
                                             ),
                                             type: PageTransitionType.fade,
                                             duration: Duration(milliseconds: 500),
@@ -640,9 +504,9 @@ class _PosScreenState extends State<PosScreen> {
                                           context,
                                           PageTransition(
                                             child: PosTwilioScreen(
-                                              businessId: widget.globalStateModel.currentBusiness.id,
+                                              businessId: widget.currentBusiness.id,
                                               screenBloc: screenBloc,
-                                              businessName: widget.globalStateModel.currentBusiness.name,
+                                              businessName: widget.currentBusiness.name,
                                             ),
                                             type: PageTransitionType.fade,
                                             duration: Duration(milliseconds: 500),
@@ -655,14 +519,13 @@ class _PosScreenState extends State<PosScreen> {
                                       width: 40,
                                       decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(10),
-                                          color: Colors.black.withOpacity(0.4)
+                                          color: overlayBackground()
                                       ),
                                       child: Center(
                                         child: Text(
                                           Language.getCommerceOSStrings('actions.open'),
                                           style: TextStyle(
                                               fontSize: 10,
-                                              color: Colors.white
                                           ),
                                         ),
                                       ),
@@ -703,7 +566,7 @@ class _PosScreenState extends State<PosScreen> {
                       context,
                       PageTransition(
                         child: PosConnectScreen(
-                          globalStateModel: widget.globalStateModel,
+                          activeBusiness: widget.currentBusiness,
                           screenBloc: screenBloc,
                         ),
                         type: PageTransitionType.fade,
@@ -722,7 +585,6 @@ class _PosScreenState extends State<PosScreen> {
                         Text(
                           'Add',
                           style: TextStyle(
-                            color: Colors.white,
                             fontSize: 12,
                           ),
                         ),
@@ -749,7 +611,6 @@ class _PosScreenState extends State<PosScreen> {
               Text(
                 'Business UUID',
                 style: TextStyle(
-                  color: Colors.white,
                   fontSize: 16,
                 ),
               ),
@@ -758,11 +619,10 @@ class _PosScreenState extends State<PosScreen> {
               ),
               Expanded(
                 child: AutoSizeText(
-                  widget.globalStateModel.currentBusiness.id,
+                  widget.currentBusiness.id,
                   minFontSize: 12,
                   maxLines: 2,
                   style: TextStyle(
-                    color: Colors.white,
                     fontSize: 16,
                   ),
                 ),
@@ -775,17 +635,16 @@ class _PosScreenState extends State<PosScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
-                color: Colors.black26,
+                color: overlayBackground(),
                 child: Text(
                   state.businessCopied ? 'Copied': 'Copy',
                   style: TextStyle(
-                      color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.w500
                   ),
                 ),
                 onPressed: () {
-                  screenBloc.add(CopyBusinessEvent(businessId: widget.globalStateModel.currentBusiness.id));
+                  screenBloc.add(CopyBusinessEvent(businessId: widget.currentBusiness.id));
                 },
               ),
             ],
@@ -795,7 +654,6 @@ class _PosScreenState extends State<PosScreen> {
               Text(
                 'Terminal UUID',
                 style: TextStyle(
-                  color: Colors.white,
                   fontSize: 16,
                 ),
               ),
@@ -808,7 +666,6 @@ class _PosScreenState extends State<PosScreen> {
                   minFontSize: 12,
                   maxLines: 2,
                   style: TextStyle(
-                    color: Colors.white,
                     fontSize: 16,
                   ),
                 ),
@@ -821,17 +678,18 @@ class _PosScreenState extends State<PosScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
-                color: Colors.black26,
+                color: overlayBackground(),
                 child: Text(
                   state.terminalCopied ? 'Copied': 'Copy',
                   style: TextStyle(
-                      color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.w500
                   ),
                 ),
                 onPressed: () {
-                  screenBloc.add(CopyTerminalEvent(businessId: widget.globalStateModel.currentBusiness.id, terminal: state.activeTerminal));
+                  screenBloc.add(CopyTerminalEvent(
+                      businessId: widget.currentBusiness.id,
+                      terminal: state.activeTerminal));
                 },
               ),
             ],
@@ -839,6 +697,70 @@ class _PosScreenState extends State<PosScreen> {
         ],
       ),
     );
+  }
+
+  List<OverflowMenuItem> appBarPopUpActions(BuildContext context, PosScreenState state) {
+    return [
+      if (state.activeTerminal != null)
+        OverflowMenuItem(
+          title: 'Switch terminal',
+          onTap: () async {
+            Navigator.push(
+              context,
+              PageTransition(
+                child: PosSwitchTerminalsScreen(
+                  screenBloc: screenBloc,
+                ),
+                type: PageTransitionType.fade,
+                duration: Duration(milliseconds: 500),
+              ),
+            );
+          },
+        ),
+      OverflowMenuItem(
+        title: 'Add new terminal',
+        onTap: () async {
+          Navigator.push(
+            context,
+            PageTransition(
+              child: PosCreateTerminalScreen(
+                screenBloc: screenBloc,
+              ),
+              type: PageTransitionType.fade,
+              duration: Duration(milliseconds: 500),
+            ),
+          );
+        },
+      ),
+      OverflowMenuItem(
+        title: 'Edit',
+        onTap: () {
+          Navigator.push(
+            context,
+            PageTransition(
+              child: PosCreateTerminalScreen(
+                screenBloc: screenBloc,
+                editTerminal: state.activeTerminal,
+              ),
+              type: PageTransitionType.fade,
+              duration: Duration(milliseconds: 500),
+            ),
+          );
+        },
+      ),
+    ];
+  }
+  get divider {
+    return Divider(
+      height: 0,
+      indent: 50,
+      thickness: 0.5,
+      color: Colors.grey[500],
+    );
+  }
+
+  Future<Null> _showNativeView() async {
+    await platform.invokeMethod('showNativeView');
   }
 }
 

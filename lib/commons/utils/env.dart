@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 import 'utils.dart';
 
 class Env {
@@ -22,6 +20,7 @@ class Env {
   static String products;
   static String inventory;
   static String shops;
+  static String plugins;
   static String wrapper;
   static String employees;
   static String appRegistry;
@@ -58,6 +57,7 @@ class Env {
     Env.commerceOsBack =
         obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_COMMERCE_OS];
     Env.pos = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_POS];
+    Env.plugins = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_BACKEND_PLUGINS];
     Env.connect = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_CONNECT];
     Env.checkout = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_CHECKOUT];
     Env.checkoutPhp = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_CHECKOUT_PHP];

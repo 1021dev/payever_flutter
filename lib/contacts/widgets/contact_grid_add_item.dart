@@ -31,16 +31,20 @@ class ContactGridAddItem extends StatelessWidget {
                 groupPlaceholder,
               ),
             ),
-            Container(
-              height: 44,
-              color: Color.fromRGBO(0, 0, 0, 0.3),
-              alignment: Alignment.center,
-              child: SizedBox.expand(
-                child: MaterialButton(
-                  child: Text(
-                    'Add Contact',
+            AspectRatio(
+              aspectRatio: 6/1,
+              child: Container(
+                width: double.infinity,
+                color: Color.fromRGBO(0, 0, 0, 0.3),
+                alignment: Alignment.center,
+                child: SizedBox.expand(
+                  child: MaterialButton(
+                    child: Text(
+                      'Add Contact',
+                      style: TextStyle(color: Colors.white, fontSize: 12),
+                    ),
+                    onPressed: onAdd,
                   ),
-                  onPressed: onAdd,
                 ),
               ),
             ),

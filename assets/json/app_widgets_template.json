@@ -1,0 +1,436 @@
+[
+  {
+    "_id": "294addf9-27d2-485a-a4b6-8e7dfd05350a",
+    "allowedAcls": {
+      "create": true,
+      "delete": true,
+      "read": true,
+      "update": true
+    },
+    "bootstrapScriptUrl": "https://marketing-frontend.payever.org/micro.js?QNrgGJ7",
+    "code": "marketing",
+    "dashboardInfo": {
+      "title": "dashboard.apps.marketing",
+      "icon": "icon-commerceos-marketing-32.png"
+    },
+    "default": false,
+    "installed": true,
+    "microUuid": "294addf9-27d2-485a-a4b6-8e7dfd05350a",
+    "order": 13,
+    "platformHeader": {
+      "tag": "marketing-app-header",
+      "bootstrapScriptUrl": "https://marketing-frontend.payever.org/header/micro.js?QNrgGJ7"
+    },
+    "setupStatus": "completed",
+    "statusChangedAt": "2020-07-21T16:46:01.312Z",
+    "tag": "<app-marketing></app-marketing>",
+    "url": "/business/{uuid}/marketing/"
+  },
+  {
+    "_id": "c41689f2-2c10-49c2-a825-8a7590395291",
+    "allowedAcls": {
+      "create": true,
+      "delete": true,
+      "read": true,
+      "update": true
+    },
+    "bootstrapScriptUrl": "https://checkout.payever.org/micro.js?X7voVWk",
+    "code": "checkout-wrapper",
+    "dashboardInfo": {},
+    "default": false,
+    "installed": false,
+    "microUuid": "c41689f2-2c10-49c2-a825-8a7590395291",
+    "platformHeader": {},
+    "setupStatus": "notStarted",
+    "tag": "<pe-checkout-wrapper-by-flow-id></pe-checkout-wrapper-by-flow-id>",
+    "url": "/pay/{uuid}"
+  },
+  {
+    "_id": "252cfe31-f217-4fb6-a0ab-eea7161ade0f",
+    "allowedAcls": {
+      "create": true,
+      "delete": true,
+      "read": true,
+      "update": true
+    },
+    "bootstrapScriptUrl": "https://settings.payever.org/micro.js?7nK3qQy",
+    "code": "settings",
+    "dashboardInfo": {
+      "title": "dashboard.apps.settings",
+      "icon": "icon-commerceos-settings-32.png"
+    },
+    "default": true,
+    "installed": true,
+    "microUuid": "252cfe31-f217-4fb6-a0ab-eea7161ade0f",
+    "platformHeader": {},
+    "setupStatus": "completed",
+    "statusChangedAt": "2020-05-04T06:56:40.463Z",
+    "tag": "<settings-root></settings-root>",
+    "url": "/business/{uuid}/settings"
+  },
+  {
+    "_id": "93460865-c128-4e44-bceb-64316a4bd05c",
+    "allowedAcls": {
+      "create": true,
+      "delete": true,
+      "read": true,
+      "update": true
+    },
+    "bootstrapScriptUrl": "https://shipping-frontend.payever.org/micro.js?02kL3oL",
+    "code": "shipping",
+    "dashboardInfo": {
+      "title": "dashboard.apps.shipping",
+      "icon": "icon-commerceos-shipping-32.png"
+    },
+    "default": false,
+    "installed": true,
+    "microUuid": "93460865-c128-4e44-bceb-64316a4bd05c",
+    "order": 6,
+    "platformHeader": {},
+    "setupStatus": "completed",
+    "statusChangedAt": "2020-05-19T16:29:29.237Z",
+    "tag": "<shipping-app></shipping-app>",
+    "url": "/business/{uuid}/shipping"
+  },
+  {
+    "_id": "954fbf2f-5cb0-472c-8582-130ca23b7f7d",
+    "allowedAcls": {
+      "create": true,
+      "delete": true,
+      "read": true,
+      "update": true
+    },
+    "bootstrapScriptUrl": "https://pos-frontend.payever.org/micro.js?B8JVV5o",
+    "code": "pos",
+    "dashboardInfo": {
+      "title": "dashboard.apps.pos",
+      "icon": "icon-commerceos-pos-32.png"
+    },
+    "default": false,
+    "installed": true,
+    "microUuid": "954fbf2f-5cb0-472c-8582-130ca23b7f7d",
+    "order": 7,
+    "platformHeader": {
+      "tag": "pos-app-header",
+      "bootstrapScriptUrl": "https://pos-frontend.payever.org/header/micro.js?B8JVV5o"
+    },
+    "setupStatus": "completed",
+    "statusChangedAt": "2020-09-02T08:59:43.378Z",
+    "tag": "<app-pos></app-pos>",
+    "url": "/business/{uuid}/pos"
+  },
+  {
+    "_id": "b792a6b5-2218-43fa-ade4-3548518ee0ba",
+    "allowedAcls": {
+      "create": true,
+      "delete": true,
+      "read": true,
+      "update": true
+    },
+    "code": "commerceos",
+    "dashboardInfo": {},
+    "default": true,
+    "installed": true,
+    "microUuid": "b792a6b5-2218-43fa-ade4-3548518ee0ba",
+    "platformHeader": {},
+    "setupStatus": "notStarted",
+    "url": "/business/{uuid}"
+  },
+  {
+    "_id": "c4094635-0f1d-42ed-b059-9a5a0dc9b5bb",
+    "allowedAcls": {
+      "create": true,
+      "delete": true,
+      "read": true,
+      "update": true
+    },
+    "bootstrapScriptUrl": "https://products-frontend.payever.org/micro.js?PMoJorw",
+    "code": "products",
+    "dashboardInfo": {
+      "title": "dashboard.apps.products",
+      "icon": "icon-commerceos-products-32.png"
+    },
+    "default": true,
+    "installed": true,
+    "microUuid": "c4094635-0f1d-42ed-b059-9a5a0dc9b5bb",
+    "order": 3,
+    "platformHeader": {},
+    "setupStatus": "completed",
+    "statusChangedAt": "2020-09-02T09:01:18.267Z",
+    "tag": "<app-products-standalone></app-products-standalone>",
+    "url": "/business/{uuid}/products"
+  },
+  {
+    "_id": "ad3cbe14-cd11-4bba-8a0a-39046ab2f7c0",
+    "allowedAcls": {
+      "create": true,
+      "delete": true,
+      "read": true,
+      "update": true
+    },
+    "bootstrapScriptUrl": null,
+    "code": "contacts",
+    "dashboardInfo": {
+      "title": "dashboard.apps.contacts",
+      "icon": "icon-commerceos-customers-32.png"
+    },
+    "default": false,
+    "installed": true,
+    "microUuid": "ad3cbe14-cd11-4bba-8a0a-39046ab2f7c0",
+    "platformHeader": {},
+    "setupStatus": "completed",
+    "statusChangedAt": "2020-05-27T15:13:20.147Z",
+    "tag": "<contacts-app></contacts-app>",
+    "url": "/business/{uuid}/contacts"
+  },
+  {
+    "_id": "494d137d-d901-4e7c-90d0-447557a7c04b",
+    "allowedAcls": {
+      "create": true,
+      "delete": true,
+      "read": true,
+      "update": true
+    },
+    "bootstrapScriptUrl": "https://santander-de-fact-frontend.devpayever.com/micro.YQYV4BA.js",
+    "code": "santander-de-fact",
+    "dashboardInfo": {},
+    "default": false,
+    "installed": false,
+    "microUuid": "494d137d-d901-4e7c-90d0-447557a7c04b",
+    "platformHeader": {},
+    "setupStatus": "notStarted",
+    "tag": "<app-santander-de-fact></app-santander-de-fact>",
+    "url": "/business/{uuid}/santander-de-fact/{storeUuid}/"
+  },
+  {
+    "_id": "79cee30b-92a7-4796-a152-6303a4117d7f",
+    "allowedAcls": {
+      "create": true,
+      "delete": true,
+      "read": true,
+      "update": true
+    },
+    "bootstrapScriptUrl": "https://checkout-frontend.payever.org/micro.js?KYxJ92x",
+    "code": "checkout",
+    "dashboardInfo": {
+      "title": "dashboard.apps.checkout",
+      "icon": "icon-commerceos-checkout-32.png"
+    },
+    "default": true,
+    "installed": true,
+    "microUuid": "79cee30b-92a7-4796-a152-6303a4117d7f",
+    "order": 4,
+    "platformHeader": {},
+    "setupStatus": "completed",
+    "statusChangedAt": "2020-09-11T14:27:25.741Z",
+    "tag": "<checkout-root></checkout-root>",
+    "url": "/business/{uuid}/checkout"
+  },
+  {
+    "_id": "f4677b67-b4fc-4ab7-9718-597c2e19a9c3",
+    "allowedAcls": {
+      "create": true,
+      "delete": true,
+      "read": true,
+      "update": true
+    },
+    "bootstrapScriptUrl": null,
+    "code": "pos-client",
+    "dashboardInfo": {},
+    "default": false,
+    "installed": false,
+    "microUuid": "f4677b67-b4fc-4ab7-9718-597c2e19a9c3",
+    "platformHeader": {},
+    "setupStatus": "notStarted",
+    "tag": "<pos-client></pos-client>",
+    "url": "/terminal"
+  },
+  {
+    "_id": "58702d8b-6570-4edf-be91-d6b528e1303d",
+    "allowedAcls": {
+      "create": true,
+      "delete": true,
+      "read": true,
+      "update": true
+    },
+    "bootstrapScriptUrl": "https://cart-frontend.payever.org/micro.js?jvmK69Y",
+    "code": "cart",
+    "dashboardInfo": {},
+    "default": false,
+    "installed": false,
+    "microUuid": "58702d8b-6570-4edf-be91-d6b528e1303d",
+    "platformHeader": {},
+    "setupStatus": "notStarted",
+    "tag": "<app-cart></app-cart>",
+    "url": "/business/{uuid}/cart"
+  },
+  {
+    "_id": "f9fdb1f3-48be-4b0c-898f-762ca96500be",
+    "allowedAcls": {
+      "create": true,
+      "delete": true,
+      "read": true,
+      "update": true
+    },
+    "bootstrapScriptUrl": "https://builder-translate-frontend.payever.org/micro.js?EZB03zY",
+    "code": "builder-translate",
+    "dashboardInfo": {},
+    "default": false,
+    "installed": true,
+    "microUuid": "f9fdb1f3-48be-4b0c-898f-762ca96500be",
+    "platformHeader": {},
+    "setupStatus": "notStarted",
+    "tag": "<app-builder-translate></app-builder-translate>",
+    "url": "/business/{uuid}/shop/{storeUuid}/builder-translate/theme_id/{theme_id}"
+  },
+  {
+    "_id": "5984444f-309f-4b53-9612-a51158b3acef",
+    "allowedAcls": {
+      "create": true,
+      "delete": true,
+      "read": true,
+      "update": true
+    },
+    "bootstrapScriptUrl": null,
+    "code": "coupons",
+    "dashboardInfo": {},
+    "default": false,
+    "installed": false,
+    "microUuid": "5984444f-309f-4b53-9612-a51158b3acef",
+    "platformHeader": {},
+    "setupStatus": "notStarted",
+    "tag": "<coupons-root></coupons-root>",
+    "url": "/business/{uuid}/coupons"
+  },
+  {
+    "_id": "87b2c5e2-c017-4805-b4ba-595f440af59c",
+    "allowedAcls": {
+      "create": true,
+      "delete": true,
+      "read": true,
+      "update": true
+    },
+    "bootstrapScriptUrl": "https://builder-frontend.devpayever.com/micro.WwpDX7o.js",
+    "code": "theme",
+    "dashboardInfo": {},
+    "default": false,
+    "installed": false,
+    "microUuid": "87b2c5e2-c017-4805-b4ba-595f440af59c",
+    "platformHeader": {},
+    "setupStatus": "notStarted",
+    "tag": "<app-theme></app-theme>",
+    "url": "/business/{uuid}/store/{storeUuid}/theme"
+  },
+  {
+    "_id": "51cce2bb-5a89-4442-a1cc-c6eed25c6112",
+    "allowedAcls": {
+      "create": true,
+      "delete": true,
+      "read": true,
+      "update": true
+    },
+    "bootstrapScriptUrl": "https://shops-frontend.test.devpayever.com/header/micro.js?rEpolRw",
+    "code": "shop-header",
+    "dashboardInfo": {},
+    "default": false,
+    "installed": false,
+    "microUuid": "51cce2bb-5a89-4442-a1cc-c6eed25c6112",
+    "order": 12,
+    "platformHeader": {},
+    "setupStatus": "notStarted",
+    "tag": "<pe-shop-app-header></pe-shop-app-header>",
+    "url": "/business/{uuid}/shop"
+  },
+  {
+    "_id": "b8b66cc3-ffaa-4aa6-b765-67831dc297ce",
+    "allowedAcls": {
+      "create": true,
+      "delete": true,
+      "read": true,
+      "update": true
+    },
+    "bootstrapScriptUrl": null,
+    "code": "builder",
+    "dashboardInfo": {},
+    "default": false,
+    "installed": true,
+    "microUuid": "b8b66cc3-ffaa-4aa6-b765-67831dc297ce",
+    "platformHeader": {},
+    "setupStatus": "notStarted",
+    "tag": "<app-builder></app-builder>",
+    "url": "/business/{uuid}/shop/{storeUuid}/"
+  },
+  {
+    "_id": "c1c70ee9-61d3-41b4-8b01-cd753a7fc202",
+    "allowedAcls": {
+      "create": true,
+      "delete": true,
+      "read": true,
+      "update": true
+    },
+    "bootstrapScriptUrl": "https://connect-frontend.payever.org/micro.js?wE4K4qr",
+    "code": "connect",
+    "dashboardInfo": {
+      "title": "dashboard.apps.connect",
+      "icon": "icon-commerceos-connect-32.png"
+    },
+    "default": true,
+    "installed": true,
+    "microUuid": "c1c70ee9-61d3-41b4-8b01-cd753a7fc202",
+    "order": 2,
+    "platformHeader": {},
+    "setupStatus": "completed",
+    "statusChangedAt": "2020-09-02T09:00:01.888Z",
+    "tag": "<connect-root></connect-root>",
+    "url": "/business/{uuid}/connect"
+  },
+  {
+    "_id": "e0504b4c-8852-49d3-9996-ddfdfec7fc39",
+    "allowedAcls": {
+      "read": true,
+      "update": true
+    },
+    "bootstrapScriptUrl": "https://transactions-frontend.payever.org/micro.js?y6Gkkzw",
+    "code": "transactions",
+    "dashboardInfo": {
+      "title": "dashboard.apps.transactions",
+      "icon": "icon-commerceos-transactions-32.png"
+    },
+    "default": true,
+    "installed": true,
+    "microUuid": "e0504b4c-8852-49d3-9996-ddfdfec7fc39",
+    "order": 1,
+    "platformHeader": {},
+    "setupStatus": "completed",
+    "statusChangedAt": "2020-09-09T18:09:05.137Z",
+    "tag": "<transactions-app></transactions-app>",
+    "url": "/business/{uuid}/transactions"
+  },
+  {
+    "_id": "51cce2bb-5a89-4442-a1cc-c6eed25c614a",
+    "allowedAcls": {
+      "create": true,
+      "delete": true,
+      "read": true,
+      "update": true
+    },
+    "bootstrapScriptUrl": "https://shops-frontend.payever.org/micro.js?jvmnjYP",
+    "code": "shop",
+    "dashboardInfo": {
+      "title": "dashboard.apps.store",
+      "icon": "icon-commerceos-store-32.png"
+    },
+    "default": false,
+    "installed": true,
+    "microUuid": "51cce2bb-5a89-4442-a1cc-c6eed25c614a",
+    "order": 12,
+    "platformHeader": {
+      "tag": "pe-shop-app-header",
+      "bootstrapScriptUrl": "https://shops-frontend.payever.org/header/micro.js?jvmnjYP"
+    },
+    "setupStatus": "completed",
+    "statusChangedAt": "2020-05-19T21:47:59.452Z",
+    "tag": "<app-shop></app-shop>",
+    "url": "/business/{uuid}/shop"
+  }
+]

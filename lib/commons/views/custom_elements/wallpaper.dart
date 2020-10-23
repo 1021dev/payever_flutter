@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:payever/theme.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/utils.dart';
@@ -11,7 +12,7 @@ class BackgroundBase extends StatefulWidget {
   final AppBar appBar;
   final Key currentKey;
   final String wallPaper;
-  final Color backgroudColor;
+  final Color backgroundColor;
 
   BackgroundBase(this._isBlur, {
     this.body,
@@ -20,7 +21,7 @@ class BackgroundBase extends StatefulWidget {
     this.appBar,
     this.currentKey,
     this.wallPaper,
-    this.backgroudColor,
+    this.backgroundColor,
   });
 
   @override
@@ -58,14 +59,18 @@ class _BackgroundBaseState extends State<BackgroundBase> {
               ),
             ),
           ),
-          SafeArea(
-            bottom: false,
+          GestureDetector(
+            onTap: () {
+              if (FocusScope.of(context).hasFocus) {
+                FocusScope.of(context).unfocus();
+              }
+            },
             child: Container(
               height: Measurements.height,
               width: Measurements.width,
               child: Scaffold(
                 key: widget.currentKey,
-                backgroundColor: widget.backgroudColor != null ? widget.backgroudColor: Colors.transparent,
+                backgroundColor: widget.backgroundColor != null ? widget.backgroundColor: overlayColor(),
                 appBar: widget.appBar,
                 endDrawer: widget.endDrawer,
                 body: widget.body,
@@ -73,6 +78,7 @@ class _BackgroundBaseState extends State<BackgroundBase> {
               ),
             ),
           )
-        ]);
+        ],
+    );
   }
 }

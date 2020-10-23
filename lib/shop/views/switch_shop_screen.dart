@@ -8,17 +8,16 @@ import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/shop/shop.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/create_shop_screen.dart';
+import 'package:payever/theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
 
-bool _isPortrait;
-bool _isTablet;
 
 class SwitchShopScreen extends StatefulWidget {
-
   final ShopScreenBloc screenBloc;
   final String businessId;
 
@@ -32,13 +31,10 @@ class SwitchShopScreen extends StatefulWidget {
 }
 
 class _SwitchShopScreenState extends State<SwitchShopScreen> {
-  String imageBase = Env.storage + '/images/';
+  bool _isPortrait;
+  bool _isTablet;
   ShopDetailModel defaultShop;
   ShopDetailModel selectedShop;
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
-  String wallpaper;
-  bool isLoading = false;
 
   @override
   void initState() {
@@ -75,7 +71,7 @@ class _SwitchShopScreenState extends State<SwitchShopScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );
@@ -92,55 +88,12 @@ class _SwitchShopScreenState extends State<SwitchShopScreen> {
     );
   }
 
-  Widget _appBar(ShopScreenState state) {
-    return AppBar(
-      centerTitle: false,
-      elevation: 0,
-      automaticallyImplyLeading: false,
-      backgroundColor: Colors.black87,
-      title: Row(
-        children: <Widget>[
-          Text(
-            'Shop list',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-      actions: <Widget>[
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
-            Icons.close,
-            color: Colors.white,
-            size: 24,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        Padding(
-          padding: EdgeInsets.only(right: 16),
-        ),
-      ],
-    );
-  }
-
   Widget _body(ShopScreenState state) {
     return Scaffold(
-      key: scaffoldKey,
-      backgroundColor: Colors.black,
       resizeToAvoidBottomPadding: false,
-      appBar: _appBar(state),
+      appBar: Appbar('Shop list'),
       body: SafeArea(
+        bottom: false,
         child: BackgroundBase(
           true,
           body: state.isLoading ?
@@ -169,7 +122,6 @@ class _SwitchShopScreenState extends State<SwitchShopScreen> {
           Text(
             'Online Shops',
             style: TextStyle(
-              color: Colors.white,
               fontSize: 18,
               fontWeight: FontWeight.w500,
             ),
@@ -211,7 +163,7 @@ class _SwitchShopScreenState extends State<SwitchShopScreen> {
                   shape: BoxShape.circle,
                   color: Colors.blueGrey.withOpacity(0.5),
                   image: DecorationImage(
-                    image: NetworkImage('$imageBase${defaultShop.picture}'),
+                    image: NetworkImage('${defaultShop.picture}'),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -253,12 +205,11 @@ class _SwitchShopScreenState extends State<SwitchShopScreen> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
-              color: Colors.black26,
+              color: overlayBackground(),
               child: Text(
                 '+ Add Shop',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.white,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -292,7 +243,7 @@ class _SwitchShopScreenState extends State<SwitchShopScreen> {
                 height: 64.0 * 2 + MediaQuery.of(context).padding.bottom,
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
-                  color: Colors.black,
+                  color: overlayFilterViewBackground(),
                   borderRadius: BorderRadius.all(Radius.circular(15)),
                 ),
                 padding: EdgeInsets.only(top: 16),
@@ -377,16 +328,9 @@ class ShopCell extends StatelessWidget {
       avatarName = name.substring(0, 1) + name.substring(name.length - 1).toUpperCase();
       avatarName = avatarName.toUpperCase();
     }
-    return MaterialButton(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(24),
-      ),
-      elevation: 0,
-      focusElevation: 0,
-      hoverElevation: 0,
-      highlightElevation: 0,
-      color: selected.id == shopModel.id ? Colors.white24 : Colors.transparent.withOpacity(0),
-      onPressed: () {
+    return InkWell(
+
+      onTap: () {
         onTap(shopModel);
       },
       child: Container(
@@ -402,7 +346,7 @@ class ShopCell extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   image: DecorationImage(
-                    image: NetworkImage('$imageBase${shopModel.picture}'),
+                    image: NetworkImage('${shopModel.picture}'),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -415,7 +359,6 @@ class ShopCell extends StatelessWidget {
                   child: Text(
                     avatarName,
                     style: TextStyle(
-                      color: Colors.white,
                       fontSize: 36,
                       fontWeight: FontWeight.w600,
                     ),
@@ -431,47 +374,53 @@ class ShopCell extends StatelessWidget {
               maxLines: 2,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.white,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
             ),
             Container(
               height: 36,
+              alignment: Alignment.center,
               child: selected.id == shopModel.id ? Row(
+                mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  MaterialButton(
-                    minWidth: 0,
-                    onPressed: () {
+                  InkWell(
+                    onTap: () {
                       onOpen(shopModel);
                     },
-                    height: 20,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    color: Colors.black26,
-                    child: Text(
-                      'Open',
-                      style: TextStyle(
-                        fontSize: 10,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
+                    child: Container(
+                      alignment: Alignment.center,
+                      height: 20,
+                      padding: EdgeInsets.symmetric(horizontal: 12,),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: overlayBackground(),
+                      ),
+
+                      child: Text(
+                        'Open',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ),
+                  SizedBox(width: 10,),
                   Flexible(
-                    child: MaterialButton(
-                      onPressed: () {
+                    child: InkWell(
+                      onTap: () {
                         onMore(shopModel);
                       },
-                      minWidth: 0,
-                      height: 20,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Icon(
-                        Icons.more_horiz,
-                        size: 16,
+                      child: Container(
+                        height: 20,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Icon(
+                          Icons.more_horiz,
+                          size: 16,
+                        ),
                       ),
                     ),
                   ),
@@ -479,6 +428,10 @@ class ShopCell extends StatelessWidget {
               ): Container(),
             ),
           ],
+        ),
+        decoration: BoxDecoration(
+          color: selected.id == shopModel.id ? overlayBackground().withOpacity(0.8) : Colors.transparent.withOpacity(0),
+          borderRadius: BorderRadius.circular(24),
         ),
       ),
     );

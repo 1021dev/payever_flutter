@@ -4,6 +4,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:payever/commons/models/fetchwallpaper.dart';
 import 'package:payever/products/models/models.dart';
+import 'package:payever/settings/models/models.dart';
 import 'package:payever/shop/models/models.dart';
 
 class DashboardScreenState {
@@ -14,6 +15,7 @@ class DashboardScreenState {
   final List<Business> businesses;
   final Business activeBusiness;
   final User user;
+  final AuthUser authUser;
   final FetchWallpaper wallpaper;
   final CurrentWallpaper currentWallpaper;
   final Terminal activeTerminal;
@@ -26,6 +28,8 @@ class DashboardScreenState {
   final List<Day> lastMonth;
   final List<Tutorial> tutorials;
   final List<Widget> activeWid;
+  final List<ProductsModel> posProducts;
+  final Info posProductsInfo;
   final String language;
   final String curWall;
   final List<Business> searchBusinesses;
@@ -36,6 +40,10 @@ class DashboardScreenState {
   final Map<String, List<NotificationModel>> notifications;
   final List<Checkout> checkouts;
   final Checkout defaultCheckout;
+  final String installBusinessAppId;
+  final List<ChannelSet>channelSets;
+  final MyWallpaper personalWallpaper;
+  final String openAppCode;
 
   DashboardScreenState({
     this.isLoading = false,
@@ -46,11 +54,14 @@ class DashboardScreenState {
     this.currentWidgets = const [],
     this.activeBusiness,
     this.user,
+    this.authUser,
     this.wallpaper,
     this.currentWallpaper,
     this.total = 0,
     this.terminalList,
     this.activeTerminal,
+    this.posProducts = const [],
+    this.posProductsInfo,
     this.lastYear = const [],
     this.monthlySum = const [],
     this.lastMonth = const [],
@@ -67,6 +78,10 @@ class DashboardScreenState {
     this.notifications = const {},
     this.checkouts = const [],
     this.defaultCheckout,
+    this.installBusinessAppId = '',
+    this.channelSets,
+    this.personalWallpaper,
+    this.openAppCode = '',
   });
 
   List<Object> get props => [
@@ -77,11 +92,14 @@ class DashboardScreenState {
     this.currentWidgets,
     this.activeBusiness,
     this.user,
+    this.authUser,
     this.wallpaper,
     this.currentWallpaper,
     this.total,
     this.terminalList,
     this.activeTerminal,
+    this.posProducts,
+    this.posProductsInfo,
     this.lastYear,
     this.monthlySum,
     this.lastMonth,
@@ -99,6 +117,10 @@ class DashboardScreenState {
     this.notifications,
     this.checkouts,
     this.defaultCheckout,
+    this.installBusinessAppId,
+    this.channelSets,
+    this.personalWallpaper,
+    this.openAppCode,
   ];
 
   DashboardScreenState copyWith({
@@ -110,6 +132,7 @@ class DashboardScreenState {
     List<Business> businesses,
     Business activeBusiness,
     User user,
+    AuthUser authUser,
     FetchWallpaper wallpaper,
     CurrentWallpaper currentWallpaper,
     Terminal activeTerminal,
@@ -120,6 +143,8 @@ class DashboardScreenState {
     List<Day> lastMonth,
     List<Tutorial> tutorials,
     List<Widget> activeWid,
+    List<ProductsModel> posProducts,
+    Info posProductsInfo,
     String language,
     String curWall,
     List<Business> searchBusinesses,
@@ -131,6 +156,10 @@ class DashboardScreenState {
     Map<String, List<NotificationModel>> notifications,
     List<Checkout> checkouts,
     Checkout defaultCheckout,
+    List<ChannelSet> channelSets,
+    String installBusinessAppId,
+    MyWallpaper personalWallpaper,
+    String openAppCode,
   }) {
     return DashboardScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -141,6 +170,7 @@ class DashboardScreenState {
       businesses: businesses ?? this.businesses,
       activeBusiness: activeBusiness ?? this.activeBusiness,
       user: user ?? this.user,
+      authUser: authUser ?? this.authUser,
       wallpaper: wallpaper ?? this.wallpaper,
       currentWallpaper: currentWallpaper ?? this.currentWallpaper,
       activeTerminal: activeTerminal ?? this.activeTerminal,
@@ -157,11 +187,17 @@ class DashboardScreenState {
       searchTransactions: searchTransactions ?? this.searchTransactions,
       lastSalesRandom: lastSalesRandom ?? this.lastSalesRandom,
       connects: connects ?? this.connects,
+      posProducts: posProducts ?? this.posProducts,
+      posProductsInfo: posProductsInfo ?? this.posProductsInfo,
       shops: shops ?? this.shops,
       activeShop: activeShop ?? this.activeShop,
       notifications: notifications ?? this.notifications,
       checkouts: checkouts ?? this.checkouts,
+      installBusinessAppId: installBusinessAppId ?? this.installBusinessAppId,
       defaultCheckout: defaultCheckout ?? this.defaultCheckout,
+      channelSets: channelSets ?? this.channelSets,
+      personalWallpaper: personalWallpaper ?? this.personalWallpaper,
+      openAppCode: openAppCode ?? this.openAppCode,
     );
   }
 }

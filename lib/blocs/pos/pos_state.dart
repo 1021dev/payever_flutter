@@ -1,12 +1,18 @@
 import 'package:flutter/cupertino.dart';
+import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
-import 'package:payever/pos/models/models.dart';
 
 class PosScreenState {
   final bool isLoading;
-  final bool searching;
+  final bool isLoadingQrcode; // & Cart Progress Flag
+  final bool isSearching;
+  final String businessId;
   final List<Terminal> terminals;
+  final List<ChannelSet> channelSets;
+  final Business activeBusiness;
+  final Checkout defaultCheckout;
   final Terminal activeTerminal;
+  final ChannelSetFlow channelSetFlow;
   final bool businessCopied;
   final bool terminalCopied;
   final List<Communication> integrations;
@@ -27,11 +33,17 @@ class PosScreenState {
   final dynamic qrImage;
 
   PosScreenState({
-    this.isLoading = false,
+    this.isLoading = true,
     this.isUpdating = false,
-    this.searching = false,
+    this.isSearching = false,
+    this.isLoadingQrcode = false,
+    this.activeBusiness,
+    this.defaultCheckout,
+    this.channelSetFlow,
     this.terminals = const [],
+    this.channelSets = const [],
     this.activeTerminal,
+    this.businessId,
     this.businessCopied = false,
     this.terminalCopied = false,
     this.integrations = const [],
@@ -54,8 +66,14 @@ class PosScreenState {
   List<Object> get props => [
     this.isLoading,
     this.isUpdating,
-    this.searching,
+    this.isSearching,
+    this.isLoadingQrcode,
     this.terminals,
+    this.channelSets,
+    this.activeBusiness,
+    this.defaultCheckout,
+    this.channelSetFlow,
+    this.businessId,
     this.activeTerminal,
     this.businessCopied,
     this.terminalCopied,
@@ -73,14 +91,20 @@ class PosScreenState {
     this.settingsModel,
     this.dropdownItems,
     this.fieldSetData,
-    this.qrImage
+    this.qrImage,
   ];
 
   PosScreenState copyWith({
     bool isLoading,
     bool isUpdating,
-    bool searching,
+    bool isSearching,
+    bool isLoadingQrcode,
+    Business activeBusiness,
+    Checkout defaultCheckout,
+    ChannelSetFlow channelSetFlow,
+    String businessId,
     List<Terminal> terminals,
+    List<ChannelSet> channelSets,
     Terminal activeTerminal,
     bool businessCopied,
     bool terminalCopied,
@@ -103,8 +127,14 @@ class PosScreenState {
     return PosScreenState(
       isLoading: isLoading ?? this.isLoading,
       isUpdating: isUpdating ?? this.isUpdating,
-      searching: searching ?? this.searching,
+      isSearching: isSearching ?? this.isSearching,
+      isLoadingQrcode: isLoadingQrcode ?? this.isLoadingQrcode,
+      activeBusiness: activeBusiness ?? this.activeBusiness,
+      defaultCheckout: defaultCheckout ?? this.defaultCheckout,
+      channelSetFlow: channelSetFlow ?? this.channelSetFlow,
       terminals: terminals ?? this.terminals,
+      channelSets: channelSets ?? this.channelSets,
+      businessId: businessId ?? this.businessId,
       activeTerminal: activeTerminal ?? this.activeTerminal,
       businessCopied: businessCopied ?? this.businessCopied,
       terminalCopied: terminalCopied ?? this.terminalCopied,

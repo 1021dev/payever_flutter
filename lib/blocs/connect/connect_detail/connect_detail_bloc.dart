@@ -4,7 +4,6 @@ import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/connect/models/connect.dart';
-import 'package:payever/connect/views/connect_screen.dart';
 
 import 'connect_detail.dart';
 

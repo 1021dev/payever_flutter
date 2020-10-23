@@ -15,7 +15,7 @@
   "welcome.contacts.pricing_link": "https://getpayever.com/",
   "welcome.contacts.terms_link": "https://getpayever.com/",
   "welcome.contacts.title": "Welcome to Contacts",
-  "welcome.get-started": "Get Started",
+  "welcome.get-started": "Loslegen",
   "welcome.hereby-confirm": "Hereby I confirm the <a href='{{pricingLink}}' target='_blank'>terms</a> and <a href='{{termsLink}}' target='_blank'>pricing</a> <br> of the payever <span>{{appName}}</span>",
   "welcome.marketing.message": "Create beautiful campaigns for your customers.",
   "welcome.marketing.pricing_link": "https://getpayever.com/",

@@ -14,6 +14,7 @@ import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/contacts/models/model.dart';
 import 'package:payever/login/login_screen.dart';
+import 'package:payever/theme.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -92,7 +93,7 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );
@@ -112,7 +113,6 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
       centerTitle: false,
       elevation: 0,
       automaticallyImplyLeading: false,
-      backgroundColor: Colors.black87,
       title: Text(
         Language.getPosConnectStrings('Add Field'),
         style: TextStyle(
@@ -153,10 +153,10 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
 
   Widget _body(ContactDetailScreenState state) {
     return Scaffold(
-      backgroundColor: Colors.black,
       resizeToAvoidBottomPadding: false,
       appBar: _appBar(state),
       body: SafeArea(
+        bottom: false,
         child: BackgroundBase(
           true,
           body: state.isLoading ?
@@ -185,7 +185,6 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
     Widget header = Container(
       padding: EdgeInsets.only(left: 16, right: 16),
       height: 56,
-      color: Colors.black54,
       child: SizedBox.expand(
         child: Row(
           children: <Widget>[
@@ -194,7 +193,6 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
                 'Custom Field',
                 maxLines: 1,
                 style: TextStyle(
-                  color: Colors.white,
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
@@ -206,13 +204,13 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
     );
 
     widgets.add(header);
-    widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
+    widgets.add(Divider(height: 0, thickness: 0.5));
 
     Widget filedLabelField = Container(
       height: 64,
       child: Center(
         child: TextFormField(
-          style: TextStyle(fontSize: 16),
+          style: TextStyle(fontSize: 16,),
           controller: fieldLabelController,
           onChanged: (val) {
             setState(() {
@@ -223,9 +221,6 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
           decoration: InputDecoration(
             contentPadding: EdgeInsets.only(left: 16, right: 16),
             labelText: Language.getPosTpmStrings('Field Label'),
-            labelStyle: TextStyle(
-              color: Colors.grey,
-            ),
             enabledBorder: InputBorder.none,
             focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -237,7 +232,7 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
     );
 
     widgets.add(filedLabelField);
-    widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
+    widgets.add(Divider(height: 0, thickness: 0.5));
 
     Widget fieldTypeField = Container(
       height: 64,
@@ -264,7 +259,7 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
     );
 
     widgets.add(fieldTypeField);
-    widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
+    widgets.add(Divider(height: 0, thickness: 0.5));
 
     Widget filterableSection = Container(
       height: 64,
@@ -277,21 +272,23 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
               'Filterable',
             ),
           ),
-          CupertinoSwitch(
-            value: isFilterable,
-            onChanged: (val) {
-              setState(() {
-                isFilterable = val;
-              });
-            },
-            trackColor: Colors.black26,
+          Transform.scale(
+            scale: 0.8,
+            child: CupertinoSwitch(
+              value: isFilterable,
+              onChanged: (val) {
+                setState(() {
+                  isFilterable = val;
+                });
+              },
+            ),
           ),
         ],
       ),
     );
 
     widgets.add(filterableSection);
-    widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
+    widgets.add(Divider(height: 0, thickness: 0.5));
 
     Widget valueEditable = Container(
       height: 64,
@@ -304,21 +301,23 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
               'Value editable only by admin',
             ),
           ),
-          CupertinoSwitch(
-            value: isOnlyAdmin,
-            onChanged: (val) {
-              setState(() {
-                isOnlyAdmin = val;
-              });
-            },
-            trackColor: Colors.black26,
+          Transform.scale(
+            scale: 0.8,
+            child: CupertinoSwitch(
+              value: isOnlyAdmin,
+              onChanged: (val) {
+                setState(() {
+                  isOnlyAdmin = val;
+                });
+              },
+            ),
           ),
         ],
       ),
     );
 
     widgets.add(valueEditable);
-    widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
+    widgets.add(Divider(height: 0, thickness: 0.5));
 
     Widget showOnPersonCards = Container(
       height: 64,
@@ -331,21 +330,23 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
               'Show on person cards',
             ),
           ),
-          CupertinoSwitch(
-            value: isShowPerson,
-            onChanged: (val) {
-              setState(() {
-                isShowPerson = val;
-              });
-            },
-            trackColor: Colors.black26,
+          Transform.scale(
+            scale: 0.8,
+            child: CupertinoSwitch(
+              value: isShowPerson,
+              onChanged: (val) {
+                setState(() {
+                  isShowPerson = val;
+                });
+              },
+            ),
           ),
         ],
       ),
     );
 
     widgets.add(showOnPersonCards);
-    widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
+    widgets.add(Divider(height: 0, thickness: 0.5));
 
     Widget showOnCompanyCards = Container(
       height: 64,
@@ -358,21 +359,23 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
               'Show on company cards',
             ),
           ),
-          CupertinoSwitch(
-            value: isShowCompany,
-            onChanged: (val) {
-              setState(() {
-                isShowCompany = val;
-              });
-            },
-            trackColor: Colors.black26,
+          Transform.scale(
+            scale: 0.8,
+            child: CupertinoSwitch(
+              value: isShowCompany,
+              onChanged: (val) {
+                setState(() {
+                  isShowCompany = val;
+                });
+              },
+            ),
           ),
         ],
       ),
     );
 
     widgets.add(showOnCompanyCards);
-    widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
+    widgets.add(Divider(height: 0, thickness: 0.5));
 
     Widget saveButton = Container(
       height: 56,
@@ -395,12 +398,11 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
               });
             }
           },
-          color: Colors.black87,
+          color: overlayBackground(),
           child: Text(
             'Save field',
             maxLines: 1,
             style: TextStyle(
-              color: Colors.white,
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
@@ -426,9 +428,6 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
           decoration: InputDecoration(
             contentPadding: EdgeInsets.only(left: 16, right: 16),
             labelText: Language.getPosTpmStrings('Name'),
-            labelStyle: TextStyle(
-              color: Colors.grey,
-            ),
             enabledBorder: InputBorder.none,
             focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -440,7 +439,7 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
     );
 
     saveWidgets.add(fieldNameField);
-    saveWidgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
+    widgets.add(Divider(height: 0, thickness: 0.5));
 
     Widget saveButton1 = Container(
       height: 56,
@@ -453,12 +452,11 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
             }
             showConfirmDialog();
           },
-          color: Colors.black87,
+          color: overlayBackground(),
           child: Text(
             'Save',
             maxLines: 1,
             style: TextStyle(
-              color: Colors.white,
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
@@ -475,7 +473,7 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
           Container(
             padding: EdgeInsets.only(left: 16, right: 16, top: 16),
             child: BlurEffectView(
-              color: Color.fromRGBO(20, 20, 20, 0.2),
+              color: overlayBackground(),
               blur: 15,
               radius: 12,
               padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -517,7 +515,6 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
                         style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w300,
-                            color: Colors.white
                         ),
                       ),
                       Padding(
@@ -529,7 +526,6 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w300,
-                          color: Colors.white,
                         ),
                       ),
                       Padding(
@@ -548,7 +544,7 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
                             height: 24,
                             elevation: 0,
                             minWidth: 0,
-                            color: Colors.white10,
+                            color: overlayBackground(),
                             child: Text(
                               Language.getCommerceOSStrings('actions.cancel'),
                             ),
@@ -570,7 +566,7 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
                             height: 24,
                             elevation: 0,
                             minWidth: 0,
-                            color: Colors.white10,
+                            color: overlayBackground(),
                             child: Text(
                               Language.getCommerceOSStrings('actions.save'),
                             ),

@@ -1,10 +1,11 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/products/models/models.dart';
 import 'package:payever/products/widgets/product_item_image_view.dart';
+import 'package:payever/theme.dart';
 
 class ProductGridItem extends StatelessWidget {
   final ProductListModel product;
@@ -43,97 +44,76 @@ class ProductGridItem extends StatelessWidget {
       });
     }
     return Container(
-      margin: EdgeInsets.only(left: 16, right: 16),
+      margin: EdgeInsets.only(left: 3, right: 3),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(12.0)),
-          color: Color.fromRGBO(0, 0, 0, 0.3)
+          color: overlayBackground(),
       ),
       child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.only(top: 16, left: 24),
-                  alignment: Alignment.centerLeft,
-                  child: InkWell(
-                    onTap: () {
-                      onCheck(product);
-                    },
-                    child: product.isChecked
-                        ? Icon(Icons.check_circle, color: Colors.white,)
-                        : Icon(Icons.radio_button_unchecked, color: Colors.white54,),
-                  ) ,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(right: 24, top: 16),
-                  child: Text(
-                    category,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
-              ],
-            ),
             Expanded(
-              child: Padding(
-                padding: EdgeInsets.all(24),
-                child: GestureDetector(
-                  onTap: () {
-                    onTap(product);
-                  },
-                  child: ProductItemImage(
+              child: Stack(
+                children: <Widget>[
+                  ProductItemImage(
                     product.productsModel.images.isEmpty ? null : product.productsModel.images.first,
                   ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 24, right: 24, bottom: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    product.productsModel.title,
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 8),
-                  ),
-                  Text(
-                    '${formatter.format(product.productsModel.price)} ${Measurements.currency(product.productsModel.currency)}',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w300,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 8),
-                  ),
-                  Text(
-                    product.productsModel.onSales
-                        ? Language.getProductListStrings('filters.quantity.options.outStock')
-                        : Language.getProductListStrings('filters.quantity.options.inStock'),
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w300,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 8),
+                  Container(
+                    padding: EdgeInsets.only(top: 4, left: 4),
+                    alignment: Alignment.topLeft,
+                    child: InkWell(
+                      onTap: () {
+                        onCheck(product);
+                      },
+                      child: product.isChecked
+                          ? Icon(Icons.check_circle, color: Colors.black54,)
+                          : Icon(Icons.radio_button_unchecked, color: Colors.black54,)
+                    ) ,
                   ),
                 ],
+              ),
+            ),
+            AspectRatio(
+              aspectRatio: 6/1.7,
+              child: Padding(
+                padding: EdgeInsets.only(left: 8, right: 8, bottom: 3, top: 4),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      AutoSizeText(
+                        product.productsModel.title,
+                        style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500
+                        ),
+                        maxLines: 1,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 3, bottom: 1),
+                        child: Text(
+                          '${formatter.format(product.productsModel.price)} ${Measurements.currency(product.productsModel.currency)}',
+                          style: TextStyle(
+                            fontSize: 8,
+                            fontWeight: FontWeight.w300,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        product.productsModel.onSales
+                            ? Language.getProductListStrings('filters.quantity.options.outStock')
+                            : Language.getProductListStrings('filters.quantity.options.inStock'),
+                        style: TextStyle(
+                          fontSize: 8,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
             Divider(
@@ -141,30 +121,15 @@ class ProductGridItem extends StatelessWidget {
               thickness: 0.5,
               color: Colors.white54,
             ),
-            Container(
-              height: 44,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      isPos ? Padding(
-                        padding: EdgeInsets.only(left: 16),
-                        child: SvgPicture.asset('assets/images/pos.svg', width: 20, height: 20,),
-                      ) : Container(),
-                      isShop ? Padding(
-                        padding: EdgeInsets.only(left: 16),
-                        child: SvgPicture.asset('assets/images/shopicon.svg', width: 20, height: 20,),
-                      ) : Container(),
-                    ],
-                  ),
-                  MaterialButton(
-                    onPressed: (){
-                      onTapMenu(product);
-                    },
-                    child: Icon(Icons.more_vert),
-                    minWidth: 0,
-                  )                ],
+            AspectRatio(
+              aspectRatio: 6/1,
+              child: Container(              
+                child: InkWell(
+                  onTap: (){
+                    onTap(product);
+                  },
+                  child: Center(child: Text('Open', style: TextStyle(fontSize: 12),)),
+                ),
               ),
             ),
           ],

@@ -12,11 +12,9 @@ import 'package:payever/login/login_screen.dart';
 import 'package:payever/search/widgets/app_widget_cell.dart';
 import 'package:payever/search/widgets/search_result_business_view.dart';
 import 'package:payever/search/widgets/search_result_transaction_view.dart';
+import 'package:payever/theme.dart';
 import 'package:payever/transactions/transactions.dart';
 import 'package:provider/provider.dart';
-
-bool _isPortrait;
-bool _isTablet;
 
 class SearchScreen extends StatefulWidget {
   final String businessId;
@@ -40,7 +38,9 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-
+  bool _isPortrait;
+  bool _isTablet;
+  double mainWidth = 0;
   SearchScreenBloc screenBloc;
   TextEditingController searchController = TextEditingController();
   String searchString = '';
@@ -75,6 +75,10 @@ class _SearchScreenState extends State<SearchScreen> {
         : MediaQuery.of(context).size.height);
     _isTablet = Measurements.width < 600 ? false : true;
 
+    if (mainWidth == 0) {
+      mainWidth = _isTablet ? Measurements.width * 0.7 : Measurements.width;
+    }
+
     return BlocListener(
       bloc: screenBloc,
       listener: (BuildContext context, SearchScreenState state) async {
@@ -82,7 +86,7 @@ class _SearchScreenState extends State<SearchScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );
@@ -110,33 +114,38 @@ class _SearchScreenState extends State<SearchScreen> {
       body: BackgroundBase(
         true,
         body: SafeArea(
-          child: Column(
-            children: <Widget>[
-              Container(
-                alignment: Alignment.topRight,
-                padding: EdgeInsets.only(top: 16, right: 16),
-                child: IconButton(
-                  constraints: BoxConstraints(
-                      maxHeight: 32,
-                      maxWidth: 32,
-                      minHeight: 32,
-                      minWidth: 32
+          bottom: false,
+          child: Center(
+            child: Container(
+              width: mainWidth,
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    alignment: Alignment.topRight,
+                    padding: EdgeInsets.only(top: 16, right: 16),
+                    child: IconButton(
+                      constraints: BoxConstraints(
+                          maxHeight: 32,
+                          maxWidth: 32,
+                          minHeight: 32,
+                          minWidth: 32
+                      ),
+                      icon: Icon(
+                        Icons.close,
+                        size: 24,
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
                   ),
-                  icon: Icon(
-                    Icons.close,
-                    color: Colors.white,
-                    size: 24,
+                  _searchBar(state),
+                  Expanded(
+                    child: _searchResultList(state),
                   ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
+                ],
               ),
-              _searchBar(state),
-              Expanded(
-                child: _searchResultList(state),
-              ),
-            ],
+            ),
           ),
         ),
       ),
@@ -152,7 +161,7 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
       child: BlurEffectView(
         radius: 12,
-        color: Color.fromRGBO(100, 100, 100, 0.2),
+        color: overlayBackground(),
         padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
         child: Container(
           height: 40,
@@ -160,7 +169,6 @@ class _SearchScreenState extends State<SearchScreen> {
             children: [
               Icon(
                 Icons.search,
-                color: Colors.white,
                 size: 20,
               ),
               SizedBox(width: 8),
@@ -175,24 +183,19 @@ class _SearchScreenState extends State<SearchScreen> {
                           isDense: true,
                           border: InputBorder.none,
                           hintText: 'Search',
-                          hintStyle: TextStyle(
-                              color: Colors.white
-                          ),
                         ),
                         style: TextStyle(
                             fontSize: 14,
-                            color: Colors.white
                         ),
                         onChanged: (val) {
                           searchString = val;
-                          Future.delayed(
-                              Duration(milliseconds: 300))
+                          Future.delayed(Duration(milliseconds: 300))
                               .then((value) async {
                             if (!state.isLoading) {
-                              screenBloc.add(SearchEvent(businessId: widget.businessId, key: val));
+                              screenBloc.add(SearchEvent(
+                                  businessId: widget.businessId, key: val));
                             }
-                          }
-                          );
+                          });
                         },
                         onSubmitted: (val) {
                           screenBloc.add(SearchEvent(businessId: widget.businessId, key: val));
@@ -220,7 +223,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget _searchResultList(SearchScreenState state) {
     List<AppWidget> appWidgets = [];
-    appWidgets = widget.appWidgets.where((element) => element.type != 'apps').toList();
+    appWidgets = widget.appWidgets.where((element) => element.type != 'apps' && element.icon.isNotEmpty).toList();
     return SingleChildScrollView(
       child: Container(
         padding: EdgeInsets.all(16),
@@ -240,7 +243,6 @@ class _SearchScreenState extends State<SearchScreen> {
                     child: Text(
                       'Business',
                       style: TextStyle(
-                        color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
@@ -248,7 +250,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                   BlurEffectView(
                     blur: 15,
-                    color: Color.fromRGBO(50, 50, 50, 0.2),
+                    color: overlayBackground(),
                     radius: 0,
                     child: ListView.separated(
                       shrinkWrap: true,
@@ -284,7 +286,6 @@ class _SearchScreenState extends State<SearchScreen> {
                     child: Text(
                       'Transactions',
                       style: TextStyle(
-                        color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
@@ -292,7 +293,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                   BlurEffectView(
                     blur: 15,
-                    color: Color.fromRGBO(50, 50, 50, 0.2),
+                    color: overlayBackground(),
                     radius: 0,
                     child: ListView.separated(
                       shrinkWrap: true,
@@ -340,7 +341,7 @@ class _SearchScreenState extends State<SearchScreen> {
             state.searchBusinesses.length == 0 && state.searchTransactions.length == 0 && appWidgets.length > 0
                 ? BlurEffectView(
               blur: 15,
-              color: Color.fromRGBO(50, 50, 50, 0.2),
+              color: overlayBackground(),
               radius: 12,
               child: Column(
                 children: <Widget>[
@@ -366,7 +367,6 @@ class _SearchScreenState extends State<SearchScreen> {
                       Language.getCommerceOSStrings('search_box.content.details'),
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Colors.white,
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
                       ),

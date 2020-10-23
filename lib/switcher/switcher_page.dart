@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/models/business.dart';
 import 'package:payever/commons/utils/common_utils.dart';
-import 'package:payever/commons/utils/env.dart';
-import 'package:payever/commons/utils/global_keys.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
-import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/dashboard/dashboard_screen.dart';
+import 'package:payever/dashboard/fake_dashboard_screen.dart';
 import 'package:payever/login/login_screen.dart';
+import 'package:payever/theme.dart';
 import 'package:provider/provider.dart';
 
 const double _heightFactorTablet = 0.05;
@@ -24,7 +24,8 @@ bool _isTablet = false;
 bool _isPortrait = true;
 
 class SwitcherScreen extends StatefulWidget {
-  SwitcherScreen();
+  final bool isLogin;
+  SwitcherScreen(this.isLogin);
 
   @override
   createState() => _SwitcherScreenState();
@@ -59,7 +60,7 @@ class _SwitcherScreenState extends State<SwitcherScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );
@@ -87,49 +88,38 @@ class _SwitcherScreenState extends State<SwitcherScreen> {
             Measurements.loadImages(context);
             isSetLanguage = true;
           }
-          return _body(state);
+          return Stack(
+            children: <Widget>[ FakeDashboardScreen(), _body(state),],
+          );
         },
       ),
     );
   }
-
+//  NetworkImage(
+//  '${Env.cdn}/images/commerceos-background.jpg')
   Widget _body(SwitcherScreenState state) {
-    return Stack(
-      children: <Widget>[
-        Positioned(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width + 200,
-          left: -50,
-          top: 0.0,
-          child: Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width + 200,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: NetworkImage(
-                    '${Env.cdn}/images/commerceos-background.jpg'),
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: BlurEffectView(
-              blur: 5,
-              radius: 0,
-              child: Container(
-                color: Colors.black.withAlpha(50),
-              ),
-            ),
-          ),
-        ),
-
-        Scaffold(
-          backgroundColor: Colors.transparent,
-          body: AnimatedOpacity(
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Stack(
+        children: <Widget>[
+          AnimatedOpacity(
             child: state.isLoading ? Wait() : Switcher(screenBloc: screenBloc,),
             duration: Duration(milliseconds: 500),
             opacity: 1.0,
           ),
-        )
-      ],
+          !widget.isLogin ? SafeArea(
+            bottom: false,
+            child: MaterialButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              minWidth: 0,
+              shape: CircleBorder(),
+              child: SvgPicture.asset('assets/images/closeicon.svg', color: iconColor(),),
+            ),
+          ): Container()
+        ],
+      ),
     );
   }
 }
@@ -145,7 +135,7 @@ class GridItems extends StatefulWidget {
 }
 
 class _GridItemsState extends State<GridItems> {
-  double itemsHeight = (Measurements.height * 0.08);
+  double itemsHeight = (Measurements.width * 0.3);
 
   bool haveImage;
   String imageURL;
@@ -162,7 +152,7 @@ class _GridItemsState extends State<GridItems> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: itemsHeight,
+      width: Measurements.width * 0.25,
       child: InkWell(
         highlightColor: Colors.transparent,
         child: Column(
@@ -181,6 +171,7 @@ class _GridItemsState extends State<GridItems> {
                         ? widget.business.logo
                         : 'business',
                     widget.business.name,
+                    Measurements.width * 0.08,
                   ),
                 ),
                 widget.isLoading
@@ -189,11 +180,13 @@ class _GridItemsState extends State<GridItems> {
               ],
             ),
             Container(
-                alignment: Alignment.center,
-                child: Text(
-                  widget.business.name,
-                  textAlign: TextAlign.center,
-                ))
+              alignment: Alignment.center,
+              child: Text(
+                widget.business.name,
+                textAlign: TextAlign.center,
+                maxLines: 1,
+              ),
+            ),
           ],
         ),
         onTap: widget.onTap,
@@ -236,10 +229,6 @@ class _SwitcherState extends State<Switcher> {
 
   @override
   Widget build(BuildContext context) {
-    Business active;
-    if (widget.screenBloc.state.businesses.length > 0) {
-      active = widget.screenBloc.state.businesses.firstWhere((element) => element.active);
-    }
     return Column(
       children: <Widget>[
         AnimatedContainer(
@@ -253,13 +242,13 @@ class _SwitcherState extends State<Switcher> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              widget.screenBloc.state.businesses.length > 0
+              widget.screenBloc.state.active != null
                   ? Container(
                   child: Column(
                     children: <Widget>[
-                      Text('BUSINESS', style: TextStyle(
-                          color: Colors.white.withAlpha(200)
-                      ),),
+                      Text(
+                        'BUSINESS',
+                      ),
                       Padding(
                         padding: EdgeInsets.only(
                             top: (Measurements.height *
@@ -274,22 +263,23 @@ class _SwitcherState extends State<Switcher> {
                           alignment: Alignment.center,
                           children: <Widget>[
                             CustomCircleAvatar(
-                              active.logo != null
-                                  ? active.logo
+                              widget.screenBloc.state.active.logo != null
+                                  ? widget.screenBloc.state.active.logo
                                   : 'business',
-                              active.name,
+                              widget.screenBloc.state.active.name,
+                              Measurements.width * 0.12,
                             ),
                             selectActive
                                 ? Stack(
                               alignment: Alignment.center,
                               children: <Widget>[
                                 Container(
-                                  height: Measurements.height * 0.08,
-                                  width: Measurements.height * 0.08,
+                                  height: Measurements.height * 0.06,
+                                  width: Measurements.height * 0.06,
                                   decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.white
-                                          .withOpacity(0.2)),
+                                    shape: BoxShape.circle,
+                                    color: Colors.white.withOpacity(0.2),
+                                  ),
                                 ),
                                 Container(
                                   child: CircularProgressIndicator(),
@@ -304,7 +294,7 @@ class _SwitcherState extends State<Switcher> {
                           setState(() {
                             selectActive = true;
                           });
-                          widget.screenBloc.add(SwitcherSetBusinessEvent(business: active));
+                          widget.screenBloc.add(SwitcherSetBusinessEvent(business: widget.screenBloc.state.active));
                         },
                       ),
                       Padding(
@@ -317,11 +307,9 @@ class _SwitcherState extends State<Switcher> {
                       ),
                       widget.screenBloc.state.businesses.length > 0
                           ? InkWell(
-                        key: GlobalKeys.allButton,
                         highlightColor: Colors.transparent,
                         child: Chip(
-                          backgroundColor:
-                          Colors.black.withOpacity(0.4),
+                          backgroundColor: overlayBackground(),
                           label: widget.screenBloc.state.businesses.length > 1
                               ? Container(
                             child: Row(
@@ -329,16 +317,8 @@ class _SwitcherState extends State<Switcher> {
                                 Text(
                                     'All ${widget.screenBloc.state.businesses.length}'),
                                 Icon(!_moreSelected
-                                    ? IconData(
-                                  58131,
-                                  fontFamily:
-                                  'MaterialIcons',
-                                )
-                                    : IconData(
-                                  58134,
-                                  fontFamily:
-                                  'MaterialIcons',
-                                ),
+                                    ? IconData(58131, fontFamily: 'MaterialIcons',)
+                                    : IconData(58134, fontFamily: 'MaterialIcons',),
                                 ),
                               ],
                             ),
@@ -346,14 +326,11 @@ class _SwitcherState extends State<Switcher> {
                               : Container(
                             child: Row(
                               children: <Widget>[
-                                Text(active.name),
+                                Text(widget.screenBloc.state.active.name),
                                 Icon(!_moreSelected
-                                    ? IconData(58131,
-                                    fontFamily:
-                                    'MaterialIcons')
-                                    : IconData(58134,
-                                    fontFamily:
-                                    'MaterialIcons'))
+                                    ? IconData(58131, fontFamily: 'MaterialIcons',)
+                                    : IconData(58134, fontFamily: 'MaterialIcons',),
+                                ),
                               ],
                             ),
                           ),
@@ -366,7 +343,8 @@ class _SwitcherState extends State<Switcher> {
                       )
                           : Container(),
                     ],
-                  ))
+                  ),
+              )
                   : Container(),
             ],
           ),
@@ -386,15 +364,19 @@ class _SwitcherState extends State<Switcher> {
 class CustomCircleAvatar extends StatelessWidget {
   final String url;
   final String name;
+  final double avatarSoze;
 
-  CustomCircleAvatar(this.url, this.name);
+  CustomCircleAvatar(this.url, this.name, this.avatarSoze);
 
   @override
   Widget build(BuildContext context) {
     ImageProvider image;
     bool _haveImage;
     String displayName;
-
+    double size = Measurements.height * 0.04;
+    if (avatarSoze != null) {
+      size = avatarSoze;
+    }
     if (url.contains('user') || url.contains('business')) {
       _haveImage = false;
       if (name.contains(' ')) {
@@ -411,21 +393,21 @@ class CustomCircleAvatar extends StatelessWidget {
 
     return Container(
       child: CircleAvatar(
-        radius: Measurements.height * 0.04,
+        radius: size,
         backgroundColor:
         _haveImage ? Colors.transparent : Colors.grey.withOpacity(0.4),
         child: _haveImage
             ? CircleAvatar(
-          radius: Measurements.height * 0.08,
+          radius: size,
           backgroundImage: image,
           backgroundColor: Colors.transparent,
         )
             : Text(displayName,
             style:
             TextStyle(
-              color: Colors.white.withOpacity(0.7),
               fontSize: _isTablet ? Measurements.height * 0.025: Measurements.height * 0.035,
               fontWeight: FontWeight.w500,
+              color: iconColor(),
             ),
         ),
       ),
@@ -448,12 +430,16 @@ class _CustomGridState extends State<CustomGrid> {
     List<Widget> business = List();
     int index = 0;
     business.add(
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
           Container(
             child: Text('Business'),
             padding: EdgeInsets.symmetric(vertical: Measurements.height * 0.01),
-          )
-        ]));
+          ),
+        ],
+      ),
+    );
     widget.screenBloc.state.businesses.forEach((f) {
       business.add(
         Container(

@@ -3,8 +3,9 @@ import 'dart:convert';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/commons/models/app_widget.dart';
-import 'package:payever/transactions/models/currency.dart';
+import 'package:payever/theme.dart';
 import 'package:payever/transactions/models/enums.dart';
+import 'package:payever/transactions/models/transaction.dart';
 
 class ProductFilterRangeContentView extends StatefulWidget {
   final String type;
@@ -20,6 +21,7 @@ class _ProductFilterRangeContentViewState extends State<ProductFilterRangeConten
   DateTime selectedDate;
   String filterConditionName = '';
   TextEditingController filterValueController = TextEditingController();
+  TextEditingController filterValueController1 = TextEditingController();
   Currency selectedCurrency;
   String selectedOptions;
 
@@ -44,15 +46,15 @@ class _ProductFilterRangeContentViewState extends State<ProductFilterRangeConten
       dropdown = 1;
     }
     return Container(
-        height: 173,
         child: Container(
           padding: EdgeInsets.fromLTRB(0 , 6, 0, 6),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 decoration: BoxDecoration(
-                    color: Color(0xFF222222),
+                    color: overlayBackground(),
                     borderRadius: BorderRadius.all(Radius.circular(6))),
                 child: Column(
                   children: [
@@ -67,7 +69,6 @@ class _ProductFilterRangeContentViewState extends State<ProductFilterRangeConten
                             value: value,
                             child: Text(
                               conditions[value],
-                              style: TextStyle(color: Colors.white70),
                             ),
                           );
                         }).toList(),
@@ -97,7 +98,6 @@ class _ProductFilterRangeContentViewState extends State<ProductFilterRangeConten
                               itemHeight: 60,
                               hint: Text(
                                 'Option',
-                                style: TextStyle(color: Colors.white70),
                               ),
                               value: selectedCurrency != null ? selectedCurrency.name : null,
                               items: currencies.map((Currency value) {
@@ -105,7 +105,6 @@ class _ProductFilterRangeContentViewState extends State<ProductFilterRangeConten
                                   value: value.name,
                                   child: Text(
                                     value.name,
-                                    style: TextStyle(color: Colors.white70),
                                   ),
                                 );
                               }).toList(),
@@ -129,7 +128,6 @@ class _ProductFilterRangeContentViewState extends State<ProductFilterRangeConten
                           itemHeight: 60,
                           hint: Text(
                             'Option',
-                            style: TextStyle(color: Colors.white70),
                           ),
                           value: selectedOptions,
                           items: options.keys.map((String value) {
@@ -137,7 +135,6 @@ class _ProductFilterRangeContentViewState extends State<ProductFilterRangeConten
                               value: value,
                               child: Text(
                                 options[value],
-                                style: TextStyle(color: Colors.white70),
                               ),
                             );
                           }).toList(),
@@ -148,44 +145,98 @@ class _ProductFilterRangeContentViewState extends State<ProductFilterRangeConten
                           },
                         ),
                       ) : Container(),
-                    dropdown == 2 ? Container(
-                      height: 60,
-                      padding: EdgeInsets.fromLTRB(20, 0, 10, 0),
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: TextField(
-                              controller: filterValueController,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: hintTextByFilter(widget.type),
+                    dropdown == 2
+                        ? Column(
+                          children: <Widget>[
+                            Container(
+                                height: 60,
+                                padding: EdgeInsets.fromLTRB(20, 0, 10, 0),
+                                child: Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: TextField(
+                                        controller: filterValueController,
+                                        decoration: InputDecoration(
+                                          border: InputBorder.none,
+                                          hintText: (filterConditionName == 'between') ? 'From' : hintTextByFilter(widget.type),
+                                        ),
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
+                                    widget.type == 'created_at'
+                                        ? IconButton(
+                                            icon: Icon(Icons.calendar_today),
+                                            onPressed: () async {
+                                              final DateTime picked =
+                                                  await showDatePicker(
+                                                context: context,
+                                                initialDate: selectedDate != null
+                                                    ? selectedDate
+                                                    : DateTime.now(),
+                                                firstDate: DateTime(2000, 1),
+                                                lastDate: DateTime(2030, 12),
+                                              );
+                                              if (picked != null &&
+                                                  picked != selectedDate) {
+                                                setState(() {
+                                                  selectedDate = picked;
+                                                });
+                                              }
+                                            },
+                                          )
+                                        : Container(),
+                                  ],
+                                ),
                               ),
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.white
+                            Visibility(
+                              visible: filterConditionName == 'between' ,
+                              child: Container(
+                              height: 60,
+                              padding: EdgeInsets.fromLTRB(20, 0, 10, 0),
+                              child: Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: TextField(
+                                      controller: filterValueController1,
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        hintText: 'To',
+                                      ),
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
+                                  widget.type == 'created_at'
+                                      ? IconButton(
+                                    icon: Icon(Icons.calendar_today),
+                                    onPressed: () async {
+                                      final DateTime picked =
+                                      await showDatePicker(
+                                        context: context,
+                                        initialDate: selectedDate != null
+                                            ? selectedDate
+                                            : DateTime.now(),
+                                        firstDate: DateTime(2000, 1),
+                                        lastDate: DateTime(2030, 12),
+                                      );
+                                      if (picked != null &&
+                                          picked != selectedDate) {
+                                        setState(() {
+                                          selectedDate = picked;
+                                        });
+                                      }
+                                    },
+                                  )
+                                      : Container(),
+                                ],
                               ),
-                            ),
-                          ),
-                          widget.type == 'created_at' ? IconButton(
-                            icon: Icon(Icons.calendar_today),
-                            onPressed: () async {
-                              final DateTime picked = await showDatePicker(
-                                context: context,
-                                initialDate: selectedDate != null ? selectedDate: DateTime.now(),
-                                firstDate: DateTime(2000, 1),
-                                lastDate: DateTime(2030, 12),
-                              );
-                              if (picked != null && picked != selectedDate) {
-                                setState(() {
-                                  selectedDate = picked;
-                                });
-                              }
-                            },
-                          ): Container(),
-                        ],
-
-                      ),
-                    ): Container(),
+                            ),)
+                          ],
+                        )
+                        : Container(),
                   ],
                 ),
               ),
@@ -244,7 +295,12 @@ class _ProductFilterRangeContentViewState extends State<ProductFilterRangeConten
                             type: widget.type,
                             condition: filterConditionName,
                             value: filterValueController.text,
-                            disPlayName: filterValueController.text,
+                            value1: filterValueController1.text,
+                            disPlayName: filterConditionName != 'between'
+                                ? filterValueController.text
+                                : filterValueController.text +
+                                ' and ' +
+                                filterValueController1.text,
                           ),
                         );
                       }

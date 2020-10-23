@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:payever/theme.dart';
 
 class ProductDetailHeaderView extends StatelessWidget {
   final String title;
@@ -24,49 +25,54 @@ class ProductDetailHeaderView extends StatelessWidget {
       child: Container(
         height: 50,
         padding: EdgeInsets.only(left: 16, right: 16),
-        color: Color(0xf2111111),
+        color: overlayBackground(),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
               this.title ?? '',
               style: TextStyle(
-                color: Colors.white,
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
               ),
             ),
-            detail == 'channel'
-                ? Container(
-              alignment: Alignment.centerLeft,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  SvgPicture.asset(
-                    'assets/images/pos.svg',
-                    width: 20,
-                    height: 20,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 8),
-                  ),
-                  SvgPicture.asset(
-                    'assets/images/shopicon.svg',
-                    width: 20,
-                    height: 20,
-                  ),
-                ],
-              ),
-            )
-                : Text(
-              this.detail ?? '',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
+            SizedBox(width: 16,),
+            Expanded(
+              child: detail == 'channel'
+                  ? Container(
+                alignment: Alignment.centerLeft,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    SvgPicture.asset(
+                      'assets/images/pos.svg',
+                      width: 20,
+                      height: 20,
+                      color: iconColor(),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 8),
+                    ),
+                    SvgPicture.asset(
+                      'assets/images/shopicon.svg',
+                      width: 20,
+                      height: 20,
+                      color: iconColor(),
+                    ),
+                  ],
+                ),
+              )
+                  : Text(
+                this.detail ?? '',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
             ),
+            SizedBox(width: 8,),
             isExpanded ? Icon(
               Icons.remove,
             ): Icon(

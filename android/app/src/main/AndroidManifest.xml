@@ -14,7 +14,7 @@
 
     <application
         android:name=".taponphone.mpos.MposApplication"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/launcher_icon"
         android:label="payever"
         tools:replace="android:label">
         <!--android:name="io.flutter.app.FlutterApplication" -->

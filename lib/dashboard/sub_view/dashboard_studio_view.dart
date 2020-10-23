@@ -4,6 +4,8 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/models/app_widget.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 
+import '../../theme.dart';
+
 class DashboardStudioView extends StatefulWidget {
   final VoidCallback onOpen;
   final AppWidget appWidget;
@@ -30,29 +32,20 @@ class _DashboardStudioViewState extends State<DashboardStudioView> {
   Widget build(BuildContext context) {
     return BlurEffectView(
       padding: EdgeInsets.fromLTRB(14, 12, 14, 14),
+      isDashboard: true,
       child: Column(
         children: [
-          Row(
-            children: [
-              Container(
-                width: 16,
-                height: 16,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: NetworkImage('${uiKit}studio.png'),
-                        fit: BoxFit.fitWidth)),
+          Container(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'STUDIO',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
               ),
-              SizedBox(width: 8,),
-              Text(
-                'STUDIO',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                ),
-              )
-            ],
+            ),
           ),
-          SizedBox(height: 8),
+          SizedBox(height: 14),
           InkWell(
             onTap: () {
 
@@ -61,7 +54,7 @@ class _DashboardStudioViewState extends State<DashboardStudioView> {
               height: 50,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(6),
-                  color: Colors.black26
+                  color: overlayDashboardButtonsBackground(),
               ),
               child: Center(
                 child: Text(

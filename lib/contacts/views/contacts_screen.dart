@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_inner_drawer/inner_drawer.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
@@ -14,13 +12,11 @@ import 'package:payever/contacts/views/contacts_filter_screen.dart';
 import 'package:payever/contacts/widgets/contact_grid_add_item.dart';
 import 'package:payever/contacts/widgets/contact_grid_item.dart';
 import 'package:payever/contacts/widgets/contact_list_item.dart';
-import 'package:payever/dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/login/login_screen.dart';
-import 'package:payever/notifications/notifications_screen.dart';
-import 'package:payever/switcher/switcher_page.dart';
+import 'package:payever/theme.dart';
+import 'package:payever/widgets/main_app_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 
 class ContactsInitScreen extends StatelessWidget {
@@ -61,9 +57,6 @@ class _ContactScreenState extends State<ContactScreen> {
   bool _isTablet;
 
   ContactScreenBloc screenBloc;
-  final GlobalKey<InnerDrawerState> _innerDrawerKey = GlobalKey<InnerDrawerState>();
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   static int selectedIndex = 0;
   static int selectedStyle = 1;
 
@@ -79,7 +72,7 @@ class _ContactScreenState extends State<ContactScreen> {
     return [
       ConnectPopupButton(
         title: Language.getProductListStrings('list_view'),
-        icon: SvgPicture.asset('assets/images/list.svg'),
+        icon: SvgPicture.asset('assets/images/list.svg', color: iconColor()),
         onTap: () async {
           setState(() {
             selectedStyle = 0;
@@ -88,7 +81,7 @@ class _ContactScreenState extends State<ContactScreen> {
       ),
       ConnectPopupButton(
         title: Language.getProductListStrings('grid_view'),
-        icon: SvgPicture.asset('assets/images/grid.svg'),
+        icon: SvgPicture.asset('assets/images/grid.svg', color: iconColor(),),
         onTap: () async {
           setState(() {
             selectedStyle = 1;
@@ -161,7 +154,7 @@ class _ContactScreenState extends State<ContactScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );
@@ -170,191 +163,9 @@ class _ContactScreenState extends State<ContactScreen> {
       child: BlocBuilder<ContactScreenBloc, ContactScreenState>(
         bloc: screenBloc,
         builder: (BuildContext context, ContactScreenState state) {
-          return DashboardMenuView(
-            innerDrawerKey: _innerDrawerKey,
-            onLogout: () async {
-              FlutterSecureStorage storage = FlutterSecureStorage();
-              await storage.delete(key: GlobalUtils.TOKEN);
-              await storage.delete(key: GlobalUtils.BUSINESS);
-              await storage.delete(key: GlobalUtils.REFRESH_TOKEN);
-              SharedPreferences.getInstance().then((p) {
-                p.setString(GlobalUtils.BUSINESS, '');
-                p.setString(GlobalUtils.DEVICE_ID, '');
-                p.setString(GlobalUtils.DB_TOKEN_ACC, '');
-                p.setString(GlobalUtils.DB_TOKEN_RFS, '');
-              });
-              Navigator.pushReplacement(
-                context,
-                PageTransition(
-                  child: LoginScreen(), type: PageTransitionType.fade,
-                ),
-              );
-            },
-            onSwitchBusiness: () async {
-              final result = await Navigator.pushReplacement(
-                context,
-                PageTransition(
-                  child: SwitcherScreen(),
-                  type: PageTransitionType.fade,
-                ),
-              );
-              if (result == 'refresh') {
-              }
-
-            },
-            onPersonalInfo: () {
-
-            },
-            onAddBusiness: () {
-
-            },
-            onClose: () {
-              _innerDrawerKey.currentState.toggle();
-            },
-            scaffold: _body(state),
-          );
+          return _body(state);
         },
       ),
-    );
-  }
-
-  Widget _appBar(ContactScreenState state) {
-    return AppBar(
-      centerTitle: false,
-      elevation: 0,
-      automaticallyImplyLeading: false,
-      backgroundColor: Colors.black87,
-      title: Row(
-        children: <Widget>[
-          Container(
-            child: Center(
-              child: Container(
-                child: SvgPicture.asset(
-                  'assets/images/contacts.svg',
-                  width: 20,
-                  height: 20,
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 8),
-          ),
-          Text(
-            Language.getCommerceOSStrings('dashboard.apps.contacts'),
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-      actions: <Widget>[
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
-            Icons.person_pin,
-            color: Colors.white,
-            size: 24,
-          ),
-          onPressed: () {
-          },
-        ),
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
-            Icons.search,
-            color: Colors.white,
-            size: 24,
-          ),
-          onPressed: () {
-
-          },
-        ),
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
-            Icons.notifications,
-            color: Colors.white,
-            size: 24,
-          ),
-          onPressed: () async{
-            await showGeneralDialog(
-              barrierColor: null,
-              transitionBuilder: (context, a1, a2, wg) {
-                final curvedValue = Curves.ease.transform(a1.value) -   1.0;
-                return Transform(
-                  transform: Matrix4.translationValues(-curvedValue * 200, 0.0, 0),
-                  child: NotificationsScreen(
-                    business: widget.dashboardScreenBloc.state.activeBusiness,
-                    businessApps: widget.dashboardScreenBloc.state.businessWidgets,
-                    dashboardScreenBloc: widget.dashboardScreenBloc,
-                    type: 'connect',
-                  ),
-                );
-              },
-              transitionDuration: Duration(milliseconds: 200),
-              barrierDismissible: true,
-              barrierLabel: '',
-              context: context,
-              pageBuilder: (context, animation1, animation2) {
-                return null;
-              },
-            );
-          },
-        ),
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
-            Icons.menu,
-            color: Colors.white,
-            size: 24,
-          ),
-          onPressed: () {
-            _innerDrawerKey.currentState.toggle();
-          },
-        ),
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
-            Icons.close,
-            color: Colors.white,
-            size: 24,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        Padding(
-          padding: EdgeInsets.only(right: 16),
-        ),
-      ],
     );
   }
 
@@ -364,11 +175,20 @@ class _ContactScreenState extends State<ContactScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       resizeToAvoidBottomPadding: false,
-      appBar: _appBar(state),
+      appBar: MainAppbar(
+        dashboardScreenBloc: widget.dashboardScreenBloc,
+        dashboardScreenState: widget.dashboardScreenBloc.state,
+        title: Language.getCommerceOSStrings('dashboard.apps.contacts'),
+        icon: SvgPicture.asset(
+          'assets/images/contacts.svg',
+          height: 20,
+          width: 20,
+        ),
+      ),
       body: SafeArea(
+        bottom: false,
         child: BackgroundBase(
           true,
-          backgroudColor: Color.fromRGBO(0, 0, 0, 0.75),
           body: state.isLoading ?
           Center(
             child: CircularProgressIndicator(),
@@ -395,8 +215,8 @@ class _ContactScreenState extends State<ContactScreen> {
     }
     itemsString = '${state.contactLists.length} items';
     return selectedCount == 0 ? Container(
-          height: 64,
-          color: Color(0xFF212122),
+          height: 50,
+          color: overlaySecondAppBar(),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -446,7 +266,8 @@ class _ContactScreenState extends State<ContactScreen> {
 
                     },
                     child: Text(
-                        'Reset'
+                        'Reset',
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
                   Padding(
@@ -531,7 +352,7 @@ class _ContactScreenState extends State<ContactScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        color: Colors.black87,
+                        color: overlayFilterViewBackground(),
                         itemBuilder: (BuildContext context) {
                           return sortPopup(context, state)
                               .map((ConnectPopupButton item) {
@@ -540,7 +361,6 @@ class _ContactScreenState extends State<ContactScreen> {
                               child: Text(
                                 item.title,
                                 style: TextStyle(
-                                  color: Colors.white,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w400,
                                 ),
@@ -562,7 +382,7 @@ class _ContactScreenState extends State<ContactScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        color: Colors.black87,
+                        color: overlayFilterViewBackground(),
                         itemBuilder: (BuildContext context) {
                           return appBarPopUpActions(context, state)
                               .map((ConnectPopupButton item) {
@@ -574,7 +394,6 @@ class _ContactScreenState extends State<ContactScreen> {
                                   Text(
                                     item.title,
                                     style: TextStyle(
-                                      color: Colors.white,
                                       fontSize: 16,
                                       fontWeight: FontWeight.w400,
                                     ),
@@ -596,8 +415,8 @@ class _ContactScreenState extends State<ContactScreen> {
             ],
           ),
     ): Container(
-      height: 64,
-      color: Color(0xFF212122),
+      height: 50,
+      color: overlaySecondAppBar(),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -608,6 +427,7 @@ class _ContactScreenState extends State<ContactScreen> {
             },
             child: Text(
               'Select all',
+              style: TextStyle(color: Colors.white),
             ),
           ),
           Container(
@@ -621,6 +441,7 @@ class _ContactScreenState extends State<ContactScreen> {
             },
             child: Text(
               'Deselect all',
+              style: TextStyle(color: Colors.white),
             ),
           ),
           Container(
@@ -634,6 +455,7 @@ class _ContactScreenState extends State<ContactScreen> {
             },
             child: Text(
               'Delete',
+              style: TextStyle(color: Colors.white),
             ),
           ),
         ],
@@ -670,7 +492,7 @@ class _ContactScreenState extends State<ContactScreen> {
                     }
                   },
                   child: Icon(
-                    selectedCount == state.contactLists.length ? Icons.check_circle_outline : Icons.radio_button_unchecked,
+                    selectedCount == state.contactLists.length ? Icons.check_circle_outline : Icons.radio_button_unchecked, color: Colors.white,
                   ),
                 ),
                 Padding(
@@ -679,6 +501,7 @@ class _ContactScreenState extends State<ContactScreen> {
                 Text(
                   'Contacts',
                   style: TextStyle(
+                    color: Colors.white,
                     fontFamily: 'Helvetica Neue',
                     fontSize: 14,
                   ),
@@ -728,18 +551,10 @@ class _ContactScreenState extends State<ContactScreen> {
   }
 
   Widget _getGridBody(ContactScreenState state) {
-    int crossAxisCount = _isTablet ? (_isPortrait ? 2 : 3): (_isPortrait ? 1 : 2);
-    double imageRatio= 323.0 / 182.0;
-    double contentHeight = 116;
-    double cellWidth = _isPortrait ? (Measurements.width - 44) / crossAxisCount : (Measurements.height - 56) / crossAxisCount;
-    double imageHeight = cellWidth / imageRatio;
-    double cellHeight = imageHeight + contentHeight;
-    print('$cellWidth,  $cellHeight, $imageHeight  => ${cellHeight / cellWidth}');
-
+    int crossAxisCount = _isTablet ? (_isPortrait ? 3 : 3): (_isPortrait ? 2 : 3);
     List<Widget> widgets = [];
     widgets.add(
       Container(
-        padding: EdgeInsets.only(left: 16, right: 16),
         child: ContactGridAddItem(
           onAdd: () {
             Navigator.push(
@@ -760,7 +575,6 @@ class _ContactScreenState extends State<ContactScreen> {
     if (state.contacts != null) {
       widgets.addAll(state.contactLists.map((contact) {
         return Container(
-          padding: EdgeInsets.only(left: 16, right: 16),
           child: ContactGridItem(
             contact: contact,
             onTap: (contactModel) {
@@ -785,7 +599,7 @@ class _ContactScreenState extends State<ContactScreen> {
     }
 
     return Container(
-      padding: EdgeInsets.only(top: 16),
+      padding: EdgeInsets.symmetric(horizontal:12, vertical: 16,),
       clipBehavior: Clip.none,
       child: SmartRefresher(
         enablePullDown: true,
@@ -809,9 +623,8 @@ class _ContactScreenState extends State<ContactScreen> {
           slivers: <Widget>[
             SliverGrid.count(
               crossAxisCount: crossAxisCount,
-              crossAxisSpacing: 12,
-              mainAxisSpacing: 12,
-              childAspectRatio: cellWidth / cellHeight,
+              crossAxisSpacing: 6,
+              mainAxisSpacing: 6,
               children: widgets,
             ),
             new SliverToBoxAdapter(

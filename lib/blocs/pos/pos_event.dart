@@ -1,8 +1,9 @@
 import 'dart:io';
 
 import 'package:equatable/equatable.dart';
+import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
-import 'package:payever/pos/models/models.dart';
+import 'package:payever/products/models/models.dart';
 
 abstract class PosScreenEvent extends Equatable {
   PosScreenEvent();
@@ -14,32 +15,32 @@ abstract class PosScreenEvent extends Equatable {
 class PosScreenInitEvent extends PosScreenEvent {
   final Business currentBusiness;
   final List<Terminal> terminals;
+  final List<ChannelSet> channelSets;
   final Terminal activeTerminal;
+  final Checkout defaultCheckout;
+  final List<ProductsModel> products;
 
   PosScreenInitEvent({
     this.currentBusiness,
+    this.channelSets,
     this.terminals,
     this.activeTerminal,
+    this.defaultCheckout,
+    this.products,
   });
 
   @override
   List<Object> get props => [
     this.currentBusiness,
+    this.channelSets,
     this.terminals,
     this.activeTerminal,
+    this.defaultCheckout,
+    this.products
   ];
 }
 
-class GetPosIntegrationsEvent extends PosScreenEvent {
-  final String businessId;
-
-  GetPosIntegrationsEvent({this.businessId});
-
-  @override
-  List<Object> get props => [
-    this.businessId,
-  ];
-}
+class GetPosIntegrationsEvent extends PosScreenEvent {}
 
 class GetTerminalIntegrationsEvent extends PosScreenEvent {
   final String businessId;
@@ -144,6 +145,9 @@ class InstallTwilioEvent extends PosScreenEvent {
     this.businessId,
   ];
 }
+
+
+
 
 class UninstallTwilioEvent extends PosScreenEvent {
   final String businessId;
@@ -283,17 +287,15 @@ class CreatePosTerminalEvent extends PosScreenEvent{
 }
 
 class UpdatePosTerminalEvent extends PosScreenEvent{
-  final String businessId;
   final String logo;
   final String name;
   final String terminalId;
-  UpdatePosTerminalEvent({this.name, this.businessId, this.logo, this.terminalId});
+  UpdatePosTerminalEvent({this.name, this.logo, this.terminalId});
 
   @override
   List<Object> get props => [
     this.name,
     this.logo,
-    this.businessId,
     this.terminalId,
   ];
 }
@@ -326,29 +328,24 @@ class SetDefaultTerminalEvent extends PosScreenEvent{
 
 class DeleteTerminalEvent extends PosScreenEvent{
   final Terminal activeTerminal;
-  final String businessId;
 
-  DeleteTerminalEvent({this.activeTerminal, this.businessId});
+  DeleteTerminalEvent({this.activeTerminal});
 
   @override
   List<Object> get props => [
     this.activeTerminal,
-    this.businessId,
   ];
 }
 
 class GetPosTerminalsEvent extends PosScreenEvent {
-  final String businessId;
   final Terminal activeTerminal;
 
   GetPosTerminalsEvent({
-    this.businessId,
     this.activeTerminal,
   });
 
   @override
   List<Object> get props => [
-    this.businessId,
     this.activeTerminal,
   ];
 }
@@ -609,5 +606,17 @@ class GetQRImage extends PosScreenEvent {
   List<Object> get props => [
     this.data,
     this.url,
+  ];
+}
+
+class RestoreQrCodeEvent extends PosScreenEvent{}
+
+class UpdateChannelSetFlowEvent extends PosScreenEvent {
+  final ChannelSetFlow channelSetFlow;
+  UpdateChannelSetFlowEvent(this.channelSetFlow);
+
+  @override
+  List<Object> get props => [
+    this.channelSetFlow,
   ];
 }

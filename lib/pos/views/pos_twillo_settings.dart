@@ -11,6 +11,7 @@ import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/pos/views/pos_twillo_add_phonenumber.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
+import 'package:payever/theme.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -84,7 +85,7 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );
@@ -147,6 +148,7 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
       resizeToAvoidBottomPadding: false,
       appBar: _appBar(state),
       body: SafeArea(
+        bottom: false,
         child: BackgroundBase(
           true,
           body: state.isLoading ?
@@ -187,7 +189,6 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
               List<dynamic> list = data['data'];
               Widget section = Container(
                 height: 56,
-                color: Colors.black45,
                 child: SizedBox.expand(
                   child: MaterialButton(
                     onPressed: () {
@@ -199,6 +200,7 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
                         }
                       });
                     },
+                    color: overlayBackground(),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -209,6 +211,7 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
                                 'assets/images/twilio.svg',
                                 width: 16,
                                 height: 16,
+                                color: iconColor(),
                               ),
                               Padding(
                                 padding: EdgeInsets.only(left: 8),
@@ -218,7 +221,6 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
                                   Language.getPosTpmStrings(data['title']),
                                   maxLines: 1,
                                   style: TextStyle(
-                                    color: Colors.white,
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -251,7 +253,6 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
                               Text(
                                 w[0]['value'],
                                 style: TextStyle(
-                                  color: Colors.white,
                                   fontSize: 14,
                                   fontWeight: FontWeight.w400,
                                 ),
@@ -262,7 +263,7 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
                               Text(
                                 w[1]['value'],
                                 style: TextStyle(
-                                  color: Colors.white.withOpacity(0.5),
+                                  color: Colors.grey,
                                   fontSize: 14,
                                   fontWeight: FontWeight.w300,
                                 ),
@@ -301,9 +302,6 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
                                             isDefaultAction: true,
                                             child: new Text(
                                               Language.getPosTpmStrings('tpm.communications.twilio.no'),
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                              ),
                                             ),
                                             onPressed: () {
                                               Navigator.pop(context, 'Cancel');
@@ -313,9 +311,6 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
                                             isDefaultAction: true,
                                             child: new Text(
                                               Language.getPosTpmStrings('tpm.communications.twilio.yes'),
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                              ),
                                             ),
                                             onPressed: () {
                                               Navigator.pop(context);
@@ -336,12 +331,11 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            color: Colors.black26,
+                            color: overlayBackground(),
                             child: Text(
                               Language.getPosTpmStrings(w[2]['text']),
                               style: TextStyle(
                                 fontSize: 10,
-                                color: Colors.white,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -373,12 +367,11 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
                             ),
                           );
                         },
-                        color: Colors.black87,
+                        color: overlayBackground(),
                         child: Text(
                           Language.getPosTpmStrings(data['operation']['text']),
                           style: TextStyle(
                             fontSize: 16,
-                            color: Colors.white,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -392,7 +385,6 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
               List<dynamic> list = data['fieldset'];
               Widget section = Container(
                 height: 56,
-                color: Colors.black45,
                 child: SizedBox.expand(
                   child: MaterialButton(
                     onPressed: () {
@@ -404,6 +396,7 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
                         }
                       });
                     },
+                    color: overlayBackground(),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -422,7 +415,6 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
                                   Language.getPosTpmStrings(data['title']),
                                   maxLines: 1,
                                   style: TextStyle(
-                                    color: Colors.white,
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -494,12 +486,11 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
                         minWidth: 0,
                         onPressed: () {
                         },
-                        color: Colors.black87,
+                        color: overlayBackground(),
                         child: Text(
                           Language.getPosTpmStrings(data['operation']['text']),
                           style: TextStyle(
                             fontSize: 16,
-                            color: Colors.white,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -521,8 +512,6 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
             Container(
               padding: EdgeInsets.only(left: 16, right: 16),
               child: BlurEffectView(
-                color: Color.fromRGBO(20, 20, 20, 0.2),
-                blur: 15,
                 radius: 12,
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                 child: Column(

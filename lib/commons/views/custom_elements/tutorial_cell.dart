@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/theme.dart';
 
 class TutorialCell extends StatelessWidget {
   final Tutorial tutorial;
@@ -20,17 +21,14 @@ class TutorialCell extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Icon(
-                    Icons.videocam,
-                    color: Colors.white,
-                    size: 20,
-                  ),
+                  SvgPicture.asset('assets/images/video.svg', color: iconColor(),),
                   SizedBox(width: 12),
                   Text(
-                    tutorial.title,
+                    tutorial.title ?? '',
                     softWrap: true,
                     style: TextStyle(
-                        color: Colors.white, fontSize: 12),
+                      fontSize: 12,
+                    ),
                   ),
                   SizedBox(width: 12),
                 ],
@@ -39,11 +37,7 @@ class TutorialCell extends StatelessWidget {
                 children: [
                   tutorial.watched ? Padding(
                     padding: EdgeInsets.only(right: 8),
-                    child: Icon(
-                      Icons.remove_red_eye,
-                      size: 20,
-                      color: Colors.white38,
-                    ),
+                    child: SvgPicture.asset('assets/images/icon_eye.svg', color: iconColor().withOpacity(0.5),),
                   ): Container(),
                   InkWell(
                     onTap: () {
@@ -51,27 +45,24 @@ class TutorialCell extends StatelessWidget {
                     },
                     child: Container(
                       height: 20,
-                      width: 60,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: Colors.black.withAlpha(100)
+                          color: overlayDashboardButtonsBackground(),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
-                            Icons.arrow_forward,
-                            color: Colors.white,
-                            size: 12,
-                          ),
+                          SizedBox(width: 6),
+                          SvgPicture.asset('assets/images/icon_arrow.svg',),
                           SizedBox(width: 4),
                           Text(
-                            Language.getCommerceOSStrings('actions.open'),
+                            Language.getWidgetStrings('widgets.tutorial.watch'),
                             style: TextStyle(
                                 fontSize: 10,
-                                color: Colors.white
+                              color: Colors.white,
                             ),
-                          )
+                          ),
+                          SizedBox(width: 6),
                         ],
                       ),
                     ),

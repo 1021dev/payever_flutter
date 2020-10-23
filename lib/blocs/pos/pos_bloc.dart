@@ -1,14 +1,10 @@
 import 'dart:io';
-
 import 'package:bloc/bloc.dart';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/commons/commons.dart';
-import 'package:payever/commons/models/pos.dart';
+import 'package:payever/pos/models/pos.dart';
 import 'package:payever/commons/utils/common_utils.dart';
-import 'package:payever/pos/models/models.dart';
-
 import '../bloc.dart';
 
 class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
@@ -22,20 +18,17 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
   @override
   Stream<PosScreenState> mapEventToState(PosScreenEvent event) async* {
     if (event is PosScreenInitEvent) {
-      if (event.terminals != null) {
-        if (event.activeTerminal != null) {
-          state.copyWith(
-            isLoading: false,
-            terminals: event.terminals,
-            activeTerminal: event.activeTerminal,
-          );
-          add(GetPosIntegrationsEvent(businessId: event.currentBusiness.id));
-          return;
-        }
-      }
-      yield* fetchPos(event.currentBusiness.id);
+      yield state.copyWith(
+          businessId: event.currentBusiness.id,
+          activeBusiness: event.currentBusiness,
+          channelSets: event.channelSets,
+          activeTerminal: event.activeTerminal,
+          terminals: event.terminals,
+          defaultCheckout: event.defaultCheckout,
+      );
+      yield* fetchPos();
     } else if (event is GetPosIntegrationsEvent) {
-      yield* getIntegrations(event.businessId);
+      yield* getIntegrations();
     } else if (event is GetTerminalIntegrationsEvent) {
       yield* getTerminalIntegrations(event.businessId, event.terminalId);
     } else if (event is GetPosCommunications) {
@@ -67,7 +60,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     } else if (event is CreatePosTerminalEvent) {
       yield* createTerminal(event.logo, event.name, event.businessId);
     } else if (event is UpdatePosTerminalEvent) {
-      yield* updateTerminal(event.logo, event.name, event.businessId, event.terminalId);
+      yield* updateTerminal(event.logo, event.name, event.terminalId);
     } else if (event is SetActiveTerminalEvent) {
       yield state.copyWith(activeTerminal: event.activeTerminal);
       yield* getTerminalIntegrations(event.businessId, event.activeTerminal.id);
@@ -76,9 +69,9 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     } else if (event is SetDefaultTerminalEvent) {
       yield* activeTerminal(event.businessId, event.activeTerminal.id);
     } else if (event is DeleteTerminalEvent) {
-      yield* deleteTerminal(event.businessId, event.activeTerminal.id);
+      yield* deleteTerminal(event.activeTerminal.id);
     } else if (event is GetPosTerminalsEvent) {
-      yield* fetchPos(event.businessId);
+      yield* fetchPos();
     } else if (event is CopyBusinessEvent) {
       yield state.copyWith(copiedBusiness: event.businessId, businessCopied: true);
     } else if (event is CopyTerminalEvent) {
@@ -92,7 +85,8 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     } else if (event is SaveQRCodeSettings) {
       yield* saveQRCodeSettings(event.businessId, event.settings);
     } else if (event is GenerateQRCodeEvent) {
-      yield* postGenerateQRCode(event.businessId, event.businessName, event.avatarUrl, event.id, event.url);
+      yield* postGenerateQRCode(event.businessId, event.businessName,
+          event.avatarUrl, event.id, event.url);
     } else if (event is GetTwilioSettings) {
       yield* getTwilioSettings(event.businessId);
     } else if (event is AddPhoneNumberSettings) {
@@ -114,69 +108,96 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       yield* removePhoneNumber(event.businessId, event.action, event.id, event.sid);
     } else if (event is UpdateAddPhoneNumberSettings) {
       yield state.copyWith(settingsModel: event.settingsModel);
+    } else if (event is RestoreQrCodeEvent) {
+      yield* getPrefilledLink();
+    } else if (event is UpdateChannelSetFlowEvent) {
+      yield state.copyWith(channelSetFlow: event.channelSetFlow);
     }
   }
 
-  Stream<PosScreenState> fetchPos(String activeBusinessId) async* {
+  Stream<PosScreenState> fetchPos() async* {
     String token = GlobalUtils.activeToken.accessToken;
     yield state.copyWith(isLoading: true);
-    List<Terminal> terminals = [];
-    List<ChannelSet> channelSets = [];
-    dynamic terminalsObj = await api.getTerminal(activeBusinessId, token);
-    if (terminalsObj != null) {
-      terminalsObj.forEach((terminal) {
-        terminals.add(Terminal.toMap(terminal));
-      });
+    List<Terminal> terminals = state.terminals;
+    List<ChannelSet> channelSets = state.channelSets;
+    // Get Terminals
+    if (terminals == null || terminals.isEmpty) {
+      dynamic terminalsObj = await api.getTerminal(state.businessId, token);
+      if (terminalsObj is List) {
+        terminalsObj.forEach((terminal) {
+          terminals.add(Terminal.fromJson(terminal));
+        });
+      }
     }
-    dynamic channelsObj = await api.getChannelSet(activeBusinessId, token);
-    if (channelsObj != null) {
-      channelsObj.forEach((channelSet) {
-        channelSets.add(ChannelSet.toMap(channelSet));
-      });
+    // Get ChannelSets
+    if (channelSets == null || channelSets.isEmpty) {
+      dynamic channelsObj = await api.getChannelSet(state.businessId, token);
+      if (channelsObj is List) {
+        channelsObj.forEach((channelSet) {
+          channelSets.add(ChannelSet.fromJson(channelSet));
+        });
+      }
     }
 
     terminals.forEach((terminal) async {
       channelSets.forEach((channelSet) async {
         if (terminal.channelSet == channelSet.id) {
-          dynamic paymentObj = await api.getCheckoutIntegration(activeBusinessId, channelSet.checkout, token);
-          paymentObj.forEach((pm) {
-            terminal.paymentMethods.add(pm);
-          });
-
-          dynamic daysObj = await api.getLastWeek(activeBusinessId, channelSet.id, token);
-          int length = daysObj.length - 1;
-          for (int i = length; i > length - 7; i--) {
-            terminal.lastWeekAmount += Day.map(daysObj[i]).amount;
+          if (terminal.paymentMethods == null || terminal.paymentMethods.isEmpty) {
+            dynamic paymentObj = await api.getCheckoutIntegration(state.businessId, channelSet.checkout, token);
+            if (paymentObj is List) {
+              paymentObj.forEach((pm) {
+                terminal.paymentMethods.add(pm);
+              });
+            }
           }
-          daysObj.forEach((day) {
-            terminal.lastWeek.add(Day.map(day));
-          });
 
-          dynamic productsObj = await api.getPopularWeek(activeBusinessId, channelSet.id, token);
-          productsObj.forEach((product) {
-            terminal.bestSales.add(Product.toMap(product));
-          });
+          if (terminal.paymentMethods == null) {
+            dynamic daysObj = await api.getLastWeek(state.businessId, channelSet.id, token);
+            if (daysObj is List) {
+              int length = daysObj.length - 1;
+              for (int i = length; i > length - 7; i--) {
+                terminal.lastWeekAmount += Day.fromJson(daysObj[i]).amount;
+              }
+              daysObj.forEach((day) {
+                terminal.lastWeek.add(Day.fromJson(day));
+              });
+            }
+          }
+
+          if (terminal.paymentMethods == null || terminal.paymentMethods.isEmpty) {
+            dynamic productsObj = await api.getPopularWeek(state.businessId, channelSet.id, token);
+            if (productsObj is List) {
+              productsObj.forEach((product) {
+                terminal.bestSales.add(Product.fromJson(product));
+              });
+            }
+          }
         }
       });
     });
-
-    Terminal activeTerminal = terminals.where((element) => element.active).toList().first;
-    if (state.activeTerminal == null) {
-      yield state.copyWith(activeTerminal: activeTerminal, terminals: terminals, isLoading: false, terminalCopied: false);
+    if (terminals != null && terminals.isNotEmpty) {
+      Terminal activeTerminal = terminals.firstWhere((element) => element.active);
+      yield state.copyWith(activeTerminal: activeTerminal, terminals: terminals, terminalCopied: false, isLoading: false);
     } else {
-      yield state.copyWith(terminals: terminals, isLoading: false, terminalCopied: false);
+      yield state.copyWith(terminals: terminals, terminalCopied: false, isLoading: false);
     }
-    add(GetPosIntegrationsEvent(businessId: activeBusinessId));
+    add(GetPosIntegrationsEvent());
   }
 
-  Stream<PosScreenState> getIntegrations(String businessId) async* {
-    dynamic integrationObj = await api.getPosIntegrations(GlobalUtils.activeToken.accessToken, businessId);
+  Stream<PosScreenState> getIntegrations() async* {
+    dynamic integrationObj = await api.getPosIntegrations(GlobalUtils.activeToken.accessToken, state.businessId);
     List<Communication> integrations = [];
     integrationObj.forEach((element) {
-      integrations.add(Communication.toMap(element));
+      integrations.add(Communication.fromJson(element));
     });
     yield state.copyWith(integrations: integrations);
-    add(GetTerminalIntegrationsEvent(businessId: businessId, terminalId: state.activeTerminal.id));
+    if (state.activeTerminal != null) {
+      add(GetTerminalIntegrationsEvent(
+          businessId: state.businessId, terminalId: state.activeTerminal.id));
+    } else {
+      print('There is no active Terminal');
+      yield state.copyWith(isLoading: false);
+    }
   }
 
   Stream<PosScreenState> getTerminalIntegrations(String businessId, String terminalId) async* {
@@ -185,40 +206,40 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     integrationObj.forEach((element) {
       integrations.add(element);
     });
-    yield state.copyWith(terminalIntegrations: integrations);
+    yield state.copyWith(terminalIntegrations: integrations, isLoading: false);
   }
 
   Stream<PosScreenState> getCommunications(String businessId) async* {
     dynamic communicationsObj = await api.getPosCommunications(GlobalUtils.activeToken.accessToken, businessId);
     List<Communication> communications = [];
     communicationsObj.forEach((element) {
-      communications.add(Communication.toMap(element));
+      communications.add(Communication.fromJson(element));
     });
     yield state.copyWith(communications: communications);
   }
 
   Stream<PosScreenState> getDevicePaymentSettings(String businessId) async* {
     dynamic devicePaymentSettingsObj = await api.getPosDevicePaymentSettings(businessId, GlobalUtils.activeToken.accessToken);
-    DevicePaymentSettings devicePayment = DevicePaymentSettings.toMap(devicePaymentSettingsObj);
+    DevicePaymentSettings devicePayment = DevicePaymentSettings.fromJson(devicePaymentSettingsObj);
     yield state.copyWith(devicePaymentSettings: devicePayment, isLoading: false);
   }
 
   Stream<PosScreenState> installDevicePayment(String businessId) async* {
     yield state.copyWith(isLoading: true);
     dynamic response = await api.patchPosConnectDevicePaymentInstall(GlobalUtils.activeToken.accessToken, businessId);
-    add(GetPosIntegrationsEvent(businessId: businessId));
+    add(GetPosIntegrationsEvent());
     add(GetPosDevicePaymentSettings(businessId: businessId));
   }
 
   Stream<PosScreenState> uninstallDevicePayment(String businessId) async* {
     dynamic response = await api.patchPosConnectDevicePaymentUninstall(GlobalUtils.activeToken.accessToken, businessId);
-    add(GetPosIntegrationsEvent(businessId: businessId));
+    add(GetPosIntegrationsEvent());
   }
 
   Stream<PosScreenState> installQR(String businessId, String businessName, String avatar, String url, String terminalId) async* {
     yield state.copyWith(isLoading: true);
     dynamic response = await api.patchPosQrInstall(GlobalUtils.activeToken.accessToken, businessId);
-    add(GetPosIntegrationsEvent(businessId: businessId));
+    add(GetPosIntegrationsEvent());
     add(
       GenerateQRSettingsEvent(
         businessId: businessId,
@@ -232,19 +253,19 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
 
   Stream<PosScreenState> uninstallQR(String businessId) async* {
     dynamic response = await api.patchPosQrUninstall(GlobalUtils.activeToken.accessToken, businessId);
-    add(GetPosIntegrationsEvent(businessId: businessId));
+    add(GetPosIntegrationsEvent());
   }
 
   Stream<PosScreenState> installTwilio(String businessId) async* {
     yield state.copyWith(isLoading: true);
     dynamic response = await api.patchPosTwilioInstall(GlobalUtils.activeToken.accessToken, businessId);
-    add(GetPosIntegrationsEvent(businessId: businessId));
+    add(GetPosIntegrationsEvent());
     add(GetTwilioSettings(businessId: businessId));
   }
 
   Stream<PosScreenState> uninstallTwilio(String businessId) async* {
     dynamic response = await api.patchPosTwilioUninstall(GlobalUtils.activeToken.accessToken, businessId);
-    add(GetPosIntegrationsEvent(businessId: businessId));
+    add(GetPosIntegrationsEvent());
   }
 
   Stream<PosScreenState> installTerminalDevicePayment(String payment, String businessId, String terminalId) async* {
@@ -274,7 +295,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       secondFactor,
       verificationType,
     );
-    DevicePaymentSettings devicePayment = DevicePaymentSettings.toMap(devicePaymentSettingsObj);
+    DevicePaymentSettings devicePayment = DevicePaymentSettings.fromJson(devicePaymentSettingsObj);
     yield state.copyWith(devicePaymentSettings: devicePayment, isLoading: false, isUpdating: false);
   }
 
@@ -294,12 +315,12 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       yield PosScreenFailure(error: 'Create Terminal failed');
     }
     yield state.copyWith(blobName: '', isUpdating: false);
-    yield* fetchPos(businessId);
+    yield* fetchPos();
   }
 
-  Stream<PosScreenState> updateTerminal(String logo, String name, String businessId, String terminalId) async* {
+  Stream<PosScreenState> updateTerminal(String logo, String name, String terminalId) async* {
     yield state.copyWith(isUpdating: true);
-    dynamic response = await api.patchTerminal(businessId, GlobalUtils.activeToken.accessToken, logo, name, terminalId);
+    dynamic response = await api.patchTerminal(state.businessId, GlobalUtils.activeToken.accessToken, logo, name, terminalId);
 //    Terminal terminal = Terminal.toMap(response);
     if (response != null) {
       yield PosScreenSuccess();
@@ -307,7 +328,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       yield PosScreenFailure(error: 'Update Terminal failed');
     }
     yield state.copyWith(blobName: '', isUpdating: false);
-    yield* fetchPos(businessId);
+    yield* fetchPos();
   }
 
   Stream<PosScreenState> activeTerminal(String businessId, String terminalId) async* {
@@ -318,18 +339,18 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     } else {
       yield PosScreenFailure(error: 'Active Terminal failed');
     }
-    yield* fetchPos(businessId);
+    yield* fetchPos();
   }
 
-  Stream<PosScreenState> deleteTerminal(String businessId, String terminalId) async* {
+  Stream<PosScreenState> deleteTerminal(String terminalId) async* {
     yield state.copyWith(isLoading: true);
-    dynamic response = await api.deleteTerminal(GlobalUtils.activeToken.accessToken, businessId, terminalId);
+    dynamic response = await api.deleteTerminal(GlobalUtils.activeToken.accessToken, state.businessId, terminalId);
     if (response != null) {
       yield PosScreenSuccess();
     } else {
       yield PosScreenFailure(error: 'Delete Terminal failed');
     }
-    yield* fetchPos(businessId);
+    yield* fetchPos();
   }
 
   Stream<PosScreenState> postGenerateQRCode(
@@ -373,6 +394,62 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
 
     yield state.copyWith(qrForm: response, isLoading: false);
     add(GetQRImage(url: imageData));
+  }
+
+  Stream<PosScreenState> getPrefilledLink() async* {
+    if (state.channelSetFlow == null)
+      return;
+    yield state.copyWith(isLoading: true);
+    Map<String, dynamic>flowBody = state.channelSetFlow.toJson();
+    flowBody.remove('amount');
+    Map<String, dynamic> data = {
+      'flow': flowBody,
+      'force_no_header': false,
+      'force_no_order': true,
+      'generate_payment_code': true,
+      'source': 'qr',
+    };
+
+    dynamic qrcodelinkResponse = await api.getChannelSetQRcode(GlobalUtils.activeToken.accessToken, data);
+    if (qrcodelinkResponse is Map) {
+      String id = qrcodelinkResponse['id'];
+      String prefilledLink = '${Env.wrapper}/pay/restore-flow-from-code/$id';
+      print('prefilled link: $prefilledLink');
+      dynamic response = await api.postGenerateTerminalQRCode(
+        GlobalUtils.activeToken.accessToken,
+        state.businessId,
+        dashboardScreenBloc.state.activeBusiness.name,
+        '$imageBase${dashboardScreenBloc.state.activeTerminal.logo}',
+        dashboardScreenBloc.state.activeTerminal.id,
+        prefilledLink,
+      );
+
+      String imageData;
+      if (response is Map) {
+        dynamic form = response['form'];
+        String contentType =
+        form['contentType'] != null ? form['contentType'] : '';
+        dynamic content = form['content'] != null ? form['content'] : null;
+        if (content != null) {
+          List<dynamic> contentData = content[contentType];
+          for (int i = 0; i < contentData.length; i++) {
+            dynamic data = content[contentType][i];
+            if (data['data'] != null) {
+              List<dynamic> list = data['data'];
+              for (dynamic w in list) {
+                if (w[0]['type'] == 'image') {
+                  imageData = w[0]['value'];
+                }
+              }
+            }
+          }
+        }
+      }
+      yield state.copyWith(qrForm: response, isLoading: false);
+      add(GetQRImage(url: imageData));
+    } else {
+      yield state.copyWith(isLoadingQrcode: false);
+    }
   }
 
   Stream<PosScreenState> postGenerateQRSettings(
@@ -535,7 +612,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       String phoneNumber,
       String id,
       ) async* {
-    yield state.copyWith(searching: true);
+    yield state.copyWith(isSearching: true);
     dynamic response = await api.searchPhoneNumberSettings(
       GlobalUtils.activeToken.accessToken,
       businessId,
@@ -596,7 +673,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     }
     model.country = dropdownItems.firstWhere((element) => element.value == fieldsetData['country']);
 
-    yield state.copyWith(twilioAddPhoneForm: contentData, settingsModel: model, searching: false);
+    yield state.copyWith(twilioAddPhoneForm: contentData, settingsModel: model, isSearching: false);
   }
 
   Stream<PosScreenState> purchasePhoneNumber(
@@ -637,38 +714,11 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
   }
 
   Stream<PosScreenState> getBlob(dynamic w, String url) async* {
-    var headers = {
-      HttpHeaders.authorizationHeader: 'Bearer ${GlobalUtils.activeToken.accessToken}',
-      HttpHeaders.contentTypeHeader: 'application/json',
-      HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-    };
-    if (url != null) {
-      print('url => $url');
-      http.Response response = await http.get(
-        url,
-        headers:  headers,
-      );
-      yield state.copyWith(qrImage: response.bodyBytes);
-    } else {
-      Map<String, String> queryParameters = {};
-      if (w is Map) {
-        w.forEach((key, value) {
-          if (value != null) {
-            queryParameters[key] = value.toString();
-          }
-        });
-        print(queryParameters);
-      }
-      var uri =
-      Uri.https(Env.qr.replaceAll('https://', ''), '/api/download/png', queryParameters);
-
-      http.Response response = await http.get(
-        uri,
-        headers:  headers,
-      );
+    print('qrcode url: $url');
+    http.Response response =  await api.getQrcode(GlobalUtils.activeToken.accessToken, url, w);
+    if (response is http.Response) {
+      print('qrcode url: $url');
       yield state.copyWith(qrImage: response.bodyBytes);
     }
-
   }
-
 }

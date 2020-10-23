@@ -63,16 +63,32 @@ class SearchScreenBloc extends Bloc<SearchScreenEvent, SearchScreenState> {
     String sortQuery = '?orderBy=created_at&direction=desc&query=$key&limit=8';
 
     dynamic obj = await api.getTransactionList(businessId, GlobalUtils.activeToken.accessToken, sortQuery);
-    Transaction data = Transaction.toMap(obj);
-    searchTransactionsResult = data.collection;
+    Transaction transaction = Transaction.fromJson(obj);
 
+    if (GlobalUtils.isBusinessMode) {
+      searchTransactionsResult.addAll(transaction.collection);
+    } else {
+      List<Collection> collections = transaction.collection
+          .where((element) =>
+              element.businessUuid == null || element.businessUuid.isEmpty)
+          .toList();
+      if (collections != null && collections.isNotEmpty) {
+        searchTransactionsResult.addAll(collections);
+      }
+    }
+    print('Business Mode => ${GlobalUtils.isBusinessMode}');
     print('searchBusinessResult=> $searchBusinessResult');
     print('searchTransactionsResult=> $searchTransactionsResult');
-    if (searchBusinessResult.length >  4) {
+    if (searchBusinessResult.length > 4) {
       yield state.copyWith(
         isLoading: false,
         searchBusinesses: searchBusinessResult.sublist(0, 4),
-        searchTransactions: searchTransactionsResult.sublist(0, 4),
+        searchTransactions: searchTransactionsResult.isEmpty
+            ? []
+            : searchTransactionsResult.length > 4
+                ? searchTransactionsResult.sublist(0, 4)
+                : searchTransactionsResult.sublist(
+                    0, searchTransactionsResult.length - 1),
       );
     } else {
       if (searchTransactionsResult.length > 8 - searchBusinessResult.length) {

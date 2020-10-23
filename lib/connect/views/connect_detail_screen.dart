@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +12,7 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:payever/connect/views/connect_payment_settings_screen.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:payever/connect/views/connect_category_more_connections.dart';
@@ -20,6 +20,7 @@ import 'package:payever/connect/views/connect_reviews_screen.dart';
 import 'package:payever/connect/views/connect_version_history_screen.dart';
 import 'package:payever/connect/widgets/connect_item_image_view.dart';
 import 'package:payever/connect/widgets/connect_top_button.dart';
+import 'package:payever/theme.dart';
 
 import 'connect_add_reviews_screen.dart';
 import 'connect_setting_screen.dart';
@@ -43,8 +44,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
   bool _isPortrait;
   bool _isTablet;
 
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   double iconSize;
   double margin;
   bool installed = false;
@@ -106,7 +105,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );
@@ -136,13 +135,12 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
         bloc: screenBloc,
         builder: (BuildContext context, ConnectDetailScreenState state) {
           return Scaffold(
-            backgroundColor: Colors.black,
             resizeToAvoidBottomPadding: false,
             appBar: _appBar(state),
             body: SafeArea(
+              bottom: false,
               child: BackgroundBase(
                 true,
-                backgroudColor: Color.fromRGBO(0, 0, 0, 0.75),
                 body: state.isLoading ?
                 Center(
                   child: CircularProgressIndicator(),
@@ -162,7 +160,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
       centerTitle: false,
       elevation: 0,
       automaticallyImplyLeading: false,
-      backgroundColor: Colors.black87,
       title: Row(
         children: <Widget>[
           Padding(
@@ -238,7 +235,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                     child: SvgPicture.asset(
                       Measurements.channelIcon(iconType),
                       width: iconSize,
-                      color: Color.fromRGBO(255, 255, 255, 0.75),
+                      color: iconColor(),
                     ),
                   ),
                   Expanded(
@@ -260,7 +257,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                     child: Text(
                                       Language.getPosConnectStrings(state.editConnect.displayOptions.title),
                                       style: TextStyle(
-                                        color: Colors.white,
                                         fontFamily: 'HelveticaNeueMed',
                                         fontSize: 18,
                                       ),
@@ -271,7 +267,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                     child: Text(
                                       Language.getPosConnectStrings(state.editConnect.installationOptions.price),
                                       style: TextStyle(
-                                        color: Color.fromRGBO(255, 255, 255, 0.6),
                                         fontFamily: 'HelveticaNeueLight',
                                         fontSize: 12,
                                       ),
@@ -282,8 +277,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                     child: Text(
                                       Language.getPosConnectStrings(state.editConnect.installationOptions.developer),
                                       style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: 'HelveticaNeue',
+                                        fontFamily: 'Helvetica Neue',
                                         fontSize: 12,
                                       ),
                                     ),
@@ -299,19 +293,33 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                     padding: EdgeInsets.all(0),
                                     child: MaterialButton(
                                       onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          PageTransition(
-                                            child: ConnectSettingScreen(
-                                              screenBloc: widget.screenBloc,
-                                              connectIntegration: state.editConnect,
+                                        if (widget.connectModel.integration.category == 'payments') {
+                                          Navigator.push(
+                                            context,
+                                            PageTransition(
+                                              child: ConnectPaymentSettingsScreen(
+                                                connectScreenBloc: widget.screenBloc,
+                                                connectModel: widget.connectModel,
+                                              ),
+                                              type: PageTransitionType.fade,
+                                              duration: Duration(milliseconds: 500),
                                             ),
-                                            type: PageTransitionType.fade,
-                                            duration: Duration(milliseconds: 500),
-                                          ),
-                                        );
+                                          );
+                                        } else {
+                                          Navigator.push(
+                                            context,
+                                            PageTransition(
+                                              child: ConnectSettingScreen(
+                                                screenBloc: widget.screenBloc,
+                                                connectIntegration: state.editConnect,
+                                              ),
+                                              type: PageTransitionType.fade,
+                                              duration: Duration(milliseconds: 500),
+                                            ),
+                                          );
+                                        }
                                       },
-                                      color: Color.fromRGBO(255, 255, 255, 0.1),
+                                      color: overlayBackground(),
                                       height: 26,
                                       minWidth: 0,
                                       shape: RoundedRectangleBorder(
@@ -324,7 +332,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                       child: Text(
                                         Language.getPosConnectStrings('integrations.actions.open'),
                                         style: TextStyle(
-                                          color: Colors.white,
                                           fontFamily: 'HelveticaNeueMed',
                                           fontSize: 14,
                                         ),
@@ -342,14 +349,14 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                           child: CircularProgressIndicator(
                                             strokeWidth: 2,
                                           ),
-                                        ) : SvgPicture.asset('assets/images/more.svg'),
+                                        ) : SvgPicture.asset('assets/images/more.svg', color: iconColor(),),
                                       ),
                                       offset: Offset(0, 100),
                                       onSelected: (ConnectPopupButton item) => item.onTap(),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8),
                                       ),
-                                      color: Colors.black87,
+                                      color: overlayBackground(),
                                       itemBuilder: (BuildContext context) {
                                         return uninstallPopUp(context, state)
                                             .map((ConnectPopupButton item) {
@@ -361,7 +368,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                                 Text(
                                                   item.title,
                                                   style: TextStyle(
-                                                    color: Colors.white,
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.w400,
                                                   ),
@@ -406,7 +412,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                       ) : Text(
                                         Language.getPosConnectStrings('integrations.actions.install'),
                                         style: TextStyle(
-                                          color: Colors.white,
                                           fontFamily: 'HelveticaNeueMed',
                                           fontSize: 14,
                                         ),
@@ -428,19 +433,34 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                 padding: EdgeInsets.all(0),
                                 child: MaterialButton(
                                   onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      PageTransition(
-                                        child: ConnectSettingScreen(
-                                          screenBloc: widget.screenBloc,
-                                          connectIntegration: state.editConnect,
+                                    if (widget.connectModel.integration.category == 'payments') {
+                                      Navigator.push(
+                                        context,
+                                        PageTransition(
+                                          child: ConnectPaymentSettingsScreen(
+                                            connectScreenBloc: widget.screenBloc,
+                                            connectModel: widget.connectModel,
+                                          ),
+                                          type: PageTransitionType.fade,
+                                          duration: Duration(milliseconds: 500),
                                         ),
-                                        type: PageTransitionType.fade,
-                                        duration: Duration(milliseconds: 500),
-                                      ),
-                                    );
+                                      );
+                                    } else {
+                                      Navigator.push(
+                                        context,
+                                        PageTransition(
+                                          child: ConnectSettingScreen(
+                                            screenBloc: widget.screenBloc,
+                                            connectIntegration: state
+                                                .editConnect,
+                                          ),
+                                          type: PageTransitionType.fade,
+                                          duration: Duration(milliseconds: 500),
+                                        ),
+                                      );
+                                    }
                                   },
-                                  color: Color.fromRGBO(255, 255, 255, 0.1),
+                                  color: overlayBackground(),
                                   height: 26,
                                   minWidth: 0,
                                   shape: RoundedRectangleBorder(
@@ -453,7 +473,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                   child: Text(
                                     Language.getPosConnectStrings('integrations.actions.open'),
                                     style: TextStyle(
-                                      color: Colors.white,
                                       fontFamily: 'HelveticaNeueMed',
                                       fontSize: 14,
                                     ),
@@ -471,14 +490,14 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                       child: CircularProgressIndicator(
                                         strokeWidth: 2,
                                       ),
-                                    ) : SvgPicture.asset('assets/images/more.svg'),
+                                    ) : SvgPicture.asset('assets/images/more.svg', color: iconColor(),),
                                   ),
                                   offset: Offset(0, 100),
                                   onSelected: (ConnectPopupButton item) => item.onTap(),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
-                                  color: Colors.black87,
+                                  color: overlayBackground(),
                                   itemBuilder: (BuildContext context) {
                                     return uninstallPopUp(context, state)
                                         .map((ConnectPopupButton item) {
@@ -490,7 +509,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                             Text(
                                               item.title,
                                               style: TextStyle(
-                                                color: Colors.white,
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w400,
                                               ),
@@ -516,7 +534,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                   onPressed: () {
                                     screenBloc.add(InstallEvent());
                                   },
-                                  color: Color.fromRGBO(255, 255, 255, 0.1),
+                                  color: overlayColor().withOpacity(0.1),
                                   height: 26,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(13),
@@ -535,7 +553,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                   ) : Text(
                                     Language.getPosConnectStrings('integrations.actions.install'),
                                     style: TextStyle(
-                                      color: Colors.white,
                                       fontFamily: 'HelveticaNeueMed',
                                       fontSize: 14,
                                     ),
@@ -548,7 +565,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                         Divider(
                           height: 24,
                           thickness: 0.5,
-                          color: Color.fromRGBO(255, 255, 255, 0.1),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -562,7 +578,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                     Text(
                                       '$rate',
                                       style: TextStyle(
-                                        color: Colors.white,
                                         fontFamily: 'HelveticaNeueMed',
                                         fontSize: 21,
                                       ),
@@ -576,7 +591,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                 Text(
                                   Language.getPosConnectStrings('${state.editConnect.reviews.length} Ratings'),
                                   style: TextStyle(
-                                    color: Colors.white,
                                     fontFamily: 'HelveticaNeueLight',
                                     fontSize: 12,
                                   ),
@@ -585,7 +599,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                             ) : Text(
                               'No rating',
                               style: TextStyle(
-                                color: Colors.white,
                                 fontFamily: 'HelveticaNeueMed',
                                 fontSize: 16,
                               ),
@@ -597,7 +610,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                 Text(
                                   '${state.editConnect.timesInstalled ?? 0}',
                                   style: TextStyle(
-                                    color: Colors.white,
                                     fontFamily: 'HelveticaNeueMed',
                                     fontSize: 21,
                                   ),
@@ -605,7 +617,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                 Text(
                                   Language.getPosConnectStrings('Times Downloaded'),
                                   style: TextStyle(
-                                    color: Colors.white,
                                     fontFamily: 'HelveticaNeueLight',
                                     fontSize: 12,
                                   ),
@@ -628,7 +639,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                             Text(
                               '${state.editConnect.timesInstalled ?? 0}',
                               style: TextStyle(
-                                color: Colors.white,
                                 fontFamily: 'HelveticaNeueMed',
                                 fontSize: 21,
                               ),
@@ -636,7 +646,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                             Text(
                               Language.getPosConnectStrings('Times Downloaded'),
                               style: TextStyle(
-                                color: Colors.white,
                                 fontFamily: 'HelveticaNeueLight',
                                 fontSize: 12,
                               ),
@@ -665,8 +674,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                     child: Text(
                       Language.getPosConnectStrings(state.editConnect.installationOptions.description),
                       style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'HelveticaNeue',
+                        fontFamily: 'Helvetica Neue',
                         fontSize: 14,
                       ),
                     ),
@@ -679,8 +687,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                       Text(
                         Language.getPosConnectStrings(state.editConnect.installationOptions.developer),
                         style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'HelveticaNeue',
+                          fontFamily: 'Helvetica Neue',
                           fontSize: 12,
                         ),
                       ),
@@ -696,14 +703,13 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                             Text(
                               Language.getConnectStrings('installation.labels.website'),
                               style: TextStyle(
-                                color: Colors.white,
                                 fontFamily: 'HelveticaNeueLight',
                                 fontSize: 12,
                               ),
                             ),
                             Padding(
                               padding: EdgeInsets.only(left: 8),
-                              child: SvgPicture.asset('assets/images/website.svg'),
+                              child: SvgPicture.asset('assets/images/website.svg', color: iconColor(),),
                             ),
                           ],
                         ),
@@ -720,14 +726,13 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                             Text(
                               Language.getConnectStrings('Support'),
                               style: TextStyle(
-                                color: Colors.white,
                                 fontFamily: 'HelveticaNeueLight',
                                 fontSize: 12,
                               ),
                             ),
                             Padding(
                               padding: EdgeInsets.only(left: 8),
-                              child: SvgPicture.asset('assets/images/support.svg'),
+                              child: SvgPicture.asset('assets/images/support.svg', color: iconColor(),),
                             ),
                           ],
                         ),
@@ -741,7 +746,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
             Divider(
               height: margin,
               thickness: 0.5,
-              color: Color.fromRGBO(255, 255, 255, 0.1),
               endIndent: margin,
               indent: margin,
             ),
@@ -751,7 +755,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
             Divider(
               height: margin,
               thickness: 0.5,
-              color: Color.fromRGBO(255, 255, 255, 0.1),
               endIndent: margin,
               indent: margin,
             ),
@@ -761,7 +764,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
             Divider(
               height: margin,
               thickness: 0.5,
-              color: Color.fromRGBO(255, 255, 255, 0.1),
               endIndent: margin,
               indent: margin,
             ),
@@ -773,7 +775,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
             Divider(
               height: margin,
               thickness: 0.5,
-              color: Color.fromRGBO(255, 255, 255, 0.1),
               endIndent: margin,
               indent: margin,
             ),
@@ -783,7 +784,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
             Divider(
               height: margin,
               thickness: 0.5,
-              color: Color.fromRGBO(255, 255, 255, 0.1),
               endIndent: margin,
               indent: margin,
             ),
@@ -838,7 +838,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
               Text(
                 Language.getConnectStrings('Ratings & Reviews'),
                 style: TextStyle(
-                  color: Color.fromRGBO(255, 255, 255, 0.95),
                   fontFamily: 'HelveticaNeueMed',
                   fontSize: 18,
                 ),
@@ -861,7 +860,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                 child: Text(
                   Language.getConnectStrings('See All'),
                   style: TextStyle(
-                    color: Color.fromRGBO(255, 255, 255, 0.95),
                     fontFamily: 'Helvetica Neue',
                     fontSize: 14,
                   ),
@@ -883,7 +881,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                 child: Text(
                   Language.getConnectStrings('Write Review'),
                   style: TextStyle(
-                    color: Color.fromRGBO(255, 255, 255, 0.95),
                     fontFamily: 'Helvetica Neue',
                     fontSize: 14,
                   ),
@@ -904,7 +901,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                   Text(
                     '$rate',
                     style: TextStyle(
-                      color: Color.fromRGBO(255, 255, 255, 0.95),
                       fontFamily: 'HelveticaNeueMed',
                       fontSize: 60,
                     ),
@@ -914,7 +910,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                     child: Text(
                       'out of 5',
                       style: TextStyle(
-                        color: Color.fromRGBO(255, 255, 255, 0.95),
                         fontFamily: 'HelveticaNeueBold',
                         fontSize: 14,
                       ),
@@ -929,7 +924,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                   Text(
                     '${reviews.length} Ratings',
                     style: TextStyle(
-                      color: Color.fromRGBO(255, 255, 255, 0.95),
                       fontFamily: 'Helvetica Neue',
                       fontSize: 14,
                     ),
@@ -945,7 +939,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
             child: Text(
               'No rating',
               style: TextStyle(
-                color: Color.fromRGBO(255, 255, 255, 0.95),
                 fontSize: 14,
                 fontFamily: 'HelveticaNeueMed',
               ),
@@ -967,7 +960,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                   padding: EdgeInsets.all(margin),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: Color.fromRGBO(255, 255, 255, 0.2),
+                    color: overlayBackground(),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -982,7 +975,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                               Text(
                                 review.title ?? '',
                                 style: TextStyle(
-                                  color: Color.fromRGBO(255, 255, 255, 0.95),
                                   fontSize: 14,
                                   fontFamily: 'HelveticaNeueMed',
                                 ),
@@ -999,7 +991,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                               Text(
                                 review.reviewDate ?? '',
                                 style: TextStyle(
-                                  color: Color.fromRGBO(255, 255, 255, 0.95).withOpacity(0.6),
                                   fontSize: 14,
                                   fontFamily: 'Helvetica Neue',
                                 ),
@@ -1010,7 +1001,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                               Text(
                                 review.userFullName ?? '',
                                 style: TextStyle(
-                                  color: Color.fromRGBO(255, 255, 255, 0.95).withOpacity(0.6),
                                   fontSize: 14,
                                   fontFamily: 'Helvetica Neue',
                                 ),
@@ -1025,7 +1015,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                       Text(
                         review.text ?? '',
                         style: TextStyle(
-                          color: Color.fromRGBO(255, 255, 255, 0.95),
                           fontSize: 14,
                           fontFamily: 'Helvetica Neue',
                         ),
@@ -1051,6 +1040,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                   : 'assets/images/star_outline.svg',
               width: 14,
               height: 14,
+              color: iconColor(),
             ),
           );
         }).toList()
@@ -1097,6 +1087,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                       'assets/images/star_fill.svg',
                       width: margin / 2,
                       height: margin / 2,
+                      color: iconColor(),
                     );
                   }),
                 ),
@@ -1109,6 +1100,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                     height: margin / 5,
                     child: LinearProgressIndicator(
                       value: p.values.first,
+                      backgroundColor: Colors.grey,
                     ),
                   ),
                 ),
@@ -1131,7 +1123,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
               Text(
                 Language.getConnectStrings('What\'s New'),
                 style: TextStyle(
-                  color: Color.fromRGBO(255, 255, 255, 0.95),
                   fontFamily: 'HelveticaNeueMed',
                   fontSize: 18,
                 ),
@@ -1157,8 +1148,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                 child: Text(
                   Language.getConnectStrings('Version History'),
                   style: TextStyle(
-                    color: Color.fromRGBO(255, 255, 255, 0.95),
-                    fontFamily: 'HelveticaNeue',
+                    fontFamily: 'Helvetica Neue',
                     fontSize: 14,
                   ),
                 ),
@@ -1205,7 +1195,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
           Text(
             Language.getConnectStrings('Informations'),
             style: TextStyle(
-              color: Color.fromRGBO(255, 255, 255, 0.95),
               fontFamily: 'HelveticaNeueMed',
               fontSize: 18,
             ),
@@ -1230,7 +1219,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                       Text(
                         info.title,
                         style: TextStyle(
-                          color: Color.fromRGBO(255, 255, 255, 0.475),
                           fontSize: 16,
                           fontFamily: 'Helvetica Neue',
                         ),
@@ -1238,7 +1226,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                       Text(
                         info.detail,
                         style: TextStyle(
-                          color: Color.fromRGBO(255, 255, 255, 0.95),
                           fontSize: 16,
                           fontFamily: 'Helvetica Neue',
                         ),
@@ -1266,11 +1253,10 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                 Divider(
                   height: margin,
                   thickness: 0.5,
-                  color: Color.fromRGBO(255, 255, 255, 0.1),
                 ),
                 Row(
                   children: <Widget>[
-                    SvgPicture.asset('assets/images/website.svg'),
+                    SvgPicture.asset('assets/images/website.svg', color: iconColor(),),
                     Padding(
                       padding: EdgeInsets.only(left: 4),
                     ),
@@ -1278,7 +1264,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                       child: Text(
                         'Developer Website',
                         style: TextStyle(
-                          color: Colors.white,
                           fontSize: 13,
                           fontFamily: 'Helvetica Neue',
                         ),
@@ -1298,11 +1283,10 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                 Divider(
                   height: margin,
                   thickness: 0.5,
-                  color: Color.fromRGBO(255, 255, 255, 0.1),
                 ),
                 Row(
                   children: <Widget>[
-                    SvgPicture.asset('assets/images/privacy.svg'),
+                    SvgPicture.asset('assets/images/privacy.svg', color: iconColor(),),
                     Padding(
                       padding: EdgeInsets.only(left: 4),
                     ),
@@ -1310,7 +1294,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                       child: Text(
                         'Privacy policy',
                         style: TextStyle(
-                          color: Colors.white,
                           fontSize: 13,
                           fontFamily: 'Helvetica Neue',
                         ),
@@ -1330,11 +1313,10 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                 Divider(
                   height: margin,
                   thickness: 0.5,
-                  color: Color.fromRGBO(255, 255, 255, 0.1),
                 ),
                 Row(
                   children: <Widget>[
-                    SvgPicture.asset('assets/images/description.svg'),
+                    SvgPicture.asset('assets/images/description.svg', color: iconColor(),),
                     Padding(
                       padding: EdgeInsets.only(left: 4),
                     ),
@@ -1342,7 +1324,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                       child: Text(
                         'Licence Agreement',
                         style: TextStyle(
-                          color: Colors.white,
                           fontSize: 13,
                           fontFamily: 'Helvetica Neue',
                         ),
@@ -1368,7 +1349,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
           Text(
             Language.getConnectStrings('Supported'),
             style: TextStyle(
-              color: Color.fromRGBO(255, 255, 255, 0.95),
               fontFamily: 'HelveticaNeueMed',
               fontSize: 18,
             ),
@@ -1378,7 +1358,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
           ),
           Row(
             children: <Widget>[
-              SvgPicture.asset('assets/images/account.svg'),
+              SvgPicture.asset('assets/images/account.svg', color: iconColor(),),
               Padding(
                 padding: EdgeInsets.only(left: margin / 2),
               ),
@@ -1391,7 +1371,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                     Text(
                       Language.getConnectStrings('Title'),
                       style: TextStyle(
-                        color: Color.fromRGBO(255, 255, 255, 0.95),
                         fontFamily: 'Helvetica Neue',
                         fontSize: 16,
                       ),
@@ -1399,7 +1378,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                     Text(
                       'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.',
                       style: TextStyle(
-                        color: Color.fromRGBO(255, 255, 255, 0.6),
                         fontFamily: 'Helvetica Neue',
                         fontSize: 14,
                       ),
@@ -1449,7 +1427,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
               Text(
                 Language.getConnectStrings('More by payever'),
                 style: TextStyle(
-                  color: Color.fromRGBO(255, 255, 255, 0.95),
                   fontFamily: 'HelveticaNeueMed',
                   fontSize: 18,
                 ),
@@ -1471,7 +1448,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                 child: Text(
                   Language.getConnectStrings('See All'),
                   style: TextStyle(
-                    color: Color.fromRGBO(255, 255, 255, 0.95),
                     fontFamily: 'Helvetica Neue',
                     fontSize: 14,
                   ),
@@ -1505,7 +1481,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                         child: SvgPicture.asset(
                           Measurements.channelIcon(iconType),
                           width: iconSize * 0.6,
-                          color: Color.fromRGBO(255, 255, 255, 0.75),
+                          color: iconColor(),
                         ),
                       ),
                       Flexible(
@@ -1520,7 +1496,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                 Text(
                                   Language.getPosConnectStrings(connect.integration.displayOptions.title),
                                   style: TextStyle(
-                                    color: Colors.white,
                                     fontFamily: 'HelveticaNeueMed',
                                     fontSize: 18,
                                   ),
@@ -1528,7 +1503,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                 Text(
                                   Language.getConnectStrings('categories.${connect.integration.category}.title'),
                                   style: TextStyle(
-                                    color: Color.fromRGBO(255, 255, 255, 0.6),
                                     fontFamily: 'Helvetica Neue',
                                     fontSize: 12,
                                   ),
@@ -1541,19 +1515,33 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                         padding: EdgeInsets.all(0),
                                         child: MaterialButton(
                                           onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              PageTransition(
-                                                child: ConnectSettingScreen(
-                                                  screenBloc: widget.screenBloc,
-                                                  connectIntegration: connect.integration,
+                                            if (widget.connectModel.integration.category == 'payments') {
+                                              Navigator.push(
+                                                context,
+                                                PageTransition(
+                                                  child: ConnectPaymentSettingsScreen(
+                                                    connectScreenBloc: widget.screenBloc,
+                                                    connectModel: widget.connectModel,
+                                                  ),
+                                                  type: PageTransitionType.fade,
+                                                  duration: Duration(milliseconds: 500),
                                                 ),
-                                                type: PageTransitionType.fade,
-                                                duration: Duration(milliseconds: 500),
-                                              ),
-                                            );
+                                              );
+                                            } else {
+                                              Navigator.push(
+                                                context,
+                                                PageTransition(
+                                                  child: ConnectSettingScreen(
+                                                    screenBloc: widget.screenBloc,
+                                                    connectIntegration: connect.integration,
+                                                  ),
+                                                  type: PageTransitionType.fade,
+                                                  duration: Duration(milliseconds: 500),
+                                                ),
+                                              );
+                                            }
                                           },
-                                          color: Color.fromRGBO(255, 255, 255, 0.1),
+                                          color: overlayBackground(),
                                           height: 26,
                                           minWidth: 0,
                                           shape: RoundedRectangleBorder(
@@ -1566,7 +1554,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                           child: Text(
                                             Language.getPosConnectStrings('integrations.actions.open'),
                                             style: TextStyle(
-                                              color: Colors.white,
                                               fontFamily: 'HelveticaNeueMed',
                                               fontSize: 14,
                                             ),
@@ -1586,14 +1573,14 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                                   strokeWidth: 2,
                                                 ),
                                               ),
-                                            ) : SvgPicture.asset('assets/images/more.svg'),
+                                            ) : SvgPicture.asset('assets/images/more.svg', color: iconColor(),),
                                           ),
                                           offset: Offset(0, 100),
                                           onSelected: (ConnectPopupButton item) => item.onTap(connect),
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(8),
                                           ),
-                                          color: Colors.black87,
+                                          color: overlayBackground(),
                                           itemBuilder: (BuildContext context) {
                                             return uninstallConnectPopUp(context, state)
                                                 .map((ConnectPopupButton item) {
@@ -1605,7 +1592,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                                     Text(
                                                       item.title,
                                                       style: TextStyle(
-                                                        color: Colors.white,
                                                         fontSize: 16,
                                                         fontWeight: FontWeight.w400,
                                                       ),
@@ -1631,7 +1617,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                           onPressed: () {
                                             screenBloc.add(InstallMoreConnectEvent(model: connect));
                                           },
-                                          color: Color.fromRGBO(255, 255, 255, 0.1),
+                                          color: overlayBackground(),
                                           height: 26,
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(13),
@@ -1650,7 +1636,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                           ) : Text(
                                             Language.getPosConnectStrings('integrations.actions.install'),
                                             style: TextStyle(
-                                              color: Colors.white,
                                               fontFamily: 'HelveticaNeueMed',
                                               fontSize: 14,
                                             ),
@@ -1663,7 +1648,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                 Divider(
                                   height: margin,
                                   thickness: 0.5,
-                                  color: Color.fromRGBO(255, 255, 255, 0.1),
                                 ),
                               ],
                             ),
@@ -1721,7 +1705,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                     style: TextStyle(
                         fontSize: 16,
                         fontFamily: 'HelveticaNeueMed',
-                        color: Colors.white
                     ),
                   ),
                   Padding(
@@ -1733,7 +1716,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                     style: TextStyle(
                       fontSize: 14,
                       fontFamily: 'Helvetica Neue',
-                      color: Colors.white,
                     ),
                   ),
                   Padding(
@@ -1746,17 +1728,31 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                         onPressed: () {
                           Navigator.pop(context);
                           if (install) {
-                            Navigator.push(
-                              context,
-                              PageTransition(
-                                child: ConnectSettingScreen(
-                                  screenBloc: widget.screenBloc,
-                                  connectIntegration: model.integration,
+                            if (widget.connectModel.integration.category == 'payments') {
+                              Navigator.push(
+                                context,
+                                PageTransition(
+                                  child: ConnectPaymentSettingsScreen(
+                                    connectScreenBloc: widget.screenBloc,
+                                    connectModel: widget.connectModel,
+                                  ),
+                                  type: PageTransitionType.fade,
+                                  duration: Duration(milliseconds: 500),
                                 ),
-                                type: PageTransitionType.fade,
-                                duration: Duration(milliseconds: 500),
-                              ),
-                            );
+                              );
+                            } else {
+                              Navigator.push(
+                                context,
+                                PageTransition(
+                                  child: ConnectSettingScreen(
+                                    screenBloc: widget.screenBloc,
+                                    connectIntegration: model.integration,
+                                  ),
+                                  type: PageTransitionType.fade,
+                                  duration: Duration(milliseconds: 500),
+                                ),
+                              );
+                            }
                           }
                         },
                         shape: RoundedRectangleBorder(
@@ -1765,7 +1761,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                         height: 24,
                         elevation: 0,
                         minWidth: 0,
-                        color: Colors.white10,
+                        color: overlayBackground(),
                         child: Text(
                           install ? Language.getPosConnectStrings('integrations.actions.open') : Language.getConnectStrings('actions.close'),
                         ),

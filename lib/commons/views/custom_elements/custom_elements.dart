@@ -10,7 +10,6 @@ export 'custom_toast_notification.dart';
 export 'dashboard_card_templates.dart';
 export 'dashboard_card_content.dart';
 export 'drop_down_menu.dart';
-export 'settings_button.dart';
 export 'sliver_appbar_delegate.dart';
 export 'updatedialog.dart';
 export 'wallpaper.dart';

@@ -1,8 +1,10 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_reorderable_list/flutter_reorderable_list.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/commons/utils/reorderable_list.dart';
+
+import '../../theme.dart';
 
 class SectionItem extends StatelessWidget {
   final String title;
@@ -12,6 +14,7 @@ class SectionItem extends StatelessWidget {
   final List<Section> sections;
   final ReorderCallback onReorder;
   final Function onDelete;
+  final Function onEdit;
 
   SectionItem({
     this.title,
@@ -21,6 +24,7 @@ class SectionItem extends StatelessWidget {
     this.sections = const [],
     this.onReorder,
     this.onDelete,
+    this.onEdit,
   });
 
   DraggingMode _draggingMode = DraggingMode.iOS;
@@ -38,14 +42,12 @@ class SectionItem extends StatelessWidget {
               right: 16,
             ),
             height: 65,
-            color: Colors.black54,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
                   title,
                   style: TextStyle(
-                    color: Colors.white,
                     fontSize: 16,
                   ),
                 ),
@@ -62,7 +64,6 @@ class SectionItem extends StatelessWidget {
                           maxLines: 1,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: Colors.white,
                             fontSize: 14,
                           ),
                         ),
@@ -71,18 +72,18 @@ class SectionItem extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
                           MaterialButton(
-                            onPressed: () {},
+                            onPressed: onEdit,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
                             height: 24,
                             minWidth: 0,
+                            color: overlayBackground(),
                             padding: EdgeInsets.only(left: 12, right: 12),
                             child: Text(
                               Language.getCheckoutStrings('checkout_sdk.action.edit'),
                               style: TextStyle(
                                 fontSize: 12,
-                                color: Colors.white,
                               ),
                             ),
                           ),
@@ -157,10 +158,12 @@ class SectionItem extends StatelessWidget {
                             Section section = sections[index];
                         return Item(
                           section: section,
-                          // first and last attributes affect border drawn during dragging
                           isFirst: index == 0,
                           isLast: index == sections.length - 1,
                           draggingMode: _draggingMode,
+                          onDelete: (Section s) {
+                            onDelete(s);
+                          },
                         );
                       },
                       childCount: sections.length,
@@ -198,12 +201,14 @@ class Item extends StatelessWidget {
     this.isFirst,
     this.isLast,
     this.draggingMode,
+    this.onDelete,
   });
 
   final Section section;
   final bool isFirst;
   final bool isLast;
   final DraggingMode draggingMode;
+  final Function onDelete;
 
   Widget _buildChild(BuildContext context, ReorderableItemState state) {
     BoxDecoration decoration;
@@ -253,7 +258,12 @@ class Item extends StatelessWidget {
                 children: <Widget>[
                   Container(
                     width: 50,
-                    child: !(section.fixed ?? false) ? Icon(Icons.remove): Container(),
+                    child: !(section.fixed ?? false) ? MaterialButton(
+                      child: Icon(Icons.remove),
+                      onPressed: () {
+                        onDelete(section);
+                      },
+                    ): Container(),
                   ),
                   Expanded(
                       child: Padding(

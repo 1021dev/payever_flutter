@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
@@ -112,7 +111,7 @@ class ProductsModel {
     vatRate = obj[GlobalUtils.DB_PROD_MODEL_VAT_RATE];
     type = obj[GlobalUtils.DB_PROD_MODEL_TYPE];
     onSales = obj[GlobalUtils.DB_PROD_MODEL_SALES];
-    businessUuid = obj[businessUuid];
+    businessUuid = obj['businessUuid'];
 
     if (obj[GlobalUtils.DB_PROD_MODEL_IMAGES] != null)
       obj[GlobalUtils.DB_PROD_MODEL_IMAGES].forEach((img) {
@@ -124,7 +123,7 @@ class ProductsModel {
       });
     if (obj[GlobalUtils.DB_PROD_MODEL_CHANNEL_SET] != null)
       obj[GlobalUtils.DB_PROD_MODEL_CHANNEL_SET].forEach((ch) {
-        channels.add(ChannelSet.toMap(ch));
+        channels.add(ChannelSet.fromJson(ch));
       });
     if (obj[GlobalUtils.DB_PROD_MODEL_VARIANTS] != null)
       obj[GlobalUtils.DB_PROD_MODEL_VARIANTS].forEach((variant) {
@@ -178,16 +177,6 @@ class ProductsModel {
     } else {
       map['shipping'] = {};
     }
-
-//    if (collections.length > 0) {
-//      List collectionsArr = [];
-//      collections.forEach((element) {
-//        collectionsArr.add(element.toDictionary());
-//      });
-//      map['collections'] = collectionsArr;
-//    } else {
-//      map['collections'] = [];
-//    }
 
     if (variants.length > 0) {
       List variantsArr = [];
@@ -248,6 +237,7 @@ class Variants {
     price = obj[GlobalUtils.DB_PROD_MODEL_VAR_PRICE];
     salePrice = obj[GlobalUtils.DB_PROD_MODEL_VAR_SALE_PRICE];
     sku = obj[GlobalUtils.DB_PROD_MODEL_VAR_SKU];
+    onSales = obj[GlobalUtils.DB_PROD_MODEL_SALES];
     barcode = obj[GlobalUtils.DB_PROD_MODEL_VAR_BARCODE];
     obj[GlobalUtils.DB_PROD_MODEL_VAR_IMAGES].forEach((img) {
       images.add(img);
@@ -268,6 +258,7 @@ class Variants {
     map['sku'] = sku;
     map['barcode'] = barcode;
     map['images'] = images;
+    map['onSales'] = onSales;
 
     if (options.length > 0) {
       List optionsArr = [];
@@ -456,7 +447,7 @@ class CollectionModel {
     List channelObj = obj['channelSets'];
     if (channelObj != null) {
       channelObj.forEach((element) {
-        channelSets.add(ChannelSet.toMap(element));
+        channelSets.add(ChannelSet.fromJson(element));
       });
     }
     if (obj['automaticFillConditions'] != null) {

@@ -18,7 +18,7 @@ class ProductItemImage extends StatelessWidget {
       return Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(8),
         ),
         child: Image.file(imageFile),
       );
@@ -29,7 +29,7 @@ class ProductItemImage extends StatelessWidget {
           imageBuilder: (context, imageProvider) => Container(
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(12.0)),
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(8.0), topRight: Radius.circular(8.0)),
               image: DecorationImage(
                 image: imageProvider,
                 fit: BoxFit.contain,
@@ -47,16 +47,34 @@ class ProductItemImage extends StatelessWidget {
             ),
           ),
           errorWidget: (context, url, error) =>  Container(
-            child: SvgPicture.asset('assets/images/noimage.svg', color: Colors.black54, width: 100, height: 100,),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(8.0), topRight: Radius.circular(8.0)),
+            ),
+            child: Center(
+              child: SvgPicture.asset(
+                'assets/images/no_image.svg',
+                color: Colors.black54,
+                width: 100,
+                height: 100,
+              ),
+            ),
           ),
         );
       } else {
         return Container(
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(12.0)),
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(8.0), topRight: Radius.circular(8.0)),
           ),
-          child: SvgPicture.asset('assets/images/noimage.svg', color: Colors.black54, width: 100, height: 100,),
+          child: Center(
+            child: SvgPicture.asset(
+              'assets/images/no_image.svg',
+              color: Colors.black54,
+              width: 100,
+              height: 100,
+            ),
+          ),
         );
       }
     }

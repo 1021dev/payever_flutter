@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:payever/theme.dart';
 
 class ConnectTopButton extends StatelessWidget {
   final Function onTap;
@@ -19,7 +20,7 @@ class ConnectTopButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final makeContent = InkWell(
       child: Material(
-        color: index == selectedIndex ? Colors.white10: Colors.transparent,
+        color: index == selectedIndex ? overlayBackground(): Colors.transparent,
         child: index == 0 ? Container(
           height: 44,
           alignment: Alignment.center,
@@ -30,7 +31,6 @@ class ConnectTopButton extends StatelessWidget {
             maxLines: 2,
             maxFontSize: 14,
             style: TextStyle(
-              color: Colors.white,
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
@@ -42,7 +42,6 @@ class ConnectTopButton extends StatelessWidget {
           child: Text(
             title,
             style: TextStyle(
-              color: Colors.white,
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),

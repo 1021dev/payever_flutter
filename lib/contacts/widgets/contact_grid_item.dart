@@ -1,8 +1,10 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/contacts/models/model.dart';
 import 'package:payever/contacts/widgets/contact_item_image_view.dart';
+import 'package:payever/theme.dart';
 
 class ContactGridItem extends StatelessWidget {
   final Function onTap;
@@ -75,65 +77,63 @@ class ContactGridItem extends StatelessWidget {
                     image == '' ? contactPlaceholder : image,
                   ),
                 ),
-                Container(
-                  height: 116,
-                  child: Column(
-                    children: <Widget>[
-                      Expanded(
-                        child: Container(
-                          padding: EdgeInsets.only(
-                            left: 20,
-                            right: 20,
-                            top: 12,
-                          ),
-                          child: Column(
-                            children: <Widget>[
-                              Container(
-                                height: 25,
-                                alignment: Alignment.topLeft,
-                                child: Text(
-                                  '$firstName $lastName',
-                                  maxLines: 1,
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 15,
-                                      fontFamily: 'Roboto-Medium'
-                                  ),
-                                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    AspectRatio(
+                      aspectRatio: 6/1.67,
+                      child: Container(
+                        width:double.infinity,
+                        alignment: Alignment.centerLeft,
+                        padding: EdgeInsets.symmetric(horizontal: 8),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            AutoSizeText(
+                              '$firstName $lastName',
+                              maxLines: 1,
+                              minFontSize: 8,
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: 'Roboto-Medium'
                               ),
-                              Container(
-                                alignment: Alignment.topLeft,
-                                child: Text(
-                                  email,
-                                  maxLines: 1,
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 11,
-                                      fontFamily: 'Roboto'
-                                  ),
-                                ),
+                            ),
+                            SizedBox(height: 4,),
+                            AutoSizeText(
+                              email,
+                              maxLines: 1,
+                              minFontSize: 8,
+                              style: TextStyle(
+                                  fontSize: 11,
+                                  fontFamily: 'Roboto'
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
-                      Container(
-                        height: 44,
-                        color: Color.fromRGBO(0, 0, 0, 0.3),
+                    ),
+                    AspectRatio(
+                      aspectRatio: 6/1,
+                      child: Container(
+                        width: double.infinity,
+                        color: overlayBackground(),
                         alignment: Alignment.center,
                         child: SizedBox.expand(
                           child: MaterialButton(
-                            child: Text(
-                              'Open',
-                            ),
-                            onPressed: (){
+                              child: Text(
+                                'Open',
+                                style: TextStyle(color: Colors.white, fontSize: 12),
+                              ),
+                              onPressed: (){
                               onOpen(contact);
                             }
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -144,7 +144,6 @@ class ContactGridItem extends StatelessWidget {
               alignment: Alignment.center,
               child: contact.isChecked ? Icon(
                 Icons.check_circle_outline,
-                color: Colors.white60,
                 size: 24,
               ) : Icon(
                 Icons.radio_button_unchecked,

@@ -7,6 +7,9 @@ import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/views/custom_elements/dashboard_option_cell.dart';
+import 'package:payever/theme.dart';
+
+import 'dashboard_setup_buttons.dart';
 
 class DashboardConnectView extends StatefulWidget {
   final AppWidget appWidget;
@@ -16,6 +19,9 @@ class DashboardConnectView extends StatefulWidget {
   final Function deleteNotification;
   final Function tapOpen;
   final List<ConnectModel> connects;
+  final Function onTapGetStarted;
+  final Function onTapContinueSetup;
+  final Function onTapLearnMore;
 
   DashboardConnectView({
     this.appWidget,
@@ -25,128 +31,43 @@ class DashboardConnectView extends StatefulWidget {
     this.deleteNotification,
     this.tapOpen,
     this.connects,
+    this.onTapGetStarted,
+    this.onTapContinueSetup,
+    this.onTapLearnMore,
   });
   @override
   _DashboardConnectViewState createState() => _DashboardConnectViewState();
 }
 
 class _DashboardConnectViewState extends State<DashboardConnectView> {
-  String uiKit = '${Env.cdnIcon}icons-apps-white/icon-apps-white-';
   bool isExpanded = false;
   @override
   Widget build(BuildContext context) {
 
     if (widget.businessApps.setupStatus == 'completed') {
       return BlurEffectView(
-        padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+        isDashboard: true,
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.fromLTRB(14, 0, 14, 0),
               child: Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: 16,
-                            height: 16,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: NetworkImage('${Env.cdnIcon}icons-apps-white/icon-apps-white-connect.png'),
-                                fit: BoxFit.fitWidth,
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 8,),
-                          Text(
-                            'CONNECT',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                            ),
-                          )
-                        ],
+                  InkWell(
+                    onTap: widget.tapOpen,
+                    child: Container(
+                      width: double.infinity,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        Language.getCommerceOSStrings('dashboard.apps.connect').toUpperCase(),
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                      Row(
-                        children: [
-                          InkWell(
-                            onTap: widget.tapOpen,
-                            child: Container(
-                              height: 20,
-                              width: 40,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.black.withAlpha(100),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  Language.getCommerceOSStrings('actions.open'),
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          widget.notifications.length > 0 ? SizedBox(width: 8): Container(),
-                          widget.notifications.length > 0 ? Container(
-                            height: 20,
-                            width: 40,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.white10,
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: Center(
-                                    child: Text(
-                                      '${widget.notifications.length}',
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        isExpanded = !isExpanded;
-                                      });
-                                    },
-                                    child: Container(
-                                      width: 21,
-                                      height: 21,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(10.5),
-                                          color: Colors.black45
-                                      ),
-                                      child: Center(
-                                        child: Icon(
-                                          isExpanded ? Icons.clear : Icons.add,
-                                          color: Colors.white,
-                                          size: 12,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ): Container(),
-                        ],
-                      )
-                    ],
+                    ),
                   ),
-                  SizedBox(height: 8),
+                  SizedBox(height: 14),
                   widget.connects == null ? Container(
                     height: 72,
                     child: Center(
@@ -169,7 +90,6 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                               'Top rated',
                               style: TextStyle(
                                 fontSize: 12,
-                                color: Colors.white70,
                               ),
                             ),
                             SizedBox(height: 4),
@@ -183,12 +103,11 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                                   String iconType = widget.connects[index].integration.displayOptions.icon ?? '';
                                   iconType = iconType.replaceAll('#icon-', '');
                                   iconType = iconType.replaceAll('#', '');
-                                  print('$iconType');
                                   return Container(
                                     width: 35,
                                     height: 35,
                                     padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                                    child: SvgPicture.asset(Measurements.channelIcon(iconType), width: 16, height: 16, color: Colors.white70,)
+                                    child: SvgPicture.asset(Measurements.channelIcon(iconType), width: 16, height: 16, color: iconColor(),)
                                   );
                                 },
                                 separatorBuilder: (context, index) {
@@ -206,18 +125,18 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                           child: InkWell(
                             onTap: widget.tapOpen,
                             child: Container(
-                              height: 50,
+                              height: 58,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(6),
-                                color: Colors.black26,
+                                color: overlayDashboardButtonsBackground(),
                               ),
                               child: Center(
                                 child: Text(
-                                  'Connect',
+                                  Language.getCommerceOSStrings('dashboard.apps.connect'),
                                   softWrap: true,
                                   style: TextStyle(
+                                    fontSize: 18,
                                     color: Colors.white,
-                                    fontSize: 16,
                                   ),
                                 ),
                               ),
@@ -227,7 +146,7 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                       )
                     ],
                   ),
-                  SizedBox(height: 12),
+
                 ],
               ),
             ),
@@ -239,7 +158,7 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                     bottomLeft: Radius.circular(6),
                     bottomRight: Radius.circular(6),
                   ),
-                  color: Colors.black38,
+                  color: overlayBackground(),
                 ),
                 child: ListView.builder(
                   itemBuilder: _itemBuilderDDetails,
@@ -251,96 +170,52 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
         ),
       );
     } else {
-      return BlurEffectView(
-        padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
-              child: Column(
-                children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage('${Env.cdnIcon}icon-comerceos-connect-not-installed.png'),
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    Language.getWidgetStrings(widget.appWidget.title),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                ],
-              ),
-            ),
-            SizedBox(height: 12),
-            Container(
-              height: 40,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(6),
-                    bottomRight: Radius.circular(6),
-                  ),
-                  color: Colors.black38
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: InkWell(
-                      onTap: () {
-
-                      },
-                      child: Center(
-                        child: Text(
-                          !widget.businessApps.installed ? 'Get started' : 'Continue setup process',
-                          softWrap: true,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  if (!widget.businessApps.installed) Container(
-                    width: 1,
-                    color: Colors.white12,
-                  ),
-                  if (!widget.businessApps.installed) Expanded(
-                    flex: 1,
-                    child: InkWell(
-                      onTap: () {
-
-                      },
-                      child: Center(
-                        child: Text(
-                          'Learn more',
-                          softWrap: true,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
+      return _unInstalledView();
     }
+  }
+
+  Widget _unInstalledView() {
+    return  BlurEffectView(
+      padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
+      isDashboard: true,
+      child: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+            child: Column(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage('${Env.cdnIcon}icon-comerceos-connect-not-installed.png'),
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  Language.getWidgetStrings(widget.appWidget.title),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 4),
+              ],
+            ),
+          ),
+          SizedBox(height: 12),
+          DashboardSetupButtons(
+            businessApps: widget.businessApps,
+            onTapContinueSetup: widget.onTapContinueSetup,
+            onTapGetStarted: widget.onTapGetStarted,
+            onTapLearnMore: widget.onTapLearnMore,
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _itemBuilderDDetails(BuildContext context, int index) {

@@ -13,6 +13,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
+import 'package:payever/theme.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -20,13 +21,11 @@ bool _isTablet;
 class PosCreateTerminalScreen extends StatefulWidget {
 
   final PosScreenBloc screenBloc;
-  final String businessId;
   final Terminal editTerminal;
   final bool fromDashBoard;
 
   PosCreateTerminalScreen({
     this.screenBloc,
-    this.businessId,
     this.editTerminal,
     this.fromDashBoard = false,
   });
@@ -80,7 +79,7 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );
@@ -149,6 +148,7 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
       resizeToAvoidBottomPadding: false,
       appBar: _appBar(state),
       body: SafeArea(
+        bottom: false,
         child: BackgroundBase(
           true,
           body: Form(
@@ -180,8 +180,6 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
         padding: EdgeInsets.only(left: 16, right: 16),
         height: 90.0 + 64.0,
         child: BlurEffectView(
-          color: Color.fromRGBO(50, 50, 50, 0.2),
-          blur: 5,
           radius: 12,
           padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
           child: Column(
@@ -249,8 +247,6 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
                           child: Container(
                             height: 60,
                             child: BlurEffectView(
-                              color: Color.fromRGBO(100, 100, 100, 0.2),
-                              blur: 15,
                               radius: 12,
                               padding: EdgeInsets.only(left: 12, right: 12),
                               child: TextFormField(
@@ -299,7 +295,6 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
               ),
               Container(
                 height: 64,
-                color: Color(0xFF424141),
                 child: SizedBox.expand(
                   child: MaterialButton(
                     onPressed: () {
@@ -312,11 +307,11 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
                     ) : Text(
                       'Done',
                       style: TextStyle(
-                        color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
+                    color: overlayBackground(),
                   ),
                 ),
               ),
@@ -330,14 +325,12 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
   void submitTerminal(PosScreenState state) {
     if (widget.editTerminal != null) {
       widget.screenBloc.add(UpdatePosTerminalEvent(
-        businessId: widget.businessId,
         name: terminalNameController.text,
         logo: state.blobName != '' ? state.blobName : null,
         terminalId: widget.editTerminal.id,
       ));
     } else {
       widget.screenBloc.add(CreatePosTerminalEvent(
-        businessId: widget.businessId,
         name: terminalNameController.text,
         logo: state.blobName != '' ? state.blobName : null,
       ));
@@ -348,7 +341,7 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
     PickedFile img = await ImagePicker().getImage(source: ImageSource.gallery);
     if (img.path != null) {
       print("_image: $img");
-      widget.screenBloc.add(UploadTerminalImage(file: File(img.path), businessId: widget.businessId));
+      widget.screenBloc.add(UploadTerminalImage(file: File(img.path)));
     }
   }
 

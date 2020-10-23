@@ -178,21 +178,27 @@ class RestDataSource {
     });
   }
 
-  Future<dynamic> getTransactionList(
-      String id, String token, String query) async {
-    print("TAG - getTransactionList() $token");
-    var headers = {
-      HttpHeaders.authorizationHeader: "Bearer $token",
-      HttpHeaders.contentTypeHeader: "application/json",
-      HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-    };
-    return _netUtil
-        .get(transactionWidUrl + id + transactionWidEnd + query,
-            headers: headers)
-        .then((dynamic result) {
-      return result;
-    });
-  }
+  // Future<dynamic> getTransactionList(
+  //     String id, String token, String query) async {
+  //   print("TAG - getTransactionList() $token");
+  //   var headers = {
+  //     HttpHeaders.authorizationHeader: "Bearer $token",
+  //     HttpHeaders.contentTypeHeader: "application/json",
+  //     HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+  //   };
+  //   // return _netUtil
+  //   //     .get(transactionWidUrl + id + transactionWidEnd + query,
+  //   //         headers: headers)
+  //   //     .then((dynamic result) {
+  //   //   return result;
+  //   // });
+  //   return _netUtil
+  //       .get(Env.transactions + '/api/user'+ transactionWidEnd + query,
+  //           headers: headers)
+  //       .then((dynamic result) {
+  //     return result;
+  //   });
+  // }
 
   Future<dynamic> getUser(String token, BuildContext context) {
     print("TAG - getUser()");

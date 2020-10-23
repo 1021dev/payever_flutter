@@ -7,12 +7,9 @@ import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
-import 'package:payever/pos/models/models.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
-
-bool _isPortrait;
-bool _isTablet;
+import 'package:payever/theme.dart';
 
 class PosQRSettings extends StatefulWidget {
 
@@ -72,15 +69,6 @@ class _PosQRSettingsState extends State<PosQRSettings> {
 
   @override
   Widget build(BuildContext context) {
-    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
-    Measurements.height = (_isPortrait
-        ? MediaQuery.of(context).size.height
-        : MediaQuery.of(context).size.width);
-    Measurements.width = (_isPortrait
-        ? MediaQuery.of(context).size.width
-        : MediaQuery.of(context).size.height);
-    _isTablet = Measurements.width < 600 ? false : true;
-
     return BlocListener(
       bloc: widget.screenBloc,
       listener: (BuildContext context, PosScreenState state) async {
@@ -88,7 +76,7 @@ class _PosQRSettingsState extends State<PosQRSettings> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );
@@ -151,6 +139,7 @@ class _PosQRSettingsState extends State<PosQRSettings> {
       resizeToAvoidBottomPadding: false,
       appBar: _appBar(state),
       body: SafeArea(
+        bottom: false,
         child: BackgroundBase(
           true,
           body: !isLoaded && state.isLoading ?
@@ -184,7 +173,6 @@ class _PosQRSettingsState extends State<PosQRSettings> {
             widgets.add(
               Container(
                 height: 64,
-                color: Color(0xFF424141),
                 child: SizedBox.expand(
                   child: MaterialButton(
                     onPressed: () {
@@ -192,6 +180,7 @@ class _PosQRSettingsState extends State<PosQRSettings> {
                         isOpened = isOpened == i ? -1: i;
                       });
                     },
+                    color: overlayBackground(),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -203,7 +192,6 @@ class _PosQRSettingsState extends State<PosQRSettings> {
                             Text(
                               data['title'] ?? '',
                               style: TextStyle(
-                                color: Colors.white,
                                 fontSize: 16,
                               ),
                             )
@@ -263,7 +251,6 @@ class _PosQRSettingsState extends State<PosQRSettings> {
                               Text(
                                 Language.getPosTpmStrings(fieldSettings['label']),
                                 style: TextStyle(
-                                  color: Colors.white70,
                                   fontSize: 12,
                                 ),
                               ),
@@ -282,7 +269,6 @@ class _PosQRSettingsState extends State<PosQRSettings> {
                                     child: Text(
                                       Language.getPosTpmStrings(label.label),
                                       style: TextStyle(
-                                        color: Colors.white,
                                         fontSize: 16,
                                         fontWeight: FontWeight.w300,
                                       ),
@@ -338,7 +324,7 @@ class _PosQRSettingsState extends State<PosQRSettings> {
                           ),
                         );
                       },
-                      color: Colors.black26,
+                      color: overlayBackground(),
                       child: state.isLoading ? SizedBox(
                         child: CircularProgressIndicator(
                           valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
@@ -350,7 +336,6 @@ class _PosQRSettingsState extends State<PosQRSettings> {
                         Language.getPosTpmStrings(data['operation']['text']),
                         style: TextStyle(
                           fontSize: 16,
-                          color: Colors.white,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -370,8 +355,6 @@ class _PosQRSettingsState extends State<PosQRSettings> {
         child: Wrap(
           children: <Widget>[
               BlurEffectView(
-                color: Color.fromRGBO(20, 20, 20, 0.2),
-                blur: 15,
                 radius: 12,
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                 child: Column(

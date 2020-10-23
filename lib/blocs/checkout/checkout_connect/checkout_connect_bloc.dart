@@ -21,19 +21,21 @@ class CheckoutConnectScreenBloc extends Bloc<CheckoutConnectScreenEvent, Checkou
     if (event is CheckoutConnectScreenInitEvent) {
       yield state.copyWith(business: event.business, category: event.category);
       yield* fetchInitialData(event.business);
+    } else if (event is InstallCheckoutConnect) {
+      yield* installCheckoutConnect(event.connectModel);
     }
   }
 
   Stream<CheckoutConnectScreenState> fetchInitialData(String business) async* {
 
     yield state.copyWith(isLoading: true);
-    List<Payment> paymentOptions = [];
+    List<CheckoutPaymentOption> paymentOptions = [];
     Map<String, PaymentVariant> paymentVariants = {};
 
     dynamic paymentOptionsResponse = await api.getPaymentOptions(token);
     if (paymentOptionsResponse is List) {
       paymentOptionsResponse.forEach((element) {
-        paymentOptions.add(Payment.fromMap(element));
+        paymentOptions.add(CheckoutPaymentOption.fromJson(element));
       });
     }
 
@@ -66,5 +68,25 @@ class CheckoutConnectScreenBloc extends Bloc<CheckoutConnectScreenEvent, Checkou
       paymentOptions: paymentOptions,
       connectInstallations: connectInstallations,
     );
+  }
+
+  Stream<CheckoutConnectScreenState> installCheckoutConnect(ConnectModel model) async* {
+    yield state.copyWith(installing: model.integration.name);
+    dynamic response = await api.installConnect(token, state.business, model.integration.name);
+    if (response is Map) {
+      if (response['installed'] ?? false) {
+        List<ConnectModel> models = [];
+        models.addAll(state.connectInstallations);
+        int index = models.indexOf(model);
+        ConnectModel m = models[index];
+        m.installed = response['installed'] ?? false;
+        models[index] = m;
+        yield state.copyWith(connectInstallations: models, installing: '');
+      } else {
+        yield state.copyWith(installing: '');
+      }
+    } else {
+      yield state.copyWith(installing: '');
+    }
   }
 }

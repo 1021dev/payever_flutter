@@ -2,6 +2,7 @@
     "widgets.actions.less": "Weniger",
     "widgets.actions.more": "Mehr",
     "widgets.actions.close": "Schlie\u00dfen",
+    "widgets.actions.continue-setup": "Einrichtung abschließen",
     "widgets.marketing.title": "Mail",
     "widgets.marketing.new-campaign": "Neuer<span class=\"hidden-xs\"> Kampagne<\/span>",
     "widgets.marketing.users": "User",

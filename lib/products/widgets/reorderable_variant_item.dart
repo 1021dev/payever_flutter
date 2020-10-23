@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_reorderable_list/flutter_reorderable_list.dart';
+import 'package:payever/commons/utils/reorderable_list.dart';
+
 
 class ReorderableVariantItem extends StatelessWidget {
   ReorderableVariantItem({

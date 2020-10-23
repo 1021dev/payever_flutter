@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
+    <defs>
+        <path id="awl8e8g3wb" d="M0 0.078L11.469 0.078 11.469 7.234 0 7.234z"/>
+        <path id="5r2hworj4d" d="M0 0.844L11.469 0.844 11.469 8 0 8z"/>
+        <linearGradient id="f8a0yuka5a" x1="50%" x2="50%" y1="-10.112%" y2="114.391%">
+            <stop offset="0%" stop-color="#3CD950"/>
+            <stop offset="100%" stop-color="#13B123"/>
+        </linearGradient>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <g>
+            <g>
+                <path fill="url(#f8a0yuka5a)" fill-rule="nonzero" d="M11.783 23.567C5.367 23.567 0 18.317 0 11.783 0 5.367 5.25 0 11.783 0 18.2 0 23.567 5.25 23.567 11.783c0 6.417-5.367 11.784-11.784 11.784z" transform="translate(-30 -241) translate(30 241)"/>
+                <g>
+                    <g transform="translate(-30 -241) translate(30 241) translate(6 5) translate(0 .922)">
+                        <mask id="97swhb772c" fill="#fff">
+                            <use xlink:href="#awl8e8g3wb"/>
+                        </mask>
+                        <path fill="#FFF" d="M.5 4.156h9.277L7.553 6.381c-.196.195-.196.511 0 .707.097.097.225.146.353.146.128 0 .256-.049.354-.146l3.062-3.063c.196-.195.196-.512 0-.707L8.229.224c-.196-.195-.512-.195-.708 0-.195.196-.195.512 0 .707l2.225 2.225H.5c-.276 0-.5.224-.5.5s.224.5.5.5" mask="url(#97swhb772c)"/>
+                    </g>
+                    <g transform="translate(-30 -241) translate(30 241) translate(6 5) translate(0 5.922)">
+                        <mask id="8rrd820nre" fill="#fff">
+                            <use xlink:href="#5r2hworj4d"/>
+                        </mask>
+                        <path fill="#FFF" d="M10.969 3.922H1.692l2.224-2.225c.196-.195.196-.511 0-.707-.195-.195-.511-.195-.707 0L.147 4.053c-.196.195-.196.512 0 .707L3.24 7.854c.098.097.226.146.354.146.128 0 .256-.05.354-.146.195-.196.195-.512 0-.707L1.723 4.922h9.246c.276 0 .5-.224.5-.5s-.224-.5-.5-.5" mask="url(#8rrd820nre)"/>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
