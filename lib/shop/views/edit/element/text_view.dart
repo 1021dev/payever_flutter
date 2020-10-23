@@ -62,6 +62,7 @@ class _TextViewState extends State<TextView> {
             $txt
            ''',
           textStyle: TextStyle(
+            color: colorConvert(styles.color),
               fontSize: styles.textFontSize(),
               fontWeight: styles.textFontWeight()),
         )

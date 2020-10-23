@@ -89,9 +89,6 @@ class _ShopCartViewState extends State<ShopCartView> {
         ));
   }
 
-  get badge {
-
-  }
   get decoration {
     return BoxDecoration(
       border: getBorder,

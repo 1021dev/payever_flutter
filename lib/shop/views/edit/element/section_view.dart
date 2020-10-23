@@ -64,6 +64,7 @@ class _SectionViewState extends State<SectionView> {
     if (styleSheet == null) {
       return Container();
     }
+    print('SectionId: ${child.id}');
     List<Widget> widgets = [];
     widgets.add(_sectionBackgroundWidget(styleSheet));
     child.children.forEach((child) {
