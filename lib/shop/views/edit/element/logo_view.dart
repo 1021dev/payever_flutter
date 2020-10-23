@@ -69,10 +69,10 @@ class _LogoViewState extends State<LogoView> {
         key: key,
         width: styles.width,
         height: styles.height,
-        decoration: BoxDecoration(
-          color: colorConvert(styles.backgroundColor),
-          shape: BoxShape.circle,
-        ),
+//        decoration: BoxDecoration(
+//          color: colorConvert(styles.backgroundColor),
+//          shape: BoxShape.circle,
+//        ),
         margin: EdgeInsets.only(
             left: styles.getMarginLeft(sectionStyleSheet),
             right: styles.marginRight,

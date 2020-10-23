@@ -33,6 +33,9 @@ class _ShopCartViewState extends State<ShopCartView> {
         styles.display == 'none')
       return Container();
 
+    if (child.data == null)
+      return Container();
+
     return Opacity(
       opacity: styles.opacity,
         child: _body());

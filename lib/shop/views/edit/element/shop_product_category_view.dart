@@ -136,8 +136,8 @@ class _ShopProductCategoryViewState extends State<ShopProductCategoryView> {
                   alignment: Alignment.center,
                   child: SvgPicture.asset(
                     'assets/images/productsicon.svg',
-                    width: 80,
-                    height: 80,
+                    width: 60,
+                    height: 60,
                     color: Colors.grey,
                   ),
                 ),

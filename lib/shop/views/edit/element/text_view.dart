@@ -47,7 +47,7 @@ class _TextViewState extends State<TextView> {
 //      print('Html Text Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
 
       return Container(
-        color: colorConvert(styles.backgroundColor, emptyColor: true),
+//        color: colorConvert(styles.backgroundColor, emptyColor: true),
         width: styles.textWidth(),
         height: styles.height,
         alignment: styles.getTextContainAlign(),
@@ -56,15 +56,21 @@ class _TextViewState extends State<TextView> {
             right: styles.marginRight,
             top: styles.getMarginTop(sectionStyleSheet),
             bottom: styles.marginBottom),
-        child: HtmlWidget(
-          // the first parameter (`html`) is required
-          '''
-            $txt
-           ''',
-          textStyle: TextStyle(
-            color: colorConvert(styles.color),
-              fontSize: styles.textFontSize(),
-              fontWeight: styles.textFontWeight()),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              HtmlWidget(
+                // the first parameter (`html`) is required
+                '''
+                  $txt
+                 ''',
+                textStyle: TextStyle(
+                  color: colorConvert(styles.color),
+                    fontSize: styles.textFontSize(),
+                    fontWeight: styles.textFontWeight()),
+              ),
+            ],
+          ),
         )
         /*Html(
           data: """
