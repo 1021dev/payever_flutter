@@ -34,7 +34,9 @@ class _ShapeViewState extends State<ShapeView> {
         styles.display == 'none')
       return Container();
 
-    return _body();
+    return Opacity(
+        opacity: styles.opacity,
+        child: _body());
   }
 
   Widget _body() {
@@ -47,30 +49,27 @@ class _ShapeViewState extends State<ShapeView> {
         return squareShape();
       default:
         print('special variant: ${child.data['variant']}');
-        return triangleShape();
+        return Container();
     }
   }
 
   Widget circleShape() {
-    return Opacity(
-      opacity: styles.opacity,
-      child: Container(
-        width: styles.width,
-        height: styles.height,
+    return Container(
+      width: styles.width,
+      height: styles.height,
 //        decoration: styles.decoration,
-        margin: EdgeInsets.only(
-            left: styles.getMarginLeft(sectionStyleSheet),
-            right: styles.marginRight,
-            top: styles.getMarginTop(sectionStyleSheet),
-            bottom: styles.marginBottom),
-        alignment: Alignment.center,
-        child: ClipShadow(
-          clipper: OvalClipper(x: styles.width, y: styles.height, w: 0),
-          boxShadow: styles.getBoxShadow,
-          child: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.elliptical(styles.width, styles.height)),
-              child: BackgroundView(styles: styles,)),
-        ),
+      margin: EdgeInsets.only(
+          left: styles.getMarginLeft(sectionStyleSheet),
+          right: styles.marginRight,
+          top: styles.getMarginTop(sectionStyleSheet),
+          bottom: styles.marginBottom),
+      alignment: Alignment.center,
+      child: ClipShadow(
+        clipper: OvalClipper(x: styles.width, y: styles.height, w: 0),
+        boxShadow: styles.getBoxShadow,
+        child: ClipRRect(
+            borderRadius: BorderRadius.all(Radius.elliptical(styles.width, styles.height)),
+            child: BackgroundView(styles: styles,)),
       ),
     );
   }

@@ -396,19 +396,6 @@ class BaseStyles {
   // if String shadow is active in case default value is '0px 0px 0px rgba(0, 0, NaN, 0, 0)'
   @JsonKey(name: 'boxShadow')
   dynamic boxShadow;
-
-  @JsonKey(name: 'shadowAngle', defaultValue: 0)
-  double shadowAngle;
-  @JsonKey(name: 'shadowBlur', defaultValue: 0)
-  double shadowBlur;
-  @JsonKey(name: 'shadowColor', defaultValue: 'rgba(0, 0, NaN, 0, 0)')
-  String shadowColor;
-  @JsonKey(name: 'shadowFormColor', defaultValue: '0, 0, 0')
-  String shadowFormColor;
-  @JsonKey(name: 'shadowOffset', defaultValue: 0)
-  double shadowOffset;
-  @JsonKey(name: 'shadowOpacity', defaultValue: 0)
-  double shadowOpacity;
   @JsonKey(name: 'filter', defaultValue: '')
   String filter;//drop-shadow(8.000000000000002pt 13.856406460551018pt 5pt rgba(26,77,124,0.47))
   @JsonKey(name: 'shadow')
@@ -637,7 +624,7 @@ class BaseStyles {
 
   get decoration {
     return BoxDecoration(
-      border: getBorder,
+//      border: getBorder,
       borderRadius: BorderRadius.circular(getBorderRadius(borderRadius)),
       boxShadow: getBoxShadow,
     );
@@ -785,6 +772,19 @@ class ImageStyles extends BaseStyles {
 
   @JsonKey(name: 'width', defaultValue: 0)
   double width;
+  // Shadow
+  @JsonKey(name: 'shadowAngle', defaultValue: 0)
+  double shadowAngle;
+  @JsonKey(name: 'shadowBlur', defaultValue: 0)
+  double shadowBlur;
+  @JsonKey(name: 'shadowColor', defaultValue: 'rgba(0, 0, NaN, 0, 0)')
+  String shadowColor;
+  @JsonKey(name: 'shadowFormColor', defaultValue: '0, 0, 0')
+  String shadowFormColor;
+  @JsonKey(name: 'shadowOffset', defaultValue: 0)
+  double shadowOffset;
+  @JsonKey(name: 'shadowOpacity', defaultValue: 0)
+  double shadowOpacity;
 //  saturate(100%) brightness(100%
   @JsonKey(name: 'imageFilter')
   dynamic imageFilter;
