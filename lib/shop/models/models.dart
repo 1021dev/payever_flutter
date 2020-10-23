@@ -633,6 +633,49 @@ class BaseStyles {
     return 0;
   }
 
+  get decoration {
+    return BoxDecoration(
+      border: getBorder,
+      borderRadius: BorderRadius.circular(getBorderRadius(borderRadius)),
+      boxShadow: getBoxShadow,
+    );
+  }
+
+  get getBorder {
+    if (border == false) {
+      return Border.all(color: Colors.transparent, width: 0);
+    }
+    List<String> borderAttrs = border.toString().split(' ');
+    double borderWidth = double.parse(borderAttrs.first.replaceAll('px', ''));
+    String borderColor = borderAttrs.last;
+    return Border.all(color: colorConvert(borderColor), width: borderWidth);
+  }
+
+
+  get getBoxShadow {
+    if (boxShadow == null || boxShadow == false) {
+      return [
+        BoxShadow(
+          color: Colors.transparent,
+          spreadRadius: 0,
+          blurRadius: 0,
+          offset: Offset.zero, // changes position of shadow
+        )
+      ];
+    }
+    double deg = shadowAngle * pi / 180;
+    return [
+      BoxShadow(
+        color: Colors.black.withOpacity(shadowOpacity / 100),
+//        spreadRadius: 5,
+        blurRadius: shadowBlur,
+        offset: Offset(cos(deg) * shadowOffset,
+            -shadowOffset * sin(deg)), // changes position of shadow
+      ),
+    ];
+  }
+
+
   factory BaseStyles.fromJson(Map<String, dynamic> json) => _$BaseStylesFromJson(json);
   Map<String, dynamic> toJson() => _$BaseStylesToJson(this);
 }

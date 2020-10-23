@@ -1,9 +1,7 @@
-import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/shop/models/models.dart';
-import 'package:payever/theme.dart';
 
 class ImageView extends StatefulWidget {
   final Child child;
@@ -11,7 +9,11 @@ class ImageView extends StatefulWidget {
   final String deviceTypeId;
   final SectionStyleSheet sectionStyleSheet;
 
-  const ImageView({this.child, this.stylesheets, this.deviceTypeId, this.sectionStyleSheet});
+  const ImageView(
+      {this.child,
+      this.stylesheets,
+      this.deviceTypeId,
+      this.sectionStyleSheet});
 
   @override
   _ImageViewState createState() => _ImageViewState(child, sectionStyleSheet);
@@ -27,13 +29,11 @@ class _ImageViewState extends State<ImageView> {
 
   @override
   Widget build(BuildContext context) {
-
     styles = styleSheet();
     if (styles == null && child.styles != null && child.styles.isNotEmpty) {
       styles = ImageStyles.fromJson(child.styles);
     }
-    if (styles == null || styles.display == 'none')
-      return Container();
+    if (styles == null || styles.display == 'none') return Container();
 
     return _body();
   }
@@ -47,8 +47,7 @@ class _ImageViewState extends State<ImageView> {
     if (styles.background.isNotEmpty) {
       url = styles.background;
     } else {
-      if (data == null)
-        return Container();
+      if (data == null) return Container();
       url = data.src;
     }
 
@@ -57,7 +56,7 @@ class _ImageViewState extends State<ImageView> {
       child: Container(
         height: styles.height,
         width: styles.width,
-        decoration: decoration,
+        decoration: styles.decoration,
 //      color: colorConvert(styles.backgroundColor),
         margin: EdgeInsets.only(
             left: styles.getMarginLeft(sectionStyleSheet),
@@ -74,8 +73,7 @@ class _ImageViewState extends State<ImageView> {
       imageUrl: url,
       imageBuilder: (context, imageProvider) => Container(
         decoration: BoxDecoration(
-//          color: Colors.transparent,
-                color: colorConvert(styles.backgroundColor),
+//          color: colorConvert(styles.backgroundColor),
           image: DecorationImage(
             image: imageProvider,
             fit: BoxFit.contain,
@@ -113,52 +111,10 @@ class _ImageViewState extends State<ImageView> {
     );
   }
 
-  get decoration {
-    return BoxDecoration(
-      border: border,
-      borderRadius: borderRadius,
-      boxShadow: boxShadow,
-    );
-  }
-
-  get border {
-    if (styles.border == false) {
-      return Border.all(color: Colors.transparent, width: 0);
-    }
-    List<String>borderAttrs = styles.border.toString().split(' ');
-    double borderWidth = double.parse(borderAttrs.first.replaceAll('px', ''));
-    String borderColor = borderAttrs.last;
-    return Border.all(color: colorConvert(borderColor), width: borderWidth);
-  }
-
-  get borderRadius {
-    return BorderRadius.circular(styles.getBorderRadius(styles.borderRadius));
-  }
-
-  get boxShadow {
-    if (styles.boxShadow == null || styles.boxShadow == false) {
-      return [BoxShadow(
-        color: Colors.transparent,
-        spreadRadius: 0,
-        blurRadius: 0,
-        offset: Offset.zero, // changes position of shadow
-      )];
-    }
-    double deg = styles.shadowAngle * pi / 180;
-    return [
-      BoxShadow(
-        color: Colors.black.withOpacity(styles.shadowOpacity/100),
-//        spreadRadius: 5,
-        blurRadius: styles.shadowBlur,
-        offset: Offset(cos(deg) * styles.shadowOffset, -styles.shadowOffset * sin(deg)), // changes position of shadow
-      ),
-    ];
-  }
-
   ImageStyles styleSheet() {
     try {
-      print(
-          'Image Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
+//      print(
+//          'Image Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
       return ImageStyles.fromJson(
           widget.stylesheets[widget.deviceTypeId][child.id]);
     } catch (e) {

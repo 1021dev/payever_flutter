@@ -26,20 +26,18 @@ class _ShapeViewState extends State<ShapeView> {
 
   @override
   Widget build(BuildContext context) {
-    if (child.styles != null && child.styles.isNotEmpty) {
+    styles = styleSheet();
+    if (styles == null && child.styles != null && child.styles.isNotEmpty) {
       styles = ShapeStyles.fromJson(child.styles);
-    } else {
-      styles = styleSheet();
     }
+    if (styles == null ||
+        styles.display == 'none')
+      return Container();
+
     return _body();
   }
 
   Widget _body() {
-    if (styles == null ||
-        styles.display == 'none' ||
-        (styleSheet() != null && styleSheet().display == 'none'))
-      return Container();
-
     switch(child.data['variant']) {
       case 'circle':
         return circleShape();
@@ -101,7 +99,7 @@ class _ShapeViewState extends State<ShapeView> {
     return Container(
       width: styles.width,
       height: styles.height,
-      color: colorConvert(styles.backgroundColor),
+//      color: colorConvert(styles.backgroundColor),
       margin: EdgeInsets.only(
           left: styles.getMarginLeft(sectionStyleSheet),
           right: styles.marginRight,

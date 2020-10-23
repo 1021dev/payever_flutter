@@ -77,7 +77,6 @@ class _BackgroundViewState extends State<BackgroundView> {
       imageUrl: styles.backgroundImage,
       imageBuilder: (context, imageProvider) => Container(
         decoration: BoxDecoration(
-          color: Colors.transparent /*background.backgroundColor*/,
           image: DecorationImage(
             image: imageProvider,
             fit: imageFit(styles.backgroundSize),
