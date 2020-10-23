@@ -669,18 +669,20 @@ class BaseStyles {
     List<String>attrs0 = shadow.replaceAll('drop-shadow', '').split(' ');
     List<String>attrs =  attrs0.map((element) {
       if (element.contains('rgb'))
-        return element.replaceAll('rgba', '').replaceAll(',', ' ').replaceAll(RegExp(r"[^\s\w]"), '');
+        return element.replaceAll('rgba', '').replaceAll(',', ' ').replaceAll('(', '').replaceAll(')', '');
       return element.replaceAll('pt', '').replaceAll('(', '');
     }).toList();
-    print('attrs: $attrs');
     double blurRadius = double.parse(attrs[2]);
     double offsetX = double.parse(attrs[0]);
     double offsetY = double.parse(attrs[1]);
     List<String>colors = attrs[3].split(' ');
+    int colorR = int.parse(colors[0]);
+    int colorG = int.parse(colors[1]);
+    int colorB = int.parse(colors[2]);
+    double opacity = double.parse(colors[3]);
     return [
       BoxShadow(
-        color: Color.fromRGBO(int.parse(colors[0]), int.parse(colors[1]),
-            int.parse(colors[2]), double.parse(colors[3])),
+        color: Color.fromRGBO(colorR, colorG, colorB, opacity),
         blurRadius: blurRadius,
         offset: Offset(offsetX, offsetY), // changes position of shadow
       ),
@@ -951,7 +953,7 @@ class ChildAction {
   ChildAction();
 
   @JsonKey(name: 'type')      String type;
-  @JsonKey(name: 'payload')   String payload;
+  @JsonKey(name: 'payload')   dynamic payload;
 
   factory ChildAction.fromJson(Map<String, dynamic> json) => _$ChildActionFromJson(json);
   Map<String, dynamic> toJson() => _$ChildActionToJson(this);

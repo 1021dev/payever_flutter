@@ -1440,7 +1440,7 @@ ImageStyles _$ImageStylesFromJson(Map<String, dynamic> json) {
     ..filterFontStyle = json['filterFontStyle'] as String ?? 'normal'
     ..filterTextDecoration = json['filterTextDecoration']
     ..width = (json['width'] as num)?.toDouble() ?? 0
-    ..imageFilter = json['imageFilter'] as String ?? 0;
+    ..imageFilter = json['imageFilter'];
 }
 
 Map<String, dynamic> _$ImageStylesToJson(ImageStyles instance) =>
@@ -2239,7 +2239,7 @@ Map<String, dynamic> _$CategoryDataToJson(CategoryData instance) =>
 ChildAction _$ChildActionFromJson(Map<String, dynamic> json) {
   return ChildAction()
     ..type = json['type'] as String
-    ..payload = json['payload'] as String;
+    ..payload = json['payload'];
 }
 
 Map<String, dynamic> _$ChildActionToJson(ChildAction instance) =>
