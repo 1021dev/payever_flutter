@@ -67,7 +67,6 @@ class _VideoViewState extends State<VideoView> {
     return Container(
       height: styles.height,
       width: styles.width,
-      color: colorConvert(styles.backgroundColor),
       margin: EdgeInsets.only(
           left: styles.getMarginLeft(sectionStyleSheet),
           right: styles.marginRight,
@@ -90,8 +89,6 @@ class _VideoViewState extends State<VideoView> {
       imageUrl: data.preview,
       imageBuilder: (context, imageProvider) => Container(
         decoration: BoxDecoration(
-          color: Colors.transparent,
-          borderRadius: BorderRadius.circular(4),
           image: DecorationImage(
             image: imageProvider,
             fit: BoxFit.contain,
@@ -106,7 +103,7 @@ class _VideoViewState extends State<VideoView> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(2),
           border: Border.all(color: Colors.grey, width: 0.5),
-          color: Color.fromRGBO(245, 245, 245, 1),
+          color: Color.fromRGBO(245, 245, 245, 0.3),
         ),
         padding: EdgeInsets.all(10),
         child: Column(
@@ -117,6 +114,7 @@ class _VideoViewState extends State<VideoView> {
                   'assets/images/no_video.svg',
                   width: double.infinity,
                   height: double.infinity,
+                  color: Colors.grey,
                 ),
               ),
             ),

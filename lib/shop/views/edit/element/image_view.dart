@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -73,8 +74,8 @@ class _ImageViewState extends State<ImageView> {
       imageUrl: url,
       imageBuilder: (context, imageProvider) => Container(
         decoration: BoxDecoration(
-          color: Colors.transparent,
-          borderRadius: BorderRadius.circular(4),
+//          color: Colors.transparent,
+                color: colorConvert(styles.backgroundColor),
           image: DecorationImage(
             image: imageProvider,
             fit: BoxFit.contain,
@@ -89,7 +90,7 @@ class _ImageViewState extends State<ImageView> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(2),
           border: Border.all(color: Colors.grey, width: 0.5),
-          color: Color.fromRGBO(245, 245, 245, 1),
+          color: Color.fromRGBO(245, 245, 245, 0.3),
         ),
         padding: EdgeInsets.all(10),
         child: Column(
@@ -131,12 +132,7 @@ class _ImageViewState extends State<ImageView> {
   }
 
   get borderRadius {
-    return BorderRadius.only(
-        topLeft: Radius.circular(0),
-        topRight: Radius.circular(0),
-        bottomLeft: Radius.circular(0),
-        bottomRight: Radius.circular(0)
-    );
+    return BorderRadius.circular(styles.getBorderRadius(styles.borderRadius));
   }
 
   get boxShadow {
@@ -148,13 +144,13 @@ class _ImageViewState extends State<ImageView> {
         offset: Offset.zero, // changes position of shadow
       )];
     }
-
+    double deg = styles.shadowAngle * pi / 180;
     return [
       BoxShadow(
         color: Colors.black.withOpacity(styles.shadowOpacity/100),
-        spreadRadius: 5,
+//        spreadRadius: 5,
         blurRadius: styles.shadowBlur,
-        offset: Offset(0, styles.shadowOffset), // changes position of shadow
+        offset: Offset(cos(deg) * styles.shadowOffset, -styles.shadowOffset * sin(deg)), // changes position of shadow
       ),
     ];
   }
