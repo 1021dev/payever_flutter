@@ -26,17 +26,18 @@ class _ImageViewState extends State<ImageView> {
 
   @override
   Widget build(BuildContext context) {
-    return _body();
-  }
 
-  Widget _body() {
     styles = styleSheet();
     if (styles == null && child.styles != null && child.styles.isNotEmpty) {
       styles = ImageStyles.fromJson(child.styles);
     }
+    if (styles == null || styles.display == 'none')
+      return Container();
 
-    if (styles == null || styles.display == 'none') return Container();
+    return _body();
+  }
 
+  Widget _body() {
     try {
       data = Data.fromJson(child.data);
     } catch (e) {}

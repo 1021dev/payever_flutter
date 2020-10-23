@@ -40,21 +40,21 @@ class _VideoViewState extends State<VideoView> {
   @override
   void dispose() {
     super.dispose();
-    if (data.controls && _controller != null) _controller.dispose();
+    if (data.controls != null && _controller != null) _controller.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return _body();
-  }
-
-  Widget _body() {
     styles = styleSheet();
     if (styles == null && child.styles != null && child.styles.isNotEmpty) {
       styles = ImageStyles.fromJson(child.styles);
     }
     if (styles == null || styles.display == 'none') return Container();
 
+    return _body();
+  }
+
+  Widget _body() {
     try {
       data = VideoData.fromJson(child.data);
     } catch (e) {}

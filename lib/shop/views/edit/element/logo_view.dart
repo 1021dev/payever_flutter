@@ -35,20 +35,19 @@ class _LogoViewState extends State<LogoView> {
   @override
   Widget build(BuildContext context) {
     globalStateModel = Provider.of<GlobalStateModel>(context, listen: true);
-
-    if (child.styles != null && child.styles.isNotEmpty) {
+    styles = styleSheet();
+    if (styles == null && child.styles != null && child.styles.isNotEmpty) {
       styles = ImageStyles.fromJson(child.styles);
-    } else {
-      styles = styleSheet();
     }
+
+    if (styles == null ||
+        styles.display == 'none')
+      return Container();
     return _body();
   }
 
   Widget _body() {
-    if (styles == null ||
-        styles.display == 'none' ||
-        (styleSheet() != null && styleSheet().display == 'none'))
-      return Container();
+
 //    if (isSelected) {
 //      RenderBox box = key.currentContext.findRenderObject();
 //      Offset position = box.localToGlobal(Offset.zero);

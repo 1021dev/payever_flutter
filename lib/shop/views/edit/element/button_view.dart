@@ -18,31 +18,24 @@ class ButtonView extends StatefulWidget {
 class _ButtonViewState extends State<ButtonView> {
   final Child child;
   final SectionStyleSheet sectionStyleSheet;
-
+  ButtonStyles styles;
   _ButtonViewState(this.child, this.sectionStyleSheet);
 
   @override
   Widget build(BuildContext context) {
+    styles = styleSheet();
+    if (styles == null && child.styles != null && child.styles.isNotEmpty) {
+      styles = ButtonStyles.fromJson(child.styles);
+    }
+
+    if (styles == null ||
+        styles.display == 'none')
+      return Container();
+
     return _body();
   }
 
   Widget _body() {
-    ButtonStyles styles;
-    if (child.styles != null && child.styles.isNotEmpty) {
-      styles = ButtonStyles.fromJson(child.styles);
-    } else {
-      styles = styleSheet();
-    }
-
-//    if (styleSheet() != null) {
-//      print(
-//          'Button Styles Sheets: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
-//    }
-    if (styles == null ||
-        styles.display == 'none' ||
-        (styleSheet() != null && styleSheet().display == 'none'))
-      return Container();
-
     return Container(
       width: styles.width,
       height: styles.height,
@@ -68,6 +61,8 @@ class _ButtonViewState extends State<ButtonView> {
 
   ButtonStyles styleSheet() {
     try {
+      //      print(
+//          'Button Styles Sheets: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
       return ButtonStyles.fromJson(
           widget.stylesheets[widget.deviceTypeId][child.id]);
     } catch (e) {
