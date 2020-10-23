@@ -71,10 +71,10 @@ class _TemplateViewState extends State<TemplateView> {
 
   SectionStyleSheet getSectionStyleSheet(String childId) {
     try {
-      print(
-          'Section StyleSheet: ${stylesheets[shopPage.stylesheetIds.mobile][childId]}');
-      return SectionStyleSheet.fromJson(
-          stylesheets[shopPage.stylesheetIds.mobile][childId]);
+      Map json = stylesheets[shopPage.stylesheetIds.mobile][childId];
+      if (json['display'] != 'none')
+        print('Section StyleSheet: $json');
+      return SectionStyleSheet.fromJson(json);
     } catch (e) {
       return null;
     }

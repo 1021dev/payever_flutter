@@ -74,11 +74,11 @@ class _ShopCartViewState extends State<ShopCartView> {
             bottom: styles.marginBottom),
         alignment: Alignment.center,
         child: Badge(
-          padding: EdgeInsets.all(10),
+          padding: EdgeInsets.all(styles.width/8),
           badgeColor: colorConvert(styles.badgeBackground),
           badgeContent: Text(
             '3',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: colorConvert(styles.badgeColor)),
+            style: TextStyle(fontSize: styles.width/3.5, fontWeight: FontWeight.w600, color: colorConvert(styles.badgeColor)),
           ),
           child: SvgPicture.asset(
             asset,
@@ -89,10 +89,13 @@ class _ShopCartViewState extends State<ShopCartView> {
         ));
   }
 
+  get badge {
+
+  }
   get decoration {
     return BoxDecoration(
       border: getBorder,
-      borderRadius: BorderRadius.circular(styles.getBorderRadius(styles.borderRadius)),
+      borderRadius: BorderRadius.circular(10/*styles.getBorderRadius(styles.borderRadius)*/),
       boxShadow: getBoxShadow,
     );
   }

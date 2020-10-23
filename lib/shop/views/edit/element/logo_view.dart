@@ -82,7 +82,6 @@ class _LogoViewState extends State<LogoView> {
           imageUrl: '${globalStateModel.activeShop.picture}',
           imageBuilder: (context, imageProvider) => Container(
             decoration: BoxDecoration(
-              color: Colors.transparent /*background.backgroundColor*/,
               image: DecorationImage(
                 image: imageProvider,
                 fit: BoxFit.contain,

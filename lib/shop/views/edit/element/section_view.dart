@@ -6,6 +6,7 @@ import 'package:payever/apis/api_service.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/element/logo_view.dart';
+import 'package:payever/shop/views/edit/element/menu_view.dart';
 import 'package:payever/shop/views/edit/element/shape_view.dart';
 import 'package:payever/shop/views/edit/element/shop_cart_view.dart';
 import 'package:payever/shop/views/edit/element/shop_product_category_view.dart';
@@ -111,6 +112,12 @@ class _SectionViewState extends State<SectionView> {
         case 'block':
           break;
         case 'menu':
+          widget = MenuView(
+            child: child,
+            stylesheets: stylesheets,
+            deviceTypeId: shopPage.stylesheetIds.mobile,
+            sectionStyleSheet: styleSheet,
+          );
           break;
         case 'shop-cart':
           widget = ShopCartView(

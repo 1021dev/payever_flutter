@@ -232,15 +232,18 @@ Color colorConvert(String color, {bool emptyColor = false}) {
   if (color == null)
     return Colors.white;
 
-  if (color == 'white')
+  if (color == 'white' || color == '#fff')
     return Colors.white;
 
+  if (color == '#000')
+    return Colors.black;
+
   color = color.replaceAll("#", "");
-  if (color.length < 6) {
-    while(color.length < 6) {
-      color = color + '0';
-    }
-  }
+//  if (color.length < 6) {
+//    while(color.length < 6) {
+//      color = color + '0';
+//    }
+//  }
 
   if (color.length == 6) {
     return Color(int.parse("0xFF"+color));
