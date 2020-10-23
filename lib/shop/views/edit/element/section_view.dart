@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/element/block_view.dart';
 import 'package:payever/shop/views/edit/element/logo_view.dart';
 import 'package:payever/shop/views/edit/element/menu_view.dart';
 import 'package:payever/shop/views/edit/element/shape_view.dart';
@@ -61,6 +62,7 @@ class _SectionViewState extends State<SectionView> {
   }
 
   Widget _section() {
+    print('Block View: ${child.id}');
     if (styleSheet == null) {
       return Container();
     }
@@ -111,6 +113,12 @@ class _SectionViewState extends State<SectionView> {
           );
           break;
         case 'block':
+          widget = BlockView(
+            child: child,
+            stylesheets: stylesheets,
+            deviceTypeId: shopPage.stylesheetIds.mobile,
+            sectionStyleSheet: styleSheet,
+          );
           break;
         case 'menu':
           widget = MenuView(

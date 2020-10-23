@@ -46,7 +46,7 @@ class _MenuViewState extends State<MenuView> {
           top: styles.getMarginTop(sectionStyleSheet),
           bottom: styles.marginBottom),
       alignment: Alignment.center,
-      child: Icon(Icons.menu, size: 24, color: Colors.black,),
+      child: Icon(Icons.menu, size: styles.width, color: Colors.black,),
     );
   }
 

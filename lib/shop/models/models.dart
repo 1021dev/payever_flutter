@@ -683,9 +683,17 @@ class BaseStyles {
 @JsonSerializable()
 class SectionStyleSheet extends BaseStyles {
   SectionStyleSheet();
+  // String or dynamic
+  @JsonKey(name: 'width')
+  dynamic width0;
 
-  @JsonKey(name: 'width', defaultValue: 0)
-  double width;
+  get getWidth {
+    if (width0 == '100%') return double.infinity;
+    if (width0 is num) {
+      return (width0 as num).toDouble();
+    }
+    return 0;
+  }
 
   @JsonKey(name: 'gridTemplateRows', defaultValue: '0 0 0')
   String gridTemplateRows;
@@ -709,9 +717,9 @@ class TextStyles extends BaseStyles {
 
   // Size String('100%') or double
   @JsonKey(name: 'width', defaultValue: 0)
-  dynamic width;
+  dynamic width0;
   double textWidth() {
-    return (width is num) ? (width as num).toDouble() : double.infinity;
+    return (width0 is num) ? (width0 as num).toDouble() : double.infinity;
   }
 
   factory TextStyles.fromJson(Map<String, dynamic> json) => _$TextStylesFromJson(json);
@@ -724,6 +732,8 @@ class ButtonStyles extends BaseStyles{
 
   @JsonKey(name: 'width', defaultValue: 0)
   double width;
+  @JsonKey(name: 'color', defaultValue: '#FFFFFF')
+  String color;
 
   double buttonBorderRadius() {
     return getBorderRadius(borderRadius);

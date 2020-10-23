@@ -620,7 +620,7 @@ SectionStyleSheet _$SectionStyleSheetFromJson(Map<String, dynamic> json) {
     ..filterFontWeight = json['filterFontWeight'] as String ?? 'normal'
     ..filterFontStyle = json['filterFontStyle'] as String ?? 'normal'
     ..filterTextDecoration = json['filterTextDecoration']
-    ..width = (json['width'] as num)?.toDouble() ?? 0
+    ..width0 = json['width']
     ..gridTemplateRows = json['gridTemplateRows'] as String ?? '0 0 0'
     ..gridTemplateColumns = json['gridTemplateColumns'] as String ?? '0 0 0'
     ..zIndex = json['zIndex'];
@@ -693,7 +693,7 @@ Map<String, dynamic> _$SectionStyleSheetToJson(SectionStyleSheet instance) =>
       'filterFontWeight': instance.filterFontWeight,
       'filterFontStyle': instance.filterFontStyle,
       'filterTextDecoration': instance.filterTextDecoration,
-      'width': instance.width,
+      'width': instance.width0,
       'gridTemplateRows': instance.gridTemplateRows,
       'gridTemplateColumns': instance.gridTemplateColumns,
       'zIndex': instance.zIndex,
@@ -771,7 +771,7 @@ TextStyles _$TextStylesFromJson(Map<String, dynamic> json) {
     ..filterFontWeight = json['filterFontWeight'] as String ?? 'normal'
     ..filterFontStyle = json['filterFontStyle'] as String ?? 'normal'
     ..filterTextDecoration = json['filterTextDecoration']
-    ..width = json['width'] ?? 0;
+    ..width0 = json['width'] ?? 0;
 }
 
 Map<String, dynamic> _$TextStylesToJson(TextStyles instance) =>
@@ -841,7 +841,7 @@ Map<String, dynamic> _$TextStylesToJson(TextStyles instance) =>
       'filterFontWeight': instance.filterFontWeight,
       'filterFontStyle': instance.filterFontStyle,
       'filterTextDecoration': instance.filterTextDecoration,
-      'width': instance.width,
+      'width': instance.width0,
     };
 
 ButtonStyles _$ButtonStylesFromJson(Map<String, dynamic> json) {
@@ -881,7 +881,6 @@ ButtonStyles _$ButtonStylesFromJson(Map<String, dynamic> json) {
     ..marginTop = (json['marginTop'] as num)?.toDouble() ?? 0
     ..top = (json['top'] as num)?.toDouble() ?? 0
     ..left = (json['left'] as num)?.toDouble() ?? 0
-    ..color = json['color'] as String ?? '#000000'
     ..fontSize = json['fontSize'] ?? 15
     ..fontStyle = json['fontStyle'] as String ?? 'normal'
     ..fontWeight = json['fontWeight'] ?? 400
@@ -916,7 +915,8 @@ ButtonStyles _$ButtonStylesFromJson(Map<String, dynamic> json) {
     ..filterFontWeight = json['filterFontWeight'] as String ?? 'normal'
     ..filterFontStyle = json['filterFontStyle'] as String ?? 'normal'
     ..filterTextDecoration = json['filterTextDecoration']
-    ..width = (json['width'] as num)?.toDouble() ?? 0;
+    ..width = (json['width'] as num)?.toDouble() ?? 0
+    ..color = json['color'] as String ?? '#FFFFFF';
 }
 
 Map<String, dynamic> _$ButtonStylesToJson(ButtonStyles instance) =>
@@ -956,7 +956,6 @@ Map<String, dynamic> _$ButtonStylesToJson(ButtonStyles instance) =>
       'marginTop': instance.marginTop,
       'top': instance.top,
       'left': instance.left,
-      'color': instance.color,
       'fontSize': instance.fontSize,
       'fontStyle': instance.fontStyle,
       'fontWeight': instance.fontWeight,
@@ -987,6 +986,7 @@ Map<String, dynamic> _$ButtonStylesToJson(ButtonStyles instance) =>
       'filterFontStyle': instance.filterFontStyle,
       'filterTextDecoration': instance.filterTextDecoration,
       'width': instance.width,
+      'color': instance.color,
     };
 
 ShopCartStyles _$ShopCartStylesFromJson(Map<String, dynamic> json) {
