@@ -432,6 +432,7 @@ BaseStyles _$BaseStylesFromJson(Map<String, dynamic> json) {
     ..shadowOffset = (json['shadowOffset'] as num)?.toDouble() ?? 0
     ..shadowOpacity = (json['shadowOpacity'] as num)?.toDouble() ?? 0
     ..filter = json['filter'] as String ?? ''
+    ..shadow = json['shadow'] as String
     ..gridColumn = json['gridColumn'] as String ?? '1 / span 1'
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea']
@@ -454,20 +455,20 @@ BaseStyles _$BaseStylesFromJson(Map<String, dynamic> json) {
     ..fontFamily = json['fontFamily'] as String ??
         'Helvetica Neue,Helvetica,Arial,sans-serif'
     ..textAlign = json['textAlign'] as String ?? 'center'
-    ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 13
+    ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
     ..titleColor = json['titleColor'] as String ?? '#000000'
     ..titleFontFamily = json['titleFontFamily'] as String ?? 'Roboto'
     ..titleFontWeight = json['titleFontWeight'] as String ?? 'bold'
     ..titleFontStyle = json['titleFontStyle'] as String ?? 'normal'
     ..titleTextDecoration = json['titleTextDecoration']
-    ..priceFontSize = (json['priceFontSize'] as num)?.toDouble() ?? 13
+    ..priceFontSize = (json['priceFontSize'] as num)?.toDouble() ?? 12
     ..priceColor = json['priceColor'] as String ?? '#a5a5a5'
     ..priceFontFamily = json['priceFontFamily'] as String ?? 'Roboto'
     ..priceFontWeight = json['priceFontWeight'] as String ?? 'normal'
     ..priceFontStyle = json['priceFontStyle'] as String ?? 'normal'
     ..priceTextDecoration = json['priceTextDecoration']
     ..categoryTitleFontSize =
-        (json['categoryTitleFontSize'] as num)?.toDouble() ?? 13
+        (json['categoryTitleFontSize'] as num)?.toDouble() ?? 40
     ..categoryTitleColor = json['categoryTitleColor'] as String ?? '#000000'
     ..categoryTitleFontFamily =
         json['categoryTitleFontFamily'] as String ?? 'Roboto'
@@ -511,6 +512,7 @@ Map<String, dynamic> _$BaseStylesToJson(BaseStyles instance) =>
       'shadowOffset': instance.shadowOffset,
       'shadowOpacity': instance.shadowOpacity,
       'filter': instance.filter,
+      'shadow': instance.shadow,
       'gridColumn': instance.gridColumn,
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
@@ -585,6 +587,7 @@ SectionStyleSheet _$SectionStyleSheetFromJson(Map<String, dynamic> json) {
     ..shadowOffset = (json['shadowOffset'] as num)?.toDouble() ?? 0
     ..shadowOpacity = (json['shadowOpacity'] as num)?.toDouble() ?? 0
     ..filter = json['filter'] as String ?? ''
+    ..shadow = json['shadow'] as String
     ..gridColumn = json['gridColumn'] as String ?? '1 / span 1'
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea']
@@ -607,20 +610,20 @@ SectionStyleSheet _$SectionStyleSheetFromJson(Map<String, dynamic> json) {
     ..fontFamily = json['fontFamily'] as String ??
         'Helvetica Neue,Helvetica,Arial,sans-serif'
     ..textAlign = json['textAlign'] as String ?? 'center'
-    ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 13
+    ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
     ..titleColor = json['titleColor'] as String ?? '#000000'
     ..titleFontFamily = json['titleFontFamily'] as String ?? 'Roboto'
     ..titleFontWeight = json['titleFontWeight'] as String ?? 'bold'
     ..titleFontStyle = json['titleFontStyle'] as String ?? 'normal'
     ..titleTextDecoration = json['titleTextDecoration']
-    ..priceFontSize = (json['priceFontSize'] as num)?.toDouble() ?? 13
+    ..priceFontSize = (json['priceFontSize'] as num)?.toDouble() ?? 12
     ..priceColor = json['priceColor'] as String ?? '#a5a5a5'
     ..priceFontFamily = json['priceFontFamily'] as String ?? 'Roboto'
     ..priceFontWeight = json['priceFontWeight'] as String ?? 'normal'
     ..priceFontStyle = json['priceFontStyle'] as String ?? 'normal'
     ..priceTextDecoration = json['priceTextDecoration']
     ..categoryTitleFontSize =
-        (json['categoryTitleFontSize'] as num)?.toDouble() ?? 13
+        (json['categoryTitleFontSize'] as num)?.toDouble() ?? 40
     ..categoryTitleColor = json['categoryTitleColor'] as String ?? '#000000'
     ..categoryTitleFontFamily =
         json['categoryTitleFontFamily'] as String ?? 'Roboto'
@@ -668,6 +671,7 @@ Map<String, dynamic> _$SectionStyleSheetToJson(SectionStyleSheet instance) =>
       'shadowOffset': instance.shadowOffset,
       'shadowOpacity': instance.shadowOpacity,
       'filter': instance.filter,
+      'shadow': instance.shadow,
       'gridColumn': instance.gridColumn,
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
@@ -746,6 +750,7 @@ TextStyles _$TextStylesFromJson(Map<String, dynamic> json) {
     ..shadowOffset = (json['shadowOffset'] as num)?.toDouble() ?? 0
     ..shadowOpacity = (json['shadowOpacity'] as num)?.toDouble() ?? 0
     ..filter = json['filter'] as String ?? ''
+    ..shadow = json['shadow'] as String
     ..gridColumn = json['gridColumn'] as String ?? '1 / span 1'
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea']
@@ -768,20 +773,20 @@ TextStyles _$TextStylesFromJson(Map<String, dynamic> json) {
     ..fontFamily = json['fontFamily'] as String ??
         'Helvetica Neue,Helvetica,Arial,sans-serif'
     ..textAlign = json['textAlign'] as String ?? 'center'
-    ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 13
+    ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
     ..titleColor = json['titleColor'] as String ?? '#000000'
     ..titleFontFamily = json['titleFontFamily'] as String ?? 'Roboto'
     ..titleFontWeight = json['titleFontWeight'] as String ?? 'bold'
     ..titleFontStyle = json['titleFontStyle'] as String ?? 'normal'
     ..titleTextDecoration = json['titleTextDecoration']
-    ..priceFontSize = (json['priceFontSize'] as num)?.toDouble() ?? 13
+    ..priceFontSize = (json['priceFontSize'] as num)?.toDouble() ?? 12
     ..priceColor = json['priceColor'] as String ?? '#a5a5a5'
     ..priceFontFamily = json['priceFontFamily'] as String ?? 'Roboto'
     ..priceFontWeight = json['priceFontWeight'] as String ?? 'normal'
     ..priceFontStyle = json['priceFontStyle'] as String ?? 'normal'
     ..priceTextDecoration = json['priceTextDecoration']
     ..categoryTitleFontSize =
-        (json['categoryTitleFontSize'] as num)?.toDouble() ?? 13
+        (json['categoryTitleFontSize'] as num)?.toDouble() ?? 40
     ..categoryTitleColor = json['categoryTitleColor'] as String ?? '#000000'
     ..categoryTitleFontFamily =
         json['categoryTitleFontFamily'] as String ?? 'Roboto'
@@ -826,6 +831,7 @@ Map<String, dynamic> _$TextStylesToJson(TextStyles instance) =>
       'shadowOffset': instance.shadowOffset,
       'shadowOpacity': instance.shadowOpacity,
       'filter': instance.filter,
+      'shadow': instance.shadow,
       'gridColumn': instance.gridColumn,
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
@@ -901,6 +907,7 @@ ButtonStyles _$ButtonStylesFromJson(Map<String, dynamic> json) {
     ..shadowOffset = (json['shadowOffset'] as num)?.toDouble() ?? 0
     ..shadowOpacity = (json['shadowOpacity'] as num)?.toDouble() ?? 0
     ..filter = json['filter'] as String ?? ''
+    ..shadow = json['shadow'] as String
     ..gridColumn = json['gridColumn'] as String ?? '1 / span 1'
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea']
@@ -923,20 +930,20 @@ ButtonStyles _$ButtonStylesFromJson(Map<String, dynamic> json) {
     ..fontFamily = json['fontFamily'] as String ??
         'Helvetica Neue,Helvetica,Arial,sans-serif'
     ..textAlign = json['textAlign'] as String ?? 'center'
-    ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 13
+    ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
     ..titleColor = json['titleColor'] as String ?? '#000000'
     ..titleFontFamily = json['titleFontFamily'] as String ?? 'Roboto'
     ..titleFontWeight = json['titleFontWeight'] as String ?? 'bold'
     ..titleFontStyle = json['titleFontStyle'] as String ?? 'normal'
     ..titleTextDecoration = json['titleTextDecoration']
-    ..priceFontSize = (json['priceFontSize'] as num)?.toDouble() ?? 13
+    ..priceFontSize = (json['priceFontSize'] as num)?.toDouble() ?? 12
     ..priceColor = json['priceColor'] as String ?? '#a5a5a5'
     ..priceFontFamily = json['priceFontFamily'] as String ?? 'Roboto'
     ..priceFontWeight = json['priceFontWeight'] as String ?? 'normal'
     ..priceFontStyle = json['priceFontStyle'] as String ?? 'normal'
     ..priceTextDecoration = json['priceTextDecoration']
     ..categoryTitleFontSize =
-        (json['categoryTitleFontSize'] as num)?.toDouble() ?? 13
+        (json['categoryTitleFontSize'] as num)?.toDouble() ?? 40
     ..categoryTitleColor = json['categoryTitleColor'] as String ?? '#000000'
     ..categoryTitleFontFamily =
         json['categoryTitleFontFamily'] as String ?? 'Roboto'
@@ -981,6 +988,7 @@ Map<String, dynamic> _$ButtonStylesToJson(ButtonStyles instance) =>
       'shadowOffset': instance.shadowOffset,
       'shadowOpacity': instance.shadowOpacity,
       'filter': instance.filter,
+      'shadow': instance.shadow,
       'gridColumn': instance.gridColumn,
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
@@ -1056,6 +1064,7 @@ ShopCartStyles _$ShopCartStylesFromJson(Map<String, dynamic> json) {
     ..shadowOffset = (json['shadowOffset'] as num)?.toDouble() ?? 0
     ..shadowOpacity = (json['shadowOpacity'] as num)?.toDouble() ?? 0
     ..filter = json['filter'] as String ?? ''
+    ..shadow = json['shadow'] as String
     ..gridColumn = json['gridColumn'] as String ?? '1 / span 1'
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea']
@@ -1078,20 +1087,20 @@ ShopCartStyles _$ShopCartStylesFromJson(Map<String, dynamic> json) {
     ..fontFamily = json['fontFamily'] as String ??
         'Helvetica Neue,Helvetica,Arial,sans-serif'
     ..textAlign = json['textAlign'] as String ?? 'center'
-    ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 13
+    ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
     ..titleColor = json['titleColor'] as String ?? '#000000'
     ..titleFontFamily = json['titleFontFamily'] as String ?? 'Roboto'
     ..titleFontWeight = json['titleFontWeight'] as String ?? 'bold'
     ..titleFontStyle = json['titleFontStyle'] as String ?? 'normal'
     ..titleTextDecoration = json['titleTextDecoration']
-    ..priceFontSize = (json['priceFontSize'] as num)?.toDouble() ?? 13
+    ..priceFontSize = (json['priceFontSize'] as num)?.toDouble() ?? 12
     ..priceColor = json['priceColor'] as String ?? '#a5a5a5'
     ..priceFontFamily = json['priceFontFamily'] as String ?? 'Roboto'
     ..priceFontWeight = json['priceFontWeight'] as String ?? 'normal'
     ..priceFontStyle = json['priceFontStyle'] as String ?? 'normal'
     ..priceTextDecoration = json['priceTextDecoration']
     ..categoryTitleFontSize =
-        (json['categoryTitleFontSize'] as num)?.toDouble() ?? 13
+        (json['categoryTitleFontSize'] as num)?.toDouble() ?? 40
     ..categoryTitleColor = json['categoryTitleColor'] as String ?? '#000000'
     ..categoryTitleFontFamily =
         json['categoryTitleFontFamily'] as String ?? 'Roboto'
@@ -1141,6 +1150,7 @@ Map<String, dynamic> _$ShopCartStylesToJson(ShopCartStyles instance) =>
       'shadowOffset': instance.shadowOffset,
       'shadowOpacity': instance.shadowOpacity,
       'filter': instance.filter,
+      'shadow': instance.shadow,
       'gridColumn': instance.gridColumn,
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
@@ -1221,6 +1231,7 @@ ShapeStyles _$ShapeStylesFromJson(Map<String, dynamic> json) {
     ..shadowOffset = (json['shadowOffset'] as num)?.toDouble() ?? 0
     ..shadowOpacity = (json['shadowOpacity'] as num)?.toDouble() ?? 0
     ..filter = json['filter'] as String ?? ''
+    ..shadow = json['shadow'] as String
     ..gridColumn = json['gridColumn'] as String ?? '1 / span 1'
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea']
@@ -1243,20 +1254,20 @@ ShapeStyles _$ShapeStylesFromJson(Map<String, dynamic> json) {
     ..fontFamily = json['fontFamily'] as String ??
         'Helvetica Neue,Helvetica,Arial,sans-serif'
     ..textAlign = json['textAlign'] as String ?? 'center'
-    ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 13
+    ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
     ..titleColor = json['titleColor'] as String ?? '#000000'
     ..titleFontFamily = json['titleFontFamily'] as String ?? 'Roboto'
     ..titleFontWeight = json['titleFontWeight'] as String ?? 'bold'
     ..titleFontStyle = json['titleFontStyle'] as String ?? 'normal'
     ..titleTextDecoration = json['titleTextDecoration']
-    ..priceFontSize = (json['priceFontSize'] as num)?.toDouble() ?? 13
+    ..priceFontSize = (json['priceFontSize'] as num)?.toDouble() ?? 12
     ..priceColor = json['priceColor'] as String ?? '#a5a5a5'
     ..priceFontFamily = json['priceFontFamily'] as String ?? 'Roboto'
     ..priceFontWeight = json['priceFontWeight'] as String ?? 'normal'
     ..priceFontStyle = json['priceFontStyle'] as String ?? 'normal'
     ..priceTextDecoration = json['priceTextDecoration']
     ..categoryTitleFontSize =
-        (json['categoryTitleFontSize'] as num)?.toDouble() ?? 13
+        (json['categoryTitleFontSize'] as num)?.toDouble() ?? 40
     ..categoryTitleColor = json['categoryTitleColor'] as String ?? '#000000'
     ..categoryTitleFontFamily =
         json['categoryTitleFontFamily'] as String ?? 'Roboto'
@@ -1301,6 +1312,7 @@ Map<String, dynamic> _$ShapeStylesToJson(ShapeStyles instance) =>
       'shadowOffset': instance.shadowOffset,
       'shadowOpacity': instance.shadowOpacity,
       'filter': instance.filter,
+      'shadow': instance.shadow,
       'gridColumn': instance.gridColumn,
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
@@ -1376,6 +1388,7 @@ ImageStyles _$ImageStylesFromJson(Map<String, dynamic> json) {
     ..shadowOffset = (json['shadowOffset'] as num)?.toDouble() ?? 0
     ..shadowOpacity = (json['shadowOpacity'] as num)?.toDouble() ?? 0
     ..filter = json['filter'] as String ?? ''
+    ..shadow = json['shadow'] as String
     ..gridColumn = json['gridColumn'] as String ?? '1 / span 1'
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea']
@@ -1398,20 +1411,20 @@ ImageStyles _$ImageStylesFromJson(Map<String, dynamic> json) {
     ..fontFamily = json['fontFamily'] as String ??
         'Helvetica Neue,Helvetica,Arial,sans-serif'
     ..textAlign = json['textAlign'] as String ?? 'center'
-    ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 13
+    ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
     ..titleColor = json['titleColor'] as String ?? '#000000'
     ..titleFontFamily = json['titleFontFamily'] as String ?? 'Roboto'
     ..titleFontWeight = json['titleFontWeight'] as String ?? 'bold'
     ..titleFontStyle = json['titleFontStyle'] as String ?? 'normal'
     ..titleTextDecoration = json['titleTextDecoration']
-    ..priceFontSize = (json['priceFontSize'] as num)?.toDouble() ?? 13
+    ..priceFontSize = (json['priceFontSize'] as num)?.toDouble() ?? 12
     ..priceColor = json['priceColor'] as String ?? '#a5a5a5'
     ..priceFontFamily = json['priceFontFamily'] as String ?? 'Roboto'
     ..priceFontWeight = json['priceFontWeight'] as String ?? 'normal'
     ..priceFontStyle = json['priceFontStyle'] as String ?? 'normal'
     ..priceTextDecoration = json['priceTextDecoration']
     ..categoryTitleFontSize =
-        (json['categoryTitleFontSize'] as num)?.toDouble() ?? 13
+        (json['categoryTitleFontSize'] as num)?.toDouble() ?? 40
     ..categoryTitleColor = json['categoryTitleColor'] as String ?? '#000000'
     ..categoryTitleFontFamily =
         json['categoryTitleFontFamily'] as String ?? 'Roboto'
@@ -1426,7 +1439,8 @@ ImageStyles _$ImageStylesFromJson(Map<String, dynamic> json) {
     ..filterFontWeight = json['filterFontWeight'] as String ?? 'normal'
     ..filterFontStyle = json['filterFontStyle'] as String ?? 'normal'
     ..filterTextDecoration = json['filterTextDecoration']
-    ..width = (json['width'] as num)?.toDouble() ?? 0;
+    ..width = (json['width'] as num)?.toDouble() ?? 0
+    ..imageFilter = json['imageFilter'] as String ?? 0;
 }
 
 Map<String, dynamic> _$ImageStylesToJson(ImageStyles instance) =>
@@ -1456,6 +1470,7 @@ Map<String, dynamic> _$ImageStylesToJson(ImageStyles instance) =>
       'shadowOffset': instance.shadowOffset,
       'shadowOpacity': instance.shadowOpacity,
       'filter': instance.filter,
+      'shadow': instance.shadow,
       'gridColumn': instance.gridColumn,
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
@@ -1502,6 +1517,7 @@ Map<String, dynamic> _$ImageStylesToJson(ImageStyles instance) =>
       'filterFontStyle': instance.filterFontStyle,
       'filterTextDecoration': instance.filterTextDecoration,
       'width': instance.width,
+      'imageFilter': instance.imageFilter,
     };
 
 SocialIconStyles _$SocialIconStylesFromJson(Map<String, dynamic> json) {
@@ -1531,6 +1547,7 @@ SocialIconStyles _$SocialIconStylesFromJson(Map<String, dynamic> json) {
     ..shadowOffset = (json['shadowOffset'] as num)?.toDouble() ?? 0
     ..shadowOpacity = (json['shadowOpacity'] as num)?.toDouble() ?? 0
     ..filter = json['filter'] as String ?? ''
+    ..shadow = json['shadow'] as String
     ..gridColumn = json['gridColumn'] as String ?? '1 / span 1'
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea']
@@ -1553,20 +1570,20 @@ SocialIconStyles _$SocialIconStylesFromJson(Map<String, dynamic> json) {
     ..fontFamily = json['fontFamily'] as String ??
         'Helvetica Neue,Helvetica,Arial,sans-serif'
     ..textAlign = json['textAlign'] as String ?? 'center'
-    ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 13
+    ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
     ..titleColor = json['titleColor'] as String ?? '#000000'
     ..titleFontFamily = json['titleFontFamily'] as String ?? 'Roboto'
     ..titleFontWeight = json['titleFontWeight'] as String ?? 'bold'
     ..titleFontStyle = json['titleFontStyle'] as String ?? 'normal'
     ..titleTextDecoration = json['titleTextDecoration']
-    ..priceFontSize = (json['priceFontSize'] as num)?.toDouble() ?? 13
+    ..priceFontSize = (json['priceFontSize'] as num)?.toDouble() ?? 12
     ..priceColor = json['priceColor'] as String ?? '#a5a5a5'
     ..priceFontFamily = json['priceFontFamily'] as String ?? 'Roboto'
     ..priceFontWeight = json['priceFontWeight'] as String ?? 'normal'
     ..priceFontStyle = json['priceFontStyle'] as String ?? 'normal'
     ..priceTextDecoration = json['priceTextDecoration']
     ..categoryTitleFontSize =
-        (json['categoryTitleFontSize'] as num)?.toDouble() ?? 13
+        (json['categoryTitleFontSize'] as num)?.toDouble() ?? 40
     ..categoryTitleColor = json['categoryTitleColor'] as String ?? '#000000'
     ..categoryTitleFontFamily =
         json['categoryTitleFontFamily'] as String ?? 'Roboto'
@@ -1611,6 +1628,7 @@ Map<String, dynamic> _$SocialIconStylesToJson(SocialIconStyles instance) =>
       'shadowOffset': instance.shadowOffset,
       'shadowOpacity': instance.shadowOpacity,
       'filter': instance.filter,
+      'shadow': instance.shadow,
       'gridColumn': instance.gridColumn,
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
@@ -1686,6 +1704,7 @@ ShopProductsStyles _$ShopProductsStylesFromJson(Map<String, dynamic> json) {
     ..shadowOffset = (json['shadowOffset'] as num)?.toDouble() ?? 0
     ..shadowOpacity = (json['shadowOpacity'] as num)?.toDouble() ?? 0
     ..filter = json['filter'] as String ?? ''
+    ..shadow = json['shadow'] as String
     ..gridColumn = json['gridColumn'] as String ?? '1 / span 1'
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea']
@@ -1708,20 +1727,20 @@ ShopProductsStyles _$ShopProductsStylesFromJson(Map<String, dynamic> json) {
     ..fontFamily = json['fontFamily'] as String ??
         'Helvetica Neue,Helvetica,Arial,sans-serif'
     ..textAlign = json['textAlign'] as String ?? 'center'
-    ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 13
+    ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
     ..titleColor = json['titleColor'] as String ?? '#000000'
     ..titleFontFamily = json['titleFontFamily'] as String ?? 'Roboto'
     ..titleFontWeight = json['titleFontWeight'] as String ?? 'bold'
     ..titleFontStyle = json['titleFontStyle'] as String ?? 'normal'
     ..titleTextDecoration = json['titleTextDecoration']
-    ..priceFontSize = (json['priceFontSize'] as num)?.toDouble() ?? 13
+    ..priceFontSize = (json['priceFontSize'] as num)?.toDouble() ?? 12
     ..priceColor = json['priceColor'] as String ?? '#a5a5a5'
     ..priceFontFamily = json['priceFontFamily'] as String ?? 'Roboto'
     ..priceFontWeight = json['priceFontWeight'] as String ?? 'normal'
     ..priceFontStyle = json['priceFontStyle'] as String ?? 'normal'
     ..priceTextDecoration = json['priceTextDecoration']
     ..categoryTitleFontSize =
-        (json['categoryTitleFontSize'] as num)?.toDouble() ?? 13
+        (json['categoryTitleFontSize'] as num)?.toDouble() ?? 40
     ..categoryTitleColor = json['categoryTitleColor'] as String ?? '#000000'
     ..categoryTitleFontFamily =
         json['categoryTitleFontFamily'] as String ?? 'Roboto'
@@ -1770,6 +1789,7 @@ Map<String, dynamic> _$ShopProductsStylesToJson(ShopProductsStyles instance) =>
       'shadowOffset': instance.shadowOffset,
       'shadowOpacity': instance.shadowOpacity,
       'filter': instance.filter,
+      'shadow': instance.shadow,
       'gridColumn': instance.gridColumn,
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
@@ -1850,6 +1870,7 @@ ShopProductDetailStyles _$ShopProductDetailStylesFromJson(
     ..shadowOffset = (json['shadowOffset'] as num)?.toDouble() ?? 0
     ..shadowOpacity = (json['shadowOpacity'] as num)?.toDouble() ?? 0
     ..filter = json['filter'] as String ?? ''
+    ..shadow = json['shadow'] as String
     ..gridColumn = json['gridColumn'] as String ?? '1 / span 1'
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea']
@@ -1872,20 +1893,20 @@ ShopProductDetailStyles _$ShopProductDetailStylesFromJson(
     ..fontFamily = json['fontFamily'] as String ??
         'Helvetica Neue,Helvetica,Arial,sans-serif'
     ..textAlign = json['textAlign'] as String ?? 'center'
-    ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 13
+    ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
     ..titleColor = json['titleColor'] as String ?? '#000000'
     ..titleFontFamily = json['titleFontFamily'] as String ?? 'Roboto'
     ..titleFontWeight = json['titleFontWeight'] as String ?? 'bold'
     ..titleFontStyle = json['titleFontStyle'] as String ?? 'normal'
     ..titleTextDecoration = json['titleTextDecoration']
-    ..priceFontSize = (json['priceFontSize'] as num)?.toDouble() ?? 13
+    ..priceFontSize = (json['priceFontSize'] as num)?.toDouble() ?? 12
     ..priceColor = json['priceColor'] as String ?? '#a5a5a5'
     ..priceFontFamily = json['priceFontFamily'] as String ?? 'Roboto'
     ..priceFontWeight = json['priceFontWeight'] as String ?? 'normal'
     ..priceFontStyle = json['priceFontStyle'] as String ?? 'normal'
     ..priceTextDecoration = json['priceTextDecoration']
     ..categoryTitleFontSize =
-        (json['categoryTitleFontSize'] as num)?.toDouble() ?? 13
+        (json['categoryTitleFontSize'] as num)?.toDouble() ?? 40
     ..categoryTitleColor = json['categoryTitleColor'] as String ?? '#000000'
     ..categoryTitleFontFamily =
         json['categoryTitleFontFamily'] as String ?? 'Roboto'
@@ -1936,6 +1957,7 @@ Map<String, dynamic> _$ShopProductDetailStylesToJson(
       'shadowOffset': instance.shadowOffset,
       'shadowOpacity': instance.shadowOpacity,
       'filter': instance.filter,
+      'shadow': instance.shadow,
       'gridColumn': instance.gridColumn,
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
@@ -2017,6 +2039,7 @@ ShopProductCategoryStyles _$ShopProductCategoryStylesFromJson(
     ..shadowOffset = (json['shadowOffset'] as num)?.toDouble() ?? 0
     ..shadowOpacity = (json['shadowOpacity'] as num)?.toDouble() ?? 0
     ..filter = json['filter'] as String ?? ''
+    ..shadow = json['shadow'] as String
     ..gridColumn = json['gridColumn'] as String ?? '1 / span 1'
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea']
@@ -2039,20 +2062,20 @@ ShopProductCategoryStyles _$ShopProductCategoryStylesFromJson(
     ..fontFamily = json['fontFamily'] as String ??
         'Helvetica Neue,Helvetica,Arial,sans-serif'
     ..textAlign = json['textAlign'] as String ?? 'center'
-    ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 13
+    ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
     ..titleColor = json['titleColor'] as String ?? '#000000'
     ..titleFontFamily = json['titleFontFamily'] as String ?? 'Roboto'
     ..titleFontWeight = json['titleFontWeight'] as String ?? 'bold'
     ..titleFontStyle = json['titleFontStyle'] as String ?? 'normal'
     ..titleTextDecoration = json['titleTextDecoration']
-    ..priceFontSize = (json['priceFontSize'] as num)?.toDouble() ?? 13
+    ..priceFontSize = (json['priceFontSize'] as num)?.toDouble() ?? 12
     ..priceColor = json['priceColor'] as String ?? '#a5a5a5'
     ..priceFontFamily = json['priceFontFamily'] as String ?? 'Roboto'
     ..priceFontWeight = json['priceFontWeight'] as String ?? 'normal'
     ..priceFontStyle = json['priceFontStyle'] as String ?? 'normal'
     ..priceTextDecoration = json['priceTextDecoration']
     ..categoryTitleFontSize =
-        (json['categoryTitleFontSize'] as num)?.toDouble() ?? 13
+        (json['categoryTitleFontSize'] as num)?.toDouble() ?? 40
     ..categoryTitleColor = json['categoryTitleColor'] as String ?? '#000000'
     ..categoryTitleFontFamily =
         json['categoryTitleFontFamily'] as String ?? 'Roboto'
@@ -2099,6 +2122,7 @@ Map<String, dynamic> _$ShopProductCategoryStylesToJson(
       'shadowOffset': instance.shadowOffset,
       'shadowOpacity': instance.shadowOpacity,
       'filter': instance.filter,
+      'shadow': instance.shadow,
       'gridColumn': instance.gridColumn,
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,

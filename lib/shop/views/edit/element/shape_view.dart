@@ -52,22 +52,22 @@ class _ShapeViewState extends State<ShapeView> {
   }
 
   Widget circleShape() {
-    return Container(
-      width: styles.width,
-      height: styles.height,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.elliptical(styles.width, styles.height)),
-//        color: colorConvert(styles.backgroundColor),
+    return Opacity(
+      opacity: styles.opacity,
+      child: Container(
+        width: styles.width,
+        height: styles.height,
+        decoration: styles.decoration,
+        margin: EdgeInsets.only(
+            left: styles.getMarginLeft(sectionStyleSheet),
+            right: styles.marginRight,
+            top: styles.getMarginTop(sectionStyleSheet),
+            bottom: styles.marginBottom),
+        alignment: Alignment.center,
+        child: ClipRRect(
+            borderRadius: BorderRadius.all(Radius.elliptical(styles.width, styles.height)),
+            child: BackgroundView(styles: styles,)),
       ),
-      margin: EdgeInsets.only(
-          left: styles.getMarginLeft(sectionStyleSheet),
-          right: styles.marginRight,
-          top: styles.getMarginTop(sectionStyleSheet),
-          bottom: styles.marginBottom),
-      alignment: Alignment.center,
-      child: ClipRRect(
-          borderRadius: BorderRadius.all(Radius.elliptical(styles.width, styles.height)),
-          child: BackgroundView(styles: styles,)),
     );
   }
 
@@ -113,7 +113,7 @@ class _ShapeViewState extends State<ShapeView> {
 
   ShapeStyles styleSheet() {
     try {
-//      print('Shape Styles: ${ widget.stylesheets[widget.deviceTypeId][child.id]}');
+      print('Shape Styles: ${ widget.stylesheets[widget.deviceTypeId][child.id]}');
       return ShapeStyles.fromJson(
           widget.stylesheets[widget.deviceTypeId][child.id]);
     } catch (e) {

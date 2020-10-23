@@ -411,6 +411,8 @@ class BaseStyles {
   double shadowOpacity;
   @JsonKey(name: 'filter', defaultValue: '')
   String filter;//drop-shadow(8.000000000000002pt 13.856406460551018pt 5pt rgba(26,77,124,0.47))
+  @JsonKey(name: 'shadow')
+  String shadow; //drop-shadow(7.071067811865474pt 7.071067811865477pt 5pt rgba(0,0,0,1)
 
   // Grid
   @JsonKey(name: 'gridColumn', defaultValue: '1 / span 1')
@@ -527,7 +529,7 @@ class BaseStyles {
   }
 
   // CategoryTitle
-  @JsonKey(name: 'categoryTitleFontSize', defaultValue: 14)
+  @JsonKey(name: 'categoryTitleFontSize', defaultValue: 40)
   double categoryTitleFontSize;
   @JsonKey(name: 'categoryTitleColor', defaultValue: '#000000')
   String categoryTitleColor;
@@ -642,8 +644,8 @@ class BaseStyles {
   }
 
   get getBorder {
-    if (border == false) {
-      return Border.all(color: Colors.transparent, width: 0);
+    if (border == null || border == false) {
+      return Border.all(width: 0);
     }
     List<String> borderAttrs = border.toString().split(' ');
     double borderWidth = double.parse(borderAttrs.first.replaceAll('px', ''));
@@ -651,9 +653,8 @@ class BaseStyles {
     return Border.all(color: colorConvert(borderColor), width: borderWidth);
   }
 
-
   get getBoxShadow {
-    if (boxShadow == null || boxShadow == false) {
+    if (shadow == null || shadow.isEmpty) {
       return [
         BoxShadow(
           color: Colors.transparent,
@@ -663,18 +664,28 @@ class BaseStyles {
         )
       ];
     }
-    double deg = shadowAngle * pi / 180;
+
+//    drop-shadow(7.071067811865474pt 7.071067811865477pt 5pt rgba(0,0,0,1))
+    List<String>attrs0 = shadow.replaceAll('drop-shadow', '').split(' ');
+    List<String>attrs =  attrs0.map((element) {
+      if (element.contains('rgb'))
+        return element.replaceAll('rgba', '').replaceAll(',', ' ').replaceAll(RegExp(r"[^\s\w]"), '');
+      return element.replaceAll('pt', '').replaceAll('(', '');
+    }).toList();
+    print('attrs: $attrs');
+    double blurRadius = double.parse(attrs[2]);
+    double offsetX = double.parse(attrs[0]);
+    double offsetY = double.parse(attrs[1]);
+    List<String>colors = attrs[3].split(' ');
     return [
       BoxShadow(
-        color: Colors.black.withOpacity(shadowOpacity / 100),
-//        spreadRadius: 5,
-        blurRadius: shadowBlur,
-        offset: Offset(cos(deg) * shadowOffset,
-            -shadowOffset * sin(deg)), // changes position of shadow
+        color: Color.fromRGBO(int.parse(colors[0]), int.parse(colors[1]),
+            int.parse(colors[2]), double.parse(colors[3])),
+        blurRadius: blurRadius,
+        offset: Offset(offsetX, offsetY), // changes position of shadow
       ),
     ];
   }
-
 
   factory BaseStyles.fromJson(Map<String, dynamic> json) => _$BaseStylesFromJson(json);
   Map<String, dynamic> toJson() => _$BaseStylesToJson(this);
@@ -773,8 +784,8 @@ class ImageStyles extends BaseStyles {
   @JsonKey(name: 'width', defaultValue: 0)
   double width;
 //  saturate(100%) brightness(100%
-  @JsonKey(name: 'imageFilter', defaultValue: 0)
-  String imageFilter;
+  @JsonKey(name: 'imageFilter')
+  dynamic imageFilter;
 
   factory ImageStyles.fromJson(Map<String, dynamic> json) => _$ImageStylesFromJson(json);
   Map<String, dynamic> toJson() => _$ImageStylesToJson(this);

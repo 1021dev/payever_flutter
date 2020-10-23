@@ -1,7 +1,10 @@
+import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/shop/models/models.dart';
+
+import '../../../../theme.dart';
 
 class ImageView extends StatefulWidget {
   final Child child;
@@ -56,7 +59,7 @@ class _ImageViewState extends State<ImageView> {
       child: Container(
         height: styles.height,
         width: styles.width,
-        decoration: styles.decoration,
+        decoration: decoration,
 //      color: colorConvert(styles.backgroundColor),
         margin: EdgeInsets.only(
             left: styles.getMarginLeft(sectionStyleSheet),
@@ -109,6 +112,47 @@ class _ImageViewState extends State<ImageView> {
         ),
       ),
     );
+  }
+
+  get decoration {
+    return BoxDecoration(
+      border: getBorder,
+      borderRadius: BorderRadius.circular(styles.getBorderRadius(styles.borderRadius)),
+      boxShadow: getBoxShadow,
+    );
+  }
+
+  get getBorder {
+    if (styles.border == null || styles.border == false) {
+      return Border.all(color: Colors.transparent, width: 0);
+    }
+    List<String> borderAttrs = styles.border.toString().split(' ');
+    double borderWidth = double.parse(borderAttrs.first.replaceAll('px', ''));
+    String borderColor = borderAttrs.last;
+    return Border.all(color: colorConvert(borderColor), width: borderWidth);
+  }
+
+  get getBoxShadow {
+    if (styles.boxShadow == null || styles.boxShadow == false) {
+      return [
+        BoxShadow(
+          color: Colors.transparent,
+          spreadRadius: 0,
+          blurRadius: 0,
+          offset: Offset.zero, // changes position of shadow
+        )
+      ];
+    }
+    double deg = styles.shadowAngle * pi / 180;
+    return [
+      BoxShadow(
+        color: Colors.black.withOpacity(styles.shadowOpacity / 100),
+//        spreadRadius: 5,
+        blurRadius: styles.shadowBlur,
+        offset: Offset(cos(deg) * styles.shadowOffset,
+            -styles.shadowOffset * sin(deg)), // changes position of shadow
+      ),
+    ];
   }
 
   ImageStyles styleSheet() {

@@ -41,18 +41,18 @@ class _SocialIconViewState extends State<SocialIconView> {
   }
 
   Widget _body() {
-
     return Opacity(
       opacity: styles.opacity,
       child: Container(
           width: styles.width,
           height: styles.height,
+          decoration: styles.decoration,
           margin: EdgeInsets.only(
               left: styles.getMarginLeft(sectionStyleSheet),
               right: styles.marginRight,
               top: styles.getMarginTop(sectionStyleSheet),
               bottom: styles.marginBottom),
-          alignment: Alignment.center,
+//          alignment: Alignment.center,
           child: SvgPicture.asset(
             'assets/images/social-icon-${child.data['variant']}.svg',
             color: colorConvert(styles.backgroundColor),
