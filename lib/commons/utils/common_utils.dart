@@ -333,6 +333,7 @@ class GlobalUtils {
   static bool isConnected = true;
   static bool isBusinessMode = true;
   static Appearance appearance = Appearance.Default;
+  static double webMobileWidth = 360.0;
   // Global Params
   // static User user;
   // static Business currentBusiness;
@@ -744,9 +745,14 @@ class GlobalUtils {
     if (mainWidth == 0) {
       mainWidth = isTablet ? Measurements.width * 0.7 : Measurements.width;
     }
+    if (shopBuilderWidthFactor == 0) {
+      shopBuilderWidthFactor = Measurements.width / webMobileWidth;
+    }
     return isTablet;
   }
   static double mainWidth = 0;
+  static double shopBuilderWidthFactor = 0;
+
 }
 
 String imageBase = Env.storage + '/images/';

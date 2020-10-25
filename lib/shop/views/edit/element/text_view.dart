@@ -42,7 +42,7 @@ class _TextViewState extends State<TextView> {
       if (styles == null || styles.display == 'none') {
         return Container();
       }
-
+      print('Text Text: $txt');
       return Container(
 //        color: colorConvert(styles.backgroundColor, emptyColor: true),
         width: styles.width,
@@ -65,7 +65,8 @@ class _TextViewState extends State<TextView> {
                   color: colorConvert(styles.color),
                     fontSize: styles.fontSize,
                     fontStyle: styles.fontStyle,
-                    fontWeight: styles.fontWeight),
+                    fontWeight: styles.fontWeight
+                ),
               ),
             ],
           ),

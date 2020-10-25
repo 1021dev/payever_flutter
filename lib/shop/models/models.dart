@@ -415,9 +415,9 @@ class BaseStyles {
   @JsonKey(name: 'width', defaultValue: 0)
   dynamic width0;
   get width {
-    if (width0 == '100%' || width0 == 360) return double.infinity;
+    if (width0 == '100%') return double.infinity;
     if (width0 is num) {
-      return (width0 as num).toDouble();
+      return (width0 as num).toDouble() * GlobalUtils.shopBuilderWidthFactor;
     }
     return 0;
   }
@@ -570,7 +570,9 @@ class BaseStyles {
   double getMarginTop(SectionStyleSheet sectionStyleSheet) {
     double margin = marginTop;
     int row =  int.parse(gridRow.split(' ').first);
-    if (row == 1) return margin;
+    if (row == 1)
+      return margin;
+
     List<String>rows = sectionStyleSheet.gridTemplateRows.split(' ');
     for (int i = 0; i < row - 1; i ++)
       margin += double.parse(rows[i]);
@@ -580,11 +582,13 @@ class BaseStyles {
   double getMarginLeft(SectionStyleSheet sectionStyleSheet) {
     double margin = marginLeft;
     int column = int.parse(gridColumn.split(' ').first);
-    if (column == 1) return margin;
-    List<String>columns = sectionStyleSheet.gridTemplateColumns.split(' ');
-    for (int i = 0; i < column - 1; i ++)
-      margin += double.parse(columns[i]);
-    return margin;
+
+    if (column > 1) {
+      List<String>columns = sectionStyleSheet.gridTemplateColumns.split(' ');
+      for (int i = 0; i < column - 1; i ++)
+        margin += double.parse(columns[i]);
+    }
+    return margin * GlobalUtils.shopBuilderWidthFactor;
   }
 
   Alignment getAlign(String align) {
