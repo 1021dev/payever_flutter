@@ -146,7 +146,7 @@ class _ImageViewState extends State<ImageView> {
     double deg = styles.shadowAngle * pi / 180;
     return [
       BoxShadow(
-        color: Colors.black.withOpacity(styles.shadowOpacity / 100),
+        color: colorConvert(styles.shadowFormColor).withOpacity(styles.shadowOpacity / 100),
 //        spreadRadius: 5,
         blurRadius: styles.shadowBlur,
         offset: Offset(cos(deg) * styles.shadowOffset,
@@ -158,8 +158,10 @@ class _ImageViewState extends State<ImageView> {
   ImageStyles styleSheet() {
     try {
       Map json = widget.stylesheets[widget.deviceTypeId][child.id];
-//      if (json['display'] != 'none')
-//        print('Image Styles: $json');
+      if (json['display'] != 'none') {
+        print('Image View ID: ${child.id}');
+        print('Image Styles: $json');
+      }
       return ImageStyles.fromJson(json);
     } catch (e) {
       return null;
