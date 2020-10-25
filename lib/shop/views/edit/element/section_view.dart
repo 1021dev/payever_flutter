@@ -62,7 +62,6 @@ class _SectionViewState extends State<SectionView> {
   }
 
   Widget _section() {
-    print('Block View: ${child.id}');
     if (styleSheet == null) {
       return Container();
     }

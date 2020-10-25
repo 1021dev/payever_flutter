@@ -902,7 +902,6 @@ class Data {
   Data();
 
   @JsonKey(name: 'text')      String text;
-  @JsonKey(name: 'action')    ChildAction action;
   @JsonKey(name: 'name')      String name;
   @JsonKey(name: 'src')       String src;
   @JsonKey(name: 'count')     num count;
@@ -910,6 +909,16 @@ class Data {
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
   Map<String, dynamic> toJson() => _$DataToJson(this);
+}
+
+@JsonSerializable()
+class ButtonData extends Data {
+  ButtonData();
+
+  @JsonKey(name: 'action')    ButtonAction action;
+
+  factory ButtonData.fromJson(Map<String, dynamic> json) => _$ButtonDataFromJson(json);
+  Map<String, dynamic> toJson() => _$ButtonDataToJson(this);
 }
 
 @JsonSerializable()
@@ -959,12 +968,24 @@ class CategoryData {
 }
 
 @JsonSerializable()
-class ChildAction {
-  ChildAction();
+class ButtonAction {
+  ButtonAction();
 
   @JsonKey(name: 'type')      String type;
-  @JsonKey(name: 'payload')   dynamic payload;
+  @JsonKey(name: 'payload')   ButtonPayload payload;
 
-  factory ChildAction.fromJson(Map<String, dynamic> json) => _$ChildActionFromJson(json);
-  Map<String, dynamic> toJson() => _$ChildActionToJson(this);
+  factory ButtonAction.fromJson(Map<String, dynamic> json) => _$ButtonActionFromJson(json);
+  Map<String, dynamic> toJson() => _$ButtonActionToJson(this);
+}
+
+@JsonSerializable()
+class ButtonPayload {
+  ButtonPayload();
+
+  @JsonKey(name: 'title')   String title;
+  @JsonKey(name: 'path')    String path;
+  @JsonKey(name: 'route')   String route;
+
+  factory ButtonPayload.fromJson(Map<String, dynamic> json) => _$ButtonPayloadFromJson(json);
+  Map<String, dynamic> toJson() => _$ButtonPayloadToJson(this);
 }

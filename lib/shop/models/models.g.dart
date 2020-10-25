@@ -2055,9 +2055,6 @@ Map<String, dynamic> _$ShopProductCategoryStylesToJson(
 Data _$DataFromJson(Map<String, dynamic> json) {
   return Data()
     ..text = json['text'] as String
-    ..action = json['action'] == null
-        ? null
-        : ChildAction.fromJson(json['action'] as Map<String, dynamic>)
     ..name = json['name'] as String
     ..src = json['src'] as String
     ..count = json['count'] as num
@@ -2066,11 +2063,32 @@ Data _$DataFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
       'text': instance.text,
-      'action': instance.action,
       'name': instance.name,
       'src': instance.src,
       'count': instance.count,
       'product': instance.product,
+    };
+
+ButtonData _$ButtonDataFromJson(Map<String, dynamic> json) {
+  return ButtonData()
+    ..text = json['text'] as String
+    ..name = json['name'] as String
+    ..src = json['src'] as String
+    ..count = json['count'] as num
+    ..product = json['product'] as Map<String, dynamic>
+    ..action = json['action'] == null
+        ? null
+        : ButtonAction.fromJson(json['action'] as Map<String, dynamic>);
+}
+
+Map<String, dynamic> _$ButtonDataToJson(ButtonData instance) =>
+    <String, dynamic>{
+      'text': instance.text,
+      'name': instance.name,
+      'src': instance.src,
+      'count': instance.count,
+      'product': instance.product,
+      'action': instance.action,
     };
 
 VideoData _$VideoDataFromJson(Map<String, dynamic> json) {
@@ -2116,14 +2134,30 @@ Map<String, dynamic> _$CategoryDataToJson(CategoryData instance) =>
       'categoryType': instance.categoryType,
     };
 
-ChildAction _$ChildActionFromJson(Map<String, dynamic> json) {
-  return ChildAction()
+ButtonAction _$ButtonActionFromJson(Map<String, dynamic> json) {
+  return ButtonAction()
     ..type = json['type'] as String
-    ..payload = json['payload'];
+    ..payload = json['payload'] == null
+        ? null
+        : ButtonPayload.fromJson(json['payload'] as Map<String, dynamic>);
 }
 
-Map<String, dynamic> _$ChildActionToJson(ChildAction instance) =>
+Map<String, dynamic> _$ButtonActionToJson(ButtonAction instance) =>
     <String, dynamic>{
       'type': instance.type,
       'payload': instance.payload,
+    };
+
+ButtonPayload _$ButtonPayloadFromJson(Map<String, dynamic> json) {
+  return ButtonPayload()
+    ..title = json['title'] as String
+    ..path = json['path'] as String
+    ..route = json['route'] as String;
+}
+
+Map<String, dynamic> _$ButtonPayloadToJson(ButtonPayload instance) =>
+    <String, dynamic>{
+      'title': instance.title,
+      'path': instance.path,
+      'route': instance.route,
     };

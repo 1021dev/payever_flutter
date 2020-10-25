@@ -19,6 +19,17 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
   ShopScreenState get initialState => ShopScreenState();
 
   @override
+  void onError(Object error, StackTrace stackTrace) {
+    print('$error, $stackTrace');
+  }
+
+  @override
+  void onTransition(Transition<ShopScreenEvent, ShopScreenState> transition) {
+    print(transition);
+    super.onTransition(transition);
+  }
+
+  @override
   Stream<ShopScreenState> mapEventToState(ShopScreenEvent event) async* {
     if (event is ShopScreenInitEvent) {
       yield state.copyWith(activeBusiness: dashboardScreenBloc.state.activeBusiness);
