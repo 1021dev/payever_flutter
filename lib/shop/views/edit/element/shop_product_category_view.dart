@@ -72,8 +72,8 @@ class _ShopProductCategoryViewState extends State<ShopProductCategoryView> {
               'Category Title',
               style: TextStyle(
                 fontSize: styles.categoryTitleFontSize,
-                fontStyle: styles.getCategoryTitleFontStyle(),
-                fontWeight: styles.getCategoryTitleFontWeight(),
+                fontStyle: styles.categoryTitleFontStyle,
+                fontWeight: styles.categoryTitleFontWeight,
                 color: colorConvert(styles.categoryTitleColor),
               ),
             ),

@@ -126,8 +126,8 @@ class _ShopProductDetailViewState extends State<ShopProductDetailView> {
                 'Add to cart',
                 style: TextStyle(
                   fontSize: styles.buttonFontSize,
-                  fontStyle: styles.getButtonFontStyle(),
-                  fontWeight: styles.getButtonFontWeight(),
+                  fontStyle: styles.buttonFontStyle,
+                  fontWeight: styles.buttonFontWeight,
                   color: colorConvert(styles.buttonColor),
                 ),
               ),

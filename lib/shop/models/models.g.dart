@@ -461,23 +461,7 @@ BaseStyles _$BaseStylesFromJson(Map<String, dynamic> json) {
     ..priceFontFamily = json['priceFontFamily'] as String ?? 'Roboto'
     ..priceFontWeight0 = json['priceFontWeight'] as String ?? 'normal'
     ..priceFontStyle0 = json['priceFontStyle'] as String ?? 'normal'
-    ..priceTextDecoration = json['priceTextDecoration']
-    ..categoryTitleFontSize =
-        (json['categoryTitleFontSize'] as num)?.toDouble() ?? 40
-    ..categoryTitleColor = json['categoryTitleColor'] as String ?? '#000000'
-    ..categoryTitleFontFamily =
-        json['categoryTitleFontFamily'] as String ?? 'Roboto'
-    ..categoryTitleFontWeight =
-        json['categoryTitleFontWeight'] as String ?? 'bold'
-    ..categoryTitleFontStyle =
-        json['categoryTitleFontStyle'] as String ?? 'normal'
-    ..categoryTitleTextDecoration = json['categoryTitleTextDecoration']
-    ..filterFontSize = (json['filterFontSize'] as num)?.toDouble() ?? 13
-    ..filterColor = json['filterColor'] as String ?? '#a5a5a5'
-    ..filterFontFamily = json['filterFontFamily'] as String ?? 'Roboto'
-    ..filterFontWeight = json['filterFontWeight'] as String ?? 'normal'
-    ..filterFontStyle = json['filterFontStyle'] as String ?? 'normal'
-    ..filterTextDecoration = json['filterTextDecoration'];
+    ..priceTextDecoration = json['priceTextDecoration'];
 }
 
 Map<String, dynamic> _$BaseStylesToJson(BaseStyles instance) =>
@@ -536,18 +520,6 @@ Map<String, dynamic> _$BaseStylesToJson(BaseStyles instance) =>
       'priceFontWeight': instance.priceFontWeight0,
       'priceFontStyle': instance.priceFontStyle0,
       'priceTextDecoration': instance.priceTextDecoration,
-      'categoryTitleFontSize': instance.categoryTitleFontSize,
-      'categoryTitleColor': instance.categoryTitleColor,
-      'categoryTitleFontFamily': instance.categoryTitleFontFamily,
-      'categoryTitleFontWeight': instance.categoryTitleFontWeight,
-      'categoryTitleFontStyle': instance.categoryTitleFontStyle,
-      'categoryTitleTextDecoration': instance.categoryTitleTextDecoration,
-      'filterFontSize': instance.filterFontSize,
-      'filterColor': instance.filterColor,
-      'filterFontFamily': instance.filterFontFamily,
-      'filterFontWeight': instance.filterFontWeight,
-      'filterFontStyle': instance.filterFontStyle,
-      'filterTextDecoration': instance.filterTextDecoration,
     };
 
 SectionStyleSheet _$SectionStyleSheetFromJson(Map<String, dynamic> json) {
@@ -607,22 +579,6 @@ SectionStyleSheet _$SectionStyleSheetFromJson(Map<String, dynamic> json) {
     ..priceFontWeight0 = json['priceFontWeight'] as String ?? 'normal'
     ..priceFontStyle0 = json['priceFontStyle'] as String ?? 'normal'
     ..priceTextDecoration = json['priceTextDecoration']
-    ..categoryTitleFontSize =
-        (json['categoryTitleFontSize'] as num)?.toDouble() ?? 40
-    ..categoryTitleColor = json['categoryTitleColor'] as String ?? '#000000'
-    ..categoryTitleFontFamily =
-        json['categoryTitleFontFamily'] as String ?? 'Roboto'
-    ..categoryTitleFontWeight =
-        json['categoryTitleFontWeight'] as String ?? 'bold'
-    ..categoryTitleFontStyle =
-        json['categoryTitleFontStyle'] as String ?? 'normal'
-    ..categoryTitleTextDecoration = json['categoryTitleTextDecoration']
-    ..filterFontSize = (json['filterFontSize'] as num)?.toDouble() ?? 13
-    ..filterColor = json['filterColor'] as String ?? '#a5a5a5'
-    ..filterFontFamily = json['filterFontFamily'] as String ?? 'Roboto'
-    ..filterFontWeight = json['filterFontWeight'] as String ?? 'normal'
-    ..filterFontStyle = json['filterFontStyle'] as String ?? 'normal'
-    ..filterTextDecoration = json['filterTextDecoration']
     ..gridTemplateRows = json['gridTemplateRows'] as String ?? '0 0 0'
     ..gridTemplateColumns = json['gridTemplateColumns'] as String ?? '0 0 0'
     ..zIndex = json['zIndex'];
@@ -684,18 +640,6 @@ Map<String, dynamic> _$SectionStyleSheetToJson(SectionStyleSheet instance) =>
       'priceFontWeight': instance.priceFontWeight0,
       'priceFontStyle': instance.priceFontStyle0,
       'priceTextDecoration': instance.priceTextDecoration,
-      'categoryTitleFontSize': instance.categoryTitleFontSize,
-      'categoryTitleColor': instance.categoryTitleColor,
-      'categoryTitleFontFamily': instance.categoryTitleFontFamily,
-      'categoryTitleFontWeight': instance.categoryTitleFontWeight,
-      'categoryTitleFontStyle': instance.categoryTitleFontStyle,
-      'categoryTitleTextDecoration': instance.categoryTitleTextDecoration,
-      'filterFontSize': instance.filterFontSize,
-      'filterColor': instance.filterColor,
-      'filterFontFamily': instance.filterFontFamily,
-      'filterFontWeight': instance.filterFontWeight,
-      'filterFontStyle': instance.filterFontStyle,
-      'filterTextDecoration': instance.filterTextDecoration,
       'gridTemplateRows': instance.gridTemplateRows,
       'gridTemplateColumns': instance.gridTemplateColumns,
       'zIndex': instance.zIndex,
@@ -757,23 +701,7 @@ TextStyles _$TextStylesFromJson(Map<String, dynamic> json) {
     ..priceFontFamily = json['priceFontFamily'] as String ?? 'Roboto'
     ..priceFontWeight0 = json['priceFontWeight'] as String ?? 'normal'
     ..priceFontStyle0 = json['priceFontStyle'] as String ?? 'normal'
-    ..priceTextDecoration = json['priceTextDecoration']
-    ..categoryTitleFontSize =
-        (json['categoryTitleFontSize'] as num)?.toDouble() ?? 40
-    ..categoryTitleColor = json['categoryTitleColor'] as String ?? '#000000'
-    ..categoryTitleFontFamily =
-        json['categoryTitleFontFamily'] as String ?? 'Roboto'
-    ..categoryTitleFontWeight =
-        json['categoryTitleFontWeight'] as String ?? 'bold'
-    ..categoryTitleFontStyle =
-        json['categoryTitleFontStyle'] as String ?? 'normal'
-    ..categoryTitleTextDecoration = json['categoryTitleTextDecoration']
-    ..filterFontSize = (json['filterFontSize'] as num)?.toDouble() ?? 13
-    ..filterColor = json['filterColor'] as String ?? '#a5a5a5'
-    ..filterFontFamily = json['filterFontFamily'] as String ?? 'Roboto'
-    ..filterFontWeight = json['filterFontWeight'] as String ?? 'normal'
-    ..filterFontStyle = json['filterFontStyle'] as String ?? 'normal'
-    ..filterTextDecoration = json['filterTextDecoration'];
+    ..priceTextDecoration = json['priceTextDecoration'];
 }
 
 Map<String, dynamic> _$TextStylesToJson(TextStyles instance) =>
@@ -832,18 +760,6 @@ Map<String, dynamic> _$TextStylesToJson(TextStyles instance) =>
       'priceFontWeight': instance.priceFontWeight0,
       'priceFontStyle': instance.priceFontStyle0,
       'priceTextDecoration': instance.priceTextDecoration,
-      'categoryTitleFontSize': instance.categoryTitleFontSize,
-      'categoryTitleColor': instance.categoryTitleColor,
-      'categoryTitleFontFamily': instance.categoryTitleFontFamily,
-      'categoryTitleFontWeight': instance.categoryTitleFontWeight,
-      'categoryTitleFontStyle': instance.categoryTitleFontStyle,
-      'categoryTitleTextDecoration': instance.categoryTitleTextDecoration,
-      'filterFontSize': instance.filterFontSize,
-      'filterColor': instance.filterColor,
-      'filterFontFamily': instance.filterFontFamily,
-      'filterFontWeight': instance.filterFontWeight,
-      'filterFontStyle': instance.filterFontStyle,
-      'filterTextDecoration': instance.filterTextDecoration,
     };
 
 ButtonStyles _$ButtonStylesFromJson(Map<String, dynamic> json) {
@@ -901,22 +817,6 @@ ButtonStyles _$ButtonStylesFromJson(Map<String, dynamic> json) {
     ..priceFontWeight0 = json['priceFontWeight'] as String ?? 'normal'
     ..priceFontStyle0 = json['priceFontStyle'] as String ?? 'normal'
     ..priceTextDecoration = json['priceTextDecoration']
-    ..categoryTitleFontSize =
-        (json['categoryTitleFontSize'] as num)?.toDouble() ?? 40
-    ..categoryTitleColor = json['categoryTitleColor'] as String ?? '#000000'
-    ..categoryTitleFontFamily =
-        json['categoryTitleFontFamily'] as String ?? 'Roboto'
-    ..categoryTitleFontWeight =
-        json['categoryTitleFontWeight'] as String ?? 'bold'
-    ..categoryTitleFontStyle =
-        json['categoryTitleFontStyle'] as String ?? 'normal'
-    ..categoryTitleTextDecoration = json['categoryTitleTextDecoration']
-    ..filterFontSize = (json['filterFontSize'] as num)?.toDouble() ?? 13
-    ..filterColor = json['filterColor'] as String ?? '#a5a5a5'
-    ..filterFontFamily = json['filterFontFamily'] as String ?? 'Roboto'
-    ..filterFontWeight = json['filterFontWeight'] as String ?? 'normal'
-    ..filterFontStyle = json['filterFontStyle'] as String ?? 'normal'
-    ..filterTextDecoration = json['filterTextDecoration']
     ..height = (json['height'] as num)?.toDouble() ?? 20
     ..color = json['color'] as String ?? '#FFFFFF';
 }
@@ -975,18 +875,6 @@ Map<String, dynamic> _$ButtonStylesToJson(ButtonStyles instance) =>
       'priceFontWeight': instance.priceFontWeight0,
       'priceFontStyle': instance.priceFontStyle0,
       'priceTextDecoration': instance.priceTextDecoration,
-      'categoryTitleFontSize': instance.categoryTitleFontSize,
-      'categoryTitleColor': instance.categoryTitleColor,
-      'categoryTitleFontFamily': instance.categoryTitleFontFamily,
-      'categoryTitleFontWeight': instance.categoryTitleFontWeight,
-      'categoryTitleFontStyle': instance.categoryTitleFontStyle,
-      'categoryTitleTextDecoration': instance.categoryTitleTextDecoration,
-      'filterFontSize': instance.filterFontSize,
-      'filterColor': instance.filterColor,
-      'filterFontFamily': instance.filterFontFamily,
-      'filterFontWeight': instance.filterFontWeight,
-      'filterFontStyle': instance.filterFontStyle,
-      'filterTextDecoration': instance.filterTextDecoration,
       'height': instance.height,
       'color': instance.color,
     };
@@ -1048,22 +936,6 @@ ShopCartStyles _$ShopCartStylesFromJson(Map<String, dynamic> json) {
     ..priceFontWeight0 = json['priceFontWeight'] as String ?? 'normal'
     ..priceFontStyle0 = json['priceFontStyle'] as String ?? 'normal'
     ..priceTextDecoration = json['priceTextDecoration']
-    ..categoryTitleFontSize =
-        (json['categoryTitleFontSize'] as num)?.toDouble() ?? 40
-    ..categoryTitleColor = json['categoryTitleColor'] as String ?? '#000000'
-    ..categoryTitleFontFamily =
-        json['categoryTitleFontFamily'] as String ?? 'Roboto'
-    ..categoryTitleFontWeight =
-        json['categoryTitleFontWeight'] as String ?? 'bold'
-    ..categoryTitleFontStyle =
-        json['categoryTitleFontStyle'] as String ?? 'normal'
-    ..categoryTitleTextDecoration = json['categoryTitleTextDecoration']
-    ..filterFontSize = (json['filterFontSize'] as num)?.toDouble() ?? 13
-    ..filterColor = json['filterColor'] as String ?? '#a5a5a5'
-    ..filterFontFamily = json['filterFontFamily'] as String ?? 'Roboto'
-    ..filterFontWeight = json['filterFontWeight'] as String ?? 'normal'
-    ..filterFontStyle = json['filterFontStyle'] as String ?? 'normal'
-    ..filterTextDecoration = json['filterTextDecoration']
     ..badgeColor = json['badgeColor'] as String ?? '#FFFFFF'
     ..badgeBackground = json['badgeBackground'] as String ?? '#FF0000'
     ..badgeBorderWidth = (json['badgeBorderWidth'] as num)?.toDouble() ?? 0
@@ -1127,18 +999,6 @@ Map<String, dynamic> _$ShopCartStylesToJson(ShopCartStyles instance) =>
       'priceFontWeight': instance.priceFontWeight0,
       'priceFontStyle': instance.priceFontStyle0,
       'priceTextDecoration': instance.priceTextDecoration,
-      'categoryTitleFontSize': instance.categoryTitleFontSize,
-      'categoryTitleColor': instance.categoryTitleColor,
-      'categoryTitleFontFamily': instance.categoryTitleFontFamily,
-      'categoryTitleFontWeight': instance.categoryTitleFontWeight,
-      'categoryTitleFontStyle': instance.categoryTitleFontStyle,
-      'categoryTitleTextDecoration': instance.categoryTitleTextDecoration,
-      'filterFontSize': instance.filterFontSize,
-      'filterColor': instance.filterColor,
-      'filterFontFamily': instance.filterFontFamily,
-      'filterFontWeight': instance.filterFontWeight,
-      'filterFontStyle': instance.filterFontStyle,
-      'filterTextDecoration': instance.filterTextDecoration,
       'badgeColor': instance.badgeColor,
       'badgeBackground': instance.badgeBackground,
       'badgeBorderWidth': instance.badgeBorderWidth,
@@ -1202,23 +1062,7 @@ ShapeStyles _$ShapeStylesFromJson(Map<String, dynamic> json) {
     ..priceFontFamily = json['priceFontFamily'] as String ?? 'Roboto'
     ..priceFontWeight0 = json['priceFontWeight'] as String ?? 'normal'
     ..priceFontStyle0 = json['priceFontStyle'] as String ?? 'normal'
-    ..priceTextDecoration = json['priceTextDecoration']
-    ..categoryTitleFontSize =
-        (json['categoryTitleFontSize'] as num)?.toDouble() ?? 40
-    ..categoryTitleColor = json['categoryTitleColor'] as String ?? '#000000'
-    ..categoryTitleFontFamily =
-        json['categoryTitleFontFamily'] as String ?? 'Roboto'
-    ..categoryTitleFontWeight =
-        json['categoryTitleFontWeight'] as String ?? 'bold'
-    ..categoryTitleFontStyle =
-        json['categoryTitleFontStyle'] as String ?? 'normal'
-    ..categoryTitleTextDecoration = json['categoryTitleTextDecoration']
-    ..filterFontSize = (json['filterFontSize'] as num)?.toDouble() ?? 13
-    ..filterColor = json['filterColor'] as String ?? '#a5a5a5'
-    ..filterFontFamily = json['filterFontFamily'] as String ?? 'Roboto'
-    ..filterFontWeight = json['filterFontWeight'] as String ?? 'normal'
-    ..filterFontStyle = json['filterFontStyle'] as String ?? 'normal'
-    ..filterTextDecoration = json['filterTextDecoration'];
+    ..priceTextDecoration = json['priceTextDecoration'];
 }
 
 Map<String, dynamic> _$ShapeStylesToJson(ShapeStyles instance) =>
@@ -1277,18 +1121,6 @@ Map<String, dynamic> _$ShapeStylesToJson(ShapeStyles instance) =>
       'priceFontWeight': instance.priceFontWeight0,
       'priceFontStyle': instance.priceFontStyle0,
       'priceTextDecoration': instance.priceTextDecoration,
-      'categoryTitleFontSize': instance.categoryTitleFontSize,
-      'categoryTitleColor': instance.categoryTitleColor,
-      'categoryTitleFontFamily': instance.categoryTitleFontFamily,
-      'categoryTitleFontWeight': instance.categoryTitleFontWeight,
-      'categoryTitleFontStyle': instance.categoryTitleFontStyle,
-      'categoryTitleTextDecoration': instance.categoryTitleTextDecoration,
-      'filterFontSize': instance.filterFontSize,
-      'filterColor': instance.filterColor,
-      'filterFontFamily': instance.filterFontFamily,
-      'filterFontWeight': instance.filterFontWeight,
-      'filterFontStyle': instance.filterFontStyle,
-      'filterTextDecoration': instance.filterTextDecoration,
     };
 
 ImageStyles _$ImageStylesFromJson(Map<String, dynamic> json) {
@@ -1348,22 +1180,6 @@ ImageStyles _$ImageStylesFromJson(Map<String, dynamic> json) {
     ..priceFontWeight0 = json['priceFontWeight'] as String ?? 'normal'
     ..priceFontStyle0 = json['priceFontStyle'] as String ?? 'normal'
     ..priceTextDecoration = json['priceTextDecoration']
-    ..categoryTitleFontSize =
-        (json['categoryTitleFontSize'] as num)?.toDouble() ?? 40
-    ..categoryTitleColor = json['categoryTitleColor'] as String ?? '#000000'
-    ..categoryTitleFontFamily =
-        json['categoryTitleFontFamily'] as String ?? 'Roboto'
-    ..categoryTitleFontWeight =
-        json['categoryTitleFontWeight'] as String ?? 'bold'
-    ..categoryTitleFontStyle =
-        json['categoryTitleFontStyle'] as String ?? 'normal'
-    ..categoryTitleTextDecoration = json['categoryTitleTextDecoration']
-    ..filterFontSize = (json['filterFontSize'] as num)?.toDouble() ?? 13
-    ..filterColor = json['filterColor'] as String ?? '#a5a5a5'
-    ..filterFontFamily = json['filterFontFamily'] as String ?? 'Roboto'
-    ..filterFontWeight = json['filterFontWeight'] as String ?? 'normal'
-    ..filterFontStyle = json['filterFontStyle'] as String ?? 'normal'
-    ..filterTextDecoration = json['filterTextDecoration']
     ..shadowAngle = (json['shadowAngle'] as num)?.toDouble() ?? 0
     ..shadowBlur = (json['shadowBlur'] as num)?.toDouble() ?? 0
     ..shadowColor = json['shadowColor'] as String ?? 'rgba(0, 0, NaN, 0, 0)'
@@ -1429,18 +1245,6 @@ Map<String, dynamic> _$ImageStylesToJson(ImageStyles instance) =>
       'priceFontWeight': instance.priceFontWeight0,
       'priceFontStyle': instance.priceFontStyle0,
       'priceTextDecoration': instance.priceTextDecoration,
-      'categoryTitleFontSize': instance.categoryTitleFontSize,
-      'categoryTitleColor': instance.categoryTitleColor,
-      'categoryTitleFontFamily': instance.categoryTitleFontFamily,
-      'categoryTitleFontWeight': instance.categoryTitleFontWeight,
-      'categoryTitleFontStyle': instance.categoryTitleFontStyle,
-      'categoryTitleTextDecoration': instance.categoryTitleTextDecoration,
-      'filterFontSize': instance.filterFontSize,
-      'filterColor': instance.filterColor,
-      'filterFontFamily': instance.filterFontFamily,
-      'filterFontWeight': instance.filterFontWeight,
-      'filterFontStyle': instance.filterFontStyle,
-      'filterTextDecoration': instance.filterTextDecoration,
       'shadowAngle': instance.shadowAngle,
       'shadowBlur': instance.shadowBlur,
       'shadowColor': instance.shadowColor,
@@ -1506,23 +1310,7 @@ SocialIconStyles _$SocialIconStylesFromJson(Map<String, dynamic> json) {
     ..priceFontFamily = json['priceFontFamily'] as String ?? 'Roboto'
     ..priceFontWeight0 = json['priceFontWeight'] as String ?? 'normal'
     ..priceFontStyle0 = json['priceFontStyle'] as String ?? 'normal'
-    ..priceTextDecoration = json['priceTextDecoration']
-    ..categoryTitleFontSize =
-        (json['categoryTitleFontSize'] as num)?.toDouble() ?? 40
-    ..categoryTitleColor = json['categoryTitleColor'] as String ?? '#000000'
-    ..categoryTitleFontFamily =
-        json['categoryTitleFontFamily'] as String ?? 'Roboto'
-    ..categoryTitleFontWeight =
-        json['categoryTitleFontWeight'] as String ?? 'bold'
-    ..categoryTitleFontStyle =
-        json['categoryTitleFontStyle'] as String ?? 'normal'
-    ..categoryTitleTextDecoration = json['categoryTitleTextDecoration']
-    ..filterFontSize = (json['filterFontSize'] as num)?.toDouble() ?? 13
-    ..filterColor = json['filterColor'] as String ?? '#a5a5a5'
-    ..filterFontFamily = json['filterFontFamily'] as String ?? 'Roboto'
-    ..filterFontWeight = json['filterFontWeight'] as String ?? 'normal'
-    ..filterFontStyle = json['filterFontStyle'] as String ?? 'normal'
-    ..filterTextDecoration = json['filterTextDecoration'];
+    ..priceTextDecoration = json['priceTextDecoration'];
 }
 
 Map<String, dynamic> _$SocialIconStylesToJson(SocialIconStyles instance) =>
@@ -1581,18 +1369,6 @@ Map<String, dynamic> _$SocialIconStylesToJson(SocialIconStyles instance) =>
       'priceFontWeight': instance.priceFontWeight0,
       'priceFontStyle': instance.priceFontStyle0,
       'priceTextDecoration': instance.priceTextDecoration,
-      'categoryTitleFontSize': instance.categoryTitleFontSize,
-      'categoryTitleColor': instance.categoryTitleColor,
-      'categoryTitleFontFamily': instance.categoryTitleFontFamily,
-      'categoryTitleFontWeight': instance.categoryTitleFontWeight,
-      'categoryTitleFontStyle': instance.categoryTitleFontStyle,
-      'categoryTitleTextDecoration': instance.categoryTitleTextDecoration,
-      'filterFontSize': instance.filterFontSize,
-      'filterColor': instance.filterColor,
-      'filterFontFamily': instance.filterFontFamily,
-      'filterFontWeight': instance.filterFontWeight,
-      'filterFontStyle': instance.filterFontStyle,
-      'filterTextDecoration': instance.filterTextDecoration,
     };
 
 ShopProductsStyles _$ShopProductsStylesFromJson(Map<String, dynamic> json) {
@@ -1639,7 +1415,6 @@ ShopProductsStyles _$ShopProductsStylesFromJson(Map<String, dynamic> json) {
     ..fontWeight0 = json['fontWeight'] ?? 400
     ..fontFamily = json['fontFamily'] as String ??
         'Helvetica Neue,Helvetica,Arial,sans-serif'
-    ..textAlign0 = json['textAlign'] as String
     ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
     ..titleColor = json['titleColor'] as String ?? '#000000'
     ..titleFontFamily = json['titleFontFamily'] as String ?? 'Roboto'
@@ -1652,24 +1427,9 @@ ShopProductsStyles _$ShopProductsStylesFromJson(Map<String, dynamic> json) {
     ..priceFontWeight0 = json['priceFontWeight'] as String ?? 'normal'
     ..priceFontStyle0 = json['priceFontStyle'] as String ?? 'normal'
     ..priceTextDecoration = json['priceTextDecoration']
-    ..categoryTitleFontSize =
-        (json['categoryTitleFontSize'] as num)?.toDouble() ?? 40
-    ..categoryTitleColor = json['categoryTitleColor'] as String ?? '#000000'
-    ..categoryTitleFontFamily =
-        json['categoryTitleFontFamily'] as String ?? 'Roboto'
-    ..categoryTitleFontWeight =
-        json['categoryTitleFontWeight'] as String ?? 'bold'
-    ..categoryTitleFontStyle =
-        json['categoryTitleFontStyle'] as String ?? 'normal'
-    ..categoryTitleTextDecoration = json['categoryTitleTextDecoration']
-    ..filterFontSize = (json['filterFontSize'] as num)?.toDouble() ?? 13
-    ..filterColor = json['filterColor'] as String ?? '#a5a5a5'
-    ..filterFontFamily = json['filterFontFamily'] as String ?? 'Roboto'
-    ..filterFontWeight = json['filterFontWeight'] as String ?? 'normal'
-    ..filterFontStyle = json['filterFontStyle'] as String ?? 'normal'
-    ..filterTextDecoration = json['filterTextDecoration']
     ..itemWidth = (json['itemWidth'] as num)?.toDouble() ?? 0
     ..itemHeight = (json['itemHeight'] as num)?.toDouble() ?? 0
+    ..textAlign0 = json['textAlign'] as String ?? 'center'
     ..productTemplateColumns = json['productTemplateColumns'] as num ?? 0
     ..productTemplateRows = json['productTemplateRows'] as num ?? 0;
 }
@@ -1717,7 +1477,6 @@ Map<String, dynamic> _$ShopProductsStylesToJson(ShopProductsStyles instance) =>
       'fontStyle': instance.fontStyle0,
       'fontWeight': instance.fontWeight0,
       'fontFamily': instance.fontFamily,
-      'textAlign': instance.textAlign0,
       'titleFontSize': instance.titleFontSize,
       'titleColor': instance.titleColor,
       'titleFontFamily': instance.titleFontFamily,
@@ -1730,20 +1489,9 @@ Map<String, dynamic> _$ShopProductsStylesToJson(ShopProductsStyles instance) =>
       'priceFontWeight': instance.priceFontWeight0,
       'priceFontStyle': instance.priceFontStyle0,
       'priceTextDecoration': instance.priceTextDecoration,
-      'categoryTitleFontSize': instance.categoryTitleFontSize,
-      'categoryTitleColor': instance.categoryTitleColor,
-      'categoryTitleFontFamily': instance.categoryTitleFontFamily,
-      'categoryTitleFontWeight': instance.categoryTitleFontWeight,
-      'categoryTitleFontStyle': instance.categoryTitleFontStyle,
-      'categoryTitleTextDecoration': instance.categoryTitleTextDecoration,
-      'filterFontSize': instance.filterFontSize,
-      'filterColor': instance.filterColor,
-      'filterFontFamily': instance.filterFontFamily,
-      'filterFontWeight': instance.filterFontWeight,
-      'filterFontStyle': instance.filterFontStyle,
-      'filterTextDecoration': instance.filterTextDecoration,
       'itemWidth': instance.itemWidth,
       'itemHeight': instance.itemHeight,
+      'textAlign': instance.textAlign0,
       'productTemplateColumns': instance.productTemplateColumns,
       'productTemplateRows': instance.productTemplateRows,
     };
@@ -1806,27 +1554,11 @@ ShopProductDetailStyles _$ShopProductDetailStylesFromJson(
     ..priceFontWeight0 = json['priceFontWeight'] as String ?? 'normal'
     ..priceFontStyle0 = json['priceFontStyle'] as String ?? 'normal'
     ..priceTextDecoration = json['priceTextDecoration']
-    ..categoryTitleFontSize =
-        (json['categoryTitleFontSize'] as num)?.toDouble() ?? 40
-    ..categoryTitleColor = json['categoryTitleColor'] as String ?? '#000000'
-    ..categoryTitleFontFamily =
-        json['categoryTitleFontFamily'] as String ?? 'Roboto'
-    ..categoryTitleFontWeight =
-        json['categoryTitleFontWeight'] as String ?? 'bold'
-    ..categoryTitleFontStyle =
-        json['categoryTitleFontStyle'] as String ?? 'normal'
-    ..categoryTitleTextDecoration = json['categoryTitleTextDecoration']
-    ..filterFontSize = (json['filterFontSize'] as num)?.toDouble() ?? 13
-    ..filterColor = json['filterColor'] as String ?? '#a5a5a5'
-    ..filterFontFamily = json['filterFontFamily'] as String ?? 'Roboto'
-    ..filterFontWeight = json['filterFontWeight'] as String ?? 'normal'
-    ..filterFontStyle = json['filterFontStyle'] as String ?? 'normal'
-    ..filterTextDecoration = json['filterTextDecoration']
     ..buttonFontSize = (json['buttonFontSize'] as num)?.toDouble() ?? 13
     ..buttonColor = json['buttonColor'] as String ?? '#a5a5a5'
     ..buttonFontFamily = json['buttonFontFamily'] as String ?? 'Roboto'
-    ..buttonFontWeight = json['buttonFontWeight'] as String ?? 'normal'
-    ..buttonFontStyle = json['buttonFontStyle'] as String ?? 'normal';
+    ..buttonFontWeight0 = json['buttonFontWeight'] as String ?? 'normal'
+    ..buttonFontStyle0 = json['buttonFontStyle'] as String ?? 'normal';
 }
 
 Map<String, dynamic> _$ShopProductDetailStylesToJson(
@@ -1886,23 +1618,11 @@ Map<String, dynamic> _$ShopProductDetailStylesToJson(
       'priceFontWeight': instance.priceFontWeight0,
       'priceFontStyle': instance.priceFontStyle0,
       'priceTextDecoration': instance.priceTextDecoration,
-      'categoryTitleFontSize': instance.categoryTitleFontSize,
-      'categoryTitleColor': instance.categoryTitleColor,
-      'categoryTitleFontFamily': instance.categoryTitleFontFamily,
-      'categoryTitleFontWeight': instance.categoryTitleFontWeight,
-      'categoryTitleFontStyle': instance.categoryTitleFontStyle,
-      'categoryTitleTextDecoration': instance.categoryTitleTextDecoration,
-      'filterFontSize': instance.filterFontSize,
-      'filterColor': instance.filterColor,
-      'filterFontFamily': instance.filterFontFamily,
-      'filterFontWeight': instance.filterFontWeight,
-      'filterFontStyle': instance.filterFontStyle,
-      'filterTextDecoration': instance.filterTextDecoration,
       'buttonFontSize': instance.buttonFontSize,
       'buttonColor': instance.buttonColor,
       'buttonFontFamily': instance.buttonFontFamily,
-      'buttonFontWeight': instance.buttonFontWeight,
-      'buttonFontStyle': instance.buttonFontStyle,
+      'buttonFontWeight': instance.buttonFontWeight0,
+      'buttonFontStyle': instance.buttonFontStyle0,
     };
 
 ShopProductCategoryStyles _$ShopProductCategoryStylesFromJson(
@@ -1950,7 +1670,6 @@ ShopProductCategoryStyles _$ShopProductCategoryStylesFromJson(
     ..fontWeight0 = json['fontWeight'] ?? 400
     ..fontFamily = json['fontFamily'] as String ??
         'Helvetica Neue,Helvetica,Arial,sans-serif'
-    ..textAlign0 = json['textAlign'] as String
     ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
     ..titleColor = json['titleColor'] as String ?? '#000000'
     ..titleFontFamily = json['titleFontFamily'] as String ?? 'Roboto'
@@ -1963,24 +1682,25 @@ ShopProductCategoryStyles _$ShopProductCategoryStylesFromJson(
     ..priceFontWeight0 = json['priceFontWeight'] as String ?? 'normal'
     ..priceFontStyle0 = json['priceFontStyle'] as String ?? 'normal'
     ..priceTextDecoration = json['priceTextDecoration']
+    ..textAlign0 = json['textAlign'] as String ?? 'center'
+    ..imageCorners = json['imageCorners'] as String ?? 'rounded'
+    ..columns = json['columns'] as num ?? 1
     ..categoryTitleFontSize =
         (json['categoryTitleFontSize'] as num)?.toDouble() ?? 40
     ..categoryTitleColor = json['categoryTitleColor'] as String ?? '#000000'
     ..categoryTitleFontFamily =
         json['categoryTitleFontFamily'] as String ?? 'Roboto'
-    ..categoryTitleFontWeight =
+    ..categoryTitleFontWeight0 =
         json['categoryTitleFontWeight'] as String ?? 'bold'
-    ..categoryTitleFontStyle =
+    ..categoryTitleFontStyle0 =
         json['categoryTitleFontStyle'] as String ?? 'normal'
     ..categoryTitleTextDecoration = json['categoryTitleTextDecoration']
     ..filterFontSize = (json['filterFontSize'] as num)?.toDouble() ?? 13
     ..filterColor = json['filterColor'] as String ?? '#a5a5a5'
     ..filterFontFamily = json['filterFontFamily'] as String ?? 'Roboto'
-    ..filterFontWeight = json['filterFontWeight'] as String ?? 'normal'
-    ..filterFontStyle = json['filterFontStyle'] as String ?? 'normal'
-    ..filterTextDecoration = json['filterTextDecoration']
-    ..imageCorners = json['imageCorners'] as String ?? 'rounded'
-    ..columns = json['columns'] as num ?? 1;
+    ..filterFontWeight0 = json['filterFontWeight'] as String ?? 'normal'
+    ..filterFontStyle0 = json['filterFontStyle'] as String ?? 'normal'
+    ..filterTextDecoration = json['filterTextDecoration'];
 }
 
 Map<String, dynamic> _$ShopProductCategoryStylesToJson(
@@ -2027,7 +1747,6 @@ Map<String, dynamic> _$ShopProductCategoryStylesToJson(
       'fontStyle': instance.fontStyle0,
       'fontWeight': instance.fontWeight0,
       'fontFamily': instance.fontFamily,
-      'textAlign': instance.textAlign0,
       'titleFontSize': instance.titleFontSize,
       'titleColor': instance.titleColor,
       'titleFontFamily': instance.titleFontFamily,
@@ -2040,20 +1759,21 @@ Map<String, dynamic> _$ShopProductCategoryStylesToJson(
       'priceFontWeight': instance.priceFontWeight0,
       'priceFontStyle': instance.priceFontStyle0,
       'priceTextDecoration': instance.priceTextDecoration,
+      'textAlign': instance.textAlign0,
+      'imageCorners': instance.imageCorners,
+      'columns': instance.columns,
       'categoryTitleFontSize': instance.categoryTitleFontSize,
       'categoryTitleColor': instance.categoryTitleColor,
       'categoryTitleFontFamily': instance.categoryTitleFontFamily,
-      'categoryTitleFontWeight': instance.categoryTitleFontWeight,
-      'categoryTitleFontStyle': instance.categoryTitleFontStyle,
+      'categoryTitleFontWeight': instance.categoryTitleFontWeight0,
+      'categoryTitleFontStyle': instance.categoryTitleFontStyle0,
       'categoryTitleTextDecoration': instance.categoryTitleTextDecoration,
       'filterFontSize': instance.filterFontSize,
       'filterColor': instance.filterColor,
       'filterFontFamily': instance.filterFontFamily,
-      'filterFontWeight': instance.filterFontWeight,
-      'filterFontStyle': instance.filterFontStyle,
+      'filterFontWeight': instance.filterFontWeight0,
+      'filterFontStyle': instance.filterFontStyle0,
       'filterTextDecoration': instance.filterTextDecoration,
-      'imageCorners': instance.imageCorners,
-      'columns': instance.columns,
     };
 
 Data _$DataFromJson(Map<String, dynamic> json) {

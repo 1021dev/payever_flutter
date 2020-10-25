@@ -237,20 +237,20 @@ Color colorConvert(String color, {bool emptyColor = false}) {
 
   if (color == '#000')
     return Colors.black;
-  if (color == '#111')
-    color = '#111111';
 
   color = color.replaceAll("#", "");
-//  if (color.length < 6) {
-//    try {
-//      String lastStr = color.substring(color.length - 1);
-//      while(color.length < 6) {
-//        color = color + lastStr;
-//      }
-//    } catch(e) {
-//      return emptyColor ? Colors.transparent :Colors.white;
-//    }
-//  }
+  if (color.length < 6) {
+    try {
+      String lastStr = color.substring(color.length - 1);
+      if (lastStr != null && lastStr.isNotEmpty) {
+        while(color.length < 6) {
+          color = color + lastStr;
+        }
+      }
+    } catch(e) {
+      return emptyColor ? Colors.transparent :Colors.white;
+    }
+  }
 
   if (color.length == 6) {
     return Color(int.parse("0xFF"+color));
