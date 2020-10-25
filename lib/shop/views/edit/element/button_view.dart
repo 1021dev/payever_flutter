@@ -16,9 +16,12 @@ class ButtonView extends StatefulWidget {
 }
 
 class _ButtonViewState extends State<ButtonView> {
+  final String TAG = 'ButtonView : ';
+
   final Child child;
   final SectionStyleSheet sectionStyleSheet;
   ButtonStyles styles;
+  ButtonData data;
   _ButtonViewState(this.child, this.sectionStyleSheet);
 
   @override
@@ -32,14 +35,21 @@ class _ButtonViewState extends State<ButtonView> {
         styles.display == 'none')
       return Container();
 
+    data = ButtonData.fromJson(child.data);
+    if (data.action != null && data.action.payload != null) {
+      print('$TAG has action');
+//      styles = ButtonStyles.fromJson(child.styles);
+      print('$TAG Style1: ${child.styles}');
+    }
     return _body();
   }
 
   Widget _body() {
     return Container(
-      width: styles.width,
-      height: styles.height,
+      width: styles.width + styles.paddingH * 2,
+      height: styles.height + styles.paddingV * 2,
       decoration: decoration,
+      padding: EdgeInsets.symmetric(horizontal: styles.paddingH, vertical: styles.paddingV),
       margin: EdgeInsets.only(
           left: styles.getMarginLeft(sectionStyleSheet),
           right: styles.marginRight,
@@ -47,7 +57,7 @@ class _ButtonViewState extends State<ButtonView> {
           bottom: styles.marginBottom),
       alignment: Alignment.center,
       child: Text(
-        Data.fromJson(child.data).text,
+        data.text,
         style: TextStyle(
             color: colorConvert(styles.color),
             fontSize: styles.textFontSize(),

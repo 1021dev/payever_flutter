@@ -421,7 +421,7 @@ class BaseStyles {
   // Relative
   @JsonKey(name: 'margin', defaultValue: '0 0 0 0')
   String margin;
-  @JsonKey(name: 'padding', defaultValue: '8 28')
+  @JsonKey(name: 'padding', defaultValue: '0 0') // Virtical Horizontal
   String padding;
   @JsonKey(name: 'position', defaultValue: 'absolute')
   String position;
@@ -544,6 +544,13 @@ class BaseStyles {
   dynamic filterTextDecoration;
   // ------------------------------------------------------
   // ------------------------------------------------------
+  get paddingH {
+    return double.parse(padding.split(' ').last);
+  }
+
+  get paddingV {
+    return double.parse(padding.split(' ').first);
+  }
 
   double getMarginTop(SectionStyleSheet sectionStyleSheet) {
     double margin = marginTop;
@@ -732,6 +739,9 @@ class ButtonStyles extends BaseStyles{
 
   @JsonKey(name: 'width', defaultValue: 0)
   double width;
+  @JsonKey(name: 'height', defaultValue: 20)
+  double height;
+
   @JsonKey(name: 'color', defaultValue: '#FFFFFF')
   String color;
 

@@ -239,11 +239,12 @@ Color colorConvert(String color, {bool emptyColor = false}) {
     return Colors.black;
 
   color = color.replaceAll("#", "");
-//  if (color.length < 6) {
-//    while(color.length < 6) {
-//      color = color + '0';
-//    }
-//  }
+  if (color.length < 6) {
+    String lastStr = color.substring(color.length);
+    while(color.length < 6) {
+      color = color + lastStr;
+    }
+  }
 
   if (color.length == 6) {
     return Color(int.parse("0xFF"+color));
