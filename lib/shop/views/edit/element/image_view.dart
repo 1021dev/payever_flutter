@@ -26,7 +26,7 @@ class _ImageViewState extends State<ImageView> {
   final Child child;
   final SectionStyleSheet sectionStyleSheet;
   ImageStyles styles;
-  Data data;
+  ImageData data;
 
   _ImageViewState(this.child, this.sectionStyleSheet);
 
@@ -43,7 +43,7 @@ class _ImageViewState extends State<ImageView> {
 
   Widget _body() {
     try {
-      data = Data.fromJson(child.data);
+      data = ImageData.fromJson(child.data);
     } catch (e) {}
 
     String url = '';

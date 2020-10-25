@@ -2059,27 +2059,18 @@ Map<String, dynamic> _$ShopProductCategoryStylesToJson(
 Data _$DataFromJson(Map<String, dynamic> json) {
   return Data()
     ..text = json['text'] as String
-    ..name = json['name'] as String
-    ..src = json['src'] as String
-    ..count = json['count'] as num
-    ..product = json['product'] as Map<String, dynamic>;
+    ..name = json['name'] as String;
 }
 
 Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
       'text': instance.text,
       'name': instance.name,
-      'src': instance.src,
-      'count': instance.count,
-      'product': instance.product,
     };
 
 ButtonData _$ButtonDataFromJson(Map<String, dynamic> json) {
   return ButtonData()
     ..text = json['text'] as String
     ..name = json['name'] as String
-    ..src = json['src'] as String
-    ..count = json['count'] as num
-    ..product = json['product'] as Map<String, dynamic>
     ..action = json['action'] == null
         ? null
         : ButtonAction.fromJson(json['action'] as Map<String, dynamic>);
@@ -2089,15 +2080,26 @@ Map<String, dynamic> _$ButtonDataToJson(ButtonData instance) =>
     <String, dynamic>{
       'text': instance.text,
       'name': instance.name,
-      'src': instance.src,
-      'count': instance.count,
-      'product': instance.product,
       'action': instance.action,
+    };
+
+ImageData _$ImageDataFromJson(Map<String, dynamic> json) {
+  return ImageData()
+    ..text = json['text'] as String
+    ..name = json['name'] as String
+    ..src = json['src'] as String;
+}
+
+Map<String, dynamic> _$ImageDataToJson(ImageData instance) => <String, dynamic>{
+      'text': instance.text,
+      'name': instance.name,
+      'src': instance.src,
     };
 
 VideoData _$VideoDataFromJson(Map<String, dynamic> json) {
   return VideoData()
     ..text = json['text'] as String
+    ..name = json['name'] as String
     ..autoplay = json['autoplay'] as bool ?? false
     ..controls = json['controls'] as bool ?? false
     ..file = json['file']
@@ -2110,6 +2112,7 @@ VideoData _$VideoDataFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$VideoDataToJson(VideoData instance) => <String, dynamic>{
       'text': instance.text,
+      'name': instance.name,
       'autoplay': instance.autoplay,
       'controls': instance.controls,
       'file': instance.file,
@@ -2123,6 +2126,7 @@ Map<String, dynamic> _$VideoDataToJson(VideoData instance) => <String, dynamic>{
 CategoryData _$CategoryDataFromJson(Map<String, dynamic> json) {
   return CategoryData()
     ..text = json['text'] as String
+    ..name = json['name'] as String
     ..categoryIds = json['categoryIds'] as List ?? []
     ..hideProductName = json['hideProductName'] as bool ?? false
     ..hideProductPrice = json['hideProductPrice'] as bool ?? false
@@ -2132,6 +2136,7 @@ CategoryData _$CategoryDataFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$CategoryDataToJson(CategoryData instance) =>
     <String, dynamic>{
       'text': instance.text,
+      'name': instance.name,
       'categoryIds': instance.categoryIds,
       'hideProductName': instance.hideProductName,
       'hideProductPrice': instance.hideProductPrice,

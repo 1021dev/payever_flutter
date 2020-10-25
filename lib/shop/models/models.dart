@@ -730,9 +730,9 @@ class SectionStyleSheet extends BaseStyles {
 class TextStyles extends BaseStyles {
   TextStyles();
 
-//  Alignment getTextContainAlign() {
-//    return getAlign(textAlign);
-//  }
+  get textHeight {
+      return (minHeight > height) ? minHeight : height;
+  }
 
   factory TextStyles.fromJson(Map<String, dynamic> json) => _$TextStylesFromJson(json);
   Map<String, dynamic> toJson() => _$TextStylesToJson(this);
@@ -901,9 +901,6 @@ class Data {
 
   @JsonKey(name: 'text')      String text;
   @JsonKey(name: 'name')      String name;
-  @JsonKey(name: 'src')       String src;
-  @JsonKey(name: 'count')     num count;
-  @JsonKey(name: 'product')   Map<String, dynamic> product;
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
   Map<String, dynamic> toJson() => _$DataToJson(this);
@@ -920,11 +917,20 @@ class ButtonData extends Data {
 }
 
 @JsonSerializable()
-class VideoData {
+class ImageData extends Data {
+  ImageData();
+
+  @JsonKey(name: 'src')       String src;
+
+  factory ImageData.fromJson(Map<String, dynamic> json) => _$ImageDataFromJson(json);
+  Map<String, dynamic> toJson() => _$ImageDataToJson(this);
+}
+
+
+@JsonSerializable()
+class VideoData extends Data {
   VideoData();
 
-  @JsonKey(name: 'text')
-  String text;
   @JsonKey(name: 'autoplay', defaultValue: false)
   bool autoplay;
   @JsonKey(name: 'controls', defaultValue: false)
@@ -947,11 +953,9 @@ class VideoData {
 }
 
 @JsonSerializable()
-class CategoryData {
+class CategoryData extends Data {
   CategoryData();
 
-  @JsonKey(name: 'text')
-  String text;
   @JsonKey(name: 'categoryIds', defaultValue: [])
   List<dynamic> categoryIds;
   @JsonKey(name: 'hideProductName', defaultValue: false)

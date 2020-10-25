@@ -44,12 +44,10 @@ class _TextViewState extends State<TextView> {
         return Container();
       }
 
-//      print('Html Text Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
-
       return Container(
 //        color: colorConvert(styles.backgroundColor, emptyColor: true),
         width: styles.width,
-        height: styles.height,
+        height: styles.textHeight,
         alignment: styles.textAlign,
         margin: EdgeInsets.only(
             left: styles.getMarginLeft(sectionStyleSheet),
