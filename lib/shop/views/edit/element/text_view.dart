@@ -48,9 +48,9 @@ class _TextViewState extends State<TextView> {
 
       return Container(
 //        color: colorConvert(styles.backgroundColor, emptyColor: true),
-        width: styles.textWidth(),
+        width: styles.width,
         height: styles.height,
-        alignment: styles.getTextContainAlign(),
+        alignment: styles.textAlign,
         margin: EdgeInsets.only(
             left: styles.getMarginLeft(sectionStyleSheet),
             right: styles.marginRight,
@@ -66,8 +66,9 @@ class _TextViewState extends State<TextView> {
                  ''',
                 textStyle: TextStyle(
                   color: colorConvert(styles.color),
-                    fontSize: styles.textFontSize(),
-                    fontWeight: styles.textFontWeight()),
+                    fontSize: styles.fontSize,
+                    fontStyle: styles.fontStyle,
+                    fontWeight: styles.fontWeight),
               ),
             ],
           ),
@@ -94,7 +95,7 @@ class _TextViewState extends State<TextView> {
     print('Text Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
 
     return Container(
-      width: styles.textWidth(),
+      width: styles.width,
       height: styles.height,
       margin: EdgeInsets.only(
           left: styles.getMarginLeft(sectionStyleSheet),
@@ -105,8 +106,9 @@ class _TextViewState extends State<TextView> {
       child: Text(txt,
           style: TextStyle(
               color: colorConvert(styles.color),
-              fontWeight: styles.textFontWeight(),
-              fontSize: styles.textFontSize())),
+              fontWeight: styles.fontWeight,
+              fontStyle: styles.fontStyle,
+              fontSize: styles.fontSize)),
     );
   }
 

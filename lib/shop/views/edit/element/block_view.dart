@@ -174,7 +174,7 @@ class _BlockViewState extends State<BlockView> {
 
   Widget _sectionBackgroundWidget(SectionStyleSheet styleSheet) {
     return Container(
-      width: styleSheet.getWidth,
+      width: styleSheet.width,
       height: styleSheet.height,
 //      decoration: decoration,
       margin: EdgeInsets.only(

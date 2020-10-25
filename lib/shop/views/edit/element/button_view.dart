@@ -49,7 +49,7 @@ class _ButtonViewState extends State<ButtonView> {
       width: styles.width + styles.paddingH * 2,
       height: styles.height + styles.paddingV * 2,
       decoration: decoration,
-      padding: EdgeInsets.symmetric(horizontal: styles.paddingH, vertical: styles.paddingV),
+//      padding: EdgeInsets.symmetric(horizontal: styles.paddingH, vertical: styles.paddingV),
       margin: EdgeInsets.only(
           left: styles.getMarginLeft(sectionStyleSheet),
           right: styles.marginRight,
@@ -60,8 +60,8 @@ class _ButtonViewState extends State<ButtonView> {
         data.text,
         style: TextStyle(
             color: colorConvert(styles.color),
-            fontSize: styles.textFontSize(),
-            fontWeight: styles.textFontWeight()),
+            fontSize: styles.fontSize,
+            fontWeight: styles.fontWeight),
       ),
     );
   }
