@@ -123,9 +123,10 @@ class _ShapeViewState extends State<ShapeView> {
 
   ShapeStyles styleSheet() {
     try {
-      print('Shape Styles: ${ widget.stylesheets[widget.deviceTypeId][child.id]}');
-      return ShapeStyles.fromJson(
-          widget.stylesheets[widget.deviceTypeId][child.id]);
+      Map json = widget.stylesheets[widget.deviceTypeId][child.id];
+//      if (json['display'] != 'none')
+//        print('Shape Styles: $json');
+      return ShapeStyles.fromJson(json);
     } catch (e) {
       return null;
     }

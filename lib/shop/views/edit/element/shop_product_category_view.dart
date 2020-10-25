@@ -190,11 +190,9 @@ class _ShopProductCategoryViewState extends State<ShopProductCategoryView> {
   ShopProductCategoryStyles styleSheet() {
     try {
       Map<String, dynamic>json = widget.stylesheets[widget.deviceTypeId][child.id];
-      print(
-          'ShopProductCategoryStyles: $json');
-      ShopProductCategoryStyles style = ShopProductCategoryStyles.fromJson(json);
-      print('Columns: ${style.columns}');
-      return style;
+//      if (json['display'] != 'none')
+//        print('ShopProductCategoryStyles: $json');
+      return ShopProductCategoryStyles.fromJson(json);
     } catch (e) {
       return null;
     }

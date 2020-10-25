@@ -64,10 +64,11 @@ class _SocialIconViewState extends State<SocialIconView> {
 
   SocialIconStyles styleSheet() {
     try {
-//      print(
-//          'Social Icon Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
-      return SocialIconStyles.fromJson(
-          widget.stylesheets[widget.deviceTypeId][child.id]);
+      Map json = widget.stylesheets[widget.deviceTypeId][child.id];
+//      if (json['display'] != 'none')
+//        print('Social Icon Styles: $json');
+
+      return SocialIconStyles.fromJson(json);
     } catch (e) {
       return null;
     }

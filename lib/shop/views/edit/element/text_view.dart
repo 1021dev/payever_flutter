@@ -114,8 +114,10 @@ class _TextViewState extends State<TextView> {
 
   TextStyles getStyles() {
     try {
-      return TextStyles.fromJson(
-          widget.stylesheets[widget.deviceTypeId][child.id]);
+      Map json = widget.stylesheets[widget.deviceTypeId][child.id];
+//      if (json['display'] != 'none')
+//        print('Text Styles: $json');
+      return TextStyles.fromJson(json);
     } catch (e) {
       return null;
     }

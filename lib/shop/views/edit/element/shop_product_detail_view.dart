@@ -138,10 +138,11 @@ class _ShopProductDetailViewState extends State<ShopProductDetailView> {
 
   ShopProductDetailStyles styleSheet() {
     try {
-//      print(
-//          'Shop Product detail Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
-      return ShopProductDetailStyles.fromJson(
-          widget.stylesheets[widget.deviceTypeId][child.id]);
+      Map json = widget.stylesheets[widget.deviceTypeId][child.id];
+//      if (json['display'] != 'none')
+//        print('Shop Product detail Styles: $json');
+
+      return ShopProductDetailStyles.fromJson(json);
     } catch (e) {
       return null;
     }

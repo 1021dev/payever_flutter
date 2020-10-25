@@ -157,10 +157,10 @@ class _ImageViewState extends State<ImageView> {
 
   ImageStyles styleSheet() {
     try {
-//      print(
-//          'Image Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
-      return ImageStyles.fromJson(
-          widget.stylesheets[widget.deviceTypeId][child.id]);
+      Map json = widget.stylesheets[widget.deviceTypeId][child.id];
+//      if (json['display'] != 'none')
+//        print('Image Styles: $json');
+      return ImageStyles.fromJson(json);
     } catch (e) {
       return null;
     }

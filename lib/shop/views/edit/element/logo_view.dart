@@ -103,10 +103,10 @@ class _LogoViewState extends State<LogoView> {
   }
   ImageStyles styleSheet() {
     try {
-//      print(
-//          'Logo Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
-      return ImageStyles.fromJson(
-          widget.stylesheets[widget.deviceTypeId][child.id]);
+      Map json = widget.stylesheets[widget.deviceTypeId][child.id];
+//      if (json['display'] != 'none')
+//        print('Logo Styles: $json');
+      return ImageStyles.fromJson(json);
     } catch (e) {
       return null;
     }
