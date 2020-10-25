@@ -2141,9 +2141,7 @@ Map<String, dynamic> _$CategoryDataToJson(CategoryData instance) =>
 ButtonAction _$ButtonActionFromJson(Map<String, dynamic> json) {
   return ButtonAction()
     ..type = json['type'] as String
-    ..payload = json['payload'] == null
-        ? null
-        : ButtonPayload.fromJson(json['payload'] as Map<String, dynamic>);
+    ..payload = json['payload'];
 }
 
 Map<String, dynamic> _$ButtonActionToJson(ButtonAction instance) =>

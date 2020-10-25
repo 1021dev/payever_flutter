@@ -149,13 +149,13 @@ class _ShopProductCategoryViewState extends State<ShopProductCategoryView> {
                     child: Container(
                       margin: EdgeInsets.only(top: 5),
                       width: double.infinity,
-                      alignment: styles.getTextAlign(),
+                      alignment: styles.textAlign,
                       child: Text(
                         'Product A',
                         style: TextStyle(
                           fontSize: styles.titleFontSize,
-                          fontStyle: styles.getTitleFontStyle(),
-                          fontWeight: styles.getTitleFontWeight(),
+                          fontStyle: styles.titleFontStyle,
+                          fontWeight: styles.titleFontWeight,
                           color: colorConvert(styles.titleColor),
                         ),
                       ),
@@ -165,14 +165,14 @@ class _ShopProductCategoryViewState extends State<ShopProductCategoryView> {
                     visible: !data.hideProductPrice,
                     child: Container(
                       width: double.infinity,
-                      alignment: styles.getTextAlign(),
+                      alignment: styles.textAlign,
                       margin: EdgeInsets.symmetric(vertical: 5),
                       child: Text(
                         '\$ 39.00',
                         style: TextStyle(
                           fontSize: styles.priceFontSize,
-                          fontStyle: styles.getPriceFontStyle(),
-                          fontWeight: styles.getPriceFontWeight(),
+                          fontStyle: styles.priceFontStyle,
+                          fontWeight: styles.priceFontWeight,
                           color: colorConvert(styles.priceColor),
                         ),
                       ),

@@ -59,8 +59,8 @@ class _ShopProductDetailViewState extends State<ShopProductDetailView> {
               child: Text(
                 'Product Title',
                 style: TextStyle(
-                  fontSize: styles.textFontSize() + 10,
-                  fontStyle: styles.textFontStyle(),
+                  fontSize: styles.fontSize + 15,
+                  fontStyle: styles.fontStyle,
                   fontWeight: FontWeight.bold,
                   color: colorConvert(styles.color),
                 ),
@@ -69,9 +69,9 @@ class _ShopProductDetailViewState extends State<ShopProductDetailView> {
             Text(
               '100.00 VAT included',
               style: TextStyle(
-                fontSize: styles.textFontSize(),
-                fontStyle: styles.textFontStyle(),
-                fontWeight: styles.textFontWeight(),
+                fontSize: styles.fontSize,
+                fontStyle: styles.fontStyle,
+                fontWeight: styles.fontWeight,
                 color: colorConvert(styles.color),
               ),
             ),
@@ -79,8 +79,8 @@ class _ShopProductDetailViewState extends State<ShopProductDetailView> {
             Text(
               'Product Description',
               style: TextStyle(
-                fontSize: styles.textFontSize(),
-                fontStyle: styles.textFontStyle(),
+                fontSize: styles.fontSize,
+                fontStyle: styles.fontStyle,
                 color: colorConvert(styles.color),
               ),
             ),
@@ -99,7 +99,7 @@ class _ShopProductDetailViewState extends State<ShopProductDetailView> {
                     child: Text(
                       'First',
                       style: TextStyle(
-                        fontSize: styles.textFontSize(),
+                        fontSize: styles.fontSize,
                         color: colorConvert(styles.color),
                       ),
                     ),

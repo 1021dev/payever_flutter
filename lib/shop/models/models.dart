@@ -970,7 +970,7 @@ class ButtonAction {
   ButtonAction();
 
   @JsonKey(name: 'type')      String type;
-  @JsonKey(name: 'payload')   ButtonPayload payload;
+  @JsonKey(name: 'payload')   dynamic payload; // ButtonPayload or String
 
   factory ButtonAction.fromJson(Map<String, dynamic> json) => _$ButtonActionFromJson(json);
   Map<String, dynamic> toJson() => _$ButtonActionToJson(this);
