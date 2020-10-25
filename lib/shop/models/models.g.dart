@@ -449,7 +449,7 @@ BaseStyles _$BaseStylesFromJson(Map<String, dynamic> json) {
     ..fontWeight0 = json['fontWeight'] ?? 400
     ..fontFamily = json['fontFamily'] as String ??
         'Helvetica Neue,Helvetica,Arial,sans-serif'
-    ..textAlign0 = json['textAlign'] as String ?? 'center'
+    ..textAlign0 = json['textAlign'] as String
     ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
     ..titleColor = json['titleColor'] as String ?? '#000000'
     ..titleFontFamily = json['titleFontFamily'] as String ?? 'Roboto'
@@ -594,7 +594,7 @@ SectionStyleSheet _$SectionStyleSheetFromJson(Map<String, dynamic> json) {
     ..fontWeight0 = json['fontWeight'] ?? 400
     ..fontFamily = json['fontFamily'] as String ??
         'Helvetica Neue,Helvetica,Arial,sans-serif'
-    ..textAlign0 = json['textAlign'] as String ?? 'center'
+    ..textAlign0 = json['textAlign'] as String
     ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
     ..titleColor = json['titleColor'] as String ?? '#000000'
     ..titleFontFamily = json['titleFontFamily'] as String ?? 'Roboto'
@@ -745,7 +745,7 @@ TextStyles _$TextStylesFromJson(Map<String, dynamic> json) {
     ..fontWeight0 = json['fontWeight'] ?? 400
     ..fontFamily = json['fontFamily'] as String ??
         'Helvetica Neue,Helvetica,Arial,sans-serif'
-    ..textAlign0 = json['textAlign'] as String ?? 'center'
+    ..textAlign0 = json['textAlign'] as String
     ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
     ..titleColor = json['titleColor'] as String ?? '#000000'
     ..titleFontFamily = json['titleFontFamily'] as String ?? 'Roboto'
@@ -888,7 +888,7 @@ ButtonStyles _$ButtonStylesFromJson(Map<String, dynamic> json) {
     ..fontWeight0 = json['fontWeight'] ?? 400
     ..fontFamily = json['fontFamily'] as String ??
         'Helvetica Neue,Helvetica,Arial,sans-serif'
-    ..textAlign0 = json['textAlign'] as String ?? 'center'
+    ..textAlign0 = json['textAlign'] as String
     ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
     ..titleColor = json['titleColor'] as String ?? '#000000'
     ..titleFontFamily = json['titleFontFamily'] as String ?? 'Roboto'
@@ -1035,7 +1035,7 @@ ShopCartStyles _$ShopCartStylesFromJson(Map<String, dynamic> json) {
     ..fontWeight0 = json['fontWeight'] ?? 400
     ..fontFamily = json['fontFamily'] as String ??
         'Helvetica Neue,Helvetica,Arial,sans-serif'
-    ..textAlign0 = json['textAlign'] as String ?? 'center'
+    ..textAlign0 = json['textAlign'] as String
     ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
     ..titleColor = json['titleColor'] as String ?? '#000000'
     ..titleFontFamily = json['titleFontFamily'] as String ?? 'Roboto'
@@ -1190,7 +1190,7 @@ ShapeStyles _$ShapeStylesFromJson(Map<String, dynamic> json) {
     ..fontWeight0 = json['fontWeight'] ?? 400
     ..fontFamily = json['fontFamily'] as String ??
         'Helvetica Neue,Helvetica,Arial,sans-serif'
-    ..textAlign0 = json['textAlign'] as String ?? 'center'
+    ..textAlign0 = json['textAlign'] as String
     ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
     ..titleColor = json['titleColor'] as String ?? '#000000'
     ..titleFontFamily = json['titleFontFamily'] as String ?? 'Roboto'
@@ -1335,7 +1335,7 @@ ImageStyles _$ImageStylesFromJson(Map<String, dynamic> json) {
     ..fontWeight0 = json['fontWeight'] ?? 400
     ..fontFamily = json['fontFamily'] as String ??
         'Helvetica Neue,Helvetica,Arial,sans-serif'
-    ..textAlign0 = json['textAlign'] as String ?? 'center'
+    ..textAlign0 = json['textAlign'] as String
     ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
     ..titleColor = json['titleColor'] as String ?? '#000000'
     ..titleFontFamily = json['titleFontFamily'] as String ?? 'Roboto'
@@ -1494,7 +1494,7 @@ SocialIconStyles _$SocialIconStylesFromJson(Map<String, dynamic> json) {
     ..fontWeight0 = json['fontWeight'] ?? 400
     ..fontFamily = json['fontFamily'] as String ??
         'Helvetica Neue,Helvetica,Arial,sans-serif'
-    ..textAlign0 = json['textAlign'] as String ?? 'center'
+    ..textAlign0 = json['textAlign'] as String
     ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
     ..titleColor = json['titleColor'] as String ?? '#000000'
     ..titleFontFamily = json['titleFontFamily'] as String ?? 'Roboto'
@@ -1639,7 +1639,7 @@ ShopProductsStyles _$ShopProductsStylesFromJson(Map<String, dynamic> json) {
     ..fontWeight0 = json['fontWeight'] ?? 400
     ..fontFamily = json['fontFamily'] as String ??
         'Helvetica Neue,Helvetica,Arial,sans-serif'
-    ..textAlign0 = json['textAlign'] as String ?? 'center'
+    ..textAlign0 = json['textAlign'] as String
     ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
     ..titleColor = json['titleColor'] as String ?? '#000000'
     ..titleFontFamily = json['titleFontFamily'] as String ?? 'Roboto'
@@ -1793,7 +1793,7 @@ ShopProductDetailStyles _$ShopProductDetailStylesFromJson(
     ..fontWeight0 = json['fontWeight'] ?? 400
     ..fontFamily = json['fontFamily'] as String ??
         'Helvetica Neue,Helvetica,Arial,sans-serif'
-    ..textAlign0 = json['textAlign'] as String ?? 'center'
+    ..textAlign0 = json['textAlign'] as String
     ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
     ..titleColor = json['titleColor'] as String ?? '#000000'
     ..titleFontFamily = json['titleFontFamily'] as String ?? 'Roboto'
@@ -1950,7 +1950,7 @@ ShopProductCategoryStyles _$ShopProductCategoryStylesFromJson(
     ..fontWeight0 = json['fontWeight'] ?? 400
     ..fontFamily = json['fontFamily'] as String ??
         'Helvetica Neue,Helvetica,Arial,sans-serif'
-    ..textAlign0 = json['textAlign'] as String ?? 'center'
+    ..textAlign0 = json['textAlign'] as String
     ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
     ..titleColor = json['titleColor'] as String ?? '#000000'
     ..titleFontFamily = json['titleFontFamily'] as String ?? 'Roboto'

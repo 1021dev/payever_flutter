@@ -77,11 +77,11 @@ class _ShopCartViewState extends State<ShopCartView> {
             bottom: styles.marginBottom),
         alignment: Alignment.center,
         child: Badge(
-          padding: EdgeInsets.all(styles.width/8),
+          padding: EdgeInsets.all(styles.width/10),
           badgeColor: colorConvert(styles.badgeBackground),
           badgeContent: Text(
             '3',
-            style: TextStyle(fontSize: styles.width/3.5, fontWeight: FontWeight.w600, color: colorConvert(styles.badgeColor)),
+            style: TextStyle(fontSize: styles.width/4, fontWeight: FontWeight.w600, color: colorConvert(styles.badgeColor)),
           ),
           child: SvgPicture.asset(
             asset,
@@ -149,8 +149,8 @@ class _ShopCartViewState extends State<ShopCartView> {
   ShopCartStyles styleSheet() {
     try {
       Map json = widget.stylesheets[widget.deviceTypeId][child.id];
-//      if (json['display'] != 'none')
-//        print('Shop Cart Styles: $json');
+      if (json['display'] != 'none')
+        print('Shop Cart Styles: $json');
 
       return ShopCartStyles.fromJson(json);
     } catch (e) {

@@ -466,10 +466,10 @@ class BaseStyles {
       defaultValue: "Helvetica Neue,Helvetica,Arial,sans-serif")
   String fontFamily;
   // textAlign is only For Text, Shop Product, Shop Product Category
-  @JsonKey(name: 'textAlign', defaultValue: 'center')
+  @JsonKey(name: 'textAlign')
   String textAlign0;
   get textAlign {
-    return getAlign(textAlign0, isTextStyle: true);
+    return getAlign(textAlign0);
   }
   get fontSize {
     if (fontSize0 == 'auto') {
@@ -587,7 +587,7 @@ class BaseStyles {
     return margin;
   }
 
-  Alignment getAlign(String align, {bool isTextStyle = false}) {
+  Alignment getAlign(String align) {
     if (align == 'center')
       return Alignment.center;
     if (align == 'top')
@@ -599,7 +599,7 @@ class BaseStyles {
     if (align == 'left')
       return Alignment.centerLeft;
 
-    return isTextStyle ? Alignment.center : Alignment.topLeft;
+    return Alignment.topLeft;
   }
 
   FontWeight getFontWeight(dynamic fontWeight) {
