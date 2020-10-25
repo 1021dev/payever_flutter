@@ -35,6 +35,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
     return Scaffold(
         appBar: Appbar(shopPage.name),
         body: SafeArea(
+          bottom: false,
           child: TemplateView(
             shopPage: shopPage,
             template: template,

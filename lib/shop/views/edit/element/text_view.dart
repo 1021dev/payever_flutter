@@ -33,7 +33,6 @@ class _TextViewState extends State<TextView> {
     } else {
       print('Data is not Map: ${child.data}');
     }
-//    print('text value: $txt');
 
     if (txt.contains('<div') ||
         txt.contains('<span') ||
@@ -71,14 +70,6 @@ class _TextViewState extends State<TextView> {
             ],
           ),
         )
-        /*Html(
-          data: """
-              $txt
-              """,
-          onLinkTap: (url) {
-            print("Opening $url...");
-          },
-        )*/,
       );
     }
     TextStyles styles;
@@ -113,8 +104,8 @@ class _TextViewState extends State<TextView> {
   TextStyles getStyles() {
     try {
       Map json = widget.stylesheets[widget.deviceTypeId][child.id];
-//      if (json['display'] != 'none')
-//        print('Text Styles: $json');
+      if (json['display'] != 'none')
+        print('Text Styles: $json');
       return TextStyles.fromJson(json);
     } catch (e) {
       return null;

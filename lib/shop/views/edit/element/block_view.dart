@@ -53,8 +53,7 @@ class _BlockViewState extends State<BlockView> {
 
   Widget _section() {
     List<Widget> widgets = [];
-    widgets.add(_sectionBackgroundWidget(styleSheet));
-    print('$TAG Block ID ${child.id}');
+    widgets.add(BackgroundView(styles: styleSheet));
     child.children.forEach((child) {
       Widget widget;
       switch(child.type) {
@@ -169,28 +168,26 @@ class _BlockViewState extends State<BlockView> {
       if (widget != null) widgets.add(widget);
     });
 
-    return  Container(child: Stack(children: widgets));
-  }
-
-  Widget _sectionBackgroundWidget(SectionStyleSheet styleSheet) {
-    return Container(
-      width: styleSheet.width,
-      height: styleSheet.height,
+    return  Container(
+        width: styleSheet.width,
+        height: styleSheet.height,
 //      decoration: decoration,
-      margin: EdgeInsets.only(
-          left: styleSheet.getMarginLeft(sectionStyleSheet),
-          right: styleSheet.marginRight,
-          top: styleSheet.getMarginTop(sectionStyleSheet),
-          bottom: styleSheet.marginBottom),
-      alignment: styleSheet.getBackgroundImageAlignment(),
-      child: BackgroundView(styles: styleSheet),
-    );
+        margin: EdgeInsets.only(
+            left: styleSheet.getMarginLeft(sectionStyleSheet),
+            right: styleSheet.marginRight,
+            top: styleSheet.getMarginTop(sectionStyleSheet),
+            bottom: styleSheet.marginBottom),
+        alignment: styleSheet.getBackgroundImageAlignment(),
+        child: Stack(children: widgets));
   }
 
   SectionStyleSheet getSectionStyleSheet() {
     try {
+
       Map json = stylesheets[deviceTypeId][child.id];
       if (json == null || json['display'] == 'none') return null;
+      print('$TAG Block ID ${child.id}');
+      print('$TAG Bloc style: $json');
       return SectionStyleSheet.fromJson(json);
     } catch (e) {
       print('$TAG Error: ${e.toString()}');

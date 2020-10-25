@@ -620,16 +620,8 @@ class BaseStyles {
   }
 
   FontStyle getFontStyle(String fontStyle) {
-    try {
-      if (fontStyle == null)
-        return FontStyle.normal;
-      if (fontStyle == 'italic')
-        return FontStyle.italic;
-      return FontStyle.normal;
-    } catch(e) {
-      print('FontStyle Error: ${e.toString()}');
-      return FontStyle.normal;
-    }
+    if (fontStyle == null) return FontStyle.normal;
+    if (fontStyle == 'italic') return FontStyle.italic;
     return FontStyle.normal;
   }
 
