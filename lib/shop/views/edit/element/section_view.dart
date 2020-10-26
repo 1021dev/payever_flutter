@@ -29,8 +29,8 @@ class SectionView extends StatefulWidget {
   final ShopPage shopPage;
   final Child child;
   final Map<String, dynamic> stylesheets;
-
-  const SectionView({this.shopPage, this.child, this.stylesheets});
+  final bool isActive;
+  const SectionView({this.shopPage, this.child, this.stylesheets, this.isActive = false});
 
   @override
   _SectionViewState createState() => _SectionViewState(
@@ -65,10 +65,10 @@ class _SectionViewState extends State<SectionView> {
   @override
   Widget build(BuildContext context) {
     globalStateModel = Provider.of<GlobalStateModel>(context, listen: true);
-    return _section();
+    return body;
   }
 
-  Widget _section() {
+  Widget get body {
     if (styleSheet == null) {
       return Container();
     }
@@ -80,15 +80,8 @@ class _SectionViewState extends State<SectionView> {
       if (widget != null)
         widgets.add(widget);
     });
-    // Add Drag Buttons
-    if (widgets.isNotEmpty) {
-      widgets.add(Positioned(
-        bottom: 0,
-        left: 0,
-        right: 0,
-        child: dragArrow,
-      ));
-    }
+
+    addActiveWidgets(widgets);
 
     return StreamBuilder(
       stream: controller.stream,
@@ -217,11 +210,66 @@ class _SectionViewState extends State<SectionView> {
     return widget;
   }
 
+  void addActiveWidgets(List<Widget>widgets) {
+    if (widget.isActive) {
+      // Add Drag Buttons
+      if (widgets.isNotEmpty) {
+        widgets.add(Positioned(
+          bottom: 0,
+          left: 0,
+          right: 0,
+          child: dragArrow,
+        ));
+      }
+      // Add Edges ---
+      // top
+      widgets.add(Positioned(
+        top: 0,
+        left: 0,
+        right: 0,
+        child: Container(
+          height: 4,
+          color: Colors.blueAccent,
+        ),
+      ));
+      // Left
+      widgets.add(Positioned(
+        top: 0,
+        left: 0,
+        bottom: 0,
+        child: Container(
+          width: 4,
+          color: Colors.blueAccent,
+        ),
+      ));
+      // Bottom
+      widgets.add(Positioned(
+        bottom: 0,
+        left: 0,
+        right: 0,
+        child: Container(
+          height: 4,
+          color: Colors.blueAccent,
+        ),
+      ));
+      // Right
+      widgets.add(Positioned(
+        top: 0,
+        right: 0,
+        bottom: 0,
+        child: Container(
+          width: 4,
+          color: Colors.blueAccent,
+        ),
+      ));
+    }
+  }
+
   Widget get dragArrow {
     return Container(
-        width: 24,
+        width: 40,
         height: 24,
-        alignment: Alignment.bottomCenter,
+        alignment: Alignment.center,
         child: GestureDetector(
             onVerticalDragUpdate: (DragUpdateDetails details) {
               setState(() {
@@ -243,14 +291,20 @@ class _SectionViewState extends State<SectionView> {
             },
             onVerticalDragEnd: (DragEndDetails details) {
               editAction();
-              print('onVerticalDragEnd ');
             },
             onVerticalDragStart: (details) {
               print('onVerticalDragDown dy = ${details.globalPosition.dy}');
             },
-            child: Icon(
-              Icons.arrow_drop_up,
-              color: Colors.black,
+            child: Container(
+              width: 40,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.blue, width: 2),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(
+                Icons.keyboard_arrow_up,
+                color: Colors.blue,
+              ),
             )));
   }
 

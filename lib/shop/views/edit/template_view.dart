@@ -25,7 +25,7 @@ class _TemplateViewState extends State<TemplateView> {
   final ShopPage shopPage;
   final Template template;
   final Map<String, dynamic> stylesheets;
-
+  String selectSectionId = '';
 
   _TemplateViewState(this.shopPage, this.template, this.stylesheets);
 
@@ -44,7 +44,21 @@ class _TemplateViewState extends State<TemplateView> {
           child.children != null &&
           /*child.children.isNotEmpty &&*/
           styleSheet.display != 'none') {
-        sections.add(SectionView(shopPage:shopPage, child:child, stylesheets:stylesheets));
+        SectionView sectionView = SectionView(
+          shopPage: shopPage,
+          child: child,
+          stylesheets: stylesheets,
+          isActive: selectSectionId == child.id,
+        );
+        Widget widget = GestureDetector(
+          onTap: () {
+            setState(() {
+              selectSectionId = child.id;
+            });
+          },
+          child: sectionView,
+        );
+        sections.add(widget);
       }
     });
 
@@ -72,12 +86,10 @@ class _TemplateViewState extends State<TemplateView> {
   SectionStyleSheet getSectionStyleSheet(String childId) {
     try {
       Map json = stylesheets[shopPage.stylesheetIds.mobile][childId];
-      if (json['display'] != 'none')
-        print('Section StyleSheet: $json');
+      if (json['display'] != 'none') print('Section StyleSheet: $json');
       return SectionStyleSheet.fromJson(json);
     } catch (e) {
       return null;
     }
   }
-
 }
