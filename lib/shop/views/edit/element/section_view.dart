@@ -50,7 +50,7 @@ class _SectionViewState extends State<SectionView> {
   double widgetHeight = 0;
   GlobalKey key = GlobalKey();
   GlobalStateModel globalStateModel;
-
+  String name;
   _SectionViewState({this.shopPage, this.child, this.stylesheets, this.activeShop}) {
     styleSheet = getSectionStyleSheet(child.id);
     widgetHeight = styleSheet.height;
@@ -73,8 +73,13 @@ class _SectionViewState extends State<SectionView> {
       return Container();
     }
     print('SectionId: ${child.id}');
+    name = 'Section';
+    if (child.data != null) {
+      name = Data.fromJson(child.data).name;
+    }
+
     List<Widget> widgets = [];
-    widgets.add(_sectionBackgroundWidget(styleSheet));
+    widgets.add(sectionBackgroundWidget);
     child.children.forEach((child) {
       Widget widget = getChild(child);
       if (widget != null)
@@ -262,10 +267,22 @@ class _SectionViewState extends State<SectionView> {
           color: Colors.blueAccent,
         ),
       ));
+      // Section Name
+      widgets.add(Positioned(
+        top: 4,
+        left: 4,
+        child: Container(
+          width: 40,
+          height: 18,
+          alignment: Alignment.center,
+          color: Colors.blue,
+          child: Text(name, style: TextStyle(fontSize: 10),),
+        ),
+      ));
     }
   }
 
-  Widget get dragArrow {
+  get dragArrow {
     return Container(
         width: 40,
         height: 24,
@@ -308,7 +325,7 @@ class _SectionViewState extends State<SectionView> {
             )));
   }
 
-  Widget _sectionBackgroundWidget(SectionStyleSheet styleSheet) {
+  get sectionBackgroundWidget {
     return Container(
       width: double.infinity,
       //styleSheet.width,

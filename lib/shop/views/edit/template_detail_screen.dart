@@ -29,7 +29,6 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
   StreamController<double> controller = StreamController.broadcast();
   double position;
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,6 +38,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
           child: TemplateView(
             shopPage: shopPage,
             template: template,
+            enableTapSection: true,
             stylesheets: stylesheets,
           ),
         ),

@@ -8,12 +8,14 @@ class TemplateView extends StatefulWidget {
   final Map<String, dynamic> stylesheets;
   final Function onTap;
   final bool scrollable;
+  final bool enableTapSection;
 
   const TemplateView(
       {this.shopPage,
       this.template,
       this.stylesheets,
       this.onTap,
+      this.enableTapSection = false,
       this.scrollable = true});
 
   @override
@@ -25,15 +27,13 @@ class _TemplateViewState extends State<TemplateView> {
   final ShopPage shopPage;
   final Template template;
   final Map<String, dynamic> stylesheets;
+
   String selectSectionId = '';
 
   _TemplateViewState(this.shopPage, this.template, this.stylesheets);
 
   @override
   Widget build(BuildContext context) {
-//    if (shopPage.name != '404 1') {
-//      return Container();
-//    }
     List sections = [];
     template.children.forEach((child) {
       SectionStyleSheet styleSheet = getSectionStyleSheet(child.id);
@@ -50,15 +50,13 @@ class _TemplateViewState extends State<TemplateView> {
           stylesheets: stylesheets,
           isActive: selectSectionId == child.id,
         );
-        Widget widget = GestureDetector(
-          onTap: () {
-            setState(() {
-              selectSectionId = child.id;
-            });
-          },
+        Widget section = GestureDetector(
+          onTap: widget.enableTapSection ? () {
+            onTapSection(child);
+          }: null,
           child: sectionView,
         );
-        sections.add(widget);
+        sections.add(section);
       }
     });
 
@@ -81,6 +79,12 @@ class _TemplateViewState extends State<TemplateView> {
         ),
       ),
     );
+  }
+
+  void onTapSection(Child child) {
+    setState(() {
+      selectSectionId = child.id;
+    });
   }
 
   SectionStyleSheet getSectionStyleSheet(String childId) {
