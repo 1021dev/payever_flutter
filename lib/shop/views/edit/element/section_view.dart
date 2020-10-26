@@ -16,6 +16,7 @@ import 'package:payever/shop/views/edit/element/shop_cart_view.dart';
 import 'package:payever/shop/views/edit/element/shop_product_category_view.dart';
 import 'package:payever/shop/views/edit/element/shop_product_detail_view.dart';
 import 'package:payever/shop/views/edit/element/shop_products_view.dart';
+import 'package:payever/shop/views/edit/element/shop_products_view1.dart';
 import 'package:payever/shop/views/edit/element/social_icon_view.dart';
 import 'package:payever/shop/views/edit/element/sub_element/background_view.dart';
 import 'package:payever/shop/views/edit/element/text_view.dart';
@@ -178,7 +179,7 @@ class _SectionViewState extends State<SectionView> {
         );
         break;
       case 'shop-products':
-        widget = ShopProductsView(
+        widget = ShopProductsView1(
           child: child,
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
