@@ -10,12 +10,14 @@ class ShopProductsView1 extends StatefulWidget {
   final Map<String, dynamic> stylesheets;
   final String deviceTypeId;
   final SectionStyleSheet sectionStyleSheet;
+  final bool isSelected;
 
   const ShopProductsView1(
       {this.child,
       this.stylesheets,
       this.deviceTypeId,
-      this.sectionStyleSheet});
+      this.sectionStyleSheet,
+      this.isSelected});
 
   @override
   _ShopProductsView1State createState() =>
@@ -40,76 +42,83 @@ class _ShopProductsView1State extends State<ShopProductsView1> {
       return Container();
 
     return ResizeableView(
-      top: styles.getMarginTop(sectionStyleSheet),
+        top: styles.getMarginTop(sectionStyleSheet),
         left: styles.getMarginLeft(sectionStyleSheet),
         width: styles.width,
         height: styles.height,
-        child: Column(
-          children: [
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey, width: 1),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: CachedNetworkImage(
-                  imageUrl: '',
-                  imageBuilder: (context, imageProvider) => Container(
-                    decoration: BoxDecoration(
-                      color: Colors.transparent /*background.backgroundColor*/,
-                      image: DecorationImage(
-                        image: imageProvider,
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-                  errorWidget: (context, url, error) {
-                    return Container(
-                      alignment: Alignment.center,
-                      width: 50,
-                      height: 50,
-                      child: SvgPicture.asset(
-                        'assets/images/shop-edit-products-icon.svg',
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-            Column(
+        isSelected: widget.isSelected,
+        child: Opacity(
+          opacity: styles.opacity,
+          child: Container(
+            color: colorConvert(styles.backgroundColor),
+            child: Column(
               children: [
-                Container(
-                  margin: EdgeInsets.only(top: 5),
-                  width: double.infinity,
-                  alignment: styles.textAlign,
-                  child: Text(
-                    'Product name',
-                    style: TextStyle(
-                      fontSize: styles.titleFontSize,
-                      fontStyle: styles.titleFontStyle,
-                      fontWeight: styles.titleFontWeight,
-                      color: colorConvert(styles.titleColor),
+                Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey, width: 1),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: CachedNetworkImage(
+                      imageUrl: '',
+                      imageBuilder: (context, imageProvider) => Container(
+                        decoration: BoxDecoration(
+                          color: Colors.transparent /*background.backgroundColor*/,
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
+                      errorWidget: (context, url, error) {
+                        return Container(
+                          alignment: Alignment.center,
+                          width: 50,
+                          height: 50,
+                          child: SvgPicture.asset(
+                            'assets/images/shop-edit-products-icon.svg',
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ),
-                Container(
-                  width: double.infinity,
-                  alignment: styles.textAlign,
-                  margin: EdgeInsets.symmetric(vertical: 5),
-                  child: Text(
-                    '\$ 00.00',
-                    style: TextStyle(
-                      fontSize: styles.priceFontSize,
-                      fontStyle: styles.priceFontStyle,
-                      fontWeight: styles.priceFontWeight,
-                      color: colorConvert(styles.priceColor),
+                Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(top: 5),
+                      width: double.infinity,
+                      alignment: styles.textAlign,
+                      child: Text(
+                        'Product name',
+                        style: TextStyle(
+                          fontSize: styles.titleFontSize,
+                          fontStyle: styles.titleFontStyle,
+                          fontWeight: styles.titleFontWeight,
+                          color: colorConvert(styles.titleColor),
+                        ),
+                      ),
                     ),
-                  ),
+                    Container(
+                      width: double.infinity,
+                      alignment: styles.textAlign,
+                      margin: EdgeInsets.symmetric(vertical: 5),
+                      child: Text(
+                        '\$ 00.00',
+                        style: TextStyle(
+                          fontSize: styles.priceFontSize,
+                          fontStyle: styles.priceFontStyle,
+                          fontWeight: styles.priceFontWeight,
+                          color: colorConvert(styles.priceColor),
+                        ),
+                      ),
+                    )
+                  ],
                 )
               ],
-            )
-          ],
+            ),
+          ),
         ));
   }
 

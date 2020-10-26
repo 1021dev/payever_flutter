@@ -1,20 +1,23 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class ResizeableView extends StatefulWidget {
-  ResizeableView({this.child, this.height, this.width , this.top, this.left});
+  ResizeableView({this.child, this.height, this.width , this.top, this.left, this.isSelected = false});
 
   final Widget child;
   final double height;
   final double width;
   final double top;
   final double left;
+  final bool isSelected;
 
   @override
   _ResizeableViewState createState() => _ResizeableViewState(
       width: width, height: height, top: top, left: left);
 }
 
-const ballDiameter = 20.0;
+const ballDiameter = 15.0;
 
 class _ResizeableViewState extends State<ResizeableView> {
   double width;
@@ -49,7 +52,9 @@ class _ResizeableViewState extends State<ResizeableView> {
             child: widget.child,
           ),
         ),
+
         // top left
+        if(widget.isSelected)
         Positioned(
           top: top - ballDiameter / 2,
           left: left - ballDiameter / 2,
@@ -68,7 +73,9 @@ class _ResizeableViewState extends State<ResizeableView> {
             },
           ),
         ),
+
         // top middle
+        if(widget.isSelected)
         Positioned(
           top: top - ballDiameter / 2,
           left: left + width / 2 - ballDiameter / 2,
@@ -83,7 +90,9 @@ class _ResizeableViewState extends State<ResizeableView> {
             },
           ),
         ),
+
         // top right
+        if(widget.isSelected)
         Positioned(
           top: top - ballDiameter / 2,
           left: left + width - ballDiameter / 2,
@@ -103,7 +112,9 @@ class _ResizeableViewState extends State<ResizeableView> {
             },
           ),
         ),
+
         // center right
+        if(widget.isSelected)
         Positioned(
           top: top + height / 2 - ballDiameter / 2,
           left: left + width - ballDiameter / 2,
@@ -117,7 +128,9 @@ class _ResizeableViewState extends State<ResizeableView> {
             },
           ),
         ),
+
         // bottom right
+        if(widget.isSelected)
         Positioned(
           top: top + height - ballDiameter / 2,
           left: left + width - ballDiameter / 2,
@@ -137,7 +150,9 @@ class _ResizeableViewState extends State<ResizeableView> {
             },
           ),
         ),
+
         // bottom center
+        if(widget.isSelected)
         Positioned(
           top: top + height - ballDiameter / 2,
           left: left + width / 2 - ballDiameter / 2,
@@ -151,7 +166,9 @@ class _ResizeableViewState extends State<ResizeableView> {
             },
           ),
         ),
+
         // bottom left
+        if(widget.isSelected)
         Positioned(
           top: top + height - ballDiameter / 2,
           left: left - ballDiameter / 2,
@@ -171,7 +188,9 @@ class _ResizeableViewState extends State<ResizeableView> {
             },
           ),
         ),
+
         //left center
+        if(widget.isSelected)
         Positioned(
           top: top + height / 2 - ballDiameter / 2,
           left: left - ballDiameter / 2,
@@ -186,7 +205,9 @@ class _ResizeableViewState extends State<ResizeableView> {
             },
           ),
         ),
+
         // center center
+        if(widget.isSelected)
         Positioned(
           top: top + height / 2 - ballDiameter / 2,
           left: left + width / 2 - ballDiameter / 2,
@@ -201,6 +222,10 @@ class _ResizeableViewState extends State<ResizeableView> {
         ),
       ],
     );
+  }
+
+  void addSelectedWidgets(List<Widget>widgets) {
+
   }
 }
 
@@ -234,6 +259,7 @@ class _ManipulatingBallState extends State<ManipulatingBall> {
 
   @override
   Widget build(BuildContext context) {
+    double deg = 45 * pi / 180;
     return GestureDetector(
       onVerticalDragStart: _handleDrag,
       onVerticalDragUpdate: _handleUpdate,
@@ -243,9 +269,16 @@ class _ManipulatingBallState extends State<ManipulatingBall> {
         width: ballDiameter,
         height: ballDiameter,
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.white, width: 1),
+          border: Border.all(color: Colors.white, width: 2),
           color: Colors.blue,
           shape: BoxShape.circle,
+          boxShadow: [BoxShadow(
+            color: Colors.black38,
+            spreadRadius: 1.5,
+            blurRadius: 1.5,
+            offset: Offset(deg,
+                deg), // changes position of shadow
+          )],
         ),
       ),
     );

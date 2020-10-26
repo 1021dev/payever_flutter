@@ -35,7 +35,7 @@ class SectionView extends StatefulWidget {
 
   @override
   _SectionViewState createState() => _SectionViewState(
-      shopPage: shopPage, child: child, stylesheets: stylesheets);
+      shopPage: shopPage, child: child, stylesheets: stylesheets, isActive: isActive);
 }
 
 class _SectionViewState extends State<SectionView> {
@@ -43,6 +43,7 @@ class _SectionViewState extends State<SectionView> {
   final Child child;
   final Map<String, dynamic> stylesheets;
   final ShopDetailModel activeShop;
+  final bool isActive;
 
   ApiService api = ApiService();
   SectionStyleSheet styleSheet;
@@ -52,9 +53,14 @@ class _SectionViewState extends State<SectionView> {
   GlobalKey key = GlobalKey();
   GlobalStateModel globalStateModel;
   String name;
-  _SectionViewState({this.shopPage, this.child, this.stylesheets, this.activeShop}) {
+  String selectSectionId = '';
+
+  _SectionViewState({this.shopPage, this.child, this.stylesheets, this.activeShop, this.isActive}) {
     styleSheet = getSectionStyleSheet(child.id);
     widgetHeight = styleSheet.height;
+    if(isActive == false) {
+        selectSectionId = '';
+    }
   }
 
   @override
@@ -83,8 +89,17 @@ class _SectionViewState extends State<SectionView> {
     widgets.add(sectionBackgroundWidget);
     child.children.forEach((child) {
       Widget widget = getChild(child);
-      if (widget != null)
-        widgets.add(widget);
+      if (widget != null) {
+        Widget element = GestureDetector(
+          onTap: () {
+                  setState(() {
+                    selectSectionId = child.id;
+                  });
+                },
+          child: widget,
+        );
+        widgets.add(element);
+      }
     });
 
     addActiveWidgets(widgets);
@@ -96,7 +111,6 @@ class _SectionViewState extends State<SectionView> {
         height: snapshot.hasData ? snapshot.data : styleSheet.height,
         width: double.infinity,
         child: Stack(
-//          overflow: Overflow.visible,
           children: widgets,
         ),
       ),
@@ -184,6 +198,7 @@ class _SectionViewState extends State<SectionView> {
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
           sectionStyleSheet: styleSheet,
+          isSelected: selectSectionId == child.id,
         );
         break;
       case 'shop-product-details':
@@ -217,76 +232,79 @@ class _SectionViewState extends State<SectionView> {
     return widget;
   }
 
-  void addActiveWidgets(List<Widget>widgets) {
-    if (widget.isActive) {
-      // Add Drag Buttons
-
-      widgets.add(Positioned(
-        bottom: 0,
-        left: 0,
-        right: 0,
-        child: dragArrow(false),
-      ));
-      widgets.add(Positioned(
-        top: 0,
-        left: 0,
-        right: 0,
-        child: dragArrow(true),
-      ));
-      // Add Edges ---
-      // top
-      widgets.add(Positioned(
-        top: 0,
-        left: 0,
-        right: 0,
-        child: Container(
-          height: 4,
-          color: Colors.blueAccent,
+  void addActiveWidgets(List<Widget> widgets) {
+    if (selectSectionId.isNotEmpty || !widget.isActive) return;
+    // Add Drag Buttons
+    // Top
+    widgets.add(Positioned(
+      top: 0,
+      left: 0,
+      right: 0,
+      child: dragArrow(true),
+    ));
+    // Bottom
+    widgets.add(Positioned(
+      bottom: 0,
+      left: 0,
+      right: 0,
+      child: dragArrow(false),
+    ));
+    // Add Edges ---
+    // top
+    widgets.add(Positioned(
+      top: 0,
+      left: 0,
+      right: 0,
+      child: Container(
+        height: 4,
+        color: Colors.blueAccent,
+      ),
+    ));
+    // Left
+    widgets.add(Positioned(
+      top: 0,
+      left: 0,
+      bottom: 0,
+      child: Container(
+        width: 4,
+        color: Colors.blueAccent,
+      ),
+    ));
+    // Bottom
+    widgets.add(Positioned(
+      bottom: 0,
+      left: 0,
+      right: 0,
+      child: Container(
+        height: 4,
+        color: Colors.blueAccent,
+      ),
+    ));
+    // Right
+    widgets.add(Positioned(
+      top: 0,
+      right: 0,
+      bottom: 0,
+      child: Container(
+        width: 4,
+        color: Colors.blueAccent,
+      ),
+    ));
+    // Section Name
+    widgets.add(Positioned(
+      top: 4,
+      left: 4,
+      child: Container(
+        width: 40,
+        height: 18,
+        alignment: Alignment.center,
+        color: Colors.blue,
+        child: Text(
+          name,
+          style: TextStyle(fontSize: 10),
         ),
-      ));
-      // Left
-      widgets.add(Positioned(
-        top: 0,
-        left: 0,
-        bottom: 0,
-        child: Container(
-          width: 4,
-          color: Colors.blueAccent,
-        ),
-      ));
-      // Bottom
-      widgets.add(Positioned(
-        bottom: 0,
-        left: 0,
-        right: 0,
-        child: Container(
-          height: 4,
-          color: Colors.blueAccent,
-        ),
-      ));
-      // Right
-      widgets.add(Positioned(
-        top: 0,
-        right: 0,
-        bottom: 0,
-        child: Container(
-          width: 4,
-          color: Colors.blueAccent,
-        ),
-      ));
-      // Section Name
-      widgets.add(Positioned(
-        top: 4,
-        left: 4,
-        child: Container(
-          width: 40,
-          height: 18,
-          alignment: Alignment.center,
-          color: Colors.blue,
-          child: Text(name, style: TextStyle(fontSize: 10),),
-        ),
-      ));
-    }
+      ),
+    ));
   }
 
   Widget dragArrow(bool top) {
@@ -313,7 +331,6 @@ class _SectionViewState extends State<SectionView> {
                       ? Navigator.pop(context)
                       : controller.add(widgetHeight);
                 }
-
               });
             },
             behavior: HitTestBehavior.translucent,
