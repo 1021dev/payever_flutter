@@ -30,12 +30,13 @@ class SectionView extends StatefulWidget {
   final ShopPage shopPage;
   final Child child;
   final Map<String, dynamic> stylesheets;
-  final bool isActive;
-  const SectionView({this.shopPage, this.child, this.stylesheets, this.isActive = false});
+  final bool isSelected;
+  final Function onTapChild;
+  const SectionView({this.shopPage, this.child, this.stylesheets, this.isSelected = false, this.onTapChild});
 
   @override
   _SectionViewState createState() => _SectionViewState(
-      shopPage: shopPage, child: child, stylesheets: stylesheets, isActive: isActive);
+      shopPage: shopPage, child: child, stylesheets: stylesheets);
 }
 
 class _SectionViewState extends State<SectionView> {
@@ -43,8 +44,6 @@ class _SectionViewState extends State<SectionView> {
   final Child child;
   final Map<String, dynamic> stylesheets;
   final ShopDetailModel activeShop;
-  final bool isActive;
-
   ApiService api = ApiService();
   SectionStyleSheet styleSheet;
 
@@ -55,12 +54,9 @@ class _SectionViewState extends State<SectionView> {
   String name;
   String selectSectionId = '';
 
-  _SectionViewState({this.shopPage, this.child, this.stylesheets, this.activeShop, this.isActive}) {
+  _SectionViewState({this.shopPage, this.child, this.stylesheets, this.activeShop}) {
     styleSheet = getSectionStyleSheet(child.id);
     widgetHeight = styleSheet.height;
-    if(isActive == false) {
-        selectSectionId = '';
-    }
   }
 
   @override
@@ -88,15 +84,16 @@ class _SectionViewState extends State<SectionView> {
     List<Widget> widgets = [];
     widgets.add(sectionBackgroundWidget);
     child.children.forEach((child) {
-      Widget widget = getChild(child);
-      if (widget != null) {
+      Widget childWidget = getChild(child);
+      if (childWidget != null) {
         Widget element = GestureDetector(
           onTap: () {
-                  setState(() {
-                    selectSectionId = child.id;
-                  });
-                },
-          child: widget,
+            widget.onTapChild();
+            setState(() {
+              selectSectionId = child.id;
+            });
+          },
+          child: childWidget,
         );
         widgets.add(element);
       }
@@ -223,6 +220,7 @@ class _SectionViewState extends State<SectionView> {
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
           sectionStyleSheet: styleSheet,
+          isSelected: selectSectionId == child.id,
         );
         break;
       default:
@@ -233,7 +231,7 @@ class _SectionViewState extends State<SectionView> {
   }
 
   void addActiveWidgets(List<Widget> widgets) {
-    if (selectSectionId.isNotEmpty || !widget.isActive) return;
+    if (!widget.isSelected) return;
     // Add Drag Buttons
     // Top
     widgets.add(Positioned(

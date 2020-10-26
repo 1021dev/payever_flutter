@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/element/sub_element/resizeable_view.dart';
 import '../../../../theme.dart';
 
 class SocialIconView extends StatefulWidget {
@@ -8,12 +9,14 @@ class SocialIconView extends StatefulWidget {
   final Map<String, dynamic> stylesheets;
   final String deviceTypeId;
   final SectionStyleSheet sectionStyleSheet;
+  final bool isSelected;
 
   const SocialIconView(
       {this.child,
       this.stylesheets,
       this.deviceTypeId,
-      this.sectionStyleSheet});
+      this.sectionStyleSheet,
+      this.isSelected});
 
   @override
   _SocialIconViewState createState() =>
@@ -41,24 +44,27 @@ class _SocialIconViewState extends State<SocialIconView> {
   }
 
   Widget _body() {
-    return Opacity(
-      opacity: styles.opacity,
-      child: Container(
-          width: styles.width,
-          height: styles.height,
-          decoration: styles.decoration,
-          margin: EdgeInsets.only(
-              left: styles.getMarginLeft(sectionStyleSheet),
-              right: styles.marginRight,
-              top: styles.getMarginTop(sectionStyleSheet),
-              bottom: styles.marginBottom),
+    return ResizeableView(
+      width: styles.width,
+      height: styles.height,
+      isSelected: widget.isSelected,
+      left: styles.getMarginLeft(sectionStyleSheet),
+      top: styles.getMarginTop(sectionStyleSheet),
+      child: Opacity(
+        opacity: styles.opacity,
+        child: Container(
+            decoration: styles.decoration,
+//            margin: EdgeInsets.only(
+//                right: styles.marginRight,
+//                bottom: styles.marginBottom),
 //          alignment: Alignment.center,
-          child: SvgPicture.asset(
-            'assets/images/social-icon-${child.data['variant']}.svg',
-            color: colorConvert(styles.backgroundColor),
-            width: styles.width,
-            height: styles.height,
-          )),
+            child: SvgPicture.asset(
+              'assets/images/social-icon-${child.data['variant']}.svg',
+              color: colorConvert(styles.backgroundColor),
+//              width: styles.width,
+//              height: styles.height,
+            )),
+      ),
     );
   }
 

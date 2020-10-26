@@ -48,7 +48,12 @@ class _TemplateViewState extends State<TemplateView> {
             shopPage: shopPage,
             child: child,
             stylesheets: stylesheets,
-            isActive: selectSectionId == child.id,
+            isSelected: selectSectionId == child.id,
+            onTapChild: () {
+              setState(() {
+                selectSectionId = '';
+              });
+            },
           );
           Widget section = GestureDetector(
             onTap: widget.enableTapSection ? () {
@@ -82,6 +87,7 @@ class _TemplateViewState extends State<TemplateView> {
   }
 
   void onTapSection(String childId) {
+    print('Selected SectionID: $childId');
     setState(() {
       selectSectionId = childId;
     });

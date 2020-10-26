@@ -17,7 +17,7 @@ class ResizeableView extends StatefulWidget {
       width: width, height: height, top: top, left: left);
 }
 
-const ballDiameter = 15.0;
+const ballDiameter = 12.0;
 
 class _ResizeableViewState extends State<ResizeableView> {
   double width;
@@ -75,7 +75,7 @@ class _ResizeableViewState extends State<ResizeableView> {
         ),
 
         // top middle
-        if(widget.isSelected)
+        if(widget.isSelected && !smallWidth)
         Positioned(
           top: top - ballDiameter / 2,
           left: left + width / 2 - ballDiameter / 2,
@@ -114,7 +114,7 @@ class _ResizeableViewState extends State<ResizeableView> {
         ),
 
         // center right
-        if(widget.isSelected)
+        if(widget.isSelected && !smallHeight)
         Positioned(
           top: top + height / 2 - ballDiameter / 2,
           left: left + width - ballDiameter / 2,
@@ -152,7 +152,7 @@ class _ResizeableViewState extends State<ResizeableView> {
         ),
 
         // bottom center
-        if(widget.isSelected)
+        if(widget.isSelected && !smallWidth)
         Positioned(
           top: top + height - ballDiameter / 2,
           left: left + width / 2 - ballDiameter / 2,
@@ -190,7 +190,7 @@ class _ResizeableViewState extends State<ResizeableView> {
         ),
 
         //left center
-        if(widget.isSelected)
+        if(widget.isSelected && !smallHeight)
         Positioned(
           top: top + height / 2 - ballDiameter / 2,
           left: left - ballDiameter / 2,
@@ -207,7 +207,7 @@ class _ResizeableViewState extends State<ResizeableView> {
         ),
 
         // center center
-        if(widget.isSelected)
+        if(widget.isSelected && !smallWidth && !smallHeight)
         Positioned(
           top: top + height / 2 - ballDiameter / 2,
           left: left + width / 2 - ballDiameter / 2,
@@ -222,6 +222,14 @@ class _ResizeableViewState extends State<ResizeableView> {
         ),
       ],
     );
+  }
+
+  bool get smallWidth {
+    return width < 50;
+  }
+
+  bool get smallHeight {
+    return height < 50;
   }
 
   void addSelectedWidgets(List<Widget>widgets) {
@@ -269,7 +277,7 @@ class _ManipulatingBallState extends State<ManipulatingBall> {
         width: ballDiameter,
         height: ballDiameter,
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.white, width: 2),
+          border: Border.all(color: Colors.white, width: 1),
           color: Colors.blue,
           shape: BoxShape.circle,
           boxShadow: [BoxShadow(
