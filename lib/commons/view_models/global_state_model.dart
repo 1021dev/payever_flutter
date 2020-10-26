@@ -26,6 +26,12 @@ class GlobalStateModel extends ChangeNotifier {
     _activeTheme = value;
     notifyListeners();
   }
+  String _selectedSectionId;
+  setSelectedSectionId(String value) {
+    _selectedSectionId = value;
+    notifyListeners();
+  }
+  String get selectedSectionId => _selectedSectionId;
 
   ShopDetailModel get activeShop => _activeShop;
 

@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/models/template_size_state_model.dart';
 import 'package:payever/shop/views/edit/element/block_view.dart';
 import 'package:payever/shop/views/edit/element/logo_view.dart';
 import 'package:payever/shop/views/edit/element/menu_view.dart';
@@ -50,10 +51,10 @@ class _SectionViewState extends State<SectionView> {
   StreamController<double> controller = StreamController.broadcast();
   double widgetHeight = 0;
   GlobalKey key = GlobalKey();
-  GlobalStateModel globalStateModel;
+
   String name;
   String selectSectionId = '';
-
+  String activeThemeId;
   _SectionViewState({this.shopPage, this.child, this.stylesheets, this.activeShop}) {
     styleSheet = getSectionStyleSheet(child.id);
     widgetHeight = styleSheet.height;
@@ -67,14 +68,22 @@ class _SectionViewState extends State<SectionView> {
 
   @override
   Widget build(BuildContext context) {
-    globalStateModel = Provider.of<GlobalStateModel>(context, listen: true);
-    return body;
+    activeThemeId = Provider.of<GlobalStateModel>(context, listen: false).activeTheme.themeId;
+    Provider.of<TemplateSizeStateModel>(context, listen: true).addListener(() {
+      if (this.mounted)
+        setState(() {
+          selectSectionId = '';
+        });
+    });
+    return body(context);
   }
 
-  Widget get body {
+  Widget body(BuildContext context) {
     if (styleSheet == null) {
       return Container();
     }
+
+
     print('SectionId: ${child.id}');
     name = 'Section';
     if (child.data != null) {
@@ -336,7 +345,7 @@ class _SectionViewState extends State<SectionView> {
               print('onVerticalDragDown dy = ${details.globalPosition.dy}');
             },
             onVerticalDragEnd: (DragEndDetails details) {
-//              editAction();
+              editAction();
             },
             onVerticalDragStart: (details) {
               print('onVerticalDragDown dy = ${details.globalPosition.dy}');
@@ -383,6 +392,8 @@ class _SectionViewState extends State<SectionView> {
   }
 
   void editAction() {
+    if (shopPage.id != 'dbe497ff-97dd-4e30-8230-67ccb37343e1')
+      return;
     Map payload = {
       child.id: {'height': widgetHeight}
     };
@@ -391,7 +402,6 @@ class _SectionViewState extends State<SectionView> {
       'target': 'stylesheets:${shopPage.stylesheetIds.mobile}', // shopPage.stylesheetIds.mobile
       'type': "stylesheet:update",
     };
-    String activeThemeId = globalStateModel.activeTheme != null ? globalStateModel.activeTheme.themeId : null;
     print('activeThemeId: $activeThemeId');
     if (activeThemeId != null && activeThemeId.isNotEmpty) {
       Map<String, dynamic> body = {
