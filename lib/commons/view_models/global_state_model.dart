@@ -18,6 +18,14 @@ class GlobalStateModel extends ChangeNotifier {
   Business _currentBusiness;
   List<AppWidget> _appWidgets;
   ShopDetailModel _activeShop;
+  ThemeModel _activeTheme;
+
+  ThemeModel get activeTheme => _activeTheme;
+
+  setActiveTheme(ThemeModel value) {
+    _activeTheme = value;
+    notifyListeners();
+  }
 
   ShopDetailModel get activeShop => _activeShop;
 

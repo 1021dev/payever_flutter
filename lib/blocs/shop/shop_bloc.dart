@@ -157,6 +157,7 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
     dynamic response = await api.getActiveTheme(GlobalUtils.activeToken.accessToken, activeBusinessId, shopId);
     if (response is Map) {
         yield state.copyWith(activeTheme: ThemeModel.fromJson(response));
+        globalStateModel.setActiveTheme(ThemeModel.fromJson(response));
     }
 
     dynamic defaultObj = await api.getShopDetail(activeBusinessId, GlobalUtils.activeToken.accessToken, shopId);

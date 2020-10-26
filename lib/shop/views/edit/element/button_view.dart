@@ -39,7 +39,7 @@ class _ButtonViewState extends State<ButtonView> {
     if (data.action != null && data.action.payload != null) {
       print('$TAG has action');
 //      styles = ButtonStyles.fromJson(child.styles);
-      print('$TAG Style1: ${child.styles}');
+
     }
     return _body();
   }

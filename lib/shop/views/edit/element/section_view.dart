@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/shop/models/models.dart';
@@ -17,6 +20,8 @@ import 'package:payever/shop/views/edit/element/social_icon_view.dart';
 import 'package:payever/shop/views/edit/element/sub_element/background_view.dart';
 import 'package:payever/shop/views/edit/element/text_view.dart';
 import 'package:payever/shop/views/edit/element/video_view.dart';
+import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 import 'button_view.dart';
 import 'image_view.dart';
 
@@ -44,6 +49,7 @@ class _SectionViewState extends State<SectionView> {
   StreamController<double> controller = StreamController.broadcast();
   double widgetHeight = 0;
   GlobalKey key = GlobalKey();
+  GlobalStateModel globalStateModel;
 
   _SectionViewState({this.shopPage, this.child, this.stylesheets, this.activeShop}) {
     styleSheet = getSectionStyleSheet(child.id);
@@ -58,6 +64,7 @@ class _SectionViewState extends State<SectionView> {
 
   @override
   Widget build(BuildContext context) {
+    globalStateModel = Provider.of<GlobalStateModel>(context, listen: true);
     return _section();
   }
 
@@ -199,8 +206,9 @@ class _SectionViewState extends State<SectionView> {
                     RenderBox box = key.currentContext.findRenderObject();
                     Offset position1 = box
                         .localToGlobal(Offset.zero); //this is global position
-
-                    widgetHeight = newHeight - position1.dy;
+                    if (newHeight - position1.dy > 30) {
+                      widgetHeight = newHeight - position1.dy;
+                    }
                     widgetHeight.isNegative
                         ? Navigator.pop(context)
                         : controller.add(widgetHeight);
@@ -211,6 +219,7 @@ class _SectionViewState extends State<SectionView> {
                   print('onVerticalDragDown dy = ${details.globalPosition.dy}');
                 },
                 onVerticalDragEnd: (DragEndDetails details) {
+                  editAction();
                   print('onVerticalDragEnd ');
                 },
                 onVerticalDragStart: (details) {
@@ -259,26 +268,51 @@ class _SectionViewState extends State<SectionView> {
 
   void editAction() {
     Map payload = {
-      '4ac8d549-460c-4511-9a16-18d3935bf8bd': {'height': widgetHeight}
+      child.id: {'height': widgetHeight}
     };
     Map effect = {
       'payload': payload,
-      'target': "stylesheets:1b8d6841-84b1-469c-9fcf-6881a4efb8b3",
+      'target': 'stylesheets:${shopPage.stylesheetIds.mobile}', // shopPage.stylesheetIds.mobile
       'type': "stylesheet:update",
     };
-    Map<String, dynamic> body = {
-      'affectedPageIds': [''],
-      'createdAt': '',
-      'effects': [effect],
-      'id': '',
-      'targetPageId': ''
-    };
-    api.shopEditAction(GlobalUtils.activeToken.accessToken, 'themeId', body);
+    String activeThemeId = globalStateModel.activeTheme != null ? globalStateModel.activeTheme.themeId : null;
+    print('activeThemeId: $activeThemeId');
+    if (activeThemeId != null && activeThemeId.isNotEmpty) {
+      Map<String, dynamic> body = {
+        'affectedPageIds': [shopPage.id],
+        'createdAt': DateFormat("yyyy-MM-dd'T'hh:mm:ss").format(DateTime.now()),
+        'effects': [effect],
+        'id': Uuid().v4(),
+        'targetPageId': shopPage.id
+      };
+      print('update Body: $body');
+      api.shopEditAction(GlobalUtils.activeToken.accessToken, activeThemeId, body).then((value) {
+        if (value is DioError) {
+          Fluttertoast.showToast(msg: value.error);
+        }
+      });
+    } else {
+      print('Error: No active Theme!');
+    }
   }
 
-//  affectedPageIds: ["269bf4d2-5fe5-48fe-8ce1-2560c2bd4f57"]
-//  createdAt: "2020-10-19T15:28:12.831Z"
-//  effects: [{type: "stylesheet:update", target: "stylesheets:1b8d6841-84b1-469c-9fcf-6881a4efb8b3",…}]
-//  id: "40932d85-f984-45f8-adbe-f1b61031b615"
-//  targetPageId: "269bf4d2-5fe5-48fe-8ce1-2560c2bd4f57"
+//  {
+//    "id":"7ba51e4f-1453-4523-8ea2-d5ecfdbab002", // UUID
+//    "createdAt":"2020-10-26T06:25:13.890Z",
+//    "targetPageId":"79829a99-b16f-47fb-8ba8-e25ae5c0df40", // Page ID
+//    "affectedPageIds":[
+//      "79829a99-b16f-47fb-8ba8-e25ae5c0df40" // Page ID
+//    ],
+//    "effects":[
+//      {
+//        "type":"stylesheet:update",
+//        "target":"stylesheets:68e0f8ff-453b-4529-ba9a-985deb137067", // shopPage.stylesheetIds.mobile
+//        "payload":{
+//          "f3bae31d-df46-4674-86fc-3fdc68c2d87d":{   // Section (Child ID)
+//          "height":116
+//          }
+//        }
+//      }
+//    ]
+//  }
 }

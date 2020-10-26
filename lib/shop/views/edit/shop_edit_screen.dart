@@ -245,7 +245,8 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
         ? Template.fromJson(screenBloc.state.templates[page.templateId])
         : null;
     String pageName = page == null ? 'Empty' : page.name;
-    print('Page Name: $pageName Template Id: ${page.templateId}');
+    print('Page Name: $pageName PageID:${page.id} Template Id: ${page.templateId}');
+
     return Container(
       color: (showName && page.variant == 'front') ? Colors.blue : Colors.transparent,
       padding: EdgeInsets.all(4),
