@@ -44,20 +44,20 @@ class _TemplateViewState extends State<TemplateView> {
           child.children != null &&
           /*child.children.isNotEmpty &&*/
           styleSheet.display != 'none') {
-        SectionView sectionView = SectionView(
-          shopPage: shopPage,
-          child: child,
-          stylesheets: stylesheets,
-          isActive: selectSectionId == child.id,
-        );
-        Widget section = GestureDetector(
-          onTap: widget.enableTapSection ? () {
-            onTapSection(child);
-          }: null,
-          child: sectionView,
-        );
-        sections.add(section);
-      }
+          SectionView sectionView = SectionView(
+            shopPage: shopPage,
+            child: child,
+            stylesheets: stylesheets,
+            isActive: selectSectionId == child.id,
+          );
+          Widget section = GestureDetector(
+            onTap: widget.enableTapSection ? () {
+              onTapSection(child.id);
+            }: null,
+            child: sectionView,
+          );
+          sections.add(section);
+        }
     });
 
     return InkWell(
@@ -81,9 +81,9 @@ class _TemplateViewState extends State<TemplateView> {
     );
   }
 
-  void onTapSection(Child child) {
+  void onTapSection(String childId) {
     setState(() {
-      selectSectionId = child.id;
+      selectSectionId = childId;
     });
   }
 

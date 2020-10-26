@@ -95,6 +95,7 @@ class _SectionViewState extends State<SectionView> {
         height: snapshot.hasData ? snapshot.data : styleSheet.height,
         width: double.infinity,
         child: Stack(
+//          overflow: Overflow.visible,
           children: widgets,
         ),
       ),
@@ -218,14 +219,19 @@ class _SectionViewState extends State<SectionView> {
   void addActiveWidgets(List<Widget>widgets) {
     if (widget.isActive) {
       // Add Drag Buttons
-      if (widgets.isNotEmpty) {
-        widgets.add(Positioned(
-          bottom: 0,
-          left: 0,
-          right: 0,
-          child: dragArrow,
-        ));
-      }
+
+      widgets.add(Positioned(
+        bottom: 0,
+        left: 0,
+        right: 0,
+        child: dragArrow(false),
+      ));
+      widgets.add(Positioned(
+        top: 0,
+        left: 0,
+        right: 0,
+        child: dragArrow(true),
+      ));
       // Add Edges ---
       // top
       widgets.add(Positioned(
@@ -282,24 +288,31 @@ class _SectionViewState extends State<SectionView> {
     }
   }
 
-  get dragArrow {
+  Widget dragArrow(bool top) {
     return Container(
         width: 40,
-        height: 24,
+        height: 15,
         alignment: Alignment.center,
         child: GestureDetector(
             onVerticalDragUpdate: (DragUpdateDetails details) {
               setState(() {
-                double newHeight = details.globalPosition.dy;
+
                 RenderBox box = key.currentContext.findRenderObject();
                 Offset position1 = box
                     .localToGlobal(Offset.zero); //this is global position
-                if (newHeight - position1.dy > 30) {
-                  widgetHeight = newHeight - position1.dy;
+                double newHeight;
+                if (top) {
+                  newHeight = widgetHeight - details.localPosition.dy;
+                } else {
+                  newHeight = details.globalPosition.dy - position1.dy;
                 }
-                widgetHeight.isNegative
-                    ? Navigator.pop(context)
-                    : controller.add(widgetHeight);
+                if (newHeight >= 30) {
+                  widgetHeight = newHeight;
+                  widgetHeight.isNegative
+                      ? Navigator.pop(context)
+                      : controller.add(widgetHeight);
+                }
+
               });
             },
             behavior: HitTestBehavior.translucent,
@@ -307,20 +320,27 @@ class _SectionViewState extends State<SectionView> {
               print('onVerticalDragDown dy = ${details.globalPosition.dy}');
             },
             onVerticalDragEnd: (DragEndDetails details) {
-              editAction();
+//              editAction();
             },
             onVerticalDragStart: (details) {
               print('onVerticalDragDown dy = ${details.globalPosition.dy}');
             },
             child: Container(
               width: 40,
+              alignment: Alignment.center,
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.blue, width: 2),
-                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.blue, width: 1),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(top ? 10 : 0),
+                  bottomRight: Radius.circular(top ? 10 : 0),
+                  topLeft: Radius.circular(top ? 0 : 10),
+                  topRight: Radius.circular(top ? 0 : 10),
+                ),
               ),
               child: Icon(
-                Icons.keyboard_arrow_up,
+                top ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_up,
                 color: Colors.blue,
+                size: 15,
               ),
             )));
   }
