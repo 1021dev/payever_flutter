@@ -17,7 +17,6 @@ import 'package:payever/shop/views/edit/element/shop_cart_view.dart';
 import 'package:payever/shop/views/edit/element/shop_product_category_view.dart';
 import 'package:payever/shop/views/edit/element/shop_product_detail_view.dart';
 import 'package:payever/shop/views/edit/element/shop_products_view.dart';
-import 'package:payever/shop/views/edit/element/shop_products_view1.dart';
 import 'package:payever/shop/views/edit/element/social_icon_view.dart';
 import 'package:payever/shop/views/edit/element/sub_element/background_view.dart';
 import 'package:payever/shop/views/edit/element/text_view.dart';
@@ -114,10 +113,8 @@ class _SectionViewState extends State<SectionView> {
       if (element.id == selectChildId) continue;
       BaseStyles baseStyles = BaseStyles.fromJson(stylesheets[shopPage.stylesheetIds.mobile][element.id]);
       bool isWrong = wrongPosition1(childSize, baseStyles);
-      if (isWrong) {
-        print('child.type :${element.type}');
+      if (isWrong)
         return true;
-      }
     }
     return false;
   }
@@ -167,7 +164,6 @@ class _SectionViewState extends State<SectionView> {
       return Container();
     }
 
-    // print('SectionId: ${child.id}');
     name = 'Section';
     if (child.data != null) {
       name = Data.fromJson(child.data).name;
@@ -286,7 +282,7 @@ class _SectionViewState extends State<SectionView> {
         );
         break;
       case 'shop-products':
-        widget = ShopProductsView1(
+        widget = ShopProductsView(
           child: child,
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
