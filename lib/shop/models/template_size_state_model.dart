@@ -14,8 +14,8 @@ class TemplateSizeStateModel extends ChangeNotifier {
     _wrongPosition = value;
     // if (isUpdate)
     notifyListeners();
-    Future.delayed(Duration(milliseconds: 300))
-        .then((value) => _wrongPosition = false);
+    // Future.delayed(Duration(milliseconds: 300))
+    //     .then((value) => _wrongPosition = false);
   }
 
   setSelectedSectionId(String value) {
@@ -27,6 +27,8 @@ class TemplateSizeStateModel extends ChangeNotifier {
   setNewChildSize(NewChildSize value) {
     _newChildSize = value;
     notifyListeners();
+    Future.delayed(Duration(milliseconds: 300))
+        .then((value) => _newChildSize = null);
   }
   NewChildSize get newChildSize => _newChildSize;
 

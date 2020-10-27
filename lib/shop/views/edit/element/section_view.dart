@@ -71,8 +71,9 @@ class _SectionViewState extends State<SectionView> {
     activeThemeId = Provider.of<GlobalStateModel>(context, listen: false).activeTheme.themeId;
     return Consumer<TemplateSizeStateModel>(
         builder: (context, templateSizeState, child1) {
+
           NewChildSize childSize = templateSizeState.newChildSize;
-      if (childSize != null) {
+      if (childSize != null && templateSizeState.selectedSectionId == child.id) {
         bool wrongposition = wrongPosition(childSize);
         if (wrongposition) {
           if (!templateSizeState.wrongPosition)
@@ -84,10 +85,9 @@ class _SectionViewState extends State<SectionView> {
         } else {
           if (templateSizeState.wrongPosition)
             Future.microtask(() =>
-            // context.read<MyNotifier>(context).fetchSomething(someValue);
             templateSizeState.setWrongPosition(wrongposition)
             );
-            // templateSizeState.setWrongPosition(wrongposition);
+
         }
       }
       if (templateSizeState.selectedSectionId != child.id || templateSizeState.refreshSelectedChild) {
@@ -98,7 +98,10 @@ class _SectionViewState extends State<SectionView> {
   }
 
   bool wrongPosition(NewChildSize childSize) {
-    return childSize.newTop < 0 || childSize.newLeft < 0;
+    return childSize.newTop < 0 ||
+        childSize.newLeft < 0 ||
+        (childSize.newTop + childSize.newHeight > widgetHeight) ||
+        (childSize.newLeft + childSize.newWidth > Measurements.width) ;
   }
 
   Widget body() {
