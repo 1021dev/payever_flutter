@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/shop/models/models.dart';
-import 'package:payever/shop/views/edit/element/sub_element/resizeable_widget.dart';
-import 'package:payever/theme.dart';
+import 'package:payever/shop/views/edit/element/sub_element/resizeable_view.dart';
 import 'package:provider/provider.dart';
 
 class LogoView extends StatefulWidget {
@@ -12,12 +11,14 @@ class LogoView extends StatefulWidget {
   final Map<String, dynamic> stylesheets;
   final String deviceTypeId;
   final SectionStyleSheet sectionStyleSheet;
+  final bool isSelected;
 
   const LogoView(
       {this.child,
       this.stylesheets,
       this.deviceTypeId,
-      this.sectionStyleSheet});
+      this.sectionStyleSheet,
+      this.isSelected});
 
   @override
   _LogoViewState createState() => _LogoViewState(child, sectionStyleSheet);
@@ -26,11 +27,12 @@ class LogoView extends StatefulWidget {
 class _LogoViewState extends State<LogoView> {
   final Child child;
   final SectionStyleSheet sectionStyleSheet;
+
   ImageStyles styles;
   GlobalStateModel globalStateModel;
   GlobalKey key = GlobalKey();
   _LogoViewState(this.child, this.sectionStyleSheet);
-  bool isSelected = false;
+
 
   @override
   Widget build(BuildContext context) {
@@ -43,60 +45,43 @@ class _LogoViewState extends State<LogoView> {
     if (styles == null ||
         styles.display == 'none')
       return Container();
-    return _body();
+    return mainBody;
   }
 
-  Widget _body() {
 
-//    if (isSelected) {
-//      RenderBox box = key.currentContext.findRenderObject();
-//      Offset position = box.localToGlobal(Offset.zero);
-//      return ResizeableWidget(
-//        width: styles.width,
-//        height: styles.height,
-//        top: position.dy - 76,
-//        left: styles.getMarginLeft(sectionStyleSheet),
-//          child: _mainBody(),
-//      );
-//    }
-    return _mainBody();
-  }
-
-  Widget _mainBody() {
-    return Opacity(
-      opacity: styles.opacity,
-      child: Container(
-        key: key,
-        width: styles.width,
-        height: styles.height,
-//        decoration: BoxDecoration(
-//          color: colorConvert(styles.backgroundColor),
-//          shape: BoxShape.circle,
-//        ),
-        margin: EdgeInsets.only(
-            left: styles.getMarginLeft(sectionStyleSheet),
-            right: styles.marginRight,
-            top: styles.getMarginTop(sectionStyleSheet),
-            bottom: styles.marginBottom),
-        child: CachedNetworkImage(
-          imageUrl: '${globalStateModel.activeShop.picture}',
-          imageBuilder: (context, imageProvider) => Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: imageProvider,
-                fit: BoxFit.contain,
+  Widget get mainBody {
+    return ResizeableView(
+      left: styles.getMarginLeft(sectionStyleSheet),
+      top: styles.getMarginTop(sectionStyleSheet),
+      width: styles.width,
+      height: styles.height,
+      isSelected: widget.isSelected,
+      child: Opacity(
+        opacity: styles.opacity,
+        child: Container(
+          key: key,
+          width: styles.width,
+          height: styles.height,
+          child: CachedNetworkImage(
+            imageUrl: '${globalStateModel.activeShop.picture}',
+            imageBuilder: (context, imageProvider) => Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: imageProvider,
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
+            errorWidget: (context, url, error) {
+              return Container(
+                alignment: Alignment.center,
+                padding: EdgeInsets.all(15),
+                child: SvgPicture.asset(
+                  'assets/images/no_image.svg',
+                ),
+              );
+            },
           ),
-          errorWidget: (context, url, error) {
-            return Container(
-              alignment: Alignment.center,
-              padding: EdgeInsets.all(15),
-              child: SvgPicture.asset(
-                'assets/images/no_image.svg',
-              ),
-            );
-          },
         ),
       ),
     );

@@ -221,6 +221,7 @@ class _SectionViewState extends State<SectionView> {
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
           sectionStyleSheet: styleSheet,
+          isSelected: selectSectionId == child.id,
         );
         break;
       case 'social-icon':

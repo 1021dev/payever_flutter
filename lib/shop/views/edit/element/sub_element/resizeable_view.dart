@@ -232,7 +232,7 @@ class _ResizeableViewState extends State<ResizeableView> {
     return height < 50;
   }
 
-  void addSelectedWidgets(List<Widget>widgets) {
+  void updateSize() {
 
   }
 }
