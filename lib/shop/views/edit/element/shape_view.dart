@@ -10,8 +10,14 @@ class ShapeView extends StatefulWidget {
   final Map<String, dynamic> stylesheets;
   final String deviceTypeId;
   final SectionStyleSheet sectionStyleSheet;
+  final bool isSelected;
 
-  const ShapeView({this.child, this.stylesheets, this.deviceTypeId, this.sectionStyleSheet});
+  const ShapeView(
+      {this.child,
+      this.stylesheets,
+      this.deviceTypeId,
+      this.sectionStyleSheet,
+      this.isSelected = false});
 
   @override
   _ShapeViewState createState() => _ShapeViewState(child, sectionStyleSheet);
@@ -30,17 +36,13 @@ class _ShapeViewState extends State<ShapeView> {
     if (styles == null && child.styles != null && child.styles.isNotEmpty) {
       styles = ShapeStyles.fromJson(child.styles);
     }
-    if (styles == null ||
-        styles.display == 'none')
-      return Container();
+    if (styles == null || styles.display == 'none') return Container();
 
-    return Opacity(
-        opacity: styles.opacity,
-        child: _body());
+    return Opacity(opacity: styles.opacity, child: _body());
   }
 
   Widget _body() {
-    switch(child.data['variant']) {
+    switch (child.data['variant']) {
       case 'circle':
         return circleShape();
       case 'triangle':
@@ -68,8 +70,11 @@ class _ShapeViewState extends State<ShapeView> {
         clipper: OvalClipper(x: styles.width, y: styles.height, w: 0),
         boxShadow: styles.getBoxShadow,
         child: ClipRRect(
-            borderRadius: BorderRadius.all(Radius.elliptical(styles.width, styles.height)),
-            child: BackgroundView(styles: styles,)),
+            borderRadius: BorderRadius.all(
+                Radius.elliptical(styles.width, styles.height)),
+            child: BackgroundView(
+              styles: styles,
+            )),
       ),
     );
   }
@@ -117,7 +122,9 @@ class _ShapeViewState extends State<ShapeView> {
           bottom: styles.marginBottom),
       alignment: Alignment.center,
       child: ClipRRect(
-          child: BackgroundView(styles: styles,)),
+          child: BackgroundView(
+        styles: styles,
+      )),
     );
   }
 
@@ -138,7 +145,10 @@ class TrianglePainter extends CustomPainter {
   final PaintingStyle paintingStyle;
   final double strokeWidth;
 
-  TrianglePainter({this.strokeColor = Colors.black, this.strokeWidth = 3, this.paintingStyle = PaintingStyle.stroke});
+  TrianglePainter(
+      {this.strokeColor = Colors.black,
+      this.strokeWidth = 3,
+      this.paintingStyle = PaintingStyle.stroke});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -169,12 +179,13 @@ class TriangleClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     final path = Path();
-    path.moveTo(size.width/2, 0.0);
+    path.moveTo(size.width / 2, 0.0);
     path.lineTo(size.width, size.height);
     path.lineTo(0.0, size.height);
     path.close();
     return path;
   }
+
   @override
   bool shouldReclip(TriangleClipper oldClipper) => false;
 }
@@ -183,6 +194,7 @@ class OvalClipper extends CustomClipper<Path> {
   double x;
   double y;
   double w;
+
   OvalClipper({this.x, this.y, this.w});
 
   @override

@@ -521,7 +521,7 @@ class BaseStyles with BackgroundAssist, StyleAssist, SizeAssist, DecorationAssis
   }
 
   double getMarginTop(SectionStyleSheet sectionStyleSheet) {
-    return getMarginLeftAssist(marginLeft, sectionStyleSheet.gridTemplateColumns, gridColumn);
+    return getMarginTopAssist(marginTop, sectionStyleSheet.gridTemplateRows, gridRow);
   }
 
   double getMarginLeft(SectionStyleSheet sectionStyleSheet) {

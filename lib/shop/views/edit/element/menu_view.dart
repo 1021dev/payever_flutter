@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/element/sub_element/resizeable_view.dart';
 
 class MenuView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
   final String deviceTypeId;
   final SectionStyleSheet sectionStyleSheet;
+  final bool isSelected;
 
-  const MenuView({this.child, this.stylesheets, this.deviceTypeId, this.sectionStyleSheet});
+  const MenuView(
+      {this.child,
+      this.stylesheets,
+      this.deviceTypeId,
+      this.sectionStyleSheet,
+      this.isSelected = false});
 
   @override
   _MenuViewState createState() => _MenuViewState(child, sectionStyleSheet);
@@ -26,27 +33,27 @@ class _MenuViewState extends State<MenuView> {
     if (styles == null && child.styles != null && child.styles.isNotEmpty) {
       styles = ShapeStyles.fromJson(child.styles);
     }
-    if (styles == null ||
-        styles.display == 'none')
-      return Container();
+    if (styles == null || styles.display == 'none') return Container();
 
-    return Opacity(
-        opacity: styles.opacity,
-        child: _body());
+    return ResizeableView(
+        width: styles.width,
+        height: styles.height,
+        left: styles.getMarginLeft(sectionStyleSheet),
+        top: styles.getMarginTop(sectionStyleSheet),
+        isSelected: widget.isSelected,
+        child: body);
   }
 
-  Widget _body() {
-    return Container(
-      width: styles.width,
-      height: styles.height,
-//        decoration: styles.decoration,
-      margin: EdgeInsets.only(
-          left: styles.getMarginLeft(sectionStyleSheet),
-          right: styles.marginRight,
-          top: styles.getMarginTop(sectionStyleSheet),
-          bottom: styles.marginBottom),
-      alignment: Alignment.center,
-      child: Icon(Icons.menu, size: styles.width, color: Colors.black,),
+  Widget get body {
+    return Opacity(
+      opacity: styles.opacity,
+      child: Container(
+        child: Icon(
+          Icons.menu,
+          size: styles.width,
+          color: Colors.black,
+        ),
+      ),
     );
   }
 
@@ -62,4 +69,3 @@ class _MenuViewState extends State<MenuView> {
     }
   }
 }
-

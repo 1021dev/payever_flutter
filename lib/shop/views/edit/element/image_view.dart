@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/element/sub_element/resizeable_view.dart';
 
 import '../../../../theme.dart';
 
@@ -11,12 +12,14 @@ class ImageView extends StatefulWidget {
   final Map<String, dynamic> stylesheets;
   final String deviceTypeId;
   final SectionStyleSheet sectionStyleSheet;
+  final bool isSelected;
 
   const ImageView(
       {this.child,
       this.stylesheets,
       this.deviceTypeId,
-      this.sectionStyleSheet});
+      this.sectionStyleSheet,
+      this.isSelected = false});
 
   @override
   _ImageViewState createState() => _ImageViewState(child, sectionStyleSheet);
@@ -27,7 +30,7 @@ class _ImageViewState extends State<ImageView> {
   final SectionStyleSheet sectionStyleSheet;
   ImageStyles styles;
   ImageData data;
-
+  String url = '';
   _ImageViewState(this.child, this.sectionStyleSheet);
 
   @override
@@ -37,16 +40,10 @@ class _ImageViewState extends State<ImageView> {
       styles = ImageStyles.fromJson(child.styles);
     }
     if (styles == null || styles.display == 'none') return Container();
-
-    return _body();
-  }
-
-  Widget _body() {
     try {
       data = ImageData.fromJson(child.data);
     } catch (e) {}
 
-    String url = '';
     if (styles.background.isNotEmpty) {
       url = styles.background;
     } else {
@@ -54,18 +51,20 @@ class _ImageViewState extends State<ImageView> {
       url = data.src;
     }
 
+    return ResizeableView(
+        width: styles.width,
+        height: styles.height,
+        left: styles.getMarginLeft(sectionStyleSheet),
+        top: styles.getMarginTop(sectionStyleSheet),
+        isSelected: widget.isSelected,
+        child: body);
+  }
+
+  Widget get body {
     return Opacity(
       opacity: styles.opacity,
       child: Container(
-        height: styles.height,
-        width: styles.width,
         decoration: decoration,
-//      color: colorConvert(styles.backgroundColor),
-        margin: EdgeInsets.only(
-            left: styles.getMarginLeft(sectionStyleSheet),
-            right: styles.marginRight,
-            top: styles.getMarginTop(sectionStyleSheet),
-            bottom: styles.marginBottom),
         child: getImage(url),
       ),
     );

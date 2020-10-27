@@ -11,7 +11,12 @@ class ButtonView extends StatefulWidget {
   final SectionStyleSheet sectionStyleSheet;
   final bool isSelected;
 
-  const ButtonView({this.child, this.stylesheets, this.deviceTypeId, this.sectionStyleSheet, this.isSelected = false});
+  const ButtonView(
+      {this.child,
+      this.stylesheets,
+      this.deviceTypeId,
+      this.sectionStyleSheet,
+      this.isSelected = false});
 
   @override
   _ButtonViewState createState() => _ButtonViewState(child, sectionStyleSheet);
@@ -24,6 +29,7 @@ class _ButtonViewState extends State<ButtonView> {
   final SectionStyleSheet sectionStyleSheet;
   ButtonStyles styles;
   ButtonData data;
+
   _ButtonViewState(this.child, this.sectionStyleSheet);
 
   @override
@@ -33,9 +39,7 @@ class _ButtonViewState extends State<ButtonView> {
       styles = ButtonStyles.fromJson(child.styles);
     }
 
-    if (styles == null ||
-        styles.display == 'none')
-      return Container();
+    if (styles == null || styles.display == 'none') return Container();
 
     data = ButtonData.fromJson(child.data);
     if (data.action != null && data.action.payload != null) {
@@ -49,8 +53,7 @@ class _ButtonViewState extends State<ButtonView> {
         left: styles.getMarginLeft(sectionStyleSheet),
         top: styles.getMarginTop(sectionStyleSheet),
         isSelected: widget.isSelected,
-        child: body
-    );
+        child: body);
   }
 
   Widget get body {
@@ -98,10 +101,14 @@ class _ButtonViewState extends State<ButtonView> {
       ];
     }
 //    rgba(0,0,0,0.7) 0 2 13 8
-    List<String>attrs0 = styles.boxShadow.split(' ');
-    List<String>attrs =  attrs0.map((element) {
+    List<String> attrs0 = styles.boxShadow.split(' ');
+    List<String> attrs = attrs0.map((element) {
       if (element.contains('rgb'))
-        return element.replaceAll('rgba', '').replaceAll(',', ' ').replaceAll('(', '').replaceAll(')', '');
+        return element
+            .replaceAll('rgba', '')
+            .replaceAll(',', ' ')
+            .replaceAll('(', '')
+            .replaceAll(')', '');
       return element.replaceAll('pt', '');
     }).toList();
     double blurRadius = double.parse(attrs[3]);
@@ -109,7 +116,7 @@ class _ButtonViewState extends State<ButtonView> {
     double offsetX = double.parse(attrs[2]);
     double offsetY = double.parse(attrs[2]);
 
-    List<String>colors = attrs[0].split(' ');
+    List<String> colors = attrs[0].split(' ');
     int colorR = int.parse(colors[0]);
     int colorG = int.parse(colors[1]);
     int colorB = int.parse(colors[2]);

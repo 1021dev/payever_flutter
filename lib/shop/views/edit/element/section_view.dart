@@ -51,7 +51,7 @@ class _SectionViewState extends State<SectionView> {
   final Map<String, dynamic> stylesheets;
   final ShopDetailModel activeShop;
   ApiService api = ApiService();
-  SectionStyleSheet styleSheet;
+  SectionStyleSheet sectionStyles;
 
   StreamController<double> controller = StreamController.broadcast();
   double widgetHeight = 0;
@@ -63,8 +63,8 @@ class _SectionViewState extends State<SectionView> {
 
   _SectionViewState(
       {this.shopPage, this.child, this.stylesheets, this.activeShop}) {
-    styleSheet = getSectionStyleSheet(child.id);
-    widgetHeight = styleSheet.height;
+    sectionStyles = getSectionStyleSheet(child.id);
+    widgetHeight = sectionStyles.height;
   }
 
   @override
@@ -122,8 +122,8 @@ class _SectionViewState extends State<SectionView> {
   bool wrongPositionWithOrderChildren(NewChildSize childSize, BaseStyles styles) {
     if (styles == null || styles.display == 'none') return false;
 
-    double x01 = styles.getMarginLeft(styleSheet);
-    double y01 = styles.getMarginTop(styleSheet);
+    double x01 = styles.getMarginLeft(sectionStyles);
+    double y01 = styles.getMarginTop(sectionStyles);
     double x02 = x01 + styles.width;
     double y02 = y01 + styles.height;
 
@@ -160,7 +160,7 @@ class _SectionViewState extends State<SectionView> {
   }
 
   Widget get body {
-    if (styleSheet == null) {
+    if (sectionStyles == null) {
       return Container();
     }
 
@@ -196,7 +196,7 @@ class _SectionViewState extends State<SectionView> {
       stream: controller.stream,
       builder: (context, snapshot) => Container(
         key: key,
-        height: snapshot.hasData ? snapshot.data : styleSheet.height,
+        height: snapshot.hasData ? snapshot.data : sectionStyles.height,
         width: double.infinity,
         child: Stack(
           children: widgets,
@@ -213,7 +213,8 @@ class _SectionViewState extends State<SectionView> {
           child: child,
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
-          sectionStyleSheet: styleSheet,
+          sectionStyleSheet: sectionStyles,
+          isSelected: selectChildId == child.id,
         );
         break;
       case 'button':
@@ -221,7 +222,7 @@ class _SectionViewState extends State<SectionView> {
           child: child,
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
-          sectionStyleSheet: styleSheet,
+          sectionStyleSheet: sectionStyles,
           isSelected: selectChildId == child.id,
         );
         break;
@@ -230,7 +231,8 @@ class _SectionViewState extends State<SectionView> {
           child: child,
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
-          sectionStyleSheet: styleSheet,
+          sectionStyleSheet: sectionStyles,
+          isSelected: selectChildId == child.id,
         );
         break;
       case 'video':
@@ -238,7 +240,8 @@ class _SectionViewState extends State<SectionView> {
           child: child,
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
-          sectionStyleSheet: styleSheet,
+          sectionStyleSheet: sectionStyles,
+          isSelected: selectChildId == child.id,
         );
         break;
       case 'shape':
@@ -246,7 +249,8 @@ class _SectionViewState extends State<SectionView> {
           child: child,
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
-          sectionStyleSheet: styleSheet,
+          sectionStyleSheet: sectionStyles,
+          isSelected: selectChildId == child.id,
         );
         break;
       case 'block':
@@ -254,7 +258,7 @@ class _SectionViewState extends State<SectionView> {
           child: child,
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
-          sectionStyleSheet: styleSheet,
+          sectionStyleSheet: sectionStyles,
         );
         break;
       case 'menu':
@@ -262,7 +266,8 @@ class _SectionViewState extends State<SectionView> {
           child: child,
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
-          sectionStyleSheet: styleSheet,
+          sectionStyleSheet: sectionStyles,
+          isSelected: selectChildId == child.id,
         );
         break;
       case 'shop-cart':
@@ -270,7 +275,7 @@ class _SectionViewState extends State<SectionView> {
           child: child,
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
-          sectionStyleSheet: styleSheet,
+          sectionStyleSheet: sectionStyles,
           isSelected: selectChildId == child.id,
         );
         break;
@@ -279,7 +284,8 @@ class _SectionViewState extends State<SectionView> {
           child: child,
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
-          sectionStyleSheet: styleSheet,
+          sectionStyleSheet: sectionStyles,
+          isSelected: selectChildId == child.id,
         );
         break;
       case 'shop-products':
@@ -287,7 +293,7 @@ class _SectionViewState extends State<SectionView> {
           child: child,
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
-          sectionStyleSheet: styleSheet,
+          sectionStyleSheet: sectionStyles,
           isSelected: selectChildId == child.id,
         );
         break;
@@ -296,7 +302,8 @@ class _SectionViewState extends State<SectionView> {
           child: child,
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
-          sectionStyleSheet: styleSheet,
+          sectionStyleSheet: sectionStyles,
+          isSelected: selectChildId == child.id,
         );
         break;
       case 'logo':
@@ -304,7 +311,7 @@ class _SectionViewState extends State<SectionView> {
           child: child,
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
-          sectionStyleSheet: styleSheet,
+          sectionStyleSheet: sectionStyles,
           isSelected: selectChildId == child.id,
         );
         break;
@@ -313,7 +320,7 @@ class _SectionViewState extends State<SectionView> {
           child: child,
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
-          sectionStyleSheet: styleSheet,
+          sectionStyleSheet: sectionStyles,
           isSelected: selectChildId == child.id,
         );
         break;
@@ -460,8 +467,8 @@ class _SectionViewState extends State<SectionView> {
       width: double.infinity,
       //styleSheet.width,
       height: widgetHeight,
-      alignment: styleSheet.getBackgroundImageAlignment(),
-      child: BackgroundView(styles: styleSheet),
+      alignment: sectionStyles.getBackgroundImageAlignment(),
+      child: BackgroundView(styles: sectionStyles),
     );
   }
 
@@ -507,4 +514,18 @@ class _SectionViewState extends State<SectionView> {
       print('Error: No active Theme!');
     }
   }
+
+  void getPayload() {
+    Map payloadSection = {};
+    payloadSection['height'] = widgetHeight;
+    if (sectionStyles.gridTemplateRows != null && sectionStyles.gridTemplateRows.isNotEmpty) {
+      double marginBottom = double.parse(sectionStyles.gridTemplateRows.split(' ').last); // To Last Vertical Element
+      double dy = widgetHeight - sectionStyles.height;
+      payloadSection['gridTemplateRows'] = marginBottom + dy;
+    }
+    Map payload = {
+      child.id: payloadSection
+    };
+  }
+
 }

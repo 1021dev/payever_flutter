@@ -8,8 +8,15 @@ class TextView extends StatefulWidget {
   final Map<String, dynamic> stylesheets;
   final String deviceTypeId;
   final SectionStyleSheet sectionStyleSheet;
+  final bool isSelected;
 
-  const TextView({this.child, this.stylesheets, this.deviceTypeId, this.sectionStyleSheet});
+  const TextView(
+      {this.child,
+      this.stylesheets,
+      this.deviceTypeId,
+      this.sectionStyleSheet,
+      this.isSelected = false});
+
   @override
   _TextViewState createState() => _TextViewState(child, sectionStyleSheet);
 }

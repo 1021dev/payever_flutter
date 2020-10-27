@@ -8,12 +8,14 @@ class ShopProductCategoryView extends StatefulWidget {
   final Map<String, dynamic> stylesheets;
   final String deviceTypeId;
   final SectionStyleSheet sectionStyleSheet;
+  final bool isSelected;
 
   const ShopProductCategoryView(
       {this.child,
       this.stylesheets,
       this.deviceTypeId,
-      this.sectionStyleSheet});
+      this.sectionStyleSheet,
+      this.isSelected = false});
 
   @override
   _ShopProductCategoryViewState createState() =>

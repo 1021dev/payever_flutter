@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/shop/models/models.dart';
-import 'package:payever/theme.dart';
+import 'package:payever/shop/views/edit/element/sub_element/resizeable_view.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoView extends StatefulWidget {
@@ -10,12 +10,14 @@ class VideoView extends StatefulWidget {
   final Map<String, dynamic> stylesheets;
   final String deviceTypeId;
   final SectionStyleSheet sectionStyleSheet;
+  final bool isSelected;
 
   const VideoView(
       {this.child,
       this.stylesheets,
       this.deviceTypeId,
-      this.sectionStyleSheet});
+      this.sectionStyleSheet,
+      this.isSelected = false});
 
   @override
   _VideoViewState createState() => _VideoViewState(child, sectionStyleSheet);
@@ -52,11 +54,6 @@ class _VideoViewState extends State<VideoView> {
       styles = ImageStyles.fromJson(child.styles);
     }
     if (styles == null || styles.display == 'none') return Container();
-
-    return _body();
-  }
-
-  Widget _body() {
     try {
       data = VideoData.fromJson(child.data);
     } catch (e) {}
@@ -64,22 +61,28 @@ class _VideoViewState extends State<VideoView> {
     if (data == null /* || data.preview == null || data.preview.isEmpty*/)
       return Container();
 
-    return Container(
-      height: styles.height,
-      width: styles.width,
-      margin: EdgeInsets.only(
-          left: styles.getMarginLeft(sectionStyleSheet),
-          right: styles.marginRight,
-          top: styles.getMarginTop(sectionStyleSheet),
-          bottom: styles.marginBottom),
-      child: Stack(
-        children: [
-          previewView,
-          videoPlayerView,
-          Visibility(
-              visible: data.controls,
-              child: Positioned(bottom: 10, right: 10, child: playButton))
-        ],
+    return ResizeableView(
+        width: styles.width,
+        height: styles.height,
+        left: styles.getMarginLeft(sectionStyleSheet),
+        top: styles.getMarginTop(sectionStyleSheet),
+        isSelected: widget.isSelected,
+        child: body);
+  }
+
+  Widget get body {
+    return Opacity(
+      opacity: styles.opacity,
+      child: Container(
+        child: Stack(
+          children: [
+            previewView,
+            videoPlayerView,
+            Visibility(
+                visible: data.controls,
+                child: Positioned(bottom: 10, right: 10, child: playButton))
+          ],
+        ),
       ),
     );
   }
