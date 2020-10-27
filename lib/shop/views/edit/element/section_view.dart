@@ -112,14 +112,14 @@ class _SectionViewState extends State<SectionView> {
     for(Child element in child.children) {
       if (element.id == selectChildId) continue;
       BaseStyles baseStyles = BaseStyles.fromJson(stylesheets[shopPage.stylesheetIds.mobile][element.id]);
-      bool isWrong = wrongPosition1(childSize, baseStyles);
+      bool isWrong = wrongPositionWithOrderChildren(childSize, baseStyles);
       if (isWrong)
         return true;
     }
     return false;
   }
 
-  bool wrongPosition1(NewChildSize childSize, BaseStyles styles) {
+  bool wrongPositionWithOrderChildren(NewChildSize childSize, BaseStyles styles) {
     if (styles == null || styles.display == 'none') return false;
 
     double x01 = styles.getMarginLeft(styleSheet);
@@ -222,6 +222,7 @@ class _SectionViewState extends State<SectionView> {
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
           sectionStyleSheet: styleSheet,
+          isSelected: selectChildId == child.id,
         );
         break;
       case 'image':
@@ -483,10 +484,8 @@ class _SectionViewState extends State<SectionView> {
     Map effect = {
       'payload': payload,
       'target': 'stylesheets:${shopPage.stylesheetIds.mobile}',
-      // shopPage.stylesheetIds.mobile
       'type': "stylesheet:update",
     };
-    print('activeThemeId: $activeThemeId');
     if (activeThemeId != null && activeThemeId.isNotEmpty) {
       Map<String, dynamic> body = {
         'affectedPageIds': [shopPage.id],

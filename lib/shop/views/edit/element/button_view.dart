@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/element/sub_element/resizeable_view.dart';
 
 import '../../../../theme.dart';
 
@@ -8,8 +9,9 @@ class ButtonView extends StatefulWidget {
   final Map<String, dynamic> stylesheets;
   final String deviceTypeId;
   final SectionStyleSheet sectionStyleSheet;
+  final bool isSelected;
 
-  const ButtonView({this.child, this.stylesheets, this.deviceTypeId, this.sectionStyleSheet});
+  const ButtonView({this.child, this.stylesheets, this.deviceTypeId, this.sectionStyleSheet, this.isSelected = false});
 
   @override
   _ButtonViewState createState() => _ButtonViewState(child, sectionStyleSheet);
@@ -41,20 +43,19 @@ class _ButtonViewState extends State<ButtonView> {
 //      styles = ButtonStyles.fromJson(child.styles);
 
     }
-    return _body();
+    return ResizeableView(
+        width: styles.width + styles.paddingH * 2,
+        height: styles.height + styles.paddingV * 2,
+        left: styles.getMarginLeft(sectionStyleSheet),
+        top: styles.getMarginTop(sectionStyleSheet),
+        isSelected: widget.isSelected,
+        child: body
+    );
   }
 
-  Widget _body() {
+  Widget get body {
     return Container(
-      width: styles.width + styles.paddingH * 2,
-      height: styles.height + styles.paddingV * 2,
       decoration: decoration,
-//      padding: EdgeInsets.symmetric(horizontal: styles.paddingH, vertical: styles.paddingV),
-      margin: EdgeInsets.only(
-          left: styles.getMarginLeft(sectionStyleSheet),
-          right: styles.marginRight,
-          top: styles.getMarginTop(sectionStyleSheet),
-          bottom: styles.marginBottom),
       alignment: Alignment.center,
       child: Text(
         data.text,

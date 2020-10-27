@@ -36,7 +36,7 @@ class _BackgroundViewState extends State<BackgroundView> {
           width: double.infinity,
           height: double.infinity,
           decoration: BoxDecoration(
-            gradient: styles.getGradient(),
+            gradient: styles.gradient,
           )
 
       );
