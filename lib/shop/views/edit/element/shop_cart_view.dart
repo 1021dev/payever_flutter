@@ -2,6 +2,7 @@ import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/element/sub_element/resizeable_view.dart';
 import '../../../../theme.dart';
 
 class ShopCartView extends StatefulWidget {
@@ -9,8 +10,9 @@ class ShopCartView extends StatefulWidget {
   final Map<String, dynamic> stylesheets;
   final String deviceTypeId;
   final SectionStyleSheet sectionStyleSheet;
+  final bool isSelected;
 
-  const ShopCartView({this.child, this.stylesheets, this.deviceTypeId, this.sectionStyleSheet});
+  const ShopCartView({this.child, this.stylesheets, this.deviceTypeId, this.sectionStyleSheet, this.isSelected});
 
   @override
   _ShopCartViewState createState() => _ShopCartViewState(child, sectionStyleSheet);
@@ -36,13 +38,17 @@ class _ShopCartViewState extends State<ShopCartView> {
     if (child.data == null)
       return Container();
 
-    return Opacity(
-      opacity: styles.opacity,
-        child: _body());
+    return ResizeableView(
+      width: styles.width,
+      height: styles.height,
+      left: styles.getMarginLeft(sectionStyleSheet),
+      top: styles.getMarginTop(sectionStyleSheet),
+      isSelected: widget.isSelected,
+      child: _body(),
+    );
   }
 
   Widget _body() {
-
     String asset = '';
     switch(child.data['variant']) {
       case 'square-cart':
@@ -66,30 +72,24 @@ class _ShopCartViewState extends State<ShopCartView> {
       default:
         break;
     }
-    return Container(
-        width: styles.width,
-        height: styles.height,
-        decoration: decoration,
-        margin: EdgeInsets.only(
-            left: styles.getMarginLeft(sectionStyleSheet),
-            right: styles.marginRight,
-            top: styles.getMarginTop(sectionStyleSheet),
-            bottom: styles.marginBottom),
-        alignment: Alignment.center,
-        child: Badge(
-          padding: EdgeInsets.all(styles.width/10),
-          badgeColor: colorConvert(styles.badgeBackground),
-          badgeContent: Text(
-            '3',
-            style: TextStyle(fontSize: styles.width/4, fontWeight: FontWeight.w600, color: colorConvert(styles.badgeColor)),
-          ),
-          child: SvgPicture.asset(
-            asset,
-            color: colorConvert(styles.backgroundColor),
-            width: styles.width,
-            height: styles.height,
-          ),
-        ));
+    return Opacity(
+      opacity: styles.opacity,
+      child: Container(
+          decoration: decoration,
+          alignment: Alignment.center,
+          child: Badge(
+            padding: EdgeInsets.all(styles.width/10),
+            badgeColor: colorConvert(styles.badgeBackground),
+            badgeContent: Text(
+              '3',
+              style: TextStyle(fontSize: styles.width/4, fontWeight: FontWeight.w600, color: colorConvert(styles.badgeColor)),
+            ),
+            child: SvgPicture.asset(
+              asset,
+              color: colorConvert(styles.backgroundColor),
+            ),
+          )),
+    );
   }
 
   get decoration {

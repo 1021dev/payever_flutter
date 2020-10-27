@@ -33,7 +33,13 @@ class SectionView extends StatefulWidget {
   final Map<String, dynamic> stylesheets;
   final bool isSelected;
   final Function onTapChild;
-  const SectionView({this.shopPage, this.child, this.stylesheets, this.isSelected = false, this.onTapChild});
+
+  const SectionView(
+      {this.shopPage,
+      this.child,
+      this.stylesheets,
+      this.isSelected = false,
+      this.onTapChild});
 
   @override
   _SectionViewState createState() => _SectionViewState(
@@ -53,9 +59,11 @@ class _SectionViewState extends State<SectionView> {
   GlobalKey key = GlobalKey();
 
   String name;
-  String selectSectionId = '';
+  String selectChildId = '';
   String activeThemeId;
-  _SectionViewState({this.shopPage, this.child, this.stylesheets, this.activeShop}) {
+
+  _SectionViewState(
+      {this.shopPage, this.child, this.stylesheets, this.activeShop}) {
     styleSheet = getSectionStyleSheet(child.id);
     widgetHeight = styleSheet.height;
   }
@@ -68,48 +76,84 @@ class _SectionViewState extends State<SectionView> {
 
   @override
   Widget build(BuildContext context) {
-    activeThemeId = Provider.of<GlobalStateModel>(context, listen: false).activeTheme.themeId;
+    activeThemeId = Provider.of<GlobalStateModel>(context, listen: false)
+        .activeTheme
+        .themeId;
     return Consumer<TemplateSizeStateModel>(
         builder: (context, templateSizeState, child1) {
-
-          NewChildSize childSize = templateSizeState.newChildSize;
-      if (childSize != null && templateSizeState.selectedSectionId == child.id) {
+      NewChildSize childSize = templateSizeState.newChildSize;
+      if (childSize != null &&
+          templateSizeState.selectedSectionId == child.id) {
         bool wrongposition = wrongPosition(childSize);
         if (wrongposition) {
-          if (!templateSizeState.wrongPosition)
-            Future.microtask(() =>
+          if (!templateSizeState.wrongPosition) Future.microtask(() =>
                 // context.read<MyNotifier>(context).fetchSomething(someValue);
-              templateSizeState.setWrongPosition(wrongposition)
-            );
-
+                templateSizeState.setWrongPosition(wrongposition));
         } else {
           if (templateSizeState.wrongPosition)
-            Future.microtask(() =>
-            templateSizeState.setWrongPosition(wrongposition)
-            );
-
+            Future.microtask(
+                () => templateSizeState.setWrongPosition(wrongposition));
         }
       }
-      if (templateSizeState.selectedSectionId != child.id || templateSizeState.refreshSelectedChild) {
-        selectSectionId = '';
+      if (templateSizeState.selectedSectionId != child.id ||
+          templateSizeState.refreshSelectedChild) {
+        selectChildId = '';
       }
-      return body();
+      return body;
     });
   }
 
   bool wrongPosition(NewChildSize childSize) {
-    return childSize.newTop < 0 ||
+    bool wrongBoundary = childSize.newTop < 0 ||
         childSize.newLeft < 0 ||
         (childSize.newTop + childSize.newHeight > widgetHeight) ||
-        (childSize.newLeft + childSize.newWidth > Measurements.width) ;
+        (childSize.newLeft + childSize.newWidth > Measurements.width);
+    if (wrongBoundary) return true;
+
+    for(Child element in child.children) {
+      if (element.id == selectChildId) continue;
+      BaseStyles baseStyles = BaseStyles.fromJson(stylesheets[shopPage.stylesheetIds.mobile][element.id]);
+      bool isWrong = wrongPosition1(childSize, baseStyles);
+      if (isWrong) {
+        print('child.type :${element.type}');
+        return true;
+      }
+    }
+    return false;
   }
 
-  Widget body() {
+  bool wrongPosition1(NewChildSize childSize, BaseStyles styles) {
+    if (styles == null || styles.display == 'none') return false;
 
+    double x01 = styles.getMarginLeft(styleSheet);
+    double y01 = styles.getMarginTop(styleSheet);
+    double x02 = x01 + styles.width;
+    double y02 = y01 + styles.height;
+
+    double x1 = childSize.newLeft;
+    double y1 = childSize.newTop;
+    double x2 = x1 + childSize.newWidth;
+    double y2 = y1 + childSize.newHeight;
+    // top left (x1, y1)
+    if ((x01< x1 && x1 <= x02) && (y01< y1 && y1 <= y02))
+      return true;
+    // top right (x2, y1)
+    if ((x01< x2 && x2 <= x02) && (y01< y1 && y1 <= y02))
+      return true;
+    // bottom left (x1, y2)
+    if ((x01< x1 && x1 <= x02) && (y01< y2 && y2 <= y02))
+      return true;
+    // bottom right (x2, y2)
+    if ((x01< x2 && x2 <= x02) && (y01< y2 && y2 <= y02))
+      return true;
+
+    return false;
+  }
+
+  Widget get body {
     if (styleSheet == null) {
       return Container();
     }
-
 
     // print('SectionId: ${child.id}');
     name = 'Section';
@@ -124,10 +168,12 @@ class _SectionViewState extends State<SectionView> {
       if (childWidget != null) {
         Widget element = GestureDetector(
           onTap: () {
-            context.read<TemplateSizeStateModel>().setSelectedSectionId(widget.child.id);
+            context
+                .read<TemplateSizeStateModel>()
+                .setSelectedSectionId(widget.child.id);
             widget.onTapChild();
             setState(() {
-              selectSectionId = child.id;
+              selectChildId = child.id;
             });
           },
           child: childWidget,
@@ -153,7 +199,7 @@ class _SectionViewState extends State<SectionView> {
 
   Widget getChild(Child child) {
     Widget widget;
-    switch(child.type) {
+    switch (child.type) {
       case 'text':
         widget = TextView(
           child: child,
@@ -216,6 +262,7 @@ class _SectionViewState extends State<SectionView> {
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
           sectionStyleSheet: styleSheet,
+          isSelected: selectChildId == child.id,
         );
         break;
       case 'shop-category':
@@ -232,7 +279,7 @@ class _SectionViewState extends State<SectionView> {
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
           sectionStyleSheet: styleSheet,
-          isSelected: selectSectionId == child.id,
+          isSelected: selectChildId == child.id,
         );
         break;
       case 'shop-product-details':
@@ -249,7 +296,7 @@ class _SectionViewState extends State<SectionView> {
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
           sectionStyleSheet: styleSheet,
-          isSelected: selectSectionId == child.id,
+          isSelected: selectChildId == child.id,
         );
         break;
       case 'social-icon':
@@ -258,12 +305,13 @@ class _SectionViewState extends State<SectionView> {
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
           sectionStyleSheet: styleSheet,
-          isSelected: selectSectionId == child.id,
+          isSelected: selectChildId == child.id,
         );
         break;
       default:
         print('Special Child Type: ${child.type}');
-        print('Special Styles: ${ stylesheets[shopPage.stylesheetIds.mobile][child.id]}');
+        print(
+            'Special Styles: ${stylesheets[shopPage.stylesheetIds.mobile][child.id]}');
     }
     return widget;
   }
@@ -351,10 +399,9 @@ class _SectionViewState extends State<SectionView> {
         child: GestureDetector(
             onVerticalDragUpdate: (DragUpdateDetails details) {
               setState(() {
-
                 RenderBox box = key.currentContext.findRenderObject();
-                Offset position1 = box
-                    .localToGlobal(Offset.zero); //this is global position
+                Offset position1 =
+                    box.localToGlobal(Offset.zero); //this is global position
                 double newHeight;
                 if (top) {
                   newHeight = widgetHeight - details.localPosition.dy;
@@ -421,14 +468,14 @@ class _SectionViewState extends State<SectionView> {
   }
 
   void editAction() {
-    if (shopPage.id != 'dbe497ff-97dd-4e30-8230-67ccb37343e1')
-      return;
+    if (shopPage.id != 'dbe497ff-97dd-4e30-8230-67ccb37343e1') return;
     Map payload = {
       child.id: {'height': widgetHeight}
     };
     Map effect = {
       'payload': payload,
-      'target': 'stylesheets:${shopPage.stylesheetIds.mobile}', // shopPage.stylesheetIds.mobile
+      'target': 'stylesheets:${shopPage.stylesheetIds.mobile}',
+      // shopPage.stylesheetIds.mobile
       'type': "stylesheet:update",
     };
     print('activeThemeId: $activeThemeId');
@@ -441,7 +488,10 @@ class _SectionViewState extends State<SectionView> {
         'targetPageId': shopPage.id
       };
       print('update Body: $body');
-      api.shopEditAction(GlobalUtils.activeToken.accessToken, activeThemeId, body).then((value) {
+      api
+          .shopEditAction(
+              GlobalUtils.activeToken.accessToken, activeThemeId, body)
+          .then((value) {
         if (value is DioError) {
           Fluttertoast.showToast(msg: value.error);
         }
@@ -450,5 +500,4 @@ class _SectionViewState extends State<SectionView> {
       print('Error: No active Theme!');
     }
   }
-
 }
