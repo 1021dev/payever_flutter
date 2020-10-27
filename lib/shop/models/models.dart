@@ -995,3 +995,12 @@ class ButtonPayload {
   factory ButtonPayload.fromJson(Map<String, dynamic> json) => _$ButtonPayloadFromJson(json);
   Map<String, dynamic> toJson() => _$ButtonPayloadToJson(this);
 }
+
+class NewChildSize {
+  double newWidth;
+  double newHeight;
+  double newTop;
+  double newLeft;
+
+  NewChildSize({this.newTop, this.newLeft, this.newWidth, this.newHeight});
+}

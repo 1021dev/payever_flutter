@@ -1,6 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/models/template_size_state_model.dart';
+import 'package:provider/provider.dart';
 
 class ResizeableView extends StatefulWidget {
   ResizeableView({this.child, this.height, this.width , this.top, this.left, this.isSelected = false});
@@ -48,7 +51,6 @@ class _ResizeableViewState extends State<ResizeableView> {
           child: Container(
             height: height,
             width: width,
-//            alignment: Alignment.center,
             child: widget.child,
           ),
         ),
@@ -69,6 +71,7 @@ class _ResizeableViewState extends State<ResizeableView> {
                 width = newWidth > 0 ? newWidth : 0;
                 top = top + mid;
                 left = left + mid;
+                updateSize();
               });
             },
           ),
@@ -86,6 +89,7 @@ class _ResizeableViewState extends State<ResizeableView> {
               setState(() {
                 height = newHeight > 0 ? newHeight : 0;
                 top = top + dy;
+                updateSize();
               });
             },
           ),
@@ -108,6 +112,7 @@ class _ResizeableViewState extends State<ResizeableView> {
                 width = newWidth > 0 ? newWidth : 0;
                 top = top - mid;
                 left = left - mid;
+                updateSize();
               });
             },
           ),
@@ -124,6 +129,7 @@ class _ResizeableViewState extends State<ResizeableView> {
 
               setState(() {
                 width = newWidth > 0 ? newWidth : 0;
+                updateSize();
               });
             },
           ),
@@ -146,6 +152,7 @@ class _ResizeableViewState extends State<ResizeableView> {
                 width = newWidth > 0 ? newWidth : 0;
                 top = top - mid;
                 left = left - mid;
+                updateSize();
               });
             },
           ),
@@ -162,6 +169,7 @@ class _ResizeableViewState extends State<ResizeableView> {
 
               setState(() {
                 height = newHeight > 0 ? newHeight : 0;
+                updateSize();
               });
             },
           ),
@@ -184,6 +192,7 @@ class _ResizeableViewState extends State<ResizeableView> {
                 width = newWidth > 0 ? newWidth : 0;
                 top = top - mid;
                 left = left - mid;
+                updateSize();
               });
             },
           ),
@@ -201,6 +210,7 @@ class _ResizeableViewState extends State<ResizeableView> {
               setState(() {
                 width = newWidth > 0 ? newWidth : 0;
                 left = left + dx;
+                updateSize();
               });
             },
           ),
@@ -216,6 +226,7 @@ class _ResizeableViewState extends State<ResizeableView> {
               setState(() {
                 top = top + dy;
                 left = left + dx;
+                updateSize();
               });
             },
           ),
@@ -233,7 +244,9 @@ class _ResizeableViewState extends State<ResizeableView> {
   }
 
   void updateSize() {
-
+    Provider.of<TemplateSizeStateModel>(context, listen: false).setNewChildSize(
+        NewChildSize(
+            newTop: top, newLeft: left, newWidth: width, newHeight: height));
   }
 }
 

@@ -48,7 +48,6 @@ class _LogoViewState extends State<LogoView> {
     return mainBody;
   }
 
-
   Widget get mainBody {
     return ResizeableView(
       left: styles.getMarginLeft(sectionStyleSheet),
@@ -86,6 +85,7 @@ class _LogoViewState extends State<LogoView> {
       ),
     );
   }
+
   ImageStyles styleSheet() {
     try {
       Map json = widget.stylesheets[widget.deviceTypeId][child.id];

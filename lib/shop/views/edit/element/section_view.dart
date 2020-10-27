@@ -69,22 +69,27 @@ class _SectionViewState extends State<SectionView> {
   @override
   Widget build(BuildContext context) {
     activeThemeId = Provider.of<GlobalStateModel>(context, listen: false).activeTheme.themeId;
-    Provider.of<TemplateSizeStateModel>(context, listen: true).addListener(() {
-      if (this.mounted)
-        setState(() {
-          selectSectionId = '';
-        });
+
+    return Consumer<TemplateSizeStateModel>(
+        builder: (context, templateSizeState, child1) {
+      if (templateSizeState.newChildSize != null) {
+        print('New Size: ${templateSizeState.newChildSize.newHeight}');
+      }
+      if (templateSizeState.selectedSectionId != child.id || templateSizeState.refreshSelectedChild) {
+        selectSectionId = '';
+      }
+      return body();
     });
-    return body(context);
   }
 
-  Widget body(BuildContext context) {
+  Widget body() {
+
     if (styleSheet == null) {
       return Container();
     }
 
 
-    print('SectionId: ${child.id}');
+    // print('SectionId: ${child.id}');
     name = 'Section';
     if (child.data != null) {
       name = Data.fromJson(child.data).name;
@@ -97,6 +102,7 @@ class _SectionViewState extends State<SectionView> {
       if (childWidget != null) {
         Widget element = GestureDetector(
           onTap: () {
+            context.read<TemplateSizeStateModel>().setSelectedSectionId(widget.child.id);
             widget.onTapChild();
             setState(() {
               selectSectionId = child.id;
