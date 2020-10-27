@@ -69,17 +69,36 @@ class _SectionViewState extends State<SectionView> {
   @override
   Widget build(BuildContext context) {
     activeThemeId = Provider.of<GlobalStateModel>(context, listen: false).activeTheme.themeId;
-
     return Consumer<TemplateSizeStateModel>(
         builder: (context, templateSizeState, child1) {
-      if (templateSizeState.newChildSize != null) {
-        print('New Size: ${templateSizeState.newChildSize.newHeight}');
+          NewChildSize childSize = templateSizeState.newChildSize;
+      if (childSize != null) {
+        bool wrongposition = wrongPosition(childSize);
+        if (wrongposition) {
+          if (!templateSizeState.wrongPosition)
+            Future.microtask(() =>
+                // context.read<MyNotifier>(context).fetchSomething(someValue);
+              templateSizeState.setWrongPosition(wrongposition)
+            );
+
+        } else {
+          if (templateSizeState.wrongPosition)
+            Future.microtask(() =>
+            // context.read<MyNotifier>(context).fetchSomething(someValue);
+            templateSizeState.setWrongPosition(wrongposition)
+            );
+            // templateSizeState.setWrongPosition(wrongposition);
+        }
       }
       if (templateSizeState.selectedSectionId != child.id || templateSizeState.refreshSelectedChild) {
         selectSectionId = '';
       }
       return body();
     });
+  }
+
+  bool wrongPosition(NewChildSize childSize) {
+    return childSize.newTop < 0 || childSize.newLeft < 0;
   }
 
   Widget body() {
