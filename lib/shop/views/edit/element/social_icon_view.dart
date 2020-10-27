@@ -40,25 +40,24 @@ class _SocialIconViewState extends State<SocialIconView> {
         styles.display == 'none')
       return Container();
 
-    return _body();
+    return ResizeableView(
+        width: styles.width,
+        height: styles.height,
+        left: styles.getMarginLeft(sectionStyleSheet),
+        top: styles.getMarginTop(sectionStyleSheet),
+        isSelected: widget.isSelected,
+        child: body);
   }
 
-  Widget _body() {
-    return ResizeableView(
-      width: styles.width,
-      height: styles.height,
-      isSelected: widget.isSelected,
-      left: styles.getMarginLeft(sectionStyleSheet),
-      top: styles.getMarginTop(sectionStyleSheet),
-      child: Opacity(
-        opacity: styles.opacity,
-        child: Container(
-            decoration: styles.decoration,
-            child: SvgPicture.asset(
-              'assets/images/social-icon-${child.data['variant']}.svg',
-              color: colorConvert(styles.backgroundColor),
-            )),
-      ),
+  Widget get body {
+    return Opacity(
+      opacity: styles.opacity,
+      child: Container(
+          decoration: styles.decoration,
+          child: SvgPicture.asset(
+            'assets/images/social-icon-${child.data['variant']}.svg',
+            color: colorConvert(styles.backgroundColor),
+          )),
     );
   }
 

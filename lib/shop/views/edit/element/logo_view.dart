@@ -45,42 +45,42 @@ class _LogoViewState extends State<LogoView> {
     if (styles == null ||
         styles.display == 'none')
       return Container();
-    return mainBody;
+
+    return ResizeableView(
+        width: styles.width,
+        height: styles.height,
+        left: styles.getMarginLeft(sectionStyleSheet),
+        top: styles.getMarginTop(sectionStyleSheet),
+        isSelected: widget.isSelected,
+        child: body);
   }
 
-  Widget get mainBody {
-    return ResizeableView(
-      left: styles.getMarginLeft(sectionStyleSheet),
-      top: styles.getMarginTop(sectionStyleSheet),
-      width: styles.width,
-      height: styles.height,
-      isSelected: widget.isSelected,
-      child: Opacity(
-        opacity: styles.opacity,
-        child: Container(
-          key: key,
-          width: styles.width,
-          height: styles.height,
-          child: CachedNetworkImage(
-            imageUrl: '${globalStateModel.activeShop.picture}',
-            imageBuilder: (context, imageProvider) => Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: imageProvider,
-                  fit: BoxFit.contain,
-                ),
+  Widget get body {
+    return Opacity(
+      opacity: styles.opacity,
+      child: Container(
+        key: key,
+        width: styles.width,
+        height: styles.height,
+        child: CachedNetworkImage(
+          imageUrl: '${globalStateModel.activeShop.picture}',
+          imageBuilder: (context, imageProvider) => Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: imageProvider,
+                fit: BoxFit.contain,
               ),
             ),
-            errorWidget: (context, url, error) {
-              return Container(
-                alignment: Alignment.center,
-                padding: EdgeInsets.all(15),
-                child: SvgPicture.asset(
-                  'assets/images/no_image.svg',
-                ),
-              );
-            },
           ),
+          errorWidget: (context, url, error) {
+            return Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.all(15),
+              child: SvgPicture.asset(
+                'assets/images/no_image.svg',
+              ),
+            );
+          },
         ),
       ),
     );

@@ -43,89 +43,89 @@ class _ShopProductsViewState extends State<ShopProductsView> {
         styles.display == 'none')
       return Container();
 
-    return body;
+    return ResizeableView(
+        width: styles.width,
+        height: styles.height,
+        left: styles.getMarginLeft(sectionStyleSheet),
+        top: styles.getMarginTop(sectionStyleSheet),
+        isSelected: widget.isSelected,
+        child: body);
   }
 
   Widget get body {
-    return ResizeableView(
-        top: styles.getMarginTop(sectionStyleSheet),
-        left: styles.getMarginLeft(sectionStyleSheet),
-        width: styles.width,
-        height: styles.height,
-        isSelected: widget.isSelected,
-        child: Opacity(
-          opacity: styles.opacity,
-          child: Container(
-            color: colorConvert(styles.backgroundColor),
-            child: Column(
-              children: [
-                Expanded(
-                  child: Container(
-                    width: double.infinity,
+    return Opacity(
+      opacity: styles.opacity,
+      child: Container(
+        color: colorConvert(styles.backgroundColor),
+        child: Column(
+          children: [
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey, width: 1),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: CachedNetworkImage(
+                  imageUrl: '',
+                  imageBuilder: (context, imageProvider) => Container(
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey, width: 1),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: CachedNetworkImage(
-                      imageUrl: '',
-                      imageBuilder: (context, imageProvider) => Container(
-                        decoration: BoxDecoration(
-                          color: Colors.transparent /*background.backgroundColor*/,
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.contain,
-                          ),
-                        ),
+                      color: Colors.transparent /*background.backgroundColor*/,
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.contain,
                       ),
-                      errorWidget: (context, url, error) {
-                        return Container(
-                          alignment: Alignment.center,
-                          width: 50,
-                          height: 50,
-                          child: SvgPicture.asset(
-                            'assets/images/shop-edit-products-icon.svg',
-                          ),
-                        );
-                      },
+                    ),
+                  ),
+                  errorWidget: (context, url, error) {
+                    return Container(
+                      alignment: Alignment.center,
+                      width: 50,
+                      height: 50,
+                      child: SvgPicture.asset(
+                        'assets/images/shop-edit-products-icon.svg',
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+            Column(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(top: 5),
+                  width: double.infinity,
+                  alignment: styles.textAlign,
+                  child: Text(
+                    'Product name',
+                    style: TextStyle(
+                      fontSize: styles.titleFontSize,
+                      fontStyle: styles.titleFontStyle,
+                      fontWeight: styles.titleFontWeight,
+                      color: colorConvert(styles.titleColor),
                     ),
                   ),
                 ),
-                Column(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(top: 5),
-                      width: double.infinity,
-                      alignment: styles.textAlign,
-                      child: Text(
-                        'Product name',
-                        style: TextStyle(
-                          fontSize: styles.titleFontSize,
-                          fontStyle: styles.titleFontStyle,
-                          fontWeight: styles.titleFontWeight,
-                          color: colorConvert(styles.titleColor),
-                        ),
-                      ),
+                Container(
+                  width: double.infinity,
+                  alignment: styles.textAlign,
+                  margin: EdgeInsets.symmetric(vertical: 5),
+                  child: Text(
+                    '\$ 00.00',
+                    style: TextStyle(
+                      fontSize: styles.priceFontSize,
+                      fontStyle: styles.priceFontStyle,
+                      fontWeight: styles.priceFontWeight,
+                      color: colorConvert(styles.priceColor),
                     ),
-                    Container(
-                      width: double.infinity,
-                      alignment: styles.textAlign,
-                      margin: EdgeInsets.symmetric(vertical: 5),
-                      child: Text(
-                        '\$ 00.00',
-                        style: TextStyle(
-                          fontSize: styles.priceFontSize,
-                          fontStyle: styles.priceFontStyle,
-                          fontWeight: styles.priceFontWeight,
-                          color: colorConvert(styles.priceColor),
-                        ),
-                      ),
-                    )
-                  ],
+                  ),
                 )
               ],
-            ),
-          ),
-        ));
+            )
+          ],
+        ),
+      ),
+    );
   }
 
   ShopProductsStyles styleSheet() {

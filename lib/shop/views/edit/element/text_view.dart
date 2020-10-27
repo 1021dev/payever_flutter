@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/element/sub_element/resizeable_view.dart';
 import '../../../../theme.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
@@ -24,42 +25,45 @@ class TextView extends StatefulWidget {
 class _TextViewState extends State<TextView> {
   final Child child;
   final SectionStyleSheet sectionStyleSheet;
-
+  TextStyles styles;
+  String txt;
   _TextViewState(this.child, this.sectionStyleSheet);
 
   @override
   Widget build(BuildContext context) {
-    return _body();
-  }
+    styles = getStyles();
+    if (styles == null && child.styles != null && child.styles.isNotEmpty) {
+      styles = TextStyles.fromJson(child.styles);
+    }
+    if (styles == null || styles.display == 'none') return Container();
 
-  Widget _body() {
-    String txt = '';
     if (child.data is Map) {
       Data data = Data.fromJson(child.data);
       if (data.text != null) txt = data.text;
     } else {
-      print('Data is not Map: ${child.data}');
+      return Container();
     }
+
+    return ResizeableView(
+        width: styles.width,
+        height: styles.textHeight,
+        left: styles.getMarginLeft(sectionStyleSheet),
+        top: styles.getMarginTop(sectionStyleSheet),
+        isSelected: widget.isSelected,
+        child: body);
+  }
+
+  Widget get body {
+
+
 
     if (txt.contains('<div') ||
         txt.contains('<span') ||
         txt.contains('<font')) {
-      TextStyles styles = getStyles();
-
-      if (styles == null || styles.display == 'none') {
-        return Container();
-      }
       print('Text Text: $txt');
       return Container(
 //        color: colorConvert(styles.backgroundColor, emptyColor: true),
-        width: styles.width,
-        height: styles.textHeight,
         alignment: styles.textAlign,
-        margin: EdgeInsets.only(
-            left: styles.getMarginLeft(sectionStyleSheet),
-            right: styles.marginRight,
-            top: styles.getMarginTop(sectionStyleSheet),
-            bottom: styles.marginBottom),
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -80,26 +84,9 @@ class _TextViewState extends State<TextView> {
         )
       );
     }
-    TextStyles styles;
-    if (child.styles != null && child.styles.isNotEmpty) {
-      styles = TextStyles.fromJson(child.styles);
-    } else {
-      styles = getStyles();
-    }
-    if (styles == null || styles.display == 'none')
-      return Container();
-
-    print('Text Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
 
     return Container(
-      width: styles.width,
-      height: styles.height,
-      margin: EdgeInsets.only(
-          left: styles.getMarginLeft(sectionStyleSheet),
-          right: styles.marginRight,
-          top: styles.getMarginTop(sectionStyleSheet),
-          bottom: styles.marginBottom),
-      alignment: Alignment.center,
+      alignment: styles.textAlign,
       child: Text(txt,
           style: TextStyle(
               color: colorConvert(styles.color),

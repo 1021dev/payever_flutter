@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/element/sub_element/resizeable_view.dart';
 import '../../../../theme.dart';
 
 class ShopProductDetailView extends StatefulWidget {
@@ -38,21 +39,18 @@ class _ShopProductDetailViewState extends State<ShopProductDetailView> {
         styles.display == 'none')
       return Container();
 
-    return _body();
-  }
-
-  Widget _body() {
-
-
-    return Container(
+    return ResizeableView(
         width: double.infinity,
         height: double.infinity,
+        left: styles.getMarginLeft(sectionStyleSheet),
+        top: styles.getMarginTop(sectionStyleSheet),
+        isSelected: widget.isSelected,
+        child: body);
+  }
+
+  Widget get body {
+    return Container(
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
-        margin: EdgeInsets.only(
-            left: styles.getMarginLeft(sectionStyleSheet),
-            right: styles.marginRight,
-            top: styles.getMarginTop(sectionStyleSheet),
-            bottom: styles.marginBottom),
         color: colorConvert(styles.backgroundColor),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

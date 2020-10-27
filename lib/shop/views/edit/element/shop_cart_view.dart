@@ -46,11 +46,11 @@ class _ShopCartViewState extends State<ShopCartView> {
       left: styles.getMarginLeft(sectionStyleSheet),
       top: styles.getMarginTop(sectionStyleSheet),
       isSelected: widget.isSelected,
-      child: _body(),
+      child: body,
     );
   }
 
-  Widget _body() {
+  Widget get body {
     String asset = '';
     switch(child.data['variant']) {
       case 'square-cart':

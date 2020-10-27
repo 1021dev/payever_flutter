@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/element/sub_element/background_view.dart';
+import 'package:payever/shop/views/edit/element/sub_element/resizeable_view.dart';
 import 'package:shape_of_view/shape_of_view.dart';
 import 'package:clip_shadow/clip_shadow.dart';
 
@@ -38,10 +39,16 @@ class _ShapeViewState extends State<ShapeView> {
     }
     if (styles == null || styles.display == 'none') return Container();
 
-    return Opacity(opacity: styles.opacity, child: _body());
+    return ResizeableView(
+        width: styles.width,
+        height: styles.height,
+        left: styles.getMarginLeft(sectionStyleSheet),
+        top: styles.getMarginTop(sectionStyleSheet),
+        isSelected: widget.isSelected,
+        child: Opacity(opacity: styles.opacity, child: body));
   }
 
-  Widget _body() {
+  Widget get body {
     switch (child.data['variant']) {
       case 'circle':
         return circleShape();
@@ -57,14 +64,7 @@ class _ShapeViewState extends State<ShapeView> {
 
   Widget circleShape() {
     return Container(
-      width: styles.width,
-      height: styles.height,
 //        decoration: styles.decoration,
-      margin: EdgeInsets.only(
-          left: styles.getMarginLeft(sectionStyleSheet),
-          right: styles.marginRight,
-          top: styles.getMarginTop(sectionStyleSheet),
-          bottom: styles.marginBottom),
       alignment: Alignment.center,
       child: ClipShadow(
         clipper: OvalClipper(x: styles.width, y: styles.height, w: 0),
@@ -81,13 +81,6 @@ class _ShapeViewState extends State<ShapeView> {
 
   Widget triangleShape() {
     return Container(
-      width: styles.width,
-      height: styles.height,
-      margin: EdgeInsets.only(
-          left: styles.getMarginLeft(sectionStyleSheet),
-          right: styles.marginRight,
-          top: styles.getMarginTop(sectionStyleSheet),
-          bottom: styles.marginBottom),
       child: ClipShadow(
         clipper: TriangleClipper(),
         boxShadow: styles.getBoxShadow,
@@ -111,15 +104,8 @@ class _ShapeViewState extends State<ShapeView> {
 
   Widget squareShape() {
     return Container(
-      width: styles.width,
-      height: styles.height,
       decoration: styles.decoration,
 //      color: colorConvert(styles.backgroundColor),
-      margin: EdgeInsets.only(
-          left: styles.getMarginLeft(sectionStyleSheet),
-          right: styles.marginRight,
-          top: styles.getMarginTop(sectionStyleSheet),
-          bottom: styles.marginBottom),
       alignment: Alignment.center,
       child: ClipRRect(
           child: BackgroundView(
@@ -210,7 +196,6 @@ class OvalClipper extends CustomClipper<Path> {
 
   @override
   bool shouldReclip(CustomClipper<Path> oldClipper) {
-    // TODO: implement shouldReclip
     return true;
   }
 }
