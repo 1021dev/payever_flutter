@@ -146,7 +146,19 @@ class _SectionViewState extends State<SectionView> {
     // bottom right (x2, y2)
     if ((x01< x2 && x2 <= x02) && (y01< y2 && y2 <= y02))
       return true;
-
+    // Revers
+    // top left (x01, y01)
+    if ((x1< x01 && x01 <= x1) && (y1< y01 && y01 <= y2))
+      return true;
+    // top right (x02, y01)
+    if ((x1< x02 && x02 <= x2) && (y1< y01 && y01 <= y2))
+      return true;
+    // bottom left (x01, y02)
+    if ((x1< x01 && x01 <= x2) && (y1< y02 && y02 <= y2))
+      return true;
+    // bottom right (x02, y02)
+    if ((x1< x02 && x02 <= x2) && (y1< y02 && y02 <= y2))
+      return true;
     return false;
   }
 

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -72,17 +74,18 @@ class _ShopCartViewState extends State<ShopCartView> {
       default:
         break;
     }
+    double size = min<double>(styles.width, styles.height);
     return Opacity(
       opacity: styles.opacity,
       child: Container(
           decoration: decoration,
           alignment: Alignment.center,
           child: Badge(
-            padding: EdgeInsets.all(styles.width/10),
+            padding: EdgeInsets.all(size/10),
             badgeColor: colorConvert(styles.badgeBackground),
             badgeContent: Text(
               '3',
-              style: TextStyle(fontSize: styles.width/4, fontWeight: FontWeight.w600, color: colorConvert(styles.badgeColor)),
+              style: TextStyle(fontSize: size/4, fontWeight: FontWeight.w600, color: colorConvert(styles.badgeColor)),
             ),
             child: SvgPicture.asset(
               asset,

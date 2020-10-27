@@ -54,15 +54,9 @@ class _SocialIconViewState extends State<SocialIconView> {
         opacity: styles.opacity,
         child: Container(
             decoration: styles.decoration,
-//            margin: EdgeInsets.only(
-//                right: styles.marginRight,
-//                bottom: styles.marginBottom),
-//          alignment: Alignment.center,
             child: SvgPicture.asset(
               'assets/images/social-icon-${child.data['variant']}.svg',
               color: colorConvert(styles.backgroundColor),
-//              width: styles.width,
-//              height: styles.height,
             )),
       ),
     );
