@@ -127,6 +127,7 @@ class ShopEditScreenBloc
 
   Stream<ShopEditScreenState> updateSection(UpdateSectionEvent event) async* {
     if (state.activeShopPage == null) {
+      yield state.copyWith(selectedSectionId: event.sectionId);
       Fluttertoast.showToast(msg: 'Shop page does not selected');
       return;
     }
@@ -143,7 +144,7 @@ class ShopEditScreenBloc
       'targetPageId': state.activeShopPage.id
     };
     print('update Body: $body');
-    yield state.copyWith(isUpdating: true);
+    yield state.copyWith(isUpdating: true, selectedSectionId: event.sectionId);
     dynamic response = await api.shopEditAction(
         GlobalUtils.activeToken.accessToken, state.activeTheme.themeId, body);
 

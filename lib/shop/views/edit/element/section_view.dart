@@ -82,54 +82,54 @@ class _SectionViewState extends State<SectionView> {
     activeThemeId = Provider.of<GlobalStateModel>(context, listen: false)
         .activeTheme
         .themeId;
-    return BlocListener(
-      listener: (BuildContext context, ShopEditScreenState state) async {
+
+
+    return Consumer<TemplateSizeStateModel>(
+        builder: (context, templateSizeState, child1) {
+      if (templateSizeState.selectedSectionId == section.id) {
+        if (templateSizeState.updateChildSize != null) {
+          _changeSection(childSize: templateSizeState.updateChildSize);
+          templateSizeState.setUpdateChildSize(null);
+        } else if (templateSizeState.newChildSize != null) {
+          bool wrongposition = wrongPosition(templateSizeState.newChildSize);
+          if (wrongposition) {
+            if (!templateSizeState.wrongPosition) Future.microtask(() =>
+                  templateSizeState.setWrongPosition(wrongposition));
+          } else {
+            if (templateSizeState.wrongPosition)
+              Future.microtask(
+                  () => templateSizeState.setWrongPosition(wrongposition));
+          }
+        }
+      }
+
+      if (templateSizeState.selectedSectionId != section.id ||
+          templateSizeState.refreshSelectedChild) {
+        selectChildId = '';
+      }
+      return BlocListener(
+        listener: (BuildContext context, ShopEditScreenState state) async {
           if (state.selectedSection) {
             setState(() {
               selectChildId = '';
             });
             screenBloc.add(RestSelectSectionEvent());
           }
-      },
-      bloc: screenBloc,
-      child: BlocBuilder(
-        condition: (ShopEditScreenState state1, state2) {
-          if (state2.selectedSectionId != section.id)
-            return false;
-          return true;
         },
         bloc: screenBloc,
-        builder: (BuildContext context, state) {
-          return body(state);
-        },
-      ),
-    );
-
-    // return Consumer<TemplateSizeStateModel>(
-    //     builder: (context, templateSizeState, child1) {
-    //   if (templateSizeState.selectedSectionId == section.id) {
-    //     if (templateSizeState.updateChildSize != null) {
-    //       _changeSection(childSize: templateSizeState.updateChildSize);
-    //       templateSizeState.setUpdateChildSize(null);
-    //     } else if (templateSizeState.newChildSize != null) {
-    //       bool wrongposition = wrongPosition(templateSizeState.newChildSize);
-    //       if (wrongposition) {
-    //         if (!templateSizeState.wrongPosition) Future.microtask(() =>
-    //               templateSizeState.setWrongPosition(wrongposition));
-    //       } else {
-    //         if (templateSizeState.wrongPosition)
-    //           Future.microtask(
-    //               () => templateSizeState.setWrongPosition(wrongposition));
-    //       }
-    //     }
-    //   }
-    //
-    //   if (templateSizeState.selectedSectionId != section.id ||
-    //       templateSizeState.refreshSelectedChild) {
-    //     selectChildId = '';
-    //   }
-    //   return body();
-    // });
+        child: BlocBuilder(
+          condition: (ShopEditScreenState state1, state2) {
+            if (state2.selectedSectionId != section.id)
+              return false;
+            return true;
+          },
+          bloc: screenBloc,
+          builder: (BuildContext context, state) {
+            return body(state);
+          },
+        ),
+      );
+    });
   }
 
   bool wrongPosition(NewChildSize childSize) {
@@ -470,7 +470,7 @@ class _SectionViewState extends State<SectionView> {
   Widget dragArrow(bool top) {
     return Container(
         width: 40,
-        height: 15,
+        height: 25,
         alignment: Alignment.center,
         child: GestureDetector(
             onVerticalDragUpdate: (DragUpdateDetails details) {
@@ -516,20 +516,23 @@ class _SectionViewState extends State<SectionView> {
             },
             child: Container(
               width: 40,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.blue, width: 1),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(top ? 10 : 0),
-                  bottomRight: Radius.circular(top ? 10 : 0),
-                  topLeft: Radius.circular(top ? 0 : 10),
-                  topRight: Radius.circular(top ? 0 : 10),
+              padding: EdgeInsets.only(top: top ? 0: 10, bottom: top ? 10: 0),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.blue, width: 2),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(top ? 10 : 0),
+                    bottomRight: Radius.circular(top ? 10 : 0),
+                    topLeft: Radius.circular(top ? 0 : 10),
+                    topRight: Radius.circular(top ? 0 : 10),
+                  ),
                 ),
-              ),
-              child: Icon(
-                top ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_up,
-                color: Colors.blue,
-                size: 15,
+                alignment: Alignment.center,
+                child: Icon(
+                  top ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_up,
+                  color: Colors.blue,
+                  size: 15,
+                ),
               ),
             )));
   }
@@ -566,7 +569,7 @@ class _SectionViewState extends State<SectionView> {
       payload = sectionPayload;
     }
     print('payload: $payload');
-    screenBloc.add(UpdateSectionEvent(payload));
+    screenBloc.add(UpdateSectionEvent(sectionId:section.id, payload: payload));
   }
 
 
@@ -579,7 +582,8 @@ class _SectionViewState extends State<SectionView> {
       double dy = widgetHeight - sectionStyles.height;
       double updatedMarginBottom = marginBottom + dy;
       gridRows.removeLast();
-      gridRows.add('${updatedMarginBottom.round()}');
+      // gridRows.add('${updatedMarginBottom.round()}');
+      gridRows.add('0');
       payloadSection['gridTemplateRows'] = '$gridRows'.replaceAll(RegExp(r"[^\s\w]"), '');
     }
     Map<String, dynamic> payload = {
@@ -588,7 +592,7 @@ class _SectionViewState extends State<SectionView> {
     return payload;
   }
 
-  Map childPayload(NewChildSize size) {
+  Map<String, dynamic> childPayload(NewChildSize size) {
     Map<String, dynamic> payloadSection = {};
     BaseStyles baseStyles = getBaseStyles(selectChildId);
     double marginTop = baseStyles.getMarginTopAssist(size.newTop, sectionStyles.gridTemplateRows, baseStyles.gridRow, isReverse: true);
@@ -599,7 +603,7 @@ class _SectionViewState extends State<SectionView> {
     payloadSection['marginLeft'] = marginLeft;
     payloadSection['height'] = size.newHeight;
     payloadSection['width'] = size.newWidth / GlobalUtils.shopBuilderWidthFactor;
-    Map payload = {
+    Map<String, dynamic>  payload = {
       selectChildId: payloadSection
     };
     return payload;
