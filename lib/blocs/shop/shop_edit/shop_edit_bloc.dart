@@ -1,10 +1,12 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:uuid/uuid.dart';
 import 'shop_edit.dart';
 
 class ShopEditScreenBloc
@@ -28,8 +30,15 @@ class ShopEditScreenBloc
       yield* fetchSnapShot();
     } else if (event is SelectSectionEvent) {
       yield state.copyWith(
-          selectedSectionId: event.sectionId,);
-      yield UpdateSelectedSection();
+          selectedSectionId: event.sectionId, selectedSection: true);
+    } else if (event is UpdateSectionEvent) {
+      yield* updateSection(event);
+    } else if (event is ActiveShopPageEvent) {
+      yield state.copyWith(
+        activeShopPage: event.activeShopPage);
+      print('updated shop page: ${state.activeShopPage.id}');
+    } else if (event is RestSelectSectionEvent) {
+      yield state.copyWith(selectedSection: false);
     }
   }
 
@@ -116,4 +125,33 @@ class ShopEditScreenBloc
         isLoading: false);
   }
 
+  Stream<ShopEditScreenState> updateSection(UpdateSectionEvent event) async* {
+    if (state.activeShopPage == null) {
+      Fluttertoast.showToast(msg: 'Shop page does not selected');
+      return;
+    }
+    Map effect = {
+      'payload': event.payload,
+      'target': 'stylesheets:${state.activeShopPage.stylesheetIds.mobile}',
+      'type': "stylesheet:update",
+    };
+    Map<String, dynamic> body = {
+      'affectedPageIds': [state.activeShopPage.id],
+      'createdAt': DateFormat("yyyy-MM-dd'T'hh:mm:ss").format(DateTime.now()),
+      'effects': [effect],
+      'id': Uuid().v4(),
+      'targetPageId': state.activeShopPage.id
+    };
+    print('update Body: $body');
+    yield state.copyWith(isUpdating: true);
+    dynamic response = await api.shopEditAction(
+        GlobalUtils.activeToken.accessToken, state.activeTheme.themeId, body);
+
+    if (response is DioError) {
+      Fluttertoast.showToast(msg: response.error);
+      yield state.copyWith(isUpdating: false);
+    } else {
+      yield state.copyWith(isUpdating: false);
+    }
+  }
 }

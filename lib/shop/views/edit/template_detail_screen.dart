@@ -41,6 +41,17 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
 
   StreamController<double> controller = StreamController.broadcast();
   double position;
+  @override
+  void initState() {
+    screenBloc.add(ActiveShopPageEvent(activeShopPage: widget.shopPage));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // screenBloc.add(ActiveShopPageEvent(activeShopPage: null));
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -44,11 +44,14 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
     isTablet = GlobalUtils.isTablet(context);
 
     return BlocListener(
-      listener: (BuildContext context, ShopEditScreenState state) async {},
+      listener: (BuildContext context, ShopEditScreenState state) async {
+
+      },
       bloc: screenBloc,
       child: BlocBuilder(
         bloc: screenBloc,
         builder: (BuildContext context, state) {
+          print('ShopEditScreen: State: ${state.runtimeType}');
           return Scaffold(
               appBar: CustomAppBar(onTapAdd: ()=> _navigateTemplatesScreen(),),
               backgroundColor: Colors.grey[800],
@@ -59,6 +62,7 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
   }
 
   Widget _body(ShopEditScreenState state) {
+
     if (state.isLoading) {
       return Center(child: CircularProgressIndicator());
     }

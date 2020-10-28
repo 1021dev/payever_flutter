@@ -3,8 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:intl/intl.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/shop/shop_edit/shop_edit_bloc.dart';
@@ -24,7 +22,6 @@ import 'package:payever/shop/views/edit/element/sub_element/background_view.dart
 import 'package:payever/shop/views/edit/element/text_view.dart';
 import 'package:payever/shop/views/edit/element/video_view.dart';
 import 'package:provider/provider.dart';
-import 'package:uuid/uuid.dart';
 import 'button_view.dart';
 import 'image_view.dart';
 
@@ -68,8 +65,6 @@ class _SectionViewState extends State<SectionView> {
   String activeThemeId;
   double limitSectionHeight = 0;
 
-  bool editState = false;
-
   _SectionViewState(
       {this.shopPage, this.section, this.stylesheets, this.activeShop, this.screenBloc}) {
     sectionStyles = getSectionStyles(section.id);
@@ -89,20 +84,20 @@ class _SectionViewState extends State<SectionView> {
         .themeId;
     return BlocListener(
       listener: (BuildContext context, ShopEditScreenState state) async {
-        print('BlocListener: ${state.runtimeType}');
-      },
-      condition: (state1, state2) {
-        if (state2 is UpdateSelectedSection) {
-          setState(() {
-            selectChildId = '';
-          });
-          return false;
-        }
-        if (state1 is ShopEditScreenState && state2 is ShopEditScreenState) return true;
-        return true;
+          if (state.selectedSection) {
+            setState(() {
+              selectChildId = '';
+            });
+            screenBloc.add(RestSelectSectionEvent());
+          }
       },
       bloc: screenBloc,
       child: BlocBuilder(
+        condition: (ShopEditScreenState state1, state2) {
+          if (state2.selectedSectionId != section.id)
+            return false;
+          return true;
+        },
         bloc: screenBloc,
         builder: (BuildContext context, state) {
           return body(state);
@@ -250,7 +245,7 @@ class _SectionViewState extends State<SectionView> {
             Stack(
               children: widgets,
             ),
-            if (editState)
+            if (state.isUpdating)
               Center(child: CircularProgressIndicator()),
           ],
 
@@ -563,55 +558,20 @@ class _SectionViewState extends State<SectionView> {
     }
   }
 
-  _changeSection({NewChildSize childSize}) async {
-    Map payload;
+  _changeSection({NewChildSize childSize}) {
+    Map<String, dynamic> payload = {};
     if (selectChildId != null && childSize != null) {
       payload = childPayload(childSize);
     } else {
       payload = sectionPayload;
     }
-
-    Map effect = {
-      'payload': payload,
-      'target': 'stylesheets:${shopPage.stylesheetIds.mobile}',
-      'type': "stylesheet:update",
-    };
-    if (activeThemeId != null && activeThemeId.isNotEmpty) {
-      Map<String, dynamic> body = {
-        'affectedPageIds': [shopPage.id],
-        'createdAt': DateFormat("yyyy-MM-dd'T'hh:mm:ss").format(DateTime.now()),
-        'effects': [effect],
-        'id': Uuid().v4(),
-        'targetPageId': shopPage.id
-      };
-      print('update Body: $body');
-      // Future.microtask(() {
-      //   setState(() {
-      //     editState = true;
-      //   });
-      // });
-
-      // dynamic response = await api.shopEditAction(
-      //     GlobalUtils.activeToken.accessToken, activeThemeId, body);
-      // setState(() {
-      //   Future.microtask(() {
-      //     setState(() {
-      //       editState = false;
-      //     });
-      //   });
-      // });
-      //
-      // if (response is DioError) {
-      //   Fluttertoast.showToast(msg: response.error);
-      // }
-    } else {
-      print('Error: No active Theme!');
-    }
+    print('payload: $payload');
+    screenBloc.add(UpdateSectionEvent(payload));
   }
 
 
   Map get sectionPayload {
-    Map payloadSection = {};
+    Map<String, dynamic> payloadSection = {};
     payloadSection['height'] = widgetHeight;
     if (sectionStyles.gridTemplateRows != null && sectionStyles.gridTemplateRows.isNotEmpty) {
       List<String>gridRows = sectionStyles.gridTemplateRows.split(' ');
@@ -622,14 +582,14 @@ class _SectionViewState extends State<SectionView> {
       gridRows.add('${updatedMarginBottom.round()}');
       payloadSection['gridTemplateRows'] = '$gridRows'.replaceAll(RegExp(r"[^\s\w]"), '');
     }
-    Map payload = {
+    Map<String, dynamic> payload = {
       section.id: payloadSection
     };
     return payload;
   }
 
   Map childPayload(NewChildSize size) {
-    Map payloadSection = {};
+    Map<String, dynamic> payloadSection = {};
     BaseStyles baseStyles = getBaseStyles(selectChildId);
     double marginTop = baseStyles.getMarginTopAssist(size.newTop, sectionStyles.gridTemplateRows, baseStyles.gridRow, isReverse: true);
     double marginLeft = baseStyles.getMarginLeftAssist(size.newLeft, sectionStyles.gridTemplateColumns, baseStyles.gridColumn, isReverse: true);

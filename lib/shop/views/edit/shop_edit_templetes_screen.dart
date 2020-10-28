@@ -35,6 +35,12 @@ class _ShopEditTemplatesScreenState extends State<ShopEditTemplatesScreen> {
     return BlocListener(
       listener: (BuildContext context, ShopEditScreenState state) async {},
       bloc: screenBloc,
+      condition: (state1, state2) {
+        if (state2.runtimeType != 'ShopEditScreenState') {
+          return false;
+        }
+        return true;
+      },
       child: BlocBuilder(
         bloc: screenBloc,
         builder: (BuildContext context, state) {
