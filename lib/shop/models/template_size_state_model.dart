@@ -8,9 +8,8 @@ class TemplateSizeStateModel extends ChangeNotifier {
   bool _refreshSelectedChild = false;
   bool _wrongPosition = false;
   NewChildSize _updateChildSize;
+
   bool get wrongPosition => _wrongPosition;
-
-
   NewChildSize get updateChildSize => _updateChildSize;
 
   setUpdateChildSize(NewChildSize value) {
@@ -50,6 +49,5 @@ class TemplateSizeStateModel extends ChangeNotifier {
     Future.delayed(Duration(milliseconds: 500))
         .then((value) => _refreshSelectedChild = false);
   }
-
 
 }

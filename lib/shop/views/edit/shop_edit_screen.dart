@@ -255,6 +255,7 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
           Expanded(
               child: (template != null)
                   ? TemplateView(
+                screenBloc: screenBloc,
                 shopPage: page,
                 template: template,
                 scrollable: !showName,
@@ -264,6 +265,7 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
                       context,
                       PageTransition(
                           child: TemplateDetailScreen(
+                            screenBloc: screenBloc,
                             shopPage: page,
                             template: template,
                             stylesheets: screenBloc.state.stylesheets,

@@ -1,11 +1,13 @@
 import 'dart:async';
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:payever/apis/api_service.dart';
+import 'package:payever/blocs/bloc.dart';
+import 'package:payever/blocs/shop/shop_edit/shop_edit_bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/models/template_size_state_model.dart';
@@ -32,17 +34,19 @@ class SectionView extends StatefulWidget {
   final Map<String, dynamic> stylesheets;
   final bool isSelected;
   final Function onTapChild;
+  final ShopEditScreenBloc screenBloc;
 
   const SectionView(
       {this.shopPage,
       this.child,
+      this.screenBloc,
       this.stylesheets,
       this.isSelected = false,
       this.onTapChild});
 
   @override
   _SectionViewState createState() => _SectionViewState(
-      shopPage: shopPage, section: child, stylesheets: stylesheets);
+      shopPage: shopPage, section: child, stylesheets: stylesheets, screenBloc: screenBloc);
 }
 
 class _SectionViewState extends State<SectionView> {
@@ -50,6 +54,7 @@ class _SectionViewState extends State<SectionView> {
   final Child section;
   final Map<String, dynamic> stylesheets;
   final ShopDetailModel activeShop;
+  final ShopEditScreenBloc screenBloc;
   final double limitSectionHeightChange = 20;
   ApiService api = ApiService();
   SectionStyles sectionStyles;
@@ -66,7 +71,7 @@ class _SectionViewState extends State<SectionView> {
   bool editState = false;
 
   _SectionViewState(
-      {this.shopPage, this.section, this.stylesheets, this.activeShop}) {
+      {this.shopPage, this.section, this.stylesheets, this.activeShop, this.screenBloc}) {
     sectionStyles = getSectionStyles(section.id);
     widgetHeight = sectionStyles.height;
   }
@@ -82,31 +87,54 @@ class _SectionViewState extends State<SectionView> {
     activeThemeId = Provider.of<GlobalStateModel>(context, listen: false)
         .activeTheme
         .themeId;
-    return Consumer<TemplateSizeStateModel>(
-        builder: (context, templateSizeState, child1) {
-      if (templateSizeState.selectedSectionId == section.id) {
-        if (templateSizeState.updateChildSize != null) {
-          _changeSection(childSize: templateSizeState.updateChildSize);
-          templateSizeState.setUpdateChildSize(null);
-        } else if (templateSizeState.newChildSize != null) {
-          bool wrongposition = wrongPosition(templateSizeState.newChildSize);
-          if (wrongposition) {
-            if (!templateSizeState.wrongPosition) Future.microtask(() =>
-                  templateSizeState.setWrongPosition(wrongposition));
-          } else {
-            if (templateSizeState.wrongPosition)
-              Future.microtask(
-                  () => templateSizeState.setWrongPosition(wrongposition));
-          }
+    return BlocListener(
+      listener: (BuildContext context, ShopEditScreenState state) async {
+        print('BlocListener: ${state.runtimeType}');
+      },
+      condition: (state1, state2) {
+        if (state2 is UpdateSelectedSection) {
+          setState(() {
+            selectChildId = '';
+          });
+          return false;
         }
-      }
+        if (state1 is ShopEditScreenState && state2 is ShopEditScreenState) return true;
+        return true;
+      },
+      bloc: screenBloc,
+      child: BlocBuilder(
+        bloc: screenBloc,
+        builder: (BuildContext context, state) {
+          return body(state);
+        },
+      ),
+    );
 
-      if (templateSizeState.selectedSectionId != section.id ||
-          templateSizeState.refreshSelectedChild) {
-        selectChildId = '';
-      }
-      return body;
-    });
+    // return Consumer<TemplateSizeStateModel>(
+    //     builder: (context, templateSizeState, child1) {
+    //   if (templateSizeState.selectedSectionId == section.id) {
+    //     if (templateSizeState.updateChildSize != null) {
+    //       _changeSection(childSize: templateSizeState.updateChildSize);
+    //       templateSizeState.setUpdateChildSize(null);
+    //     } else if (templateSizeState.newChildSize != null) {
+    //       bool wrongposition = wrongPosition(templateSizeState.newChildSize);
+    //       if (wrongposition) {
+    //         if (!templateSizeState.wrongPosition) Future.microtask(() =>
+    //               templateSizeState.setWrongPosition(wrongposition));
+    //       } else {
+    //         if (templateSizeState.wrongPosition)
+    //           Future.microtask(
+    //               () => templateSizeState.setWrongPosition(wrongposition));
+    //       }
+    //     }
+    //   }
+    //
+    //   if (templateSizeState.selectedSectionId != section.id ||
+    //       templateSizeState.refreshSelectedChild) {
+    //     selectChildId = '';
+    //   }
+    //   return body();
+    // });
   }
 
   bool wrongPosition(NewChildSize childSize) {
@@ -166,7 +194,7 @@ class _SectionViewState extends State<SectionView> {
     return false;
   }
 
-  Widget get body {
+  Widget body(ShopEditScreenState state) {
     if (sectionStyles == null) {
       return Container();
     }
@@ -557,25 +585,25 @@ class _SectionViewState extends State<SectionView> {
         'targetPageId': shopPage.id
       };
       print('update Body: $body');
-      Future.microtask(() {
-        setState(() {
-          editState = true;
-        });
-      });
+      // Future.microtask(() {
+      //   setState(() {
+      //     editState = true;
+      //   });
+      // });
 
-      dynamic response = await api.shopEditAction(
-          GlobalUtils.activeToken.accessToken, activeThemeId, body);
-      setState(() {
-        Future.microtask(() {
-          setState(() {
-            editState = false;
-          });
-        });
-      });
-
-      if (response is DioError) {
-        Fluttertoast.showToast(msg: response.error);
-      }
+      // dynamic response = await api.shopEditAction(
+      //     GlobalUtils.activeToken.accessToken, activeThemeId, body);
+      // setState(() {
+      //   Future.microtask(() {
+      //     setState(() {
+      //       editState = false;
+      //     });
+      //   });
+      // });
+      //
+      // if (response is DioError) {
+      //   Fluttertoast.showToast(msg: response.error);
+      // }
     } else {
       print('Error: No active Theme!');
     }

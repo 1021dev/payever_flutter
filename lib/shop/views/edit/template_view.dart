@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/models/template_size_state_model.dart';
 import 'package:payever/shop/views/edit/element/section_view.dart';
 import 'package:provider/provider.dart';
+import 'package:payever/blocs/bloc.dart';
 
 class TemplateView extends StatefulWidget {
   final ShopPage shopPage;
@@ -11,6 +13,7 @@ class TemplateView extends StatefulWidget {
   final Function onTap;
   final bool scrollable;
   final bool enableTapSection;
+  final ShopEditScreenBloc screenBloc;
 
   const TemplateView(
       {this.shopPage,
@@ -18,34 +21,51 @@ class TemplateView extends StatefulWidget {
       this.stylesheets,
       this.onTap,
       this.enableTapSection = false,
-      this.scrollable = true});
+      this.scrollable = true,
+      this.screenBloc});
 
   @override
-  _TemplateViewState createState() =>
-      _TemplateViewState(shopPage, template, stylesheets);
+  _TemplateViewState createState() => _TemplateViewState(
+      shopPage: shopPage,
+      template: template,
+      stylesheets: stylesheets,
+      screenBloc: screenBloc);
 }
 
 class _TemplateViewState extends State<TemplateView> {
   final ShopPage shopPage;
   final Template template;
   final Map<String, dynamic> stylesheets;
-
+  final ShopEditScreenBloc screenBloc;
   String selectSectionId = '';
 
-  _TemplateViewState(this.shopPage, this.template, this.stylesheets);
+  _TemplateViewState(
+      {this.shopPage, this.template, this.stylesheets, this.screenBloc});
+
   TemplateSizeStateModel templateSizeStateModel = TemplateSizeStateModel();
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         Provider.value(value: templateSizeStateModel),
-        ChangeNotifierProvider<TemplateSizeStateModel>(create: (_) => templateSizeStateModel),
+        ChangeNotifierProvider<TemplateSizeStateModel>(
+            create: (_) => templateSizeStateModel),
       ],
-      child: body(),
+      child: BlocListener(
+        listener: (BuildContext context, ShopEditScreenState state) async {},
+        bloc: screenBloc,
+        child: BlocBuilder(
+          bloc: screenBloc,
+          builder: (BuildContext context, state) {
+            return body(state);
+          },
+        ),
+      ),
     );
   }
 
-  Widget body () {
+  Widget body(ShopEditScreenState state) {
     List sections = [];
     template.children.forEach((child) {
       SectionStyles styleSheet = getSectionStyles(child.id);
@@ -57,6 +77,7 @@ class _TemplateViewState extends State<TemplateView> {
           /*child.children.isNotEmpty &&*/
           styleSheet.display != 'none') {
         SectionView sectionView = SectionView(
+          screenBloc: screenBloc,
           shopPage: shopPage,
           child: child,
           stylesheets: stylesheets,
@@ -102,6 +123,7 @@ class _TemplateViewState extends State<TemplateView> {
     print('Selected SectionID: $childId');
     setState(() {
       selectSectionId = childId;
+      screenBloc.add(SelectSectionEvent(selectSectionId));
       templateSizeStateModel.setSelectedSectionId(childId);
     });
   }

@@ -80,6 +80,7 @@ class _ShopEditTemplatesScreenState extends State<ShopEditTemplatesScreen> {
         Expanded(
             child: (template != null)
                 ? TemplateView(
+                    screenBloc: screenBloc,
                     shopPage: page,
                     template: template,
                     stylesheets: screenBloc.state.stylesheets,
@@ -88,6 +89,7 @@ class _ShopEditTemplatesScreenState extends State<ShopEditTemplatesScreen> {
                           context,
                           PageTransition(
                               child: TemplateDetailScreen(
+                                screenBloc: screenBloc,
                                 shopPage: page,
                                 template: template,
                                 stylesheets: screenBloc.state.stylesheets,

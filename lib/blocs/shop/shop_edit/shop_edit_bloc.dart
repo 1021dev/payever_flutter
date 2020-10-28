@@ -26,6 +26,10 @@ class ShopEditScreenBloc
           activeShop: shopScreenBloc.state.activeShop,
           activeTheme: shopScreenBloc.state.activeTheme);
       yield* fetchSnapShot();
+    } else if (event is SelectSectionEvent) {
+      yield state.copyWith(
+          selectedSectionId: event.sectionId,);
+      yield UpdateSelectedSection();
     }
   }
 
