@@ -84,27 +84,29 @@ class _SectionViewState extends State<SectionView> {
         .themeId;
     return Consumer<TemplateSizeStateModel>(
         builder: (context, templateSizeState, child1) {
-      NewChildSize childSize = templateSizeState.newChildSize;
-      if (childSize != null &&
-          templateSizeState.selectedSectionId == section.id) {
-        bool wrongposition = wrongPosition(childSize);
-        if (wrongposition) {
-          if (!templateSizeState.wrongPosition) Future.microtask(() =>
-                // context.read<MyNotifier>(context).fetchSomething(someValue);
-                templateSizeState.setWrongPosition(wrongposition));
-        } else {
-          if (templateSizeState.wrongPosition)
-            Future.microtask(
-                () => templateSizeState.setWrongPosition(wrongposition));
+      if (templateSizeState.selectedSectionId == section.id) {
+        if (templateSizeState.updateChildSize != null) {
+          _changeSection(childSize: templateSizeState.updateChildSize);
+          templateSizeState.setUpdateChildSize(null);
+        } else if (templateSizeState.newChildSize != null) {
+          bool wrongposition = wrongPosition(templateSizeState.newChildSize);
+          if (wrongposition) {
+            if (!templateSizeState.wrongPosition) Future.microtask(() =>
+                  templateSizeState.setWrongPosition(wrongposition));
+          } else {
+            if (templateSizeState.wrongPosition)
+              Future.microtask(
+                  () => templateSizeState.setWrongPosition(wrongposition));
+          }
         }
       }
+
       if (templateSizeState.selectedSectionId != section.id ||
           templateSizeState.refreshSelectedChild) {
         selectChildId = '';
       }
       return body;
     });
-
   }
 
   bool wrongPosition(NewChildSize childSize) {
@@ -114,9 +116,9 @@ class _SectionViewState extends State<SectionView> {
         (childSize.newLeft + childSize.newWidth > Measurements.width);
     if (wrongBoundary) return true;
 
-    for(Child element in section.children) {
-      if (element.id == selectChildId) continue;
-      BaseStyles baseStyles = BaseStyles.fromJson(stylesheets[shopPage.stylesheetIds.mobile][element.id]);
+    for(Child child in section.children) {
+      if (child.id == selectChildId) continue;
+      BaseStyles baseStyles = getBaseStyles(child.id);
       bool isWrong = wrongPositionWithOrderChildren(childSize, baseStyles);
       if (isWrong)
         return true;
@@ -230,8 +232,7 @@ class _SectionViewState extends State<SectionView> {
   }
 
   getLimitedSectionHeight(Child child) {
-    BaseStyles baseStyles = BaseStyles.fromJson(
-        stylesheets[shopPage.stylesheetIds.mobile][child.id]);
+    BaseStyles baseStyles = getBaseStyles(child.id);
     if (baseStyles == null || baseStyles.display == 'none') return; 
 
       double height = baseStyles.height;
@@ -485,7 +486,7 @@ class _SectionViewState extends State<SectionView> {
               print('onVerticalDragDown dy = ${details.globalPosition.dy}');
             },
             onVerticalDragEnd: (DragEndDetails details) {
-              editAction();
+              _changeSection();
             },
             onVerticalDragStart: (details) {
               print('onVerticalDragDown dy = ${details.globalPosition.dy}');
@@ -534,7 +535,14 @@ class _SectionViewState extends State<SectionView> {
     }
   }
 
-  void editAction() async {
+  _changeSection({NewChildSize childSize}) async {
+    Map payload;
+    if (selectChildId != null && childSize != null) {
+      payload = childPayload(childSize);
+    } else {
+      payload = sectionPayload;
+    }
+
     Map effect = {
       'payload': payload,
       'target': 'stylesheets:${shopPage.stylesheetIds.mobile}',
@@ -549,13 +557,20 @@ class _SectionViewState extends State<SectionView> {
         'targetPageId': shopPage.id
       };
       print('update Body: $body');
-      setState(() {
-        editState = true;
+      Future.microtask(() {
+        setState(() {
+          editState = true;
+        });
       });
+
       dynamic response = await api.shopEditAction(
           GlobalUtils.activeToken.accessToken, activeThemeId, body);
       setState(() {
-        editState = false;
+        Future.microtask(() {
+          setState(() {
+            editState = false;
+          });
+        });
       });
 
       if (response is DioError) {
@@ -566,7 +581,8 @@ class _SectionViewState extends State<SectionView> {
     }
   }
 
-  Map get payload {
+
+  Map get sectionPayload {
     Map payloadSection = {};
     payloadSection['height'] = widgetHeight;
     if (sectionStyles.gridTemplateRows != null && sectionStyles.gridTemplateRows.isNotEmpty) {
@@ -584,4 +600,21 @@ class _SectionViewState extends State<SectionView> {
     return payload;
   }
 
+  Map childPayload(NewChildSize size) {
+    Map payloadSection = {};
+    String margin = '${size.newTop} 0 0 ${size.newLeft}';
+    payloadSection['margin'] = margin;
+    payloadSection['marginTop'] = size.newTop;
+    payloadSection['marginLeft'] = size.newLeft;
+    payloadSection['height'] = size.newHeight;
+    payloadSection['width'] = size.newWidth;
+    Map payload = {
+      selectChildId: payloadSection
+    };
+    return payload;
+  }
+
+  BaseStyles getBaseStyles(String childId) {
+    return BaseStyles.fromJson(stylesheets[shopPage.stylesheetIds.mobile][childId]);
+  }
 }

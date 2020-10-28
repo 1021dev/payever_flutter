@@ -328,6 +328,9 @@ class _ResizeableViewState extends State<ResizeableView> {
       });
       context.read<TemplateSizeStateModel>().setWrongPosition(false);
       updateSize();
+    } else {
+      templateSizeStateModel.setUpdateChildSize(NewChildSize(
+          newTop: top, newLeft: left, newWidth: width, newHeight: height));
     }
   }
 
