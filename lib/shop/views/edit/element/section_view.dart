@@ -63,6 +63,8 @@ class _SectionViewState extends State<SectionView> {
   String activeThemeId;
   double limitSectionHeight = 0;
 
+  bool editState = false;
+
   _SectionViewState(
       {this.shopPage, this.section, this.stylesheets, this.activeShop}) {
     sectionStyles = getSectionStyles(section.id);
@@ -193,15 +195,20 @@ class _SectionViewState extends State<SectionView> {
         widgets.add(element);
       }
     });
+    // update Section Height:
     if (widgetHeight < limitSectionHeight) {
-      Future.microtask(() {
-        setState(() {
-          widgetHeight = limitSectionHeight;
-        });
-      });
+      widgetHeight = limitSectionHeight;
+      // String gridTemplateRows = sectionStyles.gridTemplateRows;
+      // if (gridTemplateRows != null && gridTemplateRows.isNotEmpty) {
+      //   List<String>rows = gridTemplateRows.split(' ');
+      //   if (rows.length > 1) {
+      //     double heightFactor = double.parse(rows.last);
+      //     if (sectionStyles.height - heightFactor > 0)
+      //       widgetHeight = sectionStyles.height - heightFactor;
+      //   }
+      // }
     }
     addActiveWidgets(widgets);
-
     return StreamBuilder(
       stream: controller.stream,
       builder: (context, snapshot) => Container(
@@ -209,14 +216,20 @@ class _SectionViewState extends State<SectionView> {
         height: snapshot.hasData ? snapshot.data : widgetHeight,
         width: double.infinity,
         child: Stack(
-          children: widgets,
+          children: [
+            Stack(
+              children: widgets,
+            ),
+            if (editState)
+              Center(child: CircularProgressIndicator()),
+          ],
+
         ),
       ),
     );
   }
 
   getLimitedSectionHeight(Child child) {
-    if (sectionStyles.gridTemplateRows == null) return;
     BaseStyles baseStyles = BaseStyles.fromJson(
         stylesheets[shopPage.stylesheetIds.mobile][child.id]);
     if (baseStyles == null || baseStyles.display == 'none') return; 
@@ -521,11 +534,7 @@ class _SectionViewState extends State<SectionView> {
     }
   }
 
-  void editAction() {
-    if (shopPage.id != 'dbe497ff-97dd-4e30-8230-67ccb37343e1') return;
-    Map payload = {
-      section.id: {'height': widgetHeight}
-    };
+  void editAction() async {
     Map effect = {
       'payload': payload,
       'target': 'stylesheets:${shopPage.stylesheetIds.mobile}',
@@ -540,30 +549,39 @@ class _SectionViewState extends State<SectionView> {
         'targetPageId': shopPage.id
       };
       print('update Body: $body');
-      api
-          .shopEditAction(
-              GlobalUtils.activeToken.accessToken, activeThemeId, body)
-          .then((value) {
-        if (value is DioError) {
-          Fluttertoast.showToast(msg: value.error);
-        }
+      setState(() {
+        editState = true;
       });
+      dynamic response = await api.shopEditAction(
+          GlobalUtils.activeToken.accessToken, activeThemeId, body);
+      setState(() {
+        editState = false;
+      });
+
+      if (response is DioError) {
+        Fluttertoast.showToast(msg: response.error);
+      }
     } else {
       print('Error: No active Theme!');
     }
   }
 
-  void getPayload() {
+  Map get payload {
     Map payloadSection = {};
     payloadSection['height'] = widgetHeight;
     if (sectionStyles.gridTemplateRows != null && sectionStyles.gridTemplateRows.isNotEmpty) {
-      double marginBottom = double.parse(sectionStyles.gridTemplateRows.split(' ').last); // To Last Vertical Element
+      List<String>gridRows = sectionStyles.gridTemplateRows.split(' ');
+      double marginBottom = double.parse(gridRows.last); // To Last Vertical Element
       double dy = widgetHeight - sectionStyles.height;
-      payloadSection['gridTemplateRows'] = marginBottom + dy;
+      double updatedMarginBottom = marginBottom + dy;
+      gridRows.removeLast();
+      gridRows.add('${updatedMarginBottom.round()}');
+      payloadSection['gridTemplateRows'] = '$gridRows'.replaceAll(RegExp(r"[^\s\w]"), '');
     }
     Map payload = {
       section.id: payloadSection
     };
+    return payload;
   }
 
 }
