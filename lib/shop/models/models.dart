@@ -517,6 +517,7 @@ class BaseStyles with BackgroundAssist, StyleAssist, SizeAssist, DecorationAssis
   }
 
   get paddingV {
+    if (padding == null || padding.isEmpty) return 0;
     return double.parse(padding.split(' ').first);
   }
 

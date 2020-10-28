@@ -42,14 +42,15 @@ class SectionView extends StatefulWidget {
 
   @override
   _SectionViewState createState() => _SectionViewState(
-      shopPage: shopPage, child: child, stylesheets: stylesheets);
+      shopPage: shopPage, section: child, stylesheets: stylesheets);
 }
 
 class _SectionViewState extends State<SectionView> {
   final ShopPage shopPage;
-  final Child child;
+  final Child section;
   final Map<String, dynamic> stylesheets;
   final ShopDetailModel activeShop;
+  final double limitSectionHeightChange = 20;
   ApiService api = ApiService();
   SectionStyleSheet sectionStyles;
 
@@ -60,10 +61,11 @@ class _SectionViewState extends State<SectionView> {
   String name;
   String selectChildId = '';
   String activeThemeId;
+  double limitSectionHeight = 0;
 
   _SectionViewState(
-      {this.shopPage, this.child, this.stylesheets, this.activeShop}) {
-    sectionStyles = getSectionStyleSheet(child.id);
+      {this.shopPage, this.section, this.stylesheets, this.activeShop}) {
+    sectionStyles = getSectionStyleSheet(section.id);
     widgetHeight = sectionStyles.height;
   }
 
@@ -82,7 +84,7 @@ class _SectionViewState extends State<SectionView> {
         builder: (context, templateSizeState, child1) {
       NewChildSize childSize = templateSizeState.newChildSize;
       if (childSize != null &&
-          templateSizeState.selectedSectionId == child.id) {
+          templateSizeState.selectedSectionId == section.id) {
         bool wrongposition = wrongPosition(childSize);
         if (wrongposition) {
           if (!templateSizeState.wrongPosition) Future.microtask(() =>
@@ -94,7 +96,7 @@ class _SectionViewState extends State<SectionView> {
                 () => templateSizeState.setWrongPosition(wrongposition));
         }
       }
-      if (templateSizeState.selectedSectionId != child.id ||
+      if (templateSizeState.selectedSectionId != section.id ||
           templateSizeState.refreshSelectedChild) {
         selectChildId = '';
       }
@@ -109,7 +111,7 @@ class _SectionViewState extends State<SectionView> {
         (childSize.newLeft + childSize.newWidth > Measurements.width);
     if (wrongBoundary) return true;
 
-    for(Child element in child.children) {
+    for(Child element in section.children) {
       if (element.id == selectChildId) continue;
       BaseStyles baseStyles = BaseStyles.fromJson(stylesheets[shopPage.stylesheetIds.mobile][element.id]);
       bool isWrong = wrongPositionWithOrderChildren(childSize, baseStyles);
@@ -165,13 +167,14 @@ class _SectionViewState extends State<SectionView> {
     }
 
     name = 'Section';
-    if (child.data != null) {
-      name = Data.fromJson(child.data).name;
+    if (section.data != null) {
+      name = Data.fromJson(section.data).name;
     }
 
     List<Widget> widgets = [];
     widgets.add(sectionBackgroundWidget);
-    child.children.forEach((child) {
+    section.children.forEach((child) {
+      lastVerticalChild(child);
       Widget childWidget = getChild(child);
       if (childWidget != null) {
         Widget element = GestureDetector(
@@ -196,7 +199,7 @@ class _SectionViewState extends State<SectionView> {
       stream: controller.stream,
       builder: (context, snapshot) => Container(
         key: key,
-        height: snapshot.hasData ? snapshot.data : sectionStyles.height,
+        height: snapshot.hasData ? snapshot.data : widgetHeight,
         width: double.infinity,
         child: Stack(
           children: widgets,
@@ -205,6 +208,31 @@ class _SectionViewState extends State<SectionView> {
     );
   }
 
+  lastVerticalChild(Child child) {
+    String gridTemplateRows = sectionStyles.gridTemplateRows;
+    if (gridTemplateRows == null || gridTemplateRows.isEmpty) return;
+    
+    BaseStyles baseStyles = BaseStyles.fromJson(stylesheets[shopPage.stylesheetIds.mobile][child.id]);
+    if (baseStyles == null || baseStyles.display == 'none') return;
+
+    String gridRow = baseStyles.gridRow;
+    if (gridRow == null || gridRow.isEmpty) return;
+
+    if (gridTemplateRows.split(' ').length == int.parse(gridRow.split(' ').first)){
+      double height = baseStyles.height;
+      double top = baseStyles.getMarginTop(sectionStyles);
+      limitSectionHeight = height + top + baseStyles.paddingV;
+      if (widgetHeight < limitSectionHeight) {
+        Future.microtask(
+                () {
+                  setState(() {
+                    widgetHeight = limitSectionHeight;
+                  });
+                });
+      }
+    }
+  }
+  
   Widget getChild(Child child) {
     Widget widget;
     switch (child.type) {
@@ -424,6 +452,18 @@ class _SectionViewState extends State<SectionView> {
                 } else {
                   newHeight = details.globalPosition.dy - position1.dy;
                 }
+                // Check Limitation
+                if (limitSectionHeight > 0 && newHeight < limitSectionHeight)
+                  return;
+
+                if (top && (widgetHeight - newHeight).abs() > limitSectionHeightChange) {
+                  if ((widgetHeight - newHeight) > 0) {
+                    widgetHeight -= limitSectionHeightChange;
+                  } else {
+                    widgetHeight += limitSectionHeightChange;
+                  }
+                  newHeight = widgetHeight;
+                }
                 if (newHeight >= 30) {
                   widgetHeight = newHeight;
                   widgetHeight.isNegative
@@ -486,7 +526,7 @@ class _SectionViewState extends State<SectionView> {
   void editAction() {
     if (shopPage.id != 'dbe497ff-97dd-4e30-8230-67ccb37343e1') return;
     Map payload = {
-      child.id: {'height': widgetHeight}
+      section.id: {'height': widgetHeight}
     };
     Map effect = {
       'payload': payload,
@@ -524,7 +564,7 @@ class _SectionViewState extends State<SectionView> {
       payloadSection['gridTemplateRows'] = marginBottom + dy;
     }
     Map payload = {
-      child.id: payloadSection
+      section.id: payloadSection
     };
   }
 

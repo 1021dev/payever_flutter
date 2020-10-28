@@ -134,8 +134,10 @@ class _ButtonViewState extends State<ButtonView> {
   ButtonStyles styleSheet() {
     try {
       Map json = widget.stylesheets[widget.deviceTypeId][child.id];
-//      if (json['display'] != 'none')
-//            print('Button Styles Sheets: $json');
+      if (json['display'] != 'none') {
+        print('Button ID: ${child.id}');
+        print('Button Styles Sheets: $json');
+      }
       return ButtonStyles.fromJson(json);
     } catch (e) {
       return null;

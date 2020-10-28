@@ -79,7 +79,7 @@ class _ResizeableViewState extends State<ResizeableView> {
     return Stack(children: widgets);
   }
 
-  void addWrongPositionEdges(List<Widget> widgets) {
+  addWrongPositionEdges(List<Widget> widgets) {
     if (!widget.isSelected) return;
     var isWrongPosition = context.select<TemplateSizeStateModel, bool>(
           (templateStateModel) => templateStateModel.wrongPosition,
@@ -127,7 +127,7 @@ class _ResizeableViewState extends State<ResizeableView> {
     ),);
   }
 
-  void addDragBalls(List<Widget> widgets) {
+  addDragBalls(List<Widget> widgets) {
     if (!widget.isSelected) return;
     // top left
     widgets.add(Positioned(
