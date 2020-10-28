@@ -48,7 +48,7 @@ class _TemplateViewState extends State<TemplateView> {
   Widget body () {
     List sections = [];
     template.children.forEach((child) {
-      SectionStyles styleSheet = getSectionStyleSheet(child.id);
+      SectionStyles styleSheet = getSectionStyles(child.id);
       if (styleSheet == null) {
         return Container();
       }
@@ -106,15 +106,9 @@ class _TemplateViewState extends State<TemplateView> {
     });
   }
 
-  SectionStyles getSectionStyleSheet(String childId) {
+  SectionStyles getSectionStyles(String childId) {
     try {
       Map json = stylesheets[shopPage.stylesheetIds.mobile][childId];
-      if (json['display'] != 'none') {
-        print('==============================================');
-        print('SectionID: $childId');
-        print('Section StyleSheet: $json');
-      }
-
       return SectionStyles.fromJson(json);
     } catch (e) {
       return null;

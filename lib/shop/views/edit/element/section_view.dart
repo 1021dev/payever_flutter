@@ -65,7 +65,7 @@ class _SectionViewState extends State<SectionView> {
 
   _SectionViewState(
       {this.shopPage, this.section, this.stylesheets, this.activeShop}) {
-    sectionStyles = getSectionStyleSheet(section.id);
+    sectionStyles = getSectionStyles(section.id);
     widgetHeight = sectionStyles.height;
   }
 
@@ -175,7 +175,7 @@ class _SectionViewState extends State<SectionView> {
     List<Widget> widgets = [];
     widgets.add(sectionBackgroundWidget);
     section.children.forEach((child) {
-      lastVerticalChild(child);
+      getLimitedSectionHeight(child);
       Widget childWidget = getChild(child);
       if (childWidget != null) {
         Widget element = GestureDetector(
@@ -193,7 +193,13 @@ class _SectionViewState extends State<SectionView> {
         widgets.add(element);
       }
     });
-
+    if (widgetHeight < limitSectionHeight) {
+      Future.microtask(() {
+        setState(() {
+          widgetHeight = limitSectionHeight;
+        });
+      });
+    }
     addActiveWidgets(widgets);
 
     return StreamBuilder(
@@ -209,29 +215,17 @@ class _SectionViewState extends State<SectionView> {
     );
   }
 
-  lastVerticalChild(Child child) {
+  getLimitedSectionHeight(Child child) {
     if (sectionStyles.gridTemplateRows == null) return;
     BaseStyles baseStyles = BaseStyles.fromJson(
         stylesheets[shopPage.stylesheetIds.mobile][child.id]);
-    if (baseStyles == null || baseStyles.display == 'none') return;
-    if (baseStyles.gridRow == null || baseStyles.gridRow.isEmpty) return;
-    String gridTemplateRows = sectionStyles.gridTemplateRows;
-    String gridRow = baseStyles.gridRow;
-    List<String>gridRows = gridTemplateRows.split(' ');
-    int sectionRows = (int.parse(gridRows.last) > 0 || gridRows.length == 1) ? gridRows.length : gridRows.length - 1;
-    if (sectionRows ==
-        int.parse(gridRow.split(' ').first)) {
+    if (baseStyles == null || baseStyles.display == 'none') return; 
+
       double height = baseStyles.height;
       double top = baseStyles.getMarginTop(sectionStyles);
-      limitSectionHeight = height + top + baseStyles.paddingV;
-      if (widgetHeight < limitSectionHeight) {
-        Future.microtask(() {
-          setState(() {
-            widgetHeight = limitSectionHeight;
-          });
-        });
-      }
-    }
+      double newLimitSectionHeight = height + top + baseStyles.paddingV + baseStyles.marginBottom;
+      if (limitSectionHeight < newLimitSectionHeight)
+        limitSectionHeight = newLimitSectionHeight; 
   }
 
   Widget getChild(Child child) {
@@ -513,12 +507,15 @@ class _SectionViewState extends State<SectionView> {
     );
   }
 
-  SectionStyles getSectionStyleSheet(String childId) {
+  SectionStyles getSectionStyles(String childId) {
     try {
-//      print(
-//          'Section StyleSheet: ${stylesheets[shopPage.stylesheetIds.mobile][childId]}');
-      return SectionStyles.fromJson(
-          stylesheets[shopPage.stylesheetIds.mobile][childId]);
+      Map json = stylesheets[shopPage.stylesheetIds.mobile][childId];
+      if (json['display'] != 'none') {
+        print('==============================================');
+        print('SectionID: $childId');
+        print('Section StyleSheet: $json');
+      }
+      return SectionStyles.fromJson(json);
     } catch (e) {
       return null;
     }
