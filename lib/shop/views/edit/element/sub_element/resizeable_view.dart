@@ -20,7 +20,7 @@ class ResizeableView extends StatefulWidget {
       width: width, height: height, top: top, left: left);
 }
 
-const ballDiameter = 12.0;
+const ballDiameter = 30.0;
 const wrongEdgeWidth = 2.0;
 
 class _ResizeableViewState extends State<ResizeableView> {
@@ -29,8 +29,19 @@ class _ResizeableViewState extends State<ResizeableView> {
 
   double top;
   double left;
+  double width0;
+  double height0;
+
+  double top0;
+  double left0;
+
   TemplateSizeStateModel templateSizeStateModel;
-  _ResizeableViewState({this.width, this.height, this.top, this.left});
+  _ResizeableViewState({this.width, this.height, this.top, this.left}){
+    width0 = width;
+    height0 = height;
+    top0 = top;
+    left0 = left;
+  }
 
   void onDrag(double dx, double dy) {
     var newHeight = height + dy;
@@ -123,6 +134,7 @@ class _ResizeableViewState extends State<ResizeableView> {
       top: top - ballDiameter / 2,
       left: left - ballDiameter / 2,
       child: ManipulatingBall(
+        onDragEnd: _dragEnd,
         onDrag: (dx, dy) {
           var mid = (dx + dy) / 2;
           var newHeight = height - 2 * mid;
@@ -145,6 +157,7 @@ class _ResizeableViewState extends State<ResizeableView> {
         top: top - ballDiameter / 2,
         left: left + width / 2 - ballDiameter / 2,
         child: ManipulatingBall(
+          onDragEnd: _dragEnd,
           onDrag: (dx, dy) {
             var newHeight = height - dy;
 
@@ -162,6 +175,7 @@ class _ResizeableViewState extends State<ResizeableView> {
       top: top - ballDiameter / 2,
       left: left + width - ballDiameter / 2,
       child: ManipulatingBall(
+        onDragEnd: _dragEnd,
         onDrag: (dx, dy) {
           var mid = (dx + (dy * -1)) / 2;
 
@@ -185,6 +199,7 @@ class _ResizeableViewState extends State<ResizeableView> {
         top: top + height / 2 - ballDiameter / 2,
         left: left + width - ballDiameter / 2,
         child: ManipulatingBall(
+          onDragEnd: _dragEnd,
           onDrag: (dx, dy) {
             var newWidth = width + dx;
 
@@ -201,6 +216,7 @@ class _ResizeableViewState extends State<ResizeableView> {
       top: top + height - ballDiameter / 2,
       left: left + width - ballDiameter / 2,
       child: ManipulatingBall(
+        onDragEnd: _dragEnd,
         onDrag: (dx, dy) {
           var mid = (dx + dy) / 2;
 
@@ -224,6 +240,7 @@ class _ResizeableViewState extends State<ResizeableView> {
         top: top + height - ballDiameter / 2,
         left: left + width / 2 - ballDiameter / 2,
         child: ManipulatingBall(
+          onDragEnd: _dragEnd,
           onDrag: (dx, dy) {
             var newHeight = height + dy;
 
@@ -240,6 +257,7 @@ class _ResizeableViewState extends State<ResizeableView> {
       top: top + height - ballDiameter / 2,
       left: left - ballDiameter / 2,
       child: ManipulatingBall(
+        onDragEnd: _dragEnd,
         onDrag: (dx, dy) {
           var mid = ((dx * -1) + dy) / 2;
 
@@ -263,6 +281,7 @@ class _ResizeableViewState extends State<ResizeableView> {
         top: top + height / 2 - ballDiameter / 2,
         left: left - ballDiameter / 2,
         child: ManipulatingBall(
+          onDragEnd: _dragEnd,
           onDrag: (dx, dy) {
             var newWidth = width - dx;
 
@@ -281,6 +300,7 @@ class _ResizeableViewState extends State<ResizeableView> {
         top: top + height / 2 - ballDiameter / 2,
         left: left + width / 2 - ballDiameter / 2,
         child: ManipulatingBall(
+          onDragEnd: _dragEnd,
           onDrag: (dx, dy) {
             setState(() {
               top = top + dy;
@@ -292,9 +312,23 @@ class _ResizeableViewState extends State<ResizeableView> {
       ));
   }
 
-  void updateSize() {
+  updateSize() {
     templateSizeStateModel.setNewChildSize(NewChildSize(
             newTop: top, newLeft: left, newWidth: width, newHeight: height));
+  }
+
+  _dragEnd() {
+    if (context.read<TemplateSizeStateModel>().wrongPosition) {
+      setState(() {
+        width = width0;
+        height = height0;
+        left = left0;
+        top = top0;
+
+      });
+      context.read<TemplateSizeStateModel>().setWrongPosition(false);
+      updateSize();
+    }
   }
 
   bool get smallWidth {
@@ -307,10 +341,10 @@ class _ResizeableViewState extends State<ResizeableView> {
 }
 
 class ManipulatingBall extends StatefulWidget {
-  ManipulatingBall({Key key, this.onDrag});
+  ManipulatingBall({Key key, this.onDrag, this.onDragEnd});
 
   final Function onDrag;
-
+  final Function onDragEnd;
   @override
   _ManipulatingBallState createState() => _ManipulatingBallState();
 }
@@ -334,6 +368,10 @@ class _ManipulatingBallState extends State<ManipulatingBall> {
     widget.onDrag(dx, dy);
   }
 
+  _handleEnd(details) {
+    widget.onDragEnd();
+  }
+
   @override
   Widget build(BuildContext context) {
     double deg = 45 * pi / 180;
@@ -342,20 +380,26 @@ class _ManipulatingBallState extends State<ManipulatingBall> {
       onVerticalDragUpdate: _handleUpdate,
       onHorizontalDragStart: _handleDrag,
       onHorizontalDragUpdate: _handleUpdate,
+      behavior: HitTestBehavior.translucent,
+      onVerticalDragEnd: _handleEnd,
+      onHorizontalDragEnd: _handleEnd,
       child: Container(
+        padding: EdgeInsets.all(9),
         width: ballDiameter,
         height: ballDiameter,
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.white, width: 1),
-          color: Colors.blue,
-          shape: BoxShape.circle,
-          boxShadow: [BoxShadow(
-            color: Colors.black38,
-            spreadRadius: 1.5,
-            blurRadius: 1.5,
-            offset: Offset(deg,
-                deg), // changes position of shadow
-          )],
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.white, width: 1),
+            color: Colors.blue,
+            shape: BoxShape.circle,
+            boxShadow: [BoxShadow(
+              color: Colors.black38,
+              spreadRadius: 1.5,
+              blurRadius: 1.5,
+              offset: Offset(deg,
+                  deg), // changes position of shadow
+            )],
+          ),
         ),
       ),
     );
