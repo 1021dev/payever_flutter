@@ -152,7 +152,18 @@ class ShopEditScreenBloc
       Fluttertoast.showToast(msg: response.error);
       yield state.copyWith(isUpdating: false);
     } else {
-      yield state.copyWith(isUpdating: false);
+
+      // Update styles
+      String key = event.payload.keys.first;
+      Map<String, dynamic>stylesheets = state.stylesheets;
+
+      Map<String, dynamic>updatejson =  event.payload[key];
+      Map<String, dynamic>json = stylesheets[state.activeShopPage.stylesheetIds.mobile][key];
+      updatejson.keys.forEach((element) {
+        json[element] = updatejson[element];
+      });
+      stylesheets[state.activeShopPage.stylesheetIds.mobile][key] = json;
+      yield state.copyWith(isUpdating: false, stylesheets: stylesheets);
     }
   }
 }

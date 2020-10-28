@@ -83,7 +83,6 @@ class _SectionViewState extends State<SectionView> {
         .activeTheme
         .themeId;
 
-
     return Consumer<TemplateSizeStateModel>(
         builder: (context, templateSizeState, child1) {
       if (templateSizeState.selectedSectionId == section.id) {
@@ -245,8 +244,8 @@ class _SectionViewState extends State<SectionView> {
             Stack(
               children: widgets,
             ),
-            if (state.isUpdating)
-              Center(child: CircularProgressIndicator()),
+            // if (state.isUpdating)
+            //   Center(child: CircularProgressIndicator()),
           ],
 
         ),
