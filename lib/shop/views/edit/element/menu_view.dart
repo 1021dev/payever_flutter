@@ -6,26 +6,26 @@ class MenuView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
   final String deviceTypeId;
-  final SectionStyleSheet sectionStyleSheet;
+  final SectionStyles sectionStyles;
   final bool isSelected;
 
   const MenuView(
       {this.child,
       this.stylesheets,
       this.deviceTypeId,
-      this.sectionStyleSheet,
+      this.sectionStyles,
       this.isSelected = false});
 
   @override
-  _MenuViewState createState() => _MenuViewState(child, sectionStyleSheet);
+  _MenuViewState createState() => _MenuViewState(child, sectionStyles);
 }
 
 class _MenuViewState extends State<MenuView> {
   final Child child;
-  final SectionStyleSheet sectionStyleSheet;
+  final SectionStyles sectionStyles;
   ShapeStyles styles;
 
-  _MenuViewState(this.child, this.sectionStyleSheet);
+  _MenuViewState(this.child, this.sectionStyles);
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +38,8 @@ class _MenuViewState extends State<MenuView> {
     return ResizeableView(
         width: styles.width,
         height: styles.height,
-        left: styles.getMarginLeft(sectionStyleSheet),
-        top: styles.getMarginTop(sectionStyleSheet),
+        left: styles.getMarginLeft(sectionStyles),
+        top: styles.getMarginTop(sectionStyles),
         isSelected: widget.isSelected,
         child: body);
   }

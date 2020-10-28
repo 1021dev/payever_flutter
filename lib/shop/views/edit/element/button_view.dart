@@ -8,29 +8,29 @@ class ButtonView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
   final String deviceTypeId;
-  final SectionStyleSheet sectionStyleSheet;
+  final SectionStyles sectionStyles;
   final bool isSelected;
 
   const ButtonView(
       {this.child,
       this.stylesheets,
       this.deviceTypeId,
-      this.sectionStyleSheet,
+      this.sectionStyles,
       this.isSelected = false});
 
   @override
-  _ButtonViewState createState() => _ButtonViewState(child, sectionStyleSheet);
+  _ButtonViewState createState() => _ButtonViewState(child, sectionStyles);
 }
 
 class _ButtonViewState extends State<ButtonView> {
   final String TAG = 'ButtonView : ';
 
   final Child child;
-  final SectionStyleSheet sectionStyleSheet;
+  final SectionStyles sectionStyles;
   ButtonStyles styles;
   ButtonData data;
 
-  _ButtonViewState(this.child, this.sectionStyleSheet);
+  _ButtonViewState(this.child, this.sectionStyles);
 
   @override
   Widget build(BuildContext context) {
@@ -50,8 +50,8 @@ class _ButtonViewState extends State<ButtonView> {
     return ResizeableView(
         width: styles.width + styles.paddingH * 2,
         height: styles.height + styles.paddingV * 2,
-        left: styles.getMarginLeft(sectionStyleSheet),
-        top: styles.getMarginTop(sectionStyleSheet),
+        left: styles.getMarginLeft(sectionStyles),
+        top: styles.getMarginTop(sectionStyles),
         isSelected: widget.isSelected,
         child: body);
   }

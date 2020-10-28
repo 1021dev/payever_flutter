@@ -8,27 +8,27 @@ class SocialIconView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
   final String deviceTypeId;
-  final SectionStyleSheet sectionStyleSheet;
+  final SectionStyles sectionStyles;
   final bool isSelected;
 
   const SocialIconView(
       {this.child,
       this.stylesheets,
       this.deviceTypeId,
-      this.sectionStyleSheet,
+      this.sectionStyles,
       this.isSelected});
 
   @override
   _SocialIconViewState createState() =>
-      _SocialIconViewState(child, sectionStyleSheet);
+      _SocialIconViewState(child, sectionStyles);
 }
 
 class _SocialIconViewState extends State<SocialIconView> {
   final Child child;
-  final SectionStyleSheet sectionStyleSheet;
+  final SectionStyles sectionStyles;
   SocialIconStyles styles;
 
-  _SocialIconViewState(this.child, this.sectionStyleSheet);
+  _SocialIconViewState(this.child, this.sectionStyles);
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +43,8 @@ class _SocialIconViewState extends State<SocialIconView> {
     return ResizeableView(
         width: styles.width,
         height: styles.height,
-        left: styles.getMarginLeft(sectionStyleSheet),
-        top: styles.getMarginTop(sectionStyleSheet),
+        left: styles.getMarginLeft(sectionStyles),
+        top: styles.getMarginTop(sectionStyles),
         isSelected: widget.isSelected,
         child: body);
   }

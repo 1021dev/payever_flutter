@@ -10,28 +10,28 @@ class LogoView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
   final String deviceTypeId;
-  final SectionStyleSheet sectionStyleSheet;
+  final SectionStyles sectionStyles;
   final bool isSelected;
 
   const LogoView(
       {this.child,
       this.stylesheets,
       this.deviceTypeId,
-      this.sectionStyleSheet,
+      this.sectionStyles,
       this.isSelected});
 
   @override
-  _LogoViewState createState() => _LogoViewState(child, sectionStyleSheet);
+  _LogoViewState createState() => _LogoViewState(child, sectionStyles);
 }
 
 class _LogoViewState extends State<LogoView> {
   final Child child;
-  final SectionStyleSheet sectionStyleSheet;
+  final SectionStyles sectionStyles;
 
   ImageStyles styles;
   GlobalStateModel globalStateModel;
   GlobalKey key = GlobalKey();
-  _LogoViewState(this.child, this.sectionStyleSheet);
+  _LogoViewState(this.child, this.sectionStyles);
 
 
   @override
@@ -49,8 +49,8 @@ class _LogoViewState extends State<LogoView> {
     return ResizeableView(
         width: styles.width,
         height: styles.height,
-        left: styles.getMarginLeft(sectionStyleSheet),
-        top: styles.getMarginTop(sectionStyleSheet),
+        left: styles.getMarginLeft(sectionStyles),
+        top: styles.getMarginTop(sectionStyles),
         isSelected: widget.isSelected,
         child: body);
   }

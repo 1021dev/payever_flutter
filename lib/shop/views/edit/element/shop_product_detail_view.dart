@@ -7,27 +7,27 @@ class ShopProductDetailView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
   final String deviceTypeId;
-  final SectionStyleSheet sectionStyleSheet;
+  final SectionStyles sectionStyles;
   final bool isSelected;
 
   const ShopProductDetailView(
       {this.child,
       this.stylesheets,
       this.deviceTypeId,
-      this.sectionStyleSheet,
+      this.sectionStyles,
       this.isSelected = false});
 
   @override
   _ShopProductDetailViewState createState() =>
-      _ShopProductDetailViewState(child, sectionStyleSheet);
+      _ShopProductDetailViewState(child, sectionStyles);
 }
 
 class _ShopProductDetailViewState extends State<ShopProductDetailView> {
   final Child child;
-  final SectionStyleSheet sectionStyleSheet;
+  final SectionStyles sectionStyles;
   ShopProductDetailStyles styles;
 
-  _ShopProductDetailViewState(this.child, this.sectionStyleSheet);
+  _ShopProductDetailViewState(this.child, this.sectionStyles);
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +42,8 @@ class _ShopProductDetailViewState extends State<ShopProductDetailView> {
     return ResizeableView(
         width: double.infinity,
         height: double.infinity,
-        left: styles.getMarginLeft(sectionStyleSheet),
-        top: styles.getMarginTop(sectionStyleSheet),
+        left: styles.getMarginLeft(sectionStyles),
+        top: styles.getMarginTop(sectionStyles),
         isSelected: widget.isSelected,
         child: body);
   }

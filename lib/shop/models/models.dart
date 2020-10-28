@@ -521,11 +521,11 @@ class BaseStyles with BackgroundAssist, StyleAssist, SizeAssist, DecorationAssis
     return double.parse(padding.split(' ').first);
   }
 
-  double getMarginTop(SectionStyleSheet sectionStyleSheet) {
+  double getMarginTop(SectionStyles sectionStyleSheet) {
     return getMarginTopAssist(marginTop, sectionStyleSheet.gridTemplateRows, gridRow);
   }
 
-  double getMarginLeft(SectionStyleSheet sectionStyleSheet) {
+  double getMarginLeft(SectionStyles sectionStyleSheet) {
     return getMarginLeftAssist(marginLeft, sectionStyleSheet.gridTemplateColumns, gridColumn);
   }
 
@@ -550,8 +550,8 @@ class BaseStyles with BackgroundAssist, StyleAssist, SizeAssist, DecorationAssis
 }
 
 @JsonSerializable()
-class SectionStyleSheet extends BaseStyles {
-  SectionStyleSheet();
+class SectionStyles extends BaseStyles {
+  SectionStyles();
 
   @JsonKey(name: 'gridTemplateRows', defaultValue: '0 0 0')
   String gridTemplateRows;
@@ -561,8 +561,8 @@ class SectionStyleSheet extends BaseStyles {
   @JsonKey(name: 'zIndex')
   dynamic zIndex;
 
-  factory SectionStyleSheet.fromJson(Map<String, dynamic> json) => _$SectionStyleSheetFromJson(json);
-  Map<String, dynamic> toJson() => _$SectionStyleSheetToJson(this);
+  factory SectionStyles.fromJson(Map<String, dynamic> json) => _$SectionStylesFromJson(json);
+  Map<String, dynamic> toJson() => _$SectionStylesToJson(this);
 }
 
 @JsonSerializable()

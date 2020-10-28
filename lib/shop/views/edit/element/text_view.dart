@@ -8,26 +8,26 @@ class TextView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
   final String deviceTypeId;
-  final SectionStyleSheet sectionStyleSheet;
+  final SectionStyles sectionStyles;
   final bool isSelected;
 
   const TextView(
       {this.child,
       this.stylesheets,
       this.deviceTypeId,
-      this.sectionStyleSheet,
+      this.sectionStyles,
       this.isSelected = false});
 
   @override
-  _TextViewState createState() => _TextViewState(child, sectionStyleSheet);
+  _TextViewState createState() => _TextViewState(child, sectionStyles);
 }
 
 class _TextViewState extends State<TextView> {
   final Child child;
-  final SectionStyleSheet sectionStyleSheet;
+  final SectionStyles sectionStyles;
   TextStyles styles;
   String txt;
-  _TextViewState(this.child, this.sectionStyleSheet);
+  _TextViewState(this.child, this.sectionStyles);
 
   @override
   Widget build(BuildContext context) {
@@ -47,16 +47,13 @@ class _TextViewState extends State<TextView> {
     return ResizeableView(
         width: styles.width,
         height: styles.textHeight,
-        left: styles.getMarginLeft(sectionStyleSheet),
-        top: styles.getMarginTop(sectionStyleSheet),
+        left: styles.getMarginLeft(sectionStyles),
+        top: styles.getMarginTop(sectionStyles),
         isSelected: widget.isSelected,
         child: body);
   }
 
   Widget get body {
-
-
-
     if (txt.contains('<div') ||
         txt.contains('<span') ||
         txt.contains('<font')) {

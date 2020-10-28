@@ -522,8 +522,8 @@ Map<String, dynamic> _$BaseStylesToJson(BaseStyles instance) =>
       'priceTextDecoration': instance.priceTextDecoration,
     };
 
-SectionStyleSheet _$SectionStyleSheetFromJson(Map<String, dynamic> json) {
-  return SectionStyleSheet()
+SectionStyles _$SectionStylesFromJson(Map<String, dynamic> json) {
+  return SectionStyles()
     ..display = json['display'] as String ?? 'flex'
     ..background = json['background'] as String ?? '#ffffff'
     ..backgroundColor = json['backgroundColor'] as String ?? '#ffffff'
@@ -584,7 +584,7 @@ SectionStyleSheet _$SectionStyleSheetFromJson(Map<String, dynamic> json) {
     ..zIndex = json['zIndex'];
 }
 
-Map<String, dynamic> _$SectionStyleSheetToJson(SectionStyleSheet instance) =>
+Map<String, dynamic> _$SectionStylesToJson(SectionStyles instance) =>
     <String, dynamic>{
       'display': instance.display,
       'background': instance.background,

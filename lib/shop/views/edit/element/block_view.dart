@@ -19,22 +19,22 @@ class BlockView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
   final String deviceTypeId;
-  final SectionStyleSheet sectionStyleSheet;
+  final SectionStyles sectionStyles;
 
-  const BlockView({this.child, this.stylesheets, this.deviceTypeId, this.sectionStyleSheet});
+  const BlockView({this.child, this.stylesheets, this.deviceTypeId, this.sectionStyles});
 
   @override
-  _BlockViewState createState() => _BlockViewState(child:child, sectionStyleSheet:sectionStyleSheet, stylesheets: stylesheets, deviceTypeId: deviceTypeId);
+  _BlockViewState createState() => _BlockViewState(child:child, sectionStyles:sectionStyles, stylesheets: stylesheets, deviceTypeId: deviceTypeId);
 }
 
 class _BlockViewState extends State<BlockView> {
   final Child child;
-  final SectionStyleSheet sectionStyleSheet;
+  final SectionStyles sectionStyles;
   final Map<String, dynamic> stylesheets;
   final String deviceTypeId;
-  SectionStyleSheet styleSheet;
+  SectionStyles styleSheet;
   final String TAG = 'BlockView : ';
-  _BlockViewState({this.child, this.stylesheets ,this.sectionStyleSheet, this.deviceTypeId});
+  _BlockViewState({this.child, this.stylesheets ,this.sectionStyles, this.deviceTypeId});
 
   @override
   void dispose() {
@@ -62,7 +62,7 @@ class _BlockViewState extends State<BlockView> {
             child: child,
             stylesheets: stylesheets,
             deviceTypeId: deviceTypeId,
-            sectionStyleSheet: styleSheet,
+            sectionStyles: styleSheet,
           );
           break;
         case 'button':
@@ -70,7 +70,7 @@ class _BlockViewState extends State<BlockView> {
             child: child,
             stylesheets: stylesheets,
             deviceTypeId: deviceTypeId,
-            sectionStyleSheet: styleSheet,
+            sectionStyles: styleSheet,
           );
           break;
         case 'image':
@@ -78,7 +78,7 @@ class _BlockViewState extends State<BlockView> {
             child: child,
             stylesheets: stylesheets,
             deviceTypeId: deviceTypeId,
-            sectionStyleSheet: styleSheet,
+            sectionStyles: styleSheet,
           );
           break;
         case 'video':
@@ -86,7 +86,7 @@ class _BlockViewState extends State<BlockView> {
             child: child,
             stylesheets: stylesheets,
             deviceTypeId: deviceTypeId,
-            sectionStyleSheet: styleSheet,
+            sectionStyles: styleSheet,
           );
           break;
         case 'shape':
@@ -94,7 +94,7 @@ class _BlockViewState extends State<BlockView> {
             child: child,
             stylesheets: stylesheets,
             deviceTypeId: deviceTypeId,
-            sectionStyleSheet: styleSheet,
+            sectionStyles: styleSheet,
           );
           break;
         case 'block':
@@ -102,7 +102,7 @@ class _BlockViewState extends State<BlockView> {
             child: child,
             stylesheets: stylesheets,
             deviceTypeId: deviceTypeId,
-            sectionStyleSheet: styleSheet,
+            sectionStyles: styleSheet,
           );
           break;
         case 'menu':
@@ -110,7 +110,7 @@ class _BlockViewState extends State<BlockView> {
             child: child,
             stylesheets: stylesheets,
             deviceTypeId: deviceTypeId,
-            sectionStyleSheet: styleSheet,
+            sectionStyles: styleSheet,
           );
           break;
         case 'shop-cart':
@@ -118,7 +118,7 @@ class _BlockViewState extends State<BlockView> {
             child: child,
             stylesheets: stylesheets,
             deviceTypeId: deviceTypeId,
-            sectionStyleSheet: styleSheet,
+            sectionStyles: styleSheet,
           );
           break;
         case 'shop-category':
@@ -126,7 +126,7 @@ class _BlockViewState extends State<BlockView> {
             child: child,
             stylesheets: stylesheets,
             deviceTypeId: deviceTypeId,
-            sectionStyleSheet: styleSheet,
+            sectionStyles: styleSheet,
           );
           break;
         case 'shop-products':
@@ -134,7 +134,7 @@ class _BlockViewState extends State<BlockView> {
             child: child,
             stylesheets: stylesheets,
             deviceTypeId: deviceTypeId,
-            sectionStyleSheet: styleSheet,
+            sectionStyles: styleSheet,
           );
           break;
         case 'shop-product-details':
@@ -142,7 +142,7 @@ class _BlockViewState extends State<BlockView> {
             child: child,
             stylesheets: stylesheets,
             deviceTypeId: deviceTypeId,
-            sectionStyleSheet: styleSheet,
+            sectionStyles: styleSheet,
           );
           break;
         case 'logo':
@@ -150,7 +150,7 @@ class _BlockViewState extends State<BlockView> {
             child: child,
             stylesheets: stylesheets,
             deviceTypeId: deviceTypeId,
-            sectionStyleSheet: styleSheet,
+            sectionStyles: styleSheet,
           );
           break;
         case 'social-icon':
@@ -158,7 +158,7 @@ class _BlockViewState extends State<BlockView> {
             child: child,
             stylesheets: stylesheets,
             deviceTypeId: deviceTypeId,
-            sectionStyleSheet: styleSheet,
+            sectionStyles: styleSheet,
           );
           break;
         default:
@@ -173,22 +173,22 @@ class _BlockViewState extends State<BlockView> {
         height: styleSheet.height,
 //      decoration: decoration,
         margin: EdgeInsets.only(
-            left: styleSheet.getMarginLeft(sectionStyleSheet),
+            left: styleSheet.getMarginLeft(sectionStyles),
             right: styleSheet.marginRight,
-            top: styleSheet.getMarginTop(sectionStyleSheet),
+            top: styleSheet.getMarginTop(sectionStyles),
             bottom: styleSheet.marginBottom),
         alignment: styleSheet.getBackgroundImageAlignment(),
         child: Stack(children: widgets));
   }
 
-  SectionStyleSheet getSectionStyleSheet() {
+  SectionStyles getSectionStyleSheet() {
     try {
 
       Map json = stylesheets[deviceTypeId][child.id];
       if (json == null || json['display'] == 'none') return null;
       print('$TAG Block ID ${child.id}');
       print('$TAG Bloc style: $json');
-      return SectionStyleSheet.fromJson(json);
+      return SectionStyles.fromJson(json);
     } catch (e) {
       print('$TAG Error: ${e.toString()}');
       return null;

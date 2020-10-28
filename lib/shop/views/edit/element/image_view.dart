@@ -11,27 +11,27 @@ class ImageView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
   final String deviceTypeId;
-  final SectionStyleSheet sectionStyleSheet;
+  final SectionStyles sectionStyles;
   final bool isSelected;
 
   const ImageView(
       {this.child,
       this.stylesheets,
       this.deviceTypeId,
-      this.sectionStyleSheet,
+      this.sectionStyles,
       this.isSelected = false});
 
   @override
-  _ImageViewState createState() => _ImageViewState(child, sectionStyleSheet);
+  _ImageViewState createState() => _ImageViewState(child, sectionStyles);
 }
 
 class _ImageViewState extends State<ImageView> {
   final Child child;
-  final SectionStyleSheet sectionStyleSheet;
+  final SectionStyles sectionStyles;
   ImageStyles styles;
   ImageData data;
   String url = '';
-  _ImageViewState(this.child, this.sectionStyleSheet);
+  _ImageViewState(this.child, this.sectionStyles);
 
   @override
   Widget build(BuildContext context) {
@@ -54,8 +54,8 @@ class _ImageViewState extends State<ImageView> {
     return ResizeableView(
         width: styles.width,
         height: styles.height,
-        left: styles.getMarginLeft(sectionStyleSheet),
-        top: styles.getMarginTop(sectionStyleSheet),
+        left: styles.getMarginLeft(sectionStyles),
+        top: styles.getMarginTop(sectionStyles),
         isSelected: widget.isSelected,
         child: body);
   }

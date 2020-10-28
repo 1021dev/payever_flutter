@@ -7,27 +7,27 @@ class ShopProductCategoryView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
   final String deviceTypeId;
-  final SectionStyleSheet sectionStyleSheet;
+  final SectionStyles sectionStyles;
   final bool isSelected;
 
   const ShopProductCategoryView(
       {this.child,
       this.stylesheets,
       this.deviceTypeId,
-      this.sectionStyleSheet,
+      this.sectionStyles,
       this.isSelected = false});
 
   @override
   _ShopProductCategoryViewState createState() =>
-      _ShopProductCategoryViewState(child, sectionStyleSheet);
+      _ShopProductCategoryViewState(child, sectionStyles);
 }
 
 class _ShopProductCategoryViewState extends State<ShopProductCategoryView> {
   final Child child;
-  final SectionStyleSheet sectionStyleSheet;
+  final SectionStyles sectionStyles;
   ShopProductCategoryStyles styles;
   CategoryData data;
-  _ShopProductCategoryViewState(this.child, this.sectionStyleSheet);
+  _ShopProductCategoryViewState(this.child, this.sectionStyles);
 
   @override
   Widget build(BuildContext context) {

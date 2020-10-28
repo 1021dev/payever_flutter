@@ -11,21 +11,21 @@ class ShopCartView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
   final String deviceTypeId;
-  final SectionStyleSheet sectionStyleSheet;
+  final SectionStyles sectionStyles;
   final bool isSelected;
 
-  const ShopCartView({this.child, this.stylesheets, this.deviceTypeId, this.sectionStyleSheet, this.isSelected});
+  const ShopCartView({this.child, this.stylesheets, this.deviceTypeId, this.sectionStyles, this.isSelected});
 
   @override
-  _ShopCartViewState createState() => _ShopCartViewState(child, sectionStyleSheet);
+  _ShopCartViewState createState() => _ShopCartViewState(child, sectionStyles);
 }
 
 class _ShopCartViewState extends State<ShopCartView> {
   final Child child;
-  final SectionStyleSheet sectionStyleSheet;
+  final SectionStyles sectionStyles;
   ShopCartStyles styles;
 
-  _ShopCartViewState(this.child, this.sectionStyleSheet);
+  _ShopCartViewState(this.child, this.sectionStyles);
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +43,8 @@ class _ShopCartViewState extends State<ShopCartView> {
     return ResizeableView(
       width: styles.width,
       height: styles.height,
-      left: styles.getMarginLeft(sectionStyleSheet),
-      top: styles.getMarginTop(sectionStyleSheet),
+      left: styles.getMarginLeft(sectionStyles),
+      top: styles.getMarginTop(sectionStyles),
       isSelected: widget.isSelected,
       child: body,
     );

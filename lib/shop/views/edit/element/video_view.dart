@@ -9,27 +9,27 @@ class VideoView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
   final String deviceTypeId;
-  final SectionStyleSheet sectionStyleSheet;
+  final SectionStyles sectionStyles;
   final bool isSelected;
 
   const VideoView(
       {this.child,
       this.stylesheets,
       this.deviceTypeId,
-      this.sectionStyleSheet,
+      this.sectionStyles,
       this.isSelected = false});
 
   @override
-  _VideoViewState createState() => _VideoViewState(child, sectionStyleSheet);
+  _VideoViewState createState() => _VideoViewState(child, sectionStyles);
 }
 
 class _VideoViewState extends State<VideoView> {
   final Child child;
-  final SectionStyleSheet sectionStyleSheet;
+  final SectionStyles sectionStyles;
   ImageStyles styles;
   VideoData data;
 
-  _VideoViewState(this.child, this.sectionStyleSheet);
+  _VideoViewState(this.child, this.sectionStyles);
 
   VideoPlayerController _controller;
   bool videoLoading = false;
@@ -64,8 +64,8 @@ class _VideoViewState extends State<VideoView> {
     return ResizeableView(
         width: styles.width,
         height: styles.height,
-        left: styles.getMarginLeft(sectionStyleSheet),
-        top: styles.getMarginTop(sectionStyleSheet),
+        left: styles.getMarginLeft(sectionStyles),
+        top: styles.getMarginTop(sectionStyles),
         isSelected: widget.isSelected,
         child: body);
   }

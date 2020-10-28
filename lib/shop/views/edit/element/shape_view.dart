@@ -10,26 +10,26 @@ class ShapeView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
   final String deviceTypeId;
-  final SectionStyleSheet sectionStyleSheet;
+  final SectionStyles sectionStyles;
   final bool isSelected;
 
   const ShapeView(
       {this.child,
       this.stylesheets,
       this.deviceTypeId,
-      this.sectionStyleSheet,
+      this.sectionStyles,
       this.isSelected = false});
 
   @override
-  _ShapeViewState createState() => _ShapeViewState(child, sectionStyleSheet);
+  _ShapeViewState createState() => _ShapeViewState(child, sectionStyles);
 }
 
 class _ShapeViewState extends State<ShapeView> {
   final Child child;
-  final SectionStyleSheet sectionStyleSheet;
+  final SectionStyles sectionStyles;
   ShapeStyles styles;
 
-  _ShapeViewState(this.child, this.sectionStyleSheet);
+  _ShapeViewState(this.child, this.sectionStyles);
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +42,8 @@ class _ShapeViewState extends State<ShapeView> {
     return ResizeableView(
         width: styles.width,
         height: styles.height,
-        left: styles.getMarginLeft(sectionStyleSheet),
-        top: styles.getMarginTop(sectionStyleSheet),
+        left: styles.getMarginLeft(sectionStyles),
+        top: styles.getMarginTop(sectionStyles),
         isSelected: widget.isSelected,
         child: Opacity(opacity: styles.opacity, child: body));
   }
