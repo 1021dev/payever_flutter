@@ -414,7 +414,8 @@ class BaseStyles with BackgroundAssist, StyleAssist, SizeAssist, DecorationAssis
 
   // Relative
   @JsonKey(name: 'margin', defaultValue: '0 0 0 0')
-  String margin;
+  dynamic margin; // int 0 or String '0 0 0 0'
+
   @JsonKey(name: 'padding', defaultValue: '0 0') // Virtical Horizontal
   String padding;
   @JsonKey(name: 'position', defaultValue: 'absolute')

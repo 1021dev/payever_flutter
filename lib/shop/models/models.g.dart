@@ -434,7 +434,7 @@ BaseStyles _$BaseStylesFromJson(Map<String, dynamic> json) {
     ..height = (json['height'] as num)?.toDouble() ?? 0
     ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
     ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
-    ..margin = json['margin'] as String ?? '0 0 0 0'
+    ..margin = json['margin'] ?? '0 0 0 0'
     ..padding = json['padding'] as String ?? '0 0'
     ..position = json['position'] as String ?? 'absolute'
     ..marginBottom = (json['marginBottom'] as num)?.toDouble() ?? 0
@@ -551,7 +551,7 @@ SectionStyles _$SectionStylesFromJson(Map<String, dynamic> json) {
     ..height = (json['height'] as num)?.toDouble() ?? 0
     ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
     ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
-    ..margin = json['margin'] as String ?? '0 0 0 0'
+    ..margin = json['margin'] ?? '0 0 0 0'
     ..padding = json['padding'] as String ?? '0 0'
     ..position = json['position'] as String ?? 'absolute'
     ..marginBottom = (json['marginBottom'] as num)?.toDouble() ?? 0
@@ -674,7 +674,7 @@ TextStyles _$TextStylesFromJson(Map<String, dynamic> json) {
     ..height = (json['height'] as num)?.toDouble() ?? 0
     ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
     ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
-    ..margin = json['margin'] as String ?? '0 0 0 0'
+    ..margin = json['margin'] ?? '0 0 0 0'
     ..padding = json['padding'] as String ?? '0 0'
     ..position = json['position'] as String ?? 'absolute'
     ..marginBottom = (json['marginBottom'] as num)?.toDouble() ?? 0
@@ -790,7 +790,7 @@ ButtonStyles _$ButtonStylesFromJson(Map<String, dynamic> json) {
     ..width0 = json['width'] ?? 0
     ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
     ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
-    ..margin = json['margin'] as String ?? '0 0 0 0'
+    ..margin = json['margin'] ?? '0 0 0 0'
     ..padding = json['padding'] as String ?? '0 0'
     ..position = json['position'] as String ?? 'absolute'
     ..marginBottom = (json['marginBottom'] as num)?.toDouble() ?? 0
@@ -908,7 +908,7 @@ ShopCartStyles _$ShopCartStylesFromJson(Map<String, dynamic> json) {
     ..height = (json['height'] as num)?.toDouble() ?? 0
     ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
     ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
-    ..margin = json['margin'] as String ?? '0 0 0 0'
+    ..margin = json['margin'] ?? '0 0 0 0'
     ..padding = json['padding'] as String ?? '0 0'
     ..position = json['position'] as String ?? 'absolute'
     ..marginBottom = (json['marginBottom'] as num)?.toDouble() ?? 0
@@ -1035,7 +1035,7 @@ ShapeStyles _$ShapeStylesFromJson(Map<String, dynamic> json) {
     ..height = (json['height'] as num)?.toDouble() ?? 0
     ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
     ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
-    ..margin = json['margin'] as String ?? '0 0 0 0'
+    ..margin = json['margin'] ?? '0 0 0 0'
     ..padding = json['padding'] as String ?? '0 0'
     ..position = json['position'] as String ?? 'absolute'
     ..marginBottom = (json['marginBottom'] as num)?.toDouble() ?? 0
@@ -1152,7 +1152,7 @@ ImageStyles _$ImageStylesFromJson(Map<String, dynamic> json) {
     ..height = (json['height'] as num)?.toDouble() ?? 0
     ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
     ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
-    ..margin = json['margin'] as String ?? '0 0 0 0'
+    ..margin = json['margin'] ?? '0 0 0 0'
     ..padding = json['padding'] as String ?? '0 0'
     ..position = json['position'] as String ?? 'absolute'
     ..marginBottom = (json['marginBottom'] as num)?.toDouble() ?? 0
@@ -1283,7 +1283,7 @@ SocialIconStyles _$SocialIconStylesFromJson(Map<String, dynamic> json) {
     ..height = (json['height'] as num)?.toDouble() ?? 0
     ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
     ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
-    ..margin = json['margin'] as String ?? '0 0 0 0'
+    ..margin = json['margin'] ?? '0 0 0 0'
     ..padding = json['padding'] as String ?? '0 0'
     ..position = json['position'] as String ?? 'absolute'
     ..marginBottom = (json['marginBottom'] as num)?.toDouble() ?? 0
@@ -1400,7 +1400,7 @@ ShopProductsStyles _$ShopProductsStylesFromJson(Map<String, dynamic> json) {
     ..height = (json['height'] as num)?.toDouble() ?? 0
     ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
     ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
-    ..margin = json['margin'] as String ?? '0 0 0 0'
+    ..margin = json['margin'] ?? '0 0 0 0'
     ..padding = json['padding'] as String ?? '0 0'
     ..position = json['position'] as String ?? 'absolute'
     ..marginBottom = (json['marginBottom'] as num)?.toDouble() ?? 0
@@ -1526,7 +1526,7 @@ ShopProductDetailStyles _$ShopProductDetailStylesFromJson(
     ..height = (json['height'] as num)?.toDouble() ?? 0
     ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
     ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
-    ..margin = json['margin'] as String ?? '0 0 0 0'
+    ..margin = json['margin'] ?? '0 0 0 0'
     ..padding = json['padding'] as String ?? '0 0'
     ..position = json['position'] as String ?? 'absolute'
     ..marginBottom = (json['marginBottom'] as num)?.toDouble() ?? 0
@@ -1655,7 +1655,7 @@ ShopProductCategoryStyles _$ShopProductCategoryStylesFromJson(
     ..height = (json['height'] as num)?.toDouble() ?? 0
     ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
     ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
-    ..margin = json['margin'] as String ?? '0 0 0 0'
+    ..margin = json['margin'] ?? '0 0 0 0'
     ..padding = json['padding'] as String ?? '0 0'
     ..position = json['position'] as String ?? 'absolute'
     ..marginBottom = (json['marginBottom'] as num)?.toDouble() ?? 0

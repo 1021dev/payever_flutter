@@ -110,6 +110,7 @@ class _TemplateViewState extends State<TemplateView> {
     try {
       Map json = stylesheets[shopPage.stylesheetIds.mobile][childId];
       if (json['display'] != 'none') {
+        print('==============================================');
         print('SectionID: $childId');
         print('Section StyleSheet: $json');
       }

@@ -175,7 +175,7 @@ class _SectionViewState extends State<SectionView> {
     List<Widget> widgets = [];
     widgets.add(sectionBackgroundWidget);
     section.children.forEach((child) {
-      // lastVerticalChild(child);
+      lastVerticalChild(child);
       Widget childWidget = getChild(child);
       if (childWidget != null) {
         Widget element = GestureDetector(
@@ -210,30 +210,30 @@ class _SectionViewState extends State<SectionView> {
   }
 
   lastVerticalChild(Child child) {
-    String gridTemplateRows = sectionStyles.gridTemplateRows;
-    if (gridTemplateRows == null || gridTemplateRows.isEmpty) return;
-    
-    BaseStyles baseStyles = BaseStyles.fromJson(stylesheets[shopPage.stylesheetIds.mobile][child.id]);
+    if (sectionStyles.gridTemplateRows == null) return;
+    BaseStyles baseStyles = BaseStyles.fromJson(
+        stylesheets[shopPage.stylesheetIds.mobile][child.id]);
     if (baseStyles == null || baseStyles.display == 'none') return;
-
+    if (baseStyles.gridRow == null || baseStyles.gridRow.isEmpty) return;
+    String gridTemplateRows = sectionStyles.gridTemplateRows;
     String gridRow = baseStyles.gridRow;
-    if (gridRow == null || gridRow.isEmpty) return;
-
-    if (gridTemplateRows.split(' ').length == int.parse(gridRow.split(' ').first)){
+    List<String>gridRows = gridTemplateRows.split(' ');
+    int sectionRows = (int.parse(gridRows.last) > 0 || gridRows.length == 1) ? gridRows.length : gridRows.length - 1;
+    if (sectionRows ==
+        int.parse(gridRow.split(' ').first)) {
       double height = baseStyles.height;
       double top = baseStyles.getMarginTop(sectionStyles);
       limitSectionHeight = height + top + baseStyles.paddingV;
       if (widgetHeight < limitSectionHeight) {
-        Future.microtask(
-                () {
-                  setState(() {
-                    widgetHeight = limitSectionHeight;
-                  });
-                });
+        Future.microtask(() {
+          setState(() {
+            widgetHeight = limitSectionHeight;
+          });
+        });
       }
     }
   }
-  
+
   Widget getChild(Child child) {
     Widget widget;
     switch (child.type) {
