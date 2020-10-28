@@ -602,12 +602,15 @@ class _SectionViewState extends State<SectionView> {
 
   Map childPayload(NewChildSize size) {
     Map payloadSection = {};
-    String margin = '${size.newTop} 0 0 ${size.newLeft}';
+    BaseStyles baseStyles = getBaseStyles(selectChildId);
+    double marginTop = baseStyles.getMarginTopAssist(size.newTop, sectionStyles.gridTemplateRows, baseStyles.gridRow, isReverse: true);
+    double marginLeft = baseStyles.getMarginLeftAssist(size.newLeft, sectionStyles.gridTemplateColumns, baseStyles.gridColumn, isReverse: true);
+    String margin = '$marginTop 0 0 $marginLeft';
     payloadSection['margin'] = margin;
-    payloadSection['marginTop'] = size.newTop;
-    payloadSection['marginLeft'] = size.newLeft;
+    payloadSection['marginTop'] = marginTop;
+    payloadSection['marginLeft'] = marginLeft;
     payloadSection['height'] = size.newHeight;
-    payloadSection['width'] = size.newWidth;
+    payloadSection['width'] = size.newWidth / GlobalUtils.shopBuilderWidthFactor;
     Map payload = {
       selectChildId: payloadSection
     };

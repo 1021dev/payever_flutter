@@ -150,28 +150,43 @@ class SizeAssist {
     return 0;
   }
 
-  double getMarginTopAssist(double marginTop, String gridTemplateRows, String gridRow) {
+  double getMarginTopAssist(double marginTop, String gridTemplateRows, String gridRow, {bool isReverse = false}) {
     double margin = marginTop;
     int row =  int.parse(gridRow.split(' ').first);
+    List<String>rows = gridTemplateRows.split(' ');
     if (row == 1)
       return margin;
 
-    List<String>rows = gridTemplateRows.split(' ');
-    for (int i = 0; i < row - 1; i ++)
-      margin += double.parse(rows[i]);
+    for (int i = 0; i < row - 1; i++) {
+      if (isReverse) {
+        margin -= double.parse(rows[i]);
+      } else {
+        margin += double.parse(rows[i]);
+      }
+    }
     return margin;
   }
 
-  double getMarginLeftAssist(double marginLeft, String gridTemplateColumns, String gridColumn) {
+  double getMarginLeftAssist(double marginLeft, String gridTemplateColumns, String gridColumn, {bool isReverse = false}) {
     double margin = marginLeft;
     int column = int.parse(gridColumn.split(' ').first);
 
     if (column > 1) {
       List<String>columns = gridTemplateColumns.split(' ');
-      for (int i = 0; i < column - 1; i ++)
-        margin += double.parse(columns[i]);
+
+      for (int i = 0; i < column - 1; i ++) {
+        if (isReverse) {
+          margin -= double.parse(columns[i]);
+        } else {
+          margin += double.parse(columns[i]);
+        }
+      }
     }
-    return margin * GlobalUtils.shopBuilderWidthFactor;
+    if (isReverse) {
+      return margin / GlobalUtils.shopBuilderWidthFactor;
+    } else {
+      return margin * GlobalUtils.shopBuilderWidthFactor;
+    }
   }
 
 }
