@@ -266,10 +266,10 @@ class _SectionViewState extends State<SectionView> {
   }
 
   Widget getChild(Child child) {
-    Widget widget;
+    Widget childView;
     switch (child.type) {
       case 'text':
-        widget = TextView(
+        childView = TextView(
           child: child,
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
@@ -278,7 +278,7 @@ class _SectionViewState extends State<SectionView> {
         );
         break;
       case 'button':
-        widget = ButtonView(
+        childView = ButtonView(
           child: child,
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
@@ -287,7 +287,7 @@ class _SectionViewState extends State<SectionView> {
         );
         break;
       case 'image':
-        widget = ImageView(
+        childView = ImageView(
           child: child,
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
@@ -296,7 +296,7 @@ class _SectionViewState extends State<SectionView> {
         );
         break;
       case 'video':
-        widget = VideoView(
+        childView = VideoView(
           child: child,
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
@@ -305,7 +305,7 @@ class _SectionViewState extends State<SectionView> {
         );
         break;
       case 'shape':
-        widget = ShapeView(
+        childView = ShapeView(
           child: child,
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
@@ -314,7 +314,7 @@ class _SectionViewState extends State<SectionView> {
         );
         break;
       case 'block':
-        widget = BlockView(
+        childView = BlockView(
           child: child,
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
@@ -322,7 +322,7 @@ class _SectionViewState extends State<SectionView> {
         );
         break;
       case 'menu':
-        widget = MenuView(
+        childView = MenuView(
           child: child,
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
@@ -331,7 +331,7 @@ class _SectionViewState extends State<SectionView> {
         );
         break;
       case 'shop-cart':
-        widget = ShopCartView(
+        childView = ShopCartView(
           child: child,
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
@@ -340,7 +340,7 @@ class _SectionViewState extends State<SectionView> {
         );
         break;
       case 'shop-category':
-        widget = ShopProductCategoryView(
+        childView = ShopProductCategoryView(
           child: child,
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
@@ -349,7 +349,7 @@ class _SectionViewState extends State<SectionView> {
         );
         break;
       case 'shop-products':
-        widget = ShopProductsView(
+        childView = ShopProductsView(
           child: child,
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
@@ -358,7 +358,7 @@ class _SectionViewState extends State<SectionView> {
         );
         break;
       case 'shop-product-details':
-        widget = ShopProductDetailView(
+        childView = ShopProductDetailView(
           child: child,
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
@@ -367,7 +367,7 @@ class _SectionViewState extends State<SectionView> {
         );
         break;
       case 'logo':
-        widget = LogoView(
+        childView = LogoView(
           child: child,
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
@@ -376,7 +376,7 @@ class _SectionViewState extends State<SectionView> {
         );
         break;
       case 'social-icon':
-        widget = SocialIconView(
+        childView = SocialIconView(
           child: child,
           stylesheets: stylesheets,
           deviceTypeId: shopPage.stylesheetIds.mobile,
@@ -389,7 +389,7 @@ class _SectionViewState extends State<SectionView> {
         print(
             'Special Styles: ${stylesheets[shopPage.stylesheetIds.mobile][child.id]}');
     }
-    return widget;
+    return childView;
   }
 
   void addActiveWidgets(List<Widget> widgets) {

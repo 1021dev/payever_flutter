@@ -9,28 +9,25 @@ import 'package:payever/blocs/bloc.dart';
 class TemplateDetailScreen extends StatefulWidget {
   final ShopPage shopPage;
   final Template template;
-  final Map<String, dynamic> stylesheets;
   final ShopEditScreenBloc screenBloc;
 
   const TemplateDetailScreen(
-      {this.shopPage, this.template, this.stylesheets, this.screenBloc});
+      {this.shopPage, this.template, this.screenBloc});
 
   @override
   _TemplateDetailScreenState createState() => _TemplateDetailScreenState(
       shopPage: shopPage,
       template: template,
-      stylesheets: stylesheets,
       screenBloc: screenBloc);
 }
 
 class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
   final ShopPage shopPage;
   final Template template;
-  final Map<String, dynamic> stylesheets;
   final ShopEditScreenBloc screenBloc;
 
   _TemplateDetailScreenState(
-      {this.shopPage, this.template, this.stylesheets, this.screenBloc});
+      {this.shopPage, this.template, this.screenBloc});
 
   @override
   void initState() {
@@ -62,7 +59,6 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
                     shopPage: shopPage,
                     template: template,
                     enableTapSection: true,
-                    stylesheets: stylesheets,
                   )));
         },
       ),

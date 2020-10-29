@@ -263,7 +263,6 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
                 shopPage: page,
                 template: template,
                 scrollable: !showName,
-                stylesheets: screenBloc.state.stylesheets,
                 onTap: () {
                   Navigator.push(
                       context,
@@ -272,7 +271,6 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
                             screenBloc: screenBloc,
                             shopPage: page,
                             template: template,
-                            stylesheets: screenBloc.state.stylesheets,
                           ),
                           type: PageTransitionType.fade));
                 },

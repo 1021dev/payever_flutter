@@ -9,7 +9,6 @@ import 'package:payever/blocs/bloc.dart';
 class TemplateView extends StatefulWidget {
   final ShopPage shopPage;
   final Template template;
-  final Map<String, dynamic> stylesheets;
   final Function onTap;
   final bool scrollable;
   final bool enableTapSection;
@@ -18,7 +17,6 @@ class TemplateView extends StatefulWidget {
   const TemplateView(
       {this.shopPage,
       this.template,
-      this.stylesheets,
       this.onTap,
       this.enableTapSection = false,
       this.scrollable = true,
@@ -28,19 +26,17 @@ class TemplateView extends StatefulWidget {
   _TemplateViewState createState() => _TemplateViewState(
       shopPage: shopPage,
       template: template,
-      stylesheets: stylesheets,
       screenBloc: screenBloc);
 }
 
 class _TemplateViewState extends State<TemplateView> {
   final ShopPage shopPage;
   final Template template;
-  final Map<String, dynamic> stylesheets;
   final ShopEditScreenBloc screenBloc;
   String selectSectionId = '';
 
   _TemplateViewState(
-      {this.shopPage, this.template, this.stylesheets, this.screenBloc});
+      {this.shopPage, this.template, this.screenBloc});
 
   TemplateSizeStateModel templateSizeStateModel = TemplateSizeStateModel();
 
@@ -79,8 +75,8 @@ class _TemplateViewState extends State<TemplateView> {
         SectionView sectionView = SectionView(
           screenBloc: screenBloc,
           shopPage: shopPage,
+          stylesheets: state.stylesheets,
           child: child,
-          stylesheets: stylesheets,
           isSelected: selectSectionId == child.id,
           onTapChild: () {
             setState(() {
@@ -130,7 +126,7 @@ class _TemplateViewState extends State<TemplateView> {
 
   SectionStyles getSectionStyles(String childId) {
     try {
-      Map json = stylesheets[shopPage.stylesheetIds.mobile][childId];
+      Map<String, dynamic> json = widget.screenBloc.state.stylesheets[shopPage.stylesheetIds.mobile][childId];
       return SectionStyles.fromJson(json);
     } catch (e) {
       return null;
