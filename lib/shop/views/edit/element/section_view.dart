@@ -312,9 +312,12 @@ class _SectionViewState extends State<SectionView> {
       case 'block':
         childView = BlockView(
           child: child,
-          stylesheets: state.stylesheets,
+          sectionId: section.id,
+          screenBloc: screenBloc,
+          enableTapChild: widget.enableTapChild,
           deviceTypeId: shopPage.stylesheetIds.mobile,
           sectionStyles: sectionStyles,
+          onTapChild: widget.onTapChild,
         );
         break;
       case 'menu':
@@ -560,7 +563,6 @@ class _SectionViewState extends State<SectionView> {
   }
 
   _changeSection({NewChildSize childSize}) {
-    print('Update Action ==========');
     Map<String, dynamic> payload = {};
     if (selectChildId != null && childSize != null) {
       payload = childPayload(childSize);
