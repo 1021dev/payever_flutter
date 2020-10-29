@@ -21,6 +21,7 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
   @override
   void onError(Object error, StackTrace stackTrace) {
     print('$error, $stackTrace');
+    super.onError(error, stackTrace);
   }
 
   @override

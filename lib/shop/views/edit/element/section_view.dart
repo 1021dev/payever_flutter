@@ -87,8 +87,9 @@ class _SectionViewState extends State<SectionView> {
         builder: (context, templateSizeState, child1) {
       if (templateSizeState.selectedSectionId == section.id) {
         if (templateSizeState.updateChildSize != null) {
+          Future.microtask(
+                  () => templateSizeState.setUpdateChildSize(null));
           _changeSection(childSize: templateSizeState.updateChildSize);
-          // templateSizeState.setUpdateChildSize(null);
         } else if (templateSizeState.newChildSize != null) {
           bool wrongposition = wrongPosition(templateSizeState.newChildSize);
           if (wrongposition) {
@@ -548,12 +549,12 @@ class _SectionViewState extends State<SectionView> {
 
   SectionStyles getSectionStyles(String childId) {
     try {
-      Map json = stylesheets[shopPage.stylesheetIds.mobile][childId];
-      if (json['display'] != 'none') {
-        print('==============================================');
-        print('SectionID: $childId');
-        print('Section StyleSheet: $json');
-      }
+      Map<String, dynamic> json = stylesheets[shopPage.stylesheetIds.mobile][childId];
+      // if (json['display'] != 'none') {
+      //   print('==============================================');
+      //   print('SectionID: $childId');
+      //   print('Section StyleSheet: $json');
+      // }
       return SectionStyles.fromJson(json);
     } catch (e) {
       return null;
@@ -561,6 +562,7 @@ class _SectionViewState extends State<SectionView> {
   }
 
   _changeSection({NewChildSize childSize}) {
+    print('Update Action ==========');
     Map<String, dynamic> payload = {};
     if (selectChildId != null && childSize != null) {
       payload = childPayload(childSize);

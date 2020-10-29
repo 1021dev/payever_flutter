@@ -42,6 +42,12 @@ class ShopEditScreenBloc
     }
   }
 
+  @override
+  void onError(Object error, StackTrace stackTrace) {
+    print('ShopEditScreenBloc: Error: $error, $stackTrace');
+    super.onError(error, stackTrace);
+  }
+
   Stream<ShopEditScreenState> fetchSnapShot() async* {
     if (state.activeTheme == null) {
       yield state.copyWith(isLoading: false);
@@ -144,7 +150,18 @@ class ShopEditScreenBloc
       'targetPageId': state.activeShopPage.id
     };
     print('update Body: $body');
-    yield state.copyWith(isUpdating: true, selectedSectionId: event.sectionId);
+    // yield state.copyWith(isUpdating: true, selectedSectionId: event.sectionId);
+    String key = event.payload.keys.first;
+    Map<String, dynamic>stylesheets = state.stylesheets;
+
+    Map<String, dynamic>updatejson =  event.payload[key];
+    Map<String, dynamic>json = stylesheets[state.activeShopPage.stylesheetIds.mobile][key];
+    updatejson.keys.forEach((element) {
+      json[element] = updatejson[element];
+    });
+    stylesheets[state.activeShopPage.stylesheetIds.mobile][key] = json;
+    yield state.copyWith(isUpdating: true, selectedSectionId: event.sectionId, stylesheets: stylesheets);
+
     dynamic response = await api.shopEditAction(
         GlobalUtils.activeToken.accessToken, state.activeTheme.themeId, body);
 
@@ -152,18 +169,7 @@ class ShopEditScreenBloc
       Fluttertoast.showToast(msg: response.error);
       yield state.copyWith(isUpdating: false);
     } else {
-
-      // Update styles
-      String key = event.payload.keys.first;
-      Map<String, dynamic>stylesheets = state.stylesheets;
-
-      Map<String, dynamic>updatejson =  event.payload[key];
-      Map<String, dynamic>json = stylesheets[state.activeShopPage.stylesheetIds.mobile][key];
-      updatejson.keys.forEach((element) {
-        json[element] = updatejson[element];
-      });
-      stylesheets[state.activeShopPage.stylesheetIds.mobile][key] = json;
-      yield state.copyWith(isUpdating: false, stylesheets: stylesheets);
+      yield state.copyWith(isUpdating: false);
     }
   }
 }
