@@ -184,10 +184,10 @@ class _BlockViewState extends State<BlockView> {
   SectionStyles getSectionStyleSheet() {
     try {
 
-      Map json = stylesheets[deviceTypeId][child.id];
+      Map<String, dynamic> json = stylesheets[deviceTypeId][child.id];
       if (json == null || json['display'] == 'none') return null;
-      print('$TAG Block ID ${child.id}');
-      print('$TAG Bloc style: $json');
+      // print('$TAG Block ID ${child.id}');
+      // print('$TAG Bloc style: $json');
       return SectionStyles.fromJson(json);
     } catch (e) {
       print('$TAG Error: ${e.toString()}');

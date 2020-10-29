@@ -63,19 +63,15 @@ class _ShapeViewState extends State<ShapeView> {
   }
 
   Widget circleShape() {
-    return Container(
-//        decoration: styles.decoration,
-      alignment: Alignment.center,
-      child: ClipShadow(
-        clipper: OvalClipper(x: styles.width, y: styles.height, w: 0),
-        boxShadow: styles.getBoxShadow,
-        child: ClipRRect(
-            borderRadius: BorderRadius.all(
-                Radius.elliptical(styles.width, styles.height)),
-            child: BackgroundView(
-              styles: styles,
-            )),
-      ),
+    return ClipShadow(
+      clipper: OvalClipper(x: styles.width, y: styles.height, w: 0),
+      boxShadow: styles.getBoxShadow,
+      child: ClipRRect(
+          borderRadius: BorderRadius.all(
+              Radius.elliptical(double.infinity, double.infinity)),
+          child: BackgroundView(
+            styles: styles,
+          )),
     );
   }
 
@@ -116,7 +112,7 @@ class _ShapeViewState extends State<ShapeView> {
 
   ShapeStyles styleSheet() {
     try {
-      Map json = widget.stylesheets[widget.deviceTypeId][child.id];
+      Map<String, dynamic> json = widget.stylesheets[widget.deviceTypeId][child.id];
 //      if (json['display'] != 'none')
 //        print('Shape Styles: $json');
       return ShapeStyles.fromJson(json);

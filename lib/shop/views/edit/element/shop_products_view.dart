@@ -131,11 +131,11 @@ class _ShopProductsViewState extends State<ShopProductsView> {
 
   ShopProductsStyles styleSheet() {
     try {
-      Map json = widget.stylesheets[widget.deviceTypeId][child.id];
-     if (json['display'] != 'none') {
-       print('Shop Products ID: ${child.id}');
-       print('Shop Products Styles: $json');
-     }
+      Map<String, dynamic> json = widget.stylesheets[widget.deviceTypeId][child.id];
+     // if (json['display'] != 'none') {
+     //   print('Shop Products ID: ${child.id}');
+     //   print('Shop Products Styles: $json');
+     // }
      return ShopProductsStyles.fromJson(json);
     } catch (e) {
       return null;
