@@ -30,7 +30,7 @@ class ShopEditScreenBloc
       yield* fetchSnapShot();
     } else if (event is SelectSectionEvent) {
       yield state.copyWith(
-          selectedSectionId: event.sectionId, selectedSection: true);
+          selectedSectionId: event.sectionId, selectedSection: !event.selectedChild);
     } else if (event is UpdateSectionEvent) {
       yield* updateSection(event);
     } else if (event is ActiveShopPageEvent) {

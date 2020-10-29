@@ -75,7 +75,7 @@ class _TemplateViewState extends State<TemplateView> {
           screenBloc: screenBloc,
           shopPage: shopPage,
           enableTapChild: widget.enableTapSection,
-          child: child,
+          section: child,
           isSelected: selectSectionId == child.id,
           onTapChild: () {
             setState(() {
@@ -118,8 +118,7 @@ class _TemplateViewState extends State<TemplateView> {
     print('Selected SectionID: $childId');
     setState(() {
       selectSectionId = childId;
-      screenBloc.add(SelectSectionEvent(selectSectionId));
-      templateSizeStateModel.setSelectedSectionId(childId);
+      screenBloc.add(SelectSectionEvent(sectionId: selectSectionId));
     });
   }
 

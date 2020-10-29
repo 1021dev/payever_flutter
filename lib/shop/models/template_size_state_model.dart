@@ -3,7 +3,6 @@ import 'package:payever/shop/models/models.dart';
 
 class TemplateSizeStateModel extends ChangeNotifier {
 
-  String _selectedSectionId;
   NewChildSize _newChildSize;
   bool _refreshSelectedChild = false;
   bool _wrongPosition = false;
@@ -26,12 +25,6 @@ class TemplateSizeStateModel extends ChangeNotifier {
     // Future.delayed(Duration(milliseconds: 300))
     //     .then((value) => _wrongPosition = false);
   }
-
-  setSelectedSectionId(String value) {
-    _selectedSectionId = value;
-    notifyListeners();
-  }
-  String get selectedSectionId => _selectedSectionId;
 
   setNewChildSize(NewChildSize value) {
     _newChildSize = value;

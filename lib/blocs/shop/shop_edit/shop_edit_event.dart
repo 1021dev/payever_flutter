@@ -12,12 +12,13 @@ class ShopEditScreenInitEvent extends ShopEditScreenEvent {}
 
 class SelectSectionEvent extends ShopEditScreenEvent {
   final String sectionId;
-
-  SelectSectionEvent(this.sectionId);
+  final bool selectedChild;
+  SelectSectionEvent({this.sectionId, this.selectedChild = false});
 
   @override
   List<Object> get props => [
     this.sectionId,
+    this.selectedChild,
   ];
 }
 

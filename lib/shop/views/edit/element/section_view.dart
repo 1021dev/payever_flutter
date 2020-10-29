@@ -27,7 +27,7 @@ import 'image_view.dart';
 
 class SectionView extends StatefulWidget {
   final ShopPage shopPage;
-  final Child child;
+  final Child section;
   final bool isSelected;
   final Function onTapChild;
   final ShopEditScreenBloc screenBloc;
@@ -35,7 +35,7 @@ class SectionView extends StatefulWidget {
 
   const SectionView(
       {this.shopPage,
-      this.child,
+      this.section,
       this.screenBloc,
       this.isSelected = false,
       this.enableTapChild = true,
@@ -43,14 +43,13 @@ class SectionView extends StatefulWidget {
 
   @override
   _SectionViewState createState() => _SectionViewState(
-      shopPage: shopPage, section: child, screenBloc: screenBloc);
+      shopPage: shopPage, section: section, screenBloc: screenBloc);
 }
 
 class _SectionViewState extends State<SectionView> {
 
   final ShopPage shopPage;
   final Child section;
-  final ShopDetailModel activeShop;
   final ShopEditScreenBloc screenBloc;
   final double limitSectionHeightChange = 20;
 
@@ -67,7 +66,7 @@ class _SectionViewState extends State<SectionView> {
   double limitSectionHeight = 0;
 
   _SectionViewState(
-      {this.shopPage, this.section, this.activeShop, this.screenBloc}) {
+      {this.shopPage, this.section, this.screenBloc}) {
     sectionStyles = getSectionStyles(section.id);
     widgetHeight = sectionStyles.height;
   }
@@ -83,54 +82,49 @@ class _SectionViewState extends State<SectionView> {
     activeThemeId = Provider.of<GlobalStateModel>(context, listen: false)
         .activeTheme
         .themeId;
-
-    return Consumer<TemplateSizeStateModel>(
-        builder: (context, templateSizeState, child1) {
-      if (templateSizeState.selectedSectionId == section.id) {
-        if (templateSizeState.updateChildSize != null) {
-          Future.microtask(
-                  () => templateSizeState.setUpdateChildSize(null));
-          _changeSection(childSize: templateSizeState.updateChildSize);
-        } else if (templateSizeState.newChildSize != null) {
-          bool wrongposition = wrongPosition(templateSizeState.newChildSize);
-          if (wrongposition) {
-            if (!templateSizeState.wrongPosition) Future.microtask(() =>
-                  templateSizeState.setWrongPosition(wrongposition));
-          } else {
-            if (templateSizeState.wrongPosition)
-              Future.microtask(
-                  () => templateSizeState.setWrongPosition(wrongposition));
-          }
+    return BlocListener(
+      listener: (BuildContext context, ShopEditScreenState state) async {
+        if (state.selectedSection) {
+          setState(() {
+            selectChildId = '';
+          });
+          screenBloc.add(RestSelectSectionEvent());
         }
-      }
-
-      if (templateSizeState.selectedSectionId != section.id ||
-          templateSizeState.refreshSelectedChild) {
-        selectChildId = '';
-      }
-      return BlocListener(
-        listener: (BuildContext context, ShopEditScreenState state) async {
-          if (state.selectedSection) {
-            setState(() {
-              selectChildId = '';
-            });
-            screenBloc.add(RestSelectSectionEvent());
-          }
+      },
+      bloc: screenBloc,
+      child: BlocBuilder(
+        condition: (ShopEditScreenState state1, state2) {
+          if (state2.selectedSectionId != section.id) return false;
+          return true;
         },
         bloc: screenBloc,
-        child: BlocBuilder(
-          condition: (ShopEditScreenState state1, state2) {
-            if (state2.selectedSectionId != section.id)
-              return false;
-            return true;
-          },
-          bloc: screenBloc,
-          builder: (BuildContext context, state) {
+        builder: (BuildContext context, state) {
+          return Consumer<TemplateSizeStateModel>(
+              builder: (context, templateSizeState, child1) {
+            if (state.selectedSectionId == section.id) {
+              if (templateSizeState.updateChildSize != null) {
+                Future.microtask(
+                    () => templateSizeState.setUpdateChildSize(null));
+                _changeSection(childSize: templateSizeState.updateChildSize);
+              } else if (templateSizeState.newChildSize != null) {
+                bool wrongposition =
+                    wrongPosition(templateSizeState.newChildSize);
+                if (wrongposition) {
+                  if (!templateSizeState.wrongPosition)
+                    Future.microtask(() =>
+                        templateSizeState.setWrongPosition(wrongposition));
+                } else {
+                  if (templateSizeState.wrongPosition)
+                    Future.microtask(() =>
+                        templateSizeState.setWrongPosition(wrongposition));
+                }
+              }
+            }
             return body(state);
-          },
-        ),
-      );
-    });
+          });
+        },
+      ),
+    );
   }
 
   bool wrongPosition(NewChildSize childSize) {
@@ -203,24 +197,26 @@ class _SectionViewState extends State<SectionView> {
     List<Widget> widgets = [];
     widgets.add(sectionBackgroundWidget);
     section.children.forEach((child) {
-      getLimitedSectionHeight(child);
       Widget childWidget = getChild(child, state);
       if (childWidget != null) {
+        getLimitedSectionHeight(child);
         Widget element = GestureDetector(
-          onTap: widget.enableTapChild ? () {
-            context
-                .read<TemplateSizeStateModel>()
-                .setSelectedSectionId(widget.child.id);
-            widget.onTapChild();
-            setState(() {
-              selectChildId = child.id;
-            });
-          } : null,
+          onTap: widget.enableTapChild
+              ? () {
+                  setState(() {
+                    selectChildId = child.id;
+                  });
+                  widget.onTapChild();
+                  screenBloc.add(SelectSectionEvent(
+                      sectionId: section.id, selectedChild: true));
+                }
+              : null,
           child: childWidget,
         );
         widgets.add(element);
       }
     });
+
     // update Section Height:
     if (widgetHeight < limitSectionHeight) {
       widgetHeight = limitSectionHeight;
@@ -565,8 +561,7 @@ class _SectionViewState extends State<SectionView> {
     screenBloc.add(UpdateSectionEvent(sectionId:section.id, payload: payload));
   }
 
-
-  Map get sectionPayload {
+  Map<String, dynamic> get sectionPayload {
     Map<String, dynamic> payloadSection = {};
     payloadSection['height'] = widgetHeight;
     if (sectionStyles.gridTemplateRows != null && sectionStyles.gridTemplateRows.isNotEmpty) {
