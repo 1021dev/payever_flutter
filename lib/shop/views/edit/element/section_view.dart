@@ -481,16 +481,20 @@ class _SectionViewState extends State<SectionView> {
                 // Check Limitation
                 if (limitSectionHeight > 0 && newHeight < limitSectionHeight)
                   return;
-
-                if (top && (widgetHeight - newHeight).abs() > limitSectionHeightChange) {
-                  if ((widgetHeight - newHeight) > 0) {
-                    widgetHeight -= limitSectionHeightChange;
+                double dHeight = widgetHeight - newHeight;
+                if (top && dHeight.abs() > limitSectionHeightChange) {
+                  if (dHeight> 0) {
+                    if (widgetHeight - limitSectionHeightChange < limitSectionHeightChange) {
+                      widgetHeight = limitSectionHeightChange;
+                    } else {
+                      widgetHeight -= limitSectionHeightChange;
+                    }
                   } else {
                     widgetHeight += limitSectionHeightChange;
                   }
                   newHeight = widgetHeight;
                 }
-                if (newHeight >= 30) {
+                if (newHeight >= limitSectionHeightChange) {
                   widgetHeight = newHeight;
                   widgetHeight.isNegative
                       ? Navigator.pop(context)

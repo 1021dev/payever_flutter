@@ -4,7 +4,6 @@ import 'package:payever/shop/models/models.dart';
 class TemplateSizeStateModel extends ChangeNotifier {
 
   NewChildSize _newChildSize;
-  bool _refreshSelectedChild = false;
   bool _wrongPosition = false;
   NewChildSize _updateChildSize;
 
@@ -33,14 +32,5 @@ class TemplateSizeStateModel extends ChangeNotifier {
         .then((value) => _newChildSize = null);
   }
   NewChildSize get newChildSize => _newChildSize;
-
-  bool get refreshSelectedChild => _refreshSelectedChild;
-
-  setRefreshSelectedChild(bool value) {
-    _refreshSelectedChild = value;
-    notifyListeners();
-    Future.delayed(Duration(milliseconds: 500))
-        .then((value) => _refreshSelectedChild = false);
-  }
 
 }

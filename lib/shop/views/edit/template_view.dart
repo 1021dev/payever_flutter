@@ -86,7 +86,6 @@ class _TemplateViewState extends State<TemplateView> {
         Widget section = GestureDetector(
           onTap: widget.enableTapSection ? () {
             onTapSection(child.id);
-            templateSizeStateModel.setRefreshSelectedChild(true);
           }: null,
           child: sectionView,
         );
