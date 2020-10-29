@@ -78,7 +78,6 @@ class _ShopCartViewState extends State<ShopCartView> {
     return Opacity(
       opacity: styles.opacity,
       child: Container(
-          decoration: decoration,
           alignment: Alignment.center,
           child: Badge(
             padding: EdgeInsets.all(size/10),
@@ -87,9 +86,17 @@ class _ShopCartViewState extends State<ShopCartView> {
               '3',
               style: TextStyle(fontSize: size/4, fontWeight: FontWeight.w600, color: colorConvert(styles.badgeColor)),
             ),
-            child: SvgPicture.asset(
-              asset,
-              color: colorConvert(styles.backgroundColor),
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: Container(
+                decoration: decoration,
+                child: SvgPicture.asset(
+                  asset,
+                  color: colorConvert(styles.backgroundColor),
+                  width: double.infinity,
+                  height: double.infinity,
+                ),
+              ),
             ),
           )),
     );
