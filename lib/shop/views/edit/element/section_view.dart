@@ -195,13 +195,15 @@ class _SectionViewState extends State<SectionView> {
     }
 
     List<Widget> widgets = [];
+    Widget lastElement;
     widgets.add(sectionBackgroundWidget);
     section.children.forEach((child) {
       Widget childWidget = getChild(child, state);
       if (childWidget != null) {
         getLimitedSectionHeight(child);
         Widget element = GestureDetector(
-          onTap: widget.enableTapChild
+          key: ObjectKey(child.id),
+          onTap: (widget.enableTapChild && selectChildId != child.id)
               ? () {
                   setState(() {
                     selectChildId = child.id;
@@ -213,10 +215,14 @@ class _SectionViewState extends State<SectionView> {
               : null,
           child: childWidget,
         );
-        widgets.add(element);
+        if (selectChildId == child.id)
+          lastElement = element;
+        else
+          widgets.add(element);
       }
     });
-
+    if (lastElement != null)
+      widgets.add(lastElement);
     // update Section Height:
     if (widgetHeight < limitSectionHeight) {
       widgetHeight = limitSectionHeight;
