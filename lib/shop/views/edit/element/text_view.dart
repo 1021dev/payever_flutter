@@ -57,7 +57,7 @@ class _TextViewState extends State<TextView> {
     if (txt.contains('<div') ||
         txt.contains('<span') ||
         txt.contains('<font')) {
-      print('Text Text: $txt');
+      // print('Text Text: $txt');
       return Container(
 //        color: colorConvert(styles.backgroundColor, emptyColor: true),
         alignment: styles.textAlign,
