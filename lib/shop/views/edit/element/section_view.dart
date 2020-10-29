@@ -88,7 +88,7 @@ class _SectionViewState extends State<SectionView> {
       if (templateSizeState.selectedSectionId == section.id) {
         if (templateSizeState.updateChildSize != null) {
           _changeSection(childSize: templateSizeState.updateChildSize);
-          templateSizeState.setUpdateChildSize(null);
+          // templateSizeState.setUpdateChildSize(null);
         } else if (templateSizeState.newChildSize != null) {
           bool wrongposition = wrongPosition(templateSizeState.newChildSize);
           if (wrongposition) {

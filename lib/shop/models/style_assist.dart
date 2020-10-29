@@ -43,7 +43,6 @@ class StyleAssist {
 
   double getFontSize(dynamic fontSize0) {
     if (fontSize0 == 'auto') {
-      print('fontSize0 $fontSize0');
       return 15.0;
     }
     return (fontSize0 is num) ? (fontSize0 as num).toDouble() : 0.0;

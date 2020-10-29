@@ -23,12 +23,13 @@ class ResizeableView extends StatefulWidget {
   final bool sizeChangeable;
 
   @override
-  _ResizeableViewState createState() => _ResizeableViewState(
-      width: width, height: height, top: top, left: left);
+  _ResizeableViewState createState() =>
+      _ResizeableViewState(width: width, height: height, top: top, left: left);
 }
 
 const ballDiameter = 30.0;
 const wrongEdgeWidth = 2.0;
+const limitSize = 20.0;
 
 class _ResizeableViewState extends State<ResizeableView> {
   double width;
@@ -43,7 +44,8 @@ class _ResizeableViewState extends State<ResizeableView> {
   double left0;
 
   TemplateSizeStateModel templateSizeStateModel;
-  _ResizeableViewState({this.width, this.height, this.top, this.left}){
+
+  _ResizeableViewState({this.width, this.height, this.top, this.left}) {
     width0 = width;
     height0 = height;
     top0 = top;
@@ -62,21 +64,24 @@ class _ResizeableViewState extends State<ResizeableView> {
 
   @override
   Widget build(BuildContext context) {
-    templateSizeStateModel = Provider.of<TemplateSizeStateModel>(context, listen: false);
+    templateSizeStateModel =
+        Provider.of<TemplateSizeStateModel>(context, listen: false);
     return body;
   }
 
   Widget get body {
-    List<Widget>widgets = [];
-    widgets.add(Positioned(
-      top: top,
-      left: left,
-      child: Container(
-        height: height,
-        width: width,
-        child: widget.child,
+    List<Widget> widgets = [];
+    widgets.add(
+      Positioned(
+        top: top,
+        left: left,
+        child: Container(
+          height: height,
+          width: width,
+          child: widget.child,
+        ),
       ),
-    ),);
+    );
     addWrongPositionEdges(widgets);
     addDragBalls(widgets);
     return Stack(children: widgets);
@@ -85,50 +90,58 @@ class _ResizeableViewState extends State<ResizeableView> {
   addWrongPositionEdges(List<Widget> widgets) {
     if (!widget.isSelected) return;
     var isWrongPosition = context.select<TemplateSizeStateModel, bool>(
-          (templateStateModel) => templateStateModel.wrongPosition,
+      (templateStateModel) => templateStateModel.wrongPosition,
     );
-    Color edgeColor = isWrongPosition ? Colors.red :Colors.blue;
+    Color edgeColor = isWrongPosition ? Colors.red : Colors.blue;
     // top
-    widgets.add(Positioned(
-      top: top,
-      left: left,
-      child: Container(
-        width: width,
-        height: wrongEdgeWidth,
-        color: edgeColor,
+    widgets.add(
+      Positioned(
+        top: top,
+        left: left,
+        child: Container(
+          width: width,
+          height: wrongEdgeWidth,
+          color: edgeColor,
+        ),
       ),
-    ),);
+    );
 
     // left
-    widgets.add(Positioned(
-      top: top,
-      left: left,
-      child: Container(
-        width: wrongEdgeWidth,
-        height: height,
-        color: edgeColor,
+    widgets.add(
+      Positioned(
+        top: top,
+        left: left,
+        child: Container(
+          width: wrongEdgeWidth,
+          height: height,
+          color: edgeColor,
+        ),
       ),
-    ),);
+    );
     // bottom
-    widgets.add(Positioned(
-      top: top + height - wrongEdgeWidth,
-      left: left,
-      child: Container(
-        width: width,
-        height: wrongEdgeWidth,
-        color: edgeColor,
+    widgets.add(
+      Positioned(
+        top: top + height - wrongEdgeWidth,
+        left: left,
+        child: Container(
+          width: width,
+          height: wrongEdgeWidth,
+          color: edgeColor,
+        ),
       ),
-    ),);
+    );
     // right
-    widgets.add(Positioned(
-      top: top,
-      left: left + width - wrongEdgeWidth,
-      child: Container(
-        width: wrongEdgeWidth,
-        height: height,
-        color: edgeColor,
+    widgets.add(
+      Positioned(
+        top: top,
+        left: left + width - wrongEdgeWidth,
+        child: Container(
+          width: wrongEdgeWidth,
+          height: height,
+          color: edgeColor,
+        ),
       ),
-    ),);
+    );
   }
 
   addDragBalls(List<Widget> widgets) {
@@ -152,28 +165,23 @@ class _ResizeableViewState extends State<ResizeableView> {
       ),
     ));
     if (!widget.sizeChangeable) return;
-    // top left
+    //left center
     widgets.add(Positioned(
-      top: top - ballDiameter / 2,
+      top: top + height / 2 - ballDiameter / 2,
       left: left - ballDiameter / 2,
       child: ManipulatingBall(
+        disable: smallHeight,
         onDragEnd: _dragEnd,
         onDrag: (dx, dy) {
-          var mid = (dx + dy) / 2;
-          var newHeight = height - mid;
-          var newWidth = width - mid;
-
+          var newWidth = width - dx;
           setState(() {
-            height = newHeight > 0 ? newHeight : 0;
-            width = newWidth > 0 ? newWidth : 0;
-            top = top + mid;
-            left = left + mid;
+            width = newWidth > limitSize ? newWidth : limitSize;
+            left = left + (newWidth > limitSize ? dx : 0);
             updateSize();
           });
         },
       ),
     ));
-
     // top middle
     widgets.add(Positioned(
       top: top - ballDiameter / 2,
@@ -185,37 +193,13 @@ class _ResizeableViewState extends State<ResizeableView> {
           var newHeight = height - dy;
 
           setState(() {
-            height = newHeight > 0 ? newHeight : 0;
-            top = top + dy;
+            height = newHeight > limitSize ? newHeight : limitSize;
+            top = top + (newHeight > limitSize ? dy : 0);
             updateSize();
           });
         },
       ),
     ));
-
-    // top right
-    widgets.add(Positioned(
-      top: top - ballDiameter / 2,
-      left: left + width - ballDiameter / 2,
-      child: ManipulatingBall(
-        onDragEnd: _dragEnd,
-        onDrag: (dx, dy) {
-          var mid = (dx + (dy * -1)) / 2;
-
-          var newHeight = height + mid;
-          var newWidth = width + mid;
-
-          setState(() {
-            height = newHeight > 0 ? newHeight : 0;
-            width = newWidth > 0 ? newWidth : 0;
-            top = top - mid;
-            // left = left - mid;
-            updateSize();
-          });
-        },
-      ),
-    ));
-
     // center right
     widgets.add(Positioned(
       top: top + height / 2 - ballDiameter / 2,
@@ -227,36 +211,12 @@ class _ResizeableViewState extends State<ResizeableView> {
           var newWidth = width + dx;
 
           setState(() {
-            width = newWidth > 0 ? newWidth : 0;
+            width = newWidth > limitSize ? newWidth : limitSize;
             updateSize();
           });
         },
       ),
     ));
-
-    // bottom right
-    widgets.add(Positioned(
-      top: top + height - ballDiameter / 2,
-      left: left + width - ballDiameter / 2,
-      child: ManipulatingBall(
-        onDragEnd: _dragEnd,
-        onDrag: (dx, dy) {
-          var mid = (dx + dy) / 2;
-
-          var newHeight = height + mid;
-          var newWidth = width + mid;
-
-          setState(() {
-            height = newHeight > 0 ? newHeight : 0;
-            width = newWidth > 0 ? newWidth : 0;
-            // top = top - mid;
-            // left = left - mid;
-            updateSize();
-          });
-        },
-      ),
-    ));
-
     // bottom center
     widgets.add(Positioned(
       top: top + height - ballDiameter / 2,
@@ -268,13 +228,68 @@ class _ResizeableViewState extends State<ResizeableView> {
           var newHeight = height + dy;
 
           setState(() {
-            height = newHeight > 0 ? newHeight : 0;
+            height = newHeight > limitSize ? newHeight : limitSize;
             updateSize();
           });
         },
       ),
     ));
+    // top left
+    widgets.add(Positioned(
+      top: top - ballDiameter / 2,
+      left: left - ballDiameter / 2,
+      child: ManipulatingBall(
+        onDragEnd: _dragEnd,
+        onDrag: (dx, dy) {
+          var newHeight = height - dy;
+          var newWidth = width - dx;
+          setState(() {
+            height = newHeight > limitSize ? newHeight : limitSize;
+            width = newWidth > limitSize ? newWidth : limitSize;
+            top = top + (newHeight > limitSize ? dy: 0);
+            left = left + (newWidth > limitSize ? dx : 0);
+            updateSize();
+          });
+        },
+      ),
+    ));
+    // top right
+    widgets.add(Positioned(
+      top: top - ballDiameter / 2,
+      left: left + width - ballDiameter / 2,
+      child: ManipulatingBall(
+        onDragEnd: _dragEnd,
+        onDrag: (dx, dy) {
+          var newHeight = height - dy;
+          var newWidth = width + dx;
 
+          setState(() {
+            height = newHeight > limitSize ? newHeight : limitSize;
+            width = newWidth > limitSize ? newWidth : limitSize;
+            top = top + (newHeight > limitSize ? dy : 0);
+            updateSize();
+          });
+        },
+      ),
+    ));
+    // bottom right
+    widgets.add(Positioned(
+      top: top + height - ballDiameter / 2,
+      left: left + width - ballDiameter / 2,
+      child: ManipulatingBall(
+        onDragEnd: _dragEnd,
+        onDrag: (dx, dy) {
+          var newHeight = height + dy;
+          var newWidth = width + dx;
+
+          setState(() {
+            height = newHeight > limitSize ? newHeight : limitSize;
+            width = newWidth > limitSize ? newWidth : limitSize;
+            updateSize();
+          });
+        },
+      ),
+    ));
     // bottom left
     widgets.add(Positioned(
       top: top + height - ballDiameter / 2,
@@ -282,35 +297,13 @@ class _ResizeableViewState extends State<ResizeableView> {
       child: ManipulatingBall(
         onDragEnd: _dragEnd,
         onDrag: (dx, dy) {
-          var mid = ((dx * -1) + dy) / 2;
-
-          var newHeight = height + mid;
-          var newWidth = width + mid;
-
-          setState(() {
-            height = newHeight > 0 ? newHeight : 0;
-            width = newWidth > 0 ? newWidth : 0;
-            // top = top - mid;
-            left = left - mid;
-            updateSize();
-          });
-        },
-      ),
-    ));
-
-    //left center
-    widgets.add(Positioned(
-      top: top + height / 2 - ballDiameter / 2,
-      left: left - ballDiameter / 2,
-      child: ManipulatingBall(
-        disable: smallHeight,
-        onDragEnd: _dragEnd,
-        onDrag: (dx, dy) {
+          var newHeight = height + dy;
           var newWidth = width - dx;
 
           setState(() {
-            width = newWidth > 0 ? newWidth : 0;
-            left = left + dx;
+            height = newHeight > limitSize ? newHeight : limitSize;
+            width = newWidth > limitSize ? newWidth : limitSize;
+            left = left + (newWidth > limitSize ? dx : 0);
             updateSize();
           });
         },
@@ -320,7 +313,7 @@ class _ResizeableViewState extends State<ResizeableView> {
 
   updateSize() {
     templateSizeStateModel.setNewChildSize(NewChildSize(
-            newTop: top, newLeft: left, newWidth: width, newHeight: height));
+        newTop: top, newLeft: left, newWidth: width, newHeight: height));
   }
 
   _dragEnd() {
@@ -330,7 +323,6 @@ class _ResizeableViewState extends State<ResizeableView> {
         height = height0;
         left = left0;
         top = top0;
-
       });
       context.read<TemplateSizeStateModel>().setWrongPosition(false);
       updateSize();
@@ -341,16 +333,23 @@ class _ResizeableViewState extends State<ResizeableView> {
   }
 
   bool get smallWidth {
-    return width < 50;
+    return width <= limitSize;
   }
 
   bool get smallHeight {
-    return height < 50;
+    return height <= limitSize;
   }
 }
 
 class ManipulatingBall extends StatefulWidget {
-  ManipulatingBall({Key key, this.onDrag, this.onDragEnd, this.isCenter = false, this.width = 30, this.height = 30, this.disable = false});
+  ManipulatingBall(
+      {Key key,
+      this.onDrag,
+      this.onDragEnd,
+      this.isCenter = false,
+      this.width = 30,
+      this.height = 30,
+      this.disable = false});
 
   final Function onDrag;
   final Function onDragEnd;
@@ -368,7 +367,8 @@ class _ManipulatingBallState extends State<ManipulatingBall> {
   double initY;
 
   _handleDrag(details) {
-    if(widget.disable) return;
+    if (widget.disable) return;
+    // if (widget.height < limitSize) return;
     setState(() {
       initX = details.globalPosition.dx;
       initY = details.globalPosition.dy;
@@ -376,7 +376,8 @@ class _ManipulatingBallState extends State<ManipulatingBall> {
   }
 
   _handleUpdate(details) {
-    if(widget.disable) return;
+    if (widget.disable) return;
+    // if (widget.height < limitSize) return;
     var dx = details.globalPosition.dx - initX;
     var dy = details.globalPosition.dy - initY;
     initX = details.globalPosition.dx;
@@ -385,13 +386,12 @@ class _ManipulatingBallState extends State<ManipulatingBall> {
   }
 
   _handleEnd(details) {
-    if(widget.disable) return;
+    if (widget.disable) return;
     widget.onDragEnd();
   }
 
   @override
   Widget build(BuildContext context) {
-
     return GestureDetector(
       onVerticalDragStart: _handleDrag,
       onVerticalDragUpdate: _handleUpdate,
@@ -400,7 +400,7 @@ class _ManipulatingBallState extends State<ManipulatingBall> {
       behavior: HitTestBehavior.translucent,
       onVerticalDragEnd: _handleEnd,
       onHorizontalDragEnd: _handleEnd,
-      child: widget.isCenter ? centerBody :body,
+      child: widget.isCenter ? centerBody : body,
     );
   }
 
@@ -411,25 +411,28 @@ class _ManipulatingBallState extends State<ManipulatingBall> {
       width: ballDiameter,
       height: ballDiameter,
       child: Container(
-        decoration: widget.disable ? null : BoxDecoration(
-          border: Border.all(color: Colors.white, width: 1),
-          color: Colors.blue,
-          shape: BoxShape.circle,
-          boxShadow: [BoxShadow(
-            color: Colors.black38,
-            spreadRadius: 1.5,
-            blurRadius: 1.5,
-            offset: Offset(deg,
-                deg), // changes position of shadow
-          )],
-        ),
+        decoration: widget.disable
+            ? null
+            : BoxDecoration(
+                border: Border.all(color: Colors.white, width: 1),
+                color: Colors.blue,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black38,
+                    spreadRadius: 1.5,
+                    blurRadius: 1.5,
+                    offset: Offset(deg, deg), // changes position of shadow
+                  )
+                ],
+              ),
       ),
     );
   }
 
   get centerBody {
     return Container(
-      // color: Colors.blue,
+      color: Colors.blue,
       width: widget.width,
       height: widget.height,
     );
