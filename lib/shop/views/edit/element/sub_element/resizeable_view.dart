@@ -6,7 +6,14 @@ import 'package:payever/shop/models/template_size_state_model.dart';
 import 'package:provider/provider.dart';
 
 class ResizeableView extends StatefulWidget {
-  ResizeableView({this.child, this.height, this.width , this.top, this.left, this.isSelected = false});
+  ResizeableView(
+      {this.child,
+      this.height,
+      this.width,
+      this.top,
+      this.left,
+      this.isSelected = false,
+      this.sizeChangeable = true});
 
   final Widget child;
   final double height;
@@ -14,6 +21,7 @@ class ResizeableView extends StatefulWidget {
   final double top;
   final double left;
   final bool isSelected;
+  final bool sizeChangeable;
 
   @override
   _ResizeableViewState createState() => _ResizeableViewState(
@@ -57,10 +65,6 @@ class _ResizeableViewState extends State<ResizeableView> {
   Widget build(BuildContext context) {
     templateSizeStateModel = Provider.of<TemplateSizeStateModel>(context, listen: false);
     return body;
-    // return Consumer<TemplateSizeStateModel>(
-    //     builder: (context, templateSizeState, child1) {
-    //   return body;
-    // });
   }
 
   Widget get body {
@@ -95,6 +99,7 @@ class _ResizeableViewState extends State<ResizeableView> {
         color: edgeColor,
       ),
     ),);
+
     // left
     widgets.add(Positioned(
       top: top,
@@ -147,6 +152,7 @@ class _ResizeableViewState extends State<ResizeableView> {
         },
       ),
     ));
+    if (!widget.sizeChangeable) return;
     // top left
     widgets.add(Positioned(
       top: top - ballDiameter / 2,

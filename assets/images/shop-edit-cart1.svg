@@ -1,11 +1,14 @@
-<svg _ngcontent-xqn-c287="" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 32 41" class="ng-star-inserted">
-      <g _ngcontent-xqn-c287="" fill="none" fill-rule="evenodd">
-        <rect _ngcontent-xqn-c287="" width="32" height="32" y="9" rx="5" fill="#d4d4d4" style="stroke-linecap: butt;"></rect>
+<svg _ngcontent-xqn-c287="" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"
+    viewBox="0 0 32 41" class="ng-star-inserted">
+    <g _ngcontent-xqn-c287="" fill="none" fill-rule="evenodd">
+        <rect _ngcontent-xqn-c287="" width="32" height="32" y="9" rx="5" fill="#d4d4d4"
+            style="stroke-linecap: butt;"></rect>
         <circle _ngcontent-xqn-c287="" cx="16" cy="9" r="7" style="stroke-linecap: butt;"></circle>
-      </g>
-      <g _ngcontent-xqn-c287="" fill="none" fill-rule="evenodd">
+    </g>
+    <g _ngcontent-xqn-c287="" fill="none" fill-rule="evenodd">
         <rect _ngcontent-xqn-c287="" width="32" height="32" y="9" rx="5" fill="#d4d4d4"></rect>
-        <circle _ngcontent-xqn-c287="" cx="16" cy="9" r="7" style="stroke-width: 1px; stroke: rgb(212, 212, 212);"></circle>
-      </g>
-      <!---->
-    </svg>
+        <circle _ngcontent-xqn-c287="" cx="16" cy="9" r="7"
+            style="stroke-width: 1px; stroke: rgb(212, 212, 212);"></circle>
+    </g>
+    <!---->
+</svg>

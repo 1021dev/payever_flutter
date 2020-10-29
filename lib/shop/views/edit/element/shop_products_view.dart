@@ -49,6 +49,7 @@ class _ShopProductsViewState extends State<ShopProductsView> {
         left: styles.getMarginLeft(sectionStyles),
         top: styles.getMarginTop(sectionStyles),
         isSelected: widget.isSelected,
+        sizeChangeable: false,
         child: body);
   }
 
