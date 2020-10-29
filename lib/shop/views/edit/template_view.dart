@@ -70,12 +70,11 @@ class _TemplateViewState extends State<TemplateView> {
       }
       if (child.type == 'section' &&
           child.children != null &&
-          /*child.children.isNotEmpty &&*/
           styleSheet.display != 'none') {
         SectionView sectionView = SectionView(
           screenBloc: screenBloc,
           shopPage: shopPage,
-          stylesheets: state.stylesheets,
+          enableTapChild: widget.enableTapSection,
           child: child,
           isSelected: selectSectionId == child.id,
           onTapChild: () {

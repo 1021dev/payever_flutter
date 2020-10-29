@@ -327,6 +327,10 @@ class _ResizeableViewState extends State<ResizeableView> {
       context.read<TemplateSizeStateModel>().setWrongPosition(false);
       updateSize();
     } else {
+      width0 = width;
+      height0 = height;
+      left0 = left;
+      top0 = top;
       templateSizeStateModel.setUpdateChildSize(NewChildSize(
           newTop: top, newLeft: left, newWidth: width, newHeight: height));
     }
@@ -432,7 +436,7 @@ class _ManipulatingBallState extends State<ManipulatingBall> {
 
   get centerBody {
     return Container(
-      color: Colors.blue,
+      // color: Colors.blue,
       width: widget.width,
       height: widget.height,
     );
