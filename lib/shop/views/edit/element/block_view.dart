@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/models/template_size_state_model.dart';
 import 'package:payever/shop/views/edit/element/shape_view.dart';
@@ -77,7 +78,7 @@ class _BlockViewState extends State<BlockView> {
             if (templateSizeState.updateChildSize != null && selectedSection) {
               Future.microtask(
                       () => templateSizeState.setUpdateChildSize(null));
-              // _changeSection(childSize: templateSizeState.updateChildSize);
+              _changeSection(childSize: templateSizeState.updateChildSize);
             } else if (templateSizeState.newChildSize != null && selectedSection) {
               bool wrongposition =
               wrongPosition(templateSizeState.newChildSize);
@@ -307,52 +308,29 @@ class _BlockViewState extends State<BlockView> {
     return childView;
   }
 
-  // _changeSection({NewChildSize childSize}) {
-  //   Map<String, dynamic> payload = {};
-  //   if (selectChildId != null && childSize != null) {
-  //     payload = childPayload(childSize);
-  //   } else {
-  //     payload = sectionPayload;
-  //   }
-  //   print('payload: $payload');
-  //   widget.screenBloc.add(UpdateSectionEvent(sectionId:widget.sectionId, payload: payload));
-  // }
-  //
-  // Map<String, dynamic> get sectionPayload {
-  //   Map<String, dynamic> payloadSection = {};
-  //   payloadSection['height'] = widgetHeight;
-  //   if (sectionStyles.gridTemplateRows != null && sectionStyles.gridTemplateRows.isNotEmpty) {
-  //     List<String>gridRows = sectionStyles.gridTemplateRows.split(' ');
-  //     double marginBottom = double.parse(gridRows.last); // To Last Vertical Element
-  //     double dy = widgetHeight - sectionStyles.height;
-  //     double updatedMarginBottom = marginBottom + dy;
-  //     gridRows.removeLast();
-  //     // gridRows.add('${updatedMarginBottom.round()}');
-  //     gridRows.add('0');
-  //     payloadSection['gridTemplateRows'] = '$gridRows'.replaceAll(RegExp(r"[^\s\w]"), '');
-  //   }
-  //   Map<String, dynamic> payload = {
-  //     section.id: payloadSection
-  //   };
-  //   return payload;
-  // }
-  //
-  // Map<String, dynamic> childPayload(NewChildSize size) {
-  //   Map<String, dynamic> payloadSection = {};
-  //   BaseStyles baseStyles = getBaseStyles(selectChildId);
-  //   double marginTop = baseStyles.getMarginTopAssist(size.newTop, sectionStyles.gridTemplateRows, baseStyles.gridRow, isReverse: true);
-  //   double marginLeft = baseStyles.getMarginLeftAssist(size.newLeft, sectionStyles.gridTemplateColumns, baseStyles.gridColumn, isReverse: true);
-  //   String margin = '$marginTop 0 0 $marginLeft';
-  //   payloadSection['margin'] = margin;
-  //   payloadSection['marginTop'] = marginTop;
-  //   payloadSection['marginLeft'] = marginLeft;
-  //   payloadSection['height'] = size.newHeight;
-  //   payloadSection['width'] = size.newWidth / GlobalUtils.shopBuilderWidthFactor;
-  //   Map<String, dynamic>  payload = {
-  //     selectChildId: payloadSection
-  //   };
-  //   return payload;
-  // }
+  _changeSection({NewChildSize childSize}) {
+    Map<String, dynamic> payload = childPayload(childSize);
+
+    print('payload: $payload');
+    widget.screenBloc.add(UpdateSectionEvent(sectionId:widget.sectionId, payload: payload));
+  }
+
+  Map<String, dynamic> childPayload(NewChildSize size) {
+    Map<String, dynamic> payloadSection = {};
+    BaseStyles baseStyles = getBaseStyles(selectChildId);
+    double marginTop = baseStyles.getMarginTopAssist(size.newTop, blockStyles.gridTemplateRows, baseStyles.gridRow, isReverse: true);
+    double marginLeft = baseStyles.getMarginLeftAssist(size.newLeft, blockStyles.gridTemplateColumns, baseStyles.gridColumn, isReverse: true);
+    String margin = '$marginTop 0 0 $marginLeft';
+    payloadSection['margin'] = margin;
+    payloadSection['marginTop'] = marginTop;
+    payloadSection['marginLeft'] = marginLeft;
+    payloadSection['height'] = size.newHeight;
+    payloadSection['width'] = size.newWidth / GlobalUtils.shopBuilderWidthFactor;
+    Map<String, dynamic>  payload = {
+      selectChildId: payloadSection
+    };
+    return payload;
+  }
 
   bool wrongPosition(NewChildSize childSize) {
     bool wrongBoundary = childSize.newTop < 0 ||
@@ -366,8 +344,8 @@ class _BlockViewState extends State<BlockView> {
       BaseStyles baseStyles = getBaseStyles(child.id);
       if (baseStyles == null || baseStyles.display == 'none') continue;
       bool isWrong = wrongPositionWithOrderChildren(childSize, baseStyles);
-      if (child.type == 'button' && isWrong)
-      print('Child Type: ${child.type} wrong: $isWrong');
+      // if (child.type == 'button' && isWrong)
+      // print('Child Type: ${child.type} wrong: $isWrong');
       if (isWrong)
         return true;
     }
@@ -379,9 +357,9 @@ class _BlockViewState extends State<BlockView> {
 
     double x01 = styles.getMarginLeft(blockStyles);
     double y01 = styles.getMarginTop(blockStyles);
-    double x02 = x01 + styles.width;
-    double y02 = y01 + styles.height;
-
+    double x02 = x01 + styles.width + styles.paddingH *2;
+    double y02 = y01 + styles.height + styles.paddingV *2;
+    // print('x01: $x01, y01: $y01, x02: $x02, y02: $y02');
     double x1 = childSize.newLeft;
     double y1 = childSize.newTop;
     double x2 = x1 + childSize.newWidth;
@@ -411,7 +389,26 @@ class _BlockViewState extends State<BlockView> {
     // bottom right (x02, y02)
     if ((x1< x02 && x02 <= x2) && (y1< y02 && y02 <= y2))
       return true;
-    return false;
+
+    // Check Cross
+    var distance = (x02 - x01) * (y2 - y1) - (y02 - y01) * (x2 - x1);
+    if (distance == 0) {
+      print("error, parallel lines");
+      return false;
+    }
+
+    var u = ((x1 - x01) * (y2 - y1) - (y1 - y01) * (x2 - x1)) / distance;
+    var v = ((x1 - x01) * (y02 - y01) - (y1 - y01) * (x02 - x01)) / distance;
+    if (u < 0.0 || u > 1.0) {
+      print("intersection not inside line1");
+      return false;
+    } else if (v < 0.0 || v > 1.0) {
+      print("intersection not inside line2");
+      return false;
+    } else {
+      print("intersection!!!");
+      return true;
+    }
   }
 
   BaseStyles getBaseStyles(String childId) {

@@ -599,8 +599,8 @@ class _SectionViewState extends State<SectionView> {
 
     double x01 = styles.getMarginLeft(sectionStyles);
     double y01 = styles.getMarginTop(sectionStyles);
-    double x02 = x01 + styles.width;
-    double y02 = y01 + styles.height;
+    double x02 = x01 + styles.width + styles.paddingH * 2;
+    double y02 = y01 + styles.height + styles.paddingV * 2;
 
     double x1 = childSize.newLeft;
     double y1 = childSize.newTop;
@@ -631,7 +631,25 @@ class _SectionViewState extends State<SectionView> {
     // bottom right (x02, y02)
     if ((x1< x02 && x02 <= x2) && (y1< y02 && y02 <= y2))
       return true;
-    return false;
+
+    // Check Cross
+    var distance = (x02 - x01) * (y2 - y1) - (y02 - y01) * (x2 - x1);
+    if (distance == 0) {
+      print("error, parallel lines");
+      return false;
+    }
+
+    var u = ((x1 - x01) * (y2 - y1) - (y1 - y01) * (x2 - x1)) / distance;
+    var v = ((x1 - x01) * (y02 - y01) - (y1 - y01) * (x02 - x01)) / distance;
+    if (u < 0.0 || u > 1.0) {
+      print("error, intersection not inside line1");
+      return false;
+    } else if (v < 0.0 || v > 1.0) {
+      print("error, intersection not inside line2");
+      return false;
+    } else {
+      return true;
+    }
   }
 
   BaseStyles getBaseStyles(String childId) {
