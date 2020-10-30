@@ -85,7 +85,7 @@ class _SectionViewState extends State<SectionView> {
 
     return Consumer<TemplateSizeStateModel>(
         builder: (context, templateSizeState, child1) {
-          bool selectedSection = screenBloc.state.selectedSectionId == section.id;
+          bool selectedSection = screenBloc.state.selectedSectionId == section.id && screenBloc.state.selectedBlockId == '';
           if (selectedSection) {
             if (templateSizeState.updateChildSize != null && selectedSection) {
               Future.microtask(
@@ -117,7 +117,7 @@ class _SectionViewState extends State<SectionView> {
             },
             bloc: screenBloc,
             child: BlocBuilder(
-              condition: (ShopEditScreenState state1, state2) {
+              condition: (ShopEditScreenState state1, ShopEditScreenState state2) {
                 if (state2.selectedSectionId != section.id) {
                   setState(() {
                     selectChildId = '';
@@ -161,8 +161,14 @@ class _SectionViewState extends State<SectionView> {
           onTap: (widget.enableTapChild && selectChildId != child.id)
               ? () {
             widget.onTapChild();
-            screenBloc.add(SelectSectionEvent(
-                sectionId: section.id, selectedChild: true));
+            if (child.type == 'block') {
+              screenBloc.add(SelectBlockEvent(
+                  sectionId: section.id, blockId: child.id));
+            } else {
+              screenBloc.add(SelectSectionEvent(
+                  sectionId: section.id, selectedChild: true));
+            }
+
             setState(() {
               selectChildId = child.id;
             });
@@ -261,7 +267,12 @@ class _SectionViewState extends State<SectionView> {
           enableTapChild: widget.enableTapChild,
           deviceTypeId: shopPage.stylesheetIds.mobile,
           sectionStyles: sectionStyles,
-          onTapChild: widget.onTapChild,
+          onTapChild: () {
+            setState(() {
+              selectChildId = '';
+            });
+            widget.onTapChild();
+          },
           isSelected: selectChildId == child.id,
         );
         break;

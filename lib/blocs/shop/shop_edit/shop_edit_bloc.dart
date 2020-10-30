@@ -30,7 +30,10 @@ class ShopEditScreenBloc
       yield* fetchSnapShot();
     } else if (event is SelectSectionEvent) {
       yield state.copyWith(
-          selectedSectionId: event.sectionId, selectedSection: !event.selectedChild);
+          selectedSectionId: event.sectionId, selectedBlockId:'', selectedSection: !event.selectedChild);
+    } else if (event is SelectBlockEvent) {
+      yield state.copyWith(
+          selectedSectionId: event.sectionId, selectedBlockId: event.blockId, selectedBlockSection: !event.selectedBlockChild);
     } else if (event is UpdateSectionEvent) {
       yield* updateSection(event);
     } else if (event is ActiveShopPageEvent) {
@@ -38,6 +41,8 @@ class ShopEditScreenBloc
       print('updated shop page: ${state.activeShopPage.id}');
     } else if (event is RestSelectSectionEvent) {
       yield state.copyWith(selectedSection: false);
+    } else if (event is RestSelectBlockEvent) {
+      yield state.copyWith(selectedBlockSection: false);
     }
   }
 

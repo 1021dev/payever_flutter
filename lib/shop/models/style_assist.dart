@@ -142,7 +142,7 @@ class DecorationAssist {
 
 class SizeAssist {
   double getWidth(dynamic width0) {
-    if (width0 == '100%') return double.infinity;
+    if (width0 == '100%') return Measurements.width/*double.infinity*/;
     if (width0 is num) {
       return (width0 as num).toDouble() * GlobalUtils.shopBuilderWidthFactor;
     }

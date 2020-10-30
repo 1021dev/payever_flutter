@@ -22,7 +22,22 @@ class SelectSectionEvent extends ShopEditScreenEvent {
   ];
 }
 
+class SelectBlockEvent extends ShopEditScreenEvent {
+  final String sectionId;
+  final String blockId;
+  final bool selectedBlockChild;
+  SelectBlockEvent({this.sectionId, this.blockId, this.selectedBlockChild = false});
+
+  @override
+  List<Object> get props => [
+    this.sectionId,
+    this.blockId,
+    this.selectedBlockChild,
+  ];
+}
+
 class RestSelectSectionEvent extends ShopEditScreenEvent{}
+class RestSelectBlockEvent extends ShopEditScreenEvent{}
 
 class ActiveShopPageEvent extends ShopEditScreenEvent {
   final ShopPage activeShopPage;

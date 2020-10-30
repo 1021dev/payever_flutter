@@ -72,40 +72,41 @@ class _BlockViewState extends State<BlockView> {
     }
     return Consumer<TemplateSizeStateModel>(
         builder: (context, templateSizeState, child1) {
-          bool selectedSection = widget.screenBloc.state.selectedSectionId == widget.sectionId;
+          bool selectedSection = widget.screenBloc.state.selectedBlockId == block.id;
           if (selectedSection) {
             if (templateSizeState.updateChildSize != null && selectedSection) {
               Future.microtask(
                       () => templateSizeState.setUpdateChildSize(null));
               // _changeSection(childSize: templateSizeState.updateChildSize);
             } else if (templateSizeState.newChildSize != null && selectedSection) {
-              // bool wrongposition =
-              // wrongPosition(templateSizeState.newChildSize);
-              // // print('wrong position: $wrongposition, SectionID: ${section.id}, SelectedSectionId:${screenBloc.state.selectedSectionId}');
-              // if (wrongposition) {
-              //   if (!templateSizeState.wrongPosition)
-              //     Future.microtask(() =>
-              //         templateSizeState.setWrongPosition(wrongposition));
-              // } else {
-              //   if (templateSizeState.wrongPosition)
-              //     Future.microtask(() =>
-              //         templateSizeState.setWrongPosition(wrongposition));
-              // }
+              bool wrongposition =
+              wrongPosition(templateSizeState.newChildSize);
+              // print('wrong position: $wrongposition, SectionID: ${section.id}, SelectedSectionId:${screenBloc.state.selectedSectionId}');
+              if (wrongposition) {
+                if (!templateSizeState.wrongPosition)
+                  Future.microtask(() =>
+                      templateSizeState.setWrongPosition(wrongposition));
+              } else {
+                if (templateSizeState.wrongPosition)
+                  Future.microtask(() =>
+                      templateSizeState.setWrongPosition(wrongposition));
+              }
             }
           }
           return BlocListener(
             listener: (BuildContext context, ShopEditScreenState state) async {
-              if (state.selectedSection) {
+              print('BlockView: ${state.selectedSection}, ${state.selectedBlockSection}');
+              if (state.selectedSection || state.selectedBlockSection) {
                 setState(() {
                   selectChildId = '';
                 });
-                widget.screenBloc.add(RestSelectSectionEvent());
+                widget.screenBloc.add(RestSelectBlockEvent());
               }
             },
             bloc: widget.screenBloc,
             child: BlocBuilder(
-              condition: (ShopEditScreenState state1, state2) {
-                if (state2.selectedSectionId != widget.sectionId) {
+              condition: (ShopEditScreenState state1, ShopEditScreenState state2) {
+                if (state2.selectedBlockId != block.id) {
                   setState(() {
                     selectChildId = '';
                   });
@@ -146,8 +147,8 @@ class _BlockViewState extends State<BlockView> {
           onTap: (widget.enableTapChild && selectChildId != child.id)
               ? () {
             widget.onTapChild();
-            widget.screenBloc.add(SelectSectionEvent(
-                sectionId: widget.sectionId, selectedChild: true));
+            widget.screenBloc.add(SelectBlockEvent(
+                sectionId: widget.sectionId, blockId: block.id, selectedBlockChild: true));
             setState(() {
               selectChildId = child.id;
             });
@@ -353,6 +354,66 @@ class _BlockViewState extends State<BlockView> {
   //   return payload;
   // }
 
+  bool wrongPosition(NewChildSize childSize) {
+    bool wrongBoundary = childSize.newTop < 0 ||
+        childSize.newLeft < 0 ||
+        (childSize.newTop + childSize.newHeight > blockStyles.height) ||
+        (childSize.newLeft + childSize.newWidth > blockStyles.width);
+
+    if (wrongBoundary) return true;
+    for(Child child in block.children) {
+      if (child.id == selectChildId) continue;
+      BaseStyles baseStyles = getBaseStyles(child.id);
+      if (baseStyles == null || baseStyles.display == 'none') continue;
+      bool isWrong = wrongPositionWithOrderChildren(childSize, baseStyles);
+      if (child.type == 'button' && isWrong)
+      print('Child Type: ${child.type} wrong: $isWrong');
+      if (isWrong)
+        return true;
+    }
+    // print('New Position: Top: ${childSize.newTop}, Left: ${childSize.newLeft}, SectionID: ${section.id}, SelectedSectionId:${screenBloc.state.selectedSectionId}');
+    return false;
+  }
+
+  bool wrongPositionWithOrderChildren(NewChildSize childSize, BaseStyles styles) {
+
+    double x01 = styles.getMarginLeft(blockStyles);
+    double y01 = styles.getMarginTop(blockStyles);
+    double x02 = x01 + styles.width;
+    double y02 = y01 + styles.height;
+
+    double x1 = childSize.newLeft;
+    double y1 = childSize.newTop;
+    double x2 = x1 + childSize.newWidth;
+    double y2 = y1 + childSize.newHeight;
+    // top left (x1, y1)
+    if ((x01< x1 && x1 <= x02) && (y01< y1 && y1 <= y02))
+      return true;
+    // top right (x2, y1)
+    if ((x01< x2 && x2 <= x02) && (y01< y1 && y1 <= y02))
+      return true;
+    // bottom left (x1, y2)
+    if ((x01< x1 && x1 <= x02) && (y01< y2 && y2 <= y02))
+      return true;
+    // bottom right (x2, y2)
+    if ((x01< x2 && x2 <= x02) && (y01< y2 && y2 <= y02))
+      return true;
+    // Revers
+    // top left (x01, y01)
+    if ((x1< x01 && x01 <= x1) && (y1< y01 && y01 <= y2))
+      return true;
+    // top right (x02, y01)
+    if ((x1< x02 && x02 <= x2) && (y1< y01 && y01 <= y2))
+      return true;
+    // bottom left (x01, y02)
+    if ((x1< x01 && x01 <= x2) && (y1< y02 && y02 <= y2))
+      return true;
+    // bottom right (x02, y02)
+    if ((x1< x02 && x02 <= x2) && (y1< y02 && y02 <= y2))
+      return true;
+    return false;
+  }
+
   BaseStyles getBaseStyles(String childId) {
     return BaseStyles.fromJson(widget.screenBloc.state.stylesheets[deviceTypeId][childId]);
   }
@@ -361,8 +422,8 @@ class _BlockViewState extends State<BlockView> {
     try {
       Map<String, dynamic> json = widget.screenBloc.state.stylesheets[deviceTypeId][block.id];
       if (json == null || json['display'] == 'none') return null;
-      print('$TAG Block ID ${block.id}');
-      print('$TAG Bloc style: $json');
+      // print('$TAG Block ID ${block.id}');
+      // print('$TAG Bloc style: $json');
       return SectionStyles.fromJson(json);
     } catch (e) {
       print('$TAG Error: ${e.toString()}');
