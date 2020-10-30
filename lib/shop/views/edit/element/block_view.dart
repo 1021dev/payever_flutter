@@ -73,7 +73,7 @@ class _BlockViewState extends State<BlockView> {
     }
     return Consumer<TemplateSizeStateModel>(
         builder: (context, templateSizeState, child1) {
-          bool selectedSection = widget.screenBloc.state.selectedBlockId == block.id;
+          bool selectedSection = widget.screenBloc.state.selectedBlockId == block.id && selectChildId.length > 0;
           if (selectedSection) {
             if (templateSizeState.updateChildSize != null && selectedSection) {
               Future.microtask(
@@ -82,7 +82,7 @@ class _BlockViewState extends State<BlockView> {
             } else if (templateSizeState.newChildSize != null && selectedSection) {
               bool wrongposition =
               wrongPosition(templateSizeState.newChildSize);
-              // print('wrong position: $wrongposition, SectionID: ${section.id}, SelectedSectionId:${screenBloc.state.selectedSectionId}');
+              print('wrong position: $wrongposition, Block ID: ${block.id}');
               if (wrongposition) {
                 if (!templateSizeState.wrongPosition)
                   Future.microtask(() =>
@@ -324,8 +324,8 @@ class _BlockViewState extends State<BlockView> {
     payloadSection['margin'] = margin;
     payloadSection['marginTop'] = marginTop;
     payloadSection['marginLeft'] = marginLeft;
-    payloadSection['height'] = size.newHeight;
-    payloadSection['width'] = size.newWidth / GlobalUtils.shopBuilderWidthFactor;
+    payloadSection['height'] = size.newHeight - baseStyles.paddingV * 2;
+    payloadSection['width'] = (size.newWidth - baseStyles.paddingH * 2)/ GlobalUtils.shopBuilderWidthFactor;
     Map<String, dynamic>  payload = {
       selectChildId: payloadSection
     };
@@ -354,61 +354,21 @@ class _BlockViewState extends State<BlockView> {
   }
 
   bool wrongPositionWithOrderChildren(NewChildSize childSize, BaseStyles styles) {
+    double x0 = styles.getMarginLeft(blockStyles);
+    double y0 = styles.getMarginTop(blockStyles);
+    double width0 = styles.width + styles.paddingH * 2;
+    double height0 = styles.height + styles.paddingV * 2;
 
-    double x01 = styles.getMarginLeft(blockStyles);
-    double y01 = styles.getMarginTop(blockStyles);
-    double x02 = x01 + styles.width + styles.paddingH *2;
-    double y02 = y01 + styles.height + styles.paddingV *2;
-    // print('x01: $x01, y01: $y01, x02: $x02, y02: $y02');
     double x1 = childSize.newLeft;
     double y1 = childSize.newTop;
-    double x2 = x1 + childSize.newWidth;
-    double y2 = y1 + childSize.newHeight;
-    // top left (x1, y1)
-    if ((x01< x1 && x1 <= x02) && (y01< y1 && y1 <= y02))
-      return true;
-    // top right (x2, y1)
-    if ((x01< x2 && x2 <= x02) && (y01< y1 && y1 <= y02))
-      return true;
-    // bottom left (x1, y2)
-    if ((x01< x1 && x1 <= x02) && (y01< y2 && y2 <= y02))
-      return true;
-    // bottom right (x2, y2)
-    if ((x01< x2 && x2 <= x02) && (y01< y2 && y2 <= y02))
-      return true;
-    // Revers
-    // top left (x01, y01)
-    if ((x1< x01 && x01 <= x1) && (y1< y01 && y01 <= y2))
-      return true;
-    // top right (x02, y01)
-    if ((x1< x02 && x02 <= x2) && (y1< y01 && y01 <= y2))
-      return true;
-    // bottom left (x01, y02)
-    if ((x1< x01 && x01 <= x2) && (y1< y02 && y02 <= y2))
-      return true;
-    // bottom right (x02, y02)
-    if ((x1< x02 && x02 <= x2) && (y1< y02 && y02 <= y2))
-      return true;
+    double width1 = childSize.newWidth;
+    double height1 = childSize.newHeight;
 
-    // Check Cross
-    var distance = (x02 - x01) * (y2 - y1) - (y02 - y01) * (x2 - x1);
-    if (distance == 0) {
-      print("error, parallel lines");
+    if (x0 + width0 < x1 || x1 + width1 < x0
+        || y0 + height0 < y1 || y1 + height1 < y0)
       return false;
-    }
-
-    var u = ((x1 - x01) * (y2 - y1) - (y1 - y01) * (x2 - x1)) / distance;
-    var v = ((x1 - x01) * (y02 - y01) - (y1 - y01) * (x02 - x01)) / distance;
-    if (u < 0.0 || u > 1.0) {
-      print("intersection not inside line1");
-      return false;
-    } else if (v < 0.0 || v > 1.0) {
-      print("intersection not inside line2");
-      return false;
-    } else {
-      print("intersection!!!");
+    else
       return true;
-    }
   }
 
   BaseStyles getBaseStyles(String childId) {

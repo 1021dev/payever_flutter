@@ -85,7 +85,7 @@ class _SectionViewState extends State<SectionView> {
 
     return Consumer<TemplateSizeStateModel>(
         builder: (context, templateSizeState, child1) {
-          bool selectedSection = screenBloc.state.selectedSectionId == section.id && screenBloc.state.selectedBlockId == '';
+          bool selectedSection = screenBloc.state.selectedSectionId == section.id && (screenBloc.state.selectedBlockId == '' || screenBloc.state.selectedBlockId == selectChildId);
           if (selectedSection) {
             if (templateSizeState.updateChildSize != null && selectedSection) {
               Future.microtask(
@@ -590,6 +590,46 @@ class _SectionViewState extends State<SectionView> {
       if (isWrong)
         return true;
     }
+    // If block
+    if (screenBloc.state.selectedBlockId == selectChildId) {
+      Child block = section.children.firstWhere((child) => child.id == selectChildId);
+      SectionStyles blockStyles = getSectionStyles(block.id);
+      double x1 = 0, y1 = 0, x2 = 0,y2 = 0;
+      block.children.forEach((child) {
+        BaseStyles styles = getBaseStyles(child.id);
+        if (styles != null || styles.display != 'none') {
+          double x = styles.getMarginLeft(blockStyles);
+          double y = styles.getMarginTop(blockStyles);
+          double width = styles.width;
+          double height = styles.height;
+          double X = x + width;
+          double Y = y + height;
+
+          if (x1 == 0) x1 = x;
+          if (y1 == 0) y1 = y;
+
+          if (x2 == 0) x2 = X;
+          if (y2 == 0) y2 = Y;
+
+          if (x1 > x)  x1 = x;
+          if (y1 > y)  y1 = y;
+
+          if (x2 < X)  x2 = X;
+          if (y2 < Y)  y2 = Y;
+        }
+      });
+      x1 += blockStyles.getMarginLeft(sectionStyles);
+      y1 += blockStyles.getMarginTop(sectionStyles);
+      x2 += blockStyles.getMarginLeft(sectionStyles);
+      y2 += blockStyles.getMarginTop(sectionStyles);
+
+      print('{x1: $x1, y1:$y1}, {x2: $x2, y2:$y2}');
+      print('{left0: ${childSize.newLeft}, top0:${childSize.newTop}, {left1: ${childSize.newLeft + childSize.newWidth}, top1:${childSize.newTop + childSize.newHeight}}');
+      if (childSize.newLeft > x1 || childSize.newLeft + childSize.newWidth < x2 ||
+          childSize.newTop > y1 || childSize.newTop + childSize.newHeight < y2) {
+        return true;
+      }
+    }
     // print('New Position: Top: ${childSize.newTop}, Left: ${childSize.newLeft}, SectionID: ${section.id}, SelectedSectionId:${screenBloc.state.selectedSectionId}');
     return false;
   }
@@ -597,59 +637,21 @@ class _SectionViewState extends State<SectionView> {
   bool wrongPositionWithOrderChildren(NewChildSize childSize, BaseStyles styles) {
     if (styles == null || styles.display == 'none') return false;
 
-    double x01 = styles.getMarginLeft(sectionStyles);
-    double y01 = styles.getMarginTop(sectionStyles);
-    double x02 = x01 + styles.width + styles.paddingH * 2;
-    double y02 = y01 + styles.height + styles.paddingV * 2;
+    double x0 = styles.getMarginLeft(sectionStyles);
+    double y0 = styles.getMarginTop(sectionStyles);
+    double width0 = styles.width + styles.paddingH * 2;
+    double height0 = styles.height + styles.paddingV * 2;
 
     double x1 = childSize.newLeft;
     double y1 = childSize.newTop;
-    double x2 = x1 + childSize.newWidth;
-    double y2 = y1 + childSize.newHeight;
-    // top left (x1, y1)
-    if ((x01< x1 && x1 <= x02) && (y01< y1 && y1 <= y02))
-      return true;
-    // top right (x2, y1)
-    if ((x01< x2 && x2 <= x02) && (y01< y1 && y1 <= y02))
-      return true;
-    // bottom left (x1, y2)
-    if ((x01< x1 && x1 <= x02) && (y01< y2 && y2 <= y02))
-      return true;
-    // bottom right (x2, y2)
-    if ((x01< x2 && x2 <= x02) && (y01< y2 && y2 <= y02))
-      return true;
-    // Revers
-    // top left (x01, y01)
-    if ((x1< x01 && x01 <= x1) && (y1< y01 && y01 <= y2))
-      return true;
-    // top right (x02, y01)
-    if ((x1< x02 && x02 <= x2) && (y1< y01 && y01 <= y2))
-      return true;
-    // bottom left (x01, y02)
-    if ((x1< x01 && x01 <= x2) && (y1< y02 && y02 <= y2))
-      return true;
-    // bottom right (x02, y02)
-    if ((x1< x02 && x02 <= x2) && (y1< y02 && y02 <= y2))
-      return true;
+    double width1 = childSize.newWidth;
+    double height1 = childSize.newHeight;
 
-    // Check Cross
-    var distance = (x02 - x01) * (y2 - y1) - (y02 - y01) * (x2 - x1);
-    if (distance == 0) {
-      print("error, parallel lines");
+    if (x0 + width0 < x1 || x1 + width1 < x0
+        || y0 + height0 < y1 || y1 + height1 < y0)
       return false;
-    }
-
-    var u = ((x1 - x01) * (y2 - y1) - (y1 - y01) * (x2 - x1)) / distance;
-    var v = ((x1 - x01) * (y02 - y01) - (y1 - y01) * (x02 - x01)) / distance;
-    if (u < 0.0 || u > 1.0) {
-      print("error, intersection not inside line1");
-      return false;
-    } else if (v < 0.0 || v > 1.0) {
-      print("error, intersection not inside line2");
-      return false;
-    } else {
+    else
       return true;
-    }
   }
 
   BaseStyles getBaseStyles(String childId) {
