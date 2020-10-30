@@ -206,7 +206,11 @@ class _SectionViewState extends State<SectionView> {
     List<Widget> widgets = [];
     Widget lastElement;
     widgets.add(sectionBackgroundWidget);
-    section.children.forEach((child) {
+    for (Child child in section.children) {
+      BaseStyles styles = getBaseStyles(child.id);
+      if (styles == null || styles.display == 'none') {
+        continue;
+      }
       Widget childWidget = getChild(child, state);
       if (childWidget != null) {
         getLimitedSectionHeight(child);
@@ -214,13 +218,13 @@ class _SectionViewState extends State<SectionView> {
           key: ObjectKey(child.id),
           onTap: (widget.enableTapChild && selectChildId != child.id)
               ? () {
-                  widget.onTapChild();
-                  screenBloc.add(SelectSectionEvent(
-                      sectionId: section.id, selectedChild: true));
-                  setState(() {
-                    selectChildId = child.id;
-                  });
-                }
+            widget.onTapChild();
+            screenBloc.add(SelectSectionEvent(
+                sectionId: section.id, selectedChild: true));
+            setState(() {
+              selectChildId = child.id;
+            });
+          }
               : null,
           child: childWidget,
         );
@@ -229,7 +233,7 @@ class _SectionViewState extends State<SectionView> {
         else
           widgets.add(element);
       }
-    });
+    }
     if (lastElement != null)
       widgets.add(lastElement);
     // update Section Height:
