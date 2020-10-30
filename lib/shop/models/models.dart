@@ -156,12 +156,6 @@ class ThemeResponse {
 
 }
 
-class Preview {
-  String id;
-  dynamic actionId;
-  String previewUrl;
-}
-
 @JsonSerializable()
 class ShopPage {
   ShopPage();

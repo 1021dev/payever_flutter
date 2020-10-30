@@ -5,7 +5,7 @@ class ShopEditScreenState {
   final bool isUpdating;
   final ShopDetailModel activeShop;
   final ThemeModel activeTheme;
-  final List<Preview> previews;
+  final Map<String, dynamic> previews;
   final List<ShopPage> pages;
   final Map<String, dynamic> stylesheets;
   final Map<String, dynamic> templates;
@@ -20,7 +20,7 @@ class ShopEditScreenState {
     this.isUpdating = false,
     this.activeShop,
     this.activeTheme,
-    this.previews = const [],
+    this.previews = const {},
     this.pages = const [],
     this.stylesheets = const {},
     this.templates = const {},
@@ -49,7 +49,7 @@ class ShopEditScreenState {
     bool isUpdating,
     ShopDetailModel activeShop,
     ThemeModel activeTheme,
-    List<Preview>previews,
+    Map<String, dynamic>previews,
     List<ShopPage> pages,
     Map<String, dynamic> stylesheets,
     Map<String, dynamic> templates,

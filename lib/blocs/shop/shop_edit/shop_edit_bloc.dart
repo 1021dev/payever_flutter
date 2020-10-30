@@ -57,7 +57,7 @@ class ShopEditScreenBloc
     String themeId = state.activeTheme.themeId;
     yield state.copyWith(isLoading: true);
 
-    List<Preview> previews = [];
+    Map<String, dynamic> previews = {};
     List<ShopPage> pages = [];
     Map<String, dynamic> templates = {};
     List<Action>actions = [];
@@ -71,14 +71,7 @@ class ShopEditScreenBloc
         dynamic obj = response['source'];
 
         if (obj['previews'] != null) {
-          Map<String, dynamic> previewObj = obj['previews'];
-          previewObj.keys.forEach((element) {
-            Preview preview = Preview();
-            preview.id = element;
-            preview.actionId = previewObj[element]['actionId'];
-            preview.previewUrl = previewObj[element]['previewUrl'];
-            previews.add(preview);
-          });
+          previews = obj['previews'];
         }
       }
     }
