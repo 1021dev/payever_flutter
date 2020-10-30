@@ -21,8 +21,8 @@ class TemplateSizeStateModel extends ChangeNotifier {
     _wrongPosition = value;
     // if (isUpdate)
     notifyListeners();
-    Future.delayed(Duration(milliseconds: 300))
-        .then((value) => _wrongPosition = false);
+    // Future.delayed(Duration(milliseconds: 300))
+    //     .then((value) => _wrongPosition = false);
   }
 
   setNewChildSize(NewChildSize value) {

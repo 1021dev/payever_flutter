@@ -65,7 +65,7 @@ class _ResizeableViewState extends State<ResizeableView> {
   @override
   Widget build(BuildContext context) {
     templateSizeStateModel =
-        Provider.of<TemplateSizeStateModel>(context, listen: false);
+        Provider.of<TemplateSizeStateModel>(context, listen: true);
     return body;
   }
 
@@ -89,9 +89,7 @@ class _ResizeableViewState extends State<ResizeableView> {
 
   addWrongPositionEdges(List<Widget> widgets) {
     if (!widget.isSelected) return;
-    var isWrongPosition = context.select<TemplateSizeStateModel, bool>(
-      (templateStateModel) => templateStateModel.wrongPosition,
-    );
+    var isWrongPosition = templateSizeStateModel.wrongPosition;
     Color edgeColor = isWrongPosition ? Colors.red : Colors.blue;
     // top
     widgets.add(
@@ -317,14 +315,15 @@ class _ResizeableViewState extends State<ResizeableView> {
   }
 
   _dragEnd() {
-    if (context.read<TemplateSizeStateModel>().wrongPosition) {
+    // print('Wrong position: ${templateSizeStateModel.wrongPosition}');
+    if (templateSizeStateModel.wrongPosition) {
       setState(() {
         width = width0;
         height = height0;
         left = left0;
         top = top0;
       });
-      context.read<TemplateSizeStateModel>().setWrongPosition(false);
+      templateSizeStateModel.setWrongPosition(false);
       updateSize();
     } else {
       width0 = width;
