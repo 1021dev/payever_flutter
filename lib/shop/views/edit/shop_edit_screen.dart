@@ -51,7 +51,6 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
       child: BlocBuilder(
         bloc: screenBloc,
         builder: (BuildContext context, state) {
-          print('ShopEditScreen: State: ${state.runtimeType}');
           return Scaffold(
               appBar: CustomAppBar(onTapAdd: ()=> _navigateTemplatesScreen(),),
               backgroundColor: Colors.grey[800],

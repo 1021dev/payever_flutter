@@ -34,8 +34,7 @@ class ShopEditScreenBloc
     } else if (event is UpdateSectionEvent) {
       yield* updateSection(event);
     } else if (event is ActiveShopPageEvent) {
-      yield state.copyWith(
-        activeShopPage: event.activeShopPage);
+      yield state.copyWith(activeShopPage: event.activeShopPage);
       print('updated shop page: ${state.activeShopPage.id}');
     } else if (event is RestSelectSectionEvent) {
       yield state.copyWith(selectedSection: false);
@@ -150,7 +149,6 @@ class ShopEditScreenBloc
       'targetPageId': state.activeShopPage.id
     };
     print('update Body: $body');
-    // yield state.copyWith(isUpdating: true, selectedSectionId: event.sectionId);
     String key = event.payload.keys.first;
     Map<String, dynamic>stylesheets = state.stylesheets;
 
@@ -160,16 +158,14 @@ class ShopEditScreenBloc
       json[element] = updatejson[element];
     });
     stylesheets[state.activeShopPage.stylesheetIds.mobile][key] = json;
-    yield state.copyWith(isUpdating: true, selectedSectionId: event.sectionId, stylesheets: stylesheets);
+    yield state.copyWith(selectedSectionId: event.sectionId, stylesheets: stylesheets);
 
-    dynamic response = await api.shopEditAction(
-        GlobalUtils.activeToken.accessToken, state.activeTheme.themeId, body);
+    api.shopEditAction(
+        GlobalUtils.activeToken.accessToken, state.activeTheme.themeId, body).then((response) {
+      if (response is DioError) {
+        Fluttertoast.showToast(msg: response.error);
+      }
+    });
 
-    if (response is DioError) {
-      Fluttertoast.showToast(msg: response.error);
-      yield state.copyWith(isUpdating: false);
-    } else {
-      yield state.copyWith(isUpdating: false);
-    }
   }
 }

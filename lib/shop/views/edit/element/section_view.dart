@@ -94,7 +94,12 @@ class _SectionViewState extends State<SectionView> {
       bloc: screenBloc,
       child: BlocBuilder(
         condition: (ShopEditScreenState state1, state2) {
-          if (state2.selectedSectionId != section.id) return false;
+          if (state2.selectedSectionId != section.id) {
+            setState(() {
+              selectChildId = '';
+            });
+            return false;
+          }
           return true;
         },
         bloc: screenBloc,
