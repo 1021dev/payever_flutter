@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/models/template_size_state_model.dart';
 import 'package:provider/provider.dart';
@@ -46,6 +47,9 @@ class _ResizeableViewState extends State<ResizeableView> {
   TemplateSizeStateModel templateSizeStateModel;
 
   _ResizeableViewState({this.width, this.height, this.top, this.left}) {
+    if (width == double.infinity) {
+      width = Measurements.width;
+    }
     width0 = width;
     height0 = height;
     top0 = top;

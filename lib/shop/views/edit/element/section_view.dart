@@ -135,64 +135,6 @@ class _SectionViewState extends State<SectionView> {
         });
   }
 
-  bool wrongPosition(NewChildSize childSize) {
-    bool wrongBoundary = childSize.newTop < 0 ||
-        childSize.newLeft < 0 ||
-        (childSize.newTop + childSize.newHeight > widgetHeight) ||
-        (childSize.newLeft + childSize.newWidth > Measurements.width);
-
-    if (wrongBoundary) return true;
-    for(Child child in section.children) {
-      if (child.id == selectChildId) continue;
-      BaseStyles baseStyles = getBaseStyles(child.id);
-      bool isWrong = wrongPositionWithOrderChildren(childSize, baseStyles);
-      if (isWrong)
-        return true;
-    }
-    // print('New Position: Top: ${childSize.newTop}, Left: ${childSize.newLeft}, SectionID: ${section.id}, SelectedSectionId:${screenBloc.state.selectedSectionId}');
-    return false;
-  }
-
-  bool wrongPositionWithOrderChildren(NewChildSize childSize, BaseStyles styles) {
-    if (styles == null || styles.display == 'none') return false;
-
-    double x01 = styles.getMarginLeft(sectionStyles);
-    double y01 = styles.getMarginTop(sectionStyles);
-    double x02 = x01 + styles.width;
-    double y02 = y01 + styles.height;
-
-    double x1 = childSize.newLeft;
-    double y1 = childSize.newTop;
-    double x2 = x1 + childSize.newWidth;
-    double y2 = y1 + childSize.newHeight;
-    // top left (x1, y1)
-    if ((x01< x1 && x1 <= x02) && (y01< y1 && y1 <= y02))
-      return true;
-    // top right (x2, y1)
-    if ((x01< x2 && x2 <= x02) && (y01< y1 && y1 <= y02))
-      return true;
-    // bottom left (x1, y2)
-    if ((x01< x1 && x1 <= x02) && (y01< y2 && y2 <= y02))
-      return true;
-    // bottom right (x2, y2)
-    if ((x01< x2 && x2 <= x02) && (y01< y2 && y2 <= y02))
-      return true;
-    // Revers
-    // top left (x01, y01)
-    if ((x1< x01 && x01 <= x1) && (y1< y01 && y01 <= y2))
-      return true;
-    // top right (x02, y01)
-    if ((x1< x02 && x02 <= x2) && (y1< y01 && y01 <= y2))
-      return true;
-    // bottom left (x01, y02)
-    if ((x1< x01 && x01 <= x2) && (y1< y02 && y02 <= y2))
-      return true;
-    // bottom right (x02, y02)
-    if ((x1< x02 && x02 <= x2) && (y1< y02 && y02 <= y2))
-      return true;
-    return false;
-  }
-
   Widget body(ShopEditScreenState state) {
     if (sectionStyles == null) {
       return Container();
@@ -211,9 +153,9 @@ class _SectionViewState extends State<SectionView> {
       if (styles == null || styles.display == 'none') {
         continue;
       }
-      Widget childWidget = getChild(child, state);
+      Widget childWidget = getChild(state, child, styles);
       if (childWidget != null) {
-        getLimitedSectionHeight(child);
+        _getLimitedSectionHeight(child);
         Widget element = GestureDetector(
           key: ObjectKey(child.id),
           onTap: (widget.enableTapChild && selectChildId != child.id)
@@ -263,18 +205,7 @@ class _SectionViewState extends State<SectionView> {
     );
   }
 
-  getLimitedSectionHeight(Child child) {
-    BaseStyles baseStyles = getBaseStyles(child.id);
-    if (baseStyles == null || baseStyles.display == 'none') return; 
-
-      double height = baseStyles.height;
-      double top = baseStyles.getMarginTop(sectionStyles);
-      double newLimitSectionHeight = height + top + baseStyles.paddingV + baseStyles.marginBottom;
-      if (limitSectionHeight < newLimitSectionHeight)
-        limitSectionHeight = newLimitSectionHeight; 
-  }
-
-  Widget getChild(Child child, ShopEditScreenState state) {
+  Widget getChild(ShopEditScreenState state, Child child, BaseStyles styles) {
     Widget childView;
     switch (child.type) {
       case 'text':
@@ -331,6 +262,7 @@ class _SectionViewState extends State<SectionView> {
           deviceTypeId: shopPage.stylesheetIds.mobile,
           sectionStyles: sectionStyles,
           onTapChild: widget.onTapChild,
+          isSelected: selectChildId == child.id,
         );
         break;
       case 'menu':
@@ -575,6 +507,17 @@ class _SectionViewState extends State<SectionView> {
     }
   }
 
+  _getLimitedSectionHeight(Child child) {
+    BaseStyles baseStyles = getBaseStyles(child.id);
+    if (baseStyles == null || baseStyles.display == 'none') return;
+
+    double height = baseStyles.height;
+    double top = baseStyles.getMarginTop(sectionStyles);
+    double newLimitSectionHeight = height + top + baseStyles.paddingV + baseStyles.marginBottom;
+    if (limitSectionHeight < newLimitSectionHeight)
+      limitSectionHeight = newLimitSectionHeight;
+  }
+
   _changeSection({NewChildSize childSize}) {
     Map<String, dynamic> payload = {};
     if (selectChildId != null && childSize != null) {
@@ -620,6 +563,64 @@ class _SectionViewState extends State<SectionView> {
       selectChildId: payloadSection
     };
     return payload;
+  }
+
+  bool wrongPosition(NewChildSize childSize) {
+    bool wrongBoundary = childSize.newTop < 0 ||
+        childSize.newLeft < 0 ||
+        (childSize.newTop + childSize.newHeight > widgetHeight) ||
+        (childSize.newLeft + childSize.newWidth > Measurements.width);
+
+    if (wrongBoundary) return true;
+    for(Child child in section.children) {
+      if (child.id == selectChildId) continue;
+      BaseStyles baseStyles = getBaseStyles(child.id);
+      bool isWrong = wrongPositionWithOrderChildren(childSize, baseStyles);
+      if (isWrong)
+        return true;
+    }
+    // print('New Position: Top: ${childSize.newTop}, Left: ${childSize.newLeft}, SectionID: ${section.id}, SelectedSectionId:${screenBloc.state.selectedSectionId}');
+    return false;
+  }
+
+  bool wrongPositionWithOrderChildren(NewChildSize childSize, BaseStyles styles) {
+    if (styles == null || styles.display == 'none') return false;
+
+    double x01 = styles.getMarginLeft(sectionStyles);
+    double y01 = styles.getMarginTop(sectionStyles);
+    double x02 = x01 + styles.width;
+    double y02 = y01 + styles.height;
+
+    double x1 = childSize.newLeft;
+    double y1 = childSize.newTop;
+    double x2 = x1 + childSize.newWidth;
+    double y2 = y1 + childSize.newHeight;
+    // top left (x1, y1)
+    if ((x01< x1 && x1 <= x02) && (y01< y1 && y1 <= y02))
+      return true;
+    // top right (x2, y1)
+    if ((x01< x2 && x2 <= x02) && (y01< y1 && y1 <= y02))
+      return true;
+    // bottom left (x1, y2)
+    if ((x01< x1 && x1 <= x02) && (y01< y2 && y2 <= y02))
+      return true;
+    // bottom right (x2, y2)
+    if ((x01< x2 && x2 <= x02) && (y01< y2 && y2 <= y02))
+      return true;
+    // Revers
+    // top left (x01, y01)
+    if ((x1< x01 && x01 <= x1) && (y1< y01 && y01 <= y2))
+      return true;
+    // top right (x02, y01)
+    if ((x1< x02 && x02 <= x2) && (y1< y01 && y01 <= y2))
+      return true;
+    // bottom left (x01, y02)
+    if ((x1< x01 && x01 <= x2) && (y1< y02 && y02 <= y2))
+      return true;
+    // bottom right (x02, y02)
+    if ((x1< x02 && x02 <= x2) && (y1< y02 && y02 <= y2))
+      return true;
+    return false;
   }
 
   BaseStyles getBaseStyles(String childId) {

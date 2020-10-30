@@ -50,7 +50,6 @@ class _ImageViewState extends State<ImageView> {
       if (data == null) return Container();
       url = data.src;
     }
-    // return body;
     return ResizeableView(
         width: styles.width,
         height: styles.height,

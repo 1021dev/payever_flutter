@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/commons/commons.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/models/template_size_state_model.dart';
 import 'package:payever/shop/views/edit/element/shape_view.dart';
@@ -10,6 +11,7 @@ import 'package:payever/shop/views/edit/element/shop_product_detail_view.dart';
 import 'package:payever/shop/views/edit/element/shop_products_view.dart';
 import 'package:payever/shop/views/edit/element/social_icon_view.dart';
 import 'package:payever/shop/views/edit/element/sub_element/background_view.dart';
+import 'package:payever/shop/views/edit/element/sub_element/resizeable_view.dart';
 import 'package:payever/shop/views/edit/element/text_view.dart';
 import 'package:payever/shop/views/edit/element/video_view.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +29,7 @@ class BlockView extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
   final bool enableTapChild;
   final Function onTapChild;
+  final bool isSelected;
 
   const BlockView(
       {this.child,
@@ -35,6 +38,7 @@ class BlockView extends StatefulWidget {
       this.sectionStyles,
       this.onTapChild,
       this.enableTapChild = true,
+      this.isSelected = false,
       this.screenBloc});
 
   @override
@@ -105,6 +109,13 @@ class _BlockViewState extends State<BlockView> {
                     // }
                   }
                 }
+                return ResizeableView(
+                    width: styleSheet.width,
+                    height: styleSheet.height,
+                    left: styleSheet.getMarginLeft(sectionStyles),
+                    top: styleSheet.getMarginTop(sectionStyles),
+                    isSelected: widget.isSelected,
+                    child: body(state));
                 return body(state);
               });
         },
@@ -264,14 +275,14 @@ class _BlockViewState extends State<BlockView> {
     if (lastElement != null)
       widgets.add(lastElement);
     return Container(
-        width: styleSheet.width,
-        height: styleSheet.height,
+        // width: styleSheet.width,
+        // height: styleSheet.height,
 //      decoration: decoration,
-        margin: EdgeInsets.only(
-            left: styleSheet.getMarginLeft(sectionStyles),
-            right: styleSheet.marginRight,
-            top: styleSheet.getMarginTop(sectionStyles),
-            bottom: styleSheet.marginBottom),
+//         margin: EdgeInsets.only(
+//             left: styleSheet.getMarginLeft(sectionStyles),
+//             right: styleSheet.marginRight,
+//             top: styleSheet.getMarginTop(sectionStyles),
+//             bottom: styleSheet.marginBottom),
         alignment: styleSheet.getBackgroundImageAlignment(),
         child: Stack(children: widgets));
   }
