@@ -226,50 +226,50 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
           template: template,
           scrollable: !showName,
           onTap:()=> _navigateTemplateDetailScreen(page, template));
-    if (preview == null || preview.isEmpty)
-      return Container(
-        color: Colors.white,
-      );
 
     return GestureDetector(
-      onTap:()=> _navigateTemplateDetailScreen(page, template),
-      child: CachedNetworkImage(
-        imageUrl: preview,
-        imageBuilder: (context, imageProvider) => Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            image: DecorationImage(
-              image: imageProvider,
-              fit: BoxFit.contain,
-            ),
-          ),
-        ),
-        color: Colors.white,
-        placeholder: (context, url) => Container(
-          color: Colors.white,
-          child: Center(
-            child: Container(
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
+      onTap: () => _navigateTemplateDetailScreen(page, template),
+      child: (preview == null || preview.isEmpty)
+          ? Container(
+              color: Colors.white,
+            )
+          : CachedNetworkImage(
+              imageUrl: preview,
+              imageBuilder: (context, imageProvider) => Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+              color: Colors.white,
+              placeholder: (context, url) => Container(
+                color: Colors.white,
+                child: Center(
+                  child: Container(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                    ),
+                  ),
+                ),
+              ),
+              errorWidget: (context, url, error) => Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                ),
+                child: Center(
+                  child: AspectRatio(
+                    aspectRatio: 0.8,
+                    child: SvgPicture.asset(
+                      'assets/images/no_image.svg',
+                      color: Colors.black54,
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-        errorWidget: (context, url, error) => Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-          ),
-          child: Center(
-            child: AspectRatio(
-              aspectRatio: 0.8,
-              child: SvgPicture.asset(
-                'assets/images/no_image.svg',
-                color: Colors.black54,
-              ),
-            ),
-          ),
-        ),
-      ),
     );
   }
 
