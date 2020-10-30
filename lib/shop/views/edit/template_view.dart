@@ -49,7 +49,9 @@ class _TemplateViewState extends State<TemplateView> {
             create: (_) => templateSizeStateModel),
       ],
       child: BlocListener(
-        listener: (BuildContext context, ShopEditScreenState state) async {},
+        listener: (BuildContext context, ShopEditScreenState state) async {
+
+        },
         bloc: screenBloc,
         child: BlocBuilder(
           bloc: screenBloc,

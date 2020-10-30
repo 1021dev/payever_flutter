@@ -82,54 +82,57 @@ class _SectionViewState extends State<SectionView> {
     activeThemeId = Provider.of<GlobalStateModel>(context, listen: false)
         .activeTheme
         .themeId;
-    return BlocListener(
-      listener: (BuildContext context, ShopEditScreenState state) async {
-        if (state.selectedSection) {
-          setState(() {
-            selectChildId = '';
-          });
-          screenBloc.add(RestSelectSectionEvent());
-        }
-      },
-      bloc: screenBloc,
-      child: BlocBuilder(
-        condition: (ShopEditScreenState state1, state2) {
-          if (state2.selectedSectionId != section.id) {
-            setState(() {
-              selectChildId = '';
-            });
-            return false;
-          }
-          return true;
-        },
-        bloc: screenBloc,
-        builder: (BuildContext context, state) {
-          return Consumer<TemplateSizeStateModel>(
-              builder: (context, templateSizeState, child1) {
-            if (state.selectedSectionId == section.id) {
-              if (templateSizeState.updateChildSize != null) {
-                Future.microtask(
-                    () => templateSizeState.setUpdateChildSize(null));
-                _changeSection(childSize: templateSizeState.updateChildSize);
-              } else if (templateSizeState.newChildSize != null) {
-                bool wrongposition =
-                    wrongPosition(templateSizeState.newChildSize);
-                if (wrongposition) {
-                  if (!templateSizeState.wrongPosition)
-                    Future.microtask(() =>
-                        templateSizeState.setWrongPosition(wrongposition));
-                } else {
-                  if (templateSizeState.wrongPosition)
-                    Future.microtask(() =>
-                        templateSizeState.setWrongPosition(wrongposition));
-                }
+
+    return Consumer<TemplateSizeStateModel>(
+        builder: (context, templateSizeState, child1) {
+          bool selectedSection = screenBloc.state.selectedSectionId == section.id;
+          if (selectedSection) {
+            if (templateSizeState.updateChildSize != null && selectedSection) {
+              Future.microtask(
+                      () => templateSizeState.setUpdateChildSize(null));
+              _changeSection(childSize: templateSizeState.updateChildSize);
+            } else if (templateSizeState.newChildSize != null && selectedSection) {
+              bool wrongposition =
+              wrongPosition(templateSizeState.newChildSize);
+              // print('wrong position: $wrongposition, SectionID: ${section.id}, SelectedSectionId:${screenBloc.state.selectedSectionId}');
+              if (wrongposition) {
+                if (!templateSizeState.wrongPosition)
+                  Future.microtask(() =>
+                      templateSizeState.setWrongPosition(wrongposition));
+              } else {
+                if (templateSizeState.wrongPosition)
+                  Future.microtask(() =>
+                      templateSizeState.setWrongPosition(wrongposition));
               }
             }
-            return body(state);
-          });
-        },
-      ),
-    );
+          }
+          return BlocListener(
+            listener: (BuildContext context, ShopEditScreenState state) async {
+              if (state.selectedSection) {
+                setState(() {
+                  selectChildId = '';
+                });
+                screenBloc.add(RestSelectSectionEvent());
+              }
+            },
+            bloc: screenBloc,
+            child: BlocBuilder(
+              condition: (ShopEditScreenState state1, state2) {
+                if (state2.selectedSectionId != section.id) {
+                  setState(() {
+                    selectChildId = '';
+                  });
+                  return false;
+                }
+                return true;
+              },
+              bloc: screenBloc,
+              builder: (BuildContext context, state) {
+                return body(state);
+              },
+            ),
+          );
+        });
   }
 
   bool wrongPosition(NewChildSize childSize) {
@@ -137,8 +140,8 @@ class _SectionViewState extends State<SectionView> {
         childSize.newLeft < 0 ||
         (childSize.newTop + childSize.newHeight > widgetHeight) ||
         (childSize.newLeft + childSize.newWidth > Measurements.width);
-    if (wrongBoundary) return true;
 
+    if (wrongBoundary) return true;
     for(Child child in section.children) {
       if (child.id == selectChildId) continue;
       BaseStyles baseStyles = getBaseStyles(child.id);
@@ -146,6 +149,7 @@ class _SectionViewState extends State<SectionView> {
       if (isWrong)
         return true;
     }
+    // print('New Position: Top: ${childSize.newTop}, Left: ${childSize.newLeft}, SectionID: ${section.id}, SelectedSectionId:${screenBloc.state.selectedSectionId}');
     return false;
   }
 
@@ -210,12 +214,12 @@ class _SectionViewState extends State<SectionView> {
           key: ObjectKey(child.id),
           onTap: (widget.enableTapChild && selectChildId != child.id)
               ? () {
-                  setState(() {
-                    selectChildId = child.id;
-                  });
                   widget.onTapChild();
                   screenBloc.add(SelectSectionEvent(
                       sectionId: section.id, selectedChild: true));
+                  setState(() {
+                    selectChildId = child.id;
+                  });
                 }
               : null,
           child: childWidget,
