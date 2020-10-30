@@ -98,7 +98,7 @@ class _TemplateViewState extends State<TemplateView> {
     return InkWell(
       onTap: widget.onTap,
       child: Container(
-        color: Colors.grey,
+        color: Colors.white,
         child: ListView.separated(
           physics: widget.scrollable
               ? AlwaysScrollableScrollPhysics()

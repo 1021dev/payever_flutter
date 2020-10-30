@@ -48,12 +48,6 @@ class _BackgroundViewState extends State<BackgroundView> {
         imageUrl: styles.backgroundImage,
         height: double.infinity,
         repeat: imageRepeat ? ImageRepeat.repeat : ImageRepeat.noRepeat,
-        placeholder: (context, url) =>
-            Container(child: Center(child: CircularProgressIndicator())),
-        errorWidget: (context, url, error) => Icon(
-          Icons.error,
-          size: 40,
-        ),
       );
     }
 
@@ -64,12 +58,6 @@ class _BackgroundViewState extends State<BackgroundView> {
         imageUrl: styles.backgroundImage,
         alignment: Alignment.topLeft,
         fit: imageFit(styles.backgroundSize),
-        placeholder: (context, url) =>
-            Container(child: Center(child: CircularProgressIndicator())),
-        errorWidget: (context, url, error) => Icon(
-          Icons.error,
-          size: 40,
-        ),
       );
     }
 
@@ -82,12 +70,6 @@ class _BackgroundViewState extends State<BackgroundView> {
             fit: imageFit(styles.backgroundSize),
           ),
         ),
-      ),
-      placeholder: (context, url) =>
-          Container(child: Center(child: CircularProgressIndicator())),
-      errorWidget: (context, url, error) => Icon(
-        Icons.error,
-        size: 40,
       ),
     );
   }
