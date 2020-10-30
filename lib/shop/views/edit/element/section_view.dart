@@ -153,7 +153,7 @@ class _SectionViewState extends State<SectionView> {
       if (styles == null || styles.display == 'none') {
         continue;
       }
-      Widget childWidget = getChild(state, child, styles);
+      Widget childWidget = getChild(state, child);
       if (childWidget != null) {
         _getLimitedSectionHeight(child);
         Widget element = GestureDetector(
@@ -205,7 +205,7 @@ class _SectionViewState extends State<SectionView> {
     );
   }
 
-  Widget getChild(ShopEditScreenState state, Child child, BaseStyles styles) {
+  Widget getChild(ShopEditScreenState state, Child child) {
     Widget childView;
     switch (child.type) {
       case 'text':

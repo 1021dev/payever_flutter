@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payever/blocs/bloc.dart';
-import 'package:payever/commons/commons.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/models/template_size_state_model.dart';
 import 'package:payever/shop/views/edit/element/shape_view.dart';
@@ -43,21 +42,21 @@ class BlockView extends StatefulWidget {
 
   @override
   _BlockViewState createState() => _BlockViewState(
-      child: child,
+      block: child,
       sectionStyles: sectionStyles,
       deviceTypeId: deviceTypeId);
 }
 
 class _BlockViewState extends State<BlockView> {
-  final Child child;
+  final Child block;
   final SectionStyles sectionStyles;
   final String deviceTypeId;
-  SectionStyles styleSheet;
+  SectionStyles blockStyles;
   final String TAG = 'BlockView : ';
   String selectChildId = '';
 
   _BlockViewState(
-      {this.child, this.sectionStyles, this.deviceTypeId});
+      {this.block, this.sectionStyles, this.deviceTypeId});
 
   @override
   void dispose() {
@@ -66,214 +65,105 @@ class _BlockViewState extends State<BlockView> {
 
   @override
   Widget build(BuildContext context) {
-    styleSheet = getSectionStyleSheet();
+    blockStyles = getSectionStyleSheet();
 
-    if (styleSheet == null) {
+    if (blockStyles == null) {
       return Container();
     }
-    return BlocListener(
-      listener: (BuildContext context, ShopEditScreenState state) async {
-        if (state.selectedSection) {
-          setState(() {
-            selectChildId = '';
-          });
-          widget.screenBloc.add(RestSelectSectionEvent());
-        }
-      },
-      bloc: widget.screenBloc,
-      child: BlocBuilder(
-        condition: (ShopEditScreenState state1, state2) {
-          if (state2.selectedSectionId != widget.sectionId) return false;
-          return true;
-        },
-        bloc: widget.screenBloc,
-        builder: (BuildContext context, state) {
-          return Consumer<TemplateSizeStateModel>(
-              builder: (context, templateSizeState, child1) {
-                if (state.selectedSectionId == widget.sectionId) {
-                  if (templateSizeState.updateChildSize != null) {
-                    // Future.microtask(
-                    //         () => templateSizeState.setUpdateChildSize(null));
-                    // _changeSection(childSize: templateSizeState.updateChildSize);
-                  } else if (templateSizeState.newChildSize != null) {
-                    // bool wrongposition =
-                    // wrongPosition(templateSizeState.newChildSize);
-                    // if (wrongposition) {
-                    //   if (!templateSizeState.wrongPosition)
-                    //     Future.microtask(() =>
-                    //         templateSizeState.setWrongPosition(wrongposition));
-                    // } else {
-                    //   if (templateSizeState.wrongPosition)
-                    //     Future.microtask(() =>
-                    //         templateSizeState.setWrongPosition(wrongposition));
-                    // }
-                  }
+    return Consumer<TemplateSizeStateModel>(
+        builder: (context, templateSizeState, child1) {
+          bool selectedSection = widget.screenBloc.state.selectedSectionId == widget.sectionId;
+          if (selectedSection) {
+            if (templateSizeState.updateChildSize != null && selectedSection) {
+              Future.microtask(
+                      () => templateSizeState.setUpdateChildSize(null));
+              // _changeSection(childSize: templateSizeState.updateChildSize);
+            } else if (templateSizeState.newChildSize != null && selectedSection) {
+              // bool wrongposition =
+              // wrongPosition(templateSizeState.newChildSize);
+              // // print('wrong position: $wrongposition, SectionID: ${section.id}, SelectedSectionId:${screenBloc.state.selectedSectionId}');
+              // if (wrongposition) {
+              //   if (!templateSizeState.wrongPosition)
+              //     Future.microtask(() =>
+              //         templateSizeState.setWrongPosition(wrongposition));
+              // } else {
+              //   if (templateSizeState.wrongPosition)
+              //     Future.microtask(() =>
+              //         templateSizeState.setWrongPosition(wrongposition));
+              // }
+            }
+          }
+          return BlocListener(
+            listener: (BuildContext context, ShopEditScreenState state) async {
+              if (state.selectedSection) {
+                setState(() {
+                  selectChildId = '';
+                });
+                widget.screenBloc.add(RestSelectSectionEvent());
+              }
+            },
+            bloc: widget.screenBloc,
+            child: BlocBuilder(
+              condition: (ShopEditScreenState state1, state2) {
+                if (state2.selectedSectionId != widget.sectionId) {
+                  setState(() {
+                    selectChildId = '';
+                  });
+                  return false;
                 }
+                return true;
+              },
+              bloc: widget.screenBloc,
+              builder: (BuildContext context, state) {
                 return ResizeableView(
-                    width: styleSheet.width,
-                    height: styleSheet.height,
-                    left: styleSheet.getMarginLeft(sectionStyles),
-                    top: styleSheet.getMarginTop(sectionStyles),
+                    width: blockStyles.width,
+                    height: blockStyles.height,
+                    left: blockStyles.getMarginLeft(sectionStyles),
+                    top: blockStyles.getMarginTop(sectionStyles),
                     isSelected: widget.isSelected,
                     child: body(state));
-                return body(state);
-              });
-        },
-      ),
-    );
+              },
+            ),
+          );
+        });
+
   }
 
   Widget body(ShopEditScreenState state) {
     List<Widget> widgets = [];
     Widget lastElement;
-    widgets.add(BackgroundView(styles: styleSheet));
-    child.children.forEach((child) {
-      Widget childView;
-      switch (child.type) {
-        case 'text':
-          childView = TextView(
-            child: child,
-            stylesheets: state.stylesheets,
-            deviceTypeId: deviceTypeId,
-            sectionStyles: styleSheet,
-            isSelected: selectChildId == child.id,
-          );
-          break;
-        case 'button':
-          childView = ButtonView(
-            child: child,
-            stylesheets: state.stylesheets,
-            deviceTypeId: deviceTypeId,
-            sectionStyles: styleSheet,
-            isSelected: selectChildId == child.id,
-          );
-          break;
-        case 'image':
-          childView = ImageView(
-            child: child,
-            stylesheets: state.stylesheets,
-            deviceTypeId: deviceTypeId,
-            sectionStyles: styleSheet,
-            isSelected: selectChildId == child.id,
-          );
-          break;
-        case 'video':
-          childView = VideoView(
-            child: child,
-            stylesheets: state.stylesheets,
-            deviceTypeId: deviceTypeId,
-            sectionStyles: styleSheet,
-            isSelected: selectChildId == child.id,
-          );
-          break;
-        case 'shape':
-          childView = ShapeView(
-            child: child,
-            stylesheets: state.stylesheets,
-            deviceTypeId: deviceTypeId,
-            sectionStyles: styleSheet,
-            isSelected: selectChildId == child.id,
-          );
-          break;
-        case 'block':
-          childView = BlockView(
-            child: child,
-            screenBloc: widget.screenBloc,
-            deviceTypeId: deviceTypeId,
-            sectionStyles: styleSheet,
-            enableTapChild: widget.enableTapChild,
-          );
-          break;
-        case 'menu':
-          childView = MenuView(
-            child: child,
-            stylesheets: state.stylesheets,
-            deviceTypeId: deviceTypeId,
-            sectionStyles: styleSheet,
-            isSelected: selectChildId == child.id,
-          );
-          break;
-        case 'shop-cart':
-          childView = ShopCartView(
-            child: child,
-            stylesheets: state.stylesheets,
-            deviceTypeId: deviceTypeId,
-            sectionStyles: styleSheet,
-            isSelected: selectChildId == child.id,
-          );
-          break;
-        case 'shop-category':
-          childView = ShopProductCategoryView(
-            child: child,
-            stylesheets: state.stylesheets,
-            deviceTypeId: deviceTypeId,
-            sectionStyles: styleSheet,
-            isSelected: selectChildId == child.id,
-          );
-          break;
-        case 'shop-products':
-          childView = ShopProductsView(
-            child: child,
-            stylesheets: state.stylesheets,
-            deviceTypeId: deviceTypeId,
-            sectionStyles: styleSheet,
-            isSelected: selectChildId == child.id,
-          );
-          break;
-        case 'shop-product-details':
-          childView = ShopProductDetailView(
-            child: child,
-            stylesheets: state.stylesheets,
-            deviceTypeId: deviceTypeId,
-            sectionStyles: styleSheet,
-            isSelected: selectChildId == child.id,
-          );
-          break;
-        case 'logo':
-          childView = LogoView(
-            child: child,
-            stylesheets: state.stylesheets,
-            deviceTypeId: deviceTypeId,
-            sectionStyles: styleSheet,
-            isSelected: selectChildId == child.id,
-          );
-          break;
-        case 'social-icon':
-          childView = SocialIconView(
-            child: child,
-            stylesheets: state.stylesheets,
-            deviceTypeId: deviceTypeId,
-            sectionStyles: styleSheet,
-            isSelected: selectChildId == child.id,
-          );
-          break;
-        default:
-          print('Special Child Type: ${child.type}');
+    widgets.add(BackgroundView(styles: blockStyles));
+    for (Child child in block.children) {
+      BaseStyles styles = getBaseStyles(child.id);
+      if (styles == null || styles.display == 'none') {
+        continue;
       }
-      if (childView != null) {
+      Widget childWidget = getChild(state, child);
+      if (childWidget != null) {
+        // _getLimitedSectionHeight(child);
         Widget element = GestureDetector(
           key: ObjectKey(child.id),
-          onTap: (widget.enableTapChild/* && selectChildId != child.id*/)
+          onTap: (widget.enableTapChild && selectChildId != child.id)
               ? () {
-            setState(() {
-              selectChildId = child.id;
-            });
             widget.onTapChild();
             widget.screenBloc.add(SelectSectionEvent(
                 sectionId: widget.sectionId, selectedChild: true));
-          }: null,
-          child: childView,
+            setState(() {
+              selectChildId = child.id;
+            });
+          }
+              : null,
+          child: childWidget,
         );
         if (selectChildId == child.id)
           lastElement = element;
         else
           widgets.add(element);
-
-        // widgets.add(childView);
       }
-    });
+    }
     if (lastElement != null)
       widgets.add(lastElement);
+
     return Container(
         // width: styleSheet.width,
         // height: styleSheet.height,
@@ -283,10 +173,138 @@ class _BlockViewState extends State<BlockView> {
 //             right: styleSheet.marginRight,
 //             top: styleSheet.getMarginTop(sectionStyles),
 //             bottom: styleSheet.marginBottom),
-        alignment: styleSheet.getBackgroundImageAlignment(),
+        alignment: blockStyles.getBackgroundImageAlignment(),
         child: Stack(children: widgets));
   }
 
+  Widget getChild(ShopEditScreenState state, Child child) {
+    Widget childView;
+    switch (child.type) {
+      case 'text':
+        childView = TextView(
+          child: child,
+          stylesheets: state.stylesheets,
+          deviceTypeId: deviceTypeId,
+          sectionStyles: blockStyles,
+          isSelected: selectChildId == child.id,
+        );
+        break;
+      case 'button':
+        childView = ButtonView(
+          child: child,
+          stylesheets: state.stylesheets,
+          deviceTypeId: deviceTypeId,
+          sectionStyles: blockStyles,
+          isSelected: selectChildId == child.id,
+        );
+        break;
+      case 'image':
+        childView = ImageView(
+          child: child,
+          stylesheets: state.stylesheets,
+          deviceTypeId: deviceTypeId,
+          sectionStyles: blockStyles,
+          isSelected: selectChildId == child.id,
+        );
+        break;
+      case 'video':
+        childView = VideoView(
+          child: child,
+          stylesheets: state.stylesheets,
+          deviceTypeId: deviceTypeId,
+          sectionStyles: blockStyles,
+          isSelected: selectChildId == child.id,
+        );
+        break;
+      case 'shape':
+        childView = ShapeView(
+          child: child,
+          stylesheets: state.stylesheets,
+          deviceTypeId: deviceTypeId,
+          sectionStyles: blockStyles,
+          isSelected: selectChildId == child.id,
+        );
+        break;
+      case 'block':
+        childView = BlockView(
+          child: child,
+          sectionId: widget.sectionId,
+          screenBloc: widget.screenBloc,
+          enableTapChild: widget.enableTapChild,
+          deviceTypeId: deviceTypeId,
+          sectionStyles: blockStyles,
+          onTapChild: widget.onTapChild,
+          isSelected: selectChildId == child.id,
+        );
+        break;
+      case 'menu':
+        childView = MenuView(
+          child: child,
+          stylesheets: state.stylesheets,
+          deviceTypeId: deviceTypeId,
+          sectionStyles: blockStyles,
+          isSelected: selectChildId == child.id,
+        );
+        break;
+      case 'shop-cart':
+        childView = ShopCartView(
+          child: child,
+          stylesheets: state.stylesheets,
+          deviceTypeId: deviceTypeId,
+          sectionStyles: blockStyles,
+          isSelected: selectChildId == child.id,
+        );
+        break;
+      case 'shop-category':
+        childView = ShopProductCategoryView(
+          child: child,
+          stylesheets: state.stylesheets,
+          deviceTypeId: deviceTypeId,
+          sectionStyles: blockStyles,
+          isSelected: selectChildId == child.id,
+        );
+        break;
+      case 'shop-products':
+        childView = ShopProductsView(
+          child: child,
+          stylesheets: state.stylesheets,
+          deviceTypeId: deviceTypeId,
+          sectionStyles: blockStyles,
+          isSelected: selectChildId == child.id,
+        );
+        break;
+      case 'shop-product-details':
+        childView = ShopProductDetailView(
+          child: child,
+          stylesheets: state.stylesheets,
+          deviceTypeId: deviceTypeId,
+          sectionStyles: blockStyles,
+          isSelected: selectChildId == child.id,
+        );
+        break;
+      case 'logo':
+        childView = LogoView(
+          child: child,
+          stylesheets: state.stylesheets,
+          deviceTypeId: deviceTypeId,
+          sectionStyles: blockStyles,
+          isSelected: selectChildId == child.id,
+        );
+        break;
+      case 'social-icon':
+        childView = SocialIconView(
+          child: child,
+          stylesheets: state.stylesheets,
+          deviceTypeId: deviceTypeId,
+          sectionStyles: blockStyles,
+          isSelected: selectChildId == child.id,
+        );
+        break;
+      default:
+        print('Special Child Type: ${child.type}');
+    }
+    return childView;
+  }
 
   // _changeSection({NewChildSize childSize}) {
   //   Map<String, dynamic> payload = {};
@@ -341,9 +359,9 @@ class _BlockViewState extends State<BlockView> {
 
   SectionStyles getSectionStyleSheet() {
     try {
-      Map<String, dynamic> json = widget.screenBloc.state.stylesheets[deviceTypeId][child.id];
+      Map<String, dynamic> json = widget.screenBloc.state.stylesheets[deviceTypeId][block.id];
       if (json == null || json['display'] == 'none') return null;
-      print('$TAG Block ID ${child.id}');
+      print('$TAG Block ID ${block.id}');
       print('$TAG Bloc style: $json');
       return SectionStyles.fromJson(json);
     } catch (e) {
