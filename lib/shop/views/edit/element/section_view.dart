@@ -538,8 +538,6 @@ class _SectionViewState extends State<SectionView> {
     }
     print('payload: $payload');
     // screenBloc.add(UpdateSectionEvent(sectionId:section.id, payload: payload));
-    sectionStyles.getGridTemplateRows(screenBloc.state.stylesheets[deviceTypeId], section, childSize, selectChildId);
-    sectionStyles.getGridTemplateColumns(screenBloc.state.stylesheets[deviceTypeId], section, childSize, selectChildId);
   }
 
   Map<String, dynamic> get sectionPayload {
@@ -562,7 +560,10 @@ class _SectionViewState extends State<SectionView> {
   }
 
   Map<String, dynamic> childPayload(NewChildSize size) {
+    Map<String, dynamic> payload = {};
     Map<String, dynamic> payloadSection = {};
+
+
     BaseStyles baseStyles = getBaseStyles(selectChildId);
     double marginTop = baseStyles.getMarginTopAssist(size.newTop, sectionStyles.gridTemplateRows, baseStyles.gridRow, isReverse: true);
     double marginLeft = baseStyles.getMarginLeftAssist(size.newLeft, sectionStyles.gridTemplateColumns, baseStyles.gridColumn, isReverse: true);
@@ -572,9 +573,7 @@ class _SectionViewState extends State<SectionView> {
     payloadSection['marginLeft'] = marginLeft;
     payloadSection['height'] = size.newHeight;
     payloadSection['width'] = size.newWidth / GlobalUtils.shopBuilderWidthFactor;
-    Map<String, dynamic>  payload = {
-      selectChildId: payloadSection
-    };
+    payload[selectChildId] = payloadSection;
     return payload;
   }
 
