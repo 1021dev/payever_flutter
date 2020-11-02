@@ -537,7 +537,7 @@ class _SectionViewState extends State<SectionView> {
       payload = sectionPayload;
     }
     print('payload: $payload');
-    // screenBloc.add(UpdateSectionEvent(sectionId:section.id, payload: payload));
+    screenBloc.add(UpdateSectionEvent(sectionId:section.id, payload: payload));
   }
 
   Map<String, dynamic> get sectionPayload {
@@ -565,15 +565,16 @@ class _SectionViewState extends State<SectionView> {
 
 
     BaseStyles baseStyles = getBaseStyles(selectChildId);
-    double marginTop = baseStyles.getMarginTopAssist(size.newTop, sectionStyles.gridTemplateRows, baseStyles.gridRow, isReverse: true);
-    double marginLeft = baseStyles.getMarginLeftAssist(size.newLeft, sectionStyles.gridTemplateColumns, baseStyles.gridColumn, isReverse: true);
-    String margin = '$marginTop 0 0 $marginLeft';
-    payloadSection['margin'] = margin;
-    payloadSection['marginTop'] = marginTop;
-    payloadSection['marginLeft'] = marginLeft;
-    payloadSection['height'] = size.newHeight;
-    payloadSection['width'] = size.newWidth / GlobalUtils.shopBuilderWidthFactor;
-    payload[selectChildId] = payloadSection;
+    // double marginTop = baseStyles.getMarginTopAssist(size.newTop, sectionStyles.gridTemplateRows, baseStyles.gridRow, isReverse: true);
+    // double marginLeft = baseStyles.getMarginLeftAssist(size.newLeft, sectionStyles.gridTemplateColumns, baseStyles.gridColumn, isReverse: true);
+    // String margin = '$marginTop 0 0 $marginLeft';
+    // payloadSection['margin'] = margin;
+    // payloadSection['marginTop'] = marginTop;
+    // payloadSection['marginLeft'] = marginLeft;
+    // payloadSection['height'] = size.newHeight;
+    // payloadSection['width'] = size.newWidth / GlobalUtils.shopBuilderWidthFactor;
+    // payload[selectChildId] = payloadSection;
+    payload = baseStyles.getPayload(screenBloc.state.stylesheets[deviceTypeId], section, size, selectChildId);
     return payload;
   }
 

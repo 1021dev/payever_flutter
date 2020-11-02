@@ -194,7 +194,7 @@ class SizeAssist {
     Map<String, List<String>>gridTemplateColumns = getGridTemplateColumns(stylesheets, section, newSize, updatedChildId);
     Map<String, dynamic> payload = {};
 
-
+    payload = getChildPayload(stylesheets, gridTemplateRows, gridTemplateColumns, section, newSize, updatedChildId);
     // Section
     payload[section.id] = getSectionPayload(stylesheets, gridTemplateRows, gridTemplateColumns, section, newSize, updatedChildId);
     return payload;
@@ -204,23 +204,55 @@ class SizeAssist {
     // Updated Child
     Map<String, dynamic> payload = {};
     SectionStyles sectionStyles = SectionStyles.fromJson(stylesheets[section.id]);
-    if (gridTemplateRows.length == 1 && gridTemplateColumns.length == 1) {
-      BaseStyles styles = BaseStyles.fromJson(stylesheets[updatedChildId]);
-      double marginTop = styles.getMarginTopAssist(newSize.newTop, sectionStyles.gridTemplateRows, styles.gridRow, isReverse: true);
-      double marginLeft = styles.getMarginLeftAssist(newSize.newLeft, sectionStyles.gridTemplateColumns, styles.gridColumn, isReverse: true);
-      String margin = '$marginTop 0 0 $marginLeft';
+    for(int i = 0; i < section.children.length; i ++) {
+      Child child = section.children[i];
+      BaseStyles styles = BaseStyles.fromJson(stylesheets[child.id]);
+      if (styles == null || styles.display == 'none') continue;
       Map<String, dynamic> payloadChild = {};
-      payloadChild['margin'] = margin;
+      if (child.id == updatedChildId) {
+        payloadChild['height'] = newSize.newHeight;
+        payloadChild['width'] = newSize.newWidth / GlobalUtils.shopBuilderWidthFactor;
+      }
+      // Row
+      double marginTop = styles.getMarginTop(sectionStyles);
+      if (gridTemplateRows.length == 1) {
+        payloadChild['gridRow'] =  null;
+      } else {
+        List<String>rowKeys = gridTemplateRows.keys.toList();
+        int row;
+        rowKeys.forEach((key) {
+          if(gridTemplateRows[key].contains(child.id)) {
+            row = rowKeys.indexOf(key);
+          }
+        });
+        payloadChild['gridRow'] = '${row + 1} / span 1';
+        for (int i = 0; i < row - 1; i++) {
+          marginTop -= double.parse(rowKeys[i]);
+        }
+      }
       payloadChild['marginTop'] = marginTop;
+      // Column
+      double marginLeft = styles.getMarginLeft(sectionStyles);
+      if (gridTemplateColumns.length == 1) {
+        payloadChild['gridColumn'] =  null;
+      } else {
+        List<String>columnKeys = gridTemplateColumns.keys.toList();
+        int column;
+        columnKeys.forEach((key) {
+          if(gridTemplateColumns[key].contains(child.id)) {
+            column = columnKeys.indexOf(key);
+          }
+        });
+        payloadChild['gridColumn'] = '${column + 1} / span 1';
+        for (int i = 0; i < column - 1; i++) {
+          marginLeft -= double.parse(columnKeys[i]);
+        }
+      }
       payloadChild['marginLeft'] = marginLeft;
-      payloadChild['height'] = newSize.newHeight;
-      payloadChild['width'] = newSize.newWidth / GlobalUtils.shopBuilderWidthFactor;
-      payloadChild['gridRow'] = null;
-      payloadChild['gridColumn'] = null;
-      payload[updatedChildId] = payloadChild;
-    } else {
-
+      payloadChild['margin'] = '$marginTop 0 0 $marginLeft';
+      payload[child.id] = payloadChild;
     }
+    return payload;
   }
 
   Map<String, dynamic> getSectionPayload(Map<String, dynamic> stylesheets, Map<String, List<String>>gridTemplateRows, Map<String, List<String>>gridTemplateColumns, Child section, NewChildSize newSize, String updatedChildId) {
@@ -230,7 +262,7 @@ class SizeAssist {
       payloadSection['gridTemplateRows'] = null;
     } else {
       List<double>gridRows = [];
-      List<String> heightKeys = gridTemplateRows.keys;
+      List<String> heightKeys = gridTemplateRows.keys.toList();
       heightKeys.forEach((key) {
         if (gridRows.isEmpty) {
           gridRows.add(double.parse(key));
@@ -242,6 +274,7 @@ class SizeAssist {
           gridRows.add(newMarginTop);
         }
       });
+
       // Last Object
       double lastBottomMargin = 0;
       String lastChildId = gridTemplateRows[heightKeys.last].last;
@@ -252,7 +285,7 @@ class SizeAssist {
         lastBottomMargin = sectionStyles.height - (styles.height + styles.getMarginTop(sectionStyles));
       }
       gridRows.add(lastBottomMargin);
-      String gridTemplateRowsStr;
+      String gridTemplateRowsStr = '';
       gridRows.forEach((element) {
         gridTemplateRowsStr += gridTemplateRowsStr.isEmpty ? '$element' : ' $element';
       });
@@ -291,15 +324,14 @@ class SizeAssist {
       });
       payloadSection['gridTemplateColumns'] = gridTemplateColumnsStr;
     }
-
     return payloadSection;
   }
 
-  Map<String, dynamic> getGridTemplateRows(Map<String, dynamic> stylesheets, Child section, NewChildSize newSize, String updatedChildId) {
+  Map<String, List<String>> getGridTemplateRows(Map<String, dynamic> stylesheets, Child section, NewChildSize newSize, String updatedChildId) {
     int rows = 0;
     SectionStyles sectionStyles = SectionStyles.fromJson(stylesheets[section.id]);
     List<String>overlayChildren = [];
-    Map<String, dynamic> gridTemplateRows = {};
+    Map<String, List<String>> gridTemplateRows = {};
     // Sort from Top to bottom
     section.children.sort((a,b) {
       BaseStyles styles1 = BaseStyles.fromJson(stylesheets[a.id]);
@@ -358,11 +390,11 @@ class SizeAssist {
     return gridTemplateRows;
   }
 
-  Map<String, dynamic> getGridTemplateColumns(Map<String, dynamic> stylesheets, Child section, NewChildSize newSize, String updatedChildId) {
+  Map<String, List<String>> getGridTemplateColumns(Map<String, dynamic> stylesheets, Child section, NewChildSize newSize, String updatedChildId) {
     int rows = 0;
     SectionStyles sectionStyles = SectionStyles.fromJson(stylesheets[section.id]);
     List<String>overlayChildren = [];
-    Map<String, dynamic> gridTemplateColumns = {};
+    Map<String, List<String>> gridTemplateColumns = {};
     // Sort from Left to Right
     section.children.sort((a,b) {
       BaseStyles styles1 = BaseStyles.fromJson(stylesheets[a.id]);
