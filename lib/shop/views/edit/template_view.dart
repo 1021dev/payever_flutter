@@ -64,7 +64,7 @@ class _TemplateViewState extends State<TemplateView> {
   }
 
   Widget body(ShopEditScreenState state) {
-    templateSizeStateModel.setStylesheets(state.stylesheets);
+    // templateSizeStateModel.setStylesheets(state.stylesheets);
     List sections = [];
     template.children.forEach((child) {
       SectionStyles styleSheet = getSectionStyles(child.id);

@@ -189,46 +189,129 @@ class SizeAssist {
     }
   }
 
-  String getGridTemplateRows(Map<String, dynamic> stylesheets, Child section, NewChildSize newSize, String updatedChildId) {
+  Map<String, dynamic> getGridTemplateRows(Map<String, dynamic> stylesheets, Child section, NewChildSize newSize, String updatedChildId) {
     int rows = 0;
-    SectionStyles sectionStyles = stylesheets[section.id];
+    SectionStyles sectionStyles = SectionStyles.fromJson(stylesheets[section.id]);
+    List<String>overlayChildren = [];
+    Map<String, dynamic> gridTemplateRows = {};
+    // Sort from Top to bottom
+    section.children.sort((a,b) {
+      BaseStyles styles1 = BaseStyles.fromJson(stylesheets[a.id]);
+      BaseStyles styles2 = BaseStyles.fromJson(stylesheets[b.id]);
+      double marginTop1 = styles1.getMarginTop(sectionStyles);
+      double marginTop2 = styles2.getMarginTop(sectionStyles);
+      if (a.id == updatedChildId) {
+        marginTop1 = newSize.newTop;
+      }
+      if (b.id == updatedChildId) {
+        marginTop2 = newSize.newTop;
+      }
+      return marginTop1.compareTo(marginTop2);
+    });
 
     for (int i = 0; i < section.children.length; i++) {
       Child child = section.children[i];
+      BaseStyles styles = BaseStyles.fromJson(stylesheets[child.id]);
+      if (styles == null || styles.display == 'none')  continue;
+      if (overlayChildren.contains(child.id)) continue;
       double y0, y1;
       if (child.id == updatedChildId) {
         y0 = newSize.newTop;
         y1 = newSize.newTop + newSize.newHeight;
       } else {
-        BaseStyles styles = stylesheets[child.id];
         y0 = styles.getMarginTop(sectionStyles);
         y1 = y0 + styles.height + styles.paddingV * 2;
       }
-      bool isOverlay = false;
+      overlayChildren.clear();
       for (int j = 0; j < section.children.length; j++) {
         Child element = section.children[j];
+        if (element.id == child.id) continue;
+        BaseStyles styles = BaseStyles.fromJson(stylesheets[element.id]);
+        if (styles == null || styles.display == 'none')  continue;
+
         double Y0, Y1;
         if (element.id == updatedChildId) {
           Y0 = newSize.newTop;
           Y1 = newSize.newTop + newSize.newHeight;
         } else {
-          BaseStyles styles = stylesheets[element.id];
           Y0 = styles.getMarginTop(sectionStyles);
-          Y1 = y0 + styles.height + styles.paddingV * 2;
+          Y1 = Y0 + styles.height + styles.paddingV * 2;
         }
         if (y0>= Y0 && y0 <= Y1 || y1>= Y0 && y1 <= Y1) {
-          isOverlay = true;
+          overlayChildren.add(element.id);
         }
       }
-      if (!isOverlay) {
-        rows ++;
-      }
+      rows ++;
+      List<String>temp = [child.id];
+      temp.addAll(overlayChildren);
+      gridTemplateRows['$y0'] = temp;
     }
-    print('GridTemplateRows $rows');
-    return '';
+    print('GetGridTemplateRows: $rows, $gridTemplateRows');
+    // if (rows == 1)
+    //   return null;
+    return gridTemplateRows;
   }
 
-  String getGridTemplateColumns(Child section) {
-    return '';
+  Map<String, dynamic> getGridTemplateColumns(Map<String, dynamic> stylesheets, Child section, NewChildSize newSize, String updatedChildId) {
+    int rows = 0;
+    SectionStyles sectionStyles = SectionStyles.fromJson(stylesheets[section.id]);
+    List<String>overlayChildren = [];
+    Map<String, dynamic> gridTemplateColumns = {};
+    // Sort from Left to Right
+    section.children.sort((a,b) {
+      BaseStyles styles1 = BaseStyles.fromJson(stylesheets[a.id]);
+      BaseStyles styles2 = BaseStyles.fromJson(stylesheets[b.id]);
+      double marginLeft1 = styles1.getMarginLeft(sectionStyles);
+      double marginLeft2 = styles2.getMarginLeft(sectionStyles);
+      if (a.id == updatedChildId) {
+        marginLeft1 = newSize.newLeft;
+      }
+      if (b.id == updatedChildId) {
+        marginLeft2 = newSize.newLeft;
+      }
+      return marginLeft1.compareTo(marginLeft2);
+    });
+
+    for (int i = 0; i < section.children.length; i++) {
+      Child child = section.children[i];
+      BaseStyles styles = BaseStyles.fromJson(stylesheets[child.id]);
+      if (styles == null || styles.display == 'none')  continue;
+      if (overlayChildren.contains(child.id)) continue;
+      double x0, x1;
+      if (child.id == updatedChildId) {
+        x0 = newSize.newLeft;
+        x1 = newSize.newLeft + newSize.newWidth;
+      } else {
+        x0 = styles.getMarginLeft(sectionStyles);
+        x1 = x0 + styles.width + styles.paddingH * 2;
+      }
+      overlayChildren.clear();
+      for (int j = 0; j < section.children.length; j++) {
+        Child element = section.children[j];
+        if (element.id == child.id) continue;
+        BaseStyles styles = BaseStyles.fromJson(stylesheets[element.id]);
+        if (styles == null || styles.display == 'none')  continue;
+
+        double X0, X1;
+        if (element.id == updatedChildId) {
+          X0 = newSize.newLeft;
+          X1 = newSize.newLeft + newSize.newWidth;
+        } else {
+          X0 = styles.getMarginLeft(sectionStyles);
+          X1 = X0 + styles.width + styles.paddingH * 2;
+        }
+        if (x0>= X0 && x0 <= X1 || x1>= X0 && x1 <= X1) {
+          overlayChildren.add(element.id);
+        }
+      }
+      rows ++;
+      List<String>temp = [child.id];
+      temp.addAll(overlayChildren);
+      gridTemplateColumns['$x0'] = temp;
+    }
+    print('GetGridTemplateColumns: $rows, $gridTemplateColumns');
+    // if (rows == 1)
+    //   return null;
+    return gridTemplateColumns;
   }
 }

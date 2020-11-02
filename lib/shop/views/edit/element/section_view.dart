@@ -537,7 +537,9 @@ class _SectionViewState extends State<SectionView> {
       payload = sectionPayload;
     }
     print('payload: $payload');
-    screenBloc.add(UpdateSectionEvent(sectionId:section.id, payload: payload));
+    // screenBloc.add(UpdateSectionEvent(sectionId:section.id, payload: payload));
+    sectionStyles.getGridTemplateRows(screenBloc.state.stylesheets[deviceTypeId], section, childSize, selectChildId);
+    sectionStyles.getGridTemplateColumns(screenBloc.state.stylesheets[deviceTypeId], section, childSize, selectChildId);
   }
 
   Map<String, dynamic> get sectionPayload {
