@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 
 import '../../theme.dart';
+import 'models.dart';
 
 class BackgroundAssist {
   Gradient getGradient(String backgroundImage) {
@@ -188,4 +189,46 @@ class SizeAssist {
     }
   }
 
+  String getGridTemplateRows(Map<String, dynamic> stylesheets, Child section, NewChildSize newSize, String updatedChildId) {
+    int rows = 0;
+    SectionStyles sectionStyles = stylesheets[section.id];
+
+    for (int i = 0; i < section.children.length; i++) {
+      Child child = section.children[i];
+      double y0, y1;
+      if (child.id == updatedChildId) {
+        y0 = newSize.newTop;
+        y1 = newSize.newTop + newSize.newHeight;
+      } else {
+        BaseStyles styles = stylesheets[child.id];
+        y0 = styles.getMarginTop(sectionStyles);
+        y1 = y0 + styles.height + styles.paddingV * 2;
+      }
+      bool isOverlay = false;
+      for (int j = 0; j < section.children.length; j++) {
+        Child element = section.children[j];
+        double Y0, Y1;
+        if (element.id == updatedChildId) {
+          Y0 = newSize.newTop;
+          Y1 = newSize.newTop + newSize.newHeight;
+        } else {
+          BaseStyles styles = stylesheets[element.id];
+          Y0 = styles.getMarginTop(sectionStyles);
+          Y1 = y0 + styles.height + styles.paddingV * 2;
+        }
+        if (y0>= Y0 && y0 <= Y1 || y1>= Y0 && y1 <= Y1) {
+          isOverlay = true;
+        }
+      }
+      if (!isOverlay) {
+        rows ++;
+      }
+    }
+    print('GridTemplateRows $rows');
+    return '';
+  }
+
+  String getGridTemplateColumns(Child section) {
+    return '';
+  }
 }

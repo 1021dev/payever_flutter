@@ -147,13 +147,15 @@ class _BlockViewState extends State<BlockView> {
           key: ObjectKey(child.id),
           onTap: (widget.enableTapChild && selectChildId != child.id)
               ? () {
-            widget.onTapChild();
-            widget.screenBloc.add(SelectBlockEvent(
-                sectionId: widget.sectionId, blockId: block.id, selectedBlockChild: true));
-            setState(() {
-              selectChildId = child.id;
-            });
-          }
+                  widget.onTapChild();
+                  widget.screenBloc.add(SelectBlockEvent(
+                      sectionId: widget.sectionId,
+                      blockId: block.id,
+                      selectedBlockChild: true));
+                  setState(() {
+                    selectChildId = child.id;
+                  });
+                }
               : null,
           child: childWidget,
         );
@@ -176,7 +178,9 @@ class _BlockViewState extends State<BlockView> {
      //        top: blockStyles.getMarginTop(sectionStyles),
      //        bottom: blockStyles.marginBottom),
         alignment: blockStyles.getBackgroundImageAlignment(),
-        child: Stack(children: widgets));
+        child: Stack(
+          overflow: Overflow.visible,
+            children: widgets));
   }
 
   Widget getChild(ShopEditScreenState state, Child child) {
