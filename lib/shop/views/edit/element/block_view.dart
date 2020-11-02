@@ -167,14 +167,14 @@ class _BlockViewState extends State<BlockView> {
       widgets.add(lastElement);
 
     return Container(
-        // width: styleSheet.width,
-        // height: styleSheet.height,
-//      decoration: decoration,
-//         margin: EdgeInsets.only(
-//             left: styleSheet.getMarginLeft(sectionStyles),
-//             right: styleSheet.marginRight,
-//             top: styleSheet.getMarginTop(sectionStyles),
-//             bottom: styleSheet.marginBottom),
+     //    width: blockStyles.width,
+     //    height: blockStyles.height,
+     // // decoration: decoration,
+     //    margin: EdgeInsets.only(
+     //        left: blockStyles.getMarginLeft(sectionStyles),
+     //        right: blockStyles.marginRight,
+     //        top: blockStyles.getMarginTop(sectionStyles),
+     //        bottom: blockStyles.marginBottom),
         alignment: blockStyles.getBackgroundImageAlignment(),
         child: Stack(children: widgets));
   }

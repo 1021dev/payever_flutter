@@ -590,6 +590,32 @@ class _SectionViewState extends State<SectionView> {
       if (isWrong)
         return true;
     }
+    // return wrongPositionBloc(childSize);
+    // print('New Position: Top: ${childSize.newTop}, Left: ${childSize.newLeft}, SectionID: ${section.id}, SelectedSectionId:${screenBloc.state.selectedSectionId}');
+    return false;
+  }
+
+  bool wrongPositionWithOrderChildren(NewChildSize childSize, BaseStyles styles) {
+    if (styles == null || styles.display == 'none') return false;
+
+    double x0 = styles.getMarginLeft(sectionStyles);
+    double y0 = styles.getMarginTop(sectionStyles);
+    double width0 = styles.width + styles.paddingH * 2;
+    double height0 = styles.height + styles.paddingV * 2;
+
+    double x1 = childSize.newLeft;
+    double y1 = childSize.newTop;
+    double width1 = childSize.newWidth;
+    double height1 = childSize.newHeight;
+
+    if (x0 + width0 < x1 || x1 + width1 < x0
+        || y0 + height0 < y1 || y1 + height1 < y0)
+      return false;
+    else
+      return true;
+  }
+
+  bool wrongPositionBloc(NewChildSize childSize) {
     // If block
     if (screenBloc.state.selectedBlockId == selectChildId) {
       Child block = section.children.firstWhere((child) => child.id == selectChildId);
@@ -630,28 +656,7 @@ class _SectionViewState extends State<SectionView> {
         return true;
       }
     }
-    // print('New Position: Top: ${childSize.newTop}, Left: ${childSize.newLeft}, SectionID: ${section.id}, SelectedSectionId:${screenBloc.state.selectedSectionId}');
     return false;
-  }
-
-  bool wrongPositionWithOrderChildren(NewChildSize childSize, BaseStyles styles) {
-    if (styles == null || styles.display == 'none') return false;
-
-    double x0 = styles.getMarginLeft(sectionStyles);
-    double y0 = styles.getMarginTop(sectionStyles);
-    double width0 = styles.width + styles.paddingH * 2;
-    double height0 = styles.height + styles.paddingV * 2;
-
-    double x1 = childSize.newLeft;
-    double y1 = childSize.newTop;
-    double width1 = childSize.newWidth;
-    double height1 = childSize.newHeight;
-
-    if (x0 + width0 < x1 || x1 + width1 < x0
-        || y0 + height0 < y1 || y1 + height1 < y0)
-      return false;
-    else
-      return true;
   }
 
   BaseStyles getBaseStyles(String childId) {

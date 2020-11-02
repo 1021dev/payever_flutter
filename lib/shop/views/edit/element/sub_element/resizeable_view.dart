@@ -12,6 +12,7 @@ class ResizeableView extends StatefulWidget {
       this.width,
       this.top,
       this.left,
+        this.isBlockParent = false,
       this.isSelected = false,
       this.sizeChangeable = true});
 
@@ -22,6 +23,7 @@ class ResizeableView extends StatefulWidget {
   final double left;
   final bool isSelected;
   final bool sizeChangeable;
+  final bool isBlockParent;
 
   @override
   _ResizeableViewState createState() =>
@@ -30,7 +32,7 @@ class ResizeableView extends StatefulWidget {
 
 const ballDiameter = 30.0;
 const wrongEdgeWidth = 2.0;
-const limitSize = 20.0;
+const limitSize = 25.0;
 
 class _ResizeableViewState extends State<ResizeableView> {
   double width;
@@ -211,7 +213,6 @@ class _ResizeableViewState extends State<ResizeableView> {
         onDragEnd: _dragEnd,
         onDrag: (dx, dy) {
           var newWidth = width + dx;
-
           setState(() {
             width = newWidth > limitSize ? newWidth : limitSize;
             updateSize();
