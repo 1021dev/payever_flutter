@@ -26,7 +26,7 @@ import 'button_view.dart';
 import 'image_view.dart';
 
 class SectionView extends StatefulWidget {
-  final ShopPage shopPage;
+  final String deviceTypeId;
   final Child section;
   final bool isSelected;
   final Function onTapChild;
@@ -34,7 +34,7 @@ class SectionView extends StatefulWidget {
   final bool enableTapChild;
 
   const SectionView(
-      {this.shopPage,
+      {this.deviceTypeId,
       this.section,
       this.screenBloc,
       this.isSelected = false,
@@ -43,12 +43,12 @@ class SectionView extends StatefulWidget {
 
   @override
   _SectionViewState createState() => _SectionViewState(
-      shopPage: shopPage, section: section, screenBloc: screenBloc);
+      deviceTypeId: deviceTypeId, section: section, screenBloc: screenBloc);
 }
 
 class _SectionViewState extends State<SectionView> {
 
-  final ShopPage shopPage;
+  final String deviceTypeId;
   final Child section;
   final ShopEditScreenBloc screenBloc;
   final double limitSectionHeightChange = 20;
@@ -66,7 +66,7 @@ class _SectionViewState extends State<SectionView> {
   double limitSectionHeight = 0;
 
   _SectionViewState(
-      {this.shopPage, this.section, this.screenBloc}) {
+      {this.deviceTypeId, this.section, this.screenBloc}) {
     sectionStyles = getSectionStyles(section.id);
     widgetHeight = sectionStyles.height;
   }
@@ -218,7 +218,7 @@ class _SectionViewState extends State<SectionView> {
         childView = TextView(
           child: child,
           stylesheets: state.stylesheets,
-          deviceTypeId: shopPage.stylesheetIds.mobile,
+          deviceTypeId: deviceTypeId,
           sectionStyles: sectionStyles,
           isSelected: selectChildId == child.id,
         );
@@ -227,7 +227,7 @@ class _SectionViewState extends State<SectionView> {
         childView = ButtonView(
           child: child,
           stylesheets: state.stylesheets,
-          deviceTypeId: shopPage.stylesheetIds.mobile,
+          deviceTypeId: deviceTypeId,
           sectionStyles: sectionStyles,
           isSelected: selectChildId == child.id,
         );
@@ -236,7 +236,7 @@ class _SectionViewState extends State<SectionView> {
         childView = ImageView(
           child: child,
           stylesheets: state.stylesheets,
-          deviceTypeId: shopPage.stylesheetIds.mobile,
+          deviceTypeId: deviceTypeId,
           sectionStyles: sectionStyles,
           isSelected: selectChildId == child.id,
         );
@@ -245,7 +245,7 @@ class _SectionViewState extends State<SectionView> {
         childView = VideoView(
           child: child,
           stylesheets: state.stylesheets,
-          deviceTypeId: shopPage.stylesheetIds.mobile,
+          deviceTypeId: deviceTypeId,
           sectionStyles: sectionStyles,
           isSelected: selectChildId == child.id,
         );
@@ -254,7 +254,7 @@ class _SectionViewState extends State<SectionView> {
         childView = ShapeView(
           child: child,
           stylesheets: state.stylesheets,
-          deviceTypeId: shopPage.stylesheetIds.mobile,
+          deviceTypeId: deviceTypeId,
           sectionStyles: sectionStyles,
           isSelected: selectChildId == child.id,
         );
@@ -265,7 +265,7 @@ class _SectionViewState extends State<SectionView> {
           sectionId: section.id,
           screenBloc: screenBloc,
           enableTapChild: widget.enableTapChild,
-          deviceTypeId: shopPage.stylesheetIds.mobile,
+          deviceTypeId: deviceTypeId,
           sectionStyles: sectionStyles,
           onTapChild: () {
             setState(() {
@@ -280,7 +280,7 @@ class _SectionViewState extends State<SectionView> {
         childView = MenuView(
           child: child,
           stylesheets: state.stylesheets,
-          deviceTypeId: shopPage.stylesheetIds.mobile,
+          deviceTypeId: deviceTypeId,
           sectionStyles: sectionStyles,
           isSelected: selectChildId == child.id,
         );
@@ -289,7 +289,7 @@ class _SectionViewState extends State<SectionView> {
         childView = ShopCartView(
           child: child,
           stylesheets: state.stylesheets,
-          deviceTypeId: shopPage.stylesheetIds.mobile,
+          deviceTypeId: deviceTypeId,
           sectionStyles: sectionStyles,
           isSelected: selectChildId == child.id,
         );
@@ -298,7 +298,7 @@ class _SectionViewState extends State<SectionView> {
         childView = ShopProductCategoryView(
           child: child,
           stylesheets: state.stylesheets,
-          deviceTypeId: shopPage.stylesheetIds.mobile,
+          deviceTypeId: deviceTypeId,
           sectionStyles: sectionStyles,
           isSelected: selectChildId == child.id,
         );
@@ -307,7 +307,7 @@ class _SectionViewState extends State<SectionView> {
         childView = ShopProductsView(
           child: child,
           stylesheets: state.stylesheets,
-          deviceTypeId: shopPage.stylesheetIds.mobile,
+          deviceTypeId: deviceTypeId,
           sectionStyles: sectionStyles,
           isSelected: selectChildId == child.id,
         );
@@ -316,7 +316,7 @@ class _SectionViewState extends State<SectionView> {
         childView = ShopProductDetailView(
           child: child,
           stylesheets: state.stylesheets,
-          deviceTypeId: shopPage.stylesheetIds.mobile,
+          deviceTypeId: deviceTypeId,
           sectionStyles: sectionStyles,
           isSelected: selectChildId == child.id,
         );
@@ -325,7 +325,7 @@ class _SectionViewState extends State<SectionView> {
         childView = LogoView(
           child: child,
           stylesheets: state.stylesheets,
-          deviceTypeId: shopPage.stylesheetIds.mobile,
+          deviceTypeId: deviceTypeId,
           sectionStyles: sectionStyles,
           isSelected: selectChildId == child.id,
         );
@@ -334,7 +334,7 @@ class _SectionViewState extends State<SectionView> {
         childView = SocialIconView(
           child: child,
           stylesheets: state.stylesheets,
-          deviceTypeId: shopPage.stylesheetIds.mobile,
+          deviceTypeId: deviceTypeId,
           sectionStyles: sectionStyles,
           isSelected: selectChildId == child.id,
         );
@@ -506,7 +506,7 @@ class _SectionViewState extends State<SectionView> {
 
   SectionStyles getSectionStyles(String childId) {
     try {
-      Map<String, dynamic> json = screenBloc.state.stylesheets[shopPage.stylesheetIds.mobile][childId];
+      Map<String, dynamic> json = screenBloc.state.stylesheets[deviceTypeId][childId];
       // if (json['display'] != 'none') {
       //   print('==============================================');
       //   print('SectionID: $childId');
@@ -660,6 +660,6 @@ class _SectionViewState extends State<SectionView> {
   }
 
   BaseStyles getBaseStyles(String childId) {
-    return BaseStyles.fromJson(screenBloc.state.stylesheets[shopPage.stylesheetIds.mobile][childId]);
+    return BaseStyles.fromJson(screenBloc.state.stylesheets[deviceTypeId][childId]);
   }
 }

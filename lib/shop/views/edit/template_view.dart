@@ -75,7 +75,7 @@ class _TemplateViewState extends State<TemplateView> {
           styleSheet.display != 'none') {
         SectionView sectionView = SectionView(
           screenBloc: screenBloc,
-          shopPage: shopPage,
+          deviceTypeId: shopPage.stylesheetIds.mobile,
           enableTapChild: widget.enableTapSection,
           section: child,
           isSelected: selectSectionId == child.id,
