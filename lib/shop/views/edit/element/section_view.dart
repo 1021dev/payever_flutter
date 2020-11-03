@@ -47,7 +47,6 @@ class SectionView extends StatefulWidget {
 }
 
 class _SectionViewState extends State<SectionView> {
-
   final String deviceTypeId;
   final Child section;
   final ShopEditScreenBloc screenBloc;
@@ -65,8 +64,7 @@ class _SectionViewState extends State<SectionView> {
   String activeThemeId;
   double limitSectionHeight = 0;
 
-  _SectionViewState(
-      {this.deviceTypeId, this.section, this.screenBloc}) {
+  _SectionViewState({this.deviceTypeId, this.section, this.screenBloc}) {
     sectionStyles = getSectionStyles(section.id);
     widgetHeight = sectionStyles.height;
   }
@@ -85,55 +83,60 @@ class _SectionViewState extends State<SectionView> {
 
     return Consumer<TemplateSizeStateModel>(
         builder: (context, templateSizeState, child1) {
-          bool selectedSection = screenBloc.state.selectedSectionId == section.id && (screenBloc.state.selectedBlockId == '' || screenBloc.state.selectedBlockId == selectChildId);
-          if (selectedSection) {
-            if (templateSizeState.updateChildSize != null && selectedSection) {
+      bool selectedSection = screenBloc.state.selectedSectionId == section.id &&
+          (screenBloc.state.selectedBlockId == '' ||
+              screenBloc.state.selectedBlockId == selectChildId);
+      if (selectedSection) {
+        if (templateSizeState.updateChildSize != null && selectedSection) {
+          Future.microtask(() => templateSizeState.setUpdateChildSize(null));
+          _changeSection(childSize: templateSizeState.updateChildSize);
+        } else if (templateSizeState.newChildSize != null && selectedSection) {
+          bool wrongposition = sectionStyles.wrongPosition(
+              screenBloc.state.stylesheets[deviceTypeId],
+              section,
+              widgetHeight,
+              templateSizeState.newChildSize,
+              selectChildId,
+              screenBloc.state.selectedBlockId);
+          // print('wrong position: $wrongposition, SectionID: ${section.id}, SelectedSectionId:${screenBloc.state.selectedSectionId}');
+          if (wrongposition) {
+            if (!templateSizeState.wrongPosition)
               Future.microtask(
-                      () => templateSizeState.setUpdateChildSize(null));
-              _changeSection(childSize: templateSizeState.updateChildSize);
-            } else if (templateSizeState.newChildSize != null && selectedSection) {
-              bool wrongposition =
-              wrongPosition1(templateSizeState.newChildSize);
-              // sectionStyles.wrongPosition(screenBloc.state.stylesheets[deviceTypeId], section, widgetHeight, templateSizeState.newChildSize, selectChildId, screenBloc.state.selectedBlockId);
-              // print('wrong position: $wrongposition, SectionID: ${section.id}, SelectedSectionId:${screenBloc.state.selectedSectionId}');
-              if (wrongposition) {
-                if (!templateSizeState.wrongPosition)
-                  Future.microtask(() =>
-                      templateSizeState.setWrongPosition(wrongposition));
-              } else {
-                if (templateSizeState.wrongPosition)
-                  Future.microtask(() =>
-                      templateSizeState.setWrongPosition(wrongposition));
-              }
-            }
+                  () => templateSizeState.setWrongPosition(wrongposition));
+          } else {
+            if (templateSizeState.wrongPosition)
+              Future.microtask(
+                  () => templateSizeState.setWrongPosition(wrongposition));
           }
-          return BlocListener(
-            listener: (BuildContext context, ShopEditScreenState state) async {
-              if (state.selectedSection) {
-                setState(() {
-                  selectChildId = '';
-                });
-                screenBloc.add(RestSelectSectionEvent());
-              }
-            },
-            bloc: screenBloc,
-            child: BlocBuilder(
-              condition: (ShopEditScreenState state1, ShopEditScreenState state2) {
-                if (state2.selectedSectionId != section.id) {
-                  setState(() {
-                    selectChildId = '';
-                  });
-                  return false;
-                }
-                return true;
-              },
-              bloc: screenBloc,
-              builder: (BuildContext context, state) {
-                return body(state);
-              },
-            ),
-          );
-        });
+        }
+      }
+      return BlocListener(
+        listener: (BuildContext context, ShopEditScreenState state) async {
+          if (state.selectedSection) {
+            setState(() {
+              selectChildId = '';
+            });
+            screenBloc.add(RestSelectSectionEvent());
+          }
+        },
+        bloc: screenBloc,
+        child: BlocBuilder(
+          condition: (ShopEditScreenState state1, ShopEditScreenState state2) {
+            if (state2.selectedSectionId != section.id) {
+              setState(() {
+                selectChildId = '';
+              });
+              return false;
+            }
+            return true;
+          },
+          bloc: screenBloc,
+          builder: (BuildContext context, state) {
+            return body(state);
+          },
+        ),
+      );
+    });
   }
 
   Widget body(ShopEditScreenState state) {
@@ -161,19 +164,19 @@ class _SectionViewState extends State<SectionView> {
           key: ObjectKey(child.id),
           onTap: (widget.enableTapChild && selectChildId != child.id)
               ? () {
-            widget.onTapChild();
-            if (child.type == 'block') {
-              screenBloc.add(SelectBlockEvent(
-                  sectionId: section.id, blockId: child.id));
-            } else {
-              screenBloc.add(SelectSectionEvent(
-                  sectionId: section.id, selectedChild: true));
-            }
+                  widget.onTapChild();
+                  if (child.type == 'block') {
+                    screenBloc.add(SelectBlockEvent(
+                        sectionId: section.id, blockId: child.id));
+                  } else {
+                    screenBloc.add(SelectSectionEvent(
+                        sectionId: section.id, selectedChild: true));
+                  }
 
-            setState(() {
-              selectChildId = child.id;
-            });
-          }
+                  setState(() {
+                    selectChildId = child.id;
+                  });
+                }
               : null,
           child: childWidget,
         );
@@ -183,8 +186,7 @@ class _SectionViewState extends State<SectionView> {
           widgets.add(element);
       }
     }
-    if (lastElement != null)
-      widgets.add(lastElement);
+    if (lastElement != null) widgets.add(lastElement);
     // update Section Height:
     if (widgetHeight < limitSectionHeight) {
       widgetHeight = limitSectionHeight;
@@ -443,8 +445,9 @@ class _SectionViewState extends State<SectionView> {
                   return;
                 double dHeight = widgetHeight - newHeight;
                 if (top && dHeight.abs() > limitSectionHeightChange) {
-                  if (dHeight> 0) {
-                    if (widgetHeight - limitSectionHeightChange < limitSectionHeightChange) {
+                  if (dHeight > 0) {
+                    if (widgetHeight - limitSectionHeightChange <
+                        limitSectionHeightChange) {
                       widgetHeight = limitSectionHeightChange;
                     } else {
                       widgetHeight -= limitSectionHeightChange;
@@ -474,7 +477,7 @@ class _SectionViewState extends State<SectionView> {
             },
             child: Container(
               width: 40,
-              padding: EdgeInsets.only(top: top ? 0: 10, bottom: top ? 10: 0),
+              padding: EdgeInsets.only(top: top ? 0 : 10, bottom: top ? 10 : 0),
               child: Container(
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.blue, width: 2),
@@ -507,7 +510,8 @@ class _SectionViewState extends State<SectionView> {
 
   SectionStyles getSectionStyles(String childId) {
     try {
-      Map<String, dynamic> json = screenBloc.state.stylesheets[deviceTypeId][childId];
+      Map<String, dynamic> json =
+          screenBloc.state.stylesheets[deviceTypeId][childId];
       if (json['display'] != 'none') {
         print('==============================================');
         print('SectionID: $childId');
@@ -525,7 +529,8 @@ class _SectionViewState extends State<SectionView> {
 
     double height = baseStyles.height;
     double top = baseStyles.getMarginTop(sectionStyles);
-    double newLimitSectionHeight = height + top + baseStyles.paddingV + baseStyles.marginBottom;
+    double newLimitSectionHeight =
+        height + top + baseStyles.paddingV + baseStyles.marginBottom;
     if (limitSectionHeight < newLimitSectionHeight)
       limitSectionHeight = newLimitSectionHeight;
   }
@@ -538,32 +543,34 @@ class _SectionViewState extends State<SectionView> {
       payload = sectionPayload;
     }
     print('payload: $payload');
-    screenBloc.add(UpdateSectionEvent(sectionId:section.id, payload: payload));
+    screenBloc.add(UpdateSectionEvent(sectionId: section.id, payload: payload));
   }
 
   Map<String, dynamic> get sectionPayload {
     Map<String, dynamic> payloadSection = {};
     payloadSection['height'] = widgetHeight;
-    if (sectionStyles.gridTemplateRows != null && sectionStyles.gridTemplateRows.isNotEmpty) {
-      List<String>gridRows = sectionStyles.gridTemplateRows.split(' ');
-      double marginBottom = double.parse(gridRows.last); // To Last Vertical Element
+    if (sectionStyles.gridTemplateRows != null &&
+        sectionStyles.gridTemplateRows.isNotEmpty) {
+      List<String> gridRows = sectionStyles.gridTemplateRows.split(' ');
+      double marginBottom =
+          double.parse(gridRows.last); // To Last Vertical Element
       double dy = widgetHeight - sectionStyles.height;
       double updatedMarginBottom = marginBottom + dy;
       gridRows.removeLast();
       // gridRows.add('${updatedMarginBottom.round()}');
       gridRows.add('0');
-      payloadSection['gridTemplateRows'] = '$gridRows'.replaceAll(RegExp(r"[^\s\w]"), '');
+      payloadSection['gridTemplateRows'] =
+          '$gridRows'.replaceAll(RegExp(r"[^\s\w]"), '');
     }
-    Map<String, dynamic> payload = {
-      section.id: payloadSection
-    };
+    Map<String, dynamic> payload = {section.id: payloadSection};
     return payload;
   }
 
   Map<String, dynamic> childPayload(NewChildSize size) {
     Map<String, dynamic> payload = {};
     BaseStyles baseStyles = getBaseStyles(selectChildId);
-    payload = baseStyles.getPayload(screenBloc.state.stylesheets[deviceTypeId], section, size, selectChildId);
+    payload = baseStyles.getPayload(screenBloc.state.stylesheets[deviceTypeId],
+        section, size, selectChildId);
     return payload;
     Map<String, dynamic> payloadSection = {};
     // double marginTop = baseStyles.getMarginTopAssist(size.newTop, sectionStyles.gridTemplateRows, baseStyles.gridRow, isReverse: true);
@@ -577,90 +584,8 @@ class _SectionViewState extends State<SectionView> {
     // payload[selectChildId] = payloadSection;
   }
 
-  bool wrongPosition1(NewChildSize childSize) {
-    bool wrongBoundary = childSize.newTop < 0 ||
-        childSize.newLeft < 0 ||
-        (childSize.newTop + childSize.newHeight > widgetHeight) ||
-        (childSize.newLeft + childSize.newWidth > Measurements.width);
-
-    if (wrongBoundary) return true;
-    for(Child child in section.children) {
-      if (child.id == selectChildId) continue;
-      BaseStyles baseStyles = getBaseStyles(child.id);
-      bool isWrong = wrongPositionWithOrderChildren(childSize, baseStyles);
-      if (isWrong)
-        return true;
-    }
-    // return wrongPositionBloc(childSize);
-    // print('New Position: Top: ${childSize.newTop}, Left: ${childSize.newLeft}, SectionID: ${section.id}, SelectedSectionId:${screenBloc.state.selectedSectionId}');
-    return false;
-  }
-
-  bool wrongPositionWithOrderChildren(NewChildSize childSize, BaseStyles styles) {
-    if (styles == null || styles.display == 'none') return false;
-
-    double x0 = styles.getMarginLeft(sectionStyles);
-    double y0 = styles.getMarginTop(sectionStyles);
-    double width0 = styles.width + styles.paddingH * 2;
-    double height0 = styles.height + styles.paddingV * 2;
-
-    double x1 = childSize.newLeft;
-    double y1 = childSize.newTop;
-    double width1 = childSize.newWidth;
-    double height1 = childSize.newHeight;
-
-    if (x0 + width0 < x1 || x1 + width1 < x0
-        || y0 + height0 < y1 || y1 + height1 < y0)
-      return false;
-    else
-      return true;
-  }
-
-  bool wrongPositionBloc(NewChildSize childSize) {
-    // If block
-    if (screenBloc.state.selectedBlockId == selectChildId) {
-      Child block = section.children.firstWhere((child) => child.id == selectChildId);
-      SectionStyles blockStyles = getSectionStyles(block.id);
-      double x1 = 0, y1 = 0, x2 = 0,y2 = 0;
-      block.children.forEach((child) {
-        BaseStyles styles = getBaseStyles(child.id);
-        if (styles != null || styles.display != 'none') {
-          double x = styles.getMarginLeft(blockStyles);
-          double y = styles.getMarginTop(blockStyles);
-          double width = styles.width;
-          double height = styles.height;
-          double X = x + width;
-          double Y = y + height;
-
-          if (x1 == 0) x1 = x;
-          if (y1 == 0) y1 = y;
-
-          if (x2 == 0) x2 = X;
-          if (y2 == 0) y2 = Y;
-
-          if (x1 > x)  x1 = x;
-          if (y1 > y)  y1 = y;
-
-          if (x2 < X)  x2 = X;
-          if (y2 < Y)  y2 = Y;
-        }
-      });
-      x1 += blockStyles.getMarginLeft(sectionStyles);
-      y1 += blockStyles.getMarginTop(sectionStyles);
-      x2 += blockStyles.getMarginLeft(sectionStyles);
-      y2 += blockStyles.getMarginTop(sectionStyles);
-
-      print('{x1: $x1, y1:$y1}, {x2: $x2, y2:$y2}');
-      print('{left0: ${childSize.newLeft}, top0:${childSize.newTop}, {left1: ${childSize.newLeft + childSize.newWidth}, top1:${childSize.newTop + childSize.newHeight}}');
-      if (childSize.newLeft > x1 || childSize.newLeft + childSize.newWidth < x2 ||
-          childSize.newTop > y1 || childSize.newTop + childSize.newHeight < y2) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   BaseStyles getBaseStyles(String childId) {
-    return BaseStyles.fromJson(screenBloc.state.stylesheets[deviceTypeId][childId]);
+    return BaseStyles.fromJson(
+        screenBloc.state.stylesheets[deviceTypeId][childId]);
   }
 }

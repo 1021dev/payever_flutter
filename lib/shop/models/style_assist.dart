@@ -560,8 +560,11 @@ class SizeAssist {
       Child block =
           section.children.firstWhere((child) => child.id == updatedChildId);
       SectionStyles blockStyles = SectionStyles.fromJson(stylesheets[block.id]);
-      wrongBlockPosition = wrongPositionBlockView(
-          stylesheets, block, newSize, sectionStyles, blockStyles);
+      // Check blockView Moving
+      if (blockStyles.width != newSize.newWidth || blockStyles.height != newSize.newHeight) {
+        wrongBlockPosition = wrongPositionBlockView(
+            stylesheets, block, newSize, sectionStyles, blockStyles);
+      }
     }
     // print('New Position: Top: ${childSize.newTop}, Left: ${childSize.newLeft}, SectionID: ${section.id}, SelectedSectionId:${screenBloc.state.selectedSectionId}');
     return wrongBlockPosition;

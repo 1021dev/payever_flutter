@@ -317,6 +317,7 @@ class _ResizeableViewState extends State<ResizeableView> {
   updateSize() {
     templateSizeStateModel.setNewChildSize(NewChildSize(
         newTop: top, newLeft: left, newWidth: width, newHeight: height));
+
   }
 
   _dragEnd() {
@@ -328,8 +329,10 @@ class _ResizeableViewState extends State<ResizeableView> {
         left = left0;
         top = top0;
       });
-      templateSizeStateModel.setWrongPosition(false);
       updateSize();
+      Future.delayed(Duration(milliseconds: 100)).then((value) {
+        templateSizeStateModel.setWrongPosition(false);
+      });
     } else {
       width0 = width;
       height0 = height;
