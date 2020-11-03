@@ -514,4 +514,96 @@ class SizeAssist {
     //   return null;
     return gridTemplateColumns;
   }
+
+  bool wrongPosition(Map<String, dynamic> stylesheets, Child section,
+      double sectionHeight, NewChildSize newSize, String updatedChildId, String selectedBlockId) {
+    // Check Boundary
+    bool wrongBoundary = newSize.newTop < 0 ||
+        newSize.newLeft < 0 ||
+        (newSize.newTop + newSize.newHeight > sectionHeight) ||
+        (newSize.newLeft + newSize.newWidth > Measurements.width);
+    SectionStyles sectionStyles =
+    SectionStyles.fromJson(stylesheets[section.id]);
+    if (wrongBoundary) return true;
+
+    // Check other Children
+    for(Child child in section.children) {
+      if (child.id == updatedChildId) continue;
+      BaseStyles baseStyles = BaseStyles.fromJson(stylesheets[child.id]);
+      bool isWrong = wrongPositionWithOrderChildren(newSize, baseStyles, sectionStyles);
+      if (isWrong)
+        return true;
+    }
+
+    // Check BlockView with block's children
+    bool wrongBlockPosition = false;
+    if (selectedBlockId == updatedChildId) {
+      Child block = section.children.firstWhere((child) => child.id == updatedChildId);
+      SectionStyles blockStyles = SectionStyles.fromJson(stylesheets[block.id]);
+      wrongBlockPosition = wrongPositionBloc(stylesheets, block, newSize, sectionStyles, blockStyles);
+    }
+    // print('New Position: Top: ${childSize.newTop}, Left: ${childSize.newLeft}, SectionID: ${section.id}, SelectedSectionId:${screenBloc.state.selectedSectionId}');
+    return wrongBlockPosition;
+  }
+
+  bool wrongPositionWithOrderChildren(NewChildSize childSize, BaseStyles styles, SectionStyles sectionStyles) {
+    if (styles == null || styles.display == 'none') return false;
+
+    double x0 = styles.getMarginLeft(sectionStyles);
+    double y0 = styles.getMarginTop(sectionStyles);
+    double width0 = styles.width + styles.paddingH * 2;
+    double height0 = styles.height + styles.paddingV * 2;
+
+    double x1 = childSize.newLeft;
+    double y1 = childSize.newTop;
+    double width1 = childSize.newWidth;
+    double height1 = childSize.newHeight;
+
+    if (x0 + width0 < x1 || x1 + width1 < x0
+        || y0 + height0 < y1 || y1 + height1 < y0)
+      return false;
+    else
+      return true;
+  }
+
+  bool wrongPositionBloc(Map<String, dynamic> stylesheets, Child block, NewChildSize childSize, SectionStyles sectionStyles, SectionStyles blockStyles) {
+    // If block
+      double x1 = 0, y1 = 0, x2 = 0,y2 = 0;
+      block.children.forEach((child) {
+        BaseStyles styles = BaseStyles.fromJson(stylesheets[child.id]);
+        if (styles != null || styles.display != 'none') {
+          double x = styles.getMarginLeft(blockStyles);
+          double y = styles.getMarginTop(blockStyles);
+          double width = styles.width;
+          double height = styles.height;
+          double X = x + width;
+          double Y = y + height;
+
+          if (x1 == 0) x1 = x;
+          if (y1 == 0) y1 = y;
+
+          if (x2 == 0) x2 = X;
+          if (y2 == 0) y2 = Y;
+
+          if (x1 > x)  x1 = x;
+          if (y1 > y)  y1 = y;
+
+          if (x2 < X)  x2 = X;
+          if (y2 < Y)  y2 = Y;
+        }
+      });
+      x1 += blockStyles.getMarginLeft(sectionStyles);
+      y1 += blockStyles.getMarginTop(sectionStyles);
+      x2 += blockStyles.getMarginLeft(sectionStyles);
+      y2 += blockStyles.getMarginTop(sectionStyles);
+
+      print('{x1: $x1, y1:$y1}, {x2: $x2, y2:$y2}');
+      print('{left0: ${childSize.newLeft}, top0:${childSize.newTop}, {left1: ${childSize.newLeft + childSize.newWidth}, top1:${childSize.newTop + childSize.newHeight}}');
+      if (childSize.newLeft > x1 || childSize.newLeft + childSize.newWidth < x2 ||
+          childSize.newTop > y1 || childSize.newTop + childSize.newHeight < y2) {
+        return true;
+      }
+
+    return false;
+  }
 }

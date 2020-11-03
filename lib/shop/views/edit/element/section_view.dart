@@ -93,7 +93,8 @@ class _SectionViewState extends State<SectionView> {
               _changeSection(childSize: templateSizeState.updateChildSize);
             } else if (templateSizeState.newChildSize != null && selectedSection) {
               bool wrongposition =
-              wrongPosition(templateSizeState.newChildSize);
+              wrongPosition1(templateSizeState.newChildSize);
+              // sectionStyles.wrongPosition(screenBloc.state.stylesheets[deviceTypeId], section, widgetHeight, templateSizeState.newChildSize, selectChildId, screenBloc.state.selectedBlockId);
               // print('wrong position: $wrongposition, SectionID: ${section.id}, SelectedSectionId:${screenBloc.state.selectedSectionId}');
               if (wrongposition) {
                 if (!templateSizeState.wrongPosition)
@@ -507,11 +508,11 @@ class _SectionViewState extends State<SectionView> {
   SectionStyles getSectionStyles(String childId) {
     try {
       Map<String, dynamic> json = screenBloc.state.stylesheets[deviceTypeId][childId];
-      // if (json['display'] != 'none') {
-      //   print('==============================================');
-      //   print('SectionID: $childId');
-      //   print('Section StyleSheet: $json');
-      // }
+      if (json['display'] != 'none') {
+        print('==============================================');
+        print('SectionID: $childId');
+        print('Section StyleSheet: $json');
+      }
       return SectionStyles.fromJson(json);
     } catch (e) {
       return null;
@@ -561,10 +562,10 @@ class _SectionViewState extends State<SectionView> {
 
   Map<String, dynamic> childPayload(NewChildSize size) {
     Map<String, dynamic> payload = {};
-    Map<String, dynamic> payloadSection = {};
-
-
     BaseStyles baseStyles = getBaseStyles(selectChildId);
+    payload = baseStyles.getPayload(screenBloc.state.stylesheets[deviceTypeId], section, size, selectChildId);
+    return payload;
+    Map<String, dynamic> payloadSection = {};
     // double marginTop = baseStyles.getMarginTopAssist(size.newTop, sectionStyles.gridTemplateRows, baseStyles.gridRow, isReverse: true);
     // double marginLeft = baseStyles.getMarginLeftAssist(size.newLeft, sectionStyles.gridTemplateColumns, baseStyles.gridColumn, isReverse: true);
     // String margin = '$marginTop 0 0 $marginLeft';
@@ -574,11 +575,9 @@ class _SectionViewState extends State<SectionView> {
     // payloadSection['height'] = size.newHeight;
     // payloadSection['width'] = size.newWidth / GlobalUtils.shopBuilderWidthFactor;
     // payload[selectChildId] = payloadSection;
-    payload = baseStyles.getPayload(screenBloc.state.stylesheets[deviceTypeId], section, size, selectChildId);
-    return payload;
   }
 
-  bool wrongPosition(NewChildSize childSize) {
+  bool wrongPosition1(NewChildSize childSize) {
     bool wrongBoundary = childSize.newTop < 0 ||
         childSize.newLeft < 0 ||
         (childSize.newTop + childSize.newHeight > widgetHeight) ||
