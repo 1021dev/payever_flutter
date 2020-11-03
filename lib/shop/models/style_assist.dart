@@ -201,6 +201,7 @@ class SizeAssist {
   }
 
   Map<String, dynamic> getChildPayload(Map<String, dynamic> stylesheets, Map<String, List<String>>gridTemplateRows, Map<String, List<String>>gridTemplateColumns, Child section, NewChildSize newSize, String updatedChildId) {
+    print('newSize margin Left: ${newSize.newLeft}');
     // Updated Child
     Map<String, dynamic> payload = {};
     SectionStyles sectionStyles = SectionStyles.fromJson(stylesheets[section.id]);
@@ -269,7 +270,7 @@ class SizeAssist {
           }
         }
       }
-
+      marginLeft /= GlobalUtils.shopBuilderWidthFactor;
       payloadChild['marginTop'] = marginTop;
       payloadChild['marginLeft'] = marginLeft;
       payloadChild['margin'] = '$marginTop 0 0 $marginLeft';
@@ -280,7 +281,6 @@ class SizeAssist {
 
   Map<String, dynamic> getSectionPayload(Map<String, dynamic> stylesheets, Map<String, List<String>>gridTemplateRows, Map<String, List<String>>gridTemplateColumns, Child section, NewChildSize newSize, String updatedChildId) {
     SectionStyles sectionStyles = SectionStyles.fromJson(stylesheets[section.id]);
-    print('sectionStylesheets: ${stylesheets[section.id]}');
     Map<String, dynamic> payloadSection = {};
     if (gridTemplateRows.length == 0) {
       payloadSection['gridTemplateRows'] = null;
@@ -339,7 +339,6 @@ class SizeAssist {
       double lastLeftMargin = 0;
       String lastChildId = gridTemplateColumns[widthKeys.last].last;
       if (lastChildId == updatedChildId) {
-        print('sectionStyles.width: ${sectionStyles.width}');
         lastLeftMargin = sectionStyles.width - (newSize.newLeft + newSize.newWidth);
       } else {
         BaseStyles styles = BaseStyles.fromJson(stylesheets[lastChildId]);
@@ -474,7 +473,7 @@ class SizeAssist {
       rows ++;
       List<String>temp = [child.id];
       temp.addAll(overlayChildren);
-      gridTemplateColumns['$x0'] = temp;
+      gridTemplateColumns['${x0/GlobalUtils.shopBuilderWidthFactor}'] = temp;
     }
     print('GetGridTemplateColumns: $rows, $gridTemplateColumns');
 

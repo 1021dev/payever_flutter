@@ -147,15 +147,16 @@ class ShopEditScreenBloc
       'targetPageId': state.activeShopPage.id
     };
     print('update Body: $body');
-    String key = event.payload.keys.first;
-    Map<String, dynamic>stylesheets = state.stylesheets;
 
-    Map<String, dynamic>updatejson =  event.payload[key];
-    Map<String, dynamic>json = stylesheets[state.activeShopPage.stylesheetIds.mobile][key];
-    updatejson.keys.forEach((element) {
-      json[element] = updatejson[element];
+    Map<String, dynamic>stylesheets = state.stylesheets;
+    event.payload.keys.forEach((key) {
+      Map<String, dynamic>updatejson =  event.payload[key];
+      Map<String, dynamic>json = stylesheets[state.activeShopPage.stylesheetIds.mobile][key];
+      updatejson.keys.forEach((element) {
+        json[element] = updatejson[element];
+      });
+      stylesheets[state.activeShopPage.stylesheetIds.mobile][key] = json;
     });
-    stylesheets[state.activeShopPage.stylesheetIds.mobile][key] = json;
     yield state.copyWith(selectedSectionId: event.sectionId, stylesheets: stylesheets);
 
     api.shopEditAction(
