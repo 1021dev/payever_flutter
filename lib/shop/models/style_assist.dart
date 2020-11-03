@@ -209,45 +209,68 @@ class SizeAssist {
       BaseStyles styles = BaseStyles.fromJson(stylesheets[child.id]);
       if (styles == null || styles.display == 'none') continue;
       Map<String, dynamic> payloadChild = {};
+
+      double marginTop = styles.getMarginTop(sectionStyles);
+      double marginLeft = styles.getMarginLeft(sectionStyles);
       if (child.id == updatedChildId) {
         payloadChild['height'] = newSize.newHeight;
         payloadChild['width'] = newSize.newWidth / GlobalUtils.shopBuilderWidthFactor;
+        marginTop = newSize.newTop;
+        marginLeft = newSize.newLeft;
       }
       // Row
-      double marginTop = styles.getMarginTop(sectionStyles);
-      if (gridTemplateRows.length == 1) {
+      if (gridTemplateRows.length == 0) {
         payloadChild['gridRow'] =  null;
       } else {
         List<String>rowKeys = gridTemplateRows.keys.toList();
-        int row;
-        rowKeys.forEach((key) {
+        for(int ii = 0; ii < rowKeys.length; ii ++) {
+          int rowIndex;
+          String key = rowKeys[ii];
           if(gridTemplateRows[key].contains(child.id)) {
-            row = rowKeys.indexOf(key);
+            rowIndex = gridTemplateRows[key].indexOf(child.id);
+            payloadChild['gridRow'] = '${ii + 1} / span 1';
+            if (rowIndex == 0) {
+              if (ii != 0) {
+                marginTop = 0;
+              }
+            } else {
+              for (int jj = 0; jj < ii; jj++) {
+                marginTop -= double.parse(rowKeys[jj]);
+              }
+            }
+          } else {
+            continue;
           }
-        });
-        payloadChild['gridRow'] = '${row + 1} / span 1';
-        for (int i = 0; i < row - 1; i++) {
-          marginTop -= double.parse(rowKeys[i]);
         }
       }
-      payloadChild['marginTop'] = marginTop;
+
       // Column
-      double marginLeft = styles.getMarginLeft(sectionStyles);
-      if (gridTemplateColumns.length == 1) {
+      if (gridTemplateColumns.length == 0) {
         payloadChild['gridColumn'] =  null;
       } else {
         List<String>columnKeys = gridTemplateColumns.keys.toList();
-        int column;
-        columnKeys.forEach((key) {
+        for(int ii = 0; ii < columnKeys.length; ii ++) {
+          int columnIndex;
+          String key = columnKeys[ii];
           if(gridTemplateColumns[key].contains(child.id)) {
-            column = columnKeys.indexOf(key);
+            columnIndex = gridTemplateColumns[key].indexOf(child.id);
+            payloadChild['gridColumn'] = '${ii + 1} / span 1';
+            if (columnIndex == 0) {
+              if (ii != 0) {
+                marginLeft = 0;
+              }
+            } else {
+              for (int jj = 0; jj < ii; jj++) {
+                marginLeft -= double.parse(columnKeys[jj]);
+              }
+            }
+          } else {
+            continue;
           }
-        });
-        payloadChild['gridColumn'] = '${column + 1} / span 1';
-        for (int i = 0; i < column - 1; i++) {
-          marginLeft -= double.parse(columnKeys[i]);
         }
       }
+
+      payloadChild['marginTop'] = marginTop;
       payloadChild['marginLeft'] = marginLeft;
       payloadChild['margin'] = '$marginTop 0 0 $marginLeft';
       payload[child.id] = payloadChild;
@@ -257,13 +280,15 @@ class SizeAssist {
 
   Map<String, dynamic> getSectionPayload(Map<String, dynamic> stylesheets, Map<String, List<String>>gridTemplateRows, Map<String, List<String>>gridTemplateColumns, Child section, NewChildSize newSize, String updatedChildId) {
     SectionStyles sectionStyles = SectionStyles.fromJson(stylesheets[section.id]);
+    print('sectionStylesheets: ${stylesheets[section.id]}');
     Map<String, dynamic> payloadSection = {};
-    if (gridTemplateRows.length == 1) {
+    if (gridTemplateRows.length == 0) {
       payloadSection['gridTemplateRows'] = null;
     } else {
       List<double>gridRows = [];
       List<String> heightKeys = gridTemplateRows.keys.toList();
-      heightKeys.forEach((key) {
+      for(int i = 1; i < heightKeys.length; i++) {
+        String key = heightKeys[i];
         if (gridRows.isEmpty) {
           gridRows.add(double.parse(key));
         } else {
@@ -273,7 +298,7 @@ class SizeAssist {
           });
           gridRows.add(newMarginTop);
         }
-      });
+      }
 
       // Last Object
       double lastBottomMargin = 0;
@@ -292,12 +317,13 @@ class SizeAssist {
       payloadSection['gridTemplateRows'] = gridTemplateRowsStr;
     }
 
-    if (gridTemplateColumns.length == 1) {
+    if (gridTemplateColumns.length == 0) {
       payloadSection['gridTemplateColumns'] = null;
     } else {
       List<double>gridColumns = [];
-      List<String> widthKeys = gridTemplateColumns.keys;
-      widthKeys.forEach((key) {
+      List<String> widthKeys = gridTemplateColumns.keys.toList();
+      for(int i = 1; i < widthKeys.length; i ++) {
+        String key = widthKeys[i];
         if (gridColumns.isEmpty) {
           gridColumns.add(double.parse(key));
         } else {
@@ -307,18 +333,21 @@ class SizeAssist {
           });
           gridColumns.add(newMarginLeft);
         }
-      });
+      }
+
       // Last Object
       double lastLeftMargin = 0;
       String lastChildId = gridTemplateColumns[widthKeys.last].last;
       if (lastChildId == updatedChildId) {
+        print('sectionStyles.width: ${sectionStyles.width}');
         lastLeftMargin = sectionStyles.width - (newSize.newLeft + newSize.newWidth);
       } else {
         BaseStyles styles = BaseStyles.fromJson(stylesheets[lastChildId]);
+
         lastLeftMargin = sectionStyles.width - (styles.width + styles.getMarginLeft(sectionStyles));
       }
       gridColumns.add(lastLeftMargin);
-      String gridTemplateColumnsStr;
+      String gridTemplateColumnsStr = '';
       gridColumns.forEach((element) {
         gridTemplateColumnsStr += gridTemplateColumnsStr.isEmpty ? '$element' : ' $element';
       });

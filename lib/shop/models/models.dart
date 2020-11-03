@@ -556,6 +556,14 @@ class SectionStyles extends BaseStyles {
   @JsonKey(name: 'zIndex')
   dynamic zIndex;
 
+  get width {
+    double width = super.width;
+    if (width == 0)
+      width = Measurements.width;
+
+    return width;
+  }
+
   factory SectionStyles.fromJson(Map<String, dynamic> json) => _$SectionStylesFromJson(json);
   Map<String, dynamic> toJson() => _$SectionStylesToJson(this);
 }
