@@ -329,6 +329,7 @@ class _ResizeableViewState extends State<ResizeableView> {
         left = left0;
         top = top0;
       });
+      templateSizeStateModel.setUpdateChildSizeFailed(true);
       updateSize();
       Future.delayed(Duration(milliseconds: 100)).then((value) {
         templateSizeStateModel.setWrongPosition(false);

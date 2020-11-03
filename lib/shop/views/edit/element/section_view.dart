@@ -86,52 +86,7 @@ class _SectionViewState extends State<SectionView> {
 
     return Consumer<TemplateSizeStateModel>(
         builder: (context, templateSizeState, child1) {
-      bool selectedSection = screenBloc.state.selectedSectionId == section.id &&
-          (screenBloc.state.selectedBlockId == '' ||
-              screenBloc.state.selectedBlockId == selectChildId);
-      if (selectedSection) {
-        if (templateSizeState.updateChildSize != null && selectedSection) {
-          Future.microtask(() {
-            templateSizeState.setUpdateChildSize(null);
-          });
-          _changeSection(childSize: templateSizeState.updateChildSize);
-        } else if (templateSizeState.newChildSize != null && selectedSection) {
-          bool wrongposition = sectionStyles.wrongPosition(
-              screenBloc.state.stylesheets[deviceTypeId],
-              section,
-              widgetHeight,
-              templateSizeState.newChildSize,
-              selectChildId,
-              screenBloc.state.selectedBlockId);
-          // print('wrong position: $wrongposition, SectionID: ${section.id}, SelectedSectionId:${screenBloc.state.selectedSectionId}');
-          Future.microtask(() {
-            setState(() {
-              relativeMarginLeft = sectionStyles.relativeMarginLeft(
-                  screenBloc.state.stylesheets[deviceTypeId],
-                  section,
-                  templateSizeState.newChildSize,
-                  selectChildId);
-              relativeMarginTop = sectionStyles.relativeMarginTop(
-                  screenBloc.state.stylesheets[deviceTypeId],
-                  section,
-                  templateSizeState.newChildSize,
-                  widgetHeight,
-                  selectChildId);
-              print('relativeMarginLeft: $relativeMarginLeft');
-            });
-          });
-          if (wrongposition) {
-            if (!templateSizeState.wrongPosition)
-              Future.microtask(
-                  () => templateSizeState.setWrongPosition(wrongposition));
-          } else {
-            if (templateSizeState.wrongPosition)
-              Future.microtask(() {
-                templateSizeState.setWrongPosition(wrongposition);
-              });
-          }
-        }
-      }
+      progressResize(templateSizeState);
       return BlocListener(
         listener: (BuildContext context, ShopEditScreenState state) async {
           if (state.selectedSection) {
@@ -553,6 +508,74 @@ class _SectionViewState extends State<SectionView> {
       alignment: sectionStyles.getBackgroundImageAlignment(),
       child: BackgroundView(styles: sectionStyles),
     );
+  }
+
+  void progressResize(TemplateSizeStateModel templateSizeState) {
+    bool selectedSection = screenBloc.state.selectedSectionId == section.id &&
+        (screenBloc.state.selectedBlockId == '' ||
+            screenBloc.state.selectedBlockId == selectChildId);
+    if (!selectedSection) return;
+    // Initialize Relative Lines after drag
+    if (templateSizeState.updateChildSizeFailed) {
+      Future.microtask(() => initializeRelativeLines());
+    }
+    if (templateSizeState.updateChildSize != null && selectedSection) {
+      Future.microtask(() {
+        templateSizeState.setUpdateChildSize(null);
+        initializeRelativeLines();
+      });
+      _changeSection(childSize: templateSizeState.updateChildSize);
+    } else if (templateSizeState.newChildSize != null && selectedSection) {
+      bool wrongposition = sectionStyles.wrongPosition(
+          screenBloc.state.stylesheets[deviceTypeId],
+          section,
+          widgetHeight,
+          templateSizeState.newChildSize,
+          selectChildId,
+          screenBloc.state.selectedBlockId);
+      // print('wrong position: $wrongposition, SectionID: ${section.id}, SelectedSectionId:${screenBloc.state.selectedSectionId}');
+      Future.microtask(
+          () => progressRelativeLines(templateSizeState.newChildSize));
+      if (wrongposition) {
+        if (!templateSizeState.wrongPosition)
+          Future.microtask(
+              () => templateSizeState.setWrongPosition(wrongposition));
+      } else {
+        if (templateSizeState.wrongPosition)
+          Future.microtask(() {
+            templateSizeState.setWrongPosition(wrongposition);
+          });
+      }
+    }
+  }
+
+  void progressRelativeLines(NewChildSize newChildSize) {
+    setState(() {
+      relativeMarginTop = sectionStyles.relativeMarginTop(
+          screenBloc.state.stylesheets[deviceTypeId],
+          section,
+          newChildSize,
+          widgetHeight,
+          selectChildId);
+      relativeMarginLeft = sectionStyles.relativeMarginLeft(
+          screenBloc.state.stylesheets[deviceTypeId],
+          section,
+          newChildSize,
+          selectChildId);
+    });
+  }
+
+  void initializeRelativeLines() {
+    if (relativeMarginTop > 0) {
+      setState(() {
+        relativeMarginTop = -1;
+      });
+    }
+    if (relativeMarginLeft > 0) {
+      setState(() {
+        relativeMarginLeft = -1;
+      });
+    }
   }
 
   SectionStyles getSectionStyles(String childId) {

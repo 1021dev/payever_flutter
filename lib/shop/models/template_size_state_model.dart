@@ -6,6 +6,15 @@ class TemplateSizeStateModel extends ChangeNotifier {
   NewChildSize _newChildSize;
   bool _wrongPosition = false;
   NewChildSize _updateChildSize;
+  bool _updateChildSizeFailed = false;
+
+  bool get updateChildSizeFailed => _updateChildSizeFailed;
+
+  setUpdateChildSizeFailed(bool value) {
+    _updateChildSizeFailed = value;
+    Future.delayed(Duration(milliseconds: 100))
+        .then((value) => _updateChildSizeFailed = false);
+  }
 
   Map<String, dynamic> get stylesheets => _stylesheets;
 
