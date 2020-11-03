@@ -220,10 +220,16 @@ class SizeAssist {
 
       double marginTop = styles.getMarginTop(sectionStyles);
       double marginLeft = styles.getMarginLeft(sectionStyles);
+
       if (child.id == updatedChildId) {
         payloadChild['height'] = newSize.newHeight;
         payloadChild['width'] =
             newSize.newWidth / GlobalUtils.shopBuilderWidthFactor;
+        if (child.type == 'button') {
+          payloadChild['height'] = newSize.newHeight - styles.paddingV * 2;
+          payloadChild['width'] =
+              newSize.newWidth / GlobalUtils.shopBuilderWidthFactor - styles.paddingH * 2;
+        }
         marginTop = newSize.newTop;
         marginLeft = newSize.newLeft;
       }
@@ -554,7 +560,7 @@ class SizeAssist {
       Child block =
           section.children.firstWhere((child) => child.id == updatedChildId);
       SectionStyles blockStyles = SectionStyles.fromJson(stylesheets[block.id]);
-      wrongBlockPosition = wrongPositionBloc(
+      wrongBlockPosition = wrongPositionBlockView(
           stylesheets, block, newSize, sectionStyles, blockStyles);
     }
     // print('New Position: Top: ${childSize.newTop}, Left: ${childSize.newLeft}, SectionID: ${section.id}, SelectedSectionId:${screenBloc.state.selectedSectionId}');
@@ -584,7 +590,7 @@ class SizeAssist {
       return true;
   }
 
-  bool wrongPositionBloc(
+  bool wrongPositionBlockView(
       Map<String, dynamic> stylesheets,
       Child block,
       NewChildSize childSize,
@@ -597,8 +603,8 @@ class SizeAssist {
       if (styles != null || styles.display != 'none') {
         double x = styles.getMarginLeft(blockStyles);
         double y = styles.getMarginTop(blockStyles);
-        double width = styles.width;
-        double height = styles.height;
+        double width = styles.width + styles.paddingH * 2;
+        double height = styles.height+ styles.paddingV * 2;
         double X = x + width;
         double Y = y + height;
 
@@ -632,4 +638,5 @@ class SizeAssist {
 
     return false;
   }
+
 }

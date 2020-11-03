@@ -272,6 +272,10 @@ class Child {
   @JsonKey(name: 'type')            String type;
   @JsonKey(name: 'data')            dynamic data;
 
+  bool isButton() {
+    return type == 'button';
+  }
+
   factory Child.fromJson(Map<String, dynamic> json) => _$ChildFromJson(json);
   Map<String, dynamic> toJson() => _$ChildToJson(this);
 }

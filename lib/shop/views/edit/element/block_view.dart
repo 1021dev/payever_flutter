@@ -43,9 +43,7 @@ class BlockView extends StatefulWidget {
 
   @override
   _BlockViewState createState() => _BlockViewState(
-      block: child,
-      sectionStyles: sectionStyles,
-      deviceTypeId: deviceTypeId);
+      block: child, sectionStyles: sectionStyles, deviceTypeId: deviceTypeId);
 }
 
 class _BlockViewState extends State<BlockView> {
@@ -56,8 +54,7 @@ class _BlockViewState extends State<BlockView> {
   final String TAG = 'BlockView : ';
   String selectChildId = '';
 
-  _BlockViewState(
-      {this.block, this.sectionStyles, this.deviceTypeId});
+  _BlockViewState({this.block, this.sectionStyles, this.deviceTypeId});
 
   @override
   void dispose() {
@@ -73,62 +70,68 @@ class _BlockViewState extends State<BlockView> {
     }
     return Consumer<TemplateSizeStateModel>(
         builder: (context, templateSizeState, child1) {
-          bool selectedSection = widget.screenBloc.state.selectedBlockId == block.id && selectChildId.length > 0;
-          if (selectedSection) {
-            if (templateSizeState.updateChildSize != null && selectedSection) {
-              Future.microtask(
-                      () => templateSizeState.setUpdateChildSize(null));
-              _changeSection(childSize: templateSizeState.updateChildSize);
-            } else if (templateSizeState.newChildSize != null && selectedSection) {
-              bool wrongposition =
-              wrongPosition(templateSizeState.newChildSize);
-              print('wrong position: $wrongposition, Block ID: ${block.id}');
-              if (wrongposition) {
-                if (!templateSizeState.wrongPosition)
-                  Future.microtask(() =>
-                      templateSizeState.setWrongPosition(wrongposition));
-              } else {
-                if (templateSizeState.wrongPosition)
-                  Future.microtask(() =>
-                      templateSizeState.setWrongPosition(wrongposition));
-              }
-            }
-          }
-          return BlocListener(
-            listener: (BuildContext context, ShopEditScreenState state) async {
-              print('BlockView: ${state.selectedSection}, ${state.selectedBlockSection}');
-              if (state.selectedSection || state.selectedBlockSection) {
-                setState(() {
-                  selectChildId = '';
-                });
-                widget.screenBloc.add(RestSelectBlockEvent());
-              }
-            },
-            bloc: widget.screenBloc,
-            child: BlocBuilder(
-              condition: (ShopEditScreenState state1, ShopEditScreenState state2) {
-                if (state2.selectedBlockId != block.id) {
-                  setState(() {
-                    selectChildId = '';
-                  });
-                  return false;
-                }
-                return true;
-              },
-              bloc: widget.screenBloc,
-              builder: (BuildContext context, state) {
-                return ResizeableView(
-                    width: blockStyles.width,
-                    height: blockStyles.height,
-                    left: blockStyles.getMarginLeft(sectionStyles),
-                    top: blockStyles.getMarginTop(sectionStyles),
-                    isSelected: widget.isSelected,
-                    child: body(state));
-              },
-            ),
-          );
-        });
+      bool selectedSection =
+          widget.screenBloc.state.selectedBlockId == block.id &&
+              selectChildId.length > 0;
+      if (selectedSection) {
+        if (templateSizeState.updateChildSize != null && selectedSection) {
+          Future.microtask(() => templateSizeState.setUpdateChildSize(null));
+          _changeSection(childSize: templateSizeState.updateChildSize);
+        } else if (templateSizeState.newChildSize != null && selectedSection) {
+          bool wrongposition = sectionStyles.wrongPosition(
+              widget.screenBloc.state.stylesheets[deviceTypeId],
+              block,
+              blockStyles.height,
+              templateSizeState.newChildSize,
+              selectChildId,
+              widget.screenBloc.state.selectedBlockId);
 
+          print('wrong position: $wrongposition, Block ID: ${block.id}');
+          if (wrongposition) {
+            if (!templateSizeState.wrongPosition)
+              Future.microtask(
+                  () => templateSizeState.setWrongPosition(wrongposition));
+          } else {
+            if (templateSizeState.wrongPosition)
+              Future.microtask(
+                  () => templateSizeState.setWrongPosition(wrongposition));
+          }
+        }
+      }
+      return BlocListener(
+        listener: (BuildContext context, ShopEditScreenState state) async {
+          // print('BlockView: ${state.selectedSection}, ${state.selectedBlockSection}');
+          if (state.selectedSection || state.selectedBlockSection) {
+            setState(() {
+              selectChildId = '';
+            });
+            widget.screenBloc.add(RestSelectBlockEvent());
+          }
+        },
+        bloc: widget.screenBloc,
+        child: BlocBuilder(
+          condition: (ShopEditScreenState state1, ShopEditScreenState state2) {
+            if (state2.selectedBlockId != block.id) {
+              setState(() {
+                selectChildId = '';
+              });
+              return false;
+            }
+            return true;
+          },
+          bloc: widget.screenBloc,
+          builder: (BuildContext context, state) {
+            return ResizeableView(
+                width: blockStyles.width,
+                height: blockStyles.height,
+                left: blockStyles.getMarginLeft(sectionStyles),
+                top: blockStyles.getMarginTop(sectionStyles),
+                isSelected: widget.isSelected,
+                child: body(state));
+          },
+        ),
+      );
+    });
   }
 
   Widget body(ShopEditScreenState state) {
@@ -165,22 +168,19 @@ class _BlockViewState extends State<BlockView> {
           widgets.add(element);
       }
     }
-    if (lastElement != null)
-      widgets.add(lastElement);
+    if (lastElement != null) widgets.add(lastElement);
 
     return Container(
-     //    width: blockStyles.width,
-     //    height: blockStyles.height,
-     // // decoration: decoration,
-     //    margin: EdgeInsets.only(
-     //        left: blockStyles.getMarginLeft(sectionStyles),
-     //        right: blockStyles.marginRight,
-     //        top: blockStyles.getMarginTop(sectionStyles),
-     //        bottom: blockStyles.marginBottom),
+        //    width: blockStyles.width,
+        //    height: blockStyles.height,
+        // // decoration: decoration,
+        //    margin: EdgeInsets.only(
+        //        left: blockStyles.getMarginLeft(sectionStyles),
+        //        right: blockStyles.marginRight,
+        //        top: blockStyles.getMarginTop(sectionStyles),
+        //        bottom: blockStyles.marginBottom),
         alignment: blockStyles.getBackgroundImageAlignment(),
-        child: Stack(
-          overflow: Overflow.visible,
-            children: widgets));
+        child: Stack(overflow: Overflow.visible, children: widgets));
   }
 
   Widget getChild(ShopEditScreenState state, Child child) {
@@ -316,72 +316,30 @@ class _BlockViewState extends State<BlockView> {
     Map<String, dynamic> payload = childPayload(childSize);
 
     print('payload: $payload');
-    widget.screenBloc.add(UpdateSectionEvent(sectionId:widget.sectionId, payload: payload));
+    widget.screenBloc
+        .add(UpdateSectionEvent(sectionId: widget.sectionId, payload: payload));
   }
 
   Map<String, dynamic> childPayload(NewChildSize size) {
-    Map<String, dynamic> payloadSection = {};
+    Map<String, dynamic> payload = {};
     BaseStyles baseStyles = getBaseStyles(selectChildId);
-    double marginTop = baseStyles.getMarginTopAssist(size.newTop, blockStyles.gridTemplateRows, baseStyles.gridRow, isReverse: true);
-    double marginLeft = baseStyles.getMarginLeftAssist(size.newLeft, blockStyles.gridTemplateColumns, baseStyles.gridColumn, isReverse: true);
-    String margin = '$marginTop 0 0 $marginLeft';
-    payloadSection['margin'] = margin;
-    payloadSection['marginTop'] = marginTop;
-    payloadSection['marginLeft'] = marginLeft;
-    payloadSection['height'] = size.newHeight - baseStyles.paddingV * 2;
-    payloadSection['width'] = (size.newWidth - baseStyles.paddingH * 2)/ GlobalUtils.shopBuilderWidthFactor;
-    Map<String, dynamic>  payload = {
-      selectChildId: payloadSection
-    };
+    payload = baseStyles.getPayload(
+        widget.screenBloc.state.stylesheets[deviceTypeId],
+        block,
+        size,
+        selectChildId);
     return payload;
   }
 
-  bool wrongPosition(NewChildSize childSize) {
-    bool wrongBoundary = childSize.newTop < 0 ||
-        childSize.newLeft < 0 ||
-        (childSize.newTop + childSize.newHeight > blockStyles.height) ||
-        (childSize.newLeft + childSize.newWidth > blockStyles.width);
-
-    if (wrongBoundary) return true;
-    for(Child child in block.children) {
-      if (child.id == selectChildId) continue;
-      BaseStyles baseStyles = getBaseStyles(child.id);
-      if (baseStyles == null || baseStyles.display == 'none') continue;
-      bool isWrong = wrongPositionWithOrderChildren(childSize, baseStyles);
-      // if (child.type == 'button' && isWrong)
-      // print('Child Type: ${child.type} wrong: $isWrong');
-      if (isWrong)
-        return true;
-    }
-    // print('New Position: Top: ${childSize.newTop}, Left: ${childSize.newLeft}, SectionID: ${section.id}, SelectedSectionId:${screenBloc.state.selectedSectionId}');
-    return false;
-  }
-
-  bool wrongPositionWithOrderChildren(NewChildSize childSize, BaseStyles styles) {
-    double x0 = styles.getMarginLeft(blockStyles);
-    double y0 = styles.getMarginTop(blockStyles);
-    double width0 = styles.width + styles.paddingH * 2;
-    double height0 = styles.height + styles.paddingV * 2;
-
-    double x1 = childSize.newLeft;
-    double y1 = childSize.newTop;
-    double width1 = childSize.newWidth;
-    double height1 = childSize.newHeight;
-
-    if (x0 + width0 < x1 || x1 + width1 < x0
-        || y0 + height0 < y1 || y1 + height1 < y0)
-      return false;
-    else
-      return true;
-  }
-
   BaseStyles getBaseStyles(String childId) {
-    return BaseStyles.fromJson(widget.screenBloc.state.stylesheets[deviceTypeId][childId]);
+    return BaseStyles.fromJson(
+        widget.screenBloc.state.stylesheets[deviceTypeId][childId]);
   }
 
   SectionStyles getSectionStyleSheet() {
     try {
-      Map<String, dynamic> json = widget.screenBloc.state.stylesheets[deviceTypeId][block.id];
+      Map<String, dynamic> json =
+          widget.screenBloc.state.stylesheets[deviceTypeId][block.id];
       if (json == null || json['display'] == 'none') return null;
       // print('$TAG Block ID ${block.id}');
       // print('$TAG Bloc style: $json');
