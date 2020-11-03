@@ -135,6 +135,7 @@ class DecorationAssist {
 }
 
 class SizeAssist {
+  final double relativeError = 2;
   double getWidth(dynamic width0) {
     if (width0 == '100%') return Measurements.width /*double.infinity*/;
     if (width0 is num) {
@@ -215,7 +216,7 @@ class SizeAssist {
     for (int i = 0; i < section.children.length; i++) {
       Child child = section.children[i];
       BaseStyles styles = BaseStyles.fromJson(stylesheets[child.id]);
-      if (styles == null || styles.display == 'none') continue;
+      if (styles == null || !styles.active) continue;
       Map<String, dynamic> payloadChild = {};
 
       double marginTop = styles.getMarginTop(sectionStyles);
@@ -414,7 +415,7 @@ class SizeAssist {
     for (int i = 0; i < section.children.length; i++) {
       Child child = section.children[i];
       BaseStyles styles = BaseStyles.fromJson(stylesheets[child.id]);
-      if (styles == null || styles.display == 'none') continue;
+      if (styles == null || !styles.active) continue;
       if (overlayChildren.contains(child.id)) continue;
       double y0, y1;
       if (child.id == updatedChildId) {
@@ -429,7 +430,7 @@ class SizeAssist {
         Child element = section.children[j];
         if (element.id == child.id) continue;
         BaseStyles styles = BaseStyles.fromJson(stylesheets[element.id]);
-        if (styles == null || styles.display == 'none') continue;
+        if (styles == null || !styles.active) continue;
 
         double Y0, Y1;
         if (element.id == updatedChildId) {
@@ -487,7 +488,7 @@ class SizeAssist {
     for (int i = 0; i < section.children.length; i++) {
       Child child = section.children[i];
       BaseStyles styles = BaseStyles.fromJson(stylesheets[child.id]);
-      if (styles == null || styles.display == 'none') continue;
+      if (styles == null || !styles.active) continue;
       if (overlayChildren.contains(child.id)) continue;
       double x0, x1;
       if (child.id == updatedChildId) {
@@ -502,7 +503,7 @@ class SizeAssist {
         Child element = section.children[j];
         if (element.id == child.id) continue;
         BaseStyles styles = BaseStyles.fromJson(stylesheets[element.id]);
-        if (styles == null || styles.display == 'none') continue;
+        if (styles == null || !styles.active) continue;
 
         double X0, X1;
         if (element.id == updatedChildId) {
@@ -572,7 +573,7 @@ class SizeAssist {
 
   bool wrongPositionWithOrderChildren(
       NewChildSize childSize, BaseStyles styles, SectionStyles sectionStyles) {
-    if (styles == null || styles.display == 'none') return false;
+    if (styles == null || !styles.active) return false;
 
     double x0 = styles.getMarginLeft(sectionStyles);
     double y0 = styles.getMarginTop(sectionStyles);
@@ -603,7 +604,7 @@ class SizeAssist {
     double x1 = 0, y1 = 0, x2 = 0, y2 = 0;
     block.children.forEach((child) {
       BaseStyles styles = BaseStyles.fromJson(stylesheets[child.id]);
-      if (styles != null || styles.display != 'none') {
+      if (styles != null || styles.active) {
         double x = styles.getMarginLeft(blockStyles);
         double y = styles.getMarginTop(blockStyles);
         double width = styles.width + styles.paddingH * 2;
@@ -638,8 +639,90 @@ class SizeAssist {
         childSize.newTop + childSize.newHeight < y2) {
       return true;
     }
-
     return false;
+  }
+
+  double relativeMarginTop(
+      Map<String, dynamic> stylesheets,
+      Child section,
+      NewChildSize newSize,
+      double sectionHeight,
+      String updatedChildId){
+
+    SectionStyles sectionStyles =
+    SectionStyles.fromJson(stylesheets[section.id]);
+    // Relative with Parent
+    // - Edge Center
+    if (newSize.newTop.abs() < relativeError)
+      return 0;
+    if ((newSize.newTop - sectionHeight / 2).abs() < relativeError)
+      return sectionHeight / 2;
+    if ((newSize.newTop + newSize.newHeight - sectionHeight / 2).abs() < relativeError)
+      return sectionHeight / 2;
+    if ((newSize.newTop + newSize.newHeight - sectionHeight).abs() < relativeError)
+      return sectionHeight;
+    // Body Center
+    if ((newSize.newTop + newSize.newHeight / 2 - sectionHeight / 2).abs() < relativeError)
+      return sectionHeight / 2;
+
+    // Relative with Other children
+    for (int i = 0; i < section.children.length; i++) {
+      Child child = section.children[i];
+      if (child.id == updatedChildId) continue;
+      BaseStyles styles = BaseStyles.fromJson(stylesheets[child.id]);
+      if (styles == null || !styles.active) continue;
+      if ((newSize.newTop - styles.getMarginTop(sectionStyles)).abs() < relativeError)
+        return styles.getMarginTop(sectionStyles);
+      if ((newSize.newTop - (styles.getMarginTop(sectionStyles) + styles.height + styles.paddingV * 2)).abs() < relativeError)
+        return styles.getMarginTop(sectionStyles) + styles.height + styles.paddingV * 2;
+
+      if ((newSize.newTop + newSize.newHeight - styles.getMarginTop(sectionStyles)).abs() < relativeError)
+        return styles.getMarginTop(sectionStyles);
+      if ((newSize.newTop + newSize.newHeight - (styles.getMarginTop(sectionStyles) + styles.height + styles.paddingV * 2)).abs() < relativeError)
+        return styles.getMarginTop(sectionStyles) + styles.height + styles.paddingV * 2;
+    }
+    return -1;
+  }
+
+  double relativeMarginLeft(
+      Map<String, dynamic> stylesheets,
+      Child section,
+      NewChildSize newSize,
+      String updatedChildId){
+
+    SectionStyles sectionStyles =
+    SectionStyles.fromJson(stylesheets[section.id]);
+    // Relative with Parent
+    // - Edge Center
+    if (newSize.newLeft.abs() < relativeError)
+      return 0;
+    if ((newSize.newLeft - sectionStyles.width / 2).abs() < relativeError)
+      return sectionStyles.width / 2;
+    if ((newSize.newLeft + newSize.newWidth - sectionStyles.width / 2).abs() < relativeError)
+      return sectionStyles.width / 2;
+    if ((newSize.newLeft + newSize.newWidth - sectionStyles.width).abs() < relativeError)
+      return sectionStyles.width;
+    // Body Center
+    if ((newSize.newLeft + newSize.newWidth / 2 - sectionStyles.width / 2).abs() < relativeError)
+      return sectionStyles.width / 2;
+
+    // Relative with Other children
+    for (int i = 0; i < section.children.length; i++) {
+      Child child = section.children[i];
+      if (child.id == updatedChildId) continue;
+      BaseStyles styles = BaseStyles.fromJson(stylesheets[child.id]);
+      if (styles == null || !styles.active) continue;
+      if ((newSize.newLeft - styles.getMarginLeft(sectionStyles)).abs() < relativeError)
+        return styles.getMarginLeft(sectionStyles);
+      if ((newSize.newLeft - (styles.getMarginLeft(sectionStyles) + styles.width + styles.paddingH * 2)).abs() < relativeError)
+        return styles.getMarginLeft(sectionStyles) + styles.width + styles.paddingH * 2;
+
+      if ((newSize.newLeft + newSize.newWidth - styles.getMarginLeft(sectionStyles)).abs() < relativeError)
+        return styles.getMarginLeft(sectionStyles);
+      if ((newSize.newLeft + newSize.newWidth - (styles.getMarginLeft(sectionStyles) + styles.width + styles.paddingH * 2)).abs() < relativeError)
+        return styles.getMarginLeft(sectionStyles) + styles.width + styles.paddingH * 2;
+    }
+    return -1;
   }
 
 }

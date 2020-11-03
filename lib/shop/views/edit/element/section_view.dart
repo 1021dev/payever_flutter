@@ -64,6 +64,9 @@ class _SectionViewState extends State<SectionView> {
   String activeThemeId;
   double limitSectionHeight = 0;
 
+  double relativeMarginLeft = -1;
+  double relativeMarginTop = -1;
+
   _SectionViewState({this.deviceTypeId, this.section, this.screenBloc}) {
     sectionStyles = getSectionStyles(section.id);
     widgetHeight = sectionStyles.height;
@@ -88,7 +91,9 @@ class _SectionViewState extends State<SectionView> {
               screenBloc.state.selectedBlockId == selectChildId);
       if (selectedSection) {
         if (templateSizeState.updateChildSize != null && selectedSection) {
-          Future.microtask(() => templateSizeState.setUpdateChildSize(null));
+          Future.microtask(() {
+            templateSizeState.setUpdateChildSize(null);
+          });
           _changeSection(childSize: templateSizeState.updateChildSize);
         } else if (templateSizeState.newChildSize != null && selectedSection) {
           bool wrongposition = sectionStyles.wrongPosition(
@@ -99,14 +104,31 @@ class _SectionViewState extends State<SectionView> {
               selectChildId,
               screenBloc.state.selectedBlockId);
           // print('wrong position: $wrongposition, SectionID: ${section.id}, SelectedSectionId:${screenBloc.state.selectedSectionId}');
+          Future.microtask(() {
+            setState(() {
+              relativeMarginLeft = sectionStyles.relativeMarginLeft(
+                  screenBloc.state.stylesheets[deviceTypeId],
+                  section,
+                  templateSizeState.newChildSize,
+                  selectChildId);
+              relativeMarginTop = sectionStyles.relativeMarginTop(
+                  screenBloc.state.stylesheets[deviceTypeId],
+                  section,
+                  templateSizeState.newChildSize,
+                  widgetHeight,
+                  selectChildId);
+              print('relativeMarginLeft: $relativeMarginLeft');
+            });
+          });
           if (wrongposition) {
             if (!templateSizeState.wrongPosition)
               Future.microtask(
                   () => templateSizeState.setWrongPosition(wrongposition));
           } else {
             if (templateSizeState.wrongPosition)
-              Future.microtask(
-                  () => templateSizeState.setWrongPosition(wrongposition));
+              Future.microtask(() {
+                templateSizeState.setWrongPosition(wrongposition);
+              });
           }
         }
       }
@@ -154,7 +176,7 @@ class _SectionViewState extends State<SectionView> {
     widgets.add(sectionBackgroundWidget);
     for (Child child in section.children) {
       BaseStyles styles = getBaseStyles(child.id);
-      if (styles == null || styles.display == 'none') {
+      if (styles == null || !styles.active) {
         continue;
       }
       Widget childWidget = getChild(state, child);
@@ -201,6 +223,7 @@ class _SectionViewState extends State<SectionView> {
       // }
     }
     addActiveWidgets(widgets);
+    addRelativeLines(widgets);
     return StreamBuilder(
       stream: controller.stream,
       builder: (context, snapshot) => Container(
@@ -423,6 +446,30 @@ class _SectionViewState extends State<SectionView> {
     ));
   }
 
+  void addRelativeLines(List<Widget>widgets) {
+    // Add Relative Lines
+    // - Horizontal line
+    widgets.add(Positioned(
+      top: relativeMarginTop,
+      right: 0,
+      left: 0,
+      child: Container(
+        height: 2,
+        color: (relativeMarginTop < 0 ? Colors.transparent : Colors.blue),
+      ),
+    ));
+    // - Vertical line
+    widgets.add(Positioned(
+      top: 0,
+      bottom: 0,
+      left: relativeMarginLeft,
+      child: Container(
+        width: 2,
+        color: (relativeMarginLeft < 0 ? Colors.transparent : Colors.blue),
+      ),
+    ));
+  }
+
   Widget dragArrow(bool top) {
     return Container(
         width: 40,
@@ -525,7 +572,7 @@ class _SectionViewState extends State<SectionView> {
 
   _getLimitedSectionHeight(Child child) {
     BaseStyles baseStyles = getBaseStyles(child.id);
-    if (baseStyles == null || baseStyles.display == 'none') return;
+    if (baseStyles == null || !baseStyles.active) return;
 
     double height = baseStyles.height;
     double top = baseStyles.getMarginTop(sectionStyles);
