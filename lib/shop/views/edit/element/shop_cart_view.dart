@@ -33,8 +33,7 @@ class _ShopCartViewState extends State<ShopCartView> {
     if (styles == null && child.styles != null && child.styles.isNotEmpty) {
       styles = ShopCartStyles.fromJson(child.styles);
     }
-    if (styles == null ||
-        styles.display == 'none')
+    if (styles == null || !styles.active)
       return Container();
 
     if (child.data == null)

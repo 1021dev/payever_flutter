@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payever/blocs/bloc.dart';
-import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/models/template_size_state_model.dart';
 import 'package:payever/shop/views/edit/element/shape_view.dart';
@@ -140,7 +139,7 @@ class _BlockViewState extends State<BlockView> {
     widgets.add(BackgroundView(styles: blockStyles));
     for (Child child in block.children) {
       BaseStyles styles = getBaseStyles(child.id);
-      if (styles == null || styles.display == 'none') {
+      if (styles == null || !styles.active) {
         continue;
       }
       Widget childWidget = getChild(state, child);

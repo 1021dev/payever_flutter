@@ -73,7 +73,7 @@ class _TemplateViewState extends State<TemplateView> {
       }
       if (child.type == 'section' &&
           child.children != null &&
-          styleSheet.display != 'none') {
+          styleSheet.active) {
         SectionView sectionView = SectionView(
           screenBloc: screenBloc,
           deviceTypeId: shopPage.stylesheetIds.mobile,

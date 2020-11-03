@@ -320,7 +320,7 @@ class BaseStyles with BackgroundAssist, StyleAssist, SizeAssist, DecorationAssis
   // if display is `none`, the element is hidden
   @JsonKey(name: 'display', defaultValue: 'flex')
   String display;
-
+  bool get active {return display != 'none';}
   // Background
   @JsonKey(name: 'background', defaultValue: '#ffffff')
   String background;

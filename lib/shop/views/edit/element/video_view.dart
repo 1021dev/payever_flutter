@@ -53,7 +53,7 @@ class _VideoViewState extends State<VideoView> {
     if (styles == null && child.styles != null && child.styles.isNotEmpty) {
       styles = ImageStyles.fromJson(child.styles);
     }
-    if (styles == null || styles.display == 'none') return Container();
+    if (styles == null || !styles.active) return Container();
     try {
       data = VideoData.fromJson(child.data);
     } catch (e) {}

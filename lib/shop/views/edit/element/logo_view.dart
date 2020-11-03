@@ -42,8 +42,7 @@ class _LogoViewState extends State<LogoView> {
       styles = ImageStyles.fromJson(child.styles);
     }
 
-    if (styles == null ||
-        styles.display == 'none')
+    if (styles == null || !styles.active)
       return Container();
 
     return ResizeableView(

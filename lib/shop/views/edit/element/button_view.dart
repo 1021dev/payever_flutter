@@ -39,7 +39,7 @@ class _ButtonViewState extends State<ButtonView> {
       styles = ButtonStyles.fromJson(child.styles);
     }
 
-    if (styles == null || styles.display == 'none') return Container();
+    if (styles == null || !styles.active) return Container();
 
     data = ButtonData.fromJson(child.data);
     if (data.action != null && data.action.payload != null) {

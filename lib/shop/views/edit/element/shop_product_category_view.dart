@@ -35,8 +35,7 @@ class _ShopProductCategoryViewState extends State<ShopProductCategoryView> {
     if (styles == null && child.styles != null && child.styles.isNotEmpty) {
       styles = ShopProductCategoryStyles.fromJson(child.styles);
     }
-    if (styles == null ||
-        styles.display == 'none')
+    if (styles == null || !styles.active)
       return Container();
 
     return _body();

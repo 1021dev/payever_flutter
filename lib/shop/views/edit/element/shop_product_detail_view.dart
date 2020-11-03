@@ -35,8 +35,7 @@ class _ShopProductDetailViewState extends State<ShopProductDetailView> {
     if (styles == null && child.styles != null && child.styles.isNotEmpty) {
       styles = ShopProductDetailStyles.fromJson(child.styles);
     }
-    if (styles == null ||
-        styles.display == 'none')
+    if (styles == null || !styles.active)
       return Container();
 
     return ResizeableView(

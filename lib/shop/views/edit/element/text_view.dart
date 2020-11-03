@@ -35,7 +35,7 @@ class _TextViewState extends State<TextView> {
     if (styles == null && child.styles != null && child.styles.isNotEmpty) {
       styles = TextStyles.fromJson(child.styles);
     }
-    if (styles == null || styles.display == 'none') return Container();
+    if (styles == null || !styles.active) return Container();
 
     if (child.data is Map) {
       Data data = Data.fromJson(child.data);

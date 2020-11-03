@@ -37,7 +37,7 @@ class _ShapeViewState extends State<ShapeView> {
     if (styles == null && child.styles != null && child.styles.isNotEmpty) {
       styles = ShapeStyles.fromJson(child.styles);
     }
-    if (styles == null || styles.display == 'none') return Container();
+    if (styles == null || !styles.active) return Container();
 
     return ResizeableView(
         width: styles.width,

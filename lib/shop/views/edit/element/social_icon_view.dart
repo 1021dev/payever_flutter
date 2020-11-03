@@ -36,8 +36,7 @@ class _SocialIconViewState extends State<SocialIconView> {
     if (styles == null && child.styles != null && child.styles.isNotEmpty) {
       styles = SocialIconStyles.fromJson(child.styles);
     }
-    if (styles == null ||
-        styles.display == 'none')
+    if (styles == null || !styles.active)
       return Container();
 
     return ResizeableView(
