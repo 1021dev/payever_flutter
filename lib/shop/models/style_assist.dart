@@ -28,16 +28,11 @@ class BackgroundAssist {
 
 class StyleAssist {
   Alignment getAlign(String align) {
-    if (align == 'center')
-      return Alignment.center;
-    if (align == 'top')
-      return Alignment.topCenter;
-    if (align == 'bottom')
-      return Alignment.bottomCenter;
-    if (align == 'right')
-      return Alignment.centerRight;
-    if (align == 'left')
-      return Alignment.centerLeft;
+    if (align == 'center') return Alignment.center;
+    if (align == 'top') return Alignment.topCenter;
+    if (align == 'bottom') return Alignment.bottomCenter;
+    if (align == 'right') return Alignment.centerRight;
+    if (align == 'left') return Alignment.centerLeft;
 
     return Alignment.topLeft;
   }
@@ -50,10 +45,8 @@ class StyleAssist {
   }
 
   FontWeight getFontWeight(dynamic fontWeight) {
-    if (fontWeight == 'bold')
-      return FontWeight.bold;
-    if (fontWeight == 'normal')
-      return FontWeight.w400;
+    if (fontWeight == 'bold') return FontWeight.bold;
+    if (fontWeight == 'normal') return FontWeight.w400;
 
     if (fontWeight < 200) return FontWeight.w100;
     if (fontWeight < 300) return FontWeight.w200;
@@ -74,20 +67,16 @@ class StyleAssist {
 }
 
 class DecorationAssist {
-
   double getBorderRadius(dynamic radius) {
-    if (radius is num)
-      return radius.toDouble();
+    if (radius is num) return radius.toDouble();
 
-    if (radius == '0')
-      return 0;
-    if (radius == '50%')
-      return 40; // (Need to check more)
+    if (radius == '0') return 0;
+    if (radius == '50%') return 40; // (Need to check more)
 
     if (radius is String) {
-      try{
+      try {
         return double.parse(radius);
-      } catch(e) {
+      } catch (e) {
         return 0;
       }
     }
@@ -117,16 +106,20 @@ class DecorationAssist {
     }
 
 //    drop-shadow(7.071067811865474pt 7.071067811865477pt 5pt rgba(0,0,0,1))
-    List<String>attrs0 = shadow.replaceAll('drop-shadow', '').split(' ');
-    List<String>attrs =  attrs0.map((element) {
+    List<String> attrs0 = shadow.replaceAll('drop-shadow', '').split(' ');
+    List<String> attrs = attrs0.map((element) {
       if (element.contains('rgb'))
-        return element.replaceAll('rgba', '').replaceAll(',', ' ').replaceAll('(', '').replaceAll(')', '');
+        return element
+            .replaceAll('rgba', '')
+            .replaceAll(',', ' ')
+            .replaceAll('(', '')
+            .replaceAll(')', '');
       return element.replaceAll('pt', '').replaceAll('(', '');
     }).toList();
     double blurRadius = double.parse(attrs[2]);
     double offsetX = double.parse(attrs[0]);
     double offsetY = double.parse(attrs[1]);
-    List<String>colors = attrs[3].split(' ');
+    List<String> colors = attrs[3].split(' ');
     int colorR = int.parse(colors[0]);
     int colorG = int.parse(colors[1]);
     int colorB = int.parse(colors[2]);
@@ -143,19 +136,20 @@ class DecorationAssist {
 
 class SizeAssist {
   double getWidth(dynamic width0) {
-    if (width0 == '100%') return Measurements.width/*double.infinity*/;
+    if (width0 == '100%') return Measurements.width /*double.infinity*/;
     if (width0 is num) {
       return (width0 as num).toDouble() * GlobalUtils.shopBuilderWidthFactor;
     }
     return 0;
   }
 
-  double getMarginTopAssist(double marginTop, String gridTemplateRows, String gridRow, {bool isReverse = false}) {
+  double getMarginTopAssist(
+      double marginTop, String gridTemplateRows, String gridRow,
+      {bool isReverse = false}) {
     double margin = marginTop;
-    int row =  int.parse(gridRow.split(' ').first);
-    List<String>rows = gridTemplateRows.split(' ');
-    if (row == 1)
-      return margin;
+    int row = int.parse(gridRow.split(' ').first);
+    List<String> rows = gridTemplateRows.split(' ');
+    if (row == 1) return margin;
 
     for (int i = 0; i < row - 1; i++) {
       if (isReverse) {
@@ -167,14 +161,16 @@ class SizeAssist {
     return margin;
   }
 
-  double getMarginLeftAssist(double marginLeft, String gridTemplateColumns, String gridColumn, {bool isReverse = false}) {
+  double getMarginLeftAssist(
+      double marginLeft, String gridTemplateColumns, String gridColumn,
+      {bool isReverse = false}) {
     double margin = marginLeft;
     int column = int.parse(gridColumn.split(' ').first);
 
     if (column > 1) {
-      List<String>columns = gridTemplateColumns.split(' ');
+      List<String> columns = gridTemplateColumns.split(' ');
 
-      for (int i = 0; i < column - 1; i ++) {
+      for (int i = 0; i < column - 1; i++) {
         if (isReverse) {
           margin -= double.parse(columns[i]);
         } else {
@@ -189,23 +185,34 @@ class SizeAssist {
     }
   }
 
-  Map<String, dynamic> getPayload(Map<String, dynamic> stylesheets, Child section, NewChildSize newSize, String updatedChildId) {
-    Map<String, List<String>>gridTemplateRows = getGridTemplateRows(stylesheets, section, newSize, updatedChildId);
-    Map<String, List<String>>gridTemplateColumns = getGridTemplateColumns(stylesheets, section, newSize, updatedChildId);
+  Map<String, dynamic> getPayload(Map<String, dynamic> stylesheets,
+      Child section, NewChildSize newSize, String updatedChildId) {
+    Map<String, List<String>> gridTemplateRows =
+        getGridTemplateRows(stylesheets, section, newSize, updatedChildId);
+    Map<String, List<String>> gridTemplateColumns =
+        getGridTemplateColumns(stylesheets, section, newSize, updatedChildId);
     Map<String, dynamic> payload = {};
 
-    payload = getChildPayload(stylesheets, gridTemplateRows, gridTemplateColumns, section, newSize, updatedChildId);
+    payload = getChildPayload(stylesheets, gridTemplateRows,
+        gridTemplateColumns, section, newSize, updatedChildId);
     // Section
-    payload[section.id] = getSectionPayload(stylesheets, gridTemplateRows, gridTemplateColumns, section, newSize, updatedChildId);
+    payload[section.id] = getSectionPayload(stylesheets, gridTemplateRows,
+        gridTemplateColumns, section, newSize, updatedChildId);
     return payload;
   }
 
-  Map<String, dynamic> getChildPayload(Map<String, dynamic> stylesheets, Map<String, List<String>>gridTemplateRows, Map<String, List<String>>gridTemplateColumns, Child section, NewChildSize newSize, String updatedChildId) {
-    print('newSize margin Left: ${newSize.newLeft}');
+  Map<String, dynamic> getChildPayload(
+      Map<String, dynamic> stylesheets,
+      Map<String, List<String>> gridTemplateRows,
+      Map<String, List<String>> gridTemplateColumns,
+      Child section,
+      NewChildSize newSize,
+      String updatedChildId) {
     // Updated Child
     Map<String, dynamic> payload = {};
-    SectionStyles sectionStyles = SectionStyles.fromJson(stylesheets[section.id]);
-    for(int i = 0; i < section.children.length; i ++) {
+    SectionStyles sectionStyles =
+        SectionStyles.fromJson(stylesheets[section.id]);
+    for (int i = 0; i < section.children.length; i++) {
       Child child = section.children[i];
       BaseStyles styles = BaseStyles.fromJson(stylesheets[child.id]);
       if (styles == null || styles.display == 'none') continue;
@@ -215,29 +222,29 @@ class SizeAssist {
       double marginLeft = styles.getMarginLeft(sectionStyles);
       if (child.id == updatedChildId) {
         payloadChild['height'] = newSize.newHeight;
-        payloadChild['width'] = newSize.newWidth / GlobalUtils.shopBuilderWidthFactor;
+        payloadChild['width'] =
+            newSize.newWidth / GlobalUtils.shopBuilderWidthFactor;
         marginTop = newSize.newTop;
         marginLeft = newSize.newLeft;
       }
       // Row
       if (gridTemplateRows.length == 0) {
-        payloadChild['gridRow'] =  null;
+        payloadChild['gridRow'] = null;
       } else {
-        List<String>rowKeys = gridTemplateRows.keys.toList();
-        for(int ii = 0; ii < rowKeys.length; ii ++) {
+        List<String> rowKeys = gridTemplateRows.keys.toList();
+        for (int ii = 0; ii < rowKeys.length; ii++) {
           int rowIndex;
           String key = rowKeys[ii];
-          if(gridTemplateRows[key].contains(child.id)) {
+          if (gridTemplateRows[key].contains(child.id)) {
             rowIndex = gridTemplateRows[key].indexOf(child.id);
             payloadChild['gridRow'] = '${ii + 1} / span 1';
+            if (ii == 0) {
+              continue;
+            }
             if (rowIndex == 0) {
-              if (ii != 0) {
-                marginTop = 0;
-              }
+              marginTop = 0;
             } else {
-              for (int jj = 0; jj < ii; jj++) {
-                marginTop -= double.parse(rowKeys[jj]);
-              }
+              marginTop -= double.parse(rowKeys[ii]);
             }
           } else {
             continue;
@@ -247,23 +254,22 @@ class SizeAssist {
 
       // Column
       if (gridTemplateColumns.length == 0) {
-        payloadChild['gridColumn'] =  null;
+        payloadChild['gridColumn'] = null;
       } else {
-        List<String>columnKeys = gridTemplateColumns.keys.toList();
-        for(int ii = 0; ii < columnKeys.length; ii ++) {
+        List<String> columnKeys = gridTemplateColumns.keys.toList();
+        for (int ii = 0; ii < columnKeys.length; ii++) {
           int columnIndex;
           String key = columnKeys[ii];
-          if(gridTemplateColumns[key].contains(child.id)) {
+          if (gridTemplateColumns[key].contains(child.id)) {
             columnIndex = gridTemplateColumns[key].indexOf(child.id);
             payloadChild['gridColumn'] = '${ii + 1} / span 1';
+            if (ii == 0) {
+              continue;
+            }
             if (columnIndex == 0) {
-              if (ii != 0) {
-                marginLeft = 0;
-              }
+              marginLeft = 0;
             } else {
-              for (int jj = 0; jj < ii; jj++) {
-                marginLeft -= double.parse(columnKeys[jj]);
-              }
+              marginLeft -= double.parse(columnKeys[ii]);
             }
           } else {
             continue;
@@ -276,18 +282,26 @@ class SizeAssist {
       payloadChild['margin'] = '$marginTop 0 0 $marginLeft';
       payload[child.id] = payloadChild;
     }
+    print('payloadChild: $payload');
     return payload;
   }
 
-  Map<String, dynamic> getSectionPayload(Map<String, dynamic> stylesheets, Map<String, List<String>>gridTemplateRows, Map<String, List<String>>gridTemplateColumns, Child section, NewChildSize newSize, String updatedChildId) {
-    SectionStyles sectionStyles = SectionStyles.fromJson(stylesheets[section.id]);
+  Map<String, dynamic> getSectionPayload(
+      Map<String, dynamic> stylesheets,
+      Map<String, List<String>> gridTemplateRows,
+      Map<String, List<String>> gridTemplateColumns,
+      Child section,
+      NewChildSize newSize,
+      String updatedChildId) {
+    SectionStyles sectionStyles =
+        SectionStyles.fromJson(stylesheets[section.id]);
     Map<String, dynamic> payloadSection = {};
     if (gridTemplateRows.length == 0) {
       payloadSection['gridTemplateRows'] = null;
     } else {
-      List<double>gridRows = [];
+      List<double> gridRows = [];
       List<String> heightKeys = gridTemplateRows.keys.toList();
-      for(int i = 1; i < heightKeys.length; i++) {
+      for (int i = 1; i < heightKeys.length; i++) {
         String key = heightKeys[i];
         if (gridRows.isEmpty) {
           gridRows.add(double.parse(key));
@@ -304,15 +318,18 @@ class SizeAssist {
       double lastBottomMargin = 0;
       String lastChildId = gridTemplateRows[heightKeys.last].last;
       if (lastChildId == updatedChildId) {
-        lastBottomMargin = sectionStyles.height - (newSize.newTop + newSize.newHeight);
+        lastBottomMargin =
+            sectionStyles.height - (newSize.newTop + newSize.newHeight);
       } else {
         BaseStyles styles = BaseStyles.fromJson(stylesheets[lastChildId]);
-        lastBottomMargin = sectionStyles.height - (styles.height + styles.getMarginTop(sectionStyles));
+        lastBottomMargin = sectionStyles.height -
+            (styles.height + styles.getMarginTop(sectionStyles));
       }
       gridRows.add(lastBottomMargin);
       String gridTemplateRowsStr = '';
       gridRows.forEach((element) {
-        gridTemplateRowsStr += gridTemplateRowsStr.isEmpty ? '$element' : ' $element';
+        gridTemplateRowsStr +=
+            gridTemplateRowsStr.isEmpty ? '$element' : ' $element';
       });
       payloadSection['gridTemplateRows'] = gridTemplateRowsStr;
     }
@@ -320,9 +337,9 @@ class SizeAssist {
     if (gridTemplateColumns.length == 0) {
       payloadSection['gridTemplateColumns'] = null;
     } else {
-      List<double>gridColumns = [];
+      List<double> gridColumns = [];
       List<String> widthKeys = gridTemplateColumns.keys.toList();
-      for(int i = 1; i < widthKeys.length; i ++) {
+      for (int i = 1; i < widthKeys.length; i++) {
         String key = widthKeys[i];
         if (gridColumns.isEmpty) {
           gridColumns.add(double.parse(key));
@@ -339,29 +356,38 @@ class SizeAssist {
       double lastLeftMargin = 0;
       String lastChildId = gridTemplateColumns[widthKeys.last].last;
       if (lastChildId == updatedChildId) {
-        lastLeftMargin = sectionStyles.width - (newSize.newLeft + newSize.newWidth);
+        lastLeftMargin =
+            sectionStyles.width - (newSize.newLeft + newSize.newWidth);
       } else {
         BaseStyles styles = BaseStyles.fromJson(stylesheets[lastChildId]);
 
-        lastLeftMargin = sectionStyles.width - (styles.width + styles.getMarginLeft(sectionStyles));
+        lastLeftMargin = sectionStyles.width -
+            (styles.width + styles.getMarginLeft(sectionStyles));
       }
       gridColumns.add(lastLeftMargin);
       String gridTemplateColumnsStr = '';
       gridColumns.forEach((element) {
-        gridTemplateColumnsStr += gridTemplateColumnsStr.isEmpty ? '$element' : ' $element';
+        gridTemplateColumnsStr +=
+            gridTemplateColumnsStr.isEmpty ? '$element' : ' $element';
       });
       payloadSection['gridTemplateColumns'] = gridTemplateColumnsStr;
     }
+    print('payloadSection: $payloadSection');
     return payloadSection;
   }
 
-  Map<String, List<String>> getGridTemplateRows(Map<String, dynamic> stylesheets, Child section, NewChildSize newSize, String updatedChildId) {
+  Map<String, List<String>> getGridTemplateRows(
+      Map<String, dynamic> stylesheets,
+      Child section,
+      NewChildSize newSize,
+      String updatedChildId) {
     int rows = 0;
-    SectionStyles sectionStyles = SectionStyles.fromJson(stylesheets[section.id]);
-    List<String>overlayChildren = [];
+    SectionStyles sectionStyles =
+        SectionStyles.fromJson(stylesheets[section.id]);
+    List<String> overlayChildren = [];
     Map<String, List<String>> gridTemplateRows = {};
     // Sort from Top to bottom
-    section.children.sort((a,b) {
+    section.children.sort((a, b) {
       BaseStyles styles1 = BaseStyles.fromJson(stylesheets[a.id]);
       BaseStyles styles2 = BaseStyles.fromJson(stylesheets[b.id]);
       double marginTop1 = styles1.getMarginTop(sectionStyles);
@@ -378,7 +404,7 @@ class SizeAssist {
     for (int i = 0; i < section.children.length; i++) {
       Child child = section.children[i];
       BaseStyles styles = BaseStyles.fromJson(stylesheets[child.id]);
-      if (styles == null || styles.display == 'none')  continue;
+      if (styles == null || styles.display == 'none') continue;
       if (overlayChildren.contains(child.id)) continue;
       double y0, y1;
       if (child.id == updatedChildId) {
@@ -393,7 +419,7 @@ class SizeAssist {
         Child element = section.children[j];
         if (element.id == child.id) continue;
         BaseStyles styles = BaseStyles.fromJson(stylesheets[element.id]);
-        if (styles == null || styles.display == 'none')  continue;
+        if (styles == null || styles.display == 'none') continue;
 
         double Y0, Y1;
         if (element.id == updatedChildId) {
@@ -405,10 +431,11 @@ class SizeAssist {
         }
         if (!(y1 < Y0 || Y1 < y0)) {
           overlayChildren.add(element.id);
+          if (y1 < Y1) y1 = Y1;
         }
       }
-      rows ++;
-      List<String>temp = [child.id];
+      rows++;
+      List<String> temp = [child.id];
       temp.addAll(overlayChildren);
       gridTemplateRows['$y0'] = temp;
     }
@@ -418,13 +445,18 @@ class SizeAssist {
     return gridTemplateRows;
   }
 
-  Map<String, List<String>> getGridTemplateColumns(Map<String, dynamic> stylesheets, Child section, NewChildSize newSize, String updatedChildId) {
+  Map<String, List<String>> getGridTemplateColumns(
+      Map<String, dynamic> stylesheets,
+      Child section,
+      NewChildSize newSize,
+      String updatedChildId) {
     int rows = 0;
-    SectionStyles sectionStyles = SectionStyles.fromJson(stylesheets[section.id]);
-    List<String>overlayChildren = [];
+    SectionStyles sectionStyles =
+        SectionStyles.fromJson(stylesheets[section.id]);
+    List<String> overlayChildren = [];
     Map<String, List<String>> gridTemplateColumns = {};
     // Sort from Left to Right
-    section.children.sort((a,b) {
+    section.children.sort((a, b) {
       BaseStyles styles1 = BaseStyles.fromJson(stylesheets[a.id]);
       BaseStyles styles2 = BaseStyles.fromJson(stylesheets[b.id]);
       double marginLeft1 = styles1.getMarginLeft(sectionStyles);
@@ -441,7 +473,7 @@ class SizeAssist {
     for (int i = 0; i < section.children.length; i++) {
       Child child = section.children[i];
       BaseStyles styles = BaseStyles.fromJson(stylesheets[child.id]);
-      if (styles == null || styles.display == 'none')  continue;
+      if (styles == null || styles.display == 'none') continue;
       if (overlayChildren.contains(child.id)) continue;
       double x0, x1;
       if (child.id == updatedChildId) {
@@ -456,7 +488,7 @@ class SizeAssist {
         Child element = section.children[j];
         if (element.id == child.id) continue;
         BaseStyles styles = BaseStyles.fromJson(stylesheets[element.id]);
-        if (styles == null || styles.display == 'none')  continue;
+        if (styles == null || styles.display == 'none') continue;
 
         double X0, X1;
         if (element.id == updatedChildId) {
@@ -468,12 +500,13 @@ class SizeAssist {
         }
         if (!(x1 < X0 || X1 < x0)) {
           overlayChildren.add(element.id);
+          if (x1 < X1) x1 = X1;
         }
       }
-      rows ++;
-      List<String>temp = [child.id];
+      rows++;
+      List<String> temp = [child.id];
       temp.addAll(overlayChildren);
-      gridTemplateColumns['${x0/GlobalUtils.shopBuilderWidthFactor}'] = temp;
+      gridTemplateColumns['${x0 / GlobalUtils.shopBuilderWidthFactor}'] = temp;
     }
     print('GetGridTemplateColumns: $rows, $gridTemplateColumns');
 
