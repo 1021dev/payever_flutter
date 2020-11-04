@@ -47,6 +47,8 @@ class _ButtonViewState extends State<ButtonView> {
 //      styles = ButtonStyles.fromJson(child.styles);
 
     }
+    return body;
+
     return ResizeableView(
         width: styles.width + styles.paddingH * 2,
         height: styles.height + styles.paddingV * 2,
@@ -135,8 +137,8 @@ class _ButtonViewState extends State<ButtonView> {
     try {
       Map<String, dynamic> json = widget.stylesheets[widget.deviceTypeId][child.id];
       // if (json['display'] != 'none') {
-      //   print('Button ID: ${child.id}');
-      //   print('Button Styles Sheets: $json');
+        print('Button ID: ${child.id}');
+        print('Button Styles Sheets: $json');
       // }
       return ButtonStyles.fromJson(json);
     } catch (e) {

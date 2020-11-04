@@ -272,7 +272,7 @@ class Child {
   @JsonKey(name: 'type')            String type;
   @JsonKey(name: 'data')            dynamic data;
 
-  bool isButton() {
+  bool get isButton {
     return type == 'button';
   }
 

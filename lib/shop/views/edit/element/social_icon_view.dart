@@ -38,7 +38,7 @@ class _SocialIconViewState extends State<SocialIconView> {
     }
     if (styles == null || !styles.active)
       return Container();
-
+    return body;
     return ResizeableView(
         width: styles.width,
         height: styles.height,

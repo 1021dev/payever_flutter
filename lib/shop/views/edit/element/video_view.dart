@@ -60,7 +60,7 @@ class _VideoViewState extends State<VideoView> {
 
     if (data == null /* || data.preview == null || data.preview.isEmpty*/)
       return Container();
-
+    return body;
     return ResizeableView(
         width: styles.width,
         height: styles.height,

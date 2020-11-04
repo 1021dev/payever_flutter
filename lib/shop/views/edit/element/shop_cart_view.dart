@@ -38,7 +38,7 @@ class _ShopCartViewState extends State<ShopCartView> {
 
     if (child.data == null)
       return Container();
-
+    return body;
     return ResizeableView(
       width: styles.width,
       height: styles.height,

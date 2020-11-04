@@ -43,7 +43,7 @@ class _TextViewState extends State<TextView> {
     } else {
       return Container();
     }
-
+    return body;
     return ResizeableView(
         width: styles.width,
         height: styles.textHeight,

@@ -41,7 +41,7 @@ class _ShopProductsViewState extends State<ShopProductsView> {
     }
     if (styles == null || !styles.active)
       return Container();
-
+    return body;
     return ResizeableView(
         width: styles.width,
         height: styles.height,

@@ -19,6 +19,7 @@ import 'package:payever/shop/views/edit/element/shop_product_detail_view.dart';
 import 'package:payever/shop/views/edit/element/shop_products_view.dart';
 import 'package:payever/shop/views/edit/element/social_icon_view.dart';
 import 'package:payever/shop/views/edit/element/sub_element/background_view.dart';
+import 'package:payever/shop/views/edit/element/sub_element/resizeable_view.dart';
 import 'package:payever/shop/views/edit/element/text_view.dart';
 import 'package:payever/shop/views/edit/element/video_view.dart';
 import 'package:provider/provider.dart';
@@ -134,7 +135,14 @@ class _SectionViewState extends State<SectionView> {
       if (styles == null || !styles.active) {
         continue;
       }
-      Widget childWidget = getChild(state, child);
+      Widget childWidget = ResizeableView(
+          width: styles.width + styles.paddingH * 2,
+          height: styles.height + styles.paddingV * 2,
+          left: styles.getMarginLeft(sectionStyles),
+          top: styles.getMarginTop(sectionStyles),
+          isSelected: widget.isSelected,
+          child: getChild(state, child, sectionStyles));
+
       if (childWidget != null) {
         _getLimitedSectionHeight(child);
         Widget element = GestureDetector(
@@ -149,7 +157,6 @@ class _SectionViewState extends State<SectionView> {
                     screenBloc.add(SelectSectionEvent(
                         sectionId: section.id, selectedChild: true));
                   }
-
                   setState(() {
                     selectChildId = child.id;
                   });
@@ -161,8 +168,61 @@ class _SectionViewState extends State<SectionView> {
           lastElement = element;
         else
           widgets.add(element);
+
+        // Add Block View
+        if (child.type == 'block') {
+          Map<String, dynamic> json = state.stylesheets[deviceTypeId][child.id];
+          SectionStyles blockStyles = SectionStyles.fromJson(json);
+          for (Child blockChild in child.children) {
+            BaseStyles styles1 = getBaseStyles(blockChild.id);
+            if (blockChild.isButton) {
+              Map<String, dynamic> json =
+                  state.stylesheets[widget.deviceTypeId][blockChild.id];
+              styles1 = ButtonStyles.fromJson(json);
+            }
+            if (styles1 == null || !styles1.active) continue;
+            Widget child_ = getChild(state, blockChild, blockStyles);
+            if (child_ != null) {
+              double width = styles1.width + styles1.paddingH * 2;
+              double height = styles1.height + styles1.paddingV * 2;
+              Widget blockChildWidget = ResizeableView(
+                  width: width,
+                  height: height,
+                  left: blockStyles.getMarginLeft(sectionStyles) +
+                      styles1.getMarginLeft(blockStyles),
+                  top: blockStyles.getMarginTop(sectionStyles) +
+                      styles1.getMarginTop(blockStyles),
+                  isSelected: widget.isSelected,
+                  child: child_);
+              // _getLimitedSectionHeight(child);
+              Widget blockChildElement = GestureDetector(
+                key: ObjectKey(blockChild.id),
+                onTap: (widget.enableTapChild && selectChildId != blockChild.id)
+                    ? () {
+                        widget.onTapChild();
+                        widget.screenBloc.add(SelectBlockEvent(
+                            sectionId: section.id,
+                            blockId: blockChild.id,
+                            selectedBlockChild: true));
+                        setState(() {
+                          selectChildId = blockChild.id;
+                        });
+                      }
+                    : null,
+                child: blockChildWidget,
+              );
+              // if (selectChildId == child.id)
+              //   lastElement = element;
+              // else
+              widgets.add(blockChildElement);
+            }
+          }
+
+          // if (lastElement != null) widgets.add(lastElement);
+        }
       }
     }
+
     if (lastElement != null) widgets.add(lastElement);
     // update Section Height:
     if (widgetHeight < limitSectionHeight) {
@@ -192,7 +252,7 @@ class _SectionViewState extends State<SectionView> {
     );
   }
 
-  Widget getChild(ShopEditScreenState state, Child child) {
+  Widget getChild(ShopEditScreenState state, Child child, SectionStyles sectionStyles) {
     Widget childView;
     switch (child.type) {
       case 'text':

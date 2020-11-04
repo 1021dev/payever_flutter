@@ -120,6 +120,7 @@ class _BlockViewState extends State<BlockView> {
           },
           bloc: widget.screenBloc,
           builder: (BuildContext context, state) {
+            return body(state);
             return ResizeableView(
                 width: blockStyles.width,
                 height: blockStyles.height,
@@ -137,37 +138,37 @@ class _BlockViewState extends State<BlockView> {
     List<Widget> widgets = [];
     Widget lastElement;
     widgets.add(BackgroundView(styles: blockStyles));
-    for (Child child in block.children) {
-      BaseStyles styles = getBaseStyles(child.id);
-      if (styles == null || !styles.active) {
-        continue;
-      }
-      Widget childWidget = getChild(state, child);
-      if (childWidget != null) {
-        // _getLimitedSectionHeight(child);
-        Widget element = GestureDetector(
-          key: ObjectKey(child.id),
-          onTap: (widget.enableTapChild && selectChildId != child.id)
-              ? () {
-                  widget.onTapChild();
-                  widget.screenBloc.add(SelectBlockEvent(
-                      sectionId: widget.sectionId,
-                      blockId: block.id,
-                      selectedBlockChild: true));
-                  setState(() {
-                    selectChildId = child.id;
-                  });
-                }
-              : null,
-          child: childWidget,
-        );
-        if (selectChildId == child.id)
-          lastElement = element;
-        else
-          widgets.add(element);
-      }
-    }
-    if (lastElement != null) widgets.add(lastElement);
+    // for (Child child in block.children) {
+    //   BaseStyles styles = getBaseStyles(child.id);
+    //   if (styles == null || !styles.active) {
+    //     continue;
+    //   }
+    //   Widget childWidget = getChild(state, child);
+    //   if (childWidget != null) {
+    //     // _getLimitedSectionHeight(child);
+    //     Widget element = GestureDetector(
+    //       key: ObjectKey(child.id),
+    //       onTap: (widget.enableTapChild && selectChildId != child.id)
+    //           ? () {
+    //               widget.onTapChild();
+    //               widget.screenBloc.add(SelectBlockEvent(
+    //                   sectionId: widget.sectionId,
+    //                   blockId: block.id,
+    //                   selectedBlockChild: true));
+    //               setState(() {
+    //                 selectChildId = child.id;
+    //               });
+    //             }
+    //           : null,
+    //       child: childWidget,
+    //     );
+    //     if (selectChildId == child.id)
+    //       lastElement = element;
+    //     else
+    //       widgets.add(element);
+    //   }
+    // }
+    // if (lastElement != null) widgets.add(lastElement);
 
     return Container(
         //    width: blockStyles.width,
