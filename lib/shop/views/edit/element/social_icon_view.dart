@@ -1,34 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:payever/shop/models/models.dart';
-import 'package:payever/shop/views/edit/element/sub_element/resizeable_view.dart';
 import '../../../../theme.dart';
 
 class SocialIconView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
-  final String deviceTypeId;
-  final SectionStyles sectionStyles;
-  final bool isSelected;
 
   const SocialIconView(
       {this.child,
-      this.stylesheets,
-      this.deviceTypeId,
-      this.sectionStyles,
-      this.isSelected});
+      this.stylesheets});
 
   @override
   _SocialIconViewState createState() =>
-      _SocialIconViewState(child, sectionStyles);
+      _SocialIconViewState(child);
 }
 
 class _SocialIconViewState extends State<SocialIconView> {
   final Child child;
-  final SectionStyles sectionStyles;
   SocialIconStyles styles;
 
-  _SocialIconViewState(this.child, this.sectionStyles);
+  _SocialIconViewState(this.child);
 
   @override
   Widget build(BuildContext context) {
@@ -39,13 +31,6 @@ class _SocialIconViewState extends State<SocialIconView> {
     if (styles == null || !styles.active)
       return Container();
     return body;
-    return ResizeableView(
-        width: styles.width,
-        height: styles.height,
-        left: styles.getMarginLeft(sectionStyles),
-        top: styles.getMarginTop(sectionStyles),
-        isSelected: widget.isSelected,
-        child: body);
   }
 
   Widget get body {
@@ -62,7 +47,7 @@ class _SocialIconViewState extends State<SocialIconView> {
 
   SocialIconStyles styleSheet() {
     try {
-      Map<String, dynamic> json = widget.stylesheets[widget.deviceTypeId][child.id];
+      Map<String, dynamic> json = widget.stylesheets[child.id];
      // if (json['display'] != 'none') {
      //   print('SocialID: ${child.id}');
      //   print('Social Icon Styles: $json');

@@ -1,33 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/models.dart';
-import 'package:payever/shop/views/edit/element/sub_element/resizeable_view.dart';
 import '../../../../theme.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 class TextView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
-  final String deviceTypeId;
-  final SectionStyles sectionStyles;
-  final bool isSelected;
 
   const TextView(
       {this.child,
-      this.stylesheets,
-      this.deviceTypeId,
-      this.sectionStyles,
-      this.isSelected = false});
+      this.stylesheets});
 
   @override
-  _TextViewState createState() => _TextViewState(child, sectionStyles);
+  _TextViewState createState() => _TextViewState(child);
 }
 
 class _TextViewState extends State<TextView> {
   final Child child;
-  final SectionStyles sectionStyles;
-  TextStyles styles;
+   TextStyles styles;
   String txt;
-  _TextViewState(this.child, this.sectionStyles);
+  _TextViewState(this.child);
 
   @override
   Widget build(BuildContext context) {
@@ -44,13 +36,6 @@ class _TextViewState extends State<TextView> {
       return Container();
     }
     return body;
-    return ResizeableView(
-        width: styles.width,
-        height: styles.textHeight,
-        left: styles.getMarginLeft(sectionStyles),
-        top: styles.getMarginTop(sectionStyles),
-        isSelected: widget.isSelected,
-        child: body);
   }
 
   Widget get body {
@@ -95,7 +80,7 @@ class _TextViewState extends State<TextView> {
 
   TextStyles getStyles() {
     try {
-      Map<String, dynamic> json = widget.stylesheets[widget.deviceTypeId][child.id];
+      Map<String, dynamic> json = widget.stylesheets[child.id];
       // if (json['display'] != 'none') {
       //   print('Text ID ${child.id}');
       //   print('Text Styles: $json');

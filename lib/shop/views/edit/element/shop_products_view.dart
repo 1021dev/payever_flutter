@@ -2,36 +2,26 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/shop/models/models.dart';
-import 'package:payever/shop/models/template_size_state_model.dart';
-import 'package:payever/shop/views/edit/element/sub_element/resizeable_view.dart';
-import 'package:provider/provider.dart';
 import '../../../../theme.dart';
 
 class ShopProductsView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
-  final String deviceTypeId;
-  final SectionStyles sectionStyles;
-  final bool isSelected;
 
   const ShopProductsView(
       {this.child,
-      this.stylesheets,
-      this.deviceTypeId,
-      this.sectionStyles,
-      this.isSelected});
+      this.stylesheets});
 
   @override
   _ShopProductsViewState createState() =>
-      _ShopProductsViewState(child, sectionStyles);
+      _ShopProductsViewState(child);
 }
 
 class _ShopProductsViewState extends State<ShopProductsView> {
   final Child child;
-  final SectionStyles sectionStyles;
   ShopProductsStyles styles;
 
-  _ShopProductsViewState(this.child, this.sectionStyles);
+  _ShopProductsViewState(this.child);
 
   @override
   Widget build(BuildContext context) {
@@ -42,14 +32,6 @@ class _ShopProductsViewState extends State<ShopProductsView> {
     if (styles == null || !styles.active)
       return Container();
     return body;
-    return ResizeableView(
-        width: styles.width,
-        height: styles.height,
-        left: styles.getMarginLeft(sectionStyles),
-        top: styles.getMarginTop(sectionStyles),
-        isSelected: widget.isSelected,
-        sizeChangeable: false,
-        child: body);
   }
 
   Widget get body {
@@ -130,7 +112,7 @@ class _ShopProductsViewState extends State<ShopProductsView> {
 
   ShopProductsStyles styleSheet() {
     try {
-      Map<String, dynamic> json = widget.stylesheets[widget.deviceTypeId][child.id];
+      Map<String, dynamic> json = widget.stylesheets[child.id];
      // if (json['display'] != 'none') {
      //   print('Shop Products ID: ${child.id}');
      //   print('Shop Products Styles: $json');

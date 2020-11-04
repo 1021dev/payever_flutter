@@ -3,35 +3,27 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/shop/models/models.dart';
-import 'package:payever/shop/views/edit/element/sub_element/resizeable_view.dart';
-
 import '../../../../theme.dart';
 
 class ImageView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
-  final String deviceTypeId;
-  final SectionStyles sectionStyles;
-  final bool isSelected;
 
   const ImageView(
       {this.child,
-      this.stylesheets,
-      this.deviceTypeId,
-      this.sectionStyles,
-      this.isSelected = false});
+      this.stylesheets});
 
   @override
-  _ImageViewState createState() => _ImageViewState(child, sectionStyles);
+  _ImageViewState createState() => _ImageViewState(child);
 }
 
 class _ImageViewState extends State<ImageView> {
   final Child child;
-  final SectionStyles sectionStyles;
+
   ImageStyles styles;
   ImageData data;
   String url = '';
-  _ImageViewState(this.child, this.sectionStyles);
+  _ImageViewState(this.child);
 
   @override
   Widget build(BuildContext context) {
@@ -51,13 +43,6 @@ class _ImageViewState extends State<ImageView> {
       url = data.src;
     }
     return body;
-    return ResizeableView(
-        width: styles.width,
-        height: styles.height,
-        left: styles.getMarginLeft(sectionStyles),
-        top: styles.getMarginTop(sectionStyles),
-        isSelected: widget.isSelected,
-        child: body);
   }
 
   Widget get body {
@@ -156,7 +141,7 @@ class _ImageViewState extends State<ImageView> {
 
   ImageStyles styleSheet() {
     try {
-      Map<String, dynamic> json = widget.stylesheets[widget.deviceTypeId][child.id];
+      Map<String, dynamic> json = widget.stylesheets[child.id];
       // if (json['display'] != 'none') {
       //   print('Image View ID: ${child.id}');
       //   print('Image Styles: $json');

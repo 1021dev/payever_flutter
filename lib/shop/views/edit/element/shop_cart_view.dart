@@ -1,31 +1,25 @@
 import 'dart:math';
-
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:payever/shop/models/models.dart';
-import 'package:payever/shop/views/edit/element/sub_element/resizeable_view.dart';
 import '../../../../theme.dart';
 
 class ShopCartView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
-  final String deviceTypeId;
-  final SectionStyles sectionStyles;
-  final bool isSelected;
 
-  const ShopCartView({this.child, this.stylesheets, this.deviceTypeId, this.sectionStyles, this.isSelected});
+  const ShopCartView({this.child, this.stylesheets});
 
   @override
-  _ShopCartViewState createState() => _ShopCartViewState(child, sectionStyles);
+  _ShopCartViewState createState() => _ShopCartViewState(child);
 }
 
 class _ShopCartViewState extends State<ShopCartView> {
   final Child child;
-  final SectionStyles sectionStyles;
   ShopCartStyles styles;
 
-  _ShopCartViewState(this.child, this.sectionStyles);
+  _ShopCartViewState(this.child);
 
   @override
   Widget build(BuildContext context) {
@@ -39,14 +33,6 @@ class _ShopCartViewState extends State<ShopCartView> {
     if (child.data == null)
       return Container();
     return body;
-    return ResizeableView(
-      width: styles.width,
-      height: styles.height,
-      left: styles.getMarginLeft(sectionStyles),
-      top: styles.getMarginTop(sectionStyles),
-      isSelected: widget.isSelected,
-      child: body,
-    );
   }
 
   Widget get body {
@@ -157,7 +143,7 @@ class _ShopCartViewState extends State<ShopCartView> {
 
   ShopCartStyles styleSheet() {
     try {
-      Map<String, dynamic> json = widget.stylesheets[widget.deviceTypeId][child.id];
+      Map<String, dynamic> json = widget.stylesheets[child.id];
       // if (json['display'] != 'none') {
       //   print('ShopCartID: ${child.id}');
       //   print('Shop Cart Styles: $json');

@@ -270,130 +270,84 @@ class _SectionViewState extends State<SectionView> {
   Widget getChild(
       ShopEditScreenState state, Child child, SectionStyles sectionStyles) {
     Widget childView;
+    Map<String, dynamic>stylesheets = state.stylesheets[deviceTypeId];
     switch (child.type) {
       case 'text':
         childView = TextView(
           child: child,
-          stylesheets: state.stylesheets,
-          deviceTypeId: deviceTypeId,
-          sectionStyles: sectionStyles,
-          isSelected: selectChildId == child.id,
+          stylesheets: stylesheets,
         );
         break;
       case 'button':
         childView = ButtonView(
           child: child,
-          stylesheets: state.stylesheets,
-          deviceTypeId: deviceTypeId,
-          sectionStyles: sectionStyles,
-          isSelected: selectChildId == child.id,
+          stylesheets: stylesheets,
         );
         break;
       case 'image':
         childView = ImageView(
           child: child,
-          stylesheets: state.stylesheets,
-          deviceTypeId: deviceTypeId,
-          sectionStyles: sectionStyles,
-          isSelected: selectChildId == child.id,
+          stylesheets: stylesheets,
         );
         break;
       case 'video':
         childView = VideoView(
           child: child,
-          stylesheets: state.stylesheets,
-          deviceTypeId: deviceTypeId,
-          sectionStyles: sectionStyles,
-          isSelected: selectChildId == child.id,
+          stylesheets: stylesheets,
         );
         break;
       case 'shape':
         childView = ShapeView(
           child: child,
-          stylesheets: state.stylesheets,
-          deviceTypeId: deviceTypeId,
-          sectionStyles: sectionStyles,
-          isSelected: selectChildId == child.id,
+          stylesheets: stylesheets,
         );
         break;
       case 'block':
         childView = BlockView(
           child: child,
-          sectionId: section.id,
-          screenBloc: screenBloc,
-          enableTapChild: widget.enableTapChild,
-          deviceTypeId: deviceTypeId,
-          sectionStyles: sectionStyles,
-          onTapChild: () {
-            setState(() {
-              selectChildId = '';
-            });
-            widget.onTapChild();
-          },
-          isSelected: selectChildId == child.id,
+          stylesheets: stylesheets,
         );
         break;
       case 'menu':
         childView = MenuView(
           child: child,
-          stylesheets: state.stylesheets,
-          deviceTypeId: deviceTypeId,
-          sectionStyles: sectionStyles,
-          isSelected: selectChildId == child.id,
+          stylesheets: stylesheets,
         );
         break;
       case 'shop-cart':
         childView = ShopCartView(
           child: child,
-          stylesheets: state.stylesheets,
-          deviceTypeId: deviceTypeId,
-          sectionStyles: sectionStyles,
-          isSelected: selectChildId == child.id,
+          stylesheets: stylesheets,
         );
         break;
       case 'shop-category':
         childView = ShopProductCategoryView(
           child: child,
-          stylesheets: state.stylesheets,
-          deviceTypeId: deviceTypeId,
-          sectionStyles: sectionStyles,
-          isSelected: selectChildId == child.id,
+          stylesheets: stylesheets,
         );
         break;
       case 'shop-products':
         childView = ShopProductsView(
           child: child,
-          stylesheets: state.stylesheets,
-          deviceTypeId: deviceTypeId,
-          sectionStyles: sectionStyles,
-          isSelected: selectChildId == child.id,
+          stylesheets: stylesheets,
         );
         break;
       case 'shop-product-details':
         childView = ShopProductDetailView(
           child: child,
-          stylesheets: state.stylesheets,
-          deviceTypeId: deviceTypeId,
-          sectionStyles: sectionStyles,
-          isSelected: selectChildId == child.id,
+          stylesheets: stylesheets,
         );
         break;
       case 'logo':
         childView = LogoView(
           child: child,
-          stylesheets: state.stylesheets,
-          deviceTypeId: deviceTypeId,
-          sectionStyles: sectionStyles,
-          isSelected: selectChildId == child.id,
+          stylesheets: stylesheets,
         );
         break;
       case 'social-icon':
         childView = SocialIconView(
           child: child,
-          stylesheets: state.stylesheets,
-          deviceTypeId: deviceTypeId,
-          sectionStyles: sectionStyles,
-          isSelected: selectChildId == child.id,
+          stylesheets: stylesheets,
         );
         break;
       default:

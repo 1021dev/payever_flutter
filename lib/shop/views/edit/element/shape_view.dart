@@ -2,34 +2,26 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/element/sub_element/background_view.dart';
-import 'package:payever/shop/views/edit/element/sub_element/resizeable_view.dart';
 import 'package:shape_of_view/shape_of_view.dart';
 import 'package:clip_shadow/clip_shadow.dart';
 
 class ShapeView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
-  final String deviceTypeId;
-  final SectionStyles sectionStyles;
-  final bool isSelected;
 
   const ShapeView(
       {this.child,
-      this.stylesheets,
-      this.deviceTypeId,
-      this.sectionStyles,
-      this.isSelected = false});
+      this.stylesheets});
 
   @override
-  _ShapeViewState createState() => _ShapeViewState(child, sectionStyles);
+  _ShapeViewState createState() => _ShapeViewState(child);
 }
 
 class _ShapeViewState extends State<ShapeView> {
   final Child child;
-  final SectionStyles sectionStyles;
   ShapeStyles styles;
 
-  _ShapeViewState(this.child, this.sectionStyles);
+  _ShapeViewState(this.child);
 
   @override
   Widget build(BuildContext context) {
@@ -39,13 +31,6 @@ class _ShapeViewState extends State<ShapeView> {
     }
     if (styles == null || !styles.active) return Container();
     return body;
-    return ResizeableView(
-        width: styles.width,
-        height: styles.height,
-        left: styles.getMarginLeft(sectionStyles),
-        top: styles.getMarginTop(sectionStyles),
-        isSelected: widget.isSelected,
-        child: Opacity(opacity: styles.opacity, child: body));
   }
 
   Widget get body {
@@ -112,7 +97,7 @@ class _ShapeViewState extends State<ShapeView> {
 
   ShapeStyles styleSheet() {
     try {
-      Map<String, dynamic> json = widget.stylesheets[widget.deviceTypeId][child.id];
+      Map<String, dynamic> json = widget.stylesheets[child.id];
 //      if (json['display'] != 'none')
 //        print('Shape Styles: $json');
       return ShapeStyles.fromJson(json);

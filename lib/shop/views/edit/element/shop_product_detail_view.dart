@@ -1,33 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/models.dart';
-import 'package:payever/shop/views/edit/element/sub_element/resizeable_view.dart';
 import '../../../../theme.dart';
 
 class ShopProductDetailView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
-  final String deviceTypeId;
-  final SectionStyles sectionStyles;
-  final bool isSelected;
 
   const ShopProductDetailView(
       {this.child,
-      this.stylesheets,
-      this.deviceTypeId,
-      this.sectionStyles,
-      this.isSelected = false});
+      this.stylesheets});
 
   @override
   _ShopProductDetailViewState createState() =>
-      _ShopProductDetailViewState(child, sectionStyles);
+      _ShopProductDetailViewState(child);
 }
 
 class _ShopProductDetailViewState extends State<ShopProductDetailView> {
   final Child child;
-  final SectionStyles sectionStyles;
   ShopProductDetailStyles styles;
 
-  _ShopProductDetailViewState(this.child, this.sectionStyles);
+  _ShopProductDetailViewState(this.child);
 
   @override
   Widget build(BuildContext context) {
@@ -38,14 +30,6 @@ class _ShopProductDetailViewState extends State<ShopProductDetailView> {
     if (styles == null || !styles.active)
       return Container();
     return body;
-    return ResizeableView(
-        width: double.infinity,
-        height: double.infinity,
-        left: styles.getMarginLeft(sectionStyles),
-        top: styles.getMarginTop(sectionStyles),
-        isSelected: widget.isSelected,
-        sizeChangeable: false,
-        child: body);
   }
 
   Widget get body {
@@ -138,7 +122,7 @@ class _ShopProductDetailViewState extends State<ShopProductDetailView> {
 
   ShopProductDetailStyles styleSheet() {
     try {
-      Map<String, dynamic> json = widget.stylesheets[widget.deviceTypeId][child.id];
+      Map<String, dynamic> json = widget.stylesheets[child.id];
 //      if (json['display'] != 'none')
 //        print('Shop Product detail Styles: $json');
 

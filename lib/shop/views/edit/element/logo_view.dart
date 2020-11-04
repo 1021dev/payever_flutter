@@ -3,35 +3,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/shop/models/models.dart';
-import 'package:payever/shop/views/edit/element/sub_element/resizeable_view.dart';
 import 'package:provider/provider.dart';
 
 class LogoView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
-  final String deviceTypeId;
-  final SectionStyles sectionStyles;
-  final bool isSelected;
 
   const LogoView(
       {this.child,
-      this.stylesheets,
-      this.deviceTypeId,
-      this.sectionStyles,
-      this.isSelected});
+      this.stylesheets});
 
   @override
-  _LogoViewState createState() => _LogoViewState(child, sectionStyles);
+  _LogoViewState createState() => _LogoViewState(child);
 }
 
 class _LogoViewState extends State<LogoView> {
   final Child child;
-  final SectionStyles sectionStyles;
 
   ImageStyles styles;
   GlobalStateModel globalStateModel;
   GlobalKey key = GlobalKey();
-  _LogoViewState(this.child, this.sectionStyles);
+  _LogoViewState(this.child);
 
 
   @override
@@ -45,13 +37,6 @@ class _LogoViewState extends State<LogoView> {
     if (styles == null || !styles.active)
       return Container();
     return body;
-    return ResizeableView(
-        width: styles.width,
-        height: styles.height,
-        left: styles.getMarginLeft(sectionStyles),
-        top: styles.getMarginTop(sectionStyles),
-        isSelected: widget.isSelected,
-        child: body);
   }
 
   Widget get body {
@@ -87,7 +72,7 @@ class _LogoViewState extends State<LogoView> {
 
   ImageStyles styleSheet() {
     try {
-      Map<String, dynamic> json = widget.stylesheets[widget.deviceTypeId][child.id];
+      Map<String, dynamic> json = widget.stylesheets[child.id];
 //      if (json['display'] != 'none')
 //        print('Logo Styles: $json');
       return ImageStyles.fromJson(json);

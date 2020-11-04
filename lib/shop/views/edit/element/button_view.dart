@@ -1,61 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/models.dart';
-import 'package:payever/shop/views/edit/element/sub_element/resizeable_view.dart';
-
 import '../../../../theme.dart';
 
 class ButtonView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
-  final String deviceTypeId;
-  final SectionStyles sectionStyles;
-  final bool isSelected;
 
   const ButtonView(
       {this.child,
-      this.stylesheets,
-      this.deviceTypeId,
-      this.sectionStyles,
-      this.isSelected = false});
+      this.stylesheets});
 
   @override
-  _ButtonViewState createState() => _ButtonViewState(child, sectionStyles);
+  _ButtonViewState createState() => _ButtonViewState(child);
 }
 
 class _ButtonViewState extends State<ButtonView> {
   final String TAG = 'ButtonView : ';
 
   final Child child;
-  final SectionStyles sectionStyles;
   ButtonStyles styles;
   ButtonData data;
 
-  _ButtonViewState(this.child, this.sectionStyles);
+  _ButtonViewState(this.child);
 
   @override
   Widget build(BuildContext context) {
     styles = styleSheet();
-    if (styles == null && child.styles != null && child.styles.isNotEmpty) {
-      styles = ButtonStyles.fromJson(child.styles);
-    }
-
-    if (styles == null || !styles.active) return Container();
-
     data = ButtonData.fromJson(child.data);
-    if (data.action != null && data.action.payload != null) {
-      // print('$TAG has action');
-//      styles = ButtonStyles.fromJson(child.styles);
-
-    }
     return body;
-
-    return ResizeableView(
-        width: styles.width + styles.paddingH * 2,
-        height: styles.height + styles.paddingV * 2,
-        left: styles.getMarginLeft(sectionStyles),
-        top: styles.getMarginTop(sectionStyles),
-        isSelected: widget.isSelected,
-        child: body);
   }
 
   Widget get body {
@@ -135,7 +107,7 @@ class _ButtonViewState extends State<ButtonView> {
 
   ButtonStyles styleSheet() {
     try {
-      Map<String, dynamic> json = widget.stylesheets[widget.deviceTypeId][child.id];
+      Map<String, dynamic> json = widget.stylesheets[child.id];
       // if (json['display'] != 'none') {
         print('Button ID: ${child.id}');
         print('Button Styles Sheets: $json');

@@ -6,28 +6,21 @@ import '../../../../theme.dart';
 class ShopProductCategoryView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
-  final String deviceTypeId;
-  final SectionStyles sectionStyles;
-  final bool isSelected;
 
   const ShopProductCategoryView(
       {this.child,
-      this.stylesheets,
-      this.deviceTypeId,
-      this.sectionStyles,
-      this.isSelected = false});
+      this.stylesheets});
 
   @override
   _ShopProductCategoryViewState createState() =>
-      _ShopProductCategoryViewState(child, sectionStyles);
+      _ShopProductCategoryViewState(child);
 }
 
 class _ShopProductCategoryViewState extends State<ShopProductCategoryView> {
   final Child child;
-  final SectionStyles sectionStyles;
   ShopProductCategoryStyles styles;
   CategoryData data;
-  _ShopProductCategoryViewState(this.child, this.sectionStyles);
+  _ShopProductCategoryViewState(this.child);
 
   @override
   Widget build(BuildContext context) {
@@ -190,7 +183,7 @@ class _ShopProductCategoryViewState extends State<ShopProductCategoryView> {
 
   ShopProductCategoryStyles styleSheet() {
     try {
-      Map<String, dynamic>json = widget.stylesheets[widget.deviceTypeId][child.id];
+      Map<String, dynamic>json = widget.stylesheets[child.id];
 //      if (json['display'] != 'none')
 //        print('ShopProductCategoryStyles: $json');
       return ShopProductCategoryStyles.fromJson(json);

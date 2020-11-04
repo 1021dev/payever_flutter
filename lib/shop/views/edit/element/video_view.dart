@@ -2,34 +2,26 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/shop/models/models.dart';
-import 'package:payever/shop/views/edit/element/sub_element/resizeable_view.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
-  final String deviceTypeId;
-  final SectionStyles sectionStyles;
-  final bool isSelected;
 
   const VideoView(
       {this.child,
-      this.stylesheets,
-      this.deviceTypeId,
-      this.sectionStyles,
-      this.isSelected = false});
+      this.stylesheets});
 
   @override
-  _VideoViewState createState() => _VideoViewState(child, sectionStyles);
+  _VideoViewState createState() => _VideoViewState(child);
 }
 
 class _VideoViewState extends State<VideoView> {
   final Child child;
-  final SectionStyles sectionStyles;
-  ImageStyles styles;
+   ImageStyles styles;
   VideoData data;
 
-  _VideoViewState(this.child, this.sectionStyles);
+  _VideoViewState(this.child);
 
   VideoPlayerController _controller;
   bool videoLoading = false;
@@ -61,13 +53,6 @@ class _VideoViewState extends State<VideoView> {
     if (data == null /* || data.preview == null || data.preview.isEmpty*/)
       return Container();
     return body;
-    return ResizeableView(
-        width: styles.width,
-        height: styles.height,
-        left: styles.getMarginLeft(sectionStyles),
-        top: styles.getMarginTop(sectionStyles),
-        isSelected: widget.isSelected,
-        child: body);
   }
 
   Widget get body {
@@ -179,7 +164,7 @@ class _VideoViewState extends State<VideoView> {
 
   ImageStyles styleSheet() {
     try {
-      Map<String, dynamic> json = widget.stylesheets[widget.deviceTypeId][child.id];
+      Map<String, dynamic> json = widget.stylesheets[child.id];
 //      if (json['display'] != 'none')
 //        print('Video Styles: $json');
       return ImageStyles.fromJson(json);
