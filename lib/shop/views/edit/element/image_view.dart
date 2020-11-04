@@ -28,10 +28,6 @@ class _ImageViewState extends State<ImageView> {
   @override
   Widget build(BuildContext context) {
     styles = styleSheet();
-    if (styles == null && child.styles != null && child.styles.isNotEmpty) {
-      styles = ImageStyles.fromJson(child.styles);
-    }
-    if (styles == null || !styles.active) return Container();
     try {
       data = ImageData.fromJson(child.data);
     } catch (e) {}

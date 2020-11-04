@@ -25,11 +25,6 @@ class _SocialIconViewState extends State<SocialIconView> {
   @override
   Widget build(BuildContext context) {
     styles = styleSheet();
-    if (styles == null && child.styles != null && child.styles.isNotEmpty) {
-      styles = SocialIconStyles.fromJson(child.styles);
-    }
-    if (styles == null || !styles.active)
-      return Container();
     return body;
   }
 

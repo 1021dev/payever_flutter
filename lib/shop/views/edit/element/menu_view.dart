@@ -22,10 +22,6 @@ class _MenuViewState extends State<MenuView> {
   @override
   Widget build(BuildContext context) {
     styles = styleSheet();
-    if (styles == null && child.styles != null && child.styles.isNotEmpty) {
-      styles = ShapeStyles.fromJson(child.styles);
-    }
-    if (styles == null || !styles.active) return Container();
     return body;
   }
 

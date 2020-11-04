@@ -24,11 +24,6 @@ class _ShopProductDetailViewState extends State<ShopProductDetailView> {
   @override
   Widget build(BuildContext context) {
     styles = styleSheet();
-    if (styles == null && child.styles != null && child.styles.isNotEmpty) {
-      styles = ShopProductDetailStyles.fromJson(child.styles);
-    }
-    if (styles == null || !styles.active)
-      return Container();
     return body;
   }
 

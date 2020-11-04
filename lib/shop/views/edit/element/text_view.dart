@@ -24,11 +24,6 @@ class _TextViewState extends State<TextView> {
   @override
   Widget build(BuildContext context) {
     styles = getStyles();
-    if (styles == null && child.styles != null && child.styles.isNotEmpty) {
-      styles = TextStyles.fromJson(child.styles);
-    }
-    if (styles == null || !styles.active) return Container();
-
     if (child.data is Map) {
       Data data = Data.fromJson(child.data);
       if (data.text != null) txt = data.text;

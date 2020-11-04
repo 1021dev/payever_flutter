@@ -30,12 +30,6 @@ class _LogoViewState extends State<LogoView> {
   Widget build(BuildContext context) {
     globalStateModel = Provider.of<GlobalStateModel>(context, listen: true);
     styles = styleSheet();
-    if (styles == null && child.styles != null && child.styles.isNotEmpty) {
-      styles = ImageStyles.fromJson(child.styles);
-    }
-
-    if (styles == null || !styles.active)
-      return Container();
     return body;
   }
 

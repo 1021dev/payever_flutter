@@ -68,6 +68,8 @@ class _SectionViewState extends State<SectionView> {
   double relativeMarginLeft = -1;
   double relativeMarginTop = -1;
 
+  bool blockDragging = false;
+
   _SectionViewState({this.deviceTypeId, this.section, this.screenBloc}) {
     sectionStyles = getSectionStyles(section.id);
     widgetHeight = sectionStyles.height;
@@ -90,12 +92,6 @@ class _SectionViewState extends State<SectionView> {
       progressResize(templateSizeState);
       return BlocListener(
         listener: (BuildContext context, ShopEditScreenState state) async {
-          // if (state.selectedSection) {
-          //   setState(() {
-          //     selectChildId = '';
-          //   });
-          //   screenBloc.add(RestSelectSectionEvent());
-          // }
         },
         bloc: screenBloc,
         child: BlocBuilder(

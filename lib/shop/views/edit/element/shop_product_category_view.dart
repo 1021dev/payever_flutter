@@ -25,12 +25,6 @@ class _ShopProductCategoryViewState extends State<ShopProductCategoryView> {
   @override
   Widget build(BuildContext context) {
     styles = styleSheet();
-    if (styles == null && child.styles != null && child.styles.isNotEmpty) {
-      styles = ShopProductCategoryStyles.fromJson(child.styles);
-    }
-    if (styles == null || !styles.active)
-      return Container();
-
     return _body();
   }
 
