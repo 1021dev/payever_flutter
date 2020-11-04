@@ -90,7 +90,6 @@ class _SectionViewState extends State<SectionView> {
       progressResize(templateSizeState);
       return BlocListener(
         listener: (BuildContext context, ShopEditScreenState state) async {
-          print('selectedSection: ${state.selectedSection} Current SectionID: ${section.id}');
           if (state.selectedSection) {
             setState(() {
               selectChildId = '';
@@ -101,9 +100,7 @@ class _SectionViewState extends State<SectionView> {
         bloc: screenBloc,
         child: BlocBuilder(
           condition: (ShopEditScreenState state1, ShopEditScreenState state2) {
-            print('new Selected SectionID: ${state2.selectedSectionId} Current SectionID: ${section.id}');
             if (state2.selectedSectionId != section.id) {
-
               setState(() {
                 selectChildId = '';
               });
@@ -135,7 +132,7 @@ class _SectionViewState extends State<SectionView> {
 
     for (Child child in section.children) {
       Widget resizeableWidget =
-          getResizeableChildWidget(state, child, true, sectionStyles);
+          getResizeableChildWidget(state, child, [sectionStyles]);
       if (resizeableWidget == null) continue;
       if (selectChildId == child.id)
         lastElement = resizeableWidget;
@@ -143,33 +140,17 @@ class _SectionViewState extends State<SectionView> {
         widgets.add(resizeableWidget);
       // Add Block View
       if (child.type == 'block') {
-        Map<String, dynamic> json = state.stylesheets[deviceTypeId][child.id];
-        SectionStyles blockStyles = SectionStyles.fromJson(json);
-        for (Child blockChild in child.children) {
-          Widget resizeableWidget = getResizeableChildWidget(
-              state, blockChild, false, sectionStyles,
-              blockStyles: blockStyles);
-          if (resizeableWidget == null) continue;
-          widgets.add(resizeableWidget);
-          // Add Block View
-          if (blockChild.type == 'block') {
-            Map<String, dynamic> json =
-                state.stylesheets[deviceTypeId][blockChild.id];
-            SectionStyles blockStyles1 = SectionStyles.fromJson(json);
-            if (blockStyles1 == null || !blockStyles1.active) continue;
-            for (Child blockChild in blockChild.children) {
-              Widget resizeableWidget = getResizeableChildWidget(
-                  state, blockChild, false, sectionStyles,
-                  blockStyles0: blockStyles, blockStyles: blockStyles1);
-              if (resizeableWidget == null) continue;
-              widgets.add(resizeableWidget);
-            }
-          }
-        }
+        addBlockChildren(state, widgets,[sectionStyles], child);
       }
     }
 
-    if (lastElement != null) widgets.add(lastElement);
+    if (lastElement != null) {
+      widgets.add(lastElement);
+      if (selectChildId == state.selectedBlockId) {
+        Child block = section.children.firstWhere((element) => element.id == selectChildId);
+        addBlockChildren(state, widgets,[sectionStyles], block, add: true);
+      }
+    }
     // update Section Height:
     if (widgetHeight < limitSectionHeight) {
       widgetHeight = limitSectionHeight;
@@ -198,32 +179,46 @@ class _SectionViewState extends State<SectionView> {
     );
   }
 
-  Widget getResizeableChildWidget(ShopEditScreenState state, Child child, bool isSection,
-      SectionStyles sectionStyles, {SectionStyles blockStyles0, SectionStyles blockStyles}) {
+  void addBlockChildren(
+      ShopEditScreenState state, List<Widget> widgets, List<SectionStyles> sectionStyles, Child block, {bool add = false}) {
+    if (selectChildId == block.id && add == false) {
+      return;
+    }
+    Map<String, dynamic> json = state.stylesheets[deviceTypeId][block.id];
+    SectionStyles blockStyles = SectionStyles.fromJson(json);
+    List<SectionStyles> newSectionStyles = [blockStyles];
+    newSectionStyles.addAll(sectionStyles);
+    for (Child child in block.children) {
+      Widget resizeableWidget = getResizeableChildWidget(
+          state, child, newSectionStyles);
+      if (resizeableWidget == null) continue;
+      widgets.add(resizeableWidget);
+      // Add Block View
+      if (child.type == 'block') {
+        addBlockChildren(state, widgets, newSectionStyles, child, add: add);
+      }
+    }
+  }
+
+  Widget getResizeableChildWidget(ShopEditScreenState state, Child child, List<SectionStyles> sectionStyles) {
     BaseStyles styles = getBaseStyles(child.id);
     if (styles == null || !styles.active) return null;
 
-    Widget childElement = getChild(state, child, isSection ? sectionStyles : blockStyles);
+    Widget childElement = getChild(state, child, sectionStyles.first);
     if (childElement == null) return null;
 
     double width = styles.width + styles.paddingH * 2;
     double height = styles.height + styles.paddingV * 2;
-    double marginTop, marginLeft;
+    double marginTop = 0; double marginLeft = 0;
     if (child.isButton && styles.height == 0) {
       height = 22 + styles.paddingV * 2;
     }
 
-    if (isSection) {
-      marginLeft = styles.getMarginLeft(sectionStyles);
-      marginTop = styles.getMarginTop(sectionStyles);
-    } else {
-      if (blockStyles0 != null) {
-        marginLeft = styles.getMarginLeft(blockStyles) + blockStyles.getMarginLeft(blockStyles0) + blockStyles0.getMarginLeft(sectionStyles);
-        marginTop = styles.getMarginTop(blockStyles) + blockStyles.getMarginTop(blockStyles0) + blockStyles0.getMarginTop(sectionStyles);
-      } else {
-        marginLeft = styles.getMarginLeft(blockStyles) + blockStyles.getMarginLeft(sectionStyles);
-        marginTop = styles.getMarginTop(blockStyles) + blockStyles.getMarginTop(sectionStyles);
-      }
+    for (int i = 0; i < sectionStyles.length; i++) {
+      SectionStyles sectionStyle = sectionStyles[i];
+      marginLeft += styles.getMarginLeft(sectionStyle);
+      marginTop += styles.getMarginTop(sectionStyle);
+      styles = sectionStyle;
     }
 
     Widget childWidget = ResizeableView(
@@ -234,6 +229,7 @@ class _SectionViewState extends State<SectionView> {
         isSelected: selectChildId == child.id,
         child: childElement);
 
+    bool isSection = sectionStyles.length == 1;
     if (isSection)
       _getLimitedSectionHeight(child);
 
