@@ -69,55 +69,55 @@ class _BlockViewState extends State<BlockView> {
     }
     return Consumer<TemplateSizeStateModel>(
         builder: (context, templateSizeState, child1) {
-      bool selectedSection =
-          widget.screenBloc.state.selectedBlockId == block.id &&
-              selectChildId.length > 0;
-      if (selectedSection) {
-        if (templateSizeState.updateChildSize != null && selectedSection) {
-          Future.microtask(() => templateSizeState.setUpdateChildSize(null));
-          _changeSection(childSize: templateSizeState.updateChildSize);
-        } else if (templateSizeState.newChildSize != null && selectedSection) {
-          bool wrongposition = sectionStyles.wrongPosition(
-              widget.screenBloc.state.stylesheets[deviceTypeId],
-              block,
-              blockStyles.height,
-              templateSizeState.newChildSize,
-              selectChildId,
-              widget.screenBloc.state.selectedBlockId);
-
-          print('wrong position: $wrongposition, Block ID: ${block.id}');
-          if (wrongposition) {
-            if (!templateSizeState.wrongPosition)
-              Future.microtask(
-                  () => templateSizeState.setWrongPosition(wrongposition));
-          } else {
-            if (templateSizeState.wrongPosition)
-              Future.microtask(
-                  () => templateSizeState.setWrongPosition(wrongposition));
-          }
-        }
-      }
+      // bool selectedSection =
+      //     widget.screenBloc.state.selectedBlockId == block.id &&
+      //         selectChildId.length > 0;
+      // if (selectedSection) {
+      //   if (templateSizeState.updateChildSize != null && selectedSection) {
+      //     Future.microtask(() => templateSizeState.setUpdateChildSize(null));
+      //     _changeSection(childSize: templateSizeState.updateChildSize);
+      //   } else if (templateSizeState.newChildSize != null && selectedSection) {
+      //     bool wrongposition = sectionStyles.wrongPosition(
+      //         widget.screenBloc.state.stylesheets[deviceTypeId],
+      //         block,
+      //         blockStyles.height,
+      //         templateSizeState.newChildSize,
+      //         selectChildId,
+      //         widget.screenBloc.state.selectedBlockId);
+      //
+      //     print('wrong position: $wrongposition, Block ID: ${block.id}');
+      //     if (wrongposition) {
+      //       if (!templateSizeState.wrongPosition)
+      //         Future.microtask(
+      //             () => templateSizeState.setWrongPosition(wrongposition));
+      //     } else {
+      //       if (templateSizeState.wrongPosition)
+      //         Future.microtask(
+      //             () => templateSizeState.setWrongPosition(wrongposition));
+      //     }
+      //   }
+      // }
       return BlocListener(
         listener: (BuildContext context, ShopEditScreenState state) async {
           // print('BlockView: ${state.selectedSection}, ${state.selectedBlockSection}');
-          if (state.selectedSection || state.selectedBlockSection) {
-            setState(() {
-              selectChildId = '';
-            });
-            widget.screenBloc.add(RestSelectBlockEvent());
-          }
+          // if (state.selectedSection || state.selectedBlockSection) {
+          //   setState(() {
+          //     selectChildId = '';
+          //   });
+          //   widget.screenBloc.add(RestSelectBlockEvent());
+          // }
         },
         bloc: widget.screenBloc,
         child: BlocBuilder(
-          condition: (ShopEditScreenState state1, ShopEditScreenState state2) {
-            if (state2.selectedBlockId != block.id) {
-              setState(() {
-                selectChildId = '';
-              });
-              return false;
-            }
-            return true;
-          },
+          // condition: (ShopEditScreenState state1, ShopEditScreenState state2) {
+          //   if (state2.selectedBlockId != block.id) {
+          //     setState(() {
+          //       selectChildId = '';
+          //     });
+          //     return false;
+          //   }
+          //   return true;
+          // },
           bloc: widget.screenBloc,
           builder: (BuildContext context, state) {
             return body(state);
