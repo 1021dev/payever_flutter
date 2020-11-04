@@ -142,6 +142,7 @@ class _SectionViewState extends State<SectionView> {
         widgets.add(resizeableWidget);
       // Add Block View
       if (child.type == 'block') {
+        child.children.forEach((element) { element.blocks = [];});
         addBlockChildren(state, widgets,[sectionStyles], child);
       }
     }
@@ -191,9 +192,11 @@ class _SectionViewState extends State<SectionView> {
     List<SectionStyles> newSectionStyles = [blockStyles];
     newSectionStyles.addAll(sectionStyles);
     for (Child child in block.children) {
-      Widget resizeableWidget = getResizeableChildWidget(
-          state, child, newSectionStyles);
+      Widget resizeableWidget = getResizeableChildWidget(state, child, newSectionStyles);
       if (resizeableWidget == null) continue;
+      List<Child>blocks = [block];
+      blocks.addAll(block.blocks);
+      child.blocks = blocks;
       widgets.add(resizeableWidget);
       // Add Block View
       if (child.type == 'block') {
@@ -246,13 +249,18 @@ class _SectionViewState extends State<SectionView> {
       onTap: (widget.enableTapChild && selectChildId != child.id)
           ? () {
               widget.onTapChild();
+              Child block; String blockId;
               if (child.type == 'block') {
-                screenBloc.add(
-                    SelectSectionEvent(sectionId: section.id, selectedBlockId: child.id, selectedBlock: child, selectedChild: child, isSelectedChild: true));
+                block = child;
+                blockId = child.id;
               } else {
-                screenBloc.add(SelectSectionEvent(
-                    sectionId: section.id, selectedChild: child, isSelectedChild: true));
+                blockId = child.blocks.last == null ? '' : child.blocks.last.id;
               }
+              screenBloc.add(SelectSectionEvent(
+                  sectionId: section.id,
+                  selectedBlockId: blockId,
+                  selectedBlock: block,
+                  selectedChild: child));
               setState(() {
                 selectChildId = child.id;
               });
@@ -498,7 +506,7 @@ class _SectionViewState extends State<SectionView> {
               print('onVerticalDragDown dy = ${details.globalPosition.dy}');
             },
             onVerticalDragEnd: (DragEndDetails details) {
-              _changeSection();
+              _changeSectionAction();
             },
             onVerticalDragStart: (details) {
               print('onVerticalDragDown dy = ${details.globalPosition.dy}');
@@ -536,30 +544,26 @@ class _SectionViewState extends State<SectionView> {
     );
   }
 
-  void progressResize(TemplateSizeStateModel templateSizeState) {
-    bool selectedSection = screenBloc.state.selectedSectionId == section.id &&
-        (screenBloc.state.selectedBlockId == '' ||
-            screenBloc.state.selectedBlockId == selectChildId);
-    if (!selectedSection) return;
+  void progressResize(TemplateSizeStateModel templateSizeState) { 
+    if (screenBloc.state.selectedSectionId != section.id) return;
     // Initialize Relative Lines after drag
     if (templateSizeState.updateChildSizeFailed) {
       Future.microtask(() => initializeRelativeLines());
-    }
-    if (templateSizeState.updateChildSize != null && selectedSection) {
+    } else if (templateSizeState.updateChildSize != null) {
       Future.microtask(() {
         templateSizeState.setUpdateChildSize(null);
         initializeRelativeLines();
       });
-      _changeSection(childSize: templateSizeState.updateChildSize);
-    } else if (templateSizeState.newChildSize != null && selectedSection) {
+      _changeSectionAction(childSize: templateSizeState.updateChildSize);
+    } else if (templateSizeState.newChildSize != null) {
       // bool isMoving =
       bool wrongposition = sectionStyles.wrongPosition(
           screenBloc.state.stylesheets[deviceTypeId],
           section,
           widgetHeight,
           templateSizeState.newChildSize,
-          selectChildId,
-          screenBloc.state.selectedBlockId);
+          screenBloc.state.selectedChild,
+          screenBloc.state.selectedBlock);
       // print('wrong position: $wrongposition, SectionID: ${section.id}, SelectedSectionId:${screenBloc.state.selectedSectionId}');
       Future.microtask(
           () => progressRelativeLines(templateSizeState.newChildSize));
@@ -632,7 +636,7 @@ class _SectionViewState extends State<SectionView> {
       limitSectionHeight = newLimitSectionHeight;
   }
 
-  _changeSection({NewChildSize childSize}) {
+  _changeSectionAction({NewChildSize childSize}) {
     Map<String, dynamic> payload = {};
     if (selectChildId != null && childSize != null) {
       payload = childPayload(childSize);

@@ -535,41 +535,70 @@ class SizeAssist {
       Child section,
       double sectionHeight,
       NewChildSize newSize,
-      String updatedChildId,
-      String selectedBlockId) {
-
-
-
+      Child selectedChild,
+      Child selectedBlock) {
+    String updatedChildId = selectedChild.id;
+    String blockId = selectedBlock != null ? selectedBlock.id : '';
+    SectionStyles sectionStyle = SectionStyles.fromJson(stylesheets[section.id]);
+    print('NewChildSize: ${newSize.toJson()}');
     // Check Boundary
+    // No block Element
+
     bool wrongBoundary = newSize.newTop < 0 ||
         newSize.newLeft < 0 ||
         (newSize.newTop + newSize.newHeight > sectionHeight) ||
         (newSize.newLeft + newSize.newWidth > Measurements.width);
-    SectionStyles sectionStyles =
-        SectionStyles.fromJson(stylesheets[section.id]);
     if (wrongBoundary) return true;
 
-    // Check other Children
-    for (Child child in section.children) {
-      if (child.id == updatedChildId) continue;
-      BaseStyles baseStyles = BaseStyles.fromJson(stylesheets[child.id]);
-      bool isWrong =
-          wrongPositionWithOrderChildren(newSize, baseStyles, sectionStyles);
-      if (isWrong) return true;
+    if (selectedChild.blocks != null && selectedChild.blocks.isNotEmpty) {
+      List<SectionStyles> sectionStyles = [];
+      for (Child block in selectedChild.blocks) {
+        SectionStyles blockStyle = SectionStyles.fromJson(stylesheets[block.id]);
+        sectionStyles.add(blockStyle);
+      }
+      sectionStyles.add(sectionStyle);
+      print('sectionStyles length: ${sectionStyles.length}');
+      double blockWidth = sectionStyles.first.width + sectionStyles.first.paddingH * 2;
+      double blockHeight = sectionStyles.first.height + sectionStyles.first.paddingV * 2;
+
+      double marginTop = 0; double marginLeft = 0;
+      SectionStyles styles = sectionStyles[0];
+      for (int i = 1; i < sectionStyles.length; i++) {
+        SectionStyles sectionStyle = sectionStyles[i];
+        marginLeft += styles.getMarginLeft(sectionStyle);
+        marginTop += styles.getMarginTop(sectionStyle);
+        styles = sectionStyle;
+      }
+      print('block width: $blockWidth height: $blockHeight marginTop: $marginTop marginLeft: $marginLeft');
+      wrongBoundary = newSize.newTop < marginTop ||
+          newSize.newLeft < marginLeft ||
+          (newSize.newTop + newSize.newHeight > marginTop + blockHeight) ||
+          (newSize.newLeft + newSize.newWidth > marginLeft + blockWidth);
+      if (wrongBoundary) return true;
     }
 
-    // Check BlockView with block's children
+
+    // Check other Children
+    // for (Child child in section.children) {
+    //   if (child.id == updatedChildId) continue;
+    //   BaseStyles baseStyles = BaseStyles.fromJson(stylesheets[child.id]);
+    //   bool isWrong =
+    //       wrongPositionWithOrderChildren(newSize, baseStyles, sectionStyle);
+    //   if (isWrong) return true;
+    // }
+
+    // // Check BlockView with block's children
     bool wrongBlockPosition = false;
-    if (selectedBlockId == updatedChildId) {
-      Child block =
-          section.children.firstWhere((child) => child.id == updatedChildId);
-      SectionStyles blockStyles = SectionStyles.fromJson(stylesheets[block.id]);
-      // Check blockView Moving
-      if (blockStyles.width != newSize.newWidth || blockStyles.height != newSize.newHeight) {
-        wrongBlockPosition = wrongPositionBlockView(
-            stylesheets, block, newSize, sectionStyles, blockStyles);
-      }
-    }
+    // if (blockId == updatedChildId) {
+    //   Child block =
+    //       section.children.firstWhere((child) => child.id == updatedChildId);
+    //   SectionStyles blockStyles = SectionStyles.fromJson(stylesheets[block.id]);
+    //   // Check blockView Moving
+    //   if (blockStyles.width != newSize.newWidth || blockStyles.height != newSize.newHeight) {
+    //     wrongBlockPosition = wrongPositionBlockView(
+    //         stylesheets, block, newSize, sectionStyle, blockStyles);
+    //   }
+    // }
     // print('New Position: Top: ${childSize.newTop}, Left: ${childSize.newLeft}, SectionID: ${section.id}, SelectedSectionId:${screenBloc.state.selectedSectionId}');
     return wrongBlockPosition;
   }

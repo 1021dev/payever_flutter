@@ -15,14 +15,12 @@ class SelectSectionEvent extends ShopEditScreenEvent {
   final String selectedBlockId;
   final Child selectedBlock;
   final Child selectedChild;
-  final bool isSelectedChild;
 
   SelectSectionEvent(
       {this.sectionId,
       this.selectedChild,
       this.selectedBlock,
-      this.selectedBlockId,
-      this.isSelectedChild = false});
+      this.selectedBlockId,});
 
   @override
   List<Object> get props => [
@@ -30,7 +28,6 @@ class SelectSectionEvent extends ShopEditScreenEvent {
         this.selectedChild,
         this.selectedBlock,
         this.selectedBlockId,
-        this.isSelectedChild,
       ];
 }
 

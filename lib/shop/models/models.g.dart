@@ -1888,3 +1888,20 @@ Map<String, dynamic> _$ButtonPayloadToJson(ButtonPayload instance) =>
       'path': instance.path,
       'route': instance.route,
     };
+
+NewChildSize _$NewChildSizeFromJson(Map<String, dynamic> json) {
+  return NewChildSize(
+    newTop: (json['newTop'] as num)?.toDouble(),
+    newLeft: (json['newLeft'] as num)?.toDouble(),
+    newWidth: (json['newWidth'] as num)?.toDouble(),
+    newHeight: (json['newHeight'] as num)?.toDouble(),
+  );
+}
+
+Map<String, dynamic> _$NewChildSizeToJson(NewChildSize instance) =>
+    <String, dynamic>{
+      'newWidth': instance.newWidth,
+      'newHeight': instance.newHeight,
+      'newTop': instance.newTop,
+      'newLeft': instance.newLeft,
+    };

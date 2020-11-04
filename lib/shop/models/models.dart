@@ -272,6 +272,8 @@ class Child {
   @JsonKey(name: 'type')            String type;
   @JsonKey(name: 'data')            dynamic data;
 
+  @JsonKey(ignore: true)
+  List<Child> blocks = [];
   bool get isButton {
     return type == 'button';
   }
@@ -873,11 +875,19 @@ class ButtonPayload {
   Map<String, dynamic> toJson() => _$ButtonPayloadToJson(this);
 }
 
+@JsonSerializable()
 class NewChildSize {
+  @JsonKey(name: 'newWidth')
   double newWidth;
+  @JsonKey(name: 'newHeight')
   double newHeight;
+  @JsonKey(name: 'newTop')
   double newTop;
+  @JsonKey(name: 'newLeft')
   double newLeft;
 
   NewChildSize({this.newTop, this.newLeft, this.newWidth, this.newHeight});
+
+  factory NewChildSize.fromJson(Map<String, dynamic> json) => _$NewChildSizeFromJson(json);
+  Map<String, dynamic> toJson() => _$NewChildSizeToJson(this);
 }
