@@ -12,9 +12,9 @@ class ShopEditScreenState {
   final List<Action>actions;
   final String selectedSectionId;
   final String selectedBlockId;
+  final Child selectedBlock;
+  final Child selectedChild;
   final ShopPage activeShopPage;
-  final bool selectedSection;
-  final bool selectedBlockSection;
 
   ShopEditScreenState({
     this.activeShopPage,
@@ -29,8 +29,8 @@ class ShopEditScreenState {
     this.actions = const [],
     this.selectedSectionId,
     this.selectedBlockId,
-    this.selectedSection = false,
-    this.selectedBlockSection = false,
+    this.selectedBlock,
+    this.selectedChild,
   });
 
   List<Object> get props => [
@@ -45,9 +45,9 @@ class ShopEditScreenState {
     this.templates,
     this.actions,
     this.selectedSectionId,
-    this.selectedSection,
+    this.selectedBlock,
+    this.selectedChild,
     this.selectedBlockId,
-    this.selectedBlockSection,
   ];
 
   ShopEditScreenState copyWith({
@@ -61,10 +61,10 @@ class ShopEditScreenState {
     Map<String, dynamic> templates,
     List<Action>actions,
     String selectedSectionId,
+    Child selectedBlock,
+    Child selectedChild,
     ShopPage activeShopPage,
-    bool selectedSection,
     String selectedBlockId,
-    bool selectedBlockSection,
   }) {
     return ShopEditScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -78,9 +78,9 @@ class ShopEditScreenState {
       actions: actions ?? this.actions,
       activeShopPage: activeShopPage ?? this.activeShopPage,
       selectedSectionId: selectedSectionId ?? this.selectedSectionId,
-      selectedSection: selectedSection ?? this.selectedSection,
       selectedBlockId: selectedBlockId ?? this.selectedBlockId,
-      selectedBlockSection: selectedBlockSection ?? this.selectedBlockSection
+      selectedBlock: selectedBlock,
+      selectedChild: selectedChild,
     );
   }
 }

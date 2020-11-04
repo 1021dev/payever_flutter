@@ -90,17 +90,23 @@ class _SectionViewState extends State<SectionView> {
       progressResize(templateSizeState);
       return BlocListener(
         listener: (BuildContext context, ShopEditScreenState state) async {
-          if (state.selectedSection) {
-            setState(() {
-              selectChildId = '';
-            });
-            screenBloc.add(RestSelectSectionEvent());
-          }
+          // if (state.selectedSection) {
+          //   setState(() {
+          //     selectChildId = '';
+          //   });
+          //   screenBloc.add(RestSelectSectionEvent());
+          // }
         },
         bloc: screenBloc,
         child: BlocBuilder(
           condition: (ShopEditScreenState state1, ShopEditScreenState state2) {
             if (state2.selectedSectionId != section.id) {
+              setState(() {
+                selectChildId = '';
+              });
+              return false;
+            }
+            if (state2.selectedChild == null) {
               setState(() {
                 selectChildId = '';
               });
@@ -220,14 +226,20 @@ class _SectionViewState extends State<SectionView> {
       marginTop += styles.getMarginTop(sectionStyle);
       styles = sectionStyle;
     }
+    Widget childWidget;
 
-    Widget childWidget = ResizeableView(
-        width: width,
-        height: height,
-        left: marginLeft,
-        top: marginTop,
-        isSelected: selectChildId == child.id,
-        child: childElement);
+    if (child.type == 'shop-category'|| child.type == 'shop-product-details') {
+      childWidget = childElement;
+    } else {
+      childWidget = ResizeableView(
+          width: width,
+          height: height,
+          left: marginLeft,
+          top: marginTop,
+          sizeChangeable: child.type != 'shop-products',
+          isSelected: selectChildId == child.id,
+          child: childElement);
+    }
 
     bool isSection = sectionStyles.length == 1;
     if (isSection)
@@ -240,10 +252,10 @@ class _SectionViewState extends State<SectionView> {
               widget.onTapChild();
               if (child.type == 'block') {
                 screenBloc.add(
-                    SelectBlockEvent(sectionId: section.id, blockId: child.id));
+                    SelectSectionEvent(sectionId: section.id, selectedBlockId: child.id, selectedBlock: child, selectedChild: child, isSelectedChild: true));
               } else {
                 screenBloc.add(SelectSectionEvent(
-                    sectionId: section.id, selectedChild: true));
+                    sectionId: section.id, selectedChild: child, isSelectedChild: true));
               }
               setState(() {
                 selectChildId = child.id;
@@ -590,6 +602,7 @@ class _SectionViewState extends State<SectionView> {
       });
       _changeSection(childSize: templateSizeState.updateChildSize);
     } else if (templateSizeState.newChildSize != null && selectedSection) {
+      // bool isMoving =
       bool wrongposition = sectionStyles.wrongPosition(
           screenBloc.state.stylesheets[deviceTypeId],
           section,

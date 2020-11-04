@@ -537,6 +537,9 @@ class SizeAssist {
       NewChildSize newSize,
       String updatedChildId,
       String selectedBlockId) {
+
+
+
     // Check Boundary
     bool wrongBoundary = newSize.newTop < 0 ||
         newSize.newLeft < 0 ||

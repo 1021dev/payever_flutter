@@ -12,32 +12,27 @@ class ShopEditScreenInitEvent extends ShopEditScreenEvent {}
 
 class SelectSectionEvent extends ShopEditScreenEvent {
   final String sectionId;
-  final bool selectedChild;
-  SelectSectionEvent({this.sectionId, this.selectedChild = false});
+  final String selectedBlockId;
+  final Child selectedBlock;
+  final Child selectedChild;
+  final bool isSelectedChild;
+
+  SelectSectionEvent(
+      {this.sectionId,
+      this.selectedChild,
+      this.selectedBlock,
+      this.selectedBlockId,
+      this.isSelectedChild = false});
 
   @override
   List<Object> get props => [
-    this.sectionId,
-    this.selectedChild,
-  ];
+        this.sectionId,
+        this.selectedChild,
+        this.selectedBlock,
+        this.selectedBlockId,
+        this.isSelectedChild,
+      ];
 }
-
-class SelectBlockEvent extends ShopEditScreenEvent {
-  final String sectionId;
-  final String blockId;
-  final bool selectedBlockChild;
-  SelectBlockEvent({this.sectionId, this.blockId, this.selectedBlockChild = false});
-
-  @override
-  List<Object> get props => [
-    this.sectionId,
-    this.blockId,
-    this.selectedBlockChild,
-  ];
-}
-
-class RestSelectSectionEvent extends ShopEditScreenEvent{}
-class RestSelectBlockEvent extends ShopEditScreenEvent{}
 
 class ActiveShopPageEvent extends ShopEditScreenEvent {
   final ShopPage activeShopPage;

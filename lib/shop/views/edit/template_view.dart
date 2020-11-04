@@ -120,7 +120,11 @@ class _TemplateViewState extends State<TemplateView> {
     print('Selected SectionID: $childId');
     setState(() {
       selectSectionId = childId;
-      screenBloc.add(SelectSectionEvent(sectionId: selectSectionId));
+      screenBloc.add(SelectSectionEvent(
+          sectionId: selectSectionId,
+          selectedBlock: null,
+          selectedBlockId: '',
+          selectedChild: null));
     });
   }
 
