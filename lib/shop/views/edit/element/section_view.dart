@@ -117,110 +117,45 @@ class _SectionViewState extends State<SectionView> {
     });
   }
 
+  Widget lastElement;
+
   Widget body(ShopEditScreenState state) {
     if (sectionStyles == null) {
       return Container();
     }
-
     name = 'Section';
     if (section.data != null) {
       name = Data.fromJson(section.data).name;
     }
 
     List<Widget> widgets = [];
-    Widget lastElement;
     widgets.add(sectionBackgroundWidget);
+
     for (Child child in section.children) {
-      BaseStyles styles = getBaseStyles(child.id);
-      if (styles == null || !styles.active) {
-        continue;
-      }
-      Widget childWidget = ResizeableView(
-          width: styles.width + styles.paddingH * 2,
-          height: styles.height + styles.paddingV * 2,
-          left: styles.getMarginLeft(sectionStyles),
-          top: styles.getMarginTop(sectionStyles),
-          isSelected: widget.isSelected,
-          child: getChild(state, child, sectionStyles));
-
-      if (childWidget != null) {
-        _getLimitedSectionHeight(child);
-        Widget element = GestureDetector(
-          key: ObjectKey(child.id),
-          onTap: (widget.enableTapChild && selectChildId != child.id)
-              ? () {
-                  widget.onTapChild();
-                  if (child.type == 'block') {
-                    screenBloc.add(SelectBlockEvent(
-                        sectionId: section.id, blockId: child.id));
-                  } else {
-                    screenBloc.add(SelectSectionEvent(
-                        sectionId: section.id, selectedChild: true));
-                  }
-                  setState(() {
-                    selectChildId = child.id;
-                  });
-                }
-              : null,
-          child: childWidget,
-        );
-        if (selectChildId == child.id)
-          lastElement = element;
-        else
-          widgets.add(element);
-
+        Widget resizeableWidget = getResizeableChildWidget(state, child, true, sectionStyles);
+        if (resizeableWidget == null) continue;
+        widgets.add(resizeableWidget);
         // Add Block View
         if (child.type == 'block') {
           Map<String, dynamic> json = state.stylesheets[deviceTypeId][child.id];
           SectionStyles blockStyles = SectionStyles.fromJson(json);
           for (Child blockChild in child.children) {
-            BaseStyles styles1 = getBaseStyles(blockChild.id);
-            if (blockChild.isButton) {
-              Map<String, dynamic> json =
-                  state.stylesheets[widget.deviceTypeId][blockChild.id];
-              styles1 = ButtonStyles.fromJson(json);
-            }
-            if (styles1 == null || !styles1.active) continue;
-            Widget child_ = getChild(state, blockChild, blockStyles);
-            if (child_ != null) {
-              double width = styles1.width + styles1.paddingH * 2;
-              double height = styles1.height + styles1.paddingV * 2;
-              Widget blockChildWidget = ResizeableView(
-                  width: width,
-                  height: height,
-                  left: blockStyles.getMarginLeft(sectionStyles) +
-                      styles1.getMarginLeft(blockStyles),
-                  top: blockStyles.getMarginTop(sectionStyles) +
-                      styles1.getMarginTop(blockStyles),
-                  isSelected: widget.isSelected,
-                  child: child_);
-              // _getLimitedSectionHeight(child);
-              Widget blockChildElement = GestureDetector(
-                key: ObjectKey(blockChild.id),
-                onTap: (widget.enableTapChild && selectChildId != blockChild.id)
-                    ? () {
-                        widget.onTapChild();
-                        widget.screenBloc.add(SelectBlockEvent(
-                            sectionId: section.id,
-                            blockId: blockChild.id,
-                            selectedBlockChild: true));
-                        setState(() {
-                          selectChildId = blockChild.id;
-                        });
-                      }
-                    : null,
-                child: blockChildWidget,
-              );
-              // if (selectChildId == child.id)
-              //   lastElement = element;
-              // else
-              widgets.add(blockChildElement);
+            Widget resizeableWidget = getResizeableChildWidget(state, blockChild, false, sectionStyles, blockStyles: blockStyles);
+            if (resizeableWidget == null) continue;
+            widgets.add(resizeableWidget);
+            // Add Block View
+            if (blockChild.type == 'block') {
+              Map<String, dynamic> json = state.stylesheets[deviceTypeId][blockChild.id];
+              SectionStyles blockStyles1 = SectionStyles.fromJson(json);
+              if (blockStyles1 == null || !blockStyles1.active) continue;
+              for (Child blockChild in blockChild.children) {
+                Widget resizeableWidget = getResizeableChildWidget(state, blockChild, false, sectionStyles, blockStyles0: blockStyles, blockStyles: blockStyles1);
+                if (resizeableWidget == null) continue;
+                widgets.add(resizeableWidget);
+              }
             }
           }
-
-          // if (lastElement != null) widgets.add(lastElement);
         }
-      }
     }
 
     if (lastElement != null) widgets.add(lastElement);
@@ -252,7 +187,74 @@ class _SectionViewState extends State<SectionView> {
     );
   }
 
-  Widget getChild(ShopEditScreenState state, Child child, SectionStyles sectionStyles) {
+  Widget getResizeableChildWidget(ShopEditScreenState state, Child child, bool isSection,
+      SectionStyles sectionStyles, {SectionStyles blockStyles0, SectionStyles blockStyles}) {
+    BaseStyles styles = getBaseStyles(child.id);
+    if (styles == null || !styles.active) return null;
+
+    Widget childElement = getChild(state, child, isSection ? sectionStyles : blockStyles);
+    if (childElement == null) return null;
+
+    double width = styles.width + styles.paddingH * 2;
+    double height = styles.height + styles.paddingV * 2;
+    double marginTop, marginLeft;
+    if (child.isButton && styles.height == 0) {
+      height = 22 + styles.paddingV * 2;
+    }
+
+    if (isSection) {
+      marginLeft = styles.getMarginLeft(sectionStyles);
+      marginTop = styles.getMarginTop(sectionStyles);
+    } else {
+      if (blockStyles0 != null) {
+        marginLeft = styles.getMarginLeft(blockStyles) + blockStyles.getMarginLeft(blockStyles0) + blockStyles0.getMarginLeft(sectionStyles);
+        marginTop = styles.getMarginTop(blockStyles) + blockStyles.getMarginTop(blockStyles0) + blockStyles0.getMarginTop(sectionStyles);
+      } else {
+        marginLeft = styles.getMarginLeft(blockStyles) + blockStyles.getMarginLeft(sectionStyles);
+        marginTop = styles.getMarginTop(blockStyles) + blockStyles.getMarginTop(sectionStyles);
+      }
+    }
+
+    Widget childWidget = ResizeableView(
+        width: width,
+        height: height,
+        left: marginLeft,
+        top: marginTop,
+        isSelected: widget.isSelected,
+        child: childElement);
+
+    if (isSection)
+      _getLimitedSectionHeight(child);
+
+    Widget element = GestureDetector(
+      key: ObjectKey(child.id),
+      onTap: (widget.enableTapChild && selectChildId != child.id)
+          ? () {
+              widget.onTapChild();
+              if (child.type == 'block') {
+                screenBloc.add(
+                    SelectBlockEvent(sectionId: section.id, blockId: child.id));
+              } else {
+                screenBloc.add(SelectSectionEvent(
+                    sectionId: section.id, selectedChild: true));
+              }
+              setState(() {
+                selectChildId = child.id;
+              });
+            }
+          : null,
+      child: childWidget,
+    );
+
+    if (selectChildId == child.id) {
+      lastElement = element;
+      return null;
+    } else
+      return element;
+  }
+
+  Widget getChild(
+      ShopEditScreenState state, Child child, SectionStyles sectionStyles) {
     Widget childView;
     switch (child.type) {
       case 'text':
@@ -461,7 +463,7 @@ class _SectionViewState extends State<SectionView> {
     ));
   }
 
-  void addRelativeLines(List<Widget>widgets) {
+  void addRelativeLines(List<Widget> widgets) {
     // Add Relative Lines
     // - Horizontal line
     widgets.add(Positioned(
