@@ -155,12 +155,12 @@ class ShopEditScreenBloc
     });
     yield state.copyWith(selectedSectionId: event.sectionId, stylesheets: stylesheets);
 
-    api.shopEditAction(
-        GlobalUtils.activeToken.accessToken, state.activeTheme.themeId, body).then((response) {
-      if (response is DioError) {
-        Fluttertoast.showToast(msg: response.error);
-      }
-    });
+    // api.shopEditAction(
+    //     GlobalUtils.activeToken.accessToken, state.activeTheme.themeId, body).then((response) {
+    //   if (response is DioError) {
+    //     Fluttertoast.showToast(msg: response.error);
+    //   }
+    // });
 
   }
 }

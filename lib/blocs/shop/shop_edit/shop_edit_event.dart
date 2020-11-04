@@ -12,9 +12,9 @@ class ShopEditScreenInitEvent extends ShopEditScreenEvent {}
 
 class SelectSectionEvent extends ShopEditScreenEvent {
   final String sectionId;
-  final String selectedBlockId;
-  final Child selectedBlock;
   final Child selectedChild;
+  final Child selectedBlock;
+  final String selectedBlockId;
 
   SelectSectionEvent(
       {this.sectionId,

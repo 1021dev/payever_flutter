@@ -92,17 +92,16 @@ class _SectionViewState extends State<SectionView> {
       progressResize(templateSizeState);
       return BlocListener(
         listener: (BuildContext context, ShopEditScreenState state) async {
+          if (state.selectedChild == null) {
+            setState(() {
+              selectChildId = '';
+            });
+          }
         },
         bloc: screenBloc,
         child: BlocBuilder(
           condition: (ShopEditScreenState state1, ShopEditScreenState state2) {
             if (state2.selectedSectionId != section.id) {
-              setState(() {
-                selectChildId = '';
-              });
-              return false;
-            }
-            if (state2.selectedChild == null) {
               setState(() {
                 selectChildId = '';
               });
@@ -254,7 +253,7 @@ class _SectionViewState extends State<SectionView> {
                 block = child;
                 blockId = child.id;
               } else {
-                blockId = child.blocks.last == null ? '' : child.blocks.last.id;
+                blockId = child.blocks.isEmpty ? '' : child.blocks.last.id;
               }
               screenBloc.add(SelectSectionEvent(
                   sectionId: section.id,
@@ -263,6 +262,7 @@ class _SectionViewState extends State<SectionView> {
                   selectedChild: child));
               setState(() {
                 selectChildId = child.id;
+                print('Selected Child ID: $selectChildId');
               });
             }
           : null,

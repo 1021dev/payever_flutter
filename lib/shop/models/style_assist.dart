@@ -537,55 +537,52 @@ class SizeAssist {
       NewChildSize newSize,
       Child selectedChild,
       Child selectedBlock) {
+
     String updatedChildId = selectedChild.id;
     String blockId = selectedBlock != null ? selectedBlock.id : '';
     SectionStyles sectionStyle = SectionStyles.fromJson(stylesheets[section.id]);
     print('NewChildSize: ${newSize.toJson()}');
+
     // Check Boundary
-    // No block Element
+    bool wrongBounds = wrongBoundary(stylesheets, section, sectionHeight, newSize, selectedChild);
+    if (wrongBounds) return true;
 
-    bool wrongBoundary = newSize.newTop < 0 ||
-        newSize.newLeft < 0 ||
-        (newSize.newTop + newSize.newHeight > sectionHeight) ||
-        (newSize.newLeft + newSize.newWidth > Measurements.width);
-    if (wrongBoundary) return true;
-
-    if (selectedChild.blocks != null && selectedChild.blocks.isNotEmpty) {
-      List<SectionStyles> sectionStyles = [];
-      for (Child block in selectedChild.blocks) {
-        SectionStyles blockStyle = SectionStyles.fromJson(stylesheets[block.id]);
-        sectionStyles.add(blockStyle);
+    // Check other Children
+    if (selectedChild.blocks.isEmpty) {
+      for (Child child in section.children) {
+        if (child.id == updatedChildId) continue;
+        BaseStyles styles = BaseStyles.fromJson(stylesheets[child.id]);
+        if (styles == null || !styles.active) continue;
+        bool isWrong = wrongPositionWithOrderChildren(newSize, styles, [sectionStyle]);
+        if (isWrong) return true;
       }
-      sectionStyles.add(sectionStyle);
-      print('sectionStyles length: ${sectionStyles.length}');
-      double blockWidth = sectionStyles.first.width + sectionStyles.first.paddingH * 2;
-      double blockHeight = sectionStyles.first.height + sectionStyles.first.paddingV * 2;
+    } else {
+      for (Child child in section.children) {
+        if (child.id == updatedChildId) continue;
+        // Check Children in Block View
+        if (selectedChild.blocks.isNotEmpty) {
+          if (selectedChild.blocks.last.id == child.id)
+            continue;
+        }
+        // BaseStyles baseStyles = BaseStyles.fromJson(stylesheets[child.id]);
+        // bool isWrong =
+        // wrongPositionWithOrderChildren(newSize, baseStyles, sectionStyles);
+        // if (isWrong) return true;
 
-      double marginTop = 0; double marginLeft = 0;
-      SectionStyles styles = sectionStyles[0];
-      for (int i = 1; i < sectionStyles.length; i++) {
-        SectionStyles sectionStyle = sectionStyles[i];
-        marginLeft += styles.getMarginLeft(sectionStyle);
-        marginTop += styles.getMarginTop(sectionStyle);
-        styles = sectionStyle;
+        // if (selectedChild.blocks.isNotEmpty) {
+        //   selectedChild.blocks.forEach((block) {
+        //
+        //   });
+        //   // SectionStyles blockStyle = SectionStyles.fromJson(stylesheets[block.id]);
+        //   BaseStyles baseStyles = BaseStyles.fromJson(stylesheets[child.id]);
+        //   bool isWrong =
+        //   wrongPositionWithOrderChildren(newSize, baseStyles, [sectionStyle]);
+        //   if (isWrong) return true;
+        // }
       }
-      print('block width: $blockWidth height: $blockHeight marginTop: $marginTop marginLeft: $marginLeft');
-      wrongBoundary = newSize.newTop < marginTop ||
-          newSize.newLeft < marginLeft ||
-          (newSize.newTop + newSize.newHeight > marginTop + blockHeight) ||
-          (newSize.newLeft + newSize.newWidth > marginLeft + blockWidth);
-      if (wrongBoundary) return true;
     }
 
 
-    // Check other Children
-    // for (Child child in section.children) {
-    //   if (child.id == updatedChildId) continue;
-    //   BaseStyles baseStyles = BaseStyles.fromJson(stylesheets[child.id]);
-    //   bool isWrong =
-    //       wrongPositionWithOrderChildren(newSize, baseStyles, sectionStyle);
-    //   if (isWrong) return true;
-    // }
 
     // // Check BlockView with block's children
     bool wrongBlockPosition = false;
@@ -603,14 +600,66 @@ class SizeAssist {
     return wrongBlockPosition;
   }
 
-  bool wrongPositionWithOrderChildren(
-      NewChildSize childSize, BaseStyles styles, SectionStyles sectionStyles) {
-    if (styles == null || !styles.active) return false;
+  bool wrongBoundary(Map<String, dynamic> stylesheets,
+      Child section,
+      double sectionHeight,
+      NewChildSize newSize,
+      Child selectedChild) {
+    SectionStyles sectionStyle = SectionStyles.fromJson(stylesheets[section.id]);
+    bool wrongBoundary = newSize.newTop < 0 ||
+        newSize.newLeft < 0 ||
+        (newSize.newTop + newSize.newHeight > sectionHeight) ||
+        (newSize.newLeft + newSize.newWidth > Measurements.width);
+    if (wrongBoundary) return true;
 
-    double x0 = styles.getMarginLeft(sectionStyles);
-    double y0 = styles.getMarginTop(sectionStyles);
+
+    if (selectedChild.blocks != null && selectedChild.blocks.isNotEmpty) {
+      List<SectionStyles> sectionStyles = [];
+      for (Child block in selectedChild.blocks) {
+        SectionStyles blockStyle = SectionStyles.fromJson(stylesheets[block.id]);
+        sectionStyles.add(blockStyle);
+      }
+      sectionStyles.add(sectionStyle);
+      double blockWidth = sectionStyles.first.width + sectionStyles.first.paddingH * 2;
+      double blockHeight = sectionStyles.first.height + sectionStyles.first.paddingV * 2;
+
+      double marginTop = 0; double marginLeft = 0;
+      SectionStyles styles = sectionStyles[0];
+      for (int i = 1; i < sectionStyles.length; i++) {
+        SectionStyles sectionStyle = sectionStyles[i];
+        marginLeft += styles.getMarginLeft(sectionStyle);
+        marginTop += styles.getMarginTop(sectionStyle);
+        styles = sectionStyle;
+      }
+      // print('block width: $blockWidth height: $blockHeight marginTop: $marginTop marginLeft: $marginLeft');
+      // Check if Child is over Block view
+      bool isOverBlockView = (newSize.newLeft + newSize.newWidth < marginLeft ||
+          marginLeft + blockWidth < newSize.newLeft ||
+          newSize.newTop + newSize.newHeight < marginTop ||
+          marginTop + blockHeight < newSize.newTop);
+      // Check if Child with Block view boundary
+      wrongBoundary = newSize.newTop < marginTop ||
+          newSize.newLeft < marginLeft ||
+          (newSize.newTop + newSize.newHeight > marginTop + blockHeight) ||
+          (newSize.newLeft + newSize.newWidth > marginLeft + blockWidth);
+      if (!isOverBlockView && wrongBoundary) return true;
+    }
+    return false;
+  }
+
+  bool wrongPositionWithOrderChildren(
+      NewChildSize childSize, BaseStyles styles, List<SectionStyles>sectionStyles) {
+    if (styles == null || !styles.active) return false;
     double width0 = styles.width + styles.paddingH * 2;
     double height0 = styles.height + styles.paddingV * 2;
+    double x0 = 0;
+    double y0 = 0;
+    for (int i = 0; i < sectionStyles.length; i++) {
+      SectionStyles sectionStyle = sectionStyles[i];
+      x0 += styles.getMarginLeft(sectionStyle);
+      y0 += styles.getMarginTop(sectionStyle);
+      styles = sectionStyle;
+    }
 
     double x1 = childSize.newLeft;
     double y1 = childSize.newTop;
