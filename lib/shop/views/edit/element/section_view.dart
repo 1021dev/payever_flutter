@@ -186,6 +186,7 @@ class _SectionViewState extends State<SectionView> {
     if (selectChildId == block.id && add == false) {
       return;
     }
+    Widget lastElement;
     Map<String, dynamic> json = state.stylesheets[deviceTypeId][block.id];
     SectionStyles blockStyles = SectionStyles.fromJson(json);
     List<SectionStyles> newSectionStyles = [blockStyles];
@@ -196,10 +197,22 @@ class _SectionViewState extends State<SectionView> {
       List<Child>blocks = [block];
       blocks.addAll(block.blocks);
       child.blocks = blocks;
-      widgets.add(resizeableWidget);
+      if (selectChildId == child.id)
+        lastElement = resizeableWidget;
+      else
+        widgets.add(resizeableWidget);
+
       // Add Block View
       if (child.type == 'block') {
         addBlockChildren(state, widgets, newSectionStyles, child, add: add);
+      }
+    }
+
+    if (lastElement != null) {
+      widgets.add(lastElement);
+      if (selectChildId == state.selectedBlockId) {
+        Child block1 = block.children.firstWhere((element) => element.id == selectChildId);
+        addBlockChildren(state, widgets, sectionStyles, block1, add: true);
       }
     }
   }
