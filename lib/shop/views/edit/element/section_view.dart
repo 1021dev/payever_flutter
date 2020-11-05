@@ -125,6 +125,7 @@ class _SectionViewState extends State<SectionView> {
   }
 
   Widget body(ShopEditScreenState state) {
+    sectionStyles = SectionStyles.fromJson(state.stylesheets[deviceTypeId][section.id]);
     if (sectionStyles == null) {
       return Container();
     }
