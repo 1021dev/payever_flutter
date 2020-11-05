@@ -76,8 +76,8 @@ class _TextViewState extends State<TextView> {
   TextStyles getStyles() {
     try {
       Map<String, dynamic> json = widget.stylesheets[child.id];
-      print('Text ID ${child.id}');
-      print('Text Styles: $json');
+      // print('Text ID ${child.id}');
+      // print('Text Styles: $json');
       return TextStyles.fromJson(json);
     } catch (e) {
       return null;

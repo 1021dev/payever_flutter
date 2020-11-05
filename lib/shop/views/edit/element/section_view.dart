@@ -154,7 +154,7 @@ class _SectionViewState extends State<SectionView> {
 
     if (lastElement != null) {
       widgets.add(lastElement);
-      if (selectChildId == state.selectedBlockId) {
+      if (selectChildId == state.selectedBlockId && !blockDragging) {
         Child block = section.children.firstWhere((element) => element.id == selectChildId);
         addBlockChildren(state, widgets,[sectionStyles], block, add: true);
       }
@@ -190,14 +190,16 @@ class _SectionViewState extends State<SectionView> {
   void addBlockChildren(ShopEditScreenState state, List<Widget> widgets,
       List<SectionStyles> sectionStyles, Child block,
       {bool add = false}) {
-    if (selectChildId == block.id && add == false) return;
+    bool isDraggingBlock = selectChildId == block.id && blockDragging;
+    if (selectChildId == block.id && add == false || isDraggingBlock) return;
+
     Widget lastElement;
     Map<String, dynamic> json = state.stylesheets[deviceTypeId][block.id];
     SectionStyles blockStyles = SectionStyles.fromJson(json);
     List<SectionStyles> newSectionStyles = [blockStyles];
     newSectionStyles.addAll(sectionStyles);
     for (Child child in block.children) {
-      Widget resizeableWidget = getResizeableChildWidget(state, child, newSectionStyles, blockDragging: selectChildId == block.id && blockDragging);
+      Widget resizeableWidget = getResizeableChildWidget(state, child, newSectionStyles);
       if (resizeableWidget == null) continue;
       List<Child>blocks = [block];
       blocks.addAll(block.blocks);
@@ -215,14 +217,14 @@ class _SectionViewState extends State<SectionView> {
 
     if (lastElement != null) {
       widgets.add(lastElement);
-      if (selectChildId == state.selectedBlockId) {
+      if (selectChildId == state.selectedBlockId && !blockDragging) {
         Child block1 = block.children.firstWhere((element) => element.id == selectChildId);
         addBlockChildren(state, widgets, sectionStyles, block1, add: true);
       }
     }
   }
 
-  Widget getResizeableChildWidget(ShopEditScreenState state, Child child, List<SectionStyles> sectionStyles, {bool blockDragging = false}) {
+  Widget getResizeableChildWidget(ShopEditScreenState state, Child child, List<SectionStyles> sectionStyles) {
     BaseStyles styles = getBaseStyles(child.id);
     if (styles == null || !styles.active) return null;
 
@@ -235,20 +237,12 @@ class _SectionViewState extends State<SectionView> {
     if (child.isButton && styles.height == 0) {
       height = 22 + styles.paddingV * 2;
     }
-    if (blockDragging) {
-      marginLeft = blockDraggingSize.newLeft;
-      marginTop = blockDraggingSize.newTop;
-      print('Child:${child.type} , marginLeft: $marginLeft, marginTop:$marginTop');
-    } else {
-      for (int i = 0; i < sectionStyles.length; i++) {
-        SectionStyles sectionStyle = sectionStyles[i];
-        marginLeft += styles.getMarginLeft(sectionStyle);
-        marginTop += styles.getMarginTop(sectionStyle);
-        styles = sectionStyle;
-      }
+    for (int i = 0; i < sectionStyles.length; i++) {
+      SectionStyles sectionStyle = sectionStyles[i];
+      marginLeft += styles.getMarginLeft(sectionStyle);
+      marginTop += styles.getMarginTop(sectionStyle);
+      styles = sectionStyle;
     }
-
-
 
     Widget childWidget;
     if (child.type == 'shop-category'|| child.type == 'shop-product-details') {
@@ -336,6 +330,21 @@ class _SectionViewState extends State<SectionView> {
           child: child,
           stylesheets: stylesheets,
         );
+        if (selectChildId == child.id && blockDragging) {
+          List<Widget>blockWidget = [childView];
+          for (Child blockChild in child.children) {
+            BaseStyles styles = getBaseStyles(blockChild.id);
+            if (styles == null || !styles.active) continue;
+            SectionStyles blockStyle = SectionStyles.fromJson(state.stylesheets[deviceTypeId][child.id]);
+            Widget resizeableWidget =
+            getResizeableChildWidget(state, blockChild, [blockStyle]);
+            if (resizeableWidget == null) continue;
+            blockWidget.add(resizeableWidget);
+          }
+          childView = Stack(
+            children: blockWidget,
+          );
+        }
         break;
       case 'menu':
         childView = MenuView(
@@ -382,6 +391,7 @@ class _SectionViewState extends State<SectionView> {
       default:
         print('Special Child Type: ${child.type}');
     }
+
     return childView;
   }
 
