@@ -27,7 +27,7 @@ class ShopEditScreenState {
     this.stylesheets = const {},
     this.templates = const {},
     this.actions = const [],
-    this.selectedSectionId,
+    this.selectedSectionId = '',
     this.selectedBlockId,
     this.selectedBlock,
     this.selectedChild,

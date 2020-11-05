@@ -541,7 +541,7 @@ class SizeAssist {
     String updatedChildId = selectedChild.id;
     String blockId = selectedBlock != null ? selectedBlock.id : '';
     SectionStyles sectionStyle = SectionStyles.fromJson(stylesheets[section.id]);
-    print('NewChildSize: ${newSize.toJson()}');
+    // print('NewChildSize: ${newSize.toJson()}');
 
     // Check Boundary
     bool wrongBounds = wrongBoundary(stylesheets, section, sectionHeight, newSize, selectedChild);
@@ -578,35 +578,7 @@ class SizeAssist {
         }
       }
     }
-
-      // for (Child child in section.children) {
-      //   if (child.id == updatedChildId) continue;
-      //   // Check Children in Block View
-      //   if (selectedChild.blocks.isNotEmpty) {
-      //     if (selectedChild.blocks.last.id == child.id)
-      //       continue;
-      //   }
-      //   BaseStyles styles = BaseStyles.fromJson(stylesheets[child.id]);
-      //   bool isWrong =
-      //   wrongPositionWithOrderChildren(newSize, styles, [sectionStyle]);
-      //   if (isWrong) return true;
-      //
-      //   if (selectedChild.blocks.isNotEmpty) {
-      //     selectedChild.blocks.forEach((block) {
-      //
-      //     });
-      //     // SectionStyles blockStyle = SectionStyles.fromJson(stylesheets[block.id]);
-      //     BaseStyles baseStyles = BaseStyles.fromJson(stylesheets[child.id]);
-      //     bool isWrong =
-      //     wrongPositionWithOrderChildren(newSize, baseStyles, [sectionStyle]);
-      //     if (isWrong) return true;
-      //   }
-      // }
-
-
-
-
-    // // Check BlockView with block's children
+    // Check BlockView with block's children
     bool wrongBlockPosition = false;
     // if (blockId == updatedChildId) {
     //   Child block =
@@ -689,8 +661,8 @@ class SizeAssist {
       y0 += styles.getMarginTop(sectionStyle);
       styles = sectionStyle;
     }
-    print('x0:$x0, y0:$y0, width0:$width0, height0:$height0');
-    print('newSize: ${childSize.toJson()}');
+    // print('x0:$x0, y0:$y0, width0:$width0, height0:$height0');
+    // print('newSize: ${childSize.toJson()}');
     double x1 = childSize.newLeft;
     double y1 = childSize.newTop;
     double width1 = childSize.newWidth;
@@ -741,9 +713,9 @@ class SizeAssist {
     x2 += blockStyles.getMarginLeft(sectionStyles);
     y2 += blockStyles.getMarginTop(sectionStyles);
 
-    print('{x1: $x1, y1:$y1}, {x2: $x2, y2:$y2}');
-    print(
-        '{left0: ${childSize.newLeft}, top0:${childSize.newTop}, {left1: ${childSize.newLeft + childSize.newWidth}, top1:${childSize.newTop + childSize.newHeight}}');
+    // print('{x1: $x1, y1:$y1}, {x2: $x2, y2:$y2}');
+    // print(
+    //     '{left0: ${childSize.newLeft}, top0:${childSize.newTop}, {left1: ${childSize.newLeft + childSize.newWidth}, top1:${childSize.newTop + childSize.newHeight}}');
     if (childSize.newLeft > x1 ||
         childSize.newLeft + childSize.newWidth < x2 ||
         childSize.newTop > y1 ||

@@ -69,6 +69,7 @@ class _SectionViewState extends State<SectionView> {
   double relativeMarginTop = -1;
 
   bool blockDragging = false;
+  NewChildSize blockDraggingSize;
 
   _SectionViewState({this.deviceTypeId, this.section, this.screenBloc}) {
     sectionStyles = getSectionStyles(section.id);
@@ -181,11 +182,11 @@ class _SectionViewState extends State<SectionView> {
     );
   }
 
-  void addBlockChildren(
-      ShopEditScreenState state, List<Widget> widgets, List<SectionStyles> sectionStyles, Child block, {bool add = false}) {
-    if (selectChildId == block.id && add == false) {
-      return;
-    }
+  void addBlockChildren(ShopEditScreenState state, List<Widget> widgets,
+      List<SectionStyles> sectionStyles, Child block,
+      {bool add = false}) {
+    if (selectChildId == block.id && add == false) return;
+
     Widget lastElement;
     Map<String, dynamic> json = state.stylesheets[deviceTypeId][block.id];
     SectionStyles blockStyles = SectionStyles.fromJson(json);
@@ -237,8 +238,8 @@ class _SectionViewState extends State<SectionView> {
       marginTop += styles.getMarginTop(sectionStyle);
       styles = sectionStyle;
     }
-    Widget childWidget;
 
+    Widget childWidget;
     if (child.type == 'shop-category'|| child.type == 'shop-product-details') {
       childWidget = childElement;
     } else {
@@ -563,33 +564,60 @@ class _SectionViewState extends State<SectionView> {
     if (templateSizeState.updateChildSizeFailed) {
       Future.microtask(() => initializeRelativeLines());
     } else if (templateSizeState.updateChildSize != null) {
+      // screenBloc.add(SelectSectionEvent(
+      //     sectionId: section.id,
+      //     selectedBlockId: '',
+      //     selectedBlock: null,
+      //     selectedChild: null));
       Future.microtask(() {
         templateSizeState.setUpdateChildSize(null);
         initializeRelativeLines();
       });
       _changeSectionAction(childSize: templateSizeState.updateChildSize);
     } else if (templateSizeState.newChildSize != null) {
-      // bool isMoving =
-      bool wrongposition = sectionStyles.wrongPosition(
-          screenBloc.state.stylesheets[deviceTypeId],
-          section,
-          widgetHeight,
-          templateSizeState.newChildSize,
-          screenBloc.state.selectedChild,
-          screenBloc.state.selectedBlock);
-      // print('wrong position: $wrongposition, SectionID: ${section.id}, SelectedSectionId:${screenBloc.state.selectedSectionId}');
-      Future.microtask(
-          () => progressRelativeLines(templateSizeState.newChildSize));
-      if (wrongposition) {
-        if (!templateSizeState.wrongPosition)
-          Future.microtask(
-              () => templateSizeState.setWrongPosition(wrongposition));
-      } else {
-        if (templateSizeState.wrongPosition)
-          Future.microtask(() {
-            templateSizeState.setWrongPosition(wrongposition);
-          });
-      }
+      // Check Wrong position
+      progressWrongPosition(templateSizeState);
+
+      Future.microtask(() {
+        // Hint Lines
+        progressRelativeLines(templateSizeState.newChildSize);
+        // Block Dragging
+        Child selectedChild = screenBloc.state.selectedChild;
+        setState(() {
+          if (selectedChild.type == 'block' && isDragging(templateSizeState.newChildSize, selectedChild)) {
+            blockDragging = true;
+            blockDraggingSize = templateSizeState.newChildSize;
+          } else {
+            blockDragging = false;
+            blockDraggingSize = null;
+          }
+        });
+      });
+    }
+  }
+
+  bool isDragging (NewChildSize newSize, Child child) {
+    BaseStyles styles = BaseStyles.fromJson(screenBloc.state.stylesheets[deviceTypeId][child.id]);
+    return styles.width == newSize.newWidth && styles.height == newSize.newHeight;
+  }
+
+  void progressWrongPosition(TemplateSizeStateModel templateSizeState) {
+    bool isWrongPosition = sectionStyles.wrongPosition(
+        screenBloc.state.stylesheets[deviceTypeId],
+        section,
+        widgetHeight,
+        templateSizeState.newChildSize,
+        screenBloc.state.selectedChild,
+        screenBloc.state.selectedBlock);
+    if (isWrongPosition) {
+      if (!templateSizeState.wrongPosition)
+        Future.microtask(
+                () => templateSizeState.setWrongPosition(isWrongPosition));
+    } else {
+      if (templateSizeState.wrongPosition)
+        Future.microtask(() {
+          templateSizeState.setWrongPosition(isWrongPosition);
+        });
     }
   }
 
