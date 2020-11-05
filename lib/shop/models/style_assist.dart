@@ -195,6 +195,11 @@ class SizeAssist {
         getGridTemplateColumns(stylesheets, section, newSize, updatedChildId);
     Map<String, dynamic> payload = {};
 
+    if (selectedChild.blocks.isNotEmpty) {
+
+    } else {
+
+    }
     payload = getChildPayload(stylesheets, gridTemplateRows,
         gridTemplateColumns, section, selectedChild, newSize);
     // Section
@@ -212,8 +217,8 @@ class SizeAssist {
       NewChildSize newSize) {
     // Updated Child
     Map<String, dynamic> payload = {};
-    SectionStyles sectionStyles =
-        SectionStyles.fromJson(stylesheets[section.id]);
+    SectionStyles sectionStyles = SectionStyles.fromJson(stylesheets[section.id]);
+
     for (int i = 0; i < section.children.length; i++) {
       Child child = section.children[i];
       BaseStyles styles = BaseStyles.fromJson(stylesheets[child.id]);

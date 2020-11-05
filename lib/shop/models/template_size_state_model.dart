@@ -44,8 +44,8 @@ class TemplateSizeStateModel extends ChangeNotifier {
   setNewChildSize(NewChildSize value) {
     _newChildSize = value;
     notifyListeners();
-    Future.delayed(Duration(milliseconds: 500))
-        .then((value) => _newChildSize = null);
+    // Future.delayed(Duration(milliseconds: 500))
+    //     .then((value) => _newChildSize = null);
   }
   NewChildSize get newChildSize => _newChildSize;
 

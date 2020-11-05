@@ -660,16 +660,10 @@ class _SectionViewState extends State<SectionView> {
   }
 
   void initializeRelativeLines() {
-    if (relativeMarginTop > 0) {
       setState(() {
         relativeMarginTop = -1;
-      });
-    }
-    if (relativeMarginLeft > 0) {
-      setState(() {
         relativeMarginLeft = -1;
       });
-    }
   }
 
   SectionStyles getSectionStyles(String childId) {
