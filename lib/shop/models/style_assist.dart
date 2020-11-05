@@ -580,16 +580,16 @@ class SizeAssist {
     }
     // Check BlockView with block's children
     bool wrongBlockPosition = false;
-    // if (blockId == updatedChildId) {
-    //   Child block =
-    //       section.children.firstWhere((child) => child.id == updatedChildId);
-    //   SectionStyles blockStyles = SectionStyles.fromJson(stylesheets[block.id]);
-    //   // Check blockView Moving
-    //   if (blockStyles.width != newSize.newWidth || blockStyles.height != newSize.newHeight) {
-    //     wrongBlockPosition = wrongPositionBlockView(
-    //         stylesheets, block, newSize, sectionStyle, blockStyles);
-    //   }
-    // }
+    if (blockId == updatedChildId) {
+      Child block =
+          section.children.firstWhere((child) => child.id == updatedChildId);
+      SectionStyles blockStyles = SectionStyles.fromJson(stylesheets[block.id]);
+      // Check blockView Moving
+      if (blockStyles.width != newSize.newWidth || blockStyles.height != newSize.newHeight) {
+        wrongBlockPosition = wrongPositionBlockView(
+            stylesheets, block, newSize, sectionStyle, blockStyles);
+      }
+    }
     // print('New Position: Top: ${childSize.newTop}, Left: ${childSize.newLeft}, SectionID: ${section.id}, SelectedSectionId:${screenBloc.state.selectedSectionId}');
     return wrongBlockPosition;
   }

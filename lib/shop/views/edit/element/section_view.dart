@@ -36,11 +36,11 @@ class SectionView extends StatefulWidget {
 
   const SectionView(
       {this.deviceTypeId,
-      this.section,
-      this.screenBloc,
-      this.isSelected = false,
-      this.enableTapChild = true,
-      this.onTapChild});
+        this.section,
+        this.screenBloc,
+        this.isSelected = false,
+        this.enableTapChild = true,
+        this.onTapChild});
 
   @override
   _SectionViewState createState() => _SectionViewState(
@@ -90,33 +90,33 @@ class _SectionViewState extends State<SectionView> {
 
     return Consumer<TemplateSizeStateModel>(
         builder: (context, templateSizeState, child1) {
-      progressResize(templateSizeState);
-      return BlocListener(
-        listener: (BuildContext context, ShopEditScreenState state) async {
-          if (state.selectedChild == null) {
-            setState(() {
-              selectChildId = '';
-            });
-          }
-        },
-        bloc: screenBloc,
-        child: BlocBuilder(
-          condition: (ShopEditScreenState state1, ShopEditScreenState state2) {
-            if (state2.selectedSectionId != section.id) {
-              setState(() {
-                selectChildId = '';
-              });
-              return false;
-            }
-            return true;
-          },
-          bloc: screenBloc,
-          builder: (BuildContext context, state) {
-            return body(state);
-          },
-        ),
-      );
-    });
+          progressResize(templateSizeState);
+          return BlocListener(
+            listener: (BuildContext context, ShopEditScreenState state) async {
+              if (state.selectedChild == null) {
+                setState(() {
+                  selectChildId = '';
+                });
+              }
+            },
+            bloc: screenBloc,
+            child: BlocBuilder(
+              condition: (ShopEditScreenState state1, ShopEditScreenState state2) {
+                if (state2.selectedSectionId != section.id) {
+                  setState(() {
+                    selectChildId = '';
+                  });
+                  return false;
+                }
+                return true;
+              },
+              bloc: screenBloc,
+              builder: (BuildContext context, state) {
+                return body(state);
+              },
+            ),
+          );
+        });
   }
 
   Widget body(ShopEditScreenState state) {
@@ -134,7 +134,7 @@ class _SectionViewState extends State<SectionView> {
 
     for (Child child in section.children) {
       Widget resizeableWidget =
-          getResizeableChildWidget(state, child, [sectionStyles]);
+      getResizeableChildWidget(state, child, [sectionStyles]);
       if (resizeableWidget == null) continue;
       if (selectChildId == child.id)
         lastElement = resizeableWidget;
@@ -186,14 +186,13 @@ class _SectionViewState extends State<SectionView> {
       List<SectionStyles> sectionStyles, Child block,
       {bool add = false}) {
     if (selectChildId == block.id && add == false) return;
-
     Widget lastElement;
     Map<String, dynamic> json = state.stylesheets[deviceTypeId][block.id];
     SectionStyles blockStyles = SectionStyles.fromJson(json);
     List<SectionStyles> newSectionStyles = [blockStyles];
     newSectionStyles.addAll(sectionStyles);
     for (Child child in block.children) {
-      Widget resizeableWidget = getResizeableChildWidget(state, child, newSectionStyles);
+      Widget resizeableWidget = getResizeableChildWidget(state, child, newSectionStyles, blockDragging: selectChildId == block.id && blockDragging);
       if (resizeableWidget == null) continue;
       List<Child>blocks = [block];
       blocks.addAll(block.blocks);
@@ -218,7 +217,7 @@ class _SectionViewState extends State<SectionView> {
     }
   }
 
-  Widget getResizeableChildWidget(ShopEditScreenState state, Child child, List<SectionStyles> sectionStyles) {
+  Widget getResizeableChildWidget(ShopEditScreenState state, Child child, List<SectionStyles> sectionStyles, {bool blockDragging = false}) {
     BaseStyles styles = getBaseStyles(child.id);
     if (styles == null || !styles.active) return null;
 
@@ -231,13 +230,20 @@ class _SectionViewState extends State<SectionView> {
     if (child.isButton && styles.height == 0) {
       height = 22 + styles.paddingV * 2;
     }
-
-    for (int i = 0; i < sectionStyles.length; i++) {
-      SectionStyles sectionStyle = sectionStyles[i];
-      marginLeft += styles.getMarginLeft(sectionStyle);
-      marginTop += styles.getMarginTop(sectionStyle);
-      styles = sectionStyle;
+    if (blockDragging) {
+      marginLeft = blockDraggingSize.newLeft;
+      marginTop = blockDraggingSize.newTop;
+      print('Child:${child.type} , marginLeft: $marginLeft, marginTop:$marginTop');
+    } else {
+      for (int i = 0; i < sectionStyles.length; i++) {
+        SectionStyles sectionStyle = sectionStyles[i];
+        marginLeft += styles.getMarginLeft(sectionStyle);
+        marginTop += styles.getMarginTop(sectionStyle);
+        styles = sectionStyle;
+      }
     }
+
+
 
     Widget childWidget;
     if (child.type == 'shop-category'|| child.type == 'shop-product-details') {
@@ -261,24 +267,24 @@ class _SectionViewState extends State<SectionView> {
       key: ObjectKey(child.id),
       onTap: (widget.enableTapChild && selectChildId != child.id)
           ? () {
-              widget.onTapChild();
-              Child block; String blockId;
-              if (child.type == 'block') {
-                block = child;
-                blockId = child.id;
-              } else {
-                blockId = child.blocks.isEmpty ? '' : child.blocks.last.id;
-              }
-              screenBloc.add(SelectSectionEvent(
-                  sectionId: section.id,
-                  selectedBlockId: blockId,
-                  selectedBlock: block,
-                  selectedChild: child));
-              setState(() {
-                selectChildId = child.id;
-                print('Selected Child ID: $selectChildId');
-              });
-            }
+        widget.onTapChild();
+        Child block; String blockId;
+        if (child.type == 'block') {
+          block = child;
+          blockId = child.id;
+        } else {
+          blockId = child.blocks.isEmpty ? '' : child.blocks.last.id;
+        }
+        screenBloc.add(SelectSectionEvent(
+            sectionId: section.id,
+            selectedBlockId: blockId,
+            selectedBlock: block,
+            selectedChild: child));
+        setState(() {
+          selectChildId = child.id;
+          print('Selected Child ID: $selectChildId');
+        });
+      }
           : null,
       child: childWidget,
     );
@@ -483,7 +489,7 @@ class _SectionViewState extends State<SectionView> {
               setState(() {
                 RenderBox box = key.currentContext.findRenderObject();
                 Offset position1 =
-                    box.localToGlobal(Offset.zero); //this is global position
+                box.localToGlobal(Offset.zero); //this is global position
                 double newHeight;
                 if (top) {
                   newHeight = widgetHeight - details.localPosition.dy;
@@ -558,22 +564,28 @@ class _SectionViewState extends State<SectionView> {
     );
   }
 
-  void progressResize(TemplateSizeStateModel templateSizeState) { 
+  void progressResize(TemplateSizeStateModel templateSizeState) {
     if (screenBloc.state.selectedSectionId != section.id) return;
     // Initialize Relative Lines after drag
     if (templateSizeState.updateChildSizeFailed) {
-      Future.microtask(() => initializeRelativeLines());
+      Future.microtask(() {
+        initializeRelativeLines();
+        initBlockDragging();
+      });
     } else if (templateSizeState.updateChildSize != null) {
       // screenBloc.add(SelectSectionEvent(
       //     sectionId: section.id,
       //     selectedBlockId: '',
       //     selectedBlock: null,
       //     selectedChild: null));
+
+      _changeSectionAction(childSize: templateSizeState.updateChildSize);
       Future.microtask(() {
         templateSizeState.setUpdateChildSize(null);
         initializeRelativeLines();
+        initBlockDragging();
       });
-      _changeSectionAction(childSize: templateSizeState.updateChildSize);
+
     } else if (templateSizeState.newChildSize != null) {
       // Check Wrong position
       progressWrongPosition(templateSizeState);
@@ -583,17 +595,24 @@ class _SectionViewState extends State<SectionView> {
         progressRelativeLines(templateSizeState.newChildSize);
         // Block Dragging
         Child selectedChild = screenBloc.state.selectedChild;
-        setState(() {
-          if (selectedChild.type == 'block' && isDragging(templateSizeState.newChildSize, selectedChild)) {
+        if (selectedChild.type == 'block' &&
+            isDragging(templateSizeState.newChildSize, selectedChild)) {
+          setState(() {
             blockDragging = true;
             blockDraggingSize = templateSizeState.newChildSize;
-          } else {
-            blockDragging = false;
-            blockDraggingSize = null;
-          }
-        });
+          });
+        } else {
+          initBlockDragging();
+        }
       });
     }
+  }
+
+  void initBlockDragging() {
+    setState(() {
+      blockDragging = false;
+      blockDraggingSize = null;
+    });
   }
 
   bool isDragging (NewChildSize newSize, Child child) {
@@ -653,7 +672,7 @@ class _SectionViewState extends State<SectionView> {
   SectionStyles getSectionStyles(String childId) {
     try {
       Map<String, dynamic> json =
-          screenBloc.state.stylesheets[deviceTypeId][childId];
+      screenBloc.state.stylesheets[deviceTypeId][childId];
       if (json['display'] != 'none') {
         print('==============================================');
         print('SectionID: $childId');
@@ -695,7 +714,7 @@ class _SectionViewState extends State<SectionView> {
         sectionStyles.gridTemplateRows.isNotEmpty) {
       List<String> gridRows = sectionStyles.gridTemplateRows.split(' ');
       double marginBottom =
-          double.parse(gridRows.last); // To Last Vertical Element
+      double.parse(gridRows.last); // To Last Vertical Element
       double dy = widgetHeight - sectionStyles.height;
       double updatedMarginBottom = marginBottom + dy;
       gridRows.removeLast();
