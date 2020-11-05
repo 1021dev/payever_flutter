@@ -93,7 +93,7 @@ class _SectionViewState extends State<SectionView> {
           progressResize(templateSizeState);
           return BlocListener(
             listener: (BuildContext context, ShopEditScreenState state) async {
-              if (state.selectedChild == null) {
+              if (state.selectedSectionId == section.id && state.selectedChild == null) {
                 setState(() {
                   selectChildId = '';
                 });
@@ -566,19 +566,16 @@ class _SectionViewState extends State<SectionView> {
 
   void progressResize(TemplateSizeStateModel templateSizeState) {
     if (screenBloc.state.selectedSectionId != section.id) return;
+    if (screenBloc.state.selectedChild == null) return;
     // Initialize Relative Lines after drag
     if (templateSizeState.updateChildSizeFailed) {
       Future.microtask(() {
         initializeRelativeLines();
         initBlockDragging();
       });
-    } else if (templateSizeState.updateChildSize != null) {
-      // screenBloc.add(SelectSectionEvent(
-      //     sectionId: section.id,
-      //     selectedBlockId: '',
-      //     selectedBlock: null,
-      //     selectedChild: null));
+    }
 
+    if (templateSizeState.updateChildSize != null) {
       _changeSectionAction(childSize: templateSizeState.updateChildSize);
       Future.microtask(() {
         templateSizeState.setUpdateChildSize(null);
@@ -586,10 +583,11 @@ class _SectionViewState extends State<SectionView> {
         initBlockDragging();
       });
 
-    } else if (templateSizeState.newChildSize != null) {
+    }
+
+    if (templateSizeState.newChildSize != null) {
       // Check Wrong position
       progressWrongPosition(templateSizeState);
-
       Future.microtask(() {
         // Hint Lines
         progressRelativeLines(templateSizeState.newChildSize);

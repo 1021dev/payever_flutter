@@ -329,10 +329,10 @@ class _ResizeableViewState extends State<ResizeableView> {
         left = left0;
         top = top0;
       });
-      templateSizeStateModel.setUpdateChildSizeFailed(true);
+      templateSizeStateModel.setWrongPosition(false);
       updateSize();
       Future.delayed(Duration(milliseconds: 100)).then((value) {
-        templateSizeStateModel.setWrongPosition(false);
+        templateSizeStateModel.setUpdateChildSizeFailed(true);
       });
     } else {
       width0 = width;
