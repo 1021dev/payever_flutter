@@ -90,7 +90,12 @@ class _SectionViewState extends State<SectionView> {
 
     return Consumer<TemplateSizeStateModel>(
         builder: (context, templateSizeState, child1) {
-          progressResize(templateSizeState);
+          try{
+            progressResize(templateSizeState);
+          }catch(e){
+            print('Resizing Error: ${e.toString()}');
+          }
+
           return BlocListener(
             listener: (BuildContext context, ShopEditScreenState state) async {
               if (state.selectedSectionId == section.id && state.selectedChild == null) {
@@ -729,7 +734,7 @@ class _SectionViewState extends State<SectionView> {
     Map<String, dynamic> payload = {};
     BaseStyles baseStyles = getBaseStyles(selectChildId);
     payload = baseStyles.getPayload(screenBloc.state.stylesheets[deviceTypeId],
-        section, size, selectChildId);
+        section, screenBloc.state.selectedChild, size);
     return payload;
     Map<String, dynamic> payloadSection = {};
     // double marginTop = baseStyles.getMarginTopAssist(size.newTop, sectionStyles.gridTemplateRows, baseStyles.gridRow, isReverse: true);

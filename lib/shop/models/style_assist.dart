@@ -187,7 +187,8 @@ class SizeAssist {
   }
 
   Map<String, dynamic> getPayload(Map<String, dynamic> stylesheets,
-      Child section, NewChildSize newSize, String updatedChildId) {
+      Child section, Child selectedChild, NewChildSize newSize) {
+    String updatedChildId = selectedChild.id;
     Map<String, List<String>> gridTemplateRows =
         getGridTemplateRows(stylesheets, section, newSize, updatedChildId);
     Map<String, List<String>> gridTemplateColumns =
@@ -195,7 +196,7 @@ class SizeAssist {
     Map<String, dynamic> payload = {};
 
     payload = getChildPayload(stylesheets, gridTemplateRows,
-        gridTemplateColumns, section, newSize, updatedChildId);
+        gridTemplateColumns, section, selectedChild, newSize);
     // Section
     payload[section.id] = getSectionPayload(stylesheets, gridTemplateRows,
         gridTemplateColumns, section, newSize, updatedChildId);
@@ -207,8 +208,8 @@ class SizeAssist {
       Map<String, List<String>> gridTemplateRows,
       Map<String, List<String>> gridTemplateColumns,
       Child section,
-      NewChildSize newSize,
-      String updatedChildId) {
+      Child selectedChild,
+      NewChildSize newSize) {
     // Updated Child
     Map<String, dynamic> payload = {};
     SectionStyles sectionStyles =
@@ -222,7 +223,7 @@ class SizeAssist {
       double marginTop = styles.getMarginTop(sectionStyles);
       double marginLeft = styles.getMarginLeft(sectionStyles);
 
-      if (child.id == updatedChildId) {
+      if (child.id == selectedChild.id) {
         payloadChild['height'] = newSize.newHeight;
         payloadChild['width'] =
             newSize.newWidth / GlobalUtils.shopBuilderWidthFactor;
@@ -289,6 +290,16 @@ class SizeAssist {
       payloadChild['margin'] = '$marginTop 0 0 $marginLeft';
       payload[child.id] = payloadChild;
     }
+    // If block
+    // if (selectedChild.type == 'block') {
+    //   SectionStyles blockStyle = SectionStyles.fromJson(stylesheets[selectedChild.id]);
+    //   if (newSize.newWidth != blockStyle.width || newSize.newHeight != blockStyle.height) {
+    //     if (blockStyle.gridTemplateRows != null) {
+    //       List<String> gridRows = blockStyle.gridTemplateRows.split(' ');
+    //
+    //     }
+    //   }
+    // }
     print('payloadChild: $payload');
     return payload;
   }
