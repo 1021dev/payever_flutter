@@ -187,15 +187,9 @@ class SizeAssist {
   List<Map<String, dynamic>> getPayload(Map<String, dynamic> stylesheets,
       Child section, Child selectedChild, ChildSize newSize, String deviceTypeId, String templateId) {
     List<Map<String, dynamic>>effects = [];
+    Child block = getBlockOfChild(stylesheets, section, newSize, selectedChild);
     if (selectedChild.blocks.isNotEmpty) {
-      if (!isChildOverFromBlockView(stylesheets, section.id, selectedChild, newSize)) {
-        // 1. Child is in Block Still
-        print('Child is in Block');
-        ChildSize blockSize = absoluteSize(stylesheets, section.id, selectedChild.blocks.first);
-        newSize.top -= blockSize.top;
-        newSize.left -= blockSize.left;
-        section = selectedChild.blocks.first;
-      } else {
+      if (block == null) {
         // 2. Child is over BlockView
         print('Child is Over of Block');
         Map<String, dynamic> payload = {
@@ -209,6 +203,63 @@ class SizeAssist {
         selectedChild.blocks.first.children.remove(selectedChild);
         selectedChild.blocks = [];
         section.children.add(selectedChild);
+      } else if (block.id == selectedChild.blocks.first.id) {
+        // 1. Child is in Block Still
+        print('Child is in Block');
+        ChildSize blockSize = absoluteSize(stylesheets, section.id, selectedChild.blocks.first);
+        newSize.top -= blockSize.top;
+        newSize.left -= blockSize.left;
+        section = selectedChild.blocks.first;
+      } else {
+        print('Child from One Block To the other Block');
+        // TODO: This Part Should be done later.
+      }
+    } else {
+      if (block != null) {
+        if (block.type == 'block') {
+          print('Child is Over of Block');
+          Map<String, dynamic> payload = {
+            'elementId': selectedChild.id,
+            'nextParentId': block.id
+          };
+          Map<String, dynamic>effect = {'payload':payload};
+          effect['target'] = 'templates:$templateId';
+          effect['type'] = 'template:relocate-element';
+          effects.add(effect);
+          selectedChild.blocks = [];
+          block.children.add(selectedChild);
+          ChildSize blockSize = absoluteSize(stylesheets, section.id, block);
+          newSize.top -= blockSize.top;
+          newSize.left -= blockSize.left;
+          section = block;
+        } else {
+          Map<String, dynamic> payload = {
+            'id': block.id,
+            'type': 'block'
+          };
+          Map<String, dynamic>effect = {'payload':payload};
+          effect['target'] = 'templates:$templateId';
+          effect['type'] = 'template:update-element';
+          effects.add(effect);
+          // Element to Block
+          Map<String, dynamic> styles = stylesheets[block.id];
+          styles['content'] = 'Text content';
+          // backgroundColor: "#d4d4d4"
+          Map<String, dynamic> payload1 = {
+            'selector': block.id,
+            'styles': styles
+          };
+          Map<String, dynamic>effect1 = {'payload':payload1};
+          effect1['target'] = 'stylesheets:$deviceTypeId';
+          effect1['type'] = 'stylesheet:replace';
+          effects.add(effect1);
+          block.children = [];
+          block.children.add(selectedChild);
+          ChildSize blockSize = absoluteSize(stylesheets, section.id, block);
+          newSize.top -= blockSize.top;
+          newSize.left -= blockSize.left;
+          section = block;
+        }
       }
     }
 

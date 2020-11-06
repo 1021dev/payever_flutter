@@ -124,62 +124,6 @@ class ShopEditScreenBloc
         isLoading: false);
   }
 
-  Stream<ShopEditScreenState> fetchPagesAndTemplates() async* {
-    String token = GlobalUtils.activeToken.accessToken;
-    String themeId = state.activeTheme.themeId;
-    yield state.copyWith(isLoading: true);
-
-    List<ShopPage> pages = [];
-    Map<String, dynamic> templates = {};
-    List<Action>actions = [];
-    Map<String, dynamic> stylesheets = {};
-
-    dynamic response1 = await api.getShopSnapShot(token, themeId);
-    if (response1 is DioError) {
-      yield state.copyWith(isLoading: false);
-    } else {
-      // Pages
-      if (response1['pages'] != null && response1['pages'] is Map) {
-        Map<String, dynamic> obj = response1['pages'];
-        obj.keys.forEach((element) {
-          pages.add(ShopPage.fromJson(obj[element]));
-        });
-        print('Pages Length: ${pages.length}');
-      }
-      // Stylesheets Map /{deviceKey : {templateId : Background}}
-      if (response1['stylesheets'] != null && response1['stylesheets'] is Map) {
-        stylesheets = response1['stylesheets'];
-      }
-      // Templates
-      if (response1['templates'] != null && response1['templates'] is Map) {
-        templates = response1['templates'];
-      }
-    }
-
-    Map<String, dynamic>query = {'limit': 20, 'offset': 0};
-    dynamic response2 = await api.getShopEditActions(token, themeId, query);
-    if (response2 is DioError) {
-      yield state.copyWith(isLoading: false);
-    } else {
-      response2.forEach((element) {
-        try {
-          actions.add(Action.fromJson(element));
-        } catch (e) {
-          print('Action Parse Error:' + e.toString());
-          print('Action Parse Element:' + element['id']);
-        }
-      });
-      print('Action Count: ${actions.length}');
-    }
-
-    yield state.copyWith(
-        pages: pages,
-        stylesheets: stylesheets,
-        templates: templates,
-        actions: actions,
-        isLoading: false);
-  }
-
   Stream<ShopEditScreenState> updateSection(UpdateSectionEvent event) async* {
     if (state.activeShopPage == null) {
       yield state.copyWith(selectedSectionId: event.sectionId);
@@ -210,11 +154,42 @@ class ShopEditScreenBloc
     yield state.copyWith(
         selectedSectionId: event.sectionId, stylesheets: stylesheets);
     String token = GlobalUtils.activeToken.accessToken;
-    api.shopEditAction(token, state.activeTheme.themeId, body).then((response) async* {
+    api.shopEditAction(token, state.activeTheme.themeId, body).then((response) {
       if (response is DioError) {
         Fluttertoast.showToast(msg: response.error);
       } else {
-        yield* fetchPagesAndTemplates();
+        String token = GlobalUtils.activeToken.accessToken;
+        String themeId = state.activeTheme.themeId;
+
+        api.getShopSnapShot(token, themeId).then((response1) async* {
+          if (response1 is DioError) {
+            Fluttertoast.showToast(msg: response1.error);
+          } else {
+            // Pages
+            List<ShopPage> pages = [];
+            Map<String, dynamic> templates = {};
+            Map<String, dynamic> stylesheets = {};
+            if (response1['pages'] != null && response1['pages'] is Map) {
+              Map<String, dynamic> obj = response1['pages'];
+              obj.keys.forEach((element) {
+                pages.add(ShopPage.fromJson(obj[element]));
+              });
+              print('Pages Length: ${pages.length}');
+            }
+            // Stylesheets Map /{deviceKey : {templateId : Background}}
+            if (response1['stylesheets'] != null &&
+                response1['stylesheets'] is Map) {
+              stylesheets = response1['stylesheets'];
+            }
+            // Templates
+            if (response1['templates'] != null &&
+                response1['templates'] is Map) {
+              templates = response1['templates'];
+            }
+            yield state.copyWith(
+                pages: pages, stylesheets: stylesheets, templates: templates);
+          }
+        });
       }
     });
   }
