@@ -185,8 +185,8 @@ class SizeAssist {
   }
 
   List<Map<String, dynamic>> getPayload(Map<String, dynamic> stylesheets,
-      Child section, Child selectedChild, ChildSize newSize, String deviceTypeId) {
-
+      Child section, Child selectedChild, ChildSize newSize, String deviceTypeId, String templateId) {
+    List<Map<String, dynamic>>effects = [];
     if (selectedChild.blocks.isNotEmpty) {
       if (!isChildOverFromBlockView(stylesheets, section.id, selectedChild, newSize)) {
         // 1. Child is in Block Still
@@ -198,7 +198,17 @@ class SizeAssist {
       } else {
         // 2. Child is over BlockView
         print('Child is Over of Block');
-
+        Map<String, dynamic> payload = {
+          'elementId': selectedChild.id,
+          'nextParentId': section.id
+        };
+        Map<String, dynamic>effect = {'payload':payload};
+        effect['target'] = 'templates:$templateId';
+        effect['type'] = 'template:relocate-element';
+        effects.add(effect);
+        selectedChild.blocks.first.children.remove(selectedChild);
+        selectedChild.blocks = [];
+        section.children.add(selectedChild);
       }
     }
 
@@ -220,16 +230,14 @@ class SizeAssist {
       'target': 'stylesheets:$deviceTypeId',
       'type': "stylesheet:update",
     };
-    return [effect];
+    effects.insert(0, effect);
+    return effects;
   }
 
   bool isChildOverFromBlockView(Map<String, dynamic> stylesheets, String sectionId, Child selectedChild, ChildSize newSize) {
     for (Child block in selectedChild.blocks) {
       ChildSize blockSize = absoluteSize(stylesheets, sectionId, block);
-      print('Block Size: ${blockSize.toJson()}');
-      bool isOverBlockView = !isIntersectionTwoChild(newSize, blockSize);
-      // Check if Child with Block view boundary
-      if(isOverBlockView) return true;
+      if(isIntersectionTwoChild(newSize, blockSize) == false) return true;
     }
     return false;
   }

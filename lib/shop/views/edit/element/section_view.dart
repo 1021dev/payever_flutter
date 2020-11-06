@@ -744,8 +744,17 @@ class _SectionViewState extends State<SectionView> {
     List<Map<String, dynamic>> effects = [];
     BaseStyles baseStyles = getBaseStyles(selectChildId);
     Child selectedChild = screenBloc.state.selectedChild;
-    effects = baseStyles.getPayload(screenBloc.state.stylesheets[deviceTypeId],
-          section, selectedChild, newSize, deviceTypeId);
+    Map<String, dynamic>stylesheets = screenBloc.state.stylesheets[deviceTypeId];
+
+    String templateId = screenBloc.state.activeShopPage.templateId;
+    effects = baseStyles.getPayload(stylesheets,
+        section, selectedChild, newSize, deviceTypeId, templateId);
+    // if (baseStyles.isChildOverFromBlockView(stylesheets, section.id, selectedChild, newSize)) {
+    //   selectedChild.blocks.first.children.remove(selectedChild);
+    //   selectedChild.blocks = [];
+    //   section.children.add(selectedChild);
+    //   section.children.firstWhere((element) => element.id == selectedChild.blocks.first.id).children.remove(selectedChild);
+    // }
     return effects;
   }
 
