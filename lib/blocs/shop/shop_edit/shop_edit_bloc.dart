@@ -130,23 +130,20 @@ class ShopEditScreenBloc
       Fluttertoast.showToast(msg: 'Shop page does not selected');
       return;
     }
-    Map effect = {
-      'payload': event.payload,
-      'target': 'stylesheets:${state.activeShopPage.stylesheetIds.mobile}',
-      'type': "stylesheet:update",
-    };
+
     Map<String, dynamic> body = {
       'affectedPageIds': [state.activeShopPage.id],
       'createdAt': DateFormat("yyyy-MM-dd'T'hh:mm:ss").format(DateTime.now()),
-      'effects': [effect],
+      'effects': event.effects,
       'id': Uuid().v4(),
       'targetPageId': state.activeShopPage.id
     };
     print('update Body: $body');
 
     Map<String, dynamic>stylesheets = state.stylesheets;
-    event.payload.keys.forEach((key) {
-      Map<String, dynamic>updatejson =  event.payload[key];
+    Map<String, dynamic>payload = event.effects.first['payload'];
+    payload.keys.forEach((key) {
+      Map<String, dynamic>updatejson =  payload[key];
       Map<String, dynamic>json = stylesheets[state.activeShopPage.stylesheetIds.mobile][key];
       updatejson.keys.forEach((element) {
         json[element] = updatejson[element];

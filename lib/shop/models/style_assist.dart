@@ -1,8 +1,6 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:payever/commons/utils/common_utils.dart';
-
 import '../../theme.dart';
 import 'models.dart';
 
@@ -186,11 +184,10 @@ class SizeAssist {
     }
   }
 
-  Map<String, dynamic> getPayload(Map<String, dynamic> stylesheets,
-      Child section, Child selectedChild, ChildSize newSize) {
+  List<Map<String, dynamic>> getPayload(Map<String, dynamic> stylesheets,
+      Child section, Child selectedChild, ChildSize newSize, String deviceTypeId) {
 
     if (selectedChild.blocks.isNotEmpty) {
-
       if (!isChildOverFromBlockView(stylesheets, section.id, selectedChild, newSize)) {
         // 1. Child is in Block Still
         print('Child is in Block');
@@ -218,21 +215,30 @@ class SizeAssist {
     // Section
     payload[section.id] = getSectionPayload(stylesheets, gridTemplateRows,
         gridTemplateColumns, section, newSize, updatedChildId);
-    return payload;
+    Map<String, dynamic> effect = {
+      'payload': payload,
+      'target': 'stylesheets:$deviceTypeId',
+      'type': "stylesheet:update",
+    };
+    return [effect];
   }
 
   bool isChildOverFromBlockView(Map<String, dynamic> stylesheets, String sectionId, Child selectedChild, ChildSize newSize) {
     for (Child block in selectedChild.blocks) {
       ChildSize blockSize = absoluteSize(stylesheets, sectionId, block);
       print('Block Size: ${blockSize.toJson()}');
-      bool isOverBlockView = (newSize.left + newSize.width < blockSize.left ||
-          blockSize.left + blockSize.width < newSize.left ||
-          newSize.top + newSize.height < blockSize.top ||
-          blockSize.top + blockSize.height < newSize.top);
+      bool isOverBlockView = !isIntersectionTwoChild(newSize, blockSize);
       // Check if Child with Block view boundary
       if(isOverBlockView) return true;
     }
     return false;
+  }
+
+  bool isIntersectionTwoChild(ChildSize size1, ChildSize size2) {
+    return !(size1.left + size1.width < size2.left ||
+        size2.left + size2.width < size1.left ||
+        size1.top + size1.height < size2.top ||
+        size2.top + size2.height < size1.top);
   }
 
   ChildSize absoluteSize(Map<String, dynamic> stylesheets, String sectionId, Child child) {

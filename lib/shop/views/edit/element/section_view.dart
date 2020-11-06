@@ -705,17 +705,17 @@ class _SectionViewState extends State<SectionView> {
   }
 
   _changeSectionAction({ChildSize childSize}) {
-    Map<String, dynamic> payload = {};
+    List<Map<String, dynamic>> effects = [];
     if (selectChildId != null && childSize != null) {
-      payload = childPayload(childSize);
+      effects = childPayload(childSize);
     } else {
-      payload = sectionPayload;
+      effects = sectionPayload;
     }
-    print('payload: $payload');
-    screenBloc.add(UpdateSectionEvent(sectionId: section.id, payload: payload));
+    print('payload: $effects');
+    screenBloc.add(UpdateSectionEvent(sectionId: section.id, effects: effects));
   }
 
-  Map<String, dynamic> get sectionPayload {
+  List<Map<String, dynamic>> get sectionPayload {
     Map<String, dynamic> payloadSection = {};
     payloadSection['height'] = widgetHeight;
     if (sectionStyles.gridTemplateRows != null &&
@@ -732,16 +732,21 @@ class _SectionViewState extends State<SectionView> {
           '$gridRows'.replaceAll(RegExp(r"[^\s\w]"), '');
     }
     Map<String, dynamic> payload = {section.id: payloadSection};
-    return payload;
+    Map<String, dynamic> effect = {
+      'payload': payload,
+      'target': 'stylesheets:$deviceTypeId',
+      'type': "stylesheet:update",
+    };
+    return [effect];
   }
 
-  Map<String, dynamic> childPayload(ChildSize newSize) {
-    Map<String, dynamic> payload = {};
+  List<Map<String, dynamic>> childPayload(ChildSize newSize) {
+    List<Map<String, dynamic>> effects = [];
     BaseStyles baseStyles = getBaseStyles(selectChildId);
     Child selectedChild = screenBloc.state.selectedChild;
-    payload = baseStyles.getPayload(screenBloc.state.stylesheets[deviceTypeId],
-          section, selectedChild, newSize);
-    return payload;
+    effects = baseStyles.getPayload(screenBloc.state.stylesheets[deviceTypeId],
+          section, selectedChild, newSize, deviceTypeId);
+    return effects;
   }
 
   BaseStyles getBaseStyles(String childId) {

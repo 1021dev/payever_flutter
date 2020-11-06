@@ -43,14 +43,14 @@ class ActiveShopPageEvent extends ShopEditScreenEvent {
 }
 
 class UpdateSectionEvent extends ShopEditScreenEvent {
-  final Map<String, dynamic> payload;
   final String sectionId;
+  final List<Map> effects;
 
-  UpdateSectionEvent({this.sectionId, this.payload});
+  UpdateSectionEvent({this.sectionId, this.effects});
 
   @override
   List<Object> get props => [
     this.sectionId,
-    this.payload,
+    this.effects,
   ];
 }
