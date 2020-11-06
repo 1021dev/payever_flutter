@@ -210,12 +210,12 @@ class ShopEditScreenBloc
     yield state.copyWith(
         selectedSectionId: event.sectionId, stylesheets: stylesheets);
     String token = GlobalUtils.activeToken.accessToken;
-    // api.shopEditAction(token, state.activeTheme.themeId, body).then((response) async* {
-    //   if (response is DioError) {
-    //     Fluttertoast.showToast(msg: response.error);
-    //   } else {
-    //     yield* fetchPagesAndTemplates();
-    //   }
-    // });
+    api.shopEditAction(token, state.activeTheme.themeId, body).then((response) async* {
+      if (response is DioError) {
+        Fluttertoast.showToast(msg: response.error);
+      } else {
+        yield* fetchPagesAndTemplates();
+      }
+    });
   }
 }

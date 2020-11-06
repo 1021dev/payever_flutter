@@ -640,8 +640,7 @@ class _SectionViewState extends State<SectionView> {
         section,
         widgetHeight,
         templateSizeState.newChildSize,
-        screenBloc.state.selectedChild,
-        screenBloc.state.selectedBlock);
+        screenBloc.state.selectedChild);
     if (isWrongPosition) {
       if (!templateSizeState.wrongPosition)
         Future.microtask(

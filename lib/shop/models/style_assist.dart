@@ -585,34 +585,17 @@ class SizeAssist {
       Child section,
       double sectionHeight,
       ChildSize newSize,
-      Child selectedChild,
-      Child selectedBlock) {
-
+      Child selectedChild) {
     String updatedChildId = selectedChild.id;
-    String blockId = selectedBlock != null ? selectedBlock.id : '';
-    SectionStyles sectionStyle = SectionStyles.fromJson(stylesheets[section.id]);
-    // print('NewChildSize: ${newSize.toJson()}');
 
     // Check Boundary
     bool wrongBounds = wrongBoundary(stylesheets, section, sectionHeight, newSize, selectedChild);
     if (wrongBounds) return true;
-    List<Child>allElements = [];
-    section.children.forEach((element) {
-      allElements.add(element);
-      element.children.forEach((element) {
-        allElements.add(element);
-        element.children.forEach((element) {
-          allElements.add(element);
-        });
-      });
-    });
+    List<Child>allElements = getAllSectionChildren(section);
     // Check other Children
     for (Child child in allElements) {
       if (child.id == updatedChildId) continue;
-      if (selectedChild.blocks.isNotEmpty && selectedChild.blocks.last.id == child.id)
-        continue;
-      BaseStyles styles = BaseStyles.fromJson(stylesheets[child.id]);
-      if (styles == null || !styles.active) continue;
+      if (isActive(stylesheets, child)== false) continue;
       ChildSize childSize = absoluteSize(stylesheets, section.id, child);
       bool isContainer = isContainerOfChild(selectedChild, child.id);
       if (isContainer && isContainChild(childSize:childSize, containerSize:newSize)) continue;
@@ -620,21 +603,7 @@ class SizeAssist {
         return true;
       }
     }
-
-    // Check BlockView with block's children
-    bool wrongBlockPosition = false;
-    // if (blockId == updatedChildId) {
-    //   Child block =
-    //       section.children.firstWhere((child) => child.id == updatedChildId);
-    //   SectionStyles blockStyles = SectionStyles.fromJson(stylesheets[block.id]);
-    //   // Check blockView Moving
-    //   if (blockStyles.width != newSize.width || blockStyles.height != newSize.height) {
-    //     wrongBlockPosition = wrongPositionBlockView(
-    //         stylesheets, block, newSize, sectionStyle, blockStyles);
-    //   }
-    // }
-    // print('New Position: Top: ${childSize.newTop}, Left: ${childSize.newLeft}, SectionID: ${section.id}, SelectedSectionId:${screenBloc.state.selectedSectionId}');
-    return wrongBlockPosition;
+    return false;
   }
 
   bool isContainerOfChild(Child container, String childId) {
@@ -662,6 +631,53 @@ class SizeAssist {
       if (block.id == child.id)  return true;
     }
     return false;
+  }
+
+  Child getBlockOfChild(Map<String, dynamic> stylesheets, Child section,
+      ChildSize newSize,
+      Child selectedChild) {
+      List<Child>allElements = getAllSectionChildren(section);
+      List<Child>blocks = [];
+      for (Child child in allElements) {
+        if (child.id == selectedChild.id) continue;
+        if (isActive(stylesheets, child)== false) continue;
+        ChildSize childSize = absoluteSize(stylesheets, section.id, child);
+        bool isContainer = isContainChild(childSize:newSize, containerSize: childSize);
+        if (isContainer) {
+          blocks.add(child);
+        }
+      }
+      if (blocks.isEmpty) {
+        return null;
+      }
+      blocks.sort((a, b) {
+        ChildSize childSize1 = absoluteSize(stylesheets, section.id, a);
+        ChildSize childSize2 = absoluteSize(stylesheets, section.id, b);
+        double marginLeft1 = childSize1.left;
+        double marginLeft2 = childSize2.left;
+        return marginLeft1.compareTo(marginLeft2);
+      });
+      return blocks.first;
+  }
+
+  bool isActive(Map<String, dynamic> stylesheets, Child child){
+    BaseStyles styles = BaseStyles.fromJson(stylesheets[child.id]);
+    if (styles == null || !styles.active) return false;
+    return true;
+  }
+
+  List<Child>getAllSectionChildren(Child section){
+    List<Child>allElements = [];
+    section.children.forEach((element) {
+      allElements.add(element);
+      element.children.forEach((element) {
+        allElements.add(element);
+        element.children.forEach((element) {
+          allElements.add(element);
+        });
+      });
+    });
+    return allElements;
   }
 
   bool canBeContainer(Child child) {
@@ -711,54 +727,6 @@ class SizeAssist {
           (newSize.top + newSize.height > marginTop + blockHeight) ||
           (newSize.left + newSize.width > marginLeft + blockWidth);
       if (!isOverBlockView && wrongBoundary) return true;
-    }
-    return false;
-  }
-
-  bool wrongPositionBlockView(
-      Map<String, dynamic> stylesheets,
-      Child block,
-      ChildSize childSize,
-      SectionStyles sectionStyles,
-      SectionStyles blockStyles) {
-    // If block
-    double x1 = 0, y1 = 0, x2 = 0, y2 = 0;
-    block.children.forEach((child) {
-      BaseStyles styles = BaseStyles.fromJson(stylesheets[child.id]);
-      if (styles != null || styles.active) {
-        double x = styles.getMarginLeft(blockStyles);
-        double y = styles.getMarginTop(blockStyles);
-        double width = styles.width + styles.paddingH * 2;
-        double height = styles.height+ styles.paddingV * 2;
-        double X = x + width;
-        double Y = y + height;
-
-        if (x1 == 0) x1 = x;
-        if (y1 == 0) y1 = y;
-
-        if (x2 == 0) x2 = X;
-        if (y2 == 0) y2 = Y;
-
-        if (x1 > x) x1 = x;
-        if (y1 > y) y1 = y;
-
-        if (x2 < X) x2 = X;
-        if (y2 < Y) y2 = Y;
-      }
-    });
-    x1 += blockStyles.getMarginLeft(sectionStyles);
-    y1 += blockStyles.getMarginTop(sectionStyles);
-    x2 += blockStyles.getMarginLeft(sectionStyles);
-    y2 += blockStyles.getMarginTop(sectionStyles);
-
-    // print('{x1: $x1, y1:$y1}, {x2: $x2, y2:$y2}');
-    // print(
-    //     '{left0: ${childSize.newLeft}, top0:${childSize.newTop}, {left1: ${childSize.newLeft + childSize.newWidth}, top1:${childSize.newTop + childSize.newHeight}}');
-    if (childSize.left > x1 ||
-        childSize.left + childSize.width < x2 ||
-        childSize.top > y1 ||
-        childSize.top + childSize.height < y2) {
-      return true;
     }
     return false;
   }
