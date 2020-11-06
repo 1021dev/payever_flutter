@@ -735,22 +735,13 @@ class _SectionViewState extends State<SectionView> {
     return payload;
   }
 
-  Map<String, dynamic> childPayload(NewChildSize size) {
+  Map<String, dynamic> childPayload(NewChildSize newSize) {
     Map<String, dynamic> payload = {};
     BaseStyles baseStyles = getBaseStyles(selectChildId);
+    Child selectedChild = screenBloc.state.selectedChild;
     payload = baseStyles.getPayload(screenBloc.state.stylesheets[deviceTypeId],
-        section, screenBloc.state.selectedChild, size);
+          section, selectedChild, newSize);
     return payload;
-    Map<String, dynamic> payloadSection = {};
-    // double marginTop = baseStyles.getMarginTopAssist(size.newTop, sectionStyles.gridTemplateRows, baseStyles.gridRow, isReverse: true);
-    // double marginLeft = baseStyles.getMarginLeftAssist(size.newLeft, sectionStyles.gridTemplateColumns, baseStyles.gridColumn, isReverse: true);
-    // String margin = '$marginTop 0 0 $marginLeft';
-    // payloadSection['margin'] = margin;
-    // payloadSection['marginTop'] = marginTop;
-    // payloadSection['marginLeft'] = marginLeft;
-    // payloadSection['height'] = size.newHeight;
-    // payloadSection['width'] = size.newWidth / GlobalUtils.shopBuilderWidthFactor;
-    // payload[selectChildId] = payloadSection;
   }
 
   BaseStyles getBaseStyles(String childId) {

@@ -188,6 +188,23 @@ class SizeAssist {
 
   Map<String, dynamic> getPayload(Map<String, dynamic> stylesheets,
       Child section, Child selectedChild, NewChildSize newSize) {
+
+    if (selectedChild.blocks.isNotEmpty) {
+      // 1. Child is in Block Still
+      if (!isOverBlockView(stylesheets, section.id, selectedChild, newSize)) {
+        print('Child is in Block');
+        NewChildSize blockSize = absoluteSize(stylesheets, section.id, selectedChild.blocks.first);
+        newSize.newTop -= blockSize.newTop;
+        newSize.newLeft -= blockSize.newLeft;
+        section = selectedChild.blocks.first;
+      } else {
+        print('Child is Over of Block');
+      }
+      // 2. Child is over BlockView
+    } else {
+
+    }
+
     String updatedChildId = selectedChild.id;
     Map<String, List<String>> gridTemplateRows =
         getGridTemplateRows(stylesheets, section, newSize, updatedChildId);
@@ -195,17 +212,52 @@ class SizeAssist {
         getGridTemplateColumns(stylesheets, section, newSize, updatedChildId);
     Map<String, dynamic> payload = {};
 
-    if (selectedChild.blocks.isNotEmpty) {
 
-    } else {
-
-    }
     payload = getChildPayload(stylesheets, gridTemplateRows,
         gridTemplateColumns, section, selectedChild, newSize);
     // Section
     payload[section.id] = getSectionPayload(stylesheets, gridTemplateRows,
         gridTemplateColumns, section, newSize, updatedChildId);
     return payload;
+  }
+
+  bool isOverBlockView(Map<String, dynamic> stylesheets, String sectionId, Child selectedChild, NewChildSize newSize) {
+    for (Child block in selectedChild.blocks) {
+      NewChildSize blockSize = absoluteSize(stylesheets, sectionId, block);
+      print('Block Size: ${blockSize.toJson()}');
+      bool isOverBlockView = (newSize.newLeft + newSize.newWidth < blockSize.newLeft ||
+          blockSize.newLeft + blockSize.newWidth < newSize.newLeft ||
+          newSize.newTop + newSize.newHeight < blockSize.newTop ||
+          blockSize.newTop + blockSize.newHeight < newSize.newTop);
+      // Check if Child with Block view boundary
+      if(isOverBlockView) return true;
+    }
+    return false;
+  }
+
+  NewChildSize absoluteSize(Map<String, dynamic> stylesheets, String sectionId, Child child) {
+    SectionStyles sectionStyle = SectionStyles.fromJson(stylesheets[sectionId]);
+    BaseStyles styles = BaseStyles.fromJson(stylesheets[child.id]);
+    double width = styles.width + styles.paddingH * 2;
+    double height = styles.height + styles.paddingV * 2;
+    double marginTop = 0;
+    double marginLeft = 0;
+    List<SectionStyles> sectionStyles = [];
+    if (child.blocks != null && child.blocks.isNotEmpty) {
+      for (Child block in child.blocks) {
+        SectionStyles blockStyle = SectionStyles.fromJson(
+            stylesheets[block.id]);
+        sectionStyles.add(blockStyle);
+      }
+    }
+    sectionStyles.add(sectionStyle);
+    for (int i = 0; i < sectionStyles.length; i++) {
+      SectionStyles sectionStyle = sectionStyles[i];
+      marginLeft += styles.getMarginLeft(sectionStyle);
+      marginTop += styles.getMarginTop(sectionStyle);
+      styles = sectionStyle;
+    }
+    return NewChildSize(newWidth: width, newHeight: height, newLeft: marginLeft, newTop: marginTop);
   }
 
   Map<String, dynamic> getChildPayload(
