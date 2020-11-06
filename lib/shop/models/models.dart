@@ -876,18 +876,18 @@ class ButtonPayload {
 }
 
 @JsonSerializable()
-class NewChildSize {
-  @JsonKey(name: 'newWidth')
-  double newWidth;
-  @JsonKey(name: 'newHeight')
-  double newHeight;
-  @JsonKey(name: 'newTop')
-  double newTop;
-  @JsonKey(name: 'newLeft')
-  double newLeft;
+class ChildSize {
+  @JsonKey(name: 'width')
+  double width;
+  @JsonKey(name: 'height')
+  double height;
+  @JsonKey(name: 'top')
+  double top;
+  @JsonKey(name: 'left')
+  double left;
 
-  NewChildSize({this.newTop, this.newLeft, this.newWidth, this.newHeight});
+  ChildSize({this.top, this.left, this.width, this.height});
 
-  factory NewChildSize.fromJson(Map<String, dynamic> json) => _$NewChildSizeFromJson(json);
-  Map<String, dynamic> toJson() => _$NewChildSizeToJson(this);
+  factory ChildSize.fromJson(Map<String, dynamic> json) => _$ChildSizeFromJson(json);
+  Map<String, dynamic> toJson() => _$ChildSizeToJson(this);
 }

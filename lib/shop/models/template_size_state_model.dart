@@ -3,9 +3,9 @@ import 'package:payever/shop/models/models.dart';
 
 class TemplateSizeStateModel extends ChangeNotifier {
   Map<String, dynamic> _stylesheets;
-  NewChildSize _newChildSize;
+  ChildSize _newChildSize;
   bool _wrongPosition = false;
-  NewChildSize _updateChildSize;
+  ChildSize _updateChildSize;
   bool _updateChildSizeFailed = false;
 
   bool get updateChildSizeFailed => _updateChildSizeFailed;
@@ -24,9 +24,9 @@ class TemplateSizeStateModel extends ChangeNotifier {
   }
 
   bool get wrongPosition => _wrongPosition;
-  NewChildSize get updateChildSize => _updateChildSize;
+  ChildSize get updateChildSize => _updateChildSize;
 
-  setUpdateChildSize(NewChildSize value) {
+  setUpdateChildSize(ChildSize value) {
     _updateChildSize = value;
     notifyListeners();
     Future.delayed(Duration(milliseconds: 300))
@@ -41,12 +41,12 @@ class TemplateSizeStateModel extends ChangeNotifier {
     //     .then((value) => _wrongPosition = false);
   }
 
-  setNewChildSize(NewChildSize value) {
+  setNewChildSize(ChildSize value) {
     _newChildSize = value;
     notifyListeners();
     // Future.delayed(Duration(milliseconds: 500))
     //     .then((value) => _newChildSize = null);
   }
-  NewChildSize get newChildSize => _newChildSize;
+  ChildSize get newChildSize => _newChildSize;
 
 }

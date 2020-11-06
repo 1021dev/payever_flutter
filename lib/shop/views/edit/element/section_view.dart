@@ -69,7 +69,7 @@ class _SectionViewState extends State<SectionView> {
   double relativeMarginTop = -1;
 
   bool blockDragging = false;
-  NewChildSize blockDraggingSize;
+  ChildSize blockDraggingSize;
 
   _SectionViewState({this.deviceTypeId, this.section, this.screenBloc}) {
     sectionStyles = getSectionStyles(section.id);
@@ -629,9 +629,9 @@ class _SectionViewState extends State<SectionView> {
     });
   }
 
-  bool isDragging (NewChildSize newSize, Child child) {
+  bool isDragging (ChildSize newSize, Child child) {
     BaseStyles styles = BaseStyles.fromJson(screenBloc.state.stylesheets[deviceTypeId][child.id]);
-    return styles.width == newSize.newWidth && styles.height == newSize.newHeight;
+    return styles.width == newSize.width && styles.height == newSize.height;
   }
 
   void progressWrongPosition(TemplateSizeStateModel templateSizeState) {
@@ -654,7 +654,7 @@ class _SectionViewState extends State<SectionView> {
     }
   }
 
-  void progressRelativeLines(NewChildSize newChildSize) {
+  void progressRelativeLines(ChildSize newChildSize) {
     setState(() {
       relativeMarginTop = sectionStyles.relativeMarginTop(
           screenBloc.state.stylesheets[deviceTypeId],
@@ -704,7 +704,7 @@ class _SectionViewState extends State<SectionView> {
       limitSectionHeight = newLimitSectionHeight;
   }
 
-  _changeSectionAction({NewChildSize childSize}) {
+  _changeSectionAction({ChildSize childSize}) {
     Map<String, dynamic> payload = {};
     if (selectChildId != null && childSize != null) {
       payload = childPayload(childSize);
@@ -735,7 +735,7 @@ class _SectionViewState extends State<SectionView> {
     return payload;
   }
 
-  Map<String, dynamic> childPayload(NewChildSize newSize) {
+  Map<String, dynamic> childPayload(ChildSize newSize) {
     Map<String, dynamic> payload = {};
     BaseStyles baseStyles = getBaseStyles(selectChildId);
     Child selectedChild = screenBloc.state.selectedChild;

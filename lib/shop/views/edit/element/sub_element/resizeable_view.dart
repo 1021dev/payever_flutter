@@ -315,8 +315,8 @@ class _ResizeableViewState extends State<ResizeableView> {
   }
 
   updateSize() {
-    templateSizeStateModel.setNewChildSize(NewChildSize(
-        newTop: top, newLeft: left, newWidth: width, newHeight: height));
+    templateSizeStateModel.setNewChildSize(ChildSize(
+        top: top, left: left, width: width, height: height));
 
   }
 
@@ -338,8 +338,8 @@ class _ResizeableViewState extends State<ResizeableView> {
       left0 = left;
       top0 = top;
       templateSizeStateModel.setNewChildSize(null);
-      templateSizeStateModel.setUpdateChildSize(NewChildSize(
-          newTop: top, newLeft: left, newWidth: width, newHeight: height));
+      templateSizeStateModel.setUpdateChildSize(ChildSize(
+          top: top, left: left, width: width, height: height));
     }
   }
 

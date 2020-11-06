@@ -1889,19 +1889,18 @@ Map<String, dynamic> _$ButtonPayloadToJson(ButtonPayload instance) =>
       'route': instance.route,
     };
 
-NewChildSize _$NewChildSizeFromJson(Map<String, dynamic> json) {
-  return NewChildSize(
-    newTop: (json['newTop'] as num)?.toDouble(),
-    newLeft: (json['newLeft'] as num)?.toDouble(),
-    newWidth: (json['newWidth'] as num)?.toDouble(),
-    newHeight: (json['newHeight'] as num)?.toDouble(),
+ChildSize _$ChildSizeFromJson(Map<String, dynamic> json) {
+  return ChildSize(
+    top: (json['top'] as num)?.toDouble(),
+    left: (json['left'] as num)?.toDouble(),
+    width: (json['width'] as num)?.toDouble(),
+    height: (json['height'] as num)?.toDouble(),
   );
 }
 
-Map<String, dynamic> _$NewChildSizeToJson(NewChildSize instance) =>
-    <String, dynamic>{
-      'newWidth': instance.newWidth,
-      'newHeight': instance.newHeight,
-      'newTop': instance.newTop,
-      'newLeft': instance.newLeft,
+Map<String, dynamic> _$ChildSizeToJson(ChildSize instance) => <String, dynamic>{
+      'width': instance.width,
+      'height': instance.height,
+      'top': instance.top,
+      'left': instance.left,
     };

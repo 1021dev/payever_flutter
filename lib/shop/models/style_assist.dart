@@ -187,22 +187,22 @@ class SizeAssist {
   }
 
   Map<String, dynamic> getPayload(Map<String, dynamic> stylesheets,
-      Child section, Child selectedChild, NewChildSize newSize) {
+      Child section, Child selectedChild, ChildSize newSize) {
 
     if (selectedChild.blocks.isNotEmpty) {
-      // 1. Child is in Block Still
-      if (!isOverBlockView(stylesheets, section.id, selectedChild, newSize)) {
+
+      if (!isChildOverFromBlockView(stylesheets, section.id, selectedChild, newSize)) {
+        // 1. Child is in Block Still
         print('Child is in Block');
-        NewChildSize blockSize = absoluteSize(stylesheets, section.id, selectedChild.blocks.first);
-        newSize.newTop -= blockSize.newTop;
-        newSize.newLeft -= blockSize.newLeft;
+        ChildSize blockSize = absoluteSize(stylesheets, section.id, selectedChild.blocks.first);
+        newSize.top -= blockSize.top;
+        newSize.left -= blockSize.left;
         section = selectedChild.blocks.first;
       } else {
+        // 2. Child is over BlockView
         print('Child is Over of Block');
-      }
-      // 2. Child is over BlockView
-    } else {
 
+      }
     }
 
     String updatedChildId = selectedChild.id;
@@ -221,21 +221,21 @@ class SizeAssist {
     return payload;
   }
 
-  bool isOverBlockView(Map<String, dynamic> stylesheets, String sectionId, Child selectedChild, NewChildSize newSize) {
+  bool isChildOverFromBlockView(Map<String, dynamic> stylesheets, String sectionId, Child selectedChild, ChildSize newSize) {
     for (Child block in selectedChild.blocks) {
-      NewChildSize blockSize = absoluteSize(stylesheets, sectionId, block);
+      ChildSize blockSize = absoluteSize(stylesheets, sectionId, block);
       print('Block Size: ${blockSize.toJson()}');
-      bool isOverBlockView = (newSize.newLeft + newSize.newWidth < blockSize.newLeft ||
-          blockSize.newLeft + blockSize.newWidth < newSize.newLeft ||
-          newSize.newTop + newSize.newHeight < blockSize.newTop ||
-          blockSize.newTop + blockSize.newHeight < newSize.newTop);
+      bool isOverBlockView = (newSize.left + newSize.width < blockSize.left ||
+          blockSize.left + blockSize.width < newSize.left ||
+          newSize.top + newSize.height < blockSize.top ||
+          blockSize.top + blockSize.height < newSize.top);
       // Check if Child with Block view boundary
       if(isOverBlockView) return true;
     }
     return false;
   }
 
-  NewChildSize absoluteSize(Map<String, dynamic> stylesheets, String sectionId, Child child) {
+  ChildSize absoluteSize(Map<String, dynamic> stylesheets, String sectionId, Child child) {
     SectionStyles sectionStyle = SectionStyles.fromJson(stylesheets[sectionId]);
     BaseStyles styles = BaseStyles.fromJson(stylesheets[child.id]);
     double width = styles.width + styles.paddingH * 2;
@@ -257,7 +257,7 @@ class SizeAssist {
       marginTop += styles.getMarginTop(sectionStyle);
       styles = sectionStyle;
     }
-    return NewChildSize(newWidth: width, newHeight: height, newLeft: marginLeft, newTop: marginTop);
+    return ChildSize(width: width, height: height, left: marginLeft, top: marginTop);
   }
 
   Map<String, dynamic> getChildPayload(
@@ -266,7 +266,7 @@ class SizeAssist {
       Map<String, List<String>> gridTemplateColumns,
       Child section,
       Child selectedChild,
-      NewChildSize newSize) {
+      ChildSize newSize) {
     // Updated Child
     Map<String, dynamic> payload = {};
     SectionStyles sectionStyles = SectionStyles.fromJson(stylesheets[section.id]);
@@ -281,16 +281,16 @@ class SizeAssist {
       double marginLeft = styles.getMarginLeft(sectionStyles);
 
       if (child.id == selectedChild.id) {
-        payloadChild['height'] = newSize.newHeight;
+        payloadChild['height'] = newSize.height;
         payloadChild['width'] =
-            newSize.newWidth / GlobalUtils.shopBuilderWidthFactor;
+            newSize.width / GlobalUtils.shopBuilderWidthFactor;
         if (child.type == 'button') {
-          payloadChild['height'] = newSize.newHeight - styles.paddingV * 2;
+          payloadChild['height'] = newSize.height - styles.paddingV * 2;
           payloadChild['width'] =
-              newSize.newWidth / GlobalUtils.shopBuilderWidthFactor - styles.paddingH * 2;
+              newSize.width / GlobalUtils.shopBuilderWidthFactor - styles.paddingH * 2;
         }
-        marginTop = newSize.newTop;
-        marginLeft = newSize.newLeft;
+        marginTop = newSize.top;
+        marginLeft = newSize.left;
       }
       // Row
       if (gridTemplateRows.length == 0) {
@@ -366,7 +366,7 @@ class SizeAssist {
       Map<String, List<String>> gridTemplateRows,
       Map<String, List<String>> gridTemplateColumns,
       Child section,
-      NewChildSize newSize,
+      ChildSize newSize,
       String updatedChildId) {
     SectionStyles sectionStyles =
         SectionStyles.fromJson(stylesheets[section.id]);
@@ -394,7 +394,7 @@ class SizeAssist {
       String lastChildId = gridTemplateRows[heightKeys.last].last;
       if (lastChildId == updatedChildId) {
         lastBottomMargin =
-            sectionStyles.height - (newSize.newTop + newSize.newHeight);
+            sectionStyles.height - (newSize.top + newSize.height);
       } else {
         BaseStyles styles = BaseStyles.fromJson(stylesheets[lastChildId]);
         lastBottomMargin = sectionStyles.height -
@@ -432,7 +432,7 @@ class SizeAssist {
       String lastChildId = gridTemplateColumns[widthKeys.last].last;
       if (lastChildId == updatedChildId) {
         lastLeftMargin =
-            sectionStyles.width - (newSize.newLeft + newSize.newWidth);
+            sectionStyles.width - (newSize.left + newSize.width);
       } else {
         BaseStyles styles = BaseStyles.fromJson(stylesheets[lastChildId]);
 
@@ -454,7 +454,7 @@ class SizeAssist {
   Map<String, List<String>> getGridTemplateRows(
       Map<String, dynamic> stylesheets,
       Child section,
-      NewChildSize newSize,
+      ChildSize newSize,
       String updatedChildId) {
     int rows = 0;
     SectionStyles sectionStyles =
@@ -469,10 +469,10 @@ class SizeAssist {
         double marginTop1 = styles1.getMarginTop(sectionStyles);
         double marginTop2 = styles2.getMarginTop(sectionStyles);
         if (a.id == updatedChildId) {
-          marginTop1 = newSize.newTop;
+          marginTop1 = newSize.top;
         }
         if (b.id == updatedChildId) {
-          marginTop2 = newSize.newTop;
+          marginTop2 = newSize.top;
         }
         return marginTop1.compareTo(marginTop2);
       });
@@ -487,8 +487,8 @@ class SizeAssist {
       if (overlayChildren.contains(child.id)) continue;
       double y0, y1;
       if (child.id == updatedChildId) {
-        y0 = newSize.newTop;
-        y1 = newSize.newTop + newSize.newHeight;
+        y0 = newSize.top;
+        y1 = newSize.top + newSize.height;
       } else {
         y0 = styles.getMarginTop(sectionStyles);
         y1 = y0 + styles.height + styles.paddingV * 2;
@@ -502,8 +502,8 @@ class SizeAssist {
 
         double Y0, Y1;
         if (element.id == updatedChildId) {
-          Y0 = newSize.newTop;
-          Y1 = newSize.newTop + newSize.newHeight;
+          Y0 = newSize.top;
+          Y1 = newSize.top + newSize.height;
         } else {
           Y0 = styles.getMarginTop(sectionStyles);
           Y1 = Y0 + styles.height + styles.paddingV * 2;
@@ -527,7 +527,7 @@ class SizeAssist {
   Map<String, List<String>> getGridTemplateColumns(
       Map<String, dynamic> stylesheets,
       Child section,
-      NewChildSize newSize,
+      ChildSize newSize,
       String updatedChildId) {
     int rows = 0;
     SectionStyles sectionStyles =
@@ -542,10 +542,10 @@ class SizeAssist {
         double marginLeft1 = styles1.getMarginLeft(sectionStyles);
         double marginLeft2 = styles2.getMarginLeft(sectionStyles);
         if (a.id == updatedChildId) {
-          marginLeft1 = newSize.newLeft;
+          marginLeft1 = newSize.left;
         }
         if (b.id == updatedChildId) {
-          marginLeft2 = newSize.newLeft;
+          marginLeft2 = newSize.left;
         }
         return marginLeft1.compareTo(marginLeft2);
       });
@@ -560,8 +560,8 @@ class SizeAssist {
       if (overlayChildren.contains(child.id)) continue;
       double x0, x1;
       if (child.id == updatedChildId) {
-        x0 = newSize.newLeft;
-        x1 = newSize.newLeft + newSize.newWidth;
+        x0 = newSize.left;
+        x1 = newSize.left + newSize.width;
       } else {
         x0 = styles.getMarginLeft(sectionStyles);
         x1 = x0 + styles.width + styles.paddingH * 2;
@@ -575,8 +575,8 @@ class SizeAssist {
 
         double X0, X1;
         if (element.id == updatedChildId) {
-          X0 = newSize.newLeft;
-          X1 = newSize.newLeft + newSize.newWidth;
+          X0 = newSize.left;
+          X1 = newSize.left + newSize.width;
         } else {
           X0 = styles.getMarginLeft(sectionStyles);
           X1 = X0 + styles.width + styles.paddingH * 2;
@@ -602,7 +602,7 @@ class SizeAssist {
       Map<String, dynamic> stylesheets,
       Child section,
       double sectionHeight,
-      NewChildSize newSize,
+      ChildSize newSize,
       Child selectedChild,
       Child selectedBlock) {
 
@@ -653,7 +653,7 @@ class SizeAssist {
           section.children.firstWhere((child) => child.id == updatedChildId);
       SectionStyles blockStyles = SectionStyles.fromJson(stylesheets[block.id]);
       // Check blockView Moving
-      if (blockStyles.width != newSize.newWidth || blockStyles.height != newSize.newHeight) {
+      if (blockStyles.width != newSize.width || blockStyles.height != newSize.height) {
         wrongBlockPosition = wrongPositionBlockView(
             stylesheets, block, newSize, sectionStyle, blockStyles);
       }
@@ -672,13 +672,13 @@ class SizeAssist {
   bool wrongBoundary(Map<String, dynamic> stylesheets,
       Child section,
       double sectionHeight,
-      NewChildSize newSize,
+      ChildSize newSize,
       Child selectedChild) {
     SectionStyles sectionStyle = SectionStyles.fromJson(stylesheets[section.id]);
-    bool wrongBoundary = newSize.newTop < 0 ||
-        newSize.newLeft < 0 ||
-        (newSize.newTop + newSize.newHeight > sectionHeight) ||
-        (newSize.newLeft + newSize.newWidth > Measurements.width);
+    bool wrongBoundary = newSize.top < 0 ||
+        newSize.left < 0 ||
+        (newSize.top + newSize.height > sectionHeight) ||
+        (newSize.left + newSize.width > Measurements.width);
     if (wrongBoundary) return true;
 
 
@@ -702,22 +702,22 @@ class SizeAssist {
       }
       // print('block width: $blockWidth height: $blockHeight marginTop: $marginTop marginLeft: $marginLeft');
       // Check if Child is over Block view
-      bool isOverBlockView = (newSize.newLeft + newSize.newWidth < marginLeft ||
-          marginLeft + blockWidth < newSize.newLeft ||
-          newSize.newTop + newSize.newHeight < marginTop ||
-          marginTop + blockHeight < newSize.newTop);
+      bool isOverBlockView = (newSize.left + newSize.width < marginLeft ||
+          marginLeft + blockWidth < newSize.left ||
+          newSize.top + newSize.height < marginTop ||
+          marginTop + blockHeight < newSize.top);
       // Check if Child with Block view boundary
-      wrongBoundary = newSize.newTop < marginTop ||
-          newSize.newLeft < marginLeft ||
-          (newSize.newTop + newSize.newHeight > marginTop + blockHeight) ||
-          (newSize.newLeft + newSize.newWidth > marginLeft + blockWidth);
+      wrongBoundary = newSize.top < marginTop ||
+          newSize.left < marginLeft ||
+          (newSize.top + newSize.height > marginTop + blockHeight) ||
+          (newSize.left + newSize.width > marginLeft + blockWidth);
       if (!isOverBlockView && wrongBoundary) return true;
     }
     return false;
   }
 
   bool wrongPositionWithOrderChildren(
-      NewChildSize childSize, BaseStyles styles, List<SectionStyles>sectionStyles) {
+      ChildSize childSize, BaseStyles styles, List<SectionStyles>sectionStyles) {
     if (styles == null || !styles.active) return false;
     double width0 = styles.width + styles.paddingH * 2;
     double height0 = styles.height + styles.paddingV * 2;
@@ -731,10 +731,10 @@ class SizeAssist {
     }
     // print('x0:$x0, y0:$y0, width0:$width0, height0:$height0');
     // print('newSize: ${childSize.toJson()}');
-    double x1 = childSize.newLeft;
-    double y1 = childSize.newTop;
-    double width1 = childSize.newWidth;
-    double height1 = childSize.newHeight;
+    double x1 = childSize.left;
+    double y1 = childSize.top;
+    double width1 = childSize.width;
+    double height1 = childSize.height;
 
     if (x0 + width0 < x1 ||
         x1 + width1 < x0 ||
@@ -748,7 +748,7 @@ class SizeAssist {
   bool wrongPositionBlockView(
       Map<String, dynamic> stylesheets,
       Child block,
-      NewChildSize childSize,
+      ChildSize childSize,
       SectionStyles sectionStyles,
       SectionStyles blockStyles) {
     // If block
@@ -784,10 +784,10 @@ class SizeAssist {
     // print('{x1: $x1, y1:$y1}, {x2: $x2, y2:$y2}');
     // print(
     //     '{left0: ${childSize.newLeft}, top0:${childSize.newTop}, {left1: ${childSize.newLeft + childSize.newWidth}, top1:${childSize.newTop + childSize.newHeight}}');
-    if (childSize.newLeft > x1 ||
-        childSize.newLeft + childSize.newWidth < x2 ||
-        childSize.newTop > y1 ||
-        childSize.newTop + childSize.newHeight < y2) {
+    if (childSize.left > x1 ||
+        childSize.left + childSize.width < x2 ||
+        childSize.top > y1 ||
+        childSize.top + childSize.height < y2) {
       return true;
     }
     return false;
@@ -796,7 +796,7 @@ class SizeAssist {
   double relativeMarginTop(
       Map<String, dynamic> stylesheets,
       Child section,
-      NewChildSize newSize,
+      ChildSize newSize,
       double sectionHeight,
       String updatedChildId){
 
@@ -804,16 +804,16 @@ class SizeAssist {
     SectionStyles.fromJson(stylesheets[section.id]);
     // Relative with Parent
     // - Edge Center
-    if (newSize.newTop.abs() < relativeError)
+    if (newSize.top.abs() < relativeError)
       return 0;
-    if ((newSize.newTop - sectionHeight / 2).abs() < relativeError)
+    if ((newSize.top - sectionHeight / 2).abs() < relativeError)
       return sectionHeight / 2;
-    if ((newSize.newTop + newSize.newHeight - sectionHeight / 2).abs() < relativeError)
+    if ((newSize.top + newSize.height - sectionHeight / 2).abs() < relativeError)
       return sectionHeight / 2;
-    if ((newSize.newTop + newSize.newHeight - sectionHeight).abs() < relativeError)
+    if ((newSize.top + newSize.height - sectionHeight).abs() < relativeError)
       return sectionHeight;
     // Body Center
-    if ((newSize.newTop + newSize.newHeight / 2 - sectionHeight / 2).abs() < relativeError)
+    if ((newSize.top + newSize.height / 2 - sectionHeight / 2).abs() < relativeError)
       return sectionHeight / 2;
 
     // Relative with Other children
@@ -822,14 +822,14 @@ class SizeAssist {
       if (child.id == updatedChildId) continue;
       BaseStyles styles = BaseStyles.fromJson(stylesheets[child.id]);
       if (styles == null || !styles.active) continue;
-      if ((newSize.newTop - styles.getMarginTop(sectionStyles)).abs() < relativeError)
+      if ((newSize.top - styles.getMarginTop(sectionStyles)).abs() < relativeError)
         return styles.getMarginTop(sectionStyles);
-      if ((newSize.newTop - (styles.getMarginTop(sectionStyles) + styles.height + styles.paddingV * 2)).abs() < relativeError)
+      if ((newSize.top - (styles.getMarginTop(sectionStyles) + styles.height + styles.paddingV * 2)).abs() < relativeError)
         return styles.getMarginTop(sectionStyles) + styles.height + styles.paddingV * 2;
 
-      if ((newSize.newTop + newSize.newHeight - styles.getMarginTop(sectionStyles)).abs() < relativeError)
+      if ((newSize.top + newSize.height - styles.getMarginTop(sectionStyles)).abs() < relativeError)
         return styles.getMarginTop(sectionStyles);
-      if ((newSize.newTop + newSize.newHeight - (styles.getMarginTop(sectionStyles) + styles.height + styles.paddingV * 2)).abs() < relativeError)
+      if ((newSize.top + newSize.height - (styles.getMarginTop(sectionStyles) + styles.height + styles.paddingV * 2)).abs() < relativeError)
         return styles.getMarginTop(sectionStyles) + styles.height + styles.paddingV * 2;
     }
     return -1;
@@ -838,23 +838,23 @@ class SizeAssist {
   double relativeMarginLeft(
       Map<String, dynamic> stylesheets,
       Child section,
-      NewChildSize newSize,
+      ChildSize newSize,
       String updatedChildId){
 
     SectionStyles sectionStyles =
     SectionStyles.fromJson(stylesheets[section.id]);
     // Relative with Parent
     // - Edge Center
-    if (newSize.newLeft.abs() < relativeError)
+    if (newSize.left.abs() < relativeError)
       return 0;
-    if ((newSize.newLeft - sectionStyles.width / 2).abs() < relativeError)
+    if ((newSize.left - sectionStyles.width / 2).abs() < relativeError)
       return sectionStyles.width / 2;
-    if ((newSize.newLeft + newSize.newWidth - sectionStyles.width / 2).abs() < relativeError)
+    if ((newSize.left + newSize.width - sectionStyles.width / 2).abs() < relativeError)
       return sectionStyles.width / 2;
-    if ((newSize.newLeft + newSize.newWidth - sectionStyles.width).abs() < relativeError)
+    if ((newSize.left + newSize.width - sectionStyles.width).abs() < relativeError)
       return sectionStyles.width;
     // Body Center
-    if ((newSize.newLeft + newSize.newWidth / 2 - sectionStyles.width / 2).abs() < relativeError)
+    if ((newSize.left + newSize.width / 2 - sectionStyles.width / 2).abs() < relativeError)
       return sectionStyles.width / 2;
 
     // Relative with Other children
@@ -863,14 +863,14 @@ class SizeAssist {
       if (child.id == updatedChildId) continue;
       BaseStyles styles = BaseStyles.fromJson(stylesheets[child.id]);
       if (styles == null || !styles.active) continue;
-      if ((newSize.newLeft - styles.getMarginLeft(sectionStyles)).abs() < relativeError)
+      if ((newSize.left - styles.getMarginLeft(sectionStyles)).abs() < relativeError)
         return styles.getMarginLeft(sectionStyles);
-      if ((newSize.newLeft - (styles.getMarginLeft(sectionStyles) + styles.width + styles.paddingH * 2)).abs() < relativeError)
+      if ((newSize.left - (styles.getMarginLeft(sectionStyles) + styles.width + styles.paddingH * 2)).abs() < relativeError)
         return styles.getMarginLeft(sectionStyles) + styles.width + styles.paddingH * 2;
 
-      if ((newSize.newLeft + newSize.newWidth - styles.getMarginLeft(sectionStyles)).abs() < relativeError)
+      if ((newSize.left + newSize.width - styles.getMarginLeft(sectionStyles)).abs() < relativeError)
         return styles.getMarginLeft(sectionStyles);
-      if ((newSize.newLeft + newSize.newWidth - (styles.getMarginLeft(sectionStyles) + styles.width + styles.paddingH * 2)).abs() < relativeError)
+      if ((newSize.left + newSize.width - (styles.getMarginLeft(sectionStyles) + styles.width + styles.paddingH * 2)).abs() < relativeError)
         return styles.getMarginLeft(sectionStyles) + styles.width + styles.paddingH * 2;
     }
     return -1;
