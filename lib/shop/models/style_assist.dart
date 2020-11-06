@@ -242,38 +242,6 @@ class SizeAssist {
     return false;
   }
 
-  bool isIntersectionTwoChild(ChildSize size1, ChildSize size2) {
-    return !(size1.left + size1.width < size2.left ||
-        size2.left + size2.width < size1.left ||
-        size1.top + size1.height < size2.top ||
-        size2.top + size2.height < size1.top);
-  }
-
-  ChildSize absoluteSize(Map<String, dynamic> stylesheets, String sectionId, Child child) {
-    SectionStyles sectionStyle = SectionStyles.fromJson(stylesheets[sectionId]);
-    BaseStyles styles = BaseStyles.fromJson(stylesheets[child.id]);
-    double width = styles.width + styles.paddingH * 2;
-    double height = styles.height + styles.paddingV * 2;
-    double marginTop = 0;
-    double marginLeft = 0;
-    List<SectionStyles> sectionStyles = [];
-    if (child.blocks != null && child.blocks.isNotEmpty) {
-      for (Child block in child.blocks) {
-        SectionStyles blockStyle = SectionStyles.fromJson(
-            stylesheets[block.id]);
-        sectionStyles.add(blockStyle);
-      }
-    }
-    sectionStyles.add(sectionStyle);
-    for (int i = 0; i < sectionStyles.length; i++) {
-      SectionStyles sectionStyle = sectionStyles[i];
-      marginLeft += styles.getMarginLeft(sectionStyle);
-      marginTop += styles.getMarginTop(sectionStyle);
-      styles = sectionStyle;
-    }
-    return ChildSize(width: width, height: height, left: marginLeft, top: marginTop);
-  }
-
   Map<String, dynamic> getChildPayload(
       Map<String, dynamic> stylesheets,
       Map<String, List<String>> gridTemplateRows,
@@ -628,52 +596,65 @@ class SizeAssist {
     // Check Boundary
     bool wrongBounds = wrongBoundary(stylesheets, section, sectionHeight, newSize, selectedChild);
     if (wrongBounds) return true;
-
+    List<Child>allElements = [];
+    section.children.forEach((element) {
+      allElements.add(element);
+      element.children.forEach((element) {
+        allElements.add(element);
+        element.children.forEach((element) {
+          allElements.add(element);
+        });
+      });
+    });
     // Check other Children
-    // 1. Check Section Elements
-    for (Child child in section.children) {
+    for (Child child in allElements) {
       if (child.id == updatedChildId) continue;
       if (selectedChild.blocks.isNotEmpty && selectedChild.blocks.last.id == child.id)
         continue;
       BaseStyles styles = BaseStyles.fromJson(stylesheets[child.id]);
       if (styles == null || !styles.active) continue;
-
-      bool isWrong =
-          wrongPositionWithOrderChildren(newSize, styles, [sectionStyle]);
-      if (isWrong) return true;
-    }
-      // 2. Block Elements
-    if (selectedChild.blocks.isNotEmpty) {
-      List<SectionStyles>sectionStyles = [sectionStyle];
-      for (int i = selectedChild.blocks.length - 1; i >= 0; i--) {
-        Child block = selectedChild.blocks[i];
-        SectionStyles blockStyle = SectionStyles.fromJson(stylesheets[block.id]);
-        sectionStyles.insert(0, blockStyle);
-        for (Child child in block.children) {
-          if (child.id == updatedChildId) continue;
-          if (isBlock(child, selectedChild.blocks)) continue;
-          BaseStyles styles = BaseStyles.fromJson(stylesheets[child.id]);
-          if (styles == null || !styles.active) continue;
-          bool isWrong =
-          wrongPositionWithOrderChildren(newSize, styles, sectionStyles);
-          if (isWrong) return true;
-        }
+      ChildSize childSize = absoluteSize(stylesheets, section.id, child);
+      bool isContainer = isContainerOfChild(selectedChild, child.id);
+      if (isContainer && isContainChild(childSize:childSize, containerSize:newSize)) continue;
+      if (isIntersectionTwoChild(newSize, childSize) && (!canBeContainer(child) || !isContainChild(childSize:newSize, containerSize: childSize))) {
+        return true;
       }
     }
+
     // Check BlockView with block's children
     bool wrongBlockPosition = false;
-    if (blockId == updatedChildId) {
-      Child block =
-          section.children.firstWhere((child) => child.id == updatedChildId);
-      SectionStyles blockStyles = SectionStyles.fromJson(stylesheets[block.id]);
-      // Check blockView Moving
-      if (blockStyles.width != newSize.width || blockStyles.height != newSize.height) {
-        wrongBlockPosition = wrongPositionBlockView(
-            stylesheets, block, newSize, sectionStyle, blockStyles);
-      }
-    }
+    // if (blockId == updatedChildId) {
+    //   Child block =
+    //       section.children.firstWhere((child) => child.id == updatedChildId);
+    //   SectionStyles blockStyles = SectionStyles.fromJson(stylesheets[block.id]);
+    //   // Check blockView Moving
+    //   if (blockStyles.width != newSize.width || blockStyles.height != newSize.height) {
+    //     wrongBlockPosition = wrongPositionBlockView(
+    //         stylesheets, block, newSize, sectionStyle, blockStyles);
+    //   }
+    // }
     // print('New Position: Top: ${childSize.newTop}, Left: ${childSize.newLeft}, SectionID: ${section.id}, SelectedSectionId:${screenBloc.state.selectedSectionId}');
     return wrongBlockPosition;
+  }
+
+  bool isContainerOfChild(Child container, String childId) {
+    bool isContainer = false;
+    container.children.forEach((element) {
+      if (element.id == childId) {
+        isContainer = true;
+      }
+      element.children.forEach((element) {
+        if (element.id == childId) {
+          isContainer = true;
+          element.children.forEach((element) {
+            if (element.id == childId) {
+              isContainer = true;
+            }
+          });
+        }
+      });
+    });
+    return isContainer;
   }
 
   bool isBlock(Child child, List<Child>blocks) {
@@ -681,6 +662,11 @@ class SizeAssist {
       if (block.id == child.id)  return true;
     }
     return false;
+  }
+
+  bool canBeContainer(Child child) {
+    List<String>containerTypes = ['block', 'button', 'image', 'shape'];
+    return containerTypes.contains(child.type);
   }
 
   bool wrongBoundary(Map<String, dynamic> stylesheets,
@@ -694,7 +680,6 @@ class SizeAssist {
         (newSize.top + newSize.height > sectionHeight) ||
         (newSize.left + newSize.width > Measurements.width);
     if (wrongBoundary) return true;
-
 
     if (selectedChild.blocks != null && selectedChild.blocks.isNotEmpty) {
       List<SectionStyles> sectionStyles = [];
@@ -728,35 +713,6 @@ class SizeAssist {
       if (!isOverBlockView && wrongBoundary) return true;
     }
     return false;
-  }
-
-  bool wrongPositionWithOrderChildren(
-      ChildSize childSize, BaseStyles styles, List<SectionStyles>sectionStyles) {
-    if (styles == null || !styles.active) return false;
-    double width0 = styles.width + styles.paddingH * 2;
-    double height0 = styles.height + styles.paddingV * 2;
-    double x0 = 0;
-    double y0 = 0;
-    for (int i = 0; i < sectionStyles.length; i++) {
-      SectionStyles sectionStyle = sectionStyles[i];
-      x0 += styles.getMarginLeft(sectionStyle);
-      y0 += styles.getMarginTop(sectionStyle);
-      styles = sectionStyle;
-    }
-    // print('x0:$x0, y0:$y0, width0:$width0, height0:$height0');
-    // print('newSize: ${childSize.toJson()}');
-    double x1 = childSize.left;
-    double y1 = childSize.top;
-    double width1 = childSize.width;
-    double height1 = childSize.height;
-
-    if (x0 + width0 < x1 ||
-        x1 + width1 < x0 ||
-        y0 + height0 < y1 ||
-        y1 + height1 < y0)
-      return false;
-    else
-      return true;
   }
 
   bool wrongPositionBlockView(
@@ -890,4 +846,42 @@ class SizeAssist {
     return -1;
   }
 
+  bool isIntersectionTwoChild(ChildSize size1, ChildSize size2) {
+    return !(size1.left + size1.width < size2.left ||
+        size2.left + size2.width < size1.left ||
+        size1.top + size1.height < size2.top ||
+        size2.top + size2.height < size1.top);
+  }
+
+  bool isContainChild({ChildSize childSize, ChildSize containerSize}) {
+    return (childSize.left >= containerSize.left &&
+        childSize.left + childSize.width <= containerSize.left + containerSize.width &&
+        childSize.top >= containerSize.top &&
+        childSize.top + childSize.height <= containerSize.top + containerSize.height);
+  }
+
+  ChildSize absoluteSize(Map<String, dynamic> stylesheets, String sectionId, Child child) {
+    SectionStyles sectionStyle = SectionStyles.fromJson(stylesheets[sectionId]);
+    BaseStyles styles = BaseStyles.fromJson(stylesheets[child.id]);
+    double width = styles.width + styles.paddingH * 2;
+    double height = styles.height + styles.paddingV * 2;
+    double marginTop = 0;
+    double marginLeft = 0;
+    List<SectionStyles> sectionStyles = [];
+    if (child.blocks != null && child.blocks.isNotEmpty) {
+      for (Child block in child.blocks) {
+        SectionStyles blockStyle = SectionStyles.fromJson(
+            stylesheets[block.id]);
+        sectionStyles.add(blockStyle);
+      }
+    }
+    sectionStyles.add(sectionStyle);
+    for (int i = 0; i < sectionStyles.length; i++) {
+      SectionStyles sectionStyle = sectionStyles[i];
+      marginLeft += styles.getMarginLeft(sectionStyle);
+      marginTop += styles.getMarginTop(sectionStyle);
+      styles = sectionStyle;
+    }
+    return ChildSize(width: width, height: height, left: marginLeft, top: marginTop);
+  }
 }
