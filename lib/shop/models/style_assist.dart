@@ -188,6 +188,7 @@ class SizeAssist {
       Child section, Child selectedChild, ChildSize newSize, String deviceTypeId, String templateId) {
     List<Map<String, dynamic>>effects = [];
     Child block = getBlockOfChild(stylesheets, section, newSize, selectedChild);
+    print('block id: ${block.id} type: ${block.type}');
     if (selectedChild.blocks.isNotEmpty) {
       if (block == null) {
         // 2. Child is over BlockView
@@ -217,7 +218,7 @@ class SizeAssist {
     } else {
       if (block != null) {
         if (block.type == 'block') {
-          print('Child is Over of Block');
+          print('Child is in Block new');
           Map<String, dynamic> payload = {
             'elementId': selectedChild.id,
             'nextParentId': block.id
@@ -233,6 +234,7 @@ class SizeAssist {
           newSize.left -= blockSize.left;
           section = block;
         } else {
+          print('Child is in Block By creating new Block');
           Map<String, dynamic> payload = {
             'id': block.id,
             'type': 'block'
