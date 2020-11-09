@@ -188,7 +188,8 @@ class SizeAssist {
       Child section, Child selectedChild, ChildSize newSize, String deviceTypeId, String templateId) {
     List<Map<String, dynamic>>effects = [];
     Child block = getBlockOfChild(stylesheets, section, newSize, selectedChild);
-    print('block id: ${block.id} type: ${block.type}');
+    if (block != null)
+      print('block id: ${block.id} type: ${block.type}');
     if (selectedChild.blocks.isNotEmpty) {
       if (block == null) {
         // 2. Child is over BlockView
@@ -645,12 +646,14 @@ class SizeAssist {
     bool wrongBounds = wrongBoundary(stylesheets, section, sectionHeight, newSize, selectedChild);
     if (wrongBounds) return true;
     List<Child>allElements = getAllSectionChildren(section);
+    bool dragging = isDragging(stylesheets, selectedChild, newSize);
     // Check other Children
     for (Child child in allElements) {
       if (child.id == updatedChildId) continue;
       if (isActive(stylesheets, child)== false) continue;
       ChildSize childSize = absoluteSize(stylesheets, section.id, child);
       bool isContainer = isContainerOfChild(selectedChild, child.id);
+      if (isContainer && dragging) continue;
       if (isContainer && isContainChild(childSize:childSize, containerSize:newSize)) continue;
       if (isIntersectionTwoChild(newSize, childSize) && (!canBeContainer(child) || !isContainChild(childSize:newSize, containerSize: childSize))) {
         return true;
@@ -679,6 +682,10 @@ class SizeAssist {
     return isContainer;
   }
 
+  bool isDragging(Map<String, dynamic> stylesheets, Child child, ChildSize newSize) {
+    BaseStyles styles = BaseStyles.fromJson(stylesheets[child.id]);
+    return styles.width == newSize.width && styles.height == newSize.height;
+  }
   bool isBlock(Child child, List<Child>blocks) {
     for (Child block in blocks) {
       if (block.id == child.id)  return true;

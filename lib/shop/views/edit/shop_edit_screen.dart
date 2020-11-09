@@ -6,6 +6,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/element/sub_element/shopedit_appbar.dart';
 import 'package:payever/shop/views/edit/shop_edit_templetes_screen.dart';
 import 'package:payever/shop/views/edit/template_detail_screen.dart';
 import 'package:payever/shop/views/edit/template_view.dart';
@@ -52,7 +53,7 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
         bloc: screenBloc,
         builder: (BuildContext context, state) {
           return Scaffold(
-              appBar: CustomAppBar(onTapAdd: ()=> _navigateTemplatesScreen(),),
+              appBar: ShopEditAppbar(onTapAdd: ()=> _navigateTemplatesScreen(),),
               backgroundColor: Colors.grey[800],
               body: SafeArea(bottom: false, child: _body(state)));
         },
@@ -296,88 +297,4 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
 
 
 
-class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
 
-  final Function onClose;
-  final Function onTapAdd;
-
-  CustomAppBar({this.onClose, this.onTapAdd});
-
-  @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      centerTitle: true,
-      elevation: 0,
-      automaticallyImplyLeading: false,
-      title: Container(
-        width: double.infinity,
-        padding: EdgeInsets.symmetric(horizontal: 4),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            InkWell(
-              child: Icon(
-                Icons.arrow_back_ios,
-                color: Colors.white,
-              ),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            InkWell(
-              child: Icon(
-                Icons.refresh,
-                color: Colors.white,
-              ),
-              onTap: null,
-            ),
-            InkWell(
-              child: Icon(
-                Icons.play_arrow,
-                color: Colors.white,
-              ),
-              onTap: null,
-            ),
-            InkWell(
-              child: Icon(
-                Icons.brush,
-                color: Colors.white,
-              ),
-              onTap: null,
-            ),
-            InkWell(
-              child: Icon(
-                Icons.add,
-                color: Colors.white,
-              ),
-              onTap: () => onTapAdd(),
-            ),
-            InkWell(
-                child: Icon(
-                  Icons.person_add,
-                  color: Colors.white,
-                ),
-                onTap: null),
-            InkWell(
-              child: Icon(
-                Icons.more_horiz,
-                color: Colors.white,
-              ),
-              onTap: null,
-            ),
-            InkWell(
-              child: Icon(
-                Icons.remove_red_eye,
-                color: Colors.white,
-              ),
-              onTap: null,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}

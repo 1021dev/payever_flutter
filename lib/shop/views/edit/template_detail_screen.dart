@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payever/blocs/shop/shop_edit/shop_edit_bloc.dart';
-import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/template_view.dart';
 import 'package:payever/blocs/bloc.dart';
+
+import 'element/sub_element/shopedit_appbar.dart';
 
 class TemplateDetailScreen extends StatefulWidget {
   final ShopPage shopPage;
@@ -50,7 +51,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
         bloc: screenBloc,
         builder: (BuildContext context, state) {
           return Scaffold(
-              appBar: Appbar(shopPage.name),
+              appBar: ShopEditAppbar(onTapAdd: ()=> _addObject(),),
               backgroundColor: Colors.grey[800],
               body: SafeArea(
                   bottom: false,
@@ -63,5 +64,9 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
         },
       ),
     );
+  }
+
+  void _addObject() {
+
   }
 }
