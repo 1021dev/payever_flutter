@@ -6,10 +6,11 @@ import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
-import 'package:payever/shop/views/edit/element/sub_element/shopedit_appbar.dart';
 import 'package:payever/shop/views/edit/shop_edit_templetes_screen.dart';
 import 'package:payever/shop/views/edit/template_detail_screen.dart';
 import 'package:payever/shop/views/edit/template_view.dart';
+
+import 'sub_element/shop_edit_appbar.dart';
 
 class ShopEditScreen extends StatefulWidget {
   final ShopScreenBloc shopScreenBloc;

@@ -18,10 +18,10 @@ import 'package:payever/shop/views/edit/element/shop_product_category_view.dart'
 import 'package:payever/shop/views/edit/element/shop_product_detail_view.dart';
 import 'package:payever/shop/views/edit/element/shop_products_view.dart';
 import 'package:payever/shop/views/edit/element/social_icon_view.dart';
-import 'package:payever/shop/views/edit/element/sub_element/background_view.dart';
-import 'package:payever/shop/views/edit/element/sub_element/resizeable_view.dart';
 import 'package:payever/shop/views/edit/element/text_view.dart';
 import 'package:payever/shop/views/edit/element/video_view.dart';
+import 'package:payever/shop/views/edit/sub_element/background_view.dart';
+import 'package:payever/shop/views/edit/sub_element/resizeable_view.dart';
 import 'package:provider/provider.dart';
 import 'button_view.dart';
 import 'image_view.dart';

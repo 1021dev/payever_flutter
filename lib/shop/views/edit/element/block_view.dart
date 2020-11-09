@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/models.dart';
-import 'package:payever/shop/views/edit/element/sub_element/background_view.dart';
+import 'package:payever/shop/views/edit/sub_element/background_view.dart';
 
 class BlockView extends StatefulWidget {
   final Child child;

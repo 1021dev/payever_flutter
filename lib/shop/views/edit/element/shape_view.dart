@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/models.dart';
-import 'package:payever/shop/views/edit/element/sub_element/background_view.dart';
+import 'package:payever/shop/views/edit/sub_element/background_view.dart';
 import 'package:shape_of_view/shape_of_view.dart';
 import 'package:clip_shadow/clip_shadow.dart';
 

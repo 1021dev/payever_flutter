@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/shop/shop_edit/shop_edit_bloc.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/add_object_screen.dart';
 import 'package:payever/shop/views/edit/template_view.dart';
 import 'package:payever/blocs/bloc.dart';
 
-import 'element/sub_element/shopedit_appbar.dart';
+import 'sub_element/shop_edit_appbar.dart';
+
 
 class TemplateDetailScreen extends StatefulWidget {
   final ShopPage shopPage;
@@ -67,6 +70,10 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
   }
 
   void _addObject() {
-
+    Navigator.push(
+        context,
+        PageTransition(
+            child: AddObjectScreen(),
+            type: PageTransitionType.fade));
   }
 }
