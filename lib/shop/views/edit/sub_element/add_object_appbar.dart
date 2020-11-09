@@ -18,19 +18,9 @@ class AddObjectAppbar extends StatelessWidget with PreferredSizeWidget {
       automaticallyImplyLeading: false,
       title: Container(
         width: double.infinity,
-        padding: EdgeInsets.symmetric(horizontal: 4),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            InkWell(
-              child: Icon(
-                Icons.arrow_back_ios,
-                color: Colors.white,
-              ),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
             InkWell(
               child: Icon(
                 Icons.refresh,
@@ -38,6 +28,7 @@ class AddObjectAppbar extends StatelessWidget with PreferredSizeWidget {
               ),
               onTap: null,
             ),
+            SizedBox(width: 30,),
             InkWell(
               child: Icon(
                 Icons.play_arrow,
@@ -45,6 +36,7 @@ class AddObjectAppbar extends StatelessWidget with PreferredSizeWidget {
               ),
               onTap: null,
             ),
+            SizedBox(width: 30,),
             InkWell(
               child: Icon(
                 Icons.brush,
@@ -52,6 +44,7 @@ class AddObjectAppbar extends StatelessWidget with PreferredSizeWidget {
               ),
               onTap: null,
             ),
+            SizedBox(width: 30,),
             InkWell(
               child: Icon(
                 Icons.add,
@@ -59,25 +52,15 @@ class AddObjectAppbar extends StatelessWidget with PreferredSizeWidget {
               ),
               onTap: () => onTapAdd(),
             ),
-            InkWell(
-                child: Icon(
-                  Icons.person_add,
-                  color: Colors.white,
-                ),
-                onTap: null),
+            SizedBox(width: 30,),
             InkWell(
               child: Icon(
-                Icons.more_horiz,
+                Icons.close,
                 color: Colors.white,
               ),
-              onTap: null,
-            ),
-            InkWell(
-              child: Icon(
-                Icons.remove_red_eye,
-                color: Colors.white,
-              ),
-              onTap: null,
+              onTap: () {
+                Navigator.pop(context);
+              },
             ),
           ],
         ),

@@ -891,3 +891,22 @@ class ChildSize {
   factory ChildSize.fromJson(Map<String, dynamic> json) => _$ChildSizeFromJson(json);
   Map<String, dynamic> toJson() => _$ChildSizeToJson(this);
 }
+
+List<String> objectTitles = [
+  'Basic',
+  'Geometry',
+  'Objects',
+  'Animals',
+  'Nature',
+  'Food',
+  'Symbols',
+  'Education',
+  'Arts',
+  'Science',
+  'People',
+  'Places',
+  'Activities',
+  'Transportation',
+  'Work',
+  'Ornaments'
+];
