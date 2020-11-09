@@ -7,6 +7,15 @@ class TemplateSizeStateModel extends ChangeNotifier {
   bool _wrongPosition = false;
   ChildSize _updateChildSize;
   bool _updateChildSizeFailed = false;
+  ShopObject _shopObject;
+
+  ShopObject get shopObject => _shopObject;
+
+  setShopObject(ShopObject value) {
+    _shopObject = value;
+    Future.delayed(Duration(milliseconds: 100))
+        .then((value) => _shopObject = null);
+  }
 
   bool get updateChildSizeFailed => _updateChildSizeFailed;
 

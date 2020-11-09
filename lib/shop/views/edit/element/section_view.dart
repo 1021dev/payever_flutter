@@ -598,7 +598,6 @@ class _SectionViewState extends State<SectionView> {
         initializeRelativeLines();
         initBlockDragging();
       });
-
     }
 
     if (templateSizeState.newChildSize != null) {
@@ -619,6 +618,10 @@ class _SectionViewState extends State<SectionView> {
           initBlockDragging();
         }
       });
+    }
+
+    if (templateSizeState.shopObject != null) {
+      _addNewObject(templateSizeState.shopObject);
     }
   }
 
@@ -737,6 +740,10 @@ class _SectionViewState extends State<SectionView> {
       'type': "stylesheet:update",
     };
     return [effect];
+  }
+
+  _addNewObject(ShopObject shopObject) {
+
   }
 
   List<Map<String, dynamic>> childPayload(ChildSize newSize) {

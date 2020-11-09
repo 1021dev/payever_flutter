@@ -892,6 +892,11 @@ class ChildSize {
   Map<String, dynamic> toJson() => _$ChildSizeToJson(this);
 }
 
+class ShopObject {
+  String name;
+  ShopObject({this.name,});
+}
+
 List<String> objectTitles = [
   'Basic',
   'Geometry',

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/shop/shop_edit/shop_edit_bloc.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/add_object_screen.dart';
 import 'package:payever/shop/views/edit/template_view.dart';
 import 'package:payever/blocs/bloc.dart';
-
+import 'package:uuid/uuid.dart';
 import 'sub_element/shop_edit_appbar.dart';
-
 
 class TemplateDetailScreen extends StatefulWidget {
   final ShopPage shopPage;
@@ -54,7 +54,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
         bloc: screenBloc,
         builder: (BuildContext context, state) {
           return Scaffold(
-              appBar: ShopEditAppbar(onTapAdd: ()=> _addObject(),),
+              appBar: ShopEditAppbar(onTapAdd: ()=> _addObject(state),),
               backgroundColor: Colors.grey[800],
               body: SafeArea(
                   bottom: false,
@@ -69,11 +69,19 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
     );
   }
 
-  void _addObject() {
-    Navigator.push(
+  void _addObject(ShopEditScreenState state) async {
+    if(state.selectedSectionId.isEmpty) {
+      Fluttertoast.showToast(msg: 'Please select Section to add new object.');
+      return;
+    }
+    final result = await Navigator.push(
         context,
         PageTransition(
             child: AddObjectScreen(),
-            type: PageTransitionType.fade));
+            type: PageTransitionType.fade)
+    );
+    print('result: $result');
+    if (result != 0) return;
+
   }
 }

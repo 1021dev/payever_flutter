@@ -1,11 +1,11 @@
 import 'dart:math';
-
-import 'package:clip_shadow/clip_shadow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/models/template_size_state_model.dart';
 import 'package:payever/shop/views/edit/sub_element/add_object_appbar.dart';
+import 'package:provider/provider.dart';
 import 'package:shape_of_view/shape_of_view.dart';
 import '../../../theme.dart';
 
@@ -166,6 +166,11 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
         );
         break;
     }
-    return item;
+    return InkWell(
+        onTap: () {
+          Provider.of<TemplateSizeStateModel>(context, listen: false).setShopObject(ShopObject(name: 'text'));
+          Navigator.pop(context, index);
+        },
+        child: item);
   }
 }

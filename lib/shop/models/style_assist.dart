@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:payever/commons/utils/common_utils.dart';
+import 'package:uuid/uuid.dart';
 import '../../theme.dart';
 import 'models.dart';
 
@@ -286,6 +287,21 @@ class SizeAssist {
     };
     effects.insert(0, effect);
     return effects;
+  }
+
+  Map<String, dynamic> getAddNewObjectPayload(String sectionId, String templateId) {
+    Map<String, dynamic>element = {};
+    element['children'] = [];
+    element['data'] = {'text': 'Text', 'sync': false};
+    element['id'] = Uuid().v4();
+    element['type'] = 'text';
+
+    Map<String, dynamic>payload = {'element': element, 'to': sectionId};
+
+    Map<String, dynamic>effect = {'payload':payload};
+    effect['target'] = 'templates:$templateId';
+    effect['type'] = 'template:append-element';
+    return effect;
   }
 
   bool isChildOverFromBlockView(Map<String, dynamic> stylesheets, String sectionId, Child selectedChild, ChildSize newSize) {
