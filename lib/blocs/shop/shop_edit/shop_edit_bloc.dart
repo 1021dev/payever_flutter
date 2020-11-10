@@ -143,6 +143,25 @@ class ShopEditScreenBloc
     print('update Body: $body');
 
     Map<String, dynamic>stylesheets = state.stylesheets;
+    Map<String, dynamic> templates = state.templates;
+    String actionType = event.effects.first['type'];
+    // Add Text
+    print('actionType: $actionType');
+    if (actionType == 'template:append-element') {
+      Map<String, dynamic>newTextMap = event.effects.first['payload']['element'];
+      String id = newTextMap['id'];
+      Map<String, dynamic>styles = {
+        'fontSize': 15,
+        'fontWeight': "bold",
+        'height': 18,
+        'margin': "0 0 0 0",
+        'width': 32,
+      };
+      stylesheets[state.activeShopPage.stylesheetIds.mobile][id] = styles;
+      List children = templates[state.activeShopPage.templateId]['children'] as List;
+      (children.firstWhere((element) => element['id'] == event.sectionId)['children'] as List).add(newTextMap);
+    }
+
     Map<String, dynamic>payload = event.effects.first['payload'];
     try{
       payload.keys.forEach((key) {
@@ -160,7 +179,7 @@ class ShopEditScreenBloc
 
     // Update Template if Relocated Child
     yield state.copyWith(
-        selectedSectionId: event.sectionId, stylesheets: stylesheets);
+        selectedSectionId: event.sectionId, stylesheets: stylesheets, templates: templates);
 
     api.shopEditAction(token, themeId, body).then((response) {
       if (response is DioError) {
