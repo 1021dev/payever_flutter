@@ -8,7 +8,6 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/shop_edit_templetes_screen.dart';
 import 'package:payever/shop/views/edit/template_detail_screen.dart';
-import 'package:payever/shop/views/edit/template_view.dart';
 
 import 'sub_element/shop_edit_appbar.dart';
 
@@ -221,13 +220,13 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
 
   Widget getPreview(
       ShopPage page, Template template, bool showName, String preview) {
-    if (!showName)
-      return TemplateView(
-          screenBloc: screenBloc,
-          shopPage: page,
-          template: template,
-          scrollable: !showName,
-          onTap:()=> _navigateTemplateDetailScreen(page, template));
+    // if (!showName)
+    //   return TemplateView(
+    //       screenBloc: screenBloc,
+    //       shopPage: page,
+    //       template: template,
+    //       scrollable: !showName,
+    //       onTap:()=> _navigateTemplateDetailScreen(page, template));
 
     return GestureDetector(
       onTap: () => _navigateTemplateDetailScreen(page, template),

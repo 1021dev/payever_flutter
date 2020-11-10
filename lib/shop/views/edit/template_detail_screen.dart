@@ -4,9 +4,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/shop/shop_edit/shop_edit_bloc.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/models/template_size_state_model.dart';
 import 'package:payever/shop/views/edit/add_object_screen.dart';
 import 'package:payever/shop/views/edit/template_view.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'sub_element/shop_edit_appbar.dart';
 
@@ -29,7 +31,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
   final ShopPage shopPage;
   final Template template;
   final ShopEditScreenBloc screenBloc;
-
+  TemplateSizeStateModel templateSizeStateModel = TemplateSizeStateModel();
   _TemplateDetailScreenState(
       {this.shopPage, this.template, this.screenBloc});
 
@@ -47,26 +49,34 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener(
-      listener: (BuildContext context, ShopEditScreenState state) async {},
-      bloc: screenBloc,
-      child: BlocBuilder(
-        bloc: screenBloc,
-        builder: (BuildContext context, state) {
-          return Scaffold(
-              appBar: ShopEditAppbar(onTapAdd: ()=> _addObject(state),),
-              backgroundColor: Colors.grey[800],
-              body: SafeArea(
-                  bottom: false,
-                  child: TemplateView(
-                    screenBloc: screenBloc,
-                    shopPage: shopPage,
-                    template: template,
-                    enableTapSection: true,
-                  )));
-        },
-      ),
-    );
+    return MultiProvider(
+        providers: [
+          Provider.value(value: templateSizeStateModel),
+          ChangeNotifierProvider<TemplateSizeStateModel>(
+              create: (_) => templateSizeStateModel),
+        ],
+        child: BlocListener(
+          listener: (BuildContext context, ShopEditScreenState state) async {},
+          bloc: screenBloc,
+          child: BlocBuilder(
+            bloc: screenBloc,
+            builder: (BuildContext context, state) {
+              return Scaffold(
+                  appBar: ShopEditAppbar(
+                    onTapAdd: () => _addObject(state),
+                  ),
+                  backgroundColor: Colors.grey[800],
+                  body: SafeArea(
+                      bottom: false,
+                      child: TemplateView(
+                        screenBloc: screenBloc,
+                        shopPage: shopPage,
+                        template: template,
+                        enableTapSection: true,
+                      )));
+            },
+          ),
+        ));
   }
 
   void _addObject(ShopEditScreenState state) async {
@@ -77,9 +87,10 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
     final result = await Navigator.push(
         context,
         PageTransition(
-            child: AddObjectScreen(screenBloc: screenBloc,),
+            child: AddObjectScreen(screenBloc: screenBloc, templateSizeStateModel: templateSizeStateModel,),
             type: PageTransitionType.fade)
     );
+    templateSizeStateModel.setShopObject(ShopObject(name: 'text'));
     print('result: $result');
     if (result != 0) return;
 

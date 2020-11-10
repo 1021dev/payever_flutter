@@ -103,9 +103,6 @@ class _SectionViewState extends State<SectionView> {
                   selectChildId = '';
                 });
               }
-              // if (state) {
-              //   _addNewObject(templateSizeState.shopObject);
-              // }
             },
             bloc: screenBloc,
             child: BlocBuilder(
@@ -622,7 +619,10 @@ class _SectionViewState extends State<SectionView> {
         }
       });
     }
-
+    if (templateSizeState.shopObject != null) {
+      print('templateSizeState.shopObject');
+      _addNewObject(templateSizeState.shopObject);
+    }
   }
 
   void initBlockDragging() {

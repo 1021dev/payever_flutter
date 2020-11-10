@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/models/template_size_state_model.dart';
 import 'package:payever/shop/views/edit/element/section_view.dart';
-import 'package:provider/provider.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:provider/provider.dart';
 
 class TemplateView extends StatefulWidget {
   final ShopPage shopPage;
@@ -38,28 +38,16 @@ class _TemplateViewState extends State<TemplateView> {
   _TemplateViewState(
       {this.shopPage, this.template, this.screenBloc});
 
-  TemplateSizeStateModel templateSizeStateModel = TemplateSizeStateModel();
+  TemplateSizeStateModel templateSizeStateModel/* = TemplateSizeStateModel()*/;
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        Provider.value(value: templateSizeStateModel),
-        ChangeNotifierProvider<TemplateSizeStateModel>(
-            create: (_) => templateSizeStateModel),
-      ],
-      child: BlocListener(
-        listener: (BuildContext context, ShopEditScreenState state) async {
-
-        },
-        bloc: screenBloc,
-        child: BlocBuilder(
-          bloc: screenBloc,
-          builder: (BuildContext context, state) {
-            return body(state);
-          },
-        ),
-      ),
+    templateSizeStateModel = Provider.of<TemplateSizeStateModel>(context, listen: true);
+    return BlocBuilder(
+      bloc: screenBloc,
+      builder: (BuildContext context, state) {
+        return body(state);
+      },
     );
   }
 

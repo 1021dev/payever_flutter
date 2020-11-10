@@ -6,14 +6,15 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/shop/shop_edit/shop_edit_state.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/models/template_size_state_model.dart';
 import 'package:payever/shop/views/edit/sub_element/add_object_appbar.dart';
 import 'package:shape_of_view/shape_of_view.dart';
 import '../../../theme.dart';
 
 class AddObjectScreen extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
-
-  const AddObjectScreen({this.screenBloc});
+  final TemplateSizeStateModel templateSizeStateModel;
+  const AddObjectScreen({this.screenBloc, this.templateSizeStateModel});
 
   @override
   _AddObjectScreenState createState() => _AddObjectScreenState(screenBloc);
@@ -186,7 +187,7 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
     }
     return InkWell(
         onTap: () {
-          screenBloc.add(AddNewShopObjectEvent(shopObject: ShopObject(name: 'text')));
+          // screenBloc.add(AddNewShopObjectEvent(shopObject: ShopObject(name: 'text')));
           Navigator.pop(context, index);
         },
         child: item);
