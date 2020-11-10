@@ -139,7 +139,6 @@ class _SectionViewState extends State<SectionView> {
     if (section.data != null) {
       name = Data.fromJson(section.data).name;
     }
-
     List<Widget> widgets = [];
     Widget lastElement;
     widgets.add(sectionBackgroundWidget);

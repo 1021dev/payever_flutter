@@ -39,6 +39,8 @@ class ShopEditScreenBloc
     } else if (event is ActiveShopPageEvent) {
       yield state.copyWith(activeShopPage: event.activeShopPage);
       print('updated shop page: ${state.activeShopPage.id}');
+    } else if(event is FetchPageEvent) {
+      yield* updatePage(event.response);
     }
   }
 
@@ -151,51 +153,58 @@ class ShopEditScreenBloc
         });
         stylesheets[state.activeShopPage.stylesheetIds.mobile][key] = json;
       });
-    } catch(e) {
+    } catch(e) {}
 
-    }
+    String token = GlobalUtils.activeToken.accessToken;
+    String themeId = state.activeTheme.themeId;
 
     // Update Template if Relocated Child
     yield state.copyWith(
         selectedSectionId: event.sectionId, stylesheets: stylesheets);
-    String token = GlobalUtils.activeToken.accessToken;
-    api.shopEditAction(token, state.activeTheme.themeId, body).then((response) {
+
+    api.shopEditAction(token, themeId, body).then((response) {
       if (response is DioError) {
         Fluttertoast.showToast(msg: response.error);
       } else {
-        String token = GlobalUtils.activeToken.accessToken;
-        String themeId = state.activeTheme.themeId;
-
-        api.getShopSnapShot(token, themeId).then((response1) async* {
-          if (response1 is DioError) {
-            Fluttertoast.showToast(msg: response1.error);
-          } else {
-            // Pages
-            List<ShopPage> pages = [];
-            Map<String, dynamic> templates = {};
-            Map<String, dynamic> stylesheets = {};
-            if (response1['pages'] != null && response1['pages'] is Map) {
-              Map<String, dynamic> obj = response1['pages'];
-              obj.keys.forEach((element) {
-                pages.add(ShopPage.fromJson(obj[element]));
-              });
-              print('Pages Length: ${pages.length}');
-            }
-            // Stylesheets Map /{deviceKey : {templateId : Background}}
-            if (response1['stylesheets'] != null &&
-                response1['stylesheets'] is Map) {
-              stylesheets = response1['stylesheets'];
-            }
-            // Templates
-            if (response1['templates'] != null &&
-                response1['templates'] is Map) {
-              templates = response1['templates'];
-            }
-            yield state.copyWith(
-                pages: pages, stylesheets: stylesheets, templates: templates);
-          }
-        });
+        _fetchPage();
       }
     });
   }
+
+  _fetchPage() {
+    String token = GlobalUtils.activeToken.accessToken;
+    String themeId = state.activeTheme.themeId;
+    api.getShopSnapShot(token, themeId).then((response1) {
+      if (response1 is DioError) {
+        Fluttertoast.showToast(msg: response1.error);
+      } else {
+        print('update Pages');
+        add(FetchPageEvent(response: response1));
+      }
+    });
+  }
+
+  Stream<ShopEditScreenState> updatePage(dynamic response) async* {
+    List<ShopPage> pages = [];
+    Map<String, dynamic> templates = {};
+    Map<String, dynamic> stylesheets = {};
+    if (response['pages'] != null && response['pages'] is Map) {
+      Map<String, dynamic> obj = response['pages'];
+      obj.keys.forEach((element) {
+        pages.add(ShopPage.fromJson(obj[element]));
+      });
+      print('Pages Length: ${pages.length}');
+    }
+    // Stylesheets Map /{deviceKey : {templateId : Background}}
+    if (response['stylesheets'] != null && response['stylesheets'] is Map) {
+      stylesheets = response['stylesheets'];
+    }
+    // Templates
+    if (response['templates'] != null && response['templates'] is Map) {
+      templates = response['templates'];
+    }
+    yield state.copyWith(
+        pages: pages, stylesheets: stylesheets, templates: templates);
+  }
+
 }

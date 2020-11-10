@@ -55,6 +55,16 @@ class UpdateSectionEvent extends ShopEditScreenEvent {
   ];
 }
 
+class FetchPageEvent extends ShopEditScreenEvent {
+  final dynamic response;
+  FetchPageEvent({this.response});
+
+  @override
+  List<Object> get props => [
+    this.response,
+  ];
+}
+
 class AddNewShopObjectEvent extends ShopEditScreenEvent {
   final ShopObject shopObject;
   AddNewShopObjectEvent({this.shopObject});
