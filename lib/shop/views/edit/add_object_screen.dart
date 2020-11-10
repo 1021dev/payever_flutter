@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/blocs/bloc.dart';
-import 'package:payever/blocs/shop/shop_edit/shop_edit_state.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/models/template_size_state_model.dart';
@@ -33,19 +32,14 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
     isPortrait = GlobalUtils.isPortrait(context);
     isTablet = GlobalUtils.isTablet(context);
 
-    return BlocListener(
-      listener: (BuildContext context, ShopEditScreenState state) async {
-      },
+    return BlocBuilder(
       bloc: screenBloc,
-      child: BlocBuilder(
-        bloc: screenBloc,
-        builder: (BuildContext context, state) {
-          return Scaffold(
-              appBar: AddObjectAppbar(onTapAdd: () {}),
-              backgroundColor: Colors.grey[800],
-              body: SafeArea(bottom: false, child: _body()));
-        },
-      ),
+      builder: (BuildContext context, state) {
+        return Scaffold(
+            appBar: AddObjectAppbar(onTapAdd: () {}),
+            backgroundColor: Colors.grey[800],
+            body: SafeArea(bottom: false, child: _body()));
+      },
     );
   }
 
@@ -187,7 +181,6 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
     }
     return InkWell(
         onTap: () {
-          // screenBloc.add(AddNewShopObjectEvent(shopObject: ShopObject(name: 'text')));
           Navigator.pop(context, index);
         },
         child: item);

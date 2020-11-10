@@ -289,7 +289,7 @@ class SizeAssist {
     return effects;
   }
 
-  List<Map<String, dynamic>> getAddNewObjectPayload(String sectionId, StyleSheetIds styleSheetIds, String templateId) {
+  List<Map<String, dynamic>> getAddNewObjectPayload(ShopObject shopObject, String sectionId, StyleSheetIds styleSheetIds, String templateId) {
     List<Map<String, dynamic>> effects = [];
     Map<String, dynamic>element = {};
     String elementId = Uuid().v4();

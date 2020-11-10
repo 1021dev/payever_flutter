@@ -93,7 +93,7 @@ class _SectionViewState extends State<SectionView> {
           try{
             progressResize(templateSizeState);
           }catch(e){
-            print('Resizing Error: ${e.toString()}');
+            print('Consumer Error: ${e.toString()}');
           }
 
           return BlocListener(
@@ -582,6 +582,9 @@ class _SectionViewState extends State<SectionView> {
 
   void progressResize(TemplateSizeStateModel templateSizeState) {
     if (screenBloc.state.selectedSectionId != section.id) return;
+    if (templateSizeState.shopObject != null) {
+      _addNewObject(templateSizeState.shopObject);
+    }
     if (screenBloc.state.selectedChild == null) return;
     // Initialize Relative Lines after drag
     if (templateSizeState.updateChildSizeFailed) {
@@ -618,10 +621,6 @@ class _SectionViewState extends State<SectionView> {
           initBlockDragging();
         }
       });
-    }
-    if (templateSizeState.shopObject != null) {
-      print('templateSizeState.shopObject');
-      _addNewObject(templateSizeState.shopObject);
     }
   }
 
@@ -743,7 +742,7 @@ class _SectionViewState extends State<SectionView> {
   }
 
   _addNewObject(ShopObject shopObject) {
-    List<Map<String, dynamic>>effects = sectionStyles.getAddNewObjectPayload(section.id,screenBloc.state.activeShopPage.stylesheetIds, screenBloc.state.activeShopPage.templateId);
+    List<Map<String, dynamic>>effects = sectionStyles.getAddNewObjectPayload(shopObject, section.id,screenBloc.state.activeShopPage.stylesheetIds, screenBloc.state.activeShopPage.templateId);
     print('payload: $effects');
     // screenBloc.add(UpdateSectionEvent(sectionId: section.id, effects: effects));
   }

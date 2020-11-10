@@ -90,9 +90,28 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
             child: AddObjectScreen(screenBloc: screenBloc, templateSizeStateModel: templateSizeStateModel,),
             type: PageTransitionType.fade)
     );
-    templateSizeStateModel.setShopObject(ShopObject(name: 'text'));
-    print('result: $result');
-    if (result != 0) return;
 
+    print('result: $result');
+    ShopObject shopObject;
+    switch(result) {
+      case 0:
+        shopObject = ShopObject(name: 'text');
+        break;
+      case 1:
+        shopObject = ShopObject(name: 'square');
+        break;
+      case 2:
+        shopObject = ShopObject(name: 'rounded-square');
+        break;
+      case 3:
+        shopObject = ShopObject(name: 'circle');
+        break;
+      case 4:
+        shopObject = ShopObject(name: 'Triangle');
+        break;
+    }
+
+    if (shopObject == null) return;
+    templateSizeStateModel.setShopObject(shopObject);
   }
 }
