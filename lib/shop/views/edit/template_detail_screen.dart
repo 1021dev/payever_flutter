@@ -9,7 +9,6 @@ import 'package:payever/shop/views/edit/add_object_screen.dart';
 import 'package:payever/shop/views/edit/template_view.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:provider/provider.dart';
-import 'package:uuid/uuid.dart';
 import 'sub_element/shop_edit_appbar.dart';
 
 class TemplateDetailScreen extends StatefulWidget {
@@ -92,6 +91,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
     );
 
     print('result: $result');
+    if (result == null) return;
     ShopObject shopObject;
     switch(result) {
       case 0:

@@ -308,13 +308,13 @@ class SizeAssist {
     // Display None for Desktop and Tablet
     Map<String, dynamic>payload1 = {elementId: {'display': 'none'}};
     Map<String, dynamic>effect1 = {'payload':payload1};
-    effect['target'] = 'stylesheets:${styleSheetIds.desktop}';
-    effect['type'] = 'stylesheet:update';
+    effect1['target'] = 'stylesheets:${styleSheetIds.desktop}';
+    effect1['type'] = 'stylesheet:update';
     effects.add(effect1);
 
     Map<String, dynamic>effect2 = {'payload':payload1};
-    effect['target'] = 'stylesheets:${styleSheetIds.tablet}';
-    effect['type'] = 'stylesheet:update';
+    effect2['target'] = 'stylesheets:${styleSheetIds.tablet}';
+    effect2['type'] = 'stylesheet:update';
     effects.add(effect2);
 
     // Add Element Style

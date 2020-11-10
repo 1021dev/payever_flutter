@@ -16,7 +16,7 @@ class TemplateSizeStateModel extends ChangeNotifier {
   setShopObject(ShopObject value) {
     _shopObject = value;
     notifyListeners();
-    Future.delayed(Duration(milliseconds: 500))
+    Future.delayed(Duration(milliseconds: 100))
         .then((value) => _shopObject = null);
   }
 

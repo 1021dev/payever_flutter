@@ -142,14 +142,19 @@ class ShopEditScreenBloc
 
     Map<String, dynamic>stylesheets = state.stylesheets;
     Map<String, dynamic>payload = event.effects.first['payload'];
-    payload.keys.forEach((key) {
-      Map<String, dynamic>updatejson =  payload[key];
-      Map<String, dynamic>json = stylesheets[state.activeShopPage.stylesheetIds.mobile][key];
-      updatejson.keys.forEach((element) {
-        json[element] = updatejson[element];
+    try{
+      payload.keys.forEach((key) {
+        Map<String, dynamic>updatejson =  payload[key];
+        Map<String, dynamic>json = stylesheets[state.activeShopPage.stylesheetIds.mobile][key];
+        updatejson.keys.forEach((element) {
+          json[element] = updatejson[element];
+        });
+        stylesheets[state.activeShopPage.stylesheetIds.mobile][key] = json;
       });
-      stylesheets[state.activeShopPage.stylesheetIds.mobile][key] = json;
-    });
+    } catch(e) {
+
+    }
+
     // Update Template if Relocated Child
     yield state.copyWith(
         selectedSectionId: event.sectionId, stylesheets: stylesheets);

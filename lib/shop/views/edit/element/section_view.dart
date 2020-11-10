@@ -584,6 +584,7 @@ class _SectionViewState extends State<SectionView> {
     if (screenBloc.state.selectedSectionId != section.id) return;
     if (templateSizeState.shopObject != null) {
       _addNewObject(templateSizeState.shopObject);
+      Future.microtask(()=>templateSizeState.setShopObject(null));
     }
     if (screenBloc.state.selectedChild == null) return;
     // Initialize Relative Lines after drag
@@ -744,7 +745,7 @@ class _SectionViewState extends State<SectionView> {
   _addNewObject(ShopObject shopObject) {
     List<Map<String, dynamic>>effects = sectionStyles.getAddNewObjectPayload(shopObject, section.id,screenBloc.state.activeShopPage.stylesheetIds, screenBloc.state.activeShopPage.templateId);
     print('payload: $effects');
-    // screenBloc.add(UpdateSectionEvent(sectionId: section.id, effects: effects));
+    screenBloc.add(UpdateSectionEvent(sectionId: section.id, effects: effects));
   }
 
   List<Map<String, dynamic>> childPayload(ChildSize newSize) {
