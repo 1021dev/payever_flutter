@@ -54,3 +54,13 @@ class UpdateSectionEvent extends ShopEditScreenEvent {
     this.effects,
   ];
 }
+
+class AddNewShopObjectEvent extends ShopEditScreenEvent {
+  final ShopObject shopObject;
+  AddNewShopObjectEvent({this.shopObject});
+
+  @override
+  List<Object> get props => [
+    this.shopObject,
+  ];
+}

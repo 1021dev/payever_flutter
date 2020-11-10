@@ -77,7 +77,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
     final result = await Navigator.push(
         context,
         PageTransition(
-            child: AddObjectScreen(),
+            child: AddObjectScreen(screenBloc: screenBloc,),
             type: PageTransitionType.fade)
     );
     print('result: $result');

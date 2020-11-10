@@ -289,11 +289,13 @@ class SizeAssist {
     return effects;
   }
 
-  Map<String, dynamic> getAddNewObjectPayload(String sectionId, String templateId) {
+  List<Map<String, dynamic>> getAddNewObjectPayload(String sectionId, StyleSheetIds styleSheetIds, String templateId) {
+    List<Map<String, dynamic>> effects = [];
     Map<String, dynamic>element = {};
+    String elementId = Uuid().v4();
     element['children'] = [];
     element['data'] = {'text': 'Text', 'sync': false};
-    element['id'] = Uuid().v4();
+    element['id'] = elementId;
     element['type'] = 'text';
 
     Map<String, dynamic>payload = {'element': element, 'to': sectionId};
@@ -301,7 +303,39 @@ class SizeAssist {
     Map<String, dynamic>effect = {'payload':payload};
     effect['target'] = 'templates:$templateId';
     effect['type'] = 'template:append-element';
-    return effect;
+    effects.add(effect);
+
+    // Display None for Desktop and Tablet
+    Map<String, dynamic>payload1 = {elementId: {'display': 'none'}};
+    Map<String, dynamic>effect1 = {'payload':payload1};
+    effect['target'] = 'stylesheets:${styleSheetIds.desktop}';
+    effect['type'] = 'stylesheet:update';
+    effects.add(effect1);
+
+    Map<String, dynamic>effect2 = {'payload':payload1};
+    effect['target'] = 'stylesheets:${styleSheetIds.tablet}';
+    effect['type'] = 'stylesheet:update';
+    effects.add(effect2);
+
+    // Add Element Style
+    Map<String, dynamic>styles = {
+      'fontSize': 15,
+      'fontWeight': "bold",
+      'height': 18,
+      'margin': "0 0 0 0",
+      'width': 32,
+    };
+
+    Map<String, dynamic>payload3 = {elementId: styles};
+    Map<String, dynamic>effect3 = {'payload':payload3};
+    effect3['target'] = 'stylesheets:${styleSheetIds.mobile}';
+    effect3['type'] = 'stylesheet:update';
+    effects.add(effect3);
+
+    // payload: null
+    // target: "contextSchemas:d3cfbd81-a677-40a5-84cb-66e980d55e5f"
+    // type: "context-schema:update"
+    return effects;
   }
 
   bool isChildOverFromBlockView(Map<String, dynamic> stylesheets, String sectionId, Child selectedChild, ChildSize newSize) {

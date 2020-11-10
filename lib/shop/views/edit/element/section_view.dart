@@ -103,6 +103,9 @@ class _SectionViewState extends State<SectionView> {
                   selectChildId = '';
                 });
               }
+              // if (state) {
+              //   _addNewObject(templateSizeState.shopObject);
+              // }
             },
             bloc: screenBloc,
             child: BlocBuilder(
@@ -620,9 +623,6 @@ class _SectionViewState extends State<SectionView> {
       });
     }
 
-    if (templateSizeState.shopObject != null) {
-      _addNewObject(templateSizeState.shopObject);
-    }
   }
 
   void initBlockDragging() {
@@ -743,7 +743,9 @@ class _SectionViewState extends State<SectionView> {
   }
 
   _addNewObject(ShopObject shopObject) {
-
+    List<Map<String, dynamic>>effects = sectionStyles.getAddNewObjectPayload(section.id,screenBloc.state.activeShopPage.stylesheetIds, screenBloc.state.activeShopPage.templateId);
+    print('payload: $effects');
+    // screenBloc.add(UpdateSectionEvent(sectionId: section.id, effects: effects));
   }
 
   List<Map<String, dynamic>> childPayload(ChildSize newSize) {
