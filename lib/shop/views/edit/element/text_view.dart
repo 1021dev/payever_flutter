@@ -27,6 +27,8 @@ class _TextViewState extends State<TextView> {
     if (child.data is Map) {
       Data data = Data.fromJson(child.data);
       if (data.text != null) txt = data.text;
+      if (child.data != null)
+        print('Text Data:' + child.data.toString());
     } else {
       return Container();
     }

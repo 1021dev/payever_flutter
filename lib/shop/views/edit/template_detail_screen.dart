@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -6,6 +7,7 @@ import 'package:payever/blocs/shop/shop_edit/shop_edit_bloc.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/models/template_size_state_model.dart';
 import 'package:payever/shop/views/edit/add_object_screen.dart';
+import 'package:payever/shop/views/edit/sub_element/text_style_view.dart';
 import 'package:payever/shop/views/edit/template_view.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:provider/provider.dart';
@@ -63,6 +65,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
               return Scaffold(
                   appBar: ShopEditAppbar(
                     onTapAdd: () => _addObject(state),
+                    onTapStyle: () => _showStyleDialogView(),
                   ),
                   backgroundColor: Colors.grey[800],
                   body: SafeArea(
@@ -113,5 +116,15 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
 
     if (shopObject == null) return;
     templateSizeStateModel.setShopObject(shopObject);
+  }
+
+  void _showStyleDialogView() {
+    showCupertinoModalPopup(
+        context: context,
+        builder: (builder) {
+          return TextStyleView(
+            screenBloc: screenBloc,
+          );
+        });
   }
 }

@@ -4,8 +4,8 @@ class ShopEditAppbar extends StatelessWidget with PreferredSizeWidget {
 
   final Function onClose;
   final Function onTapAdd;
-
-  ShopEditAppbar({this.onClose, this.onTapAdd});
+  final Function onTapStyle;
+  ShopEditAppbar({this.onClose, this.onTapAdd, this.onTapStyle});
 
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
@@ -50,7 +50,7 @@ class ShopEditAppbar extends StatelessWidget with PreferredSizeWidget {
                 Icons.brush,
                 color: Colors.white,
               ),
-              onTap: null,
+              onTap: ()=> onTapStyle(),
             ),
             InkWell(
               child: Icon(
