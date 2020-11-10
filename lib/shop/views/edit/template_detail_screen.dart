@@ -13,26 +13,26 @@ import 'sub_element/shop_edit_appbar.dart';
 
 class TemplateDetailScreen extends StatefulWidget {
   final ShopPage shopPage;
-  final Template template;
+  final String templateId;
   final ShopEditScreenBloc screenBloc;
 
   const TemplateDetailScreen(
-      {this.shopPage, this.template, this.screenBloc});
+      {this.shopPage, this.templateId, this.screenBloc});
 
   @override
   _TemplateDetailScreenState createState() => _TemplateDetailScreenState(
       shopPage: shopPage,
-      template: template,
+      templateId: templateId,
       screenBloc: screenBloc);
 }
 
 class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
   final ShopPage shopPage;
-  final Template template;
+  final String templateId;
   final ShopEditScreenBloc screenBloc;
   TemplateSizeStateModel templateSizeStateModel = TemplateSizeStateModel();
   _TemplateDetailScreenState(
-      {this.shopPage, this.template, this.screenBloc});
+      {this.shopPage, this.templateId, this.screenBloc});
 
   @override
   void initState() {
@@ -70,7 +70,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
                       child: TemplateView(
                         screenBloc: screenBloc,
                         shopPage: shopPage,
-                        template: template,
+                        templateId: templateId,
                         enableTapSection: true,
                       )));
             },

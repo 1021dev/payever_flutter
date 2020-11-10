@@ -181,9 +181,6 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
   }
 
   Widget _templateItem(ShopEditScreenState state, ShopPage page, {bool showName = true}) {
-    Template template = page != null
-        ? Template.fromJson(state.templates[page.templateId])
-        : null;
     String preview;
     if (state.previews != null && state.previews[page.id] != null) {
       preview = state.previews[page.id]['previewUrl'];
@@ -197,8 +194,8 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
       child: Column(
         children: [
           Expanded(
-              child: (template != null)
-                  ? getPreview(page, template, showName, preview)
+              child: (page != null)
+                  ? getPreview(page, showName, preview)
                   : Container(
                 color: Colors.white,
               )),
@@ -219,7 +216,7 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
   }
 
   Widget getPreview(
-      ShopPage page, Template template, bool showName, String preview) {
+      ShopPage page, bool showName, String preview) {
     // if (!showName)
     //   return TemplateView(
     //       screenBloc: screenBloc,
@@ -229,7 +226,7 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
     //       onTap:()=> _navigateTemplateDetailScreen(page, template));
 
     return GestureDetector(
-      onTap: () => _navigateTemplateDetailScreen(page, template),
+      onTap: () => _navigateTemplateDetailScreen(page),
       child: (preview == null || preview.isEmpty)
           ? Container(
               color: Colors.white,
@@ -274,14 +271,14 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
     );
   }
 
-  _navigateTemplateDetailScreen(ShopPage page, Template template) {
+  _navigateTemplateDetailScreen(ShopPage page) {
      Navigator.push(
           context,
           PageTransition(
               child: TemplateDetailScreen(
                 screenBloc: screenBloc,
                 shopPage: page,
-                template: template,
+                templateId: page.templateId,
               ),
               type: PageTransitionType.fade));
   }

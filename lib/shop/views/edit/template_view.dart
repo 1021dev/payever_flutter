@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 class TemplateView extends StatefulWidget {
   final ShopPage shopPage;
-  final Template template;
+  final String templateId;
   final Function onTap;
   final bool scrollable;
   final bool enableTapSection;
@@ -16,7 +16,7 @@ class TemplateView extends StatefulWidget {
 
   const TemplateView(
       {this.shopPage,
-      this.template,
+      this.templateId,
       this.onTap,
       this.enableTapSection = false,
       this.scrollable = true,
@@ -25,18 +25,18 @@ class TemplateView extends StatefulWidget {
   @override
   _TemplateViewState createState() => _TemplateViewState(
       shopPage: shopPage,
-      template: template,
+      templateId: templateId,
       screenBloc: screenBloc);
 }
 
 class _TemplateViewState extends State<TemplateView> {
   final ShopPage shopPage;
-  final Template template;
+  final String templateId;
   final ShopEditScreenBloc screenBloc;
   String selectSectionId = '';
 
   _TemplateViewState(
-      {this.shopPage, this.template, this.screenBloc});
+      {this.shopPage, this.templateId, this.screenBloc});
 
   TemplateSizeStateModel templateSizeStateModel/* = TemplateSizeStateModel()*/;
 
@@ -52,6 +52,7 @@ class _TemplateViewState extends State<TemplateView> {
   }
 
   Widget body(ShopEditScreenState state) {
+    Template template =  Template.fromJson(state.templates[templateId]);
     // templateSizeStateModel.setStylesheets(state.stylesheets);
     List sections = [];
     template.children.forEach((child) {
@@ -66,7 +67,8 @@ class _TemplateViewState extends State<TemplateView> {
           screenBloc: screenBloc,
           deviceTypeId: shopPage.stylesheetIds.mobile,
           enableTapChild: widget.enableTapSection,
-          section: child,
+          templateId: templateId,
+          sectionId: child.id,
           isSelected: selectSectionId == child.id,
           onTapChild: () {
             setState(() {

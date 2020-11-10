@@ -28,7 +28,8 @@ import 'image_view.dart';
 
 class SectionView extends StatefulWidget {
   final String deviceTypeId;
-  final Child section;
+  final String templateId;
+  final String sectionId;
   final bool isSelected;
   final Function onTapChild;
   final ShopEditScreenBloc screenBloc;
@@ -36,7 +37,8 @@ class SectionView extends StatefulWidget {
 
   const SectionView(
       {this.deviceTypeId,
-        this.section,
+        this.templateId,
+        this.sectionId,
         this.screenBloc,
         this.isSelected = false,
         this.enableTapChild = true,
@@ -44,15 +46,16 @@ class SectionView extends StatefulWidget {
 
   @override
   _SectionViewState createState() => _SectionViewState(
-      deviceTypeId: deviceTypeId, section: section, screenBloc: screenBloc);
+      deviceTypeId: deviceTypeId, sectionId: sectionId, screenBloc: screenBloc);
 }
 
 class _SectionViewState extends State<SectionView> {
   final String deviceTypeId;
-  final Child section;
+  final String sectionId;
   final ShopEditScreenBloc screenBloc;
   final double limitSectionHeightChange = 20;
-
+  Template template;
+  Child section;
   ApiService api = ApiService();
   SectionStyles sectionStyles;
 
@@ -71,8 +74,8 @@ class _SectionViewState extends State<SectionView> {
   bool blockDragging = false;
   ChildSize blockDraggingSize;
 
-  _SectionViewState({this.deviceTypeId, this.section, this.screenBloc}) {
-    sectionStyles = getSectionStyles(section.id);
+  _SectionViewState({this.deviceTypeId, this.sectionId, this.screenBloc}) {
+    sectionStyles = getSectionStyles(sectionId);
     widgetHeight = sectionStyles.height;
   }
 
@@ -98,7 +101,7 @@ class _SectionViewState extends State<SectionView> {
 
           return BlocListener(
             listener: (BuildContext context, ShopEditScreenState state) async {
-              if (state.selectedSectionId == section.id && state.selectedChild == null) {
+              if (state.selectedSectionId == sectionId && state.selectedChild == null) {
                 setState(() {
                   selectChildId = '';
                 });
@@ -107,7 +110,7 @@ class _SectionViewState extends State<SectionView> {
             bloc: screenBloc,
             child: BlocBuilder(
               condition: (ShopEditScreenState state1, ShopEditScreenState state2) {
-                if (state2.selectedSectionId != section.id) {
+                if (state2.selectedSectionId != sectionId) {
                   setState(() {
                     selectChildId = '';
                   });
@@ -125,7 +128,10 @@ class _SectionViewState extends State<SectionView> {
   }
 
   Widget body(ShopEditScreenState state) {
-    sectionStyles = SectionStyles.fromJson(state.stylesheets[deviceTypeId][section.id]);
+    template =  Template.fromJson(state.templates[widget.templateId]);
+    section = template.children.firstWhere((element) => element.id == sectionId);
+    sectionStyles = SectionStyles.fromJson(state.stylesheets[deviceTypeId][sectionId]);
+
     if (sectionStyles == null) {
       return Container();
     }
