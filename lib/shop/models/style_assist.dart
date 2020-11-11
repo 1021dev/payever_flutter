@@ -338,6 +338,16 @@ class SizeAssist {
     return effects;
   }
 
+  List<Map<String, dynamic>> getUpdateTextStylePayload(String selectedChildId, Map<String, dynamic>styles, StyleSheetIds styleSheetIds) {
+    List<Map<String, dynamic>> effects = [];
+    Map<String, dynamic>payload = {selectedChildId: styles};
+    Map<String, dynamic>effect = {'payload':payload};
+    effect['target'] = 'stylesheets:${styleSheetIds.mobile}';
+    effect['type'] = 'stylesheet:update';
+    effects.add(effect);
+    return effects;
+  }
+
   bool isChildOverFromBlockView(Map<String, dynamic> stylesheets, String sectionId, Child selectedChild, ChildSize newSize) {
     for (Child block in selectedChild.blocks) {
       ChildSize blockSize = absoluteSize(stylesheets, sectionId, block);

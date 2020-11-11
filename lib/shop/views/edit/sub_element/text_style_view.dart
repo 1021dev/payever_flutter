@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/shop/shop_edit/shop_edit_bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
@@ -25,18 +27,28 @@ class _TextStyleViewState extends State<TextStyleView> {
   bool borderExpanded = false;
   bool shadowExpanded = false;
   double _currentSliderValue = 1;
-  TextStyles styles;
   TextStyleType styleType = TextStyleType.Style;
 
-
+  String selectedId;
+  TextStyles styles;
 
   @override
   Widget build(BuildContext context) {
     isPortrait = GlobalUtils.isPortrait(context);
     isTablet = GlobalUtils.isTablet(context);
+    return BlocBuilder(
+      bloc: screenBloc,
+      builder: (BuildContext context, state) {
+        return body(state);
+      },
+    );
+  }
 
+  Widget body(ShopEditScreenState state) {
+    if (state.selectedChild == null)
+      return Container();
 
-    String selectedId = screenBloc.state.selectedChild.id;
+    selectedId = state.selectedChild.id;
     styles = TextStyles.fromJson(widget.stylesheets[selectedId]);
     bgColor = colorConvert(styles.backgroundColor, emptyColor: true);
 
@@ -121,7 +133,7 @@ class _TextStyleViewState extends State<TextStyleView> {
     );
   }
 
-  get _fill {
+  Widget get _fill {
     return Container(
       height: 60,
       child: Row(
@@ -150,8 +162,8 @@ class _TextStyleViewState extends State<TextStyleView> {
                         setState(() {
                         });
                         var hex = '${bgColor.value.toRadixString(16)}';
-                        // callback('#${hex.substring(2)}');
-                        // settingBloc.add(UpdateCheckoutSettingsEvent());
+                        String newBgColor = '#${hex.substring(2)}';
+                        _updateStyle();
                       },
                     ),
                   ],
@@ -352,6 +364,7 @@ class _TextStyleViewState extends State<TextStyleView> {
         onTap: () {
           setState(() {
             bgColor = textBgColors[index];
+            _updateStyle();
           });
         },
         child: item);
@@ -422,5 +435,16 @@ class _TextStyleViewState extends State<TextStyleView> {
         child: item);
   }
 
+  void _updateStyle() {
+    var hex = '${bgColor.value.toRadixString(16)}';
+    String newBgColor = '#${hex.substring(2)}';
+    print('newBgColor: $newBgColor');
+    Map<String, dynamic> sheets = widget.stylesheets[selectedId];
+    sheets['backgroundColor'] = newBgColor;
+    List<Map<String, dynamic>>effects = styles.getUpdateTextStylePayload(selectedId, sheets,screenBloc.state.activeShopPage.stylesheetIds);
+    print('payload: $effects');
+    screenBloc.add(UpdateSectionEvent(sectionId: screenBloc.state.selectedSectionId, effects: effects));
+    Navigator.pop(context);
+  }
 
 }
