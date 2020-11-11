@@ -915,3 +915,16 @@ List<String> objectTitles = [
   'Work',
   'Ornaments'
 ];
+
+List<Color>textBgColors = [Color.fromRGBO(0, 168, 255, 1),
+  Color.fromRGBO(96, 234, 50, 1),
+  Color.fromRGBO(255, 22, 1, 1),
+  Color.fromRGBO(255, 200, 0, 1),
+  Color.fromRGBO(255, 91, 175, 1),
+  Color.fromRGBO(0, 0, 0, 1)];
+
+enum TextStyleType {
+  Style,
+  Text,
+  Arrange
+}

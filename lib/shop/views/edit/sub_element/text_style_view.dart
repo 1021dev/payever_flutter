@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:payever/blocs/shop/shop_edit/shop_edit_bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/shop/models/models.dart';
 
 class TextStyleView extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
@@ -18,65 +20,70 @@ class _TextStyleViewState extends State<TextStyleView> {
   Color bgColor = Colors.transparent;
   bool borderExpanded = false;
   bool shadowExpanded = false;
+  double _currentSliderValue = 1;
+  TextStyleType styleType = TextStyleType.Style;
+
   @override
   Widget build(BuildContext context) {
     isPortrait = GlobalUtils.isPortrait(context);
     isTablet = GlobalUtils.isTablet(context);
-    List<Widget>textStyleWidgets = [];
-    textStyleWidgets.add(_gridViewBody);
-    textStyleWidgets.add(_fill);
-    textStyleWidgets.add(_border);
-    textStyleWidgets.add(_shadow);
+    List<Widget>textStyleWidgets = [_gridViewBody, _fill, _border, _shadow, _opacity];
+
     return Container(
       height: 350,
-      color: Colors.grey[800],
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: Container(
-          padding: EdgeInsets.only(left: 16, right: 16, top: 18, bottom: 34),
-          child: Column(
-            children: [
-              _segmentedControl,
-              Expanded(
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: textStyleWidgets.length,
-                  itemBuilder: (context, index) {
-                    return textStyleWidgets[index];
-                  },
-                  separatorBuilder: (context, index) {
-                    return Divider(
-                      height: 0,
-                      thickness: 0.5,
-                      color: Colors.grey,
-                    );
-                  },
+        body: SafeArea(
+          bottom: false,
+          child: Container(
+            color: Colors.grey[800],
+            padding: EdgeInsets.only(left: 16, right: 16, top: 18, bottom: 34),
+            child: Column(
+              children: [
+                _segmentedControl,
+                Expanded(
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: textStyleWidgets.length,
+                    itemBuilder: (context, index) {
+                      return textStyleWidgets[index];
+                    },
+                    separatorBuilder: (context, index) {
+                      return Divider(
+                        height: 0,
+                        thickness: 0.5,
+                        color: Colors.grey,
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  get _segmentedControl {
-    return Container(
-      alignment: Alignment.center,
-      child: CupertinoSegmentedControl(
-        children: const <int, Widget>{
-          0: Padding(
-              padding: EdgeInsets.all(8.0), child: Text('Style')),
-          1: Padding(
-              padding: EdgeInsets.all(8.0), child: Text('Text')),
-          2: Padding(
-              padding: EdgeInsets.all(8.0), child: Text('Arrange'))
-        },
-        onValueChanged: (value) {
-          setState(() {});
-        },
-      ),
+  Widget get _segmentedControl {
+    return CupertinoSegmentedControl<TextStyleType>(
+      selectedColor: Colors.grey[400],
+      unselectedColor: Colors.grey[900],
+      children: <TextStyleType, Widget>{
+        TextStyleType.Style: Padding(
+            padding: EdgeInsets.all(8.0), child: Text('Style', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),)),
+        TextStyleType.Text: Padding(
+            padding: EdgeInsets.all(8.0), child: Text('Text', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),)),
+        TextStyleType.Arrange: Padding(
+            padding: EdgeInsets.all(8.0), child: Text('Arrange', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),)),
+      },
+      onValueChanged: (TextStyleType value) {
+        setState(() {
+          styleType = value;
+        });
+      },
+      groupValue: styleType,
     );
   }
 
@@ -108,17 +115,46 @@ class _TextStyleViewState extends State<TextStyleView> {
        children: [
          Text('Fill', style: TextStyle(color: Colors.white, fontSize: 18),),
          Spacer(),
-         Container(
-           width: 100,
-           height: 40,
-           decoration: BoxDecoration(
-             border: Border.all(color: Colors.grey, width: 1),
-             color: bgColor,
-             borderRadius: BorderRadius.circular(8),
+         GestureDetector(
+            onTap: () {
+              showDialog(
+                context: context,
+                child: AlertDialog(
+                  title: const Text('Pick a color!'),
+                  content: SingleChildScrollView(
+                    child: ColorPicker(
+                      pickerColor: bgColor,
+                      onColorChanged: changeColor,
+                      showLabel: true,
+                      pickerAreaHeightPercent: 0.8,
+                    ),
+                  ),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: const Text('Got it'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        setState(() {
+                        });
+                        var hex = '${bgColor.value.toRadixString(16)}';
+                        // callback('#${hex.substring(2)}');
+                        // settingBloc.add(UpdateCheckoutSettingsEvent());
+                      },
+                    ),
+                  ],
+                ),
+              );
+            },
+            child: Container(
+             width: 100,
+             height: 40,
+             decoration: BoxDecoration(
+               border: Border.all(color: Colors.grey, width: 1),
+               color: bgColor,
+               borderRadius: BorderRadius.circular(8),
+             ),
            ),
          ),
-         SizedBox(width: 15),
-         Icon(Icons.arrow_forward_ios),
        ],
       ),
     );
@@ -259,33 +295,41 @@ class _TextStyleViewState extends State<TextStyleView> {
     );
   }
 
-  Widget _textBackgroundGridItem(int index) {
-    Color color;
-    switch (index) {
-      case 0:
-        color = Color.fromRGBO(0, 168, 255, 1);
-        break;
-      case 1:
-        color = Color.fromRGBO(96, 234, 50, 1);
-        break;
-      case 2:
-        color = Color.fromRGBO(255, 22, 1, 1);
-        break;
-      case 3:
-        color = Color.fromRGBO(255, 200, 0, 1);
-        break;
-      case 4:
-        color = Color.fromRGBO(255, 91, 175, 1);
-        break;
-      case 5:
-        color = Color.fromRGBO(0, 0, 0, 1);
-        break;
-    }
+  get _opacity {
+    return Container(
+      height: 60,
+      child: Row(
+        children: [
+          Text('Opacity', style: TextStyle(color: Colors.white, fontSize: 18),),
+          SizedBox(width: 10,),
+          Expanded(
+            child: Slider(
+              value: _currentSliderValue,
+              min: 0,
+              max: 1,
+              divisions: 10,
+              label: _currentSliderValue.toString(),
+              onChanged: (double value) {
+                setState(() {
+                  _currentSliderValue = value;
+                });
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
+  void changeColor(Color color) {
+    bgColor = color;
+  }
+
+  Widget _textBackgroundGridItem(int index) {
     Widget item = Container(
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: color,
+        color: textBgColors[index],
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text('Text', style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),),
@@ -293,7 +337,9 @@ class _TextStyleViewState extends State<TextStyleView> {
 
     return InkWell(
         onTap: () {
-          Navigator.pop(context, index);
+          setState(() {
+            bgColor = textBgColors[index];
+          });
         },
         child: item);
   }
