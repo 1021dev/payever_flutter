@@ -119,6 +119,10 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
   }
 
   void _showStyleDialogView(ShopEditScreenState state) {
+    if (state.selectedChild == null) {
+      Fluttertoast.showToast(msg: 'Please select an element!');
+      return;
+    }
     showCupertinoModalPopup(
         context: context,
         builder: (builder) {

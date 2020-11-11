@@ -15,7 +15,6 @@ class ShopEditScreenState {
   final Child selectedBlock;
   final Child selectedChild;
   final ShopPage activeShopPage;
-  final ShopObject shopObject;
 
   ShopEditScreenState({
     this.activeShopPage,
@@ -32,7 +31,6 @@ class ShopEditScreenState {
     this.selectedBlockId,
     this.selectedBlock,
     this.selectedChild,
-    this.shopObject,
   });
 
   List<Object> get props => [
@@ -50,7 +48,6 @@ class ShopEditScreenState {
     this.selectedBlock,
     this.selectedChild,
     this.selectedBlockId,
-    this.shopObject,
   ];
 
   ShopEditScreenState copyWith({
@@ -68,7 +65,6 @@ class ShopEditScreenState {
     Child selectedChild,
     ShopPage activeShopPage,
     String selectedBlockId,
-    ShopObject shopObject,
   }) {
     return ShopEditScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -83,9 +79,32 @@ class ShopEditScreenState {
       activeShopPage: activeShopPage ?? this.activeShopPage,
       selectedSectionId: selectedSectionId ?? this.selectedSectionId,
       selectedBlockId: selectedBlockId ?? this.selectedBlockId,
+      selectedBlock: selectedBlock ?? this.selectedBlock,
+      selectedChild: selectedChild ?? this.selectedChild,
+    );
+  }
+
+  ShopEditScreenState initSelectedChild({
+    String selectedSectionId,
+    Child selectedBlock,
+    Child selectedChild,
+    String selectedBlockId,
+  }) {
+    return ShopEditScreenState(
+      isLoading: this.isLoading,
+      isUpdating: this.isUpdating,
+      activeShop: this.activeShop,
+      activeTheme: this.activeTheme,
+      previews: this.previews,
+      pages: this.pages,
+      stylesheets: this.stylesheets,
+      templates: this.templates,
+      actions: this.actions,
+      activeShopPage: this.activeShopPage,
+      selectedSectionId: selectedSectionId ?? this.selectedSectionId,
+      selectedBlockId: selectedBlockId ?? this.selectedBlockId,
       selectedBlock: selectedBlock,
       selectedChild: selectedChild,
-      shopObject: shopObject,
     );
   }
 }

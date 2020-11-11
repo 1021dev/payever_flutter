@@ -444,7 +444,6 @@ class _TextStyleViewState extends State<TextStyleView> {
     List<Map<String, dynamic>>effects = styles.getUpdateTextStylePayload(selectedId, sheets,screenBloc.state.activeShopPage.stylesheetIds);
     print('payload: $effects');
     screenBloc.add(UpdateSectionEvent(sectionId: screenBloc.state.selectedSectionId, effects: effects));
-    Navigator.pop(context);
   }
 
 }

@@ -29,11 +29,20 @@ class ShopEditScreenBloc
           activeTheme: shopScreenBloc.state.activeTheme);
       yield* fetchSnapShot();
     } else if (event is SelectSectionEvent) {
-      yield state.copyWith(
-          selectedSectionId: event.sectionId,
-          selectedBlockId: event.selectedBlockId,
-          selectedBlock: event.selectedBlock,
-          selectedChild: event.selectedChild);
+      if (event.selectedChild == null && event.selectedBlock == null) {
+        yield state.initSelectedChild(
+            selectedSectionId: event.sectionId,
+            selectedBlockId: event.selectedBlockId,
+            selectedBlock: event.selectedBlock,
+            selectedChild: event.selectedChild);
+      } else {
+        yield state.copyWith(
+            selectedSectionId: event.sectionId,
+            selectedBlockId: event.selectedBlockId,
+            selectedBlock: event.selectedBlock,
+            selectedChild: event.selectedChild);
+      }
+
     } else if (event is UpdateSectionEvent) {
       yield* updateSection(event);
     } else if (event is ActiveShopPageEvent) {
