@@ -230,7 +230,7 @@ String iconString() {
 
 Color colorConvert(String color, {bool emptyColor = false}) {
   if (color == null)
-    return Colors.white;
+    return emptyColor ? Colors.transparent :Colors.white;
 
   if (color == 'white' || color == '#fff')
     return Colors.white;

@@ -4,33 +4,46 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:payever/blocs/shop/shop_edit/shop_edit_bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/theme.dart';
 
 class TextStyleView extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
-
-  const TextStyleView({this.screenBloc});
+  final Map<String, dynamic>stylesheets;
+  const TextStyleView({this.screenBloc, this.stylesheets});
 
   @override
-  _TextStyleViewState createState() => _TextStyleViewState();
+  _TextStyleViewState createState() => _TextStyleViewState(screenBloc);
 }
 
 class _TextStyleViewState extends State<TextStyleView> {
+  final ShopEditScreenBloc screenBloc;
+  _TextStyleViewState(this.screenBloc);
+
   bool isPortrait;
   bool isTablet;
-  Color bgColor = Colors.transparent;
+  Color bgColor;
   bool borderExpanded = false;
   bool shadowExpanded = false;
   double _currentSliderValue = 1;
+  TextStyles styles;
   TextStyleType styleType = TextStyleType.Style;
+
+
 
   @override
   Widget build(BuildContext context) {
     isPortrait = GlobalUtils.isPortrait(context);
     isTablet = GlobalUtils.isTablet(context);
+
+
+    String selectedId = screenBloc.state.selectedChild.id;
+    styles = TextStyles.fromJson(widget.stylesheets[selectedId]);
+    bgColor = colorConvert(styles.backgroundColor, emptyColor: true);
+
     List<Widget>textStyleWidgets = [_gridViewBody, _fill, _border, _shadow, _opacity];
 
     return Container(
-      height: 350,
+      height: 400,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: SafeArea(

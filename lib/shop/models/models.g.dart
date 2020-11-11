@@ -649,7 +649,6 @@ TextStyles _$TextStylesFromJson(Map<String, dynamic> json) {
   return TextStyles()
     ..display = json['display'] as String ?? 'flex'
     ..background = json['background'] as String ?? '#ffffff'
-    ..backgroundColor = json['backgroundColor'] as String ?? '#ffffff'
     ..backgroundImage = json['backgroundImage'] as String ?? ''
     ..backgroundSize = json['backgroundSize'] as String
     ..backgroundPosition = json['backgroundPosition'] as String ?? 'center'
@@ -701,14 +700,14 @@ TextStyles _$TextStylesFromJson(Map<String, dynamic> json) {
     ..priceFontFamily = json['priceFontFamily'] as String ?? 'Roboto'
     ..priceFontWeight0 = json['priceFontWeight'] as String ?? 'normal'
     ..priceFontStyle0 = json['priceFontStyle'] as String ?? 'normal'
-    ..priceTextDecoration = json['priceTextDecoration'];
+    ..priceTextDecoration = json['priceTextDecoration']
+    ..backgroundColor = json['backgroundColor'] as String;
 }
 
 Map<String, dynamic> _$TextStylesToJson(TextStyles instance) =>
     <String, dynamic>{
       'display': instance.display,
       'background': instance.background,
-      'backgroundColor': instance.backgroundColor,
       'backgroundImage': instance.backgroundImage,
       'backgroundSize': instance.backgroundSize,
       'backgroundPosition': instance.backgroundPosition,
@@ -760,6 +759,7 @@ Map<String, dynamic> _$TextStylesToJson(TextStyles instance) =>
       'priceFontWeight': instance.priceFontWeight0,
       'priceFontStyle': instance.priceFontStyle0,
       'priceTextDecoration': instance.priceTextDecoration,
+      'backgroundColor': instance.backgroundColor,
     };
 
 ButtonStyles _$ButtonStylesFromJson(Map<String, dynamic> json) {

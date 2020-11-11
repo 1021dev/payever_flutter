@@ -578,6 +578,9 @@ class SectionStyles extends BaseStyles {
 class TextStyles extends BaseStyles {
   TextStyles();
 
+  @JsonKey(name: 'backgroundColor')
+  String backgroundColor;
+
   get textHeight {
       return (minHeight > height) ? minHeight : height;
   }

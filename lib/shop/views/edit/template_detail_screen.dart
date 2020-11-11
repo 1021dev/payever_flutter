@@ -65,7 +65,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
               return Scaffold(
                   appBar: ShopEditAppbar(
                     onTapAdd: () => _addObject(state),
-                    onTapStyle: () => _showStyleDialogView(),
+                    onTapStyle: () => _showStyleDialogView(state),
                   ),
                   backgroundColor: Colors.grey[800],
                   body: SafeArea(
@@ -118,12 +118,13 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
     templateSizeStateModel.setShopObject(shopObject);
   }
 
-  void _showStyleDialogView() {
+  void _showStyleDialogView(ShopEditScreenState state) {
     showCupertinoModalPopup(
         context: context,
         builder: (builder) {
           return TextStyleView(
             screenBloc: screenBloc,
+            stylesheets: state.stylesheets[state.activeShopPage.stylesheetIds.mobile],
           );
         });
   }
