@@ -10,7 +10,8 @@ import 'package:payever/theme.dart';
 
 class TextStyleView extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
-  final Map<String, dynamic>stylesheets;
+  final Map<String, dynamic> stylesheets;
+
   const TextStyleView({this.screenBloc, this.stylesheets});
 
   @override
@@ -19,6 +20,7 @@ class TextStyleView extends StatefulWidget {
 
 class _TextStyleViewState extends State<TextStyleView> {
   final ShopEditScreenBloc screenBloc;
+
   _TextStyleViewState(this.screenBloc);
 
   bool isPortrait;
@@ -45,14 +47,11 @@ class _TextStyleViewState extends State<TextStyleView> {
   }
 
   Widget body(ShopEditScreenState state) {
-    if (state.selectedChild == null)
-      return Container();
+    if (state.selectedChild == null) return Container();
 
     selectedId = state.selectedChild.id;
     styles = TextStyles.fromJson(widget.stylesheets[selectedId]);
     bgColor = colorConvert(styles.backgroundColor, emptyColor: true);
-
-    List<Widget>textStyleWidgets = [_gridViewBody, _fill, _border, _shadow, _opacity];
 
     return Container(
       height: 400,
@@ -61,28 +60,12 @@ class _TextStyleViewState extends State<TextStyleView> {
         body: SafeArea(
           bottom: false,
           child: Container(
-            color: Colors.grey[800],
+            color: Colors.grey[900],
             padding: EdgeInsets.only(left: 16, right: 16, top: 18, bottom: 34),
             child: Column(
               children: [
                 _segmentedControl,
-                Expanded(
-                  child: ListView.separated(
-                    shrinkWrap: true,
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: textStyleWidgets.length,
-                    itemBuilder: (context, index) {
-                      return textStyleWidgets[index];
-                    },
-                    separatorBuilder: (context, index) {
-                      return Divider(
-                        height: 0,
-                        thickness: 0.5,
-                        color: Colors.grey,
-                      );
-                    },
-                  ),
-                ),
+                Expanded(child: mainBody),
               ],
             ),
           ),
@@ -97,11 +80,23 @@ class _TextStyleViewState extends State<TextStyleView> {
       unselectedColor: Colors.grey[900],
       children: <TextStyleType, Widget>{
         TextStyleType.Style: Padding(
-            padding: EdgeInsets.all(8.0), child: Text('Style', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),)),
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              'Style',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            )),
         TextStyleType.Text: Padding(
-            padding: EdgeInsets.all(8.0), child: Text('Text', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),)),
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              'Text',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            )),
         TextStyleType.Arrange: Padding(
-            padding: EdgeInsets.all(8.0), child: Text('Arrange', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),)),
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              'Arrange',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            )),
       },
       onValueChanged: (TextStyleType value) {
         setState(() {
@@ -109,6 +104,47 @@ class _TextStyleViewState extends State<TextStyleView> {
         });
       },
       groupValue: styleType,
+    );
+  }
+
+  Widget get mainBody {
+    switch (styleType) {
+      case TextStyleType.Style:
+        return _styleBody;
+      case TextStyleType.Text:
+        return _textBody;
+        break;
+      case TextStyleType.Arrange:
+        return _arrangeBody;
+        break;
+      default:
+        return _styleBody;
+    }
+  }
+
+  // Style Body
+  Widget get _styleBody {
+    List<Widget> textStyleWidgets = [
+      _gridViewBody,
+      _fill,
+      _border,
+      _shadow,
+      _opacity
+    ];
+    return ListView.separated(
+      shrinkWrap: true,
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      itemCount: textStyleWidgets.length,
+      itemBuilder: (context, index) {
+        return textStyleWidgets[index];
+      },
+      separatorBuilder: (context, index) {
+        return Divider(
+          height: 0,
+          thickness: 0.5,
+          color: Colors.grey,
+        );
+      },
     );
   }
 
@@ -137,10 +173,13 @@ class _TextStyleViewState extends State<TextStyleView> {
     return Container(
       height: 60,
       child: Row(
-       children: [
-         Text('Fill', style: TextStyle(color: Colors.white, fontSize: 18),),
-         Spacer(),
-         GestureDetector(
+        children: [
+          Text(
+            'Fill',
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          Spacer(),
+          GestureDetector(
             onTap: () {
               showDialog(
                 context: context,
@@ -159,8 +198,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                       child: const Text('Got it'),
                       onPressed: () {
                         Navigator.of(context).pop();
-                        setState(() {
-                        });
+                        setState(() {});
                         var hex = '${bgColor.value.toRadixString(16)}';
                         String newBgColor = '#${hex.substring(2)}';
                         _updateStyle();
@@ -171,16 +209,16 @@ class _TextStyleViewState extends State<TextStyleView> {
               );
             },
             child: Container(
-             width: 100,
-             height: 40,
-             decoration: BoxDecoration(
-               border: Border.all(color: Colors.grey, width: 1),
-               color: bgColor,
-               borderRadius: BorderRadius.circular(8),
-             ),
-           ),
-         ),
-       ],
+              width: 100,
+              height: 40,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey, width: 1),
+                color: bgColor,
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -192,7 +230,10 @@ class _TextStyleViewState extends State<TextStyleView> {
           height: 60,
           child: Row(
             children: [
-              Text('Border', style: TextStyle(color: Colors.white, fontSize: 18),),
+              Text(
+                'Border',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
               Spacer(),
               Transform.scale(
                 scale: 0.8,
@@ -217,10 +258,13 @@ class _TextStyleViewState extends State<TextStyleView> {
                   height: 60,
                   child: Row(
                     children: [
-                      Text('Style', style: TextStyle(color: Colors.white, fontSize: 18),),
+                      Text(
+                        'Style',
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
                       Expanded(
                           child: Container(
-                            margin: EdgeInsets.symmetric(horizontal: 10),
+                        margin: EdgeInsets.symmetric(horizontal: 10),
                         height: 4,
                         color: Colors.white,
                       )),
@@ -232,7 +276,10 @@ class _TextStyleViewState extends State<TextStyleView> {
                   height: 60,
                   child: Row(
                     children: [
-                      Text('Color', style: TextStyle(color: Colors.white, fontSize: 18),),
+                      Text(
+                        'Color',
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
                       Spacer(),
                       Container(
                         width: 100,
@@ -243,7 +290,9 @@ class _TextStyleViewState extends State<TextStyleView> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      SizedBox(width: 10,),
+                      SizedBox(
+                        width: 10,
+                      ),
                       Icon(Icons.arrow_forward_ios),
                     ],
                   ),
@@ -252,14 +301,20 @@ class _TextStyleViewState extends State<TextStyleView> {
                   height: 60,
                   child: Row(
                     children: [
-                      Text('Width', style: TextStyle(color: Colors.white, fontSize: 18),),
+                      Text(
+                        'Width',
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
                       Expanded(
                           child: Container(
-                            margin: EdgeInsets.symmetric(horizontal: 10),
-                            height: 4,
-                            color: Colors.white,
-                          )),
-                      Text('1 pt', style: TextStyle(color: Colors.white, fontSize: 16),),
+                        margin: EdgeInsets.symmetric(horizontal: 10),
+                        height: 4,
+                        color: Colors.white,
+                      )),
+                      Text(
+                        '1 pt',
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
                     ],
                   ),
                 )
@@ -277,7 +332,10 @@ class _TextStyleViewState extends State<TextStyleView> {
           height: 60,
           child: Row(
             children: [
-              Text('Shadow', style: TextStyle(color: Colors.white, fontSize: 18),),
+              Text(
+                'Shadow',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
               Spacer(),
               Transform.scale(
                 scale: 0.8,
@@ -298,7 +356,7 @@ class _TextStyleViewState extends State<TextStyleView> {
             alignment: Alignment.center,
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.grey[400],
+              color: Colors.grey[700],
               borderRadius: BorderRadius.circular(16),
             ),
             child: GridView.count(
@@ -310,7 +368,7 @@ class _TextStyleViewState extends State<TextStyleView> {
               physics: NeverScrollableScrollPhysics(),
               children: List.generate(
                 6,
-                    (index) {
+                (index) {
                   return _shadowGridItem(index);
                 },
               ),
@@ -325,8 +383,13 @@ class _TextStyleViewState extends State<TextStyleView> {
       height: 60,
       child: Row(
         children: [
-          Text('Opacity', style: TextStyle(color: Colors.white, fontSize: 18),),
-          SizedBox(width: 10,),
+          Text(
+            'Opacity',
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          SizedBox(
+            width: 10,
+          ),
           Expanded(
             child: Slider(
               value: _currentSliderValue,
@@ -357,7 +420,11 @@ class _TextStyleViewState extends State<TextStyleView> {
         color: textBgColors[index],
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Text('Text', style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),),
+      child: Text(
+        'Text',
+        style: TextStyle(
+            color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+      ),
     );
 
     return InkWell(
@@ -435,15 +502,172 @@ class _TextStyleViewState extends State<TextStyleView> {
         child: item);
   }
 
+  // Text Body
+  Widget get _textBody {
+    return Container(
+        margin: EdgeInsets.only(top: 16),
+        child: Column(
+          children: [_fontType, _fontSize],
+        ));
+  }
+
+  // Arrange Body
+  Widget get _arrangeBody {
+    return Container();
+  }
+
+  get _fontType {
+    return Container(
+      height: 50,
+      child: Row(
+        children: [
+          Expanded(
+              child: InkWell(
+                  child: Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[700],
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(8),
+                            bottomLeft: Radius.circular(8)),
+                      ),
+                      child: Text(
+                        'B',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      )))),
+          SizedBox(
+            width: 1,
+          ),
+          Expanded(
+              child: InkWell(
+                  child: Container(
+                      alignment: Alignment.center,
+                      color: Colors.grey[700],
+                      child: Text(
+                        'I',
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            fontStyle: FontStyle.italic),
+                      )))),
+          SizedBox(
+            width: 1,
+          ),
+          Expanded(
+              child: InkWell(
+                  child: Container(
+                      alignment: Alignment.center,
+                      color: Colors.grey[700],
+                      child: Text(
+                        'U',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.underline,
+                        ),
+                      )))),
+          SizedBox(
+            width: 1,
+          ),
+          Expanded(
+              child: InkWell(
+                  child: Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[700],
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(8),
+                            bottomRight: Radius.circular(8)),
+                      ),
+                      child: Text(
+                        'S',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.lineThrough,
+                        ),
+                      ))))
+        ],
+      ),
+    );
+  }
+
+  get _fontSize {
+    return Container(
+      margin: EdgeInsets.only(top: 16),
+      height: 50,
+      child: Row(
+        children: [
+          Text(
+            'Size',
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          Spacer(),
+          Text(
+            '16 pt',
+            style: TextStyle(color: Colors.blue, fontSize: 18),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Container(
+            width: 150,
+            child: Row(
+              children: [
+                Expanded(
+                  child: InkWell(
+                    child: Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[700],
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(8),
+                            bottomLeft: Radius.circular(8)),
+                      ),
+                      child: Text(
+                        '-',
+                        style: TextStyle(fontSize: 24),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 1,),
+                Expanded(
+                  child: InkWell(
+                    child: Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[700],
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(8),
+                            bottomRight: Radius.circular(8)),
+                      ),
+                      child: Text(
+                        '+',
+                        style: TextStyle(fontSize: 24),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   void _updateStyle() {
     var hex = '${bgColor.value.toRadixString(16)}';
     String newBgColor = '#${hex.substring(2)}';
     print('newBgColor: $newBgColor');
     Map<String, dynamic> sheets = widget.stylesheets[selectedId];
     sheets['backgroundColor'] = newBgColor;
-    List<Map<String, dynamic>>effects = styles.getUpdateTextStylePayload(selectedId, sheets,screenBloc.state.activeShopPage.stylesheetIds);
+    List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
+        selectedId, sheets, screenBloc.state.activeShopPage.stylesheetIds);
     print('payload: $effects');
-    screenBloc.add(UpdateSectionEvent(sectionId: screenBloc.state.selectedSectionId, effects: effects));
+    screenBloc.add(UpdateSectionEvent(
+        sectionId: screenBloc.state.selectedSectionId, effects: effects));
   }
-
 }
