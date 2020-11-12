@@ -951,3 +951,14 @@ enum TextVAlign {
   Center,
   Bottom,
 }
+
+enum BulletList {
+  Bullet,
+  List,
+}
+
+enum ColorType {
+  BackGround,
+  Border,
+  Text
+}

@@ -28,6 +28,8 @@ class _TextStyleViewState extends State<TextStyleView> {
   bool isTablet;
   Color bgColor;
   Color textColor;
+  Color borderColor;
+
   bool borderExpanded = false;
   bool shadowExpanded = false;
   double opacityValue = 1.0;
@@ -36,6 +38,7 @@ class _TextStyleViewState extends State<TextStyleView> {
   TextFontType fontType;
   TextHAlign hAlign;
   TextVAlign vAlign;
+  BulletList bulletList;
 
   String selectedId;
   TextStyles styles;
@@ -58,8 +61,8 @@ class _TextStyleViewState extends State<TextStyleView> {
     selectedId = state.selectedChild.id;
     styles = TextStyles.fromJson(widget.stylesheets[selectedId]);
     bgColor = colorConvert(styles.backgroundColor, emptyColor: true);
+    borderColor = colorConvert(styles.borderColor, emptyColor: true);
     textColor = colorConvert(styles.color, emptyColor: true);
-    textColor = Colors.red;
 
     return Container(
       height: 400,
@@ -173,7 +176,7 @@ class _TextStyleViewState extends State<TextStyleView> {
   Widget get _styleBody {
     List<Widget> textStyleWidgets = [
       _gridViewBody,
-      _fill(true),
+      _fill(ColorType.BackGround),
       _border,
       _shadow,
       _opacity
@@ -216,13 +219,29 @@ class _TextStyleViewState extends State<TextStyleView> {
     );
   }
 
-  Widget _fill(bool isBackground) {
+  Widget _fill(ColorType colorType) {
+    String title;
+    Color color;
+    switch(colorType) {
+      case ColorType.BackGround:
+        title = 'Fill';
+        color = bgColor;
+        break;
+      case ColorType.Border:
+        title = 'Color';
+        color = borderColor;
+        break;
+      case ColorType.Text:
+        title = 'Text Color';
+        color = textColor;
+        break;
+    }
     return Container(
       height: 60,
       child: Row(
         children: [
           Text(
-            isBackground ? 'Fill' : 'Text Color',
+            title,
             style: TextStyle(color: Colors.white, fontSize: 15),
           ),
           Spacer(),
@@ -236,7 +255,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                     child: ColorPicker(
                       pickerColor: textColor,
                       onColorChanged: (color) =>
-                          changeColor(color, isBackground),
+                          changeColor(color, colorType),
                       showLabel: true,
                       pickerAreaHeightPercent: 0.8,
                     ),
@@ -259,7 +278,7 @@ class _TextStyleViewState extends State<TextStyleView> {
               height: 40,
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey, width: 1),
-                color: bgColor,
+                color: color,
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
@@ -318,31 +337,32 @@ class _TextStyleViewState extends State<TextStyleView> {
                     ],
                   ),
                 ),
-                Container(
-                  height: 60,
-                  child: Row(
-                    children: [
-                      Text(
-                        'Color',
-                        style: TextStyle(color: Colors.white, fontSize: 15),
-                      ),
-                      Spacer(),
-                      Container(
-                        width: 100,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey, width: 1),
-                          color: bgColor,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Icon(Icons.arrow_forward_ios),
-                    ],
-                  ),
-                ),
+                _fill(ColorType.Border),
+                // Container(
+                //   height: 60,
+                //   child: Row(
+                //     children: [
+                //       Text(
+                //         'Color',
+                //         style: TextStyle(color: Colors.white, fontSize: 15),
+                //       ),
+                //       Spacer(),
+                //       Container(
+                //         width: 100,
+                //         height: 40,
+                //         decoration: BoxDecoration(
+                //           border: Border.all(color: Colors.grey, width: 1),
+                //           color: bgColor,
+                //           borderRadius: BorderRadius.circular(8),
+                //         ),
+                //       ),
+                //       SizedBox(
+                //         width: 10,
+                //       ),
+                //       Icon(Icons.arrow_forward_ios),
+                //     ],
+                //   ),
+                // ),
                 Container(
                   height: 60,
                   child: Row(
@@ -455,11 +475,13 @@ class _TextStyleViewState extends State<TextStyleView> {
     );
   }
 
-  void changeColor(Color color, bool isBackground) {
-    if (isBackground)
+  void changeColor(Color color, ColorType colorType) {
+    if (colorType == ColorType.BackGround)
       bgColor = color;
-    else
+    else if (colorType == ColorType.Text)
       textColor = color;
+    else
+      borderColor = color;
   }
 
   void changeTextColor(Color color) {
@@ -565,7 +587,7 @@ class _TextStyleViewState extends State<TextStyleView> {
               _paragraphStyle,
               _fontType,
               _fontSize,
-              _fill(false),
+              _fill(ColorType.Text),
               _textHorizontalAlign,
               _textVerticalAlign,
               _verticalText,
@@ -1034,13 +1056,13 @@ class _TextStyleViewState extends State<TextStyleView> {
                     child: InkWell(
                         onTap: () {
                           setState(() {
-                            fontType = TextFontType.Bold;
+                            bulletList = BulletList.Bullet;
                           });
                         },
                         child: Container(
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: fontType != TextFontType.Bold
+                              color: bulletList != BulletList.Bullet
                                   ? Color.fromRGBO(51, 48, 53, 1)
                                   : Color.fromRGBO(0, 135, 255, 1),
                               borderRadius: BorderRadius.only(
@@ -1055,13 +1077,13 @@ class _TextStyleViewState extends State<TextStyleView> {
                     child: InkWell(
                         onTap: () {
                           setState(() {
-                            fontType = TextFontType.LineThrough;
+                            bulletList = BulletList.List;
                           });
                         },
                         child: Container(
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: fontType != TextFontType.LineThrough
+                              color: bulletList != BulletList.List
                                   ? Color.fromRGBO(51, 48, 53, 1)
                                   : Color.fromRGBO(0, 135, 255, 1),
                               borderRadius: BorderRadius.only(
@@ -1215,10 +1237,6 @@ class _TextStyleViewState extends State<TextStyleView> {
       padding: EdgeInsets.symmetric(vertical: 10),
       child: Row(
         children: [
-          Icon(Icons.list),
-          SizedBox(
-            width: 10,
-          ),
           Text(
             'Shrink Text to Fit',
             style: TextStyle(color: Colors.white, fontSize: 15),
