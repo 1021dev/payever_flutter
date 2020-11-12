@@ -72,9 +72,10 @@ class _TextStyleViewState extends State<TextStyleView> {
             child: Column(
               children: [
                 _segmentedControl,
-                SizedBox(height: 10,),
-                Expanded(
-                    child: mainBody),
+                SizedBox(
+                  height: 10,
+                ),
+                Expanded(child: mainBody),
               ],
             ),
           ),
@@ -95,19 +96,28 @@ class _TextStyleViewState extends State<TextStyleView> {
             width: 100,
             child: Text(
               'Style',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.white),
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.white),
             )),
         TextStyleType.Text: Padding(
             padding: EdgeInsets.all(8.0),
             child: Text(
               'Text',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.white),
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.white),
             )),
         TextStyleType.Arrange: Padding(
             padding: EdgeInsets.all(8.0),
             child: Text(
               'Arrange',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.white),
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.white),
             )),
       },
       onValueChanged: (TextStyleType value) {
@@ -188,7 +198,7 @@ class _TextStyleViewState extends State<TextStyleView> {
         children: [
           Text(
             isBackground ? 'Fill' : 'Text Color',
-            style: TextStyle(color: Colors.white, fontSize: 18),
+            style: TextStyle(color: Colors.white, fontSize: 15),
           ),
           Spacer(),
           GestureDetector(
@@ -200,7 +210,8 @@ class _TextStyleViewState extends State<TextStyleView> {
                   content: SingleChildScrollView(
                     child: ColorPicker(
                       pickerColor: textColor,
-                      onColorChanged:(color) => changeColor(color, isBackground),
+                      onColorChanged: (color) =>
+                          changeColor(color, isBackground),
                       showLabel: true,
                       pickerAreaHeightPercent: 0.8,
                     ),
@@ -242,7 +253,7 @@ class _TextStyleViewState extends State<TextStyleView> {
             children: [
               Text(
                 'Border',
-                style: TextStyle(color: Colors.white, fontSize: 18),
+                style: TextStyle(color: Colors.white, fontSize: 15),
               ),
               Spacer(),
               Transform.scale(
@@ -270,7 +281,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                     children: [
                       Text(
                         'Style',
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        style: TextStyle(color: Colors.white, fontSize: 15),
                       ),
                       Expanded(
                           child: Container(
@@ -344,7 +355,7 @@ class _TextStyleViewState extends State<TextStyleView> {
             children: [
               Text(
                 'Shadow',
-                style: TextStyle(color: Colors.white, fontSize: 18),
+                style: TextStyle(color: Colors.white, fontSize: 15),
               ),
               Spacer(),
               Transform.scale(
@@ -395,7 +406,7 @@ class _TextStyleViewState extends State<TextStyleView> {
         children: [
           Text(
             'Opacity',
-            style: TextStyle(color: Colors.white, fontSize: 18),
+            style: TextStyle(color: Colors.white, fontSize: 15),
           ),
           SizedBox(
             width: 10,
@@ -427,7 +438,7 @@ class _TextStyleViewState extends State<TextStyleView> {
   }
 
   void changeTextColor(Color color) {
-      textColor = color;
+    textColor = color;
   }
 
   Widget _textBackgroundGridItem(int index) {
@@ -525,7 +536,19 @@ class _TextStyleViewState extends State<TextStyleView> {
         margin: EdgeInsets.only(top: 16),
         child: SingleChildScrollView(
           child: Column(
-            children: [_paragraphStyle, _fontType, _fontSize, _fill(false), _textHorizontalAlign, _textVerticalAlign],
+            children: [
+              _paragraphStyle,
+              _fontType,
+              _fontSize,
+              _fill(false),
+              _textHorizontalAlign,
+              _textVerticalAlign,
+              _verticalText,
+              _bullets,
+              _lineSpacing,
+              _columns,
+              _margin,
+            ],
           ),
         ));
   }
@@ -536,8 +559,16 @@ class _TextStyleViewState extends State<TextStyleView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('PARAGRAPH STYLE', style: TextStyle(color:Colors.grey[400] ,fontSize: 13, fontWeight: FontWeight.w300),),
-          SizedBox(height: 10,),
+          Text(
+            'PARAGRAPH STYLE',
+            style: TextStyle(
+                color: Colors.grey[400],
+                fontSize: 13,
+                fontWeight: FontWeight.w300),
+          ),
+          SizedBox(
+            height: 10,
+          ),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
             decoration: BoxDecoration(
@@ -546,7 +577,10 @@ class _TextStyleViewState extends State<TextStyleView> {
             ),
             child: Row(
               children: [
-                Text('Label ', style: TextStyle(color: Colors.white, fontSize: 24),),
+                Text(
+                  'Label ',
+                  style: TextStyle(color: Colors.white, fontSize: 24),
+                ),
                 Spacer(),
                 Icon(Icons.arrow_forward_ios, color: Colors.grey[600]),
               ],
@@ -564,29 +598,45 @@ class _TextStyleViewState extends State<TextStyleView> {
         children: [
           Row(
             children: [
-              Text('Font', style: TextStyle(color:Colors.white, fontSize: 15),),
+              Text(
+                'Font',
+                style: TextStyle(color: Colors.white, fontSize: 15),
+              ),
               Spacer(),
-              Text('Helvetica Neue', style: TextStyle(color:Colors.blue, fontSize: 15),),
-              SizedBox(width: 20,),
-              Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey[600],),
+              Text(
+                'Helvetica Neue',
+                style: TextStyle(color: Colors.blue, fontSize: 15),
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+                color: Colors.grey[600],
+              ),
             ],
           ),
-          SizedBox(height: 15,),
+          SizedBox(
+            height: 15,
+          ),
           Container(
             height: 50,
             child: Row(
               children: [
                 Expanded(
                     child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          fontType = TextFontType.Bold;
-                        });
-                      },
+                        onTap: () {
+                          setState(() {
+                            fontType = TextFontType.Bold;
+                          });
+                        },
                         child: Container(
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: fontType != TextFontType.Bold ? Color.fromRGBO(51, 48, 53, 1) : Color.fromRGBO(0, 135, 255, 1),
+                              color: fontType != TextFontType.Bold
+                                  ? Color.fromRGBO(51, 48, 53, 1)
+                                  : Color.fromRGBO(0, 135, 255, 1),
                               borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(8),
                                   bottomLeft: Radius.circular(8)),
@@ -608,12 +658,13 @@ class _TextStyleViewState extends State<TextStyleView> {
                         },
                         child: Container(
                             alignment: Alignment.center,
-                            color: fontType != TextFontType.Italic ? Color.fromRGBO(51, 48, 53, 1) : Color.fromRGBO(0, 135, 255, 1),
+                            color: fontType != TextFontType.Italic
+                                ? Color.fromRGBO(51, 48, 53, 1)
+                                : Color.fromRGBO(0, 135, 255, 1),
                             child: Text(
                               'I',
                               style: TextStyle(
-                                  fontSize: 18,
-                                  fontStyle: FontStyle.italic),
+                                  fontSize: 18, fontStyle: FontStyle.italic),
                             )))),
                 SizedBox(
                   width: 1,
@@ -627,7 +678,9 @@ class _TextStyleViewState extends State<TextStyleView> {
                         },
                         child: Container(
                             alignment: Alignment.center,
-                            color: fontType != TextFontType.Underline ? Color.fromRGBO(51, 48, 53, 1) : Color.fromRGBO(0, 135, 255, 1),
+                            color: fontType != TextFontType.Underline
+                                ? Color.fromRGBO(51, 48, 53, 1)
+                                : Color.fromRGBO(0, 135, 255, 1),
                             child: Text(
                               'U',
                               style: TextStyle(
@@ -648,7 +701,9 @@ class _TextStyleViewState extends State<TextStyleView> {
                         child: Container(
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: fontType != TextFontType.LineThrough ? Color.fromRGBO(51, 48, 53, 1) : Color.fromRGBO(0, 135, 255, 1),
+                              color: fontType != TextFontType.LineThrough
+                                  ? Color.fromRGBO(51, 48, 53, 1)
+                                  : Color.fromRGBO(0, 135, 255, 1),
                               borderRadius: BorderRadius.only(
                                   topRight: Radius.circular(8),
                                   bottomRight: Radius.circular(8)),
@@ -707,7 +762,9 @@ class _TextStyleViewState extends State<TextStyleView> {
                     ),
                   ),
                 ),
-                SizedBox(width: 1,),
+                SizedBox(
+                  width: 1,
+                ),
                 Expanded(
                   child: InkWell(
                     child: Container(
@@ -749,7 +806,9 @@ class _TextStyleViewState extends State<TextStyleView> {
                   child: Container(
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: hAlign != TextHAlign.Start ? Color.fromRGBO(51, 48, 53, 1) : Color.fromRGBO(0, 135, 255, 1),
+                        color: hAlign != TextHAlign.Start
+                            ? Color.fromRGBO(51, 48, 53, 1)
+                            : Color.fromRGBO(0, 135, 255, 1),
                         borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(8),
                             bottomLeft: Radius.circular(8)),
@@ -771,12 +830,13 @@ class _TextStyleViewState extends State<TextStyleView> {
                   },
                   child: Container(
                       alignment: Alignment.center,
-                      color: hAlign != TextHAlign.Center ? Color.fromRGBO(51, 48, 53, 1) : Color.fromRGBO(0, 135, 255, 1),
+                      color: hAlign != TextHAlign.Center
+                          ? Color.fromRGBO(51, 48, 53, 1)
+                          : Color.fromRGBO(0, 135, 255, 1),
                       child: Text(
                         'I',
                         style: TextStyle(
-                            fontSize: 18,
-                            fontStyle: FontStyle.italic),
+                            fontSize: 18, fontStyle: FontStyle.italic),
                       )))),
           SizedBox(
             width: 1,
@@ -790,7 +850,9 @@ class _TextStyleViewState extends State<TextStyleView> {
                   },
                   child: Container(
                       alignment: Alignment.center,
-                      color: hAlign != TextHAlign.End ? Color.fromRGBO(51, 48, 53, 1) : Color.fromRGBO(0, 135, 255, 1),
+                      color: hAlign != TextHAlign.End
+                          ? Color.fromRGBO(51, 48, 53, 1)
+                          : Color.fromRGBO(0, 135, 255, 1),
                       child: Text(
                         'U',
                         style: TextStyle(
@@ -811,7 +873,9 @@ class _TextStyleViewState extends State<TextStyleView> {
                   child: Container(
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: hAlign != TextHAlign.Stretch ? Color.fromRGBO(51, 48, 53, 1) : Color.fromRGBO(0, 135, 255, 1),
+                        color: hAlign != TextHAlign.Stretch
+                            ? Color.fromRGBO(51, 48, 53, 1)
+                            : Color.fromRGBO(0, 135, 255, 1),
                         borderRadius: BorderRadius.only(
                             topRight: Radius.circular(8),
                             bottomRight: Radius.circular(8)),
@@ -844,7 +908,9 @@ class _TextStyleViewState extends State<TextStyleView> {
                   child: Container(
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: vAlign != TextVAlign.Top ? Color.fromRGBO(51, 48, 53, 1) : Color.fromRGBO(0, 135, 255, 1),
+                        color: vAlign != TextVAlign.Top
+                            ? Color.fromRGBO(51, 48, 53, 1)
+                            : Color.fromRGBO(0, 135, 255, 1),
                         borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(8),
                             bottomLeft: Radius.circular(8)),
@@ -866,12 +932,13 @@ class _TextStyleViewState extends State<TextStyleView> {
                   },
                   child: Container(
                       alignment: Alignment.center,
-                      color: vAlign != TextVAlign.Center ? Color.fromRGBO(51, 48, 53, 1) : Color.fromRGBO(0, 135, 255, 1),
+                      color: vAlign != TextVAlign.Center
+                          ? Color.fromRGBO(51, 48, 53, 1)
+                          : Color.fromRGBO(0, 135, 255, 1),
                       child: Text(
                         'I',
                         style: TextStyle(
-                            fontSize: 18,
-                            fontStyle: FontStyle.italic),
+                            fontSize: 18, fontStyle: FontStyle.italic),
                       )))),
           SizedBox(
             width: 1,
@@ -886,7 +953,9 @@ class _TextStyleViewState extends State<TextStyleView> {
                   child: Container(
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: vAlign != TextVAlign.Bottom ? Color.fromRGBO(51, 48, 53, 1) : Color.fromRGBO(0, 135, 255, 1),
+                        color: vAlign != TextVAlign.Bottom
+                            ? Color.fromRGBO(51, 48, 53, 1)
+                            : Color.fromRGBO(0, 135, 255, 1),
                         borderRadius: BorderRadius.only(
                             topRight: Radius.circular(8),
                             bottomRight: Radius.circular(8)),
@@ -898,6 +967,335 @@ class _TextStyleViewState extends State<TextStyleView> {
                           decoration: TextDecoration.underline,
                         ),
                       )))),
+        ],
+      ),
+    );
+  }
+
+  get _verticalText {
+    return Column(
+      children: [
+        Container(
+          height: 60,
+          child: Row(
+            children: [
+              Text(
+                'Vertical Text',
+                style: TextStyle(color: Colors.white, fontSize: 15),
+              ),
+              Spacer(),
+              Transform.scale(
+                scale: 0.8,
+                child: CupertinoSwitch(
+                  value: borderExpanded,
+                  onChanged: (value) {
+                    setState(() {
+                      borderExpanded = value;
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+        if (borderExpanded)
+          Container(
+            padding: EdgeInsets.only(left: 16),
+            child: Column(
+              children: [
+                Container(
+                  height: 60,
+                  child: Row(
+                    children: [
+                      Text(
+                        'Style',
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                      Expanded(
+                          child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: 10),
+                        height: 4,
+                        color: Colors.white,
+                      )),
+                      Icon(Icons.arrow_forward_ios),
+                    ],
+                  ),
+                ),
+                Container(
+                  height: 60,
+                  child: Row(
+                    children: [
+                      Text(
+                        'Color',
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                      Spacer(),
+                      Container(
+                        width: 100,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey, width: 1),
+                          color: bgColor,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Icon(Icons.arrow_forward_ios),
+                    ],
+                  ),
+                ),
+                Container(
+                  height: 60,
+                  child: Row(
+                    children: [
+                      Text(
+                        'Width',
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                      Expanded(
+                          child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: 10),
+                        height: 4,
+                        color: Colors.white,
+                      )),
+                      Text(
+                        '1 pt',
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          )
+      ],
+    );
+  }
+
+  get _bullets {
+    return Padding(
+      padding: const EdgeInsets.only(top: 20.0),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Icon(Icons.list),
+              SizedBox(
+                width: 10,
+              ),
+              Text(
+                'Bullets & Lists',
+                style: TextStyle(color: Colors.white, fontSize: 15),
+              ),
+              Spacer(),
+              Text(
+                'None',
+                style: TextStyle(color: Colors.blue, fontSize: 15),
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+                color: Colors.grey[600],
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          Container(
+            height: 50,
+            child: Row(
+              children: [
+                Expanded(
+                    child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            fontType = TextFontType.Bold;
+                          });
+                        },
+                        child: Container(
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: fontType != TextFontType.Bold
+                                  ? Color.fromRGBO(51, 48, 53, 1)
+                                  : Color.fromRGBO(0, 135, 255, 1),
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(8),
+                                  bottomLeft: Radius.circular(8)),
+                            ),
+                            child: Text(
+                              'B',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            )))),
+                SizedBox(
+                  width: 1,
+                ),
+                Expanded(
+                    child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            fontType = TextFontType.LineThrough;
+                          });
+                        },
+                        child: Container(
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: fontType != TextFontType.LineThrough
+                                  ? Color.fromRGBO(51, 48, 53, 1)
+                                  : Color.fromRGBO(0, 135, 255, 1),
+                              borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(8),
+                                  bottomRight: Radius.circular(8)),
+                            ),
+                            child: Text(
+                              'S',
+                              style: TextStyle(
+                                fontSize: 18,
+                                decoration: TextDecoration.lineThrough,
+                              ),
+                            ))))
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  get _lineSpacing {
+    return Container(
+      margin: EdgeInsets.only(top: 20),
+      padding: EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        children: [
+          Icon(Icons.list),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            'Line Spacing',
+            style: TextStyle(color: Colors.white, fontSize: 15),
+          ),
+          Spacer(),
+          Text(
+            '1',
+            style: TextStyle(color: Colors.blue, fontSize: 15),
+          ),
+          SizedBox(
+            width: 20,
+          ),
+          Icon(
+            Icons.arrow_forward_ios,
+            size: 16,
+            color: Colors.grey[600],
+          ),
+        ],
+      ),
+    );
+  }
+
+  get _columns {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        children: [
+          Icon(Icons.list),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            'Columns',
+            style: TextStyle(color: Colors.white, fontSize: 15),
+          ),
+          Spacer(),
+          Text(
+            '1',
+            style: TextStyle(color: Colors.blue, fontSize: 15),
+          ),
+          SizedBox(
+            width: 20,
+          ),
+          Icon(
+            Icons.arrow_forward_ios,
+            size: 16,
+            color: Colors.grey[600],
+          ),
+        ],
+      ),
+    );
+  }
+
+  get _margin {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        children: [
+          Icon(Icons.list),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            'Margin',
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          Spacer(),
+          Text(
+            '16 pt',
+            style: TextStyle(color: Colors.blue, fontSize: 18),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Container(
+            width: 150,
+            child: Row(
+              children: [
+                Expanded(
+                  child: InkWell(
+                    child: Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: Color.fromRGBO(51, 48, 53, 1),
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(8),
+                            bottomLeft: Radius.circular(8)),
+                      ),
+                      child: Text(
+                        '-',
+                        style: TextStyle(fontSize: 24),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 1,
+                ),
+                Expanded(
+                  child: InkWell(
+                    child: Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: Color.fromRGBO(51, 48, 53, 1),
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(8),
+                            bottomRight: Radius.circular(8)),
+                      ),
+                      child: Text(
+                        '+',
+                        style: TextStyle(fontSize: 24),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
         ],
       ),
     );
