@@ -26,6 +26,7 @@ class _TextStyleViewState extends State<TextStyleView> {
   bool isPortrait;
   bool isTablet;
   Color bgColor;
+  Color textColor;
   bool borderExpanded = false;
   bool shadowExpanded = false;
   double _currentSliderValue = 1;
@@ -52,6 +53,8 @@ class _TextStyleViewState extends State<TextStyleView> {
     selectedId = state.selectedChild.id;
     styles = TextStyles.fromJson(widget.stylesheets[selectedId]);
     bgColor = colorConvert(styles.backgroundColor, emptyColor: true);
+    textColor = colorConvert(styles.color, emptyColor: true);
+    textColor = Colors.red;
 
     return Container(
       height: 400,
@@ -60,12 +63,14 @@ class _TextStyleViewState extends State<TextStyleView> {
         body: SafeArea(
           bottom: false,
           child: Container(
-            color: Colors.grey[900],
+            color: Color.fromRGBO(23, 23, 25, 1),
             padding: EdgeInsets.only(left: 16, right: 16, top: 18, bottom: 34),
             child: Column(
               children: [
                 _segmentedControl,
-                Expanded(child: mainBody),
+                SizedBox(height: 10,),
+                Expanded(
+                    child: mainBody),
               ],
             ),
           ),
@@ -76,26 +81,29 @@ class _TextStyleViewState extends State<TextStyleView> {
 
   Widget get _segmentedControl {
     return CupertinoSegmentedControl<TextStyleType>(
-      selectedColor: Colors.grey[400],
-      unselectedColor: Colors.grey[900],
+      selectedColor: Color.fromRGBO(110, 109, 116, 1),
+      unselectedColor: Color.fromRGBO(46, 45, 50, 1),
+      borderColor: Color.fromRGBO(23, 23, 25, 1),
       children: <TextStyleType, Widget>{
-        TextStyleType.Style: Padding(
+        TextStyleType.Style: Container(
             padding: EdgeInsets.all(8.0),
+            alignment: Alignment.center,
+            width: 100,
             child: Text(
               'Style',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.white),
             )),
         TextStyleType.Text: Padding(
             padding: EdgeInsets.all(8.0),
             child: Text(
               'Text',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.white),
             )),
         TextStyleType.Arrange: Padding(
             padding: EdgeInsets.all(8.0),
             child: Text(
               'Arrange',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.white),
             )),
       },
       onValueChanged: (TextStyleType value) {
@@ -126,7 +134,7 @@ class _TextStyleViewState extends State<TextStyleView> {
   Widget get _styleBody {
     List<Widget> textStyleWidgets = [
       _gridViewBody,
-      _fill,
+      _fill(true),
       _border,
       _shadow,
       _opacity
@@ -169,13 +177,13 @@ class _TextStyleViewState extends State<TextStyleView> {
     );
   }
 
-  Widget get _fill {
+  Widget _fill(bool isBackground) {
     return Container(
       height: 60,
       child: Row(
         children: [
           Text(
-            'Fill',
+            isBackground ? 'Fill' : 'Text Color',
             style: TextStyle(color: Colors.white, fontSize: 18),
           ),
           Spacer(),
@@ -187,8 +195,8 @@ class _TextStyleViewState extends State<TextStyleView> {
                   title: const Text('Pick a color!'),
                   content: SingleChildScrollView(
                     child: ColorPicker(
-                      pickerColor: bgColor,
-                      onColorChanged: changeColor,
+                      pickerColor: textColor,
+                      onColorChanged:(color) => changeColor(color, isBackground),
                       showLabel: true,
                       pickerAreaHeightPercent: 0.8,
                     ),
@@ -199,8 +207,6 @@ class _TextStyleViewState extends State<TextStyleView> {
                       onPressed: () {
                         Navigator.of(context).pop();
                         setState(() {});
-                        var hex = '${bgColor.value.toRadixString(16)}';
-                        String newBgColor = '#${hex.substring(2)}';
                         _updateStyle();
                       },
                     ),
@@ -409,8 +415,15 @@ class _TextStyleViewState extends State<TextStyleView> {
     );
   }
 
-  void changeColor(Color color) {
-    bgColor = color;
+  void changeColor(Color color, bool isBackground) {
+    if (isBackground)
+      bgColor = color;
+    else
+      textColor = color;
+  }
+
+  void changeTextColor(Color color) {
+      textColor = color;
   }
 
   Widget _textBackgroundGridItem(int index) {
@@ -506,14 +519,38 @@ class _TextStyleViewState extends State<TextStyleView> {
   Widget get _textBody {
     return Container(
         margin: EdgeInsets.only(top: 16),
-        child: Column(
-          children: [_fontType, _fontSize],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [_paragraphStyle, _fontType, _fontSize, _fill(false)],
+          ),
         ));
   }
 
-  // Arrange Body
-  Widget get _arrangeBody {
-    return Container();
+  get _paragraphStyle {
+    return Container(
+      padding: EdgeInsets.only(bottom: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('PARAGRAPH STYLE', style: TextStyle(color:Colors.grey[400] ,fontSize: 13, fontWeight: FontWeight.w300),),
+          SizedBox(height: 10,),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+            decoration: BoxDecoration(
+              color: Color.fromRGBO(51, 48, 53, 1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              children: [
+                Text('Label ', style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w400),),
+                Spacer(),
+                Icon(Icons.arrow_forward_ios),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   get _fontType {
@@ -526,7 +563,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                   child: Container(
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: Colors.grey[700],
+                        color: Color.fromRGBO(51, 48, 53, 1),
                         borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(8),
                             bottomLeft: Radius.circular(8)),
@@ -543,7 +580,7 @@ class _TextStyleViewState extends State<TextStyleView> {
               child: InkWell(
                   child: Container(
                       alignment: Alignment.center,
-                      color: Colors.grey[700],
+                      color: Color.fromRGBO(51, 48, 53, 1),
                       child: Text(
                         'I',
                         style: TextStyle(
@@ -558,7 +595,7 @@ class _TextStyleViewState extends State<TextStyleView> {
               child: InkWell(
                   child: Container(
                       alignment: Alignment.center,
-                      color: Colors.grey[700],
+                      color: Color.fromRGBO(51, 48, 53, 1),
                       child: Text(
                         'U',
                         style: TextStyle(
@@ -575,7 +612,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                   child: Container(
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: Colors.grey[700],
+                        color: Color.fromRGBO(51, 48, 53, 1),
                         borderRadius: BorderRadius.only(
                             topRight: Radius.circular(8),
                             bottomRight: Radius.circular(8)),
@@ -620,7 +657,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                     child: Container(
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: Colors.grey[700],
+                        color: Color.fromRGBO(51, 48, 53, 1),
                         borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(8),
                             bottomLeft: Radius.circular(8)),
@@ -638,7 +675,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                     child: Container(
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: Colors.grey[700],
+                        color: Color.fromRGBO(51, 48, 53, 1),
                         borderRadius: BorderRadius.only(
                             topRight: Radius.circular(8),
                             bottomRight: Radius.circular(8)),
@@ -656,6 +693,11 @@ class _TextStyleViewState extends State<TextStyleView> {
         ],
       ),
     );
+  }
+
+  // Arrange Body
+  Widget get _arrangeBody {
+    return Container();
   }
 
   void _updateStyle() {
