@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/models.dart';
 import '../../../../theme.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:html/parser.dart';
 
 class TextView extends StatefulWidget {
@@ -45,31 +44,28 @@ class _TextViewState extends State<TextView> {
     // <font style="font-size: 20px;">NEW IN: THE B27</font>
     // <div style="text-align: center;"><font face="Roboto"><span style="font-size: 18px;">05</span></font></div><div style="text-align: center;"><font face="Roboto"><span style="font-size: 18px;">NOVEMBER</span></font></div>
 
-    if (txt.contains('<div') ||
-        txt.contains('<span') ||
-        txt.contains('<font')) {
+    if (widget.isEditState) {
       controller.text = parseHtmlString(txt);
-      // txt = parseHtmlString(txt);
-      // htmlTextColor(txt);
-      if (widget.isEditState) {
-        return textField();
-      }
-      return htmlTextView();
+      return textField;
     }
 
     return Container(
-      alignment: styles.textAlign,
       color: colorConvert(styles.backgroundColor, emptyColor: true),
-      child: Text(txt,
-          style: TextStyle(
-              color: colorConvert(styles.color),
-              fontWeight: styles.fontWeight,
-              fontStyle: styles.fontStyle,
-              fontSize: styles.fontSize)),
+      child: Text(parseHtmlString(txt),
+        style: TextStyle(
+            color: colorConvert(htmlTextColor(txt)),
+            fontWeight: styles.fontWeight,
+            fontStyle: styles.fontStyle,
+            fontSize: htmlFontSize(txt)),
+        textAlign: htmlAlignment(txt),
+      ),
     );
   }
 
   String parseHtmlString(String string) {
+    if (!isHtmlText)
+      return txt;
+
     String text = txt.replaceAll('<br>', '\n');
     var document  = parse(text);
     var elements;
@@ -91,6 +87,12 @@ class _TextViewState extends State<TextView> {
     }
   }
 
+  bool get isHtmlText {
+    return (txt.contains('<div') ||
+        txt.contains('<span') ||
+        txt.contains('<font'));
+  }
+
   TextAlign htmlAlignment(String text) {
     if (text.contains('text-align: center')) {
       return TextAlign.center;
@@ -103,7 +105,9 @@ class _TextViewState extends State<TextView> {
   }
 
   String htmlTextColor(String text) {
-    // <div style="text-align: center;"><font color="#5e5e5e">#NEW</font></div>
+    if (!isHtmlText)
+      return styles.color;
+
     if (text.contains('color="')) {
       int index = text.indexOf('color="');
       String color = text.substring(index + 7, index + 14);
@@ -120,7 +124,9 @@ class _TextViewState extends State<TextView> {
   }
 
   double htmlFontSize(String text) {
-    // <font style="font-size: 20px;">NEW IN: THE B27</font>
+    if (!isHtmlText)
+      return styles.fontSize;
+
     if (text.contains('font-size:')) {
       int index = text.indexOf('font-size:');
       String font = text.substring(index + 11, index + 13);
@@ -135,7 +141,7 @@ class _TextViewState extends State<TextView> {
     return styles.fontSize;
   }
 
-  Widget textField () {
+  Widget get textField {
     return Container(
       alignment: styles.textAlign,
       color: colorConvert(styles.backgroundColor, emptyColor: true),
@@ -153,46 +159,6 @@ class _TextViewState extends State<TextView> {
 
           }
         },
-      ),
-    );
-  }
-
-  Widget htmlTextView() {
-    // return Container(
-    //     color: colorConvert(styles.backgroundColor, emptyColor: true),
-    //     alignment: styles.textAlign,
-    //     child: SingleChildScrollView(
-    //       physics: NeverScrollableScrollPhysics(),
-    //       child: Column(
-    //         crossAxisAlignment: CrossAxisAlignment.center,
-    //         children: [
-    //           HtmlWidget(
-    //             // the first parameter (`html`) is required
-    //             '''
-    //               $txt
-    //              ''',
-    //             textStyle: TextStyle(
-    //               color: colorConvert(styles.color),
-    //               fontSize: styles.fontSize,
-    //               fontStyle: styles.fontStyle,
-    //               fontWeight: styles.fontWeight,
-    //             ),
-    //           ),
-    //         ],
-    //       ),
-    //     )
-    // );
-
-    return Container(
-      // alignment: styles.textAlign,
-      color: colorConvert(styles.backgroundColor, emptyColor: true),
-      child: Text(parseHtmlString(txt),
-          style: TextStyle(
-              color: colorConvert(htmlTextColor(txt)),
-              fontWeight: styles.fontWeight,
-              fontStyle: styles.fontStyle,
-              fontSize: htmlFontSize(txt)),
-        textAlign: htmlAlignment(txt),
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/shop/shop_edit/shop_edit_bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
@@ -843,11 +844,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                             topLeft: Radius.circular(8),
                             bottomLeft: Radius.circular(8)),
                       ),
-                      child: Text(
-                        'B',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      )))),
+                      child: SvgPicture.asset('assets/images/align-left.svg')))),
           SizedBox(
             width: 1,
           ),
@@ -863,11 +860,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                       color: hAlign != TextHAlign.Center
                           ? Color.fromRGBO(51, 48, 53, 1)
                           : Color.fromRGBO(0, 135, 255, 1),
-                      child: Text(
-                        'I',
-                        style: TextStyle(
-                            fontSize: 18, fontStyle: FontStyle.italic),
-                      )))),
+                      child: SvgPicture.asset('assets/images/align-center.svg')))),
           SizedBox(
             width: 1,
           ),
@@ -883,13 +876,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                       color: hAlign != TextHAlign.End
                           ? Color.fromRGBO(51, 48, 53, 1)
                           : Color.fromRGBO(0, 135, 255, 1),
-                      child: Text(
-                        'U',
-                        style: TextStyle(
-                          fontSize: 18,
-                          decoration: TextDecoration.underline,
-                        ),
-                      )))),
+                      child: SvgPicture.asset('assets/images/align-right.svg')))),
           SizedBox(
             width: 1,
           ),
@@ -910,13 +897,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                             topRight: Radius.circular(8),
                             bottomRight: Radius.circular(8)),
                       ),
-                      child: Text(
-                        'S',
-                        style: TextStyle(
-                          fontSize: 18,
-                          decoration: TextDecoration.lineThrough,
-                        ),
-                      ))))
+                      child: SvgPicture.asset('assets/images/align-all.svg'))))
         ],
       ),
     );
@@ -945,11 +926,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                             topLeft: Radius.circular(8),
                             bottomLeft: Radius.circular(8)),
                       ),
-                      child: Text(
-                        'B',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      )))),
+                      child: SvgPicture.asset('assets/images/align-v-top.svg')))),
           SizedBox(
             width: 1,
           ),
@@ -965,11 +942,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                       color: vAlign != TextVAlign.Center
                           ? Color.fromRGBO(51, 48, 53, 1)
                           : Color.fromRGBO(0, 135, 255, 1),
-                      child: Text(
-                        'I',
-                        style: TextStyle(
-                            fontSize: 18, fontStyle: FontStyle.italic),
-                      )))),
+                      child: SvgPicture.asset('assets/images/align-v-center.svg')))),
           SizedBox(
             width: 1,
           ),
@@ -990,13 +963,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                             topRight: Radius.circular(8),
                             bottomRight: Radius.circular(8)),
                       ),
-                      child: Text(
-                        'U',
-                        style: TextStyle(
-                          fontSize: 18,
-                          decoration: TextDecoration.underline,
-                        ),
-                      )))),
+                      child: SvgPicture.asset('assets/images/align-v-bottom.svg')))),
         ],
       ),
     );
@@ -1080,11 +1047,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                                   topLeft: Radius.circular(8),
                                   bottomLeft: Radius.circular(8)),
                             ),
-                            child: Text(
-                              'B',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            )))),
+                            child: SvgPicture.asset('assets/images/bullet-left.svg')))),
                 SizedBox(
                   width: 1,
                 ),
@@ -1105,13 +1068,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                                   topRight: Radius.circular(8),
                                   bottomRight: Radius.circular(8)),
                             ),
-                            child: Text(
-                              'S',
-                              style: TextStyle(
-                                fontSize: 18,
-                                decoration: TextDecoration.lineThrough,
-                              ),
-                            ))))
+                            child: SvgPicture.asset('assets/images/bullet-right.svg'))))
               ],
             ),
           ),
@@ -1126,7 +1083,7 @@ class _TextStyleViewState extends State<TextStyleView> {
       padding: EdgeInsets.symmetric(vertical: 10),
       child: Row(
         children: [
-          Icon(Icons.list),
+          SvgPicture.asset('assets/images/line-spacing.svg'),
           SizedBox(
             width: 10,
           ),
@@ -1157,7 +1114,7 @@ class _TextStyleViewState extends State<TextStyleView> {
       padding: EdgeInsets.symmetric(vertical: 10),
       child: Row(
         children: [
-          Icon(Icons.list),
+          SvgPicture.asset('assets/images/columns.svg'),
           SizedBox(
             width: 10,
           ),
@@ -1188,7 +1145,7 @@ class _TextStyleViewState extends State<TextStyleView> {
       padding: EdgeInsets.symmetric(vertical: 10),
       child: Row(
         children: [
-          Icon(Icons.list),
+          SvgPicture.asset('assets/images/margin.svg'),
           SizedBox(
             width: 10,
           ),
