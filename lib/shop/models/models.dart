@@ -453,17 +453,17 @@ class BaseStyles with BackgroundAssist, StyleAssist, SizeAssist, DecorationAssis
   // textAlign is only For Text, Shop Product, Shop Product Category
   @JsonKey(name: 'textAlign')
   String textAlign0;
-  get textAlign {
+  Alignment get textAlign {
     return getAlign(textAlign0);
   }
   double get fontSize {
     return getFontSize(fontSize0);
   }
 
-  get fontWeight {
+  FontWeight get fontWeight {
     return getFontWeight(fontWeight0);
   }
-  get fontStyle {
+  FontStyle get fontStyle {
     return getFontStyle(fontStyle0);
   }
   // ------------------------------------------------------

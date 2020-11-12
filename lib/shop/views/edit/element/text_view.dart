@@ -7,10 +7,12 @@ class TextView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
   final bool isEditState;
+  final Function onChangeText;
 
   const TextView(
       {this.child,
       this.stylesheets,
+      this.onChangeText,
       this.isEditState = false});
 
   @override
@@ -79,8 +81,6 @@ class _TextViewState extends State<TextView> {
     try {
       String text = '';
       (elements as List).forEach((element) { text += '${element.text}\n'; });
-
-      print('Text document: $text');
       return text;
     } catch (e) {
       return '';
@@ -111,13 +111,11 @@ class _TextViewState extends State<TextView> {
     if (text.contains('color="')) {
       int index = text.indexOf('color="');
       String color = text.substring(index + 7, index + 14);
-      print('Text color: $index $color');
       return color;
     }
     if (text.contains('color: rgb')) {
       int index = text.indexOf('color: rgb');
       String color = text.substring(index + 10, index + 25);
-      print('Text color: $index $color');
       return color;
     }
     return styles.color;
@@ -130,7 +128,6 @@ class _TextViewState extends State<TextView> {
     if (text.contains('font-size:')) {
       int index = text.indexOf('font-size:');
       String font = text.substring(index + 11, index + 13);
-      print('font index: $index $font');
       try {
         return double.parse(font);
       }
@@ -139,6 +136,18 @@ class _TextViewState extends State<TextView> {
       }
     }
     return styles.fontSize;
+  }
+
+  FontWeight htmlFontWeight(String text) {
+    if (!isHtmlText)
+      return styles.fontWeight;
+
+    if (text.contains('font-weight: normal')) {
+      return styles.getFontWeight('normal');
+    } else if (text.contains('font-weight: bold')) {
+      return styles.getFontWeight('bold');
+    }
+    return styles.fontWeight;
   }
 
   Widget get textField {
@@ -155,9 +164,10 @@ class _TextViewState extends State<TextView> {
             fontSize: htmlFontSize(txt)),
         textAlign: htmlAlignment(txt),
         onChanged: (text) {
-          if (text.trim().isNotEmpty) {
-
-          }
+          widget.onChangeText(text);
+          // if (text.trim().isNotEmpty) {
+          //
+          // }
         },
       ),
     );

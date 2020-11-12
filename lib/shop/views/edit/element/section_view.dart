@@ -306,6 +306,9 @@ class _SectionViewState extends State<SectionView> {
           child: child,
           isEditState: selectChildId == child.id,
           stylesheets: stylesheets,
+          onChangeText: (value) {
+            print('Update Text: $value');
+          },
         );
         break;
       case 'button':

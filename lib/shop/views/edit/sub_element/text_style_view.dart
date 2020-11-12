@@ -221,19 +221,19 @@ class _TextStyleViewState extends State<TextStyleView> {
 
   Widget _fill(ColorType colorType) {
     String title;
-    Color color;
+    Color pickColor;
     switch(colorType) {
       case ColorType.BackGround:
         title = 'Fill';
-        color = bgColor;
+        pickColor = bgColor;
         break;
       case ColorType.Border:
         title = 'Color';
-        color = borderColor;
+        pickColor = borderColor;
         break;
       case ColorType.Text:
         title = 'Text Color';
-        color = textColor;
+        pickColor = textColor;
         break;
     }
     return Container(
@@ -253,7 +253,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                   title: const Text('Pick a color!'),
                   content: SingleChildScrollView(
                     child: ColorPicker(
-                      pickerColor: textColor,
+                      pickerColor: pickColor,
                       onColorChanged: (color) =>
                           changeColor(color, colorType),
                       showLabel: true,
@@ -278,7 +278,7 @@ class _TextStyleViewState extends State<TextStyleView> {
               height: 40,
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey, width: 1),
-                color: color,
+                color: pickColor,
                 borderRadius: BorderRadius.circular(8),
               ),
             ),

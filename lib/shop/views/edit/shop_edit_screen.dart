@@ -284,11 +284,11 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
   }
 
   void _navigateTemplatesScreen() {
-    Navigator.push(
-        context,
-        PageTransition(
-            child: ShopEditTemplatesScreen(screenBloc),
-            type: PageTransitionType.fade));
+    // Navigator.push(
+    //     context,
+    //     PageTransition(
+    //         child: ShopEditTemplatesScreen(screenBloc),
+    //         type: PageTransitionType.fade));
   }
 }
 
