@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:payever/theme.dart';
 
 class ShopEditAppbar extends StatelessWidget with PreferredSizeWidget {
 
@@ -23,60 +25,41 @@ class ShopEditAppbar extends StatelessWidget with PreferredSizeWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             InkWell(
-              child: Icon(
-                Icons.arrow_back_ios,
-                color: Colors.white,
+              child: Text(
+                'Done',
+                style: TextStyle(
+                  color: colorConvert('#0371E2'),
+                ),
               ),
               onTap: () {
                 Navigator.pop(context);
               },
             ),
             InkWell(
-              child: Icon(
-                Icons.refresh,
-                color: Colors.white,
-              ),
+              child: SvgPicture.asset('assets/images/back.svg'),
               onTap: null,
             ),
             InkWell(
               child: Icon(
                 Icons.play_arrow,
-                color: Colors.white,
+                size: 40,
+                color: colorConvert('#0371E2'),
               ),
               onTap: null,
             ),
             InkWell(
-              child: Icon(
-                Icons.brush,
-                color: Colors.white,
-              ),
+              child: SvgPicture.asset('assets/images/shop-brush.svg'),
               onTap: ()=> onTapStyle(),
             ),
             InkWell(
-              child: Icon(
-                Icons.add,
-                color: Colors.white,
-              ),
+              child: SvgPicture.asset('assets/images/shop-add.svg'),
               onTap: () => onTapAdd(),
             ),
             InkWell(
-                child: Icon(
-                  Icons.person_add,
-                  color: Colors.white,
-                ),
+                child: SvgPicture.asset('assets/images/add-contact.svg'),
                 onTap: null),
             InkWell(
-              child: Icon(
-                Icons.more_horiz,
-                color: Colors.white,
-              ),
-              onTap: null,
-            ),
-            InkWell(
-              child: Icon(
-                Icons.remove_red_eye,
-                color: Colors.white,
-              ),
+              child: SvgPicture.asset('assets/images/shop-more.svg'),
               onTap: null,
             ),
           ],

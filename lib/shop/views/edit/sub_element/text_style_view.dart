@@ -1273,7 +1273,7 @@ class _TextStyleViewState extends State<TextStyleView> {
           Container(
             child: Row(
               children: [
-                Icon(Icons.list, color: Colors.grey[600]),
+                SvgPicture.asset('assets/images/send-to-back.svg'),
                 Expanded(
                   child: Slider(
                     value: opacityValue,
@@ -1288,7 +1288,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                     },
                   ),
                 ),
-                Icon(Icons.list, color: Colors.grey[600]),
+                SvgPicture.asset('assets/images/send-to-top.svg'),
               ],
             ),
           ),
@@ -1302,10 +1302,6 @@ class _TextStyleViewState extends State<TextStyleView> {
       padding: EdgeInsets.symmetric(vertical: 10),
       child: Row(
         children: [
-          Icon(Icons.list),
-          SizedBox(
-            width: 10,
-          ),
           Text(
             'Constrain Proportions',
             style: TextStyle(color: Colors.white, fontSize: 15),
@@ -1342,7 +1338,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                 style: TextStyle(color: Colors.white, fontSize: 15),
               ),
               Spacer(),
-              Icon(Icons.list),
+              SvgPicture.asset('assets/images/flip-horizontal.svg'),
             ],
           ),
         ),
@@ -1364,7 +1360,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                 style: TextStyle(color: Colors.white, fontSize: 15),
               ),
               Spacer(),
-              Icon(Icons.list),
+              SvgPicture.asset('assets/images/flip-vertical.svg')
             ],
           ),
         ),
