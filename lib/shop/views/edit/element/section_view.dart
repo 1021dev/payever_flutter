@@ -304,6 +304,7 @@ class _SectionViewState extends State<SectionView> {
       case 'text':
         childView = TextView(
           child: child,
+          isEditState: selectChildId == child.id,
           stylesheets: stylesheets,
         );
         break;

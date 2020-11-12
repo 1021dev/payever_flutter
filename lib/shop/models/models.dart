@@ -456,7 +456,7 @@ class BaseStyles with BackgroundAssist, StyleAssist, SizeAssist, DecorationAssis
   get textAlign {
     return getAlign(textAlign0);
   }
-  get fontSize {
+  double get fontSize {
     return getFontSize(fontSize0);
   }
 

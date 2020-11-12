@@ -7,10 +7,12 @@ import 'package:html/parser.dart';
 class TextView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
+  final bool isEditState;
 
   const TextView(
       {this.child,
-      this.stylesheets});
+      this.stylesheets,
+      this.isEditState = false});
 
   @override
   _TextViewState createState() => _TextViewState(child);
@@ -20,6 +22,8 @@ class _TextViewState extends State<TextView> {
   final Child child;
    TextStyles styles;
   String txt;
+  TextEditingController controller = TextEditingController();
+
   _TextViewState(this.child);
 
   @override
@@ -44,32 +48,13 @@ class _TextViewState extends State<TextView> {
     if (txt.contains('<div') ||
         txt.contains('<span') ||
         txt.contains('<font')) {
+      controller.text = parseHtmlString(txt);
       // txt = parseHtmlString(txt);
-      return Container(
-       color: colorConvert(styles.backgroundColor, emptyColor: true),
-        alignment: alignment(txt),
-        child: SingleChildScrollView(
-          physics: NeverScrollableScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              HtmlWidget(
-                // the first parameter (`html`) is required
-                '''
-                  $txt
-                 ''',
-                textStyle: TextStyle(
-                  color: colorConvert(styles.color),
-                    fontSize: styles.fontSize,
-                    fontStyle: styles.fontStyle,
-                    fontWeight: styles.fontWeight,
-                ),
-
-              ),
-            ],
-          ),
-        )
-      );
+      // htmlTextColor(txt);
+      if (widget.isEditState) {
+        return textField();
+      }
+      return htmlTextView();
     }
 
     return Container(
@@ -85,7 +70,8 @@ class _TextViewState extends State<TextView> {
   }
 
   String parseHtmlString(String string) {
-    var document  = parse(txt);
+    String text = txt.replaceAll('<br>', '\n');
+    var document  = parse(text);
     var elements;
     if (string.contains('div')) {
       elements = document.getElementsByTagName('div');
@@ -97,28 +83,118 @@ class _TextViewState extends State<TextView> {
     try {
       String text = '';
       (elements as List).forEach((element) { text += '${element.text}\n'; });
-      return text;
+
       print('Text document: $text');
-      // print('Text document: ${elements[0].text}');
-      // print('Text document: ${elements[1].text}');
+      return text;
     } catch (e) {
       return '';
     }
   }
 
-  Alignment alignment(String text) {
+  TextAlign htmlAlignment(String text) {
     if (text.contains('text-align: center')) {
-      return styles.getAlign('center');
+      return TextAlign.center;
     } else if (text.contains('text-align: left')) {
-      return styles.getAlign('left');
+      return TextAlign.start;
     } else if (text.contains('text-align: right')) {
-      return styles.getAlign('right');
-    } else if (text.contains('text-align: top')) {
-      return styles.getAlign('top');
-    } else if (text.contains('text-align: bottom')) {
-      return styles.getAlign('bottom');
+      return TextAlign.end;
     }
-    return styles.getAlign('left');
+    return TextAlign.start;
+  }
+
+  String htmlTextColor(String text) {
+    // <div style="text-align: center;"><font color="#5e5e5e">#NEW</font></div>
+    if (text.contains('color="')) {
+      int index = text.indexOf('color="');
+      String color = text.substring(index + 7, index + 14);
+      print('Text color: $index $color');
+      return color;
+    }
+    if (text.contains('color: rgb')) {
+      int index = text.indexOf('color: rgb');
+      String color = text.substring(index + 10, index + 25);
+      print('Text color: $index $color');
+      return color;
+    }
+    return styles.color;
+  }
+
+  double htmlFontSize(String text) {
+    // <font style="font-size: 20px;">NEW IN: THE B27</font>
+    if (text.contains('font-size:')) {
+      int index = text.indexOf('font-size:');
+      String font = text.substring(index + 11, index + 13);
+      print('font index: $index $font');
+      try {
+        return double.parse(font);
+      }
+      catch (e) {
+        return styles.fontSize;
+      }
+    }
+    return styles.fontSize;
+  }
+
+  Widget textField () {
+    return Container(
+      alignment: styles.textAlign,
+      color: colorConvert(styles.backgroundColor, emptyColor: true),
+      child: TextField(
+        controller: controller,
+        // decoration: widget.tfTextDecoration,
+        style: TextStyle(
+            color: colorConvert(htmlTextColor(txt)),
+            fontWeight: styles.fontWeight,
+            fontStyle: styles.fontStyle,
+            fontSize: htmlFontSize(txt)),
+        textAlign: htmlAlignment(txt),
+        onChanged: (text) {
+          if (text.trim().isNotEmpty) {
+
+          }
+        },
+      ),
+    );
+  }
+
+  Widget htmlTextView() {
+    // return Container(
+    //     color: colorConvert(styles.backgroundColor, emptyColor: true),
+    //     alignment: styles.textAlign,
+    //     child: SingleChildScrollView(
+    //       physics: NeverScrollableScrollPhysics(),
+    //       child: Column(
+    //         crossAxisAlignment: CrossAxisAlignment.center,
+    //         children: [
+    //           HtmlWidget(
+    //             // the first parameter (`html`) is required
+    //             '''
+    //               $txt
+    //              ''',
+    //             textStyle: TextStyle(
+    //               color: colorConvert(styles.color),
+    //               fontSize: styles.fontSize,
+    //               fontStyle: styles.fontStyle,
+    //               fontWeight: styles.fontWeight,
+    //             ),
+    //           ),
+    //         ],
+    //       ),
+    //     )
+    // );
+
+    return Container(
+      // alignment: styles.textAlign,
+      color: colorConvert(styles.backgroundColor, emptyColor: true),
+      child: Text(parseHtmlString(txt),
+          style: TextStyle(
+              color: colorConvert(htmlTextColor(txt)),
+              fontWeight: styles.fontWeight,
+              fontStyle: styles.fontStyle,
+              fontSize: htmlFontSize(txt)),
+        textAlign: htmlAlignment(txt),
+      ),
+    );
   }
 
   TextStyles getStyles() {
