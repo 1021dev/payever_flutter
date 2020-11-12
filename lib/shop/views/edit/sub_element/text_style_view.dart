@@ -401,7 +401,7 @@ class _TextStyleViewState extends State<TextStyleView> {
             alignment: Alignment.center,
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.grey[700],
+              color: Colors.grey[800],
               borderRadius: BorderRadius.circular(16),
             ),
             child: GridView.count(
@@ -594,21 +594,26 @@ class _TextStyleViewState extends State<TextStyleView> {
           SizedBox(
             height: 10,
           ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-            decoration: BoxDecoration(
-              color: Color.fromRGBO(51, 48, 53, 1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              children: [
-                Text(
-                  'Label ',
-                  style: TextStyle(color: Colors.white, fontSize: 24),
-                ),
-                Spacer(),
-                Icon(Icons.arrow_forward_ios, color: Colors.grey[600]),
-              ],
+          InkWell(
+            onTap: () async {
+
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+              decoration: BoxDecoration(
+                color: Color.fromRGBO(51, 48, 53, 1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  Text(
+                    'Label ',
+                    style: TextStyle(color: Colors.white, fontSize: 24),
+                  ),
+                  Spacer(),
+                  Icon(Icons.arrow_forward_ios, color: Colors.grey[600]),
+                ],
+              ),
             ),
           ),
         ],

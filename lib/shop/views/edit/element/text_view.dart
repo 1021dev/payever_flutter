@@ -44,6 +44,7 @@ class _TextViewState extends State<TextView> {
     if (txt.contains('<div') ||
         txt.contains('<span') ||
         txt.contains('<font')) {
+      // txt = parseHtmlString(txt);
       return Container(
        color: colorConvert(styles.backgroundColor, emptyColor: true),
         alignment: alignment(txt),
@@ -69,12 +70,11 @@ class _TextViewState extends State<TextView> {
           ),
         )
       );
-    // txt = textString(txt) ?? '';
     }
 
     return Container(
       alignment: styles.textAlign,
-      color: colorConvert(styles.backgroundColor),
+      color: colorConvert(styles.backgroundColor, emptyColor: true),
       child: Text(txt,
           style: TextStyle(
               color: colorConvert(styles.color),
@@ -84,7 +84,7 @@ class _TextViewState extends State<TextView> {
     );
   }
 
-  String textString(String string) {
+  String parseHtmlString(String string) {
     var document  = parse(txt);
     var elements;
     if (string.contains('div')) {
@@ -95,9 +95,15 @@ class _TextViewState extends State<TextView> {
       elements = document.getElementsByTagName('span');
     }
     try {
-      print('Text document: ${elements[0].text}');
-      print('Text document: ${elements[1].text}');
-    } catch (e) {}
+      String text = '';
+      (elements as List).forEach((element) { text += '${element.text}\n'; });
+      return text;
+      print('Text document: $text');
+      // print('Text document: ${elements[0].text}');
+      // print('Text document: ${elements[1].text}');
+    } catch (e) {
+      return '';
+    }
   }
 
   Alignment alignment(String text) {
