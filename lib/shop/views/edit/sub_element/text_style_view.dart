@@ -85,47 +85,71 @@ class _TextStyleViewState extends State<TextStyleView> {
   }
 
   Widget get _segmentedControl {
-    return CupertinoSegmentedControl<TextStyleType>(
-      selectedColor: Color.fromRGBO(110, 109, 116, 1),
-      unselectedColor: Color.fromRGBO(46, 45, 50, 1),
-      borderColor: Color.fromRGBO(23, 23, 25, 1),
-      children: <TextStyleType, Widget>{
-        TextStyleType.Style: Container(
-            padding: EdgeInsets.all(8.0),
-            alignment: Alignment.center,
-            width: 100,
-            child: Text(
-              'Style',
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.white),
-            )),
-        TextStyleType.Text: Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text(
-              'Text',
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.white),
-            )),
-        TextStyleType.Arrange: Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text(
-              'Arrange',
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.white),
-            )),
-      },
-      onValueChanged: (TextStyleType value) {
-        setState(() {
-          styleType = value;
-        });
-      },
-      groupValue: styleType,
+    return Container(
+      child: Row(
+        children: [
+          SizedBox(
+            width: 30,
+          ),
+          Expanded(
+            child: CupertinoSegmentedControl<TextStyleType>(
+              selectedColor: Color.fromRGBO(110, 109, 116, 1),
+              unselectedColor: Color.fromRGBO(46, 45, 50, 1),
+              borderColor: Color.fromRGBO(23, 23, 25, 1),
+              children: <TextStyleType, Widget>{
+                TextStyleType.Style: Container(
+                    padding: EdgeInsets.all(8.0),
+                    alignment: Alignment.center,
+                    width: 100,
+                    child: Text(
+                      'Style',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white),
+                    )),
+                TextStyleType.Text: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      'Text',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white),
+                    )),
+                TextStyleType.Arrange: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      'Arrange',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white),
+                    )),
+              },
+              onValueChanged: (TextStyleType value) {
+                setState(() {
+                  styleType = value;
+                });
+              },
+              groupValue: styleType,
+            ),
+          ),
+          InkWell(
+            onTap: () => Navigator.pop(context),
+            child: Container(
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Color.fromRGBO(46, 45, 50, 1),
+              ),
+              alignment: Alignment.center,
+              child: Icon(Icons.close, color: Colors.grey),
+            ),
+          )
+        ],
+      ),
     );
   }
 
@@ -299,7 +323,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                     children: [
                       Text(
                         'Color',
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        style: TextStyle(color: Colors.white, fontSize: 15),
                       ),
                       Spacer(),
                       Container(
@@ -324,7 +348,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                     children: [
                       Text(
                         'Width',
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        style: TextStyle(color: Colors.white, fontSize: 15),
                       ),
                       Expanded(
                           child: Container(
@@ -548,6 +572,7 @@ class _TextStyleViewState extends State<TextStyleView> {
               _lineSpacing,
               _columns,
               _margin,
+              _shrinkText,
             ],
           ),
         ));
@@ -731,12 +756,12 @@ class _TextStyleViewState extends State<TextStyleView> {
         children: [
           Text(
             'Size',
-            style: TextStyle(color: Colors.white, fontSize: 18),
+            style: TextStyle(color: Colors.white, fontSize: 15),
           ),
           Spacer(),
           Text(
             '16 pt',
-            style: TextStyle(color: Colors.blue, fontSize: 18),
+            style: TextStyle(color: Colors.blue, fontSize: 15),
           ),
           SizedBox(
             width: 10,
@@ -973,104 +998,26 @@ class _TextStyleViewState extends State<TextStyleView> {
   }
 
   get _verticalText {
-    return Column(
-      children: [
-        Container(
-          height: 60,
-          child: Row(
-            children: [
-              Text(
-                'Vertical Text',
-                style: TextStyle(color: Colors.white, fontSize: 15),
-              ),
-              Spacer(),
-              Transform.scale(
-                scale: 0.8,
-                child: CupertinoSwitch(
-                  value: borderExpanded,
-                  onChanged: (value) {
-                    setState(() {
-                      borderExpanded = value;
-                    });
-                  },
-                ),
-              ),
-            ],
+    return Container(
+      height: 60,
+      child: Row(
+        children: [
+          Text(
+            'Vertical Text',
+            style: TextStyle(color: Colors.white, fontSize: 15),
           ),
-        ),
-        if (borderExpanded)
-          Container(
-            padding: EdgeInsets.only(left: 16),
-            child: Column(
-              children: [
-                Container(
-                  height: 60,
-                  child: Row(
-                    children: [
-                      Text(
-                        'Style',
-                        style: TextStyle(color: Colors.white, fontSize: 18),
-                      ),
-                      Expanded(
-                          child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 10),
-                        height: 4,
-                        color: Colors.white,
-                      )),
-                      Icon(Icons.arrow_forward_ios),
-                    ],
-                  ),
-                ),
-                Container(
-                  height: 60,
-                  child: Row(
-                    children: [
-                      Text(
-                        'Color',
-                        style: TextStyle(color: Colors.white, fontSize: 18),
-                      ),
-                      Spacer(),
-                      Container(
-                        width: 100,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey, width: 1),
-                          color: bgColor,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Icon(Icons.arrow_forward_ios),
-                    ],
-                  ),
-                ),
-                Container(
-                  height: 60,
-                  child: Row(
-                    children: [
-                      Text(
-                        'Width',
-                        style: TextStyle(color: Colors.white, fontSize: 18),
-                      ),
-                      Expanded(
-                          child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 10),
-                        height: 4,
-                        color: Colors.white,
-                      )),
-                      Text(
-                        '1 pt',
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                      ),
-                    ],
-                  ),
-                )
-              ],
+          Spacer(),
+          Transform.scale(
+            scale: 0.8,
+            child: CupertinoSwitch(
+              value: false,
+              onChanged: (value) {
+                setState(() {});
+              },
             ),
-          )
-      ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -1242,12 +1189,12 @@ class _TextStyleViewState extends State<TextStyleView> {
           ),
           Text(
             'Margin',
-            style: TextStyle(color: Colors.white, fontSize: 18),
+            style: TextStyle(color: Colors.white, fontSize: 15),
           ),
           Spacer(),
           Text(
             '16 pt',
-            style: TextStyle(color: Colors.blue, fontSize: 18),
+            style: TextStyle(color: Colors.blue, fontSize: 15),
           ),
           SizedBox(
             width: 10,
@@ -1300,10 +1247,192 @@ class _TextStyleViewState extends State<TextStyleView> {
       ),
     );
   }
-  
+
+  get _shrinkText {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        children: [
+          Icon(Icons.list),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            'Shrink Text to Fit',
+            style: TextStyle(color: Colors.white, fontSize: 15),
+          ),
+          Spacer(),
+          Transform.scale(
+            scale: 0.8,
+            child: CupertinoSwitch(
+              value: false,
+              onChanged: (value) {
+                setState(() {});
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   // Arrange Body
   Widget get _arrangeBody {
-    return Container();
+    return Container(
+        margin: EdgeInsets.only(top: 16),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              _moveToBackFront,
+              _constrainProportion,
+              _flipView,
+              _lock,
+            ],
+          ),
+        ));
+  }
+
+  get _moveToBackFront {
+    return Container(
+      padding: EdgeInsets.only(bottom: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'MOVE TO BACK/FRONT',
+            style: TextStyle(
+                color: Colors.grey[400],
+                fontSize: 13,
+                fontWeight: FontWeight.w300),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Container(
+            child: Row(
+              children: [
+                Icon(Icons.list, color: Colors.grey[600]),
+                Expanded(
+                  child: Slider(
+                    value: opacityValue,
+                    min: 0,
+                    max: 1,
+                    divisions: 10,
+                    label: opacityValue.toString(),
+                    onChanged: (double value) {
+                      setState(() {
+                        opacityValue = value;
+                      });
+                    },
+                  ),
+                ),
+                Icon(Icons.list, color: Colors.grey[600]),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  get _constrainProportion {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        children: [
+          Icon(Icons.list),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            'Constrain Proportions',
+            style: TextStyle(color: Colors.white, fontSize: 15),
+          ),
+          Spacer(),
+          Transform.scale(
+            scale: 0.8,
+            child: CupertinoSwitch(
+              value: false,
+              onChanged: (value) {
+                setState(() {});
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  get _flipView {
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          height: 50,
+          decoration: BoxDecoration(
+              color: Color.fromRGBO(51, 48, 53, 1),
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(8), topRight: Radius.circular(8))),
+          child: Row(
+            children: [
+              Text(
+                'Flip Horizontally',
+                style: TextStyle(color: Colors.white, fontSize: 15),
+              ),
+              Spacer(),
+              Icon(Icons.list),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 1,
+        ),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          height: 50,
+          decoration: BoxDecoration(
+              color: Color.fromRGBO(51, 48, 53, 1),
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(8),
+                  bottomRight: Radius.circular(8))),
+          child: Row(
+            children: [
+              Text(
+                'Flip Vertically',
+                style: TextStyle(color: Colors.white, fontSize: 15),
+              ),
+              Spacer(),
+              Icon(Icons.list),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  get _lock {
+    return Container(
+      margin: EdgeInsets.symmetric(
+        vertical: 16,
+      ),
+      padding: EdgeInsets.symmetric(
+        horizontal: 16,
+      ),
+      height: 50,
+      decoration: BoxDecoration(
+          color: Color.fromRGBO(51, 48, 53, 1),
+          borderRadius: BorderRadius.all(Radius.circular(8))),
+      child: Row(
+        children: [
+          Text(
+            'Lock',
+            style: TextStyle(color: Colors.white, fontSize: 15),
+          ),
+          Spacer(),
+          Icon(Icons.lock_outlined),
+        ],
+      ),
+    );
   }
 
   void _updateStyle() {
