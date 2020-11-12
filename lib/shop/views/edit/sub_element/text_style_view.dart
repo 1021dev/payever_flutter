@@ -29,8 +29,12 @@ class _TextStyleViewState extends State<TextStyleView> {
   Color textColor;
   bool borderExpanded = false;
   bool shadowExpanded = false;
-  double _currentSliderValue = 1;
+  double opacityValue = 1.0;
+
   TextStyleType styleType = TextStyleType.Style;
+  TextFontType fontType;
+  TextHAlign hAlign;
+  TextVAlign vAlign;
 
   String selectedId;
   TextStyles styles;
@@ -398,14 +402,14 @@ class _TextStyleViewState extends State<TextStyleView> {
           ),
           Expanded(
             child: Slider(
-              value: _currentSliderValue,
+              value: opacityValue,
               min: 0,
               max: 1,
               divisions: 10,
-              label: _currentSliderValue.toString(),
+              label: opacityValue.toString(),
               onChanged: (double value) {
                 setState(() {
-                  _currentSliderValue = value;
+                  opacityValue = value;
                 });
               },
             ),
@@ -521,7 +525,7 @@ class _TextStyleViewState extends State<TextStyleView> {
         margin: EdgeInsets.only(top: 16),
         child: SingleChildScrollView(
           child: Column(
-            children: [_paragraphStyle, _fontType, _fontSize, _fill(false)],
+            children: [_paragraphStyle, _fontType, _fontSize, _fill(false), _textHorizontalAlign, _textVerticalAlign],
           ),
         ));
   }
@@ -542,9 +546,9 @@ class _TextStyleViewState extends State<TextStyleView> {
             ),
             child: Row(
               children: [
-                Text('Label ', style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w400),),
+                Text('Label ', style: TextStyle(color: Colors.white, fontSize: 24),),
                 Spacer(),
-                Icon(Icons.arrow_forward_ios),
+                Icon(Icons.arrow_forward_ios, color: Colors.grey[600]),
               ],
             ),
           ),
@@ -554,77 +558,111 @@ class _TextStyleViewState extends State<TextStyleView> {
   }
 
   get _fontType {
-    return Container(
-      height: 50,
-      child: Row(
+    return Padding(
+      padding: const EdgeInsets.only(top: 20.0),
+      child: Column(
         children: [
-          Expanded(
-              child: InkWell(
-                  child: Container(
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Color.fromRGBO(51, 48, 53, 1),
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(8),
-                            bottomLeft: Radius.circular(8)),
-                      ),
-                      child: Text(
-                        'B',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      )))),
-          SizedBox(
-            width: 1,
+          Row(
+            children: [
+              Text('Font', style: TextStyle(color:Colors.white, fontSize: 15),),
+              Spacer(),
+              Text('Helvetica Neue', style: TextStyle(color:Colors.blue, fontSize: 15),),
+              SizedBox(width: 20,),
+              Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey[600],),
+            ],
           ),
-          Expanded(
-              child: InkWell(
-                  child: Container(
-                      alignment: Alignment.center,
-                      color: Color.fromRGBO(51, 48, 53, 1),
-                      child: Text(
-                        'I',
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            fontStyle: FontStyle.italic),
-                      )))),
-          SizedBox(
-            width: 1,
+          SizedBox(height: 15,),
+          Container(
+            height: 50,
+            child: Row(
+              children: [
+                Expanded(
+                    child: InkWell(
+                      onTap: () {
+                        setState(() {
+                          fontType = TextFontType.Bold;
+                        });
+                      },
+                        child: Container(
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: fontType != TextFontType.Bold ? Color.fromRGBO(51, 48, 53, 1) : Color.fromRGBO(0, 135, 255, 1),
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(8),
+                                  bottomLeft: Radius.circular(8)),
+                            ),
+                            child: Text(
+                              'B',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            )))),
+                SizedBox(
+                  width: 1,
+                ),
+                Expanded(
+                    child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            fontType = TextFontType.Italic;
+                          });
+                        },
+                        child: Container(
+                            alignment: Alignment.center,
+                            color: fontType != TextFontType.Italic ? Color.fromRGBO(51, 48, 53, 1) : Color.fromRGBO(0, 135, 255, 1),
+                            child: Text(
+                              'I',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontStyle: FontStyle.italic),
+                            )))),
+                SizedBox(
+                  width: 1,
+                ),
+                Expanded(
+                    child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            fontType = TextFontType.Underline;
+                          });
+                        },
+                        child: Container(
+                            alignment: Alignment.center,
+                            color: fontType != TextFontType.Underline ? Color.fromRGBO(51, 48, 53, 1) : Color.fromRGBO(0, 135, 255, 1),
+                            child: Text(
+                              'U',
+                              style: TextStyle(
+                                fontSize: 18,
+                                decoration: TextDecoration.underline,
+                              ),
+                            )))),
+                SizedBox(
+                  width: 1,
+                ),
+                Expanded(
+                    child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            fontType = TextFontType.LineThrough;
+                          });
+                        },
+                        child: Container(
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: fontType != TextFontType.LineThrough ? Color.fromRGBO(51, 48, 53, 1) : Color.fromRGBO(0, 135, 255, 1),
+                              borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(8),
+                                  bottomRight: Radius.circular(8)),
+                            ),
+                            child: Text(
+                              'S',
+                              style: TextStyle(
+                                fontSize: 18,
+                                decoration: TextDecoration.lineThrough,
+                              ),
+                            ))))
+              ],
+            ),
           ),
-          Expanded(
-              child: InkWell(
-                  child: Container(
-                      alignment: Alignment.center,
-                      color: Color.fromRGBO(51, 48, 53, 1),
-                      child: Text(
-                        'U',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.underline,
-                        ),
-                      )))),
-          SizedBox(
-            width: 1,
-          ),
-          Expanded(
-              child: InkWell(
-                  child: Container(
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Color.fromRGBO(51, 48, 53, 1),
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(8),
-                            bottomRight: Radius.circular(8)),
-                      ),
-                      child: Text(
-                        'S',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.lineThrough,
-                        ),
-                      ))))
         ],
       ),
     );
@@ -633,7 +671,7 @@ class _TextStyleViewState extends State<TextStyleView> {
   get _fontSize {
     return Container(
       margin: EdgeInsets.only(top: 16),
-      height: 50,
+      height: 40,
       child: Row(
         children: [
           Text(
@@ -695,6 +733,176 @@ class _TextStyleViewState extends State<TextStyleView> {
     );
   }
 
+  get _textHorizontalAlign {
+    return Container(
+      margin: const EdgeInsets.only(top: 20.0),
+      height: 50,
+      child: Row(
+        children: [
+          Expanded(
+              child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      hAlign = TextHAlign.Start;
+                    });
+                  },
+                  child: Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: hAlign != TextHAlign.Start ? Color.fromRGBO(51, 48, 53, 1) : Color.fromRGBO(0, 135, 255, 1),
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(8),
+                            bottomLeft: Radius.circular(8)),
+                      ),
+                      child: Text(
+                        'B',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      )))),
+          SizedBox(
+            width: 1,
+          ),
+          Expanded(
+              child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      hAlign = TextHAlign.Center;
+                    });
+                  },
+                  child: Container(
+                      alignment: Alignment.center,
+                      color: hAlign != TextHAlign.Center ? Color.fromRGBO(51, 48, 53, 1) : Color.fromRGBO(0, 135, 255, 1),
+                      child: Text(
+                        'I',
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontStyle: FontStyle.italic),
+                      )))),
+          SizedBox(
+            width: 1,
+          ),
+          Expanded(
+              child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      hAlign = TextHAlign.End;
+                    });
+                  },
+                  child: Container(
+                      alignment: Alignment.center,
+                      color: hAlign != TextHAlign.End ? Color.fromRGBO(51, 48, 53, 1) : Color.fromRGBO(0, 135, 255, 1),
+                      child: Text(
+                        'U',
+                        style: TextStyle(
+                          fontSize: 18,
+                          decoration: TextDecoration.underline,
+                        ),
+                      )))),
+          SizedBox(
+            width: 1,
+          ),
+          Expanded(
+              child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      hAlign = TextHAlign.Stretch;
+                    });
+                  },
+                  child: Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: hAlign != TextHAlign.Stretch ? Color.fromRGBO(51, 48, 53, 1) : Color.fromRGBO(0, 135, 255, 1),
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(8),
+                            bottomRight: Radius.circular(8)),
+                      ),
+                      child: Text(
+                        'S',
+                        style: TextStyle(
+                          fontSize: 18,
+                          decoration: TextDecoration.lineThrough,
+                        ),
+                      ))))
+        ],
+      ),
+    );
+  }
+
+  get _textVerticalAlign {
+    return Container(
+      margin: const EdgeInsets.only(top: 3.0),
+      height: 50,
+      child: Row(
+        children: [
+          Expanded(
+              child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      vAlign = TextVAlign.Top;
+                    });
+                  },
+                  child: Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: vAlign != TextVAlign.Top ? Color.fromRGBO(51, 48, 53, 1) : Color.fromRGBO(0, 135, 255, 1),
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(8),
+                            bottomLeft: Radius.circular(8)),
+                      ),
+                      child: Text(
+                        'B',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      )))),
+          SizedBox(
+            width: 1,
+          ),
+          Expanded(
+              child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      vAlign = TextVAlign.Center;
+                    });
+                  },
+                  child: Container(
+                      alignment: Alignment.center,
+                      color: vAlign != TextVAlign.Center ? Color.fromRGBO(51, 48, 53, 1) : Color.fromRGBO(0, 135, 255, 1),
+                      child: Text(
+                        'I',
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontStyle: FontStyle.italic),
+                      )))),
+          SizedBox(
+            width: 1,
+          ),
+          Expanded(
+              child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      vAlign = TextVAlign.Bottom;
+                    });
+                  },
+                  child: Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: vAlign != TextVAlign.Bottom ? Color.fromRGBO(51, 48, 53, 1) : Color.fromRGBO(0, 135, 255, 1),
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(8),
+                            bottomRight: Radius.circular(8)),
+                      ),
+                      child: Text(
+                        'U',
+                        style: TextStyle(
+                          fontSize: 18,
+                          decoration: TextDecoration.underline,
+                        ),
+                      )))),
+        ],
+      ),
+    );
+  }
+  
   // Arrange Body
   Widget get _arrangeBody {
     return Container();

@@ -931,3 +931,23 @@ enum TextStyleType {
   Text,
   Arrange
 }
+
+enum TextFontType {
+  Bold,
+  Italic,
+  Underline,
+  LineThrough
+}
+
+enum TextHAlign {
+  Start,
+  Center,
+  End,
+  Stretch
+}
+
+enum TextVAlign {
+  Top,
+  Center,
+  Bottom,
+}
