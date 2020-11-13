@@ -6,25 +6,24 @@ import 'package:payever/blocs/shop/shop_edit/shop_edit_bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
 
-class ParagraphView extends StatefulWidget {
+class FontsView extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
   final Map<String, dynamic> stylesheets;
 
-  const ParagraphView({this.screenBloc, this.stylesheets});
+  const FontsView({this.screenBloc, this.stylesheets});
 
   @override
-  _ParagraphViewState createState() => _ParagraphViewState(screenBloc);
+  _FontsViewState createState() => _FontsViewState(screenBloc);
 }
 
-class _ParagraphViewState extends State<ParagraphView> {
+class _FontsViewState extends State<FontsView> {
   final ShopEditScreenBloc screenBloc;
 
-  _ParagraphViewState(this.screenBloc);
+  _FontsViewState(this.screenBloc);
 
   bool isPortrait;
   bool isTablet;
   int selectedIndex = -1;
-  bool isEdit = false;
 
   @override
   Widget build(BuildContext context) {
@@ -86,40 +85,25 @@ class _ParagraphViewState extends State<ParagraphView> {
           ),
           Expanded(
               child: Text(
-            'Paragraph Styles',
+            'Fonts',
             style: TextStyle(color: Colors.white, fontSize: 18),
             textAlign: TextAlign.center,
           )),
-          Row(
-            children: [
-              InkWell(
-                  onTap: () {
-                    setState(() {
-                      isEdit = !isEdit;
-                    });
-                  },
-                  child: Text(
-                    isEdit ? 'Done' : 'Edit',
-                    style: TextStyle(color: Colors.blue, fontSize: 16),
-                  )),
-              SizedBox(width: 16,),
-              InkWell(
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  width: 30,
-                  height: 30,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Color.fromRGBO(46, 45, 50, 1),
-                  ),
-                  alignment: Alignment.center,
-                  child: Icon(Icons.close, color: Colors.grey),
-                ),
+          InkWell(
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+            child: Container(
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Color.fromRGBO(46, 45, 50, 1),
               ),
-            ],
+              alignment: Alignment.center,
+              child: Icon(Icons.close, color: Colors.grey),
+            ),
           )
         ],
       ),
@@ -128,12 +112,11 @@ class _ParagraphViewState extends State<ParagraphView> {
 
   // Style Body
   Widget get _styleBody {
-    if (!isEdit)
     return ListView.separated(
       shrinkWrap: true,
-      itemCount: paragraphStyles.length,
+      itemCount: fonts.length,
       itemBuilder: (context, index) {
-        return paragraphItem(index);
+        return fontItem(index);
       },
       separatorBuilder: (context, index) {
         return Divider(
@@ -141,28 +124,49 @@ class _ParagraphViewState extends State<ParagraphView> {
           indent: 20,
           endIndent: 20,
           thickness: 0.5,
-          color: Colors.grey,
+          color: Colors.grey[800],
         );
       },
     );
+  }
 
-    return ReorderableListView(
-      onReorder: _onReorder,
-      scrollDirection: Axis.vertical,
-      children: List.generate(
-        paragraphStyles.length,
-            (index) {
-          return paragraphItem(index);
-        },
+  Widget fontItem(int index) {
+    String font = fonts[index];
+    TextStyle textStyle = getTextStyle(font);
+
+    return InkWell(
+      key: Key('$index'),
+      onTap: () {
+        setState(() {
+          selectedIndex = index;
+        });
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        height: 50,
+        child: Row(
+          children: [
+            Opacity(
+              opacity: selectedIndex == index ? 1 : 0,
+              child: Icon(
+                Icons.check,
+                color: Colors.blue,
+              ),
+            ),
+            SizedBox(width: 16,),
+            Text(
+              fonts[index],
+              // style: textStyle,
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget paragraphItem(int index) {
+  TextStyle getTextStyle(String font) {
     TextStyle textStyle;
-    String style = paragraphStyles[index];
-    bool isCaptionRed = false;
-    switch (style) {
+    switch (font) {
       case 'Title':
       case 'Title Small':
         textStyle = TextStyle(
@@ -182,7 +186,6 @@ class _ParagraphViewState extends State<ParagraphView> {
       case 'Caption Red':
         textStyle = TextStyle(
             color: Colors.red, fontSize: 30, fontWeight: FontWeight.w700);
-        isCaptionRed = true;
         break;
       case 'Quote':
         textStyle = TextStyle(
@@ -195,73 +198,6 @@ class _ParagraphViewState extends State<ParagraphView> {
       default:
         textStyle = TextStyle(color: Colors.black, fontSize: 30);
     }
-    return InkWell(
-      key: Key('$index'),
-      onTap: () {
-        setState(() {
-          selectedIndex = index;
-        });
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20),
-        height: isCaptionRed ? 70 : 65,
-        color: isCaptionRed ? Colors.transparent : Colors.white,
-        child: Row(
-          children: [
-            if (isEdit)
-              Padding(
-                padding: const EdgeInsets.only(right: 16),
-                child: InkWell(
-                  onTap: () => _onRemove(index),
-                  child: Icon(
-                    Icons.remove_circle,
-                    color: Colors.red,
-                    size: 24.0,
-                  ),
-                ),
-              ),
-            Text(
-              paragraphStyles[index],
-              style: textStyle,
-            ),
-            Spacer(),
-            if (!isEdit && selectedIndex == index)
-              Icon(
-                Icons.check,
-                color: Colors.blue,
-              ),
-            if (isEdit)
-              Padding(
-                padding: const EdgeInsets.only(left: 16),
-                child: Icon(
-                  Icons.reorder,
-                  color: Colors.grey,
-                  size: 24.0,
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _onReorder(int oldIndex, int newIndex) {
-    setState(
-      () {
-        if (newIndex > oldIndex) {
-          newIndex -= 1;
-        }
-        final String item = paragraphStyles.removeAt(oldIndex);
-        paragraphStyles.insert(newIndex, item);
-      },
-    );
-  }
-
-  void _onRemove(int index) {
-    setState(
-          () {
-        paragraphStyles.removeAt(index);
-      },
-    );
+    return textStyle;
   }
 }

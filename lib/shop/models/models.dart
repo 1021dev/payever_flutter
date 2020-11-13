@@ -919,18 +919,6 @@ List<String> objectTitles = [
   'Ornaments'
 ];
 
-List<String>paragraphStyles = [
-  'Title',
-  'Title Small',
-  'Subtitle',
-  'Body',
-  'Body Small',
-  'Caption',
-  'Caption Red',
-  'Quote',
-  'Attribution',
-];
-
 List<Color>textBgColors = [Color.fromRGBO(0, 168, 255, 1),
   Color.fromRGBO(96, 234, 50, 1),
   Color.fromRGBO(255, 22, 1, 1),
@@ -974,3 +962,38 @@ enum ColorType {
   Border,
   Text
 }
+
+List<String>paragraphStyles = [
+  'Title',
+  'Title Small',
+  'Subtitle',
+  'Body',
+  'Body Small',
+  'Caption',
+  'Caption Red',
+  'Quote',
+  'Attribution',
+];
+
+List<String>fonts = [
+  'Academy Engraved LET',
+  'Al Nile',
+  'American Typewriter',
+  'Apple  Color  Emoji',
+  'Apple SD Gothic Neo',
+  'Apple Symbols',
+  'AppleMyungjo',
+  'Arial',
+  'Arial Hebrew',
+  'Arial Rounded MT Bold',
+  'Avenir',
+  'Avenir Next',
+  'Avenir Next Condensed',
+  'Baskerville',
+  'Bodoni 72',
+  'Bodoni 72 Oldstyle',
+  'Bodoni 72 Smallcaps',
+  'Bradley Hand',
+  'Chalkboard SE',
+  'Chalkduster',
+];

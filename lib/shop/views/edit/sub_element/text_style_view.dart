@@ -7,6 +7,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/shop/shop_edit/shop_edit_bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/sub_element/font_view.dart';
 import 'package:payever/shop/views/edit/sub_element/paragraph_view.dart';
 import 'package:payever/theme.dart';
 
@@ -616,16 +617,10 @@ class _TextStyleViewState extends State<TextStyleView> {
           ),
           InkWell(
             onTap: () async {
-              showModalBottomSheet(
-                  context: context,
-                  barrierColor: Colors.transparent,
-                  // isScrollControlled: true,
-                  builder: (builder) {
-                    return ParagraphView(
-                      screenBloc: screenBloc,
-                      stylesheets: widget.stylesheets,
-                    );
-                  });
+              navigateSubView(ParagraphView(
+                screenBloc: screenBloc,
+                stylesheets: widget.stylesheets,
+              ));
             },
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
@@ -655,26 +650,29 @@ class _TextStyleViewState extends State<TextStyleView> {
       padding: const EdgeInsets.only(top: 20.0),
       child: Column(
         children: [
-          Row(
-            children: [
-              Text(
-                'Font',
-                style: TextStyle(color: Colors.white, fontSize: 15),
-              ),
-              Spacer(),
-              Text(
-                'Helvetica Neue',
-                style: TextStyle(color: Colors.blue, fontSize: 15),
-              ),
-              SizedBox(
-                width: 20,
-              ),
-              Icon(
-                Icons.arrow_forward_ios,
-                size: 16,
-                color: Colors.grey[600],
-              ),
-            ],
+          InkWell(
+            onTap: () => navigateSubView(FontsView(screenBloc: screenBloc, stylesheets: widget.stylesheets,)),
+            child: Row(
+              children: [
+                Text(
+                  'Font',
+                  style: TextStyle(color: Colors.white, fontSize: 15),
+                ),
+                Spacer(),
+                Text(
+                  'Helvetica Neue',
+                  style: TextStyle(color: Colors.blue, fontSize: 15),
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  size: 16,
+                  color: Colors.grey[600],
+                ),
+              ],
+            ),
           ),
           SizedBox(
             height: 15,
@@ -1428,5 +1426,15 @@ class _TextStyleViewState extends State<TextStyleView> {
     print('payload: $effects');
     screenBloc.add(UpdateSectionEvent(
         sectionId: screenBloc.state.selectedSectionId, effects: effects));
+  }
+
+  void navigateSubView(Widget subview) {
+    showModalBottomSheet(
+        context: context,
+        barrierColor: Colors.transparent,
+        // isScrollControlled: true,
+        builder: (builder) {
+          return subview;
+        });
   }
 }
