@@ -26,6 +26,7 @@ class _ParagraphViewState extends State<ParagraphView> {
   bool isPortrait;
   bool isTablet;
   int selectedIndex = -1;
+  bool isEdit = false;
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +53,7 @@ class _ParagraphViewState extends State<ParagraphView> {
             padding: EdgeInsets.only(top: 18),
             child: Column(
               children: [
-                _segmentedControl,
+                _toolBar,
                 SizedBox(
                   height: 10,
                 ),
@@ -65,37 +66,62 @@ class _ParagraphViewState extends State<ParagraphView> {
     );
   }
 
-  Widget get _segmentedControl {
+  Widget get _toolBar {
     return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10),
       child: Row(
         children: [
           InkWell(
             onTap: () => Navigator.pop(context),
             child: Row(
               children: [
-                Icon(Icons.arrow_back_ios, color: Colors.blue,),
-                Text('Text', style: TextStyle(color: Colors.blue, fontSize: 16),)
+                Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.blue,
+                ),
+                Text(
+                  'Text',
+                  style: TextStyle(color: Colors.blue, fontSize: 16),
+                )
               ],
             ),
           ),
           Expanded(
-            child: Text('Paragraph Styles', style: TextStyle(color: Colors.white, fontSize: 18), textAlign: TextAlign.center,)
-          ),
-          InkWell(
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pop(context);
-            },
-            child: Container(
-              width: 30,
-              height: 30,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color.fromRGBO(46, 45, 50, 1),
+              child: Text(
+            'Paragraph Styles',
+            style: TextStyle(color: Colors.white, fontSize: 18),
+            textAlign: TextAlign.center,
+          )),
+          Row(
+            children: [
+              InkWell(
+                  onTap: () {
+                    setState(() {
+                      isEdit = !isEdit;
+                    });
+                  },
+                  child: Text(
+                    isEdit ? 'Done' : 'Edit',
+                    style: TextStyle(color: Colors.blue, fontSize: 16),
+                  )),
+              SizedBox(width: 16,),
+              InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  width: 30,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Color.fromRGBO(46, 45, 50, 1),
+                  ),
+                  alignment: Alignment.center,
+                  child: Icon(Icons.close, color: Colors.grey),
+                ),
               ),
-              alignment: Alignment.center,
-              child: Icon(Icons.close, color: Colors.grey),
-            ),
+            ],
           )
         ],
       ),
@@ -104,6 +130,7 @@ class _ParagraphViewState extends State<ParagraphView> {
 
   // Style Body
   Widget get _styleBody {
+    if (!isEdit)
     return ListView.separated(
       shrinkWrap: true,
       itemCount: paragraphStyles.length,
@@ -120,38 +147,58 @@ class _ParagraphViewState extends State<ParagraphView> {
         );
       },
     );
+
+    return ReorderableListView(
+      onReorder: _onReorder,
+      scrollDirection: Axis.vertical,
+      children: List.generate(
+        paragraphStyles.length,
+            (index) {
+          return paragraphItem(index);
+        },
+      ),
+    );
   }
 
   Widget paragraphItem(int index) {
     TextStyle textStyle;
-    switch(index) {
-      case 0:
-      case 1:
-        textStyle = TextStyle(color: Colors.black, fontSize: 35, fontWeight: FontWeight.w600);
+    String style = paragraphStyles[index];
+    bool isCaptionRed = false;
+    switch (style) {
+      case 'Title':
+      case 'Title Small':
+        textStyle = TextStyle(
+            color: Colors.black, fontSize: 35, fontWeight: FontWeight.w600);
         break;
-      case 2:
-      case 3:
+      case 'Subtitle':
+      case 'Body':
         textStyle = TextStyle(color: Colors.black, fontSize: 30);
         break;
-      case 4:
+      case 'Body Small':
         textStyle = TextStyle(color: Colors.black, fontSize: 25);
         break;
-      case 5:
-        textStyle = TextStyle(color: Colors.black, fontSize: 23, fontWeight: FontWeight.w700);
+      case 'Caption':
+        textStyle = TextStyle(
+            color: Colors.black, fontSize: 23, fontWeight: FontWeight.w700);
         break;
-      case 6:
-        textStyle = TextStyle(color: Colors.red, fontSize: 30, fontWeight: FontWeight.w700);
+      case 'Caption Red':
+        textStyle = TextStyle(
+            color: Colors.red, fontSize: 30, fontWeight: FontWeight.w700);
+        isCaptionRed = true;
         break;
-      case 7:
-        textStyle = TextStyle(color: Colors.black, fontSize: 30, fontWeight: FontWeight.w600);
+      case 'Quote':
+        textStyle = TextStyle(
+            color: Colors.black, fontSize: 30, fontWeight: FontWeight.w600);
         break;
-      case 8:
-        textStyle = TextStyle(color: Colors.black, fontSize: 25, fontStyle: FontStyle.italic);
+      case 'Attribution':
+        textStyle = TextStyle(
+            color: Colors.black, fontSize: 25, fontStyle: FontStyle.italic);
         break;
       default:
         textStyle = TextStyle(color: Colors.black, fontSize: 30);
     }
     return InkWell(
+      key: Key('$index'),
       onTap: () {
         setState(() {
           selectedIndex = index;
@@ -159,17 +206,64 @@ class _ParagraphViewState extends State<ParagraphView> {
       },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20),
-        height: index == 6 ? 70 : 65,
-        color: index != 6 ? Colors.white : Colors.transparent,
+        height: isCaptionRed ? 70 : 65,
+        color: isCaptionRed ? Colors.transparent : Colors.white,
         child: Row(
           children: [
-            Text(paragraphStyles[index], style: textStyle,),
+            if (isEdit)
+              Padding(
+                padding: const EdgeInsets.only(right: 16),
+                child: InkWell(
+                  onTap: () => _onRemove(index),
+                  child: Icon(
+                    Icons.remove_circle,
+                    color: Colors.red,
+                    size: 24.0,
+                  ),
+                ),
+              ),
+            Text(
+              paragraphStyles[index],
+              style: textStyle,
+            ),
             Spacer(),
-            if (selectedIndex == index)
-              Icon(Icons.check, color: Colors.blue,)
+            if (!isEdit && selectedIndex == index)
+              Icon(
+                Icons.check,
+                color: Colors.blue,
+              ),
+            if (isEdit)
+              Padding(
+                padding: const EdgeInsets.only(left: 16),
+                child: Icon(
+                  Icons.reorder,
+                  color: Colors.grey,
+                  size: 24.0,
+                ),
+              ),
           ],
         ),
       ),
+    );
+  }
+
+  void _onReorder(int oldIndex, int newIndex) {
+    setState(
+      () {
+        if (newIndex > oldIndex) {
+          newIndex -= 1;
+        }
+        final String item = paragraphStyles.removeAt(oldIndex);
+        paragraphStyles.insert(newIndex, item);
+      },
+    );
+  }
+
+  void _onRemove(int index) {
+    setState(
+          () {
+        paragraphStyles.removeAt(index);
+      },
     );
   }
 }
