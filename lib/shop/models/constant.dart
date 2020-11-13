@@ -108,7 +108,7 @@ List<String>capitalizations = [
   'All Caps',
   'Small Caps',
   'Title Case',
-  'Start Case',
+  'Start Case'
 ];
 
 List<String>ligatures = [
