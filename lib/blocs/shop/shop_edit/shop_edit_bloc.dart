@@ -171,6 +171,23 @@ class ShopEditScreenBloc
       (children.firstWhere((element) => element['id'] == event.sectionId)['children'] as List).add(newTextMap);
     }
 
+    if ((event.effects.first['payload'] as Map).containsKey('id')) {
+      String id = event.effects.first['payload']['id'];
+      List sections = templates[state.activeShopPage.templateId]['children'] as List;
+      List children = sections.firstWhere((element) => element['id'] == event.sectionId)['children'] as List;
+
+      List newChildren = children.map((element) {
+        if (element['id'] == id) {
+          print('Text Element: ${element.toString()}');
+          element = event.effects.first['payload'];
+          print('Text Element update: ${element.toString()}');
+        }
+        return element;
+      }).toList();
+
+      sections.firstWhere((element) => element['id'] == event.sectionId)['children'] = newChildren;
+    }
+    
     Map<String, dynamic>payload = event.effects.first['payload'];
     try{
       payload.keys.forEach((key) {
@@ -194,7 +211,7 @@ class ShopEditScreenBloc
       if (response is DioError) {
         Fluttertoast.showToast(msg: response.error);
       } else {
-        _fetchPage();
+        // _fetchPage();
       }
     });
   }
@@ -230,8 +247,8 @@ class ShopEditScreenBloc
     if (response['templates'] != null && response['templates'] is Map) {
       templates = response['templates'];
     }
-    // yield state.copyWith(
-    //     pages: pages, stylesheets: stylesheets, templates: templates);
+    yield state.copyWith(
+        pages: pages, stylesheets: stylesheets, templates: templates);
   }
 
 }

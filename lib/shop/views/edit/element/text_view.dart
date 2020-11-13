@@ -9,25 +9,25 @@ class TextView extends StatefulWidget {
   final bool isEditState;
   final Function onChangeText;
 
-  const TextView(
+  TextView(
       {this.child,
       this.stylesheets,
       this.onChangeText,
       this.isEditState = false});
 
   @override
-  _TextViewState createState() => _TextViewState(child);
+  _TextViewState createState() => _TextViewState();
 }
 
 class _TextViewState extends State<TextView> {
-  final Child child;
+
    TextStyles styles;
   final FocusNode _focusNode = FocusNode();
   String txt;
   String htmlParseText;
   TextEditingController controller = TextEditingController();
 
-  _TextViewState(this.child);
+  _TextViewState();
 
   @override
   void initState() {
@@ -46,14 +46,13 @@ class _TextViewState extends State<TextView> {
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     styles = getStyles();
-    if (child.data is Map) {
-      Data data = Data.fromJson(child.data);
+    if (widget.child.data is Map) {
+      Data data = Data.fromJson(widget.child.data);
       if (data.text != null) txt = data.text;
-      if (child.data != null)
+      if (widget.child.data != null)
         print('Text Data:' + data.text);
     } else {
       return Container();
@@ -197,7 +196,7 @@ class _TextViewState extends State<TextView> {
 
   TextStyles getStyles() {
     try {
-      Map<String, dynamic> json = widget.stylesheets[child.id];
+      Map<String, dynamic> json = widget.stylesheets[widget.child.id];
       // print('Text ID ${child.id}');
       // print('Text Styles: $json');
       return TextStyles.fromJson(json);
