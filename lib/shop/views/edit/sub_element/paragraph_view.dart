@@ -7,23 +7,22 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/shop/shop_edit/shop_edit_bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
-import 'package:payever/shop/views/edit/sub_element/paragraph_view.dart';
 import 'package:payever/theme.dart';
 
-class TextStyleView extends StatefulWidget {
+class ParagraphView extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
   final Map<String, dynamic> stylesheets;
 
-  const TextStyleView({this.screenBloc, this.stylesheets});
+  const ParagraphView({this.screenBloc, this.stylesheets});
 
   @override
-  _TextStyleViewState createState() => _TextStyleViewState(screenBloc);
+  _ParagraphViewState createState() => _ParagraphViewState(screenBloc);
 }
 
-class _TextStyleViewState extends State<TextStyleView> {
+class _ParagraphViewState extends State<ParagraphView> {
   final ShopEditScreenBloc screenBloc;
 
-  _TextStyleViewState(this.screenBloc);
+  _ParagraphViewState(this.screenBloc);
 
   bool isPortrait;
   bool isTablet;
@@ -93,55 +92,23 @@ class _TextStyleViewState extends State<TextStyleView> {
     return Container(
       child: Row(
         children: [
-          SizedBox(
-            width: 30,
-          ),
-          Expanded(
-            child: CupertinoSegmentedControl<TextStyleType>(
-              selectedColor: Color.fromRGBO(110, 109, 116, 1),
-              unselectedColor: Color.fromRGBO(46, 45, 50, 1),
-              borderColor: Color.fromRGBO(23, 23, 25, 1),
-              children: <TextStyleType, Widget>{
-                TextStyleType.Style: Container(
-                    padding: EdgeInsets.all(8.0),
-                    alignment: Alignment.center,
-                    width: 100,
-                    child: Text(
-                      'Style',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white),
-                    )),
-                TextStyleType.Text: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(
-                      'Text',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white),
-                    )),
-                TextStyleType.Arrange: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(
-                      'Arrange',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white),
-                    )),
-              },
-              onValueChanged: (TextStyleType value) {
-                setState(() {
-                  styleType = value;
-                });
-              },
-              groupValue: styleType,
-            ),
-          ),
           InkWell(
             onTap: () => Navigator.pop(context),
+            child: Row(
+              children: [
+                Icon(Icons.arrow_back_ios, color: Colors.blue,),
+                Text('Text', style: TextStyle(color: Colors.blue, fontSize: 16),)
+              ],
+            ),
+          ),
+          Expanded(
+            child: Text('Paragraph Styles', style: TextStyle(color: Colors.white, fontSize: 18), textAlign: TextAlign.center,)
+          ),
+          InkWell(
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
             child: Container(
               width: 30,
               height: 30,
@@ -621,9 +588,9 @@ class _TextStyleViewState extends State<TextStyleView> {
                   barrierColor: Colors.transparent,
                   // isScrollControlled: true,
                   builder: (builder) {
-                    return ParagraphView(
-                      screenBloc: screenBloc,
-                      stylesheets: widget.stylesheets,
+                    return Container(
+                      color: Colors.red,
+                      height: 400,
                     );
                   });
             },

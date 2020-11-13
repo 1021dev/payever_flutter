@@ -35,7 +35,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
   TemplateSizeStateModel templateSizeStateModel = TemplateSizeStateModel();
   _TemplateDetailScreenState(
       {this.shopPage, this.templateId, this.screenBloc});
-
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
     screenBloc.add(ActiveShopPageEvent(activeShopPage: widget.shopPage));
@@ -63,6 +63,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
             bloc: screenBloc,
             builder: (BuildContext context, state) {
               return Scaffold(
+                  key: scaffoldKey,
                   appBar: ShopEditAppbar(
                     onTapAdd: () => _addObject(state),
                     onTapStyle: () => _showStyleDialogView(state),
@@ -123,8 +124,10 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
       Fluttertoast.showToast(msg: 'Please select an element!');
       return;
     }
-    showCupertinoModalPopup(
+    showModalBottomSheet(
         context: context,
+        barrierColor: Colors.transparent,
+        // isScrollControlled: true,
         builder: (builder) {
           return TextStyleView(
             screenBloc: screenBloc,

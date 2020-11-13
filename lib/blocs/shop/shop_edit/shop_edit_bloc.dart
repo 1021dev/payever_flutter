@@ -206,7 +206,6 @@ class ShopEditScreenBloc
       if (response1 is DioError) {
         Fluttertoast.showToast(msg: response1.error);
       } else {
-        print('update Pages');
         add(FetchPageEvent(response: response1));
       }
     });
@@ -231,8 +230,8 @@ class ShopEditScreenBloc
     if (response['templates'] != null && response['templates'] is Map) {
       templates = response['templates'];
     }
-    yield state.copyWith(
-        pages: pages, stylesheets: stylesheets, templates: templates);
+    // yield state.copyWith(
+    //     pages: pages, stylesheets: stylesheets, templates: templates);
   }
 
 }
