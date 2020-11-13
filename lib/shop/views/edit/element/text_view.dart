@@ -22,10 +22,30 @@ class TextView extends StatefulWidget {
 class _TextViewState extends State<TextView> {
   final Child child;
    TextStyles styles;
+  final FocusNode _focusNode = FocusNode();
   String txt;
+  String htmlParseText;
   TextEditingController controller = TextEditingController();
 
   _TextViewState(this.child);
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(() {
+      print("Has focus: ${_focusNode.hasFocus}");
+      if (!_focusNode.hasFocus && htmlParseText != controller.text) {
+        widget.onChangeText(controller.text);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -45,15 +65,15 @@ class _TextViewState extends State<TextView> {
     // <div style="text-align: center;"><font style="font-size: 41px;">SELECTION</font></div>
     // <font style="font-size: 20px;">NEW IN: THE B27</font>
     // <div style="text-align: center;"><font face="Roboto"><span style="font-size: 18px;">05</span></font></div><div style="text-align: center;"><font face="Roboto"><span style="font-size: 18px;">NOVEMBER</span></font></div>
-
+    htmlParseText = parseHtmlString(txt);
     if (widget.isEditState) {
-      controller.text = parseHtmlString(txt);
+      controller.text = htmlParseText;
       return textField;
     }
 
     return Container(
       color: colorConvert(styles.backgroundColor, emptyColor: true),
-      child: Text(parseHtmlString(txt),
+      child: Text(htmlParseText,
         style: TextStyle(
             color: colorConvert(htmlTextColor(txt)),
             fontWeight: styles.fontWeight,
@@ -156,6 +176,7 @@ class _TextViewState extends State<TextView> {
       color: colorConvert(styles.backgroundColor, emptyColor: true),
       child: TextField(
         controller: controller,
+        focusNode: _focusNode,
         // decoration: widget.tfTextDecoration,
         style: TextStyle(
             color: colorConvert(htmlTextColor(txt)),
@@ -163,12 +184,13 @@ class _TextViewState extends State<TextView> {
             fontStyle: styles.fontStyle,
             fontSize: htmlFontSize(txt)),
         textAlign: htmlAlignment(txt),
-        onChanged: (text) {
-          widget.onChangeText(text);
-          // if (text.trim().isNotEmpty) {
-          //
-          // }
-        },
+        maxLines: 100,
+        // onChanged: (text) {
+        //   widget.onChangeText(text);
+        //   // if (text.trim().isNotEmpty) {
+        //   //
+        //   // }
+        // },
       ),
     );
   }

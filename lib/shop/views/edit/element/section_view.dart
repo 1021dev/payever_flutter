@@ -308,6 +308,7 @@ class _SectionViewState extends State<SectionView> {
           stylesheets: stylesheets,
           onChangeText: (value) {
             print('Update Text: $value');
+            _updateTextAction(state, value);
           },
         );
         break;
@@ -724,6 +725,15 @@ class _SectionViewState extends State<SectionView> {
     }
     print('payload: $effects');
     screenBloc.add(UpdateSectionEvent(sectionId: section.id, effects: effects));
+  }
+
+  _updateTextAction(ShopEditScreenState state, String text) {
+    Map<String, dynamic> sheets = state.stylesheets[deviceTypeId][selectChildId];
+    TextStyles styles = TextStyles.fromJson(sheets);
+    List<Map<String, dynamic>> effects = styles.getUpdateTextPayload(section.id, selectChildId, sheets, text, state.activeShopPage.templateId);
+    print('payload: $effects');
+    screenBloc.add(UpdateSectionEvent(
+        sectionId: screenBloc.state.selectedSectionId, effects: effects));
   }
 
   List<Map<String, dynamic>> get sectionPayload {

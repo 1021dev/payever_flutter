@@ -348,6 +348,26 @@ class SizeAssist {
     return effects;
   }
 
+  List<Map<String, dynamic>> getUpdateTextPayload(String sectionId, String selectedChildId, Map<String, dynamic>styles, String text, String templateId) {
+    List<Map<String, dynamic>> effects = [];
+    Map<String, dynamic> payload = {};
+
+    payload['childrenRefs'] = {};
+    Map<String, dynamic> data = {'text': text, 'sync': false};
+    payload['id'] = selectedChildId;
+    payload['data'] = data;
+    payload['type'] = 'text';
+    Map<String, dynamic> parent = {'id': sectionId, 'slot': 'host'};
+    payload['parent'] = parent;
+    payload['styles'] = styles;
+
+    Map<String, dynamic> effect = {'payload': payload};
+    effect['target'] = 'templates:$templateId';
+    effect['type'] = 'template:update-element';
+    effects.add(effect);
+    return effects;
+  }
+
   bool isChildOverFromBlockView(Map<String, dynamic> stylesheets, String sectionId, Child selectedChild, ChildSize newSize) {
     for (Child block in selectedChild.blocks) {
       ChildSize blockSize = absoluteSize(stylesheets, sectionId, block);
