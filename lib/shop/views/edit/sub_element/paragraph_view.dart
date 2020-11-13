@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/shop/shop_edit/shop_edit_bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
-import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/models/constant.dart';
 
 class ParagraphView extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;

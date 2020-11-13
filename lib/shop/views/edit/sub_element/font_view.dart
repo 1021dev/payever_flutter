@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/shop/shop_edit/shop_edit_bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
 
 class FontsView extends StatefulWidget {
@@ -89,20 +90,23 @@ class _FontsViewState extends State<FontsView> {
             style: TextStyle(color: Colors.white, fontSize: 18),
             textAlign: TextAlign.center,
           )),
-          InkWell(
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pop(context);
-            },
-            child: Container(
-              width: 30,
-              height: 30,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color.fromRGBO(46, 45, 50, 1),
+          Padding(
+            padding: EdgeInsets.only(left: 20),
+            child: InkWell(
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              },
+              child: Container(
+                width: 30,
+                height: 30,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color.fromRGBO(46, 45, 50, 1),
+                ),
+                child: Icon(Icons.close, color: Colors.grey),
               ),
-              alignment: Alignment.center,
-              child: Icon(Icons.close, color: Colors.grey),
             ),
           )
         ],

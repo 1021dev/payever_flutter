@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
-import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/template_size_state_model.dart';
 import 'package:payever/shop/views/edit/sub_element/add_object_appbar.dart';
 import 'package:shape_of_view/shape_of_view.dart';

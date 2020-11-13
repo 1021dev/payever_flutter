@@ -6,9 +6,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/shop/shop_edit/shop_edit_bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/sub_element/font_view.dart';
 import 'package:payever/shop/views/edit/sub_element/paragraph_view.dart';
+import 'package:payever/shop/views/edit/sub_element/text_options_view.dart';
 import 'package:payever/theme.dart';
 
 class TextStyleView extends StatefulWidget {
@@ -757,6 +759,24 @@ class _TextStyleViewState extends State<TextStyleView> {
                         },
                         child: Container(
                             alignment: Alignment.center,
+                            color: fontType != TextFontType.LineThrough
+                                ? Color.fromRGBO(51, 48, 53, 1)
+                                : Color.fromRGBO(0, 135, 255, 1),
+                            child: Text(
+                              'S',
+                              style: TextStyle(
+                                fontSize: 18,
+                                decoration: TextDecoration.lineThrough,
+                              ),
+                            )))),
+                SizedBox(
+                  width: 1,
+                ),
+                Expanded(
+                    child: InkWell(
+                        onTap: () => navigateSubView(TextOptionsView(screenBloc: screenBloc, stylesheets: widget.stylesheets,)),
+                        child: Container(
+                            alignment: Alignment.center,
                             decoration: BoxDecoration(
                               color: fontType != TextFontType.LineThrough
                                   ? Color.fromRGBO(51, 48, 53, 1)
@@ -765,13 +785,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                                   topRight: Radius.circular(8),
                                   bottomRight: Radius.circular(8)),
                             ),
-                            child: Text(
-                              'S',
-                              style: TextStyle(
-                                fontSize: 18,
-                                decoration: TextDecoration.lineThrough,
-                              ),
-                            ))))
+                            child: Icon(Icons.more_horiz))))
               ],
             ),
           ),
