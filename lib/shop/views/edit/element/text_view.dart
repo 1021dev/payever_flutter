@@ -1,113 +1,165 @@
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/models.dart';
 import '../../../../theme.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 class TextView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
-  final String deviceTypeId;
-  final SectionStyleSheet sectionStyleSheet;
+  final bool isEditState;
+  final Function onChangeText;
 
-  const TextView({this.child, this.stylesheets, this.deviceTypeId, this.sectionStyleSheet});
+  TextView(
+      {this.child,
+      this.stylesheets,
+      this.onChangeText,
+      this.isEditState = false});
+
   @override
-  _TextViewState createState() => _TextViewState(child, sectionStyleSheet);
+  _TextViewState createState() => _TextViewState();
 }
 
 class _TextViewState extends State<TextView> {
-  final Child child;
-  final SectionStyleSheet sectionStyleSheet;
+  TextStyles styles;
+  final FocusNode _focusNode = FocusNode();
+  String txt;
+  String htmlParseText;
+  TextEditingController controller = TextEditingController();
 
-  _TextViewState(this.child, this.sectionStyleSheet);
+  _TextViewState();
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(() {
+      print('Has focus: ${_focusNode.hasFocus} ${controller.text}');
+      if (!_focusNode.hasFocus && htmlParseText != controller.text) {
+        widget.onChangeText(controller.text);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return _body();
+    styles = getStyles();
+    if (widget.child.data is Map) {
+      Data data = Data.fromJson(widget.child.data);
+      if (data.text != null) txt = data.text;
+      if (widget.child.data != null) print('Text Data:' + data.text);
+    } else {
+      return Container();
+    }
+    return body;
   }
 
-  Widget _body() {
-    String txt = '';
-    if (child.data is Map) {
-      Data data = Data.fromJson(child.data);
-      if (data.text != null) txt = data.text;
-    } else {
-      print('Data is not Map: ${child.data}');
+  Widget get body {
+    // <div style="text-align: center;"><font style="font-size: 41px;">SELECTION</font></div>
+    // <font style="font-size: 20px;">NEW IN: THE B27</font>
+    // <div style="text-align: center;"><font face="Roboto"><span style="font-size: 18px;">05</span></font></div><div style="text-align: center;"><font face="Roboto"><span style="font-size: 18px;">NOVEMBER</span></font></div>
+    htmlParseText = styles.parseHtmlString(txt);
+    print('htmlParseText: $htmlParseText');
+    controller.text = htmlParseText;
+    return textField;
+  }
+
+  TextAlign htmlAlignment(String text) {
+    if (!styles.isHtmlText(text)) return styles.textAlign;
+    if (text.contains('text-align: center')) {
+      return TextAlign.center;
+    } else if (text.contains('text-align: left')) {
+      return TextAlign.start;
+    } else if (text.contains('text-align: right')) {
+      return TextAlign.end;
     }
-//    print('text value: $txt');
+    return styles.textAlign;
+  }
 
-    if (txt.contains('<div') ||
-        txt.contains('<span') ||
-        txt.contains('<font')) {
-      TextStyles styles = getStyles();
+  Color htmlTextColor(String text) {
+    if (!styles.isHtmlText(text)) return colorConvert(styles.color);
 
-      if (styles == null || styles.display == 'none') {
-        return Container();
+    if (text.contains('color="')) {
+      int index = text.indexOf('color="');
+      String color = text.substring(index + 7, index + 14);
+      return colorConvert(color);
+    }
+    if (text.contains('color: rgb')) {
+      int index = text.indexOf('color: rgb');
+      String color = text.substring(index + 10, index + 25);
+      String newColor =  color.replaceAll(RegExp(r"[^\s\w]"), '');
+      List<String>colors = newColor.split(' ');
+      return Color.fromRGBO(int.parse(colors[0]), int.parse(colors[1]), int.parse(colors[2]), 1);
+    }
+    return colorConvert(styles.color);
+  }
+
+  double htmlFontSize(String text) {
+    if (!styles.isHtmlText(text)) return styles.fontSize;
+
+    if (text.contains('font-size:')) {
+      int index = text.indexOf('font-size:');
+      String font = text.substring(index + 11, index + 13);
+      try {
+        return double.parse(font);
+      } catch (e) {
+        return styles.fontSize;
       }
-
-//      print('Html Text Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
-
-      return Container(
-        color: colorConvert(styles.backgroundColor, emptyColor: true),
-        width: styles.textWidth(),
-        height: styles.height,
-        alignment: styles.getTextContainAlign(),
-        margin: EdgeInsets.only(
-            left: styles.getMarginLeft(sectionStyleSheet),
-            right: styles.marginRight,
-            top: styles.getMarginTop(sectionStyleSheet),
-            bottom: styles.marginBottom),
-        child: HtmlWidget(
-          // the first parameter (`html`) is required
-          '''
-            $txt
-           ''',
-          textStyle: TextStyle(
-            color: colorConvert(styles.color),
-              fontSize: styles.textFontSize(),
-              fontWeight: styles.textFontWeight()),
-        )
-        /*Html(
-          data: """
-              $txt
-              """,
-          onLinkTap: (url) {
-            print("Opening $url...");
-          },
-        )*/,
-      );
     }
-    TextStyles styles;
-    if (child.styles != null && child.styles.isNotEmpty) {
-      styles = TextStyles.fromJson(child.styles);
-    } else {
-      styles = getStyles();
+    return styles.fontSize;
+  }
+
+  FontWeight htmlFontWeight(String text) {
+    if (!styles.isHtmlText(text)) return styles.fontWeight;
+
+    if (text.contains('font-weight: normal')) {
+      return styles.getFontWeight('normal');
+    } else if (text.contains('font-weight: bold')) {
+      return styles.getFontWeight('bold');
     }
-    if (styles == null || styles.display == 'none')
-      return Container();
+    return styles.fontWeight;
+  }
 
-    print('Text Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
-
+  Widget get textField {
     return Container(
-      width: styles.textWidth(),
-      height: styles.height,
-      margin: EdgeInsets.only(
-          left: styles.getMarginLeft(sectionStyleSheet),
-          right: styles.marginRight,
-          top: styles.getMarginTop(sectionStyleSheet),
-          bottom: styles.marginBottom),
-      alignment: Alignment.center,
-      child: Text(txt,
-          style: TextStyle(
-              color: colorConvert(styles.color),
-              fontWeight: styles.textFontWeight(),
-              fontSize: styles.textFontSize())),
+      // alignment: styles.textAlign,
+      color: colorConvert(styles.backgroundColor, emptyColor: true),
+      child: TextField(
+        controller: controller,
+        focusNode: _focusNode,
+        enabled: widget.isEditState,
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.zero,
+          isDense: true,
+          border: InputBorder.none,
+          focusedBorder: InputBorder.none,
+          enabledBorder: InputBorder.none,
+          errorBorder: InputBorder.none,
+          disabledBorder: InputBorder.none,
+        ),
+        style: TextStyle(
+            color: htmlTextColor(txt),
+            fontWeight: styles.fontWeight,
+            fontStyle: styles.fontStyle,
+            fontSize: htmlFontSize(txt)),
+        textAlign: htmlAlignment(txt),
+        maxLines: 100,
+        onChanged: (text) {
+          // widget.onChangeText(text);
+        },
+      ),
     );
   }
 
   TextStyles getStyles() {
     try {
-      return TextStyles.fromJson(
-          widget.stylesheets[widget.deviceTypeId][child.id]);
+      Map<String, dynamic> json = widget.stylesheets[widget.child.id];
+      print('Text ID ${widget.child.id}');
+      print('Text Styles: $json');
+      return TextStyles.fromJson(json);
     } catch (e) {
       return null;
     }

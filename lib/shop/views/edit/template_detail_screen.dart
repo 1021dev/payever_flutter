@@ -1,176 +1,138 @@
-import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:payever/commons/utils/draggable_widget.dart';
-import 'package:payever/settings/widgets/app_bar.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:payever/blocs/shop/shop_edit/shop_edit_bloc.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/models/template_size_state_model.dart';
+import 'package:payever/shop/views/edit/add_object_screen.dart';
+import 'package:payever/shop/views/edit/sub_element/text_style_view.dart';
 import 'package:payever/shop/views/edit/template_view.dart';
-import 'element/sub_element/resizeable_widget.dart';
+import 'package:payever/blocs/bloc.dart';
+import 'package:provider/provider.dart';
+import 'sub_element/shop_edit_appbar.dart';
 
 class TemplateDetailScreen extends StatefulWidget {
   final ShopPage shopPage;
-  final Template template;
-  final Map<String, dynamic> stylesheets;
+  final String templateId;
+  final ShopEditScreenBloc screenBloc;
 
-  const TemplateDetailScreen({this.shopPage, this.template, this.stylesheets});
+  const TemplateDetailScreen(
+      {this.shopPage, this.templateId, this.screenBloc});
 
   @override
-  _TemplateDetailScreenState createState() => _TemplateDetailScreenState(shopPage, template, stylesheets);
+  _TemplateDetailScreenState createState() => _TemplateDetailScreenState(
+      shopPage: shopPage,
+      templateId: templateId,
+      screenBloc: screenBloc);
 }
 
 class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
   final ShopPage shopPage;
-  final Template template;
-  final Map<String, dynamic> stylesheets;
-  DragController dragController = DragController();
+  final String templateId;
+  final ShopEditScreenBloc screenBloc;
+  TemplateSizeStateModel templateSizeStateModel = TemplateSizeStateModel();
+  _TemplateDetailScreenState(
+      {this.shopPage, this.templateId, this.screenBloc});
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  @override
+  void initState() {
+    screenBloc.add(ActiveShopPageEvent(activeShopPage: widget.shopPage));
+    super.initState();
+  }
 
-
-  int count = 0;
-  _TemplateDetailScreenState(this.shopPage, this.template, this.stylesheets);
-  StreamController<double> controller = StreamController.broadcast();
-  double position;
-
+  @override
+  void dispose() {
+    // screenBloc.add(ActiveShopPageEvent(activeShopPage: null));
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: Appbar(shopPage.name),
-        body: SafeArea(
-          child: TemplateView(
-            shopPage: shopPage,
-            template: template,
-            stylesheets: stylesheets,
-          ),
-        ),
-    );
-  }
-
-  get resizeableDemo {
-    return Container(
-      child: ResizeableWidget(
-        child: Container(color: Colors.red, width: 500, height: 200,),
-      ),
-    );
-  }
-
-  get _dragSize {
-    return StreamBuilder(
-      stream: controller.stream,
-      builder: (context, snapshot) => Container(
-        alignment: Alignment.bottomCenter,
-        color: Colors.red,
-        height: snapshot.hasData ? snapshot.data : 200.0,
-        width: double.infinity,
-        child: GestureDetector(
-            onVerticalDragUpdate: (DragUpdateDetails details) {
-              position = /*MediaQuery.of(context).size.height -*/
-              details.globalPosition.dy;
-              print('position dy = ${position}');
-              position.isNegative
-                  ? Navigator.pop(context)
-                  : controller.add(position);
-            },
-            behavior: HitTestBehavior.translucent,
-            child: Text('Child')),
-      ),
-    );
-  }
-
-  get _draggable {
-    return Container(
-      color: Colors.white,
-      child: Stack(
-          children:[
-            // other widgets...
-            DraggableWidget(
-              bottomMargin: 80,
-              topMargin: 80,
-              intialVisibility: true,
-              horizontalSapce: 20,
-              shadowBorderRadius: 50,
-              child: Container(
-                height: 50,
-                width: 50,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.blue,
-                ),
-              ),
-              initialPosition: AnchoringPosition.topLeft,
-              dragController: dragController,
-            )
-          ]
-      ),
-    );
-  }
-
-  get _body {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-            Draggable(
-              child: buildBox("+1", Colors.red[200]),
-              feedback: buildBox("+1", Colors.red[200]),
-              childWhenDragging: buildBox("+1", Colors.grey[300]),
-              data: 1,
-              onDragStarted: (){
-                print("onDragStarted");
-              },
-              onDragCompleted: (){
-                print("onDragCompleted");
-              },
-              onDragEnd: (details){
-                print("onDragEnd Accept = "+details.wasAccepted.toString());
-                print("onDragEnd Velocity = "+details.velocity.pixelsPerSecond.distance.toString());
-                print("onDragEnd Offeset= "+details.offset.direction.toString());
-              },
-              onDraggableCanceled: (Velocity velocity, Offset offset){
-                print("onDraggableCanceled "+velocity.toString());
-              },
-            ),
-            Draggable(
-              child: buildBox("-1", Colors.blue[200]),
-              feedback: buildBox("-1", Colors.blue[200]),
-              childWhenDragging: buildBox("-1", Colors.blue[300]),
-              data: -1,
-            )
-          ]),
-          DragTarget(
-            builder: (BuildContext context, List<int> candidateData,
-                List<dynamic> rejectedData) {
-              print("candidateData = " +
-                  candidateData.toString() +
-                  " , rejectedData = " +
-                  rejectedData.toString());
-              return buildBox("$count", Colors.green[200]);
-            },
-            onWillAccept: (data) {
-              print("onWillAccept");
-              return data == 1 || data == -1; // accept when data = 1 only.
-            },
-            onAccept: (data) {
-              print("onAccept");
-              count += data;
-            },
-            onLeave: (data) {
-              print("onLeave");
-            },
-          )
+    return MultiProvider(
+        providers: [
+          Provider.value(value: templateSizeStateModel),
+          ChangeNotifierProvider<TemplateSizeStateModel>(
+              create: (_) => templateSizeStateModel),
         ],
-      ),
-    );
+        child: BlocListener(
+          listener: (BuildContext context, ShopEditScreenState state) async {},
+          bloc: screenBloc,
+          child: BlocBuilder(
+            bloc: screenBloc,
+            builder: (BuildContext context, state) {
+              return Scaffold(
+                  key: scaffoldKey,
+                  appBar: ShopEditAppbar(
+                    onTapAdd: () => _addObject(state),
+                    onTapStyle: () => _showStyleDialogView(state),
+                  ),
+                  backgroundColor: Colors.grey[800],
+                  body: SafeArea(
+                      bottom: false,
+                      child: TemplateView(
+                        screenBloc: screenBloc,
+                        shopPage: shopPage,
+                        templateId: templateId,
+                        enableTapSection: true,
+                      )));
+            },
+          ),
+        ));
   }
 
-  Container buildBox(String title, Color color) {
-    return Container(
-        width: 100,
-        height: 100,
-        color: color,
-        child: Center(
-            child: Text(title,
-                style: TextStyle(fontSize: 18, color: Colors.black))));
+  void _addObject(ShopEditScreenState state) async {
+    if(state.selectedSectionId.isEmpty) {
+      Fluttertoast.showToast(msg: 'Please select Section to add new object.');
+      return;
+    }
+    final result = await Navigator.push(
+        context,
+        PageTransition(
+            child: AddObjectScreen(screenBloc: screenBloc, templateSizeStateModel: templateSizeStateModel,),
+            type: PageTransitionType.fade)
+    );
+
+    print('result: $result');
+    if (result == null) return;
+    ShopObject shopObject;
+    switch(result) {
+      case 0:
+        shopObject = ShopObject(name: 'text');
+        break;
+      case 1:
+        shopObject = ShopObject(name: 'square');
+        break;
+      case 2:
+        shopObject = ShopObject(name: 'rounded-square');
+        break;
+      case 3:
+        shopObject = ShopObject(name: 'circle');
+        break;
+      case 4:
+        shopObject = ShopObject(name: 'Triangle');
+        break;
+    }
+
+    if (shopObject == null) return;
+    templateSizeStateModel.setShopObject(shopObject);
+  }
+
+  void _showStyleDialogView(ShopEditScreenState state) {
+    if (state.selectedChild == null) {
+      Fluttertoast.showToast(msg: 'Please select an element!');
+      return;
+    }
+    showModalBottomSheet(
+        context: context,
+        barrierColor: Colors.transparent,
+        // isScrollControlled: true,
+        builder: (builder) {
+          return TextStyleView(
+            screenBloc: screenBloc,
+            stylesheets: state.stylesheets[state.activeShopPage.stylesheetIds.mobile],
+          );
+        });
   }
 }
-
-

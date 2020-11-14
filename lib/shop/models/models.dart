@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:payever/theme.dart';
+
+import 'style_assist.dart';
 part 'models.g.dart';
 
 @JsonSerializable()
@@ -154,12 +156,6 @@ class ThemeResponse {
 
 }
 
-class Preview {
-  String id;
-  dynamic actionId;
-  String previewUrl;
-}
-
 @JsonSerializable()
 class ShopPage {
   ShopPage();
@@ -276,6 +272,12 @@ class Child {
   @JsonKey(name: 'type')            String type;
   @JsonKey(name: 'data')            dynamic data;
 
+  @JsonKey(ignore: true)
+  List<Child> blocks = [];
+  bool get isButton {
+    return type == 'button';
+  }
+
   factory Child.fromJson(Map<String, dynamic> json) => _$ChildFromJson(json);
   Map<String, dynamic> toJson() => _$ChildToJson(this);
 }
@@ -307,20 +309,20 @@ class Parent {
   Parent();
 
   @JsonKey(name: 'id')    String id;
-  @JsonKey(name: 'slot')  String  slot;
+  @JsonKey(name: 'slot')  String slot;
 
   factory Parent.fromJson(Map<String, dynamic> json) => _$ParentFromJson(json);
   Map<String, dynamic> toJson() => _$ParentToJson(this);
 }
 
 @JsonSerializable()
-class BaseStyles {
+class BaseStyles with BackgroundAssist, StyleAssist, SizeAssist, DecorationAssist {
   BaseStyles();
 
   // if display is `none`, the element is hidden
   @JsonKey(name: 'display', defaultValue: 'flex')
   String display;
-
+  bool get active {return display != 'none';}
   // Background
   @JsonKey(name: 'background', defaultValue: '#ffffff')
   String background;
@@ -341,22 +343,8 @@ class BaseStyles {
   Alignment getBackgroundImageAlignment() {
     return getAlign(backgroundPosition);
   }
-  Gradient getGradient() {
-    String txt = backgroundImage
-        .replaceAll('linear-gradient', '')
-        .replaceAll(RegExp(r"[^\s\w]"), '');
-    List<String> txts = txt.split(' ');
-    double degree = double.parse(txts[0].replaceAll('deg', ''));
-    String color1 = txts[1];
-    String color2 = txts[2];
-    double deg = degree * pi / 180;
-    return LinearGradient(
-        begin: Alignment(-sin(deg), cos(deg)),
-        end: Alignment(sin(deg), -cos(deg)),
-        colors: <Color>[
-          colorConvert(color1),
-          colorConvert(color2),
-        ]);
+  Gradient get gradient {
+    return getGradient(backgroundImage);
   }
   // ------------------------------------------------------
   // ------------------------------------------------------
@@ -406,11 +394,20 @@ class BaseStyles {
   String gridColumn;
   @JsonKey(name: 'gridRow', defaultValue: '1 / span 1')
   String gridRow;
-  @JsonKey(name: 'gridArea')
-  dynamic gridArea;
+  @JsonKey(name: 'gridArea') // (1 / 3 / span 1 / span 1)
+  String gridArea;
 
   // Size
   // Width is ignored because Text Width has string value: '100%'
+  // String or dynamic
+  @JsonKey(name: 'width', defaultValue: 0)
+  dynamic width0;
+  double get width {
+    double width1 = getWidth(width0);
+    if (minWidth != null && minWidth > width1)
+      return minWidth * GlobalUtils.shopBuilderWidthFactor;
+    return width1;
+  }
   @JsonKey(name: 'height', defaultValue: 0)
   double height;
   @JsonKey(name: 'minWidth', defaultValue: 0)
@@ -420,8 +417,9 @@ class BaseStyles {
 
   // Relative
   @JsonKey(name: 'margin', defaultValue: '0 0 0 0')
-  String margin;
-  @JsonKey(name: 'padding', defaultValue: '8 28')
+  dynamic margin; // int 0 or String '0 0 0 0'
+
+  @JsonKey(name: 'padding', defaultValue: '0 0') // Virtical Horizontal
   String padding;
   @JsonKey(name: 'position', defaultValue: 'absolute')
   String position;
@@ -443,32 +441,33 @@ class BaseStyles {
   // Title (Only Text and Button Elements)
   @JsonKey(name: 'color', defaultValue: '#000000')
   String color;
-  // String or double
+  // String(auto) or double
   @JsonKey(name: 'fontSize', defaultValue: 15)
-  dynamic fontSize;
+  dynamic fontSize0;
   @JsonKey(name: 'fontStyle', defaultValue: 'normal')
-  String fontStyle;
+  String fontStyle0;
   // String(bold) or double
   @JsonKey(name: 'fontWeight', defaultValue: 400)
-  dynamic fontWeight;
+  dynamic fontWeight0;
   @JsonKey(
       name: "fontFamily",
       defaultValue: "Helvetica Neue,Helvetica,Arial,sans-serif")
   String fontFamily;
   // textAlign is only For Text, Shop Product, Shop Product Category
-  @JsonKey(name: 'textAlign', defaultValue: 'center')
-  String textAlign;
-  Alignment getTextAlign() {
-    return getAlign(textAlign, isTextStyle: true);
+  @JsonKey(name: 'textAlign')
+  String textAlign0;
+  TextAlign get textAlign {
+    return getTextAlign(textAlign0);
   }
-  double textFontSize() {
-    return (fontSize is num) ? (fontSize as num).toDouble() : 0;
+  double get fontSize {
+    return getFontSize(fontSize0);
   }
-  FontWeight textFontWeight() {
-    return getFontWeight(fontWeight);
+
+  FontWeight get fontWeight {
+    return getFontWeight(fontWeight0);
   }
-  FontStyle textFontStyle() {
-    return getFontStyle(fontStyle);
+  FontStyle get fontStyle {
+    return getFontStyle(fontStyle0);
   }
   // ------------------------------------------------------
   // ------------------------------------------------------
@@ -482,9 +481,9 @@ class BaseStyles {
   @JsonKey(name: 'titleFontFamily', defaultValue: 'Roboto')
   String titleFontFamily;
   @JsonKey(name: 'titleFontWeight', defaultValue: 'bold')
-  String titleFontWeight;
+  String titleFontWeight0;
   @JsonKey(name: 'titleFontStyle', defaultValue: 'normal')
-  String titleFontStyle;
+  String titleFontStyle0;
   @JsonKey(name: 'titleTextDecoration')
   dynamic titleTextDecoration;
 
@@ -496,133 +495,45 @@ class BaseStyles {
   @JsonKey(name: 'priceFontFamily', defaultValue: 'Roboto')
   String priceFontFamily;
   @JsonKey(name: 'priceFontWeight', defaultValue: 'normal')
-  String priceFontWeight;
+  String priceFontWeight0;
   @JsonKey(name: 'priceFontStyle', defaultValue: 'normal')
-  String priceFontStyle;
+  String priceFontStyle0;
   @JsonKey(name: 'priceTextDecoration')
   dynamic priceTextDecoration;
 
-  FontWeight getTitleFontWeight() {
-    return getFontWeight(titleFontWeight);
+  get titleFontWeight {
+    return getFontWeight(titleFontWeight0);
   }
-  FontStyle getTitleFontStyle() {
-    return getFontStyle(titleFontStyle);
+  get titleFontStyle {
+    return getFontStyle(titleFontStyle0);
   }
-  FontWeight getPriceFontWeight() {
-    return getFontWeight(priceFontWeight);
+  get priceFontWeight {
+    return getFontWeight(priceFontWeight0);
   }
-  FontStyle getPriceFontStyle() {
-    return getFontStyle(priceFontStyle);
+  get priceFontStyle {
+    return getFontStyle(priceFontStyle0);
   }
 
-  // CategoryTitle
-  @JsonKey(name: 'categoryTitleFontSize', defaultValue: 40)
-  double categoryTitleFontSize;
-  @JsonKey(name: 'categoryTitleColor', defaultValue: '#000000')
-  String categoryTitleColor;
-  @JsonKey(name: 'categoryTitleFontFamily', defaultValue: 'Roboto')
-  String categoryTitleFontFamily;
-  @JsonKey(name: 'categoryTitleFontWeight', defaultValue: 'bold')
-  String categoryTitleFontWeight;
-  @JsonKey(name: 'categoryTitleFontStyle', defaultValue: 'normal')
-  String categoryTitleFontStyle;
-  @JsonKey(name: 'categoryTitleTextDecoration')
-  dynamic categoryTitleTextDecoration;
-
-  // Category Filter Title
-  @JsonKey(name: 'filterFontSize', defaultValue: 13)
-  double filterFontSize;
-  @JsonKey(name: 'filterColor', defaultValue: '#a5a5a5')
-  String filterColor;
-  @JsonKey(name: 'filterFontFamily', defaultValue: 'Roboto')
-  String filterFontFamily;
-  @JsonKey(name: 'filterFontWeight', defaultValue: 'normal')
-  String filterFontWeight;
-  @JsonKey(name: 'filterFontStyle', defaultValue: 'normal')
-  String filterFontStyle;
-  @JsonKey(name: 'filterTextDecoration')
-  dynamic filterTextDecoration;
   // ------------------------------------------------------
   // ------------------------------------------------------
-
-  double getMarginTop(SectionStyleSheet sectionStyleSheet) {
-    double margin = marginTop;
-    int row =  int.parse(gridRow.split(' ').first);
-    if (row == 1) return margin;
-    List<String>rows = sectionStyleSheet.gridTemplateRows.split(' ');
-    for (int i = 0; i < row - 1; i ++)
-      margin += double.parse(rows[i]);
-    return margin;
+  get paddingH {
+    return double.parse(padding.split(' ').last);
   }
 
-  double getMarginLeft(SectionStyleSheet sectionStyleSheet) {
-    double margin = marginLeft;
-    int column = int.parse(gridColumn.split(' ').first);
-    if (column == 1) return margin;
-    List<String>columns = sectionStyleSheet.gridTemplateColumns.split(' ');
-    for (int i = 0; i < column - 1; i ++)
-      margin += double.parse(columns[i]);
-    return margin;
+  get paddingV {
+    if (padding == null || padding.isEmpty) return 0;
+    return double.parse(padding.split(' ').first);
   }
 
-  Alignment getAlign(String align, {bool isTextStyle = false}) {
-    if (align == 'center')
-      return Alignment.center;
-    if (align == 'top')
-      return Alignment.topCenter;
-    if (align == 'bottom')
-      return Alignment.bottomCenter;
-    if (align == 'right')
-      return Alignment.centerRight;
-    if (align == 'left')
-      return Alignment.centerLeft;
-
-    return isTextStyle ? Alignment.center : Alignment.topLeft;
+  double getMarginTop(SectionStyles sectionStyleSheet) {
+    return getMarginTopAssist(marginTop, sectionStyleSheet.gridTemplateRows, gridRow);
   }
 
-  FontWeight getFontWeight(dynamic fontWeight) {
-    if (fontWeight == 'bold')
-      return FontWeight.bold;
-    if (fontWeight == 'normal')
-      return FontWeight.w400;
-
-    if (fontWeight < 200) return FontWeight.w100;
-    if (fontWeight < 300) return FontWeight.w200;
-    if (fontWeight < 400) return FontWeight.w300;
-    if (fontWeight < 500) return FontWeight.w400;
-    if (fontWeight < 600) return FontWeight.w500;
-    if (fontWeight < 700) return FontWeight.w600;
-    if (fontWeight < 800) return FontWeight.w700;
-    if (fontWeight < 900) return FontWeight.w800;
-    return FontWeight.w900;
+  double getMarginLeft(SectionStyles sectionStyleSheet) {
+    return getMarginLeftAssist(marginLeft, sectionStyleSheet.gridTemplateColumns, gridColumn);
   }
 
-  FontStyle getFontStyle(String fontStyle) {
-    if (fontStyle == 'italic')
-      return FontStyle.italic;
-    return FontStyle.normal;
-  }
-
-  double getBorderRadius(dynamic radius) {
-    if (radius is num)
-      return radius.toDouble();
-
-    if (radius == '0')
-      return 0;
-    if (radius == '50%')
-      return 40; // (Need to check more)
-
-    if (radius is String) {
-      try{
-        return double.parse(radius);
-      } catch(e) {
-        return 0;
-      }
-    }
-    return 0;
-  }
-
-  get decoration {
+  Decoration get decoration {
     return BoxDecoration(
 //      border: getBorder,
       borderRadius: BorderRadius.circular(getBorderRadius(borderRadius)),
@@ -630,50 +541,12 @@ class BaseStyles {
     );
   }
 
-  get getBorder {
-    if (border == null || border == false) {
-      return Border.all(width: 0);
-    }
-    List<String> borderAttrs = border.toString().split(' ');
-    double borderWidth = double.parse(borderAttrs.first.replaceAll('px', ''));
-    String borderColor = borderAttrs.last;
-    return Border.all(color: colorConvert(borderColor), width: borderWidth);
+  Border get getBorder {
+    return getBorder1(border);
   }
 
-  get getBoxShadow {
-    if (shadow == null || shadow.isEmpty) {
-      return [
-        BoxShadow(
-          color: Colors.transparent,
-          spreadRadius: 0,
-          blurRadius: 0,
-          offset: Offset.zero, // changes position of shadow
-        )
-      ];
-    }
-
-//    drop-shadow(7.071067811865474pt 7.071067811865477pt 5pt rgba(0,0,0,1))
-    List<String>attrs0 = shadow.replaceAll('drop-shadow', '').split(' ');
-    List<String>attrs =  attrs0.map((element) {
-      if (element.contains('rgb'))
-        return element.replaceAll('rgba', '').replaceAll(',', ' ').replaceAll('(', '').replaceAll(')', '');
-      return element.replaceAll('pt', '').replaceAll('(', '');
-    }).toList();
-    double blurRadius = double.parse(attrs[2]);
-    double offsetX = double.parse(attrs[0]);
-    double offsetY = double.parse(attrs[1]);
-    List<String>colors = attrs[3].split(' ');
-    int colorR = int.parse(colors[0]);
-    int colorG = int.parse(colors[1]);
-    int colorB = int.parse(colors[2]);
-    double opacity = double.parse(colors[3]);
-    return [
-      BoxShadow(
-        color: Color.fromRGBO(colorR, colorG, colorB, opacity),
-        blurRadius: blurRadius,
-        offset: Offset(offsetX, offsetY), // changes position of shadow
-      ),
-    ];
+  List<BoxShadow> get getBoxShadow {
+    return getBoxShadow1(shadow);
   }
 
   factory BaseStyles.fromJson(Map<String, dynamic> json) => _$BaseStylesFromJson(json);
@@ -681,19 +554,8 @@ class BaseStyles {
 }
 
 @JsonSerializable()
-class SectionStyleSheet extends BaseStyles {
-  SectionStyleSheet();
-  // String or dynamic
-  @JsonKey(name: 'width')
-  dynamic width0;
-
-  get getWidth {
-    if (width0 == '100%') return double.infinity;
-    if (width0 is num) {
-      return (width0 as num).toDouble();
-    }
-    return 0;
-  }
+class SectionStyles extends BaseStyles {
+  SectionStyles();
 
   @JsonKey(name: 'gridTemplateRows', defaultValue: '0 0 0')
   String gridTemplateRows;
@@ -703,23 +565,30 @@ class SectionStyleSheet extends BaseStyles {
   @JsonKey(name: 'zIndex')
   dynamic zIndex;
 
-  factory SectionStyleSheet.fromJson(Map<String, dynamic> json) => _$SectionStyleSheetFromJson(json);
-  Map<String, dynamic> toJson() => _$SectionStyleSheetToJson(this);
+  get width {
+    double width = super.width;
+    if (width == 0)
+      width = Measurements.width;
+
+    return width;
+  }
+
+  factory SectionStyles.fromJson(Map<String, dynamic> json) => _$SectionStylesFromJson(json);
+  Map<String, dynamic> toJson() => _$SectionStylesToJson(this);
 }
 
 @JsonSerializable()
 class TextStyles extends BaseStyles {
   TextStyles();
 
-  Alignment getTextContainAlign() {
-    return getAlign(textAlign);
-  }
+  @JsonKey(name: 'height', defaultValue: 18)
+  double height;
 
-  // Size String('100%') or double
-  @JsonKey(name: 'width', defaultValue: 0)
-  dynamic width0;
-  double textWidth() {
-    return (width0 is num) ? (width0 as num).toDouble() : double.infinity;
+  @JsonKey(name: 'backgroundColor')
+  String backgroundColor;
+
+  get textHeight {
+      return (minHeight > height) ? minHeight : height;
   }
 
   factory TextStyles.fromJson(Map<String, dynamic> json) => _$TextStylesFromJson(json);
@@ -730,8 +599,9 @@ class TextStyles extends BaseStyles {
 class ButtonStyles extends BaseStyles{
   ButtonStyles();
 
-  @JsonKey(name: 'width', defaultValue: 0)
-  double width;
+  @JsonKey(name: 'height', defaultValue: 20)
+  double height;
+
   @JsonKey(name: 'color', defaultValue: '#FFFFFF')
   String color;
 
@@ -747,8 +617,6 @@ class ButtonStyles extends BaseStyles{
 class ShopCartStyles extends BaseStyles{
   ShopCartStyles();
 
-  @JsonKey(name: 'width', defaultValue: 0)
-  double width;
   // Badge
   @JsonKey(name: 'badgeColor', defaultValue: '#FFFFFF')
   String badgeColor;
@@ -769,9 +637,6 @@ class ShopCartStyles extends BaseStyles{
 class ShapeStyles extends BaseStyles {
   ShapeStyles();
 
-  @JsonKey(name: 'width', defaultValue: 0)
-  double width;
-
   factory ShapeStyles.fromJson(Map<String, dynamic> json) => _$ShapeStylesFromJson(json);
   Map<String, dynamic> toJson() => _$ShapeStylesToJson(this);
 }
@@ -780,8 +645,6 @@ class ShapeStyles extends BaseStyles {
 class ImageStyles extends BaseStyles {
   ImageStyles();
 
-  @JsonKey(name: 'width', defaultValue: 0)
-  double width;
   // Shadow
   @JsonKey(name: 'shadowAngle', defaultValue: 0)
   double shadowAngle;
@@ -807,9 +670,6 @@ class ImageStyles extends BaseStyles {
 class SocialIconStyles extends BaseStyles {
   SocialIconStyles();
 
-  @JsonKey(name: 'width', defaultValue: 0)
-  double width;
-
   factory SocialIconStyles.fromJson(Map<String, dynamic> json) => _$SocialIconStylesFromJson(json);
   Map<String, dynamic> toJson() => _$SocialIconStylesToJson(this);
 }
@@ -818,13 +678,13 @@ class SocialIconStyles extends BaseStyles {
 class ShopProductsStyles extends BaseStyles {
   ShopProductsStyles();
 
-  @JsonKey(name: 'width', defaultValue: 0)
-  double width;
-
   @JsonKey(name: 'itemWidth', defaultValue: 0)
   double itemWidth;
   @JsonKey(name: 'itemHeight', defaultValue: 0)
   double itemHeight;
+
+  @JsonKey(name: 'textAlign', defaultValue:'center')
+  String textAlign0;
 
   @JsonKey(name: 'productTemplateColumns', defaultValue: 0)
   num productTemplateColumns;
@@ -839,8 +699,6 @@ class ShopProductsStyles extends BaseStyles {
 class ShopProductDetailStyles extends BaseStyles {
   ShopProductDetailStyles();
 
-  @JsonKey(name: 'width', defaultValue: 0)
-  double width;
   // Text
   // attributes are same as parent
 
@@ -852,15 +710,15 @@ class ShopProductDetailStyles extends BaseStyles {
   @JsonKey(name: 'buttonFontFamily', defaultValue: 'Roboto')
   String buttonFontFamily;
   @JsonKey(name: 'buttonFontWeight', defaultValue: 'normal')
-  String buttonFontWeight;
+  String buttonFontWeight0;
   @JsonKey(name: 'buttonFontStyle', defaultValue: 'normal')
-  String buttonFontStyle;
+  String buttonFontStyle0;
 
-  FontWeight getButtonFontWeight() {
-    return getFontWeight(buttonFontWeight);
+  get buttonFontWeight {
+    return getFontWeight(buttonFontWeight0);
   }
-  FontStyle getButtonFontStyle() {
-    return getFontStyle(buttonFontStyle);
+  get buttonFontStyle {
+    return getFontStyle(buttonFontStyle0);
   }
 
   factory ShopProductDetailStyles.fromJson(Map<String, dynamic> json) => _$ShopProductDetailStylesFromJson(json);
@@ -872,27 +730,59 @@ class ShopProductCategoryStyles extends BaseStyles {
   ShopProductCategoryStyles();
   // width, height, margin, and the other attributes respective a widget Size and position are null because this widget is full size of Screen.
   // Moreover height is much greater than screen size so it can be scrolled.
+  @JsonKey(name: 'textAlign', defaultValue:'center')
+  String textAlign0;
+
   @JsonKey(name: 'imageCorners', defaultValue:'rounded')
   String imageCorners;
   @JsonKey(name: 'columns', defaultValue: 1)
   num columns;
 
+  // CategoryTitle
+  @JsonKey(name: 'categoryTitleFontSize', defaultValue: 40)
+  double categoryTitleFontSize;
+  @JsonKey(name: 'categoryTitleColor', defaultValue: '#000000')
+  String categoryTitleColor;
+  @JsonKey(name: 'categoryTitleFontFamily', defaultValue: 'Roboto')
+  String categoryTitleFontFamily;
+  @JsonKey(name: 'categoryTitleFontWeight', defaultValue: 'bold')
+  String categoryTitleFontWeight0;
+  @JsonKey(name: 'categoryTitleFontStyle', defaultValue: 'normal')
+  String categoryTitleFontStyle0;
+  @JsonKey(name: 'categoryTitleTextDecoration')
+  dynamic categoryTitleTextDecoration;
+
+  // Category Filter Title
+  @JsonKey(name: 'filterFontSize', defaultValue: 13)
+  double filterFontSize;
+  @JsonKey(name: 'filterColor', defaultValue: '#a5a5a5')
+  String filterColor;
+  @JsonKey(name: 'filterFontFamily', defaultValue: 'Roboto')
+  String filterFontFamily;
+  @JsonKey(name: 'filterFontWeight', defaultValue: 'normal')
+  String filterFontWeight0;
+  @JsonKey(name: 'filterFontStyle', defaultValue: 'normal')
+  String filterFontStyle0;
+  @JsonKey(name: 'filterTextDecoration')
+  dynamic filterTextDecoration;
+
   double getCategoryBorderRadius() {
     return getBorderRadius(borderRadius);
   }
 
-  FontWeight getCategoryTitleFontWeight() {
-    return getFontWeight(categoryTitleFontWeight);
+  get categoryTitleFontWeight {
+    return getFontWeight(categoryTitleFontWeight0);
   }
-  FontStyle getCategoryTitleFontStyle() {
-    return getFontStyle(categoryTitleFontStyle);
+  get categoryTitleFontStyle {
+    return getFontStyle(categoryTitleFontStyle0);
   }
-  FontWeight getFilterFontWeight() {
-    return getFontWeight(filterFontWeight);
+  get filterFontWeight {
+    return getFontWeight(filterFontWeight0);
   }
-  FontStyle getFilterFontStyle() {
-    return getFontStyle(filterFontStyle);
+  get filterFontStyle {
+    return getFontStyle(filterFontStyle0);
   }
+
   factory ShopProductCategoryStyles.fromJson(Map<String, dynamic> json) => _$ShopProductCategoryStylesFromJson(json);
   Map<String, dynamic> toJson() => _$ShopProductCategoryStylesToJson(this);
 }
@@ -902,22 +792,37 @@ class Data {
   Data();
 
   @JsonKey(name: 'text')      String text;
-  @JsonKey(name: 'action')    ChildAction action;
   @JsonKey(name: 'name')      String name;
-  @JsonKey(name: 'src')       String src;
-  @JsonKey(name: 'count')     num count;
-  @JsonKey(name: 'product')   Map<String, dynamic> product;
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
   Map<String, dynamic> toJson() => _$DataToJson(this);
 }
 
 @JsonSerializable()
-class VideoData {
+class ButtonData extends Data {
+  ButtonData();
+
+  @JsonKey(name: 'action')    ButtonAction action;
+
+  factory ButtonData.fromJson(Map<String, dynamic> json) => _$ButtonDataFromJson(json);
+  Map<String, dynamic> toJson() => _$ButtonDataToJson(this);
+}
+
+@JsonSerializable()
+class ImageData extends Data {
+  ImageData();
+
+  @JsonKey(name: 'src')       String src;
+
+  factory ImageData.fromJson(Map<String, dynamic> json) => _$ImageDataFromJson(json);
+  Map<String, dynamic> toJson() => _$ImageDataToJson(this);
+}
+
+
+@JsonSerializable()
+class VideoData extends Data {
   VideoData();
 
-  @JsonKey(name: 'text')
-  String text;
   @JsonKey(name: 'autoplay', defaultValue: false)
   bool autoplay;
   @JsonKey(name: 'controls', defaultValue: false)
@@ -940,11 +845,9 @@ class VideoData {
 }
 
 @JsonSerializable()
-class CategoryData {
+class CategoryData extends Data {
   CategoryData();
 
-  @JsonKey(name: 'text')
-  String text;
   @JsonKey(name: 'categoryIds', defaultValue: [])
   List<dynamic> categoryIds;
   @JsonKey(name: 'hideProductName', defaultValue: false)
@@ -959,12 +862,46 @@ class CategoryData {
 }
 
 @JsonSerializable()
-class ChildAction {
-  ChildAction();
+class ButtonAction {
+  ButtonAction();
 
   @JsonKey(name: 'type')      String type;
-  @JsonKey(name: 'payload')   dynamic payload;
+  @JsonKey(name: 'payload')   dynamic payload; // ButtonPayload or String
 
-  factory ChildAction.fromJson(Map<String, dynamic> json) => _$ChildActionFromJson(json);
-  Map<String, dynamic> toJson() => _$ChildActionToJson(this);
+  factory ButtonAction.fromJson(Map<String, dynamic> json) => _$ButtonActionFromJson(json);
+  Map<String, dynamic> toJson() => _$ButtonActionToJson(this);
+}
+
+@JsonSerializable()
+class ButtonPayload {
+  ButtonPayload();
+
+  @JsonKey(name: 'title')   String title;
+  @JsonKey(name: 'path')    String path;
+  @JsonKey(name: 'route')   String route;
+
+  factory ButtonPayload.fromJson(Map<String, dynamic> json) => _$ButtonPayloadFromJson(json);
+  Map<String, dynamic> toJson() => _$ButtonPayloadToJson(this);
+}
+
+@JsonSerializable()
+class ChildSize {
+  @JsonKey(name: 'width')
+  double width;
+  @JsonKey(name: 'height')
+  double height;
+  @JsonKey(name: 'top')
+  double top;
+  @JsonKey(name: 'left')
+  double left;
+
+  ChildSize({this.top, this.left, this.width, this.height});
+
+  factory ChildSize.fromJson(Map<String, dynamic> json) => _$ChildSizeFromJson(json);
+  Map<String, dynamic> toJson() => _$ChildSizeToJson(this);
+}
+
+class ShopObject {
+  String name;
+  ShopObject({this.name,});
 }

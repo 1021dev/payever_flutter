@@ -1,46 +1,36 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/models.dart';
-import 'package:payever/shop/views/edit/element/sub_element/background_view.dart';
+import 'package:payever/shop/views/edit/sub_element/background_view.dart';
 import 'package:shape_of_view/shape_of_view.dart';
 import 'package:clip_shadow/clip_shadow.dart';
 
 class ShapeView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
-  final String deviceTypeId;
-  final SectionStyleSheet sectionStyleSheet;
 
-  const ShapeView({this.child, this.stylesheets, this.deviceTypeId, this.sectionStyleSheet});
+  const ShapeView(
+      {this.child,
+      this.stylesheets});
 
   @override
-  _ShapeViewState createState() => _ShapeViewState(child, sectionStyleSheet);
+  _ShapeViewState createState() => _ShapeViewState(child);
 }
 
 class _ShapeViewState extends State<ShapeView> {
   final Child child;
-  final SectionStyleSheet sectionStyleSheet;
   ShapeStyles styles;
 
-  _ShapeViewState(this.child, this.sectionStyleSheet);
+  _ShapeViewState(this.child);
 
   @override
   Widget build(BuildContext context) {
     styles = styleSheet();
-    if (styles == null && child.styles != null && child.styles.isNotEmpty) {
-      styles = ShapeStyles.fromJson(child.styles);
-    }
-    if (styles == null ||
-        styles.display == 'none')
-      return Container();
-
-    return Opacity(
-        opacity: styles.opacity,
-        child: _body());
+    return body;
   }
 
-  Widget _body() {
-    switch(child.data['variant']) {
+  Widget get body {
+    switch (child.data['variant']) {
       case 'circle':
         return circleShape();
       case 'triangle':
@@ -54,35 +44,20 @@ class _ShapeViewState extends State<ShapeView> {
   }
 
   Widget circleShape() {
-    return Container(
-      width: styles.width,
-      height: styles.height,
-//        decoration: styles.decoration,
-      margin: EdgeInsets.only(
-          left: styles.getMarginLeft(sectionStyleSheet),
-          right: styles.marginRight,
-          top: styles.getMarginTop(sectionStyleSheet),
-          bottom: styles.marginBottom),
-      alignment: Alignment.center,
-      child: ClipShadow(
-        clipper: OvalClipper(x: styles.width, y: styles.height, w: 0),
-        boxShadow: styles.getBoxShadow,
-        child: ClipRRect(
-            borderRadius: BorderRadius.all(Radius.elliptical(styles.width, styles.height)),
-            child: BackgroundView(styles: styles,)),
-      ),
+    return ClipShadow(
+      clipper: OvalClipper(x: styles.width, y: styles.height, w: 0),
+      boxShadow: styles.getBoxShadow,
+      child: ClipRRect(
+          borderRadius: BorderRadius.all(
+              Radius.elliptical(double.infinity, double.infinity)),
+          child: BackgroundView(
+            styles: styles,
+          )),
     );
   }
 
   Widget triangleShape() {
     return Container(
-      width: styles.width,
-      height: styles.height,
-      margin: EdgeInsets.only(
-          left: styles.getMarginLeft(sectionStyleSheet),
-          right: styles.marginRight,
-          top: styles.getMarginTop(sectionStyleSheet),
-          bottom: styles.marginBottom),
       child: ClipShadow(
         clipper: TriangleClipper(),
         boxShadow: styles.getBoxShadow,
@@ -106,26 +81,22 @@ class _ShapeViewState extends State<ShapeView> {
 
   Widget squareShape() {
     return Container(
-      width: styles.width,
-      height: styles.height,
       decoration: styles.decoration,
 //      color: colorConvert(styles.backgroundColor),
-      margin: EdgeInsets.only(
-          left: styles.getMarginLeft(sectionStyleSheet),
-          right: styles.marginRight,
-          top: styles.getMarginTop(sectionStyleSheet),
-          bottom: styles.marginBottom),
       alignment: Alignment.center,
       child: ClipRRect(
-          child: BackgroundView(styles: styles,)),
+          child: BackgroundView(
+        styles: styles,
+      )),
     );
   }
 
   ShapeStyles styleSheet() {
     try {
-      print('Shape Styles: ${ widget.stylesheets[widget.deviceTypeId][child.id]}');
-      return ShapeStyles.fromJson(
-          widget.stylesheets[widget.deviceTypeId][child.id]);
+      Map<String, dynamic> json = widget.stylesheets[child.id];
+//      if (json['display'] != 'none')
+//        print('Shape Styles: $json');
+      return ShapeStyles.fromJson(json);
     } catch (e) {
       return null;
     }
@@ -137,7 +108,10 @@ class TrianglePainter extends CustomPainter {
   final PaintingStyle paintingStyle;
   final double strokeWidth;
 
-  TrianglePainter({this.strokeColor = Colors.black, this.strokeWidth = 3, this.paintingStyle = PaintingStyle.stroke});
+  TrianglePainter(
+      {this.strokeColor = Colors.black,
+      this.strokeWidth = 3,
+      this.paintingStyle = PaintingStyle.stroke});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -168,12 +142,13 @@ class TriangleClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     final path = Path();
-    path.moveTo(size.width/2, 0.0);
+    path.moveTo(size.width / 2, 0.0);
     path.lineTo(size.width, size.height);
     path.lineTo(0.0, size.height);
     path.close();
     return path;
   }
+
   @override
   bool shouldReclip(TriangleClipper oldClipper) => false;
 }
@@ -182,6 +157,7 @@ class OvalClipper extends CustomClipper<Path> {
   double x;
   double y;
   double w;
+
   OvalClipper({this.x, this.y, this.w});
 
   @override
@@ -197,7 +173,6 @@ class OvalClipper extends CustomClipper<Path> {
 
   @override
   bool shouldReclip(CustomClipper<Path> oldClipper) {
-    // TODO: implement shouldReclip
     return true;
   }
 }

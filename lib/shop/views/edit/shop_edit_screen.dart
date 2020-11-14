@@ -8,7 +8,8 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/shop_edit_templetes_screen.dart';
 import 'package:payever/shop/views/edit/template_detail_screen.dart';
-import 'package:payever/shop/views/edit/template_view.dart';
+
+import 'sub_element/shop_edit_appbar.dart';
 
 class ShopEditScreen extends StatefulWidget {
   final ShopScreenBloc shopScreenBloc;
@@ -44,13 +45,15 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
     isTablet = GlobalUtils.isTablet(context);
 
     return BlocListener(
-      listener: (BuildContext context, ShopEditScreenState state) async {},
+      listener: (BuildContext context, ShopEditScreenState state) async {
+
+      },
       bloc: screenBloc,
       child: BlocBuilder(
         bloc: screenBloc,
         builder: (BuildContext context, state) {
           return Scaffold(
-              appBar: CustomAppBar(onTapAdd: ()=> _navigateTemplatesScreen(),),
+              appBar: ShopEditAppbar(onTapAdd: ()=> _navigateTemplatesScreen(),),
               backgroundColor: Colors.grey[800],
               body: SafeArea(bottom: false, child: _body(state)));
         },
@@ -59,6 +62,7 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
   }
 
   Widget _body(ShopEditScreenState state) {
+
     if (state.isLoading) {
       return Center(child: CircularProgressIndicator());
     }
@@ -93,7 +97,7 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
               padding: EdgeInsets.all(6),
               color: Colors.white,
               child: homePage != null
-                  ? _templateItem(homePage, showName: false)
+                  ? _templateItem(state, homePage, showName: false)
                   : Container(),
             ),
           ),
@@ -132,9 +136,7 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
                 itemBuilder: (context, index) {
                   return AspectRatio(
                       aspectRatio: aspectRatio,
-                      child: activeMode
-                          ? _templateItem(pages[index])
-                          :_previewItem(index));
+                      child: _templateItem(state, pages[index]));
                 },
                 separatorBuilder: (index, context) => Divider(color: Colors.transparent,),
                 itemCount: length),
@@ -178,98 +180,22 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
     );
   }
 
-  Widget _previewItem(int index) {
-    Preview preview = screenBloc.state.previews[index];
-    return Container(
-      padding: EdgeInsets.only(left: 10, right: 4),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        children: [
-          Align(
-              alignment: Alignment.bottomCenter,
-              child: Text('${index + 1}')),
-          SizedBox(
-            width: 3,
-          ),
-          Expanded(
-              child: CachedNetworkImage(
-                imageUrl: '${preview.previewUrl}',
-                imageBuilder: (context, imageProvider) =>
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4),
-                        image: DecorationImage(
-                          image: imageProvider,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ),
-                color: Colors.white,
-                placeholder: (context, url) => Container(
-                  color: Colors.white,
-                  child: Center(
-                    child: Container(
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                      ),
-                    ),
-                  ),
-                ),
-                errorWidget: (context, url, error) => Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Center(
-                    child: AspectRatio(
-                      aspectRatio: 0.8,
-                      child: SvgPicture.asset(
-                        'assets/images/no_image.svg',
-                        color: Colors.black54,
-                      ),
-                    ),
-                  ),
-                ),
-              ))
-        ],
-      ),
-    );
-  }
-
-  Widget _templateItem(ShopPage page, {bool showName = true}) {
-    Template template = page != null
-        ? Template.fromJson(screenBloc.state.templates[page.templateId])
-        : null;
+  Widget _templateItem(ShopEditScreenState state, ShopPage page, {bool showName = true}) {
+    String preview;
+    if (state.previews != null && state.previews[page.id] != null) {
+      preview = state.previews[page.id]['previewUrl'];
+    }
     String pageName = page == null ? 'Empty' : page.name;
-    print('Page Name: $pageName Template Id: ${page.templateId}');
+    // print('Page Name: $pageName PageID:${page.id} Template Id: ${page.templateId}');
+
     return Container(
       color: (showName && page.variant == 'front') ? Colors.blue : Colors.transparent,
       padding: EdgeInsets.all(4),
       child: Column(
         children: [
           Expanded(
-              child: (template != null)
-                  ? TemplateView(
-                shopPage: page,
-                template: template,
-                scrollable: !showName,
-                stylesheets: screenBloc.state.stylesheets,
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          child: TemplateDetailScreen(
-                            shopPage: page,
-                            template: template,
-                            stylesheets: screenBloc.state.stylesheets,
-                          ),
-                          type: PageTransitionType.fade));
-                },
-              )
+              child: (page != null)
+                  ? getPreview(page, showName, preview)
                   : Container(
                 color: Colors.white,
               )),
@@ -289,111 +215,83 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
     );
   }
 
-  void _navigateTemplatesScreen() {
-    Navigator.push(
-        context,
-        PageTransition(
-            child: ShopEditTemplatesScreen(screenBloc),
-            type: PageTransitionType.fade));
-//    ShopPage page = screenBloc.state.pages.firstWhere((element) => element.name == 'ABOUT 2');
-//    Template template = Template.fromJson(screenBloc.state.templates[page.templateId]);
-//    Navigator.push(
-//        context,
-//        PageTransition(
-//            child: TemplateDetailScreen(
-//              shopPage: page,
-//              template: template,
-//              stylesheets: screenBloc.state.stylesheets,
-//            ),
-//            type: PageTransitionType.fade));
+  Widget getPreview(
+      ShopPage page, bool showName, String preview) {
+    // if (!showName)
+    //   return TemplateView(
+    //       screenBloc: screenBloc,
+    //       shopPage: page,
+    //       template: template,
+    //       scrollable: !showName,
+    //       onTap:()=> _navigateTemplateDetailScreen(page, template));
 
-  }
-}
-
-
-
-class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
-
-  final Function onClose;
-  final Function onTapAdd;
-
-  CustomAppBar({this.onClose, this.onTapAdd});
-
-  @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      centerTitle: true,
-      elevation: 0,
-      automaticallyImplyLeading: false,
-      title: Container(
-        width: double.infinity,
-        padding: EdgeInsets.symmetric(horizontal: 4),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            InkWell(
-              child: Icon(
-                Icons.arrow_back_ios,
-                color: Colors.white,
+    return GestureDetector(
+      onTap: () => _navigateTemplateDetailScreen(page),
+      child: (preview == null || preview.isEmpty)
+          ? Container(
+              color: Colors.white,
+            )
+          : CachedNetworkImage(
+              imageUrl: preview,
+              imageBuilder: (context, imageProvider) => Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.contain,
+                  ),
+                ),
               ),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            InkWell(
-              child: Icon(
-                Icons.refresh,
+              color: Colors.white,
+              placeholder: (context, url) => Container(
                 color: Colors.white,
+                child: Center(
+                  child: Container(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                    ),
+                  ),
+                ),
               ),
-              onTap: null,
-            ),
-            InkWell(
-              child: Icon(
-                Icons.play_arrow,
-                color: Colors.white,
-              ),
-              onTap: null,
-            ),
-            InkWell(
-              child: Icon(
-                Icons.brush,
-                color: Colors.white,
-              ),
-              onTap: null,
-            ),
-            InkWell(
-              child: Icon(
-                Icons.add,
-                color: Colors.white,
-              ),
-              onTap: () => onTapAdd(),
-            ),
-            InkWell(
-                child: Icon(
-                  Icons.person_add,
+              errorWidget: (context, url, error) => Container(
+                decoration: BoxDecoration(
                   color: Colors.white,
                 ),
-                onTap: null),
-            InkWell(
-              child: Icon(
-                Icons.more_horiz,
-                color: Colors.white,
+                child: Center(
+                  child: AspectRatio(
+                    aspectRatio: 0.8,
+                    child: SvgPicture.asset(
+                      'assets/images/no_image.svg',
+                      color: Colors.black54,
+                    ),
+                  ),
+                ),
               ),
-              onTap: null,
             ),
-            InkWell(
-              child: Icon(
-                Icons.remove_red_eye,
-                color: Colors.white,
-              ),
-              onTap: null,
-            ),
-          ],
-        ),
-      ),
     );
   }
+
+  _navigateTemplateDetailScreen(ShopPage page) {
+     Navigator.push(
+          context,
+          PageTransition(
+              child: TemplateDetailScreen(
+                screenBloc: screenBloc,
+                shopPage: page,
+                templateId: page.templateId,
+              ),
+              type: PageTransitionType.fade));
+  }
+
+  void _navigateTemplatesScreen() {
+    // Navigator.push(
+    //     context,
+    //     PageTransition(
+    //         child: ShopEditTemplatesScreen(screenBloc),
+    //         type: PageTransitionType.fade));
+  }
 }
+
+
+
+

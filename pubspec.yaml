@@ -67,6 +67,7 @@ dependencies:
   badges: ^1.1.3
   clip_shadow: ^0.2.1
   meta: ^1.1.8
+  html: ^0.14.0+4
 
 dev_dependencies:
   flutter_launcher_icons: "^0.8.0"

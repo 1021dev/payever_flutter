@@ -3,81 +3,43 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/shop/models/models.dart';
-import 'package:payever/shop/views/edit/element/sub_element/resizeable_widget.dart';
-import 'package:payever/theme.dart';
 import 'package:provider/provider.dart';
 
 class LogoView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
-  final String deviceTypeId;
-  final SectionStyleSheet sectionStyleSheet;
 
   const LogoView(
       {this.child,
-      this.stylesheets,
-      this.deviceTypeId,
-      this.sectionStyleSheet});
+      this.stylesheets});
 
   @override
-  _LogoViewState createState() => _LogoViewState(child, sectionStyleSheet);
+  _LogoViewState createState() => _LogoViewState(child);
 }
 
 class _LogoViewState extends State<LogoView> {
   final Child child;
-  final SectionStyleSheet sectionStyleSheet;
+
   ImageStyles styles;
   GlobalStateModel globalStateModel;
   GlobalKey key = GlobalKey();
-  _LogoViewState(this.child, this.sectionStyleSheet);
-  bool isSelected = false;
+  _LogoViewState(this.child);
+
 
   @override
   Widget build(BuildContext context) {
     globalStateModel = Provider.of<GlobalStateModel>(context, listen: true);
     styles = styleSheet();
-    if (styles == null && child.styles != null && child.styles.isNotEmpty) {
-      styles = ImageStyles.fromJson(child.styles);
-    }
-
-    if (styles == null ||
-        styles.display == 'none')
-      return Container();
-    return _body();
+    return body;
   }
 
-  Widget _body() {
-
-//    if (isSelected) {
-//      RenderBox box = key.currentContext.findRenderObject();
-//      Offset position = box.localToGlobal(Offset.zero);
-//      return ResizeableWidget(
-//        width: styles.width,
-//        height: styles.height,
-//        top: position.dy - 76,
-//        left: styles.getMarginLeft(sectionStyleSheet),
-//          child: _mainBody(),
-//      );
-//    }
-    return _mainBody();
-  }
-
-  Widget _mainBody() {
+  Widget get body {
     return Opacity(
       opacity: styles.opacity,
       child: Container(
         key: key,
         width: styles.width,
         height: styles.height,
-        decoration: BoxDecoration(
-          color: colorConvert(styles.backgroundColor),
-          shape: BoxShape.circle,
-        ),
-        margin: EdgeInsets.only(
-            left: styles.getMarginLeft(sectionStyleSheet),
-            right: styles.marginRight,
-            top: styles.getMarginTop(sectionStyleSheet),
-            bottom: styles.marginBottom),
         child: CachedNetworkImage(
           imageUrl: '${globalStateModel.activeShop.picture}',
           imageBuilder: (context, imageProvider) => Container(
@@ -101,12 +63,13 @@ class _LogoViewState extends State<LogoView> {
       ),
     );
   }
+
   ImageStyles styleSheet() {
     try {
-//      print(
-//          'Logo Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
-      return ImageStyles.fromJson(
-          widget.stylesheets[widget.deviceTypeId][child.id]);
+      Map<String, dynamic> json = widget.stylesheets[child.id];
+//      if (json['display'] != 'none')
+//        print('Logo Styles: $json');
+      return ImageStyles.fromJson(json);
     } catch (e) {
       return null;
     }

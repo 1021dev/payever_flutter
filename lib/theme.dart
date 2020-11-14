@@ -230,7 +230,7 @@ String iconString() {
 
 Color colorConvert(String color, {bool emptyColor = false}) {
   if (color == null)
-    return Colors.white;
+    return emptyColor ? Colors.transparent :Colors.white;
 
   if (color == 'white' || color == '#fff')
     return Colors.white;
@@ -239,11 +239,18 @@ Color colorConvert(String color, {bool emptyColor = false}) {
     return Colors.black;
 
   color = color.replaceAll("#", "");
-//  if (color.length < 6) {
-//    while(color.length < 6) {
-//      color = color + '0';
-//    }
-//  }
+  if (color.length < 6) {
+    try {
+      String lastStr = color.substring(color.length - 1);
+      if (lastStr != null && lastStr.isNotEmpty) {
+        while(color.length < 6) {
+          color = color + lastStr;
+        }
+      }
+    } catch(e) {
+      return emptyColor ? Colors.transparent :Colors.white;
+    }
+  }
 
   if (color.length == 6) {
     return Color(int.parse("0xFF"+color));

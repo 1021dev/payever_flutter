@@ -1,57 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/models.dart';
-
 import '../../../../theme.dart';
 
 class ButtonView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
-  final String deviceTypeId;
-  final SectionStyleSheet sectionStyleSheet;
 
-  const ButtonView({this.child, this.stylesheets, this.deviceTypeId, this.sectionStyleSheet});
+  const ButtonView(
+      {this.child,
+      this.stylesheets});
 
   @override
-  _ButtonViewState createState() => _ButtonViewState(child, sectionStyleSheet);
+  _ButtonViewState createState() => _ButtonViewState(child);
 }
 
 class _ButtonViewState extends State<ButtonView> {
+  final String TAG = 'ButtonView : ';
+
   final Child child;
-  final SectionStyleSheet sectionStyleSheet;
   ButtonStyles styles;
-  _ButtonViewState(this.child, this.sectionStyleSheet);
+  ButtonData data;
+
+  _ButtonViewState(this.child);
 
   @override
   Widget build(BuildContext context) {
     styles = styleSheet();
-    if (styles == null && child.styles != null && child.styles.isNotEmpty) {
-      styles = ButtonStyles.fromJson(child.styles);
-    }
-
-    if (styles == null ||
-        styles.display == 'none')
-      return Container();
-
-    return _body();
+    data = ButtonData.fromJson(child.data);
+    return body;
   }
 
-  Widget _body() {
+  Widget get body {
     return Container(
-      width: styles.width,
-      height: styles.height,
       decoration: decoration,
-      margin: EdgeInsets.only(
-          left: styles.getMarginLeft(sectionStyleSheet),
-          right: styles.marginRight,
-          top: styles.getMarginTop(sectionStyleSheet),
-          bottom: styles.marginBottom),
       alignment: Alignment.center,
       child: Text(
-        Data.fromJson(child.data).text,
+        data.text,
         style: TextStyle(
             color: colorConvert(styles.color),
-            fontSize: styles.textFontSize(),
-            fontWeight: styles.textFontWeight()),
+            fontSize: styles.fontSize,
+            fontWeight: styles.fontWeight),
       ),
     );
   }
@@ -87,10 +75,14 @@ class _ButtonViewState extends State<ButtonView> {
       ];
     }
 //    rgba(0,0,0,0.7) 0 2 13 8
-    List<String>attrs0 = styles.boxShadow.split(' ');
-    List<String>attrs =  attrs0.map((element) {
+    List<String> attrs0 = styles.boxShadow.split(' ');
+    List<String> attrs = attrs0.map((element) {
       if (element.contains('rgb'))
-        return element.replaceAll('rgba', '').replaceAll(',', ' ').replaceAll('(', '').replaceAll(')', '');
+        return element
+            .replaceAll('rgba', '')
+            .replaceAll(',', ' ')
+            .replaceAll('(', '')
+            .replaceAll(')', '');
       return element.replaceAll('pt', '');
     }).toList();
     double blurRadius = double.parse(attrs[3]);
@@ -98,7 +90,7 @@ class _ButtonViewState extends State<ButtonView> {
     double offsetX = double.parse(attrs[2]);
     double offsetY = double.parse(attrs[2]);
 
-    List<String>colors = attrs[0].split(' ');
+    List<String> colors = attrs[0].split(' ');
     int colorR = int.parse(colors[0]);
     int colorG = int.parse(colors[1]);
     int colorB = int.parse(colors[2]);
@@ -115,9 +107,11 @@ class _ButtonViewState extends State<ButtonView> {
 
   ButtonStyles styleSheet() {
     try {
-      Map json = widget.stylesheets[widget.deviceTypeId][child.id];
-      if (json['display'] != 'none')
-            print('Button Styles Sheets: $json');
+      Map<String, dynamic> json = widget.stylesheets[child.id];
+
+      // print('Button ID: ${child.id}');
+      // print('Button Styles Sheets: $json');
+
       return ButtonStyles.fromJson(json);
     } catch (e) {
       return null;

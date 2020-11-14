@@ -19,6 +19,18 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
   ShopScreenState get initialState => ShopScreenState();
 
   @override
+  void onError(Object error, StackTrace stackTrace) {
+    print('$error, $stackTrace');
+    super.onError(error, stackTrace);
+  }
+
+  @override
+  void onTransition(Transition<ShopScreenEvent, ShopScreenState> transition) {
+    print(transition);
+    super.onTransition(transition);
+  }
+
+  @override
   Stream<ShopScreenState> mapEventToState(ShopScreenEvent event) async* {
     if (event is ShopScreenInitEvent) {
       yield state.copyWith(activeBusiness: dashboardScreenBloc.state.activeBusiness);
@@ -146,6 +158,7 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
     dynamic response = await api.getActiveTheme(GlobalUtils.activeToken.accessToken, activeBusinessId, shopId);
     if (response is Map) {
         yield state.copyWith(activeTheme: ThemeModel.fromJson(response));
+        globalStateModel.setActiveTheme(ThemeModel.fromJson(response));
     }
 
     dynamic defaultObj = await api.getShopDetail(activeBusinessId, GlobalUtils.activeToken.accessToken, shopId);

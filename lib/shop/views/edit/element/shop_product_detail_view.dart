@@ -5,52 +5,31 @@ import '../../../../theme.dart';
 class ShopProductDetailView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
-  final String deviceTypeId;
-  final SectionStyleSheet sectionStyleSheet;
 
   const ShopProductDetailView(
       {this.child,
-      this.stylesheets,
-      this.deviceTypeId,
-      this.sectionStyleSheet});
+      this.stylesheets});
 
   @override
   _ShopProductDetailViewState createState() =>
-      _ShopProductDetailViewState(child, sectionStyleSheet);
+      _ShopProductDetailViewState(child);
 }
 
 class _ShopProductDetailViewState extends State<ShopProductDetailView> {
   final Child child;
-  final SectionStyleSheet sectionStyleSheet;
   ShopProductDetailStyles styles;
 
-  _ShopProductDetailViewState(this.child, this.sectionStyleSheet);
+  _ShopProductDetailViewState(this.child);
 
   @override
   Widget build(BuildContext context) {
     styles = styleSheet();
-    if (styles == null && child.styles != null && child.styles.isNotEmpty) {
-      styles = ShopProductDetailStyles.fromJson(child.styles);
-    }
-    if (styles == null ||
-        styles.display == 'none')
-      return Container();
-
-    return _body();
+    return body;
   }
 
-  Widget _body() {
-
-
+  Widget get body {
     return Container(
-        width: double.infinity,
-        height: double.infinity,
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
-        margin: EdgeInsets.only(
-            left: styles.getMarginLeft(sectionStyleSheet),
-            right: styles.marginRight,
-            top: styles.getMarginTop(sectionStyleSheet),
-            bottom: styles.marginBottom),
         color: colorConvert(styles.backgroundColor),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,8 +38,8 @@ class _ShopProductDetailViewState extends State<ShopProductDetailView> {
               child: Text(
                 'Product Title',
                 style: TextStyle(
-                  fontSize: styles.textFontSize() + 10,
-                  fontStyle: styles.textFontStyle(),
+                  fontSize: styles.fontSize + 15,
+                  fontStyle: styles.fontStyle,
                   fontWeight: FontWeight.bold,
                   color: colorConvert(styles.color),
                 ),
@@ -69,9 +48,9 @@ class _ShopProductDetailViewState extends State<ShopProductDetailView> {
             Text(
               '100.00 VAT included',
               style: TextStyle(
-                fontSize: styles.textFontSize(),
-                fontStyle: styles.textFontStyle(),
-                fontWeight: styles.textFontWeight(),
+                fontSize: styles.fontSize,
+                fontStyle: styles.fontStyle,
+                fontWeight: styles.fontWeight,
                 color: colorConvert(styles.color),
               ),
             ),
@@ -79,8 +58,8 @@ class _ShopProductDetailViewState extends State<ShopProductDetailView> {
             Text(
               'Product Description',
               style: TextStyle(
-                fontSize: styles.textFontSize(),
-                fontStyle: styles.textFontStyle(),
+                fontSize: styles.fontSize,
+                fontStyle: styles.fontStyle,
                 color: colorConvert(styles.color),
               ),
             ),
@@ -99,7 +78,7 @@ class _ShopProductDetailViewState extends State<ShopProductDetailView> {
                     child: Text(
                       'First',
                       style: TextStyle(
-                        fontSize: styles.textFontSize(),
+                        fontSize: styles.fontSize,
                         color: colorConvert(styles.color),
                       ),
                     ),
@@ -126,8 +105,8 @@ class _ShopProductDetailViewState extends State<ShopProductDetailView> {
                 'Add to cart',
                 style: TextStyle(
                   fontSize: styles.buttonFontSize,
-                  fontStyle: styles.getButtonFontStyle(),
-                  fontWeight: styles.getButtonFontWeight(),
+                  fontStyle: styles.buttonFontStyle,
+                  fontWeight: styles.buttonFontWeight,
                   color: colorConvert(styles.buttonColor),
                 ),
               ),
@@ -138,10 +117,11 @@ class _ShopProductDetailViewState extends State<ShopProductDetailView> {
 
   ShopProductDetailStyles styleSheet() {
     try {
-//      print(
-//          'Shop Product detail Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
-      return ShopProductDetailStyles.fromJson(
-          widget.stylesheets[widget.deviceTypeId][child.id]);
+      Map<String, dynamic> json = widget.stylesheets[child.id];
+//      if (json['display'] != 'none')
+//        print('Shop Product detail Styles: $json');
+
+      return ShopProductDetailStyles.fromJson(json);
     } catch (e) {
       return null;
     }

@@ -2,32 +2,26 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/shop/models/models.dart';
-import 'package:payever/theme.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
-  final String deviceTypeId;
-  final SectionStyleSheet sectionStyleSheet;
 
   const VideoView(
       {this.child,
-      this.stylesheets,
-      this.deviceTypeId,
-      this.sectionStyleSheet});
+      this.stylesheets});
 
   @override
-  _VideoViewState createState() => _VideoViewState(child, sectionStyleSheet);
+  _VideoViewState createState() => _VideoViewState(child);
 }
 
 class _VideoViewState extends State<VideoView> {
   final Child child;
-  final SectionStyleSheet sectionStyleSheet;
-  ImageStyles styles;
+   ImageStyles styles;
   VideoData data;
 
-  _VideoViewState(this.child, this.sectionStyleSheet);
+  _VideoViewState(this.child);
 
   VideoPlayerController _controller;
   bool videoLoading = false;
@@ -48,38 +42,28 @@ class _VideoViewState extends State<VideoView> {
   @override
   Widget build(BuildContext context) {
     styles = styleSheet();
-    if (styles == null && child.styles != null && child.styles.isNotEmpty) {
-      styles = ImageStyles.fromJson(child.styles);
-    }
-    if (styles == null || styles.display == 'none') return Container();
-
-    return _body();
-  }
-
-  Widget _body() {
     try {
       data = VideoData.fromJson(child.data);
     } catch (e) {}
 
     if (data == null /* || data.preview == null || data.preview.isEmpty*/)
       return Container();
+    return body;
+  }
 
-    return Container(
-      height: styles.height,
-      width: styles.width,
-      margin: EdgeInsets.only(
-          left: styles.getMarginLeft(sectionStyleSheet),
-          right: styles.marginRight,
-          top: styles.getMarginTop(sectionStyleSheet),
-          bottom: styles.marginBottom),
-      child: Stack(
-        children: [
-          previewView,
-          videoPlayerView,
-          Visibility(
-              visible: data.controls,
-              child: Positioned(bottom: 10, right: 10, child: playButton))
-        ],
+  Widget get body {
+    return Opacity(
+      opacity: styles.opacity,
+      child: Container(
+        child: Stack(
+          children: [
+            previewView,
+            videoPlayerView,
+            Visibility(
+                visible: data.controls,
+                child: Positioned(bottom: 10, right: 10, child: playButton))
+          ],
+        ),
       ),
     );
   }
@@ -176,10 +160,10 @@ class _VideoViewState extends State<VideoView> {
 
   ImageStyles styleSheet() {
     try {
-//      print(
-//          'Video Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
-      return ImageStyles.fromJson(
-          widget.stylesheets[widget.deviceTypeId][child.id]);
+      Map<String, dynamic> json = widget.stylesheets[child.id];
+//      if (json['display'] != 'none')
+//        print('Video Styles: $json');
+      return ImageStyles.fromJson(json);
     } catch (e) {
       return null;
     }

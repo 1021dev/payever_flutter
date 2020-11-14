@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,7 +8,6 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/standard_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
-
 import 'commons/view_models/view_models.dart';
 import 'commons/utils/utils.dart';
 import 'commons/network/network.dart';

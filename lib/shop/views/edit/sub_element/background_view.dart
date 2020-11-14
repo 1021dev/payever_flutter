@@ -1,8 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/models.dart';
-
-import '../../../../../theme.dart';
+import '../../../../theme.dart';
 
 class BackgroundView extends StatefulWidget {
   final BaseStyles styles;
@@ -36,7 +35,7 @@ class _BackgroundViewState extends State<BackgroundView> {
           width: double.infinity,
           height: double.infinity,
           decoration: BoxDecoration(
-            gradient: styles.getGradient(),
+            gradient: styles.gradient,
           )
 
       );
@@ -48,12 +47,6 @@ class _BackgroundViewState extends State<BackgroundView> {
         imageUrl: styles.backgroundImage,
         height: double.infinity,
         repeat: imageRepeat ? ImageRepeat.repeat : ImageRepeat.noRepeat,
-        placeholder: (context, url) =>
-            Container(child: Center(child: CircularProgressIndicator())),
-        errorWidget: (context, url, error) => Icon(
-          Icons.error,
-          size: 40,
-        ),
       );
     }
 
@@ -64,12 +57,6 @@ class _BackgroundViewState extends State<BackgroundView> {
         imageUrl: styles.backgroundImage,
         alignment: Alignment.topLeft,
         fit: imageFit(styles.backgroundSize),
-        placeholder: (context, url) =>
-            Container(child: Center(child: CircularProgressIndicator())),
-        errorWidget: (context, url, error) => Icon(
-          Icons.error,
-          size: 40,
-        ),
       );
     }
 
@@ -82,12 +69,6 @@ class _BackgroundViewState extends State<BackgroundView> {
             fit: imageFit(styles.backgroundSize),
           ),
         ),
-      ),
-      placeholder: (context, url) =>
-          Container(child: Center(child: CircularProgressIndicator())),
-      errorWidget: (context, url, error) => Icon(
-        Icons.error,
-        size: 40,
       ),
     );
   }

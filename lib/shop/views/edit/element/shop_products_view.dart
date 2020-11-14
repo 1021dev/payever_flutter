@@ -7,130 +7,112 @@ import '../../../../theme.dart';
 class ShopProductsView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
-  final String deviceTypeId;
-  final SectionStyleSheet sectionStyleSheet;
 
   const ShopProductsView(
       {this.child,
-      this.stylesheets,
-      this.deviceTypeId,
-      this.sectionStyleSheet});
+      this.stylesheets});
 
   @override
   _ShopProductsViewState createState() =>
-      _ShopProductsViewState(child, sectionStyleSheet);
+      _ShopProductsViewState(child);
 }
 
 class _ShopProductsViewState extends State<ShopProductsView> {
   final Child child;
-  final SectionStyleSheet sectionStyleSheet;
   ShopProductsStyles styles;
 
-  _ShopProductsViewState(this.child, this.sectionStyleSheet);
+  _ShopProductsViewState(this.child);
 
   @override
   Widget build(BuildContext context) {
     styles = styleSheet();
-    if (styles == null && child.styles != null && child.styles.isNotEmpty) {
-      styles = ShopProductsStyles.fromJson(child.styles);
-    }
-    if (styles == null ||
-        styles.display == 'none')
-      return Container();
-
-    return _body();
+    return body;
   }
 
-  Widget _body() {
-
+  Widget get body {
     return Opacity(
       opacity: styles.opacity,
       child: Container(
-          width: styles.width,
-          height: styles.height,
-          margin: EdgeInsets.only(
-              left: styles.getMarginLeft(sectionStyleSheet),
-              right: styles.marginRight,
-              top: styles.getMarginTop(sectionStyleSheet),
-              bottom: styles.marginBottom),
-          alignment: Alignment.center,
-          color: colorConvert(styles.backgroundColor),
-          child: Column(
-            children: [
-              Expanded(
-                child: Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey, width: 1),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: CachedNetworkImage(
-                    imageUrl: '',
-                    imageBuilder: (context, imageProvider) => Container(
-                      decoration: BoxDecoration(
-                        color: Colors.transparent /*background.backgroundColor*/,
-                        image: DecorationImage(
-                          image: imageProvider,
-                          fit: BoxFit.contain,
-                        ),
+        color: colorConvert(styles.backgroundColor),
+        child: Column(
+          children: [
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey, width: 1),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: CachedNetworkImage(
+                  imageUrl: '',
+                  imageBuilder: (context, imageProvider) => Container(
+                    decoration: BoxDecoration(
+                      color: Colors.transparent /*background.backgroundColor*/,
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.contain,
                       ),
                     ),
-                    errorWidget: (context, url, error) {
-                      return Container(
-                        alignment: Alignment.center,
-                        width: 50,
-                        height: 50,
-                        child: SvgPicture.asset(
-                          'assets/images/shop-edit-products-icon.svg',
-                        ),
-                      );
-                    },
                   ),
+                  errorWidget: (context, url, error) {
+                    return Container(
+                      alignment: Alignment.center,
+                      width: 50,
+                      height: 50,
+                      child: SvgPicture.asset(
+                        'assets/images/shop-edit-products-icon.svg',
+                      ),
+                    );
+                  },
                 ),
               ),
-              Column(
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(top: 5),
-                    width: double.infinity,
-                    alignment: styles.getTextAlign(),
-                    child: Text(
-                      'Product name',
-                      style: TextStyle(
-                          fontSize: styles.titleFontSize,
-                          fontStyle: styles.getTitleFontStyle(),
-                          fontWeight: styles.getTitleFontWeight(),
-                          color: colorConvert(styles.titleColor),
-                      ),
+            ),
+            Column(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(top: 5),
+                  width: double.infinity,
+                  child: Text(
+                    'Product name',
+                    style: TextStyle(
+                      fontSize: styles.titleFontSize,
+                      fontStyle: styles.titleFontStyle,
+                      fontWeight: styles.titleFontWeight,
+                      color: colorConvert(styles.titleColor),
                     ),
+                    textAlign: styles.textAlign,
                   ),
-                  Container(
-                    width: double.infinity,
-                    alignment: styles.getTextAlign(),
-                    margin: EdgeInsets.symmetric(vertical: 5),
-                    child: Text(
-                      '\$ 00.00',
-                      style: TextStyle(
-                        fontSize: styles.priceFontSize,
-                        fontStyle: styles.getPriceFontStyle(),
-                        fontWeight: styles.getPriceFontWeight(),
-                        color: colorConvert(styles.priceColor),
-                      ),
+                ),
+                Container(
+                  width: double.infinity,
+                  margin: EdgeInsets.symmetric(vertical: 5),
+                  child: Text(
+                    '\$ 00.00',
+                    style: TextStyle(
+                      fontSize: styles.priceFontSize,
+                      fontStyle: styles.priceFontStyle,
+                      fontWeight: styles.priceFontWeight,
+                      color: colorConvert(styles.priceColor),
                     ),
-                  )
-                ],
-              )
-            ],
-          )),
+                    textAlign: styles.textAlign,
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
+      ),
     );
   }
 
   ShopProductsStyles styleSheet() {
     try {
-      print(
-          'Shop Products Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
-      return ShopProductsStyles.fromJson(
-          widget.stylesheets[widget.deviceTypeId][child.id]);
+      Map<String, dynamic> json = widget.stylesheets[child.id];
+     // if (json['display'] != 'none') {
+     //   print('Shop Products ID: ${child.id}');
+     //   print('Shop Products Styles: $json');
+     // }
+     return ShopProductsStyles.fromJson(json);
     } catch (e) {
       return null;
     }

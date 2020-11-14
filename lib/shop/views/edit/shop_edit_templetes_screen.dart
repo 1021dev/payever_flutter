@@ -35,6 +35,12 @@ class _ShopEditTemplatesScreenState extends State<ShopEditTemplatesScreen> {
     return BlocListener(
       listener: (BuildContext context, ShopEditScreenState state) async {},
       bloc: screenBloc,
+      condition: (state1, state2) {
+        if (state2.runtimeType != 'ShopEditScreenState') {
+          return false;
+        }
+        return true;
+      },
       child: BlocBuilder(
         bloc: screenBloc,
         builder: (BuildContext context, state) {
@@ -70,27 +76,25 @@ class _ShopEditTemplatesScreenState extends State<ShopEditTemplatesScreen> {
   Widget _templateItem(ShopPage page) {
 //    RenderRepaintBoundary boundary = _globalKey.currentContext.findRenderObject();
 //    boundary.toImage(pixelRatio: 3.0).then((value) => null);
-    Template template = page != null
-        ? Template.fromJson(screenBloc.state.templates[page.templateId])
-        : null;
+
     String pageName = page == null ? 'Empty' : page.name;
 
     return Column(
       children: [
         Expanded(
-            child: (template != null)
+            child: (page != null)
                 ? TemplateView(
+                    screenBloc: screenBloc,
                     shopPage: page,
-                    template: template,
-                    stylesheets: screenBloc.state.stylesheets,
+                    templateId: page.templateId,
                     onTap: () {
                       Navigator.push(
                           context,
                           PageTransition(
                               child: TemplateDetailScreen(
+                                screenBloc: screenBloc,
                                 shopPage: page,
-                                template: template,
-                                stylesheets: screenBloc.state.stylesheets,
+                                templateId: page.templateId,
                               ),
                               type: PageTransitionType.fade));
                     },

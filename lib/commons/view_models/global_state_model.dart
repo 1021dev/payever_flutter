@@ -8,9 +8,9 @@ class GlobalStateModel extends ChangeNotifier {
   String _currentWallpaperBlur;
 
   String _defaultCustomWallpaper =
-      "https://payever.azureedge.net/images/commerseos-background.jpg";
+      "https://payever.azureedge.net/images/commerceos-background.jpg";
   String _defaultCustomWallpaperBlur =
-      "https://payever.azureedge.net/images/commerseos-background-blurred.jpg";
+      "https://payever.azureedge.net/images/commerceos-background-blurred.jpg";
   String _theme = 'default';
 
   String _language = 'en';
@@ -18,6 +18,20 @@ class GlobalStateModel extends ChangeNotifier {
   Business _currentBusiness;
   List<AppWidget> _appWidgets;
   ShopDetailModel _activeShop;
+  ThemeModel _activeTheme;
+
+  ThemeModel get activeTheme => _activeTheme;
+
+  setActiveTheme(ThemeModel value) {
+    _activeTheme = value;
+    notifyListeners();
+  }
+  String _selectedSectionId;
+  setSelectedSectionId(String value) {
+    _selectedSectionId = value;
+    notifyListeners();
+  }
+  String get selectedSectionId => _selectedSectionId;
 
   ShopDetailModel get activeShop => _activeShop;
 

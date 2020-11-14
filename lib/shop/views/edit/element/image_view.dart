@@ -3,69 +3,49 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/shop/models/models.dart';
-
 import '../../../../theme.dart';
 
 class ImageView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
-  final String deviceTypeId;
-  final SectionStyleSheet sectionStyleSheet;
 
   const ImageView(
       {this.child,
-      this.stylesheets,
-      this.deviceTypeId,
-      this.sectionStyleSheet});
+      this.stylesheets});
 
   @override
-  _ImageViewState createState() => _ImageViewState(child, sectionStyleSheet);
+  _ImageViewState createState() => _ImageViewState(child);
 }
 
 class _ImageViewState extends State<ImageView> {
   final Child child;
-  final SectionStyleSheet sectionStyleSheet;
-  ImageStyles styles;
-  Data data;
 
-  _ImageViewState(this.child, this.sectionStyleSheet);
+  ImageStyles styles;
+  ImageData data;
+  String url = '';
+  _ImageViewState(this.child);
 
   @override
   Widget build(BuildContext context) {
     styles = styleSheet();
-    if (styles == null && child.styles != null && child.styles.isNotEmpty) {
-      styles = ImageStyles.fromJson(child.styles);
-    }
-    if (styles == null || styles.display == 'none') return Container();
-
-    return _body();
-  }
-
-  Widget _body() {
     try {
-      data = Data.fromJson(child.data);
+      data = ImageData.fromJson(child.data);
     } catch (e) {}
 
-    String url = '';
     if (styles.background.isNotEmpty) {
       url = styles.background;
     } else {
       if (data == null) return Container();
       url = data.src;
     }
+    return body;
+  }
 
+  Widget get body {
     return Opacity(
       opacity: styles.opacity,
       child: Container(
-        height: styles.height,
-        width: styles.width,
         decoration: decoration,
-//      color: colorConvert(styles.backgroundColor),
-        margin: EdgeInsets.only(
-            left: styles.getMarginLeft(sectionStyleSheet),
-            right: styles.marginRight,
-            top: styles.getMarginTop(sectionStyleSheet),
-            bottom: styles.marginBottom),
         child: getImage(url),
       ),
     );
@@ -146,7 +126,7 @@ class _ImageViewState extends State<ImageView> {
     double deg = styles.shadowAngle * pi / 180;
     return [
       BoxShadow(
-        color: Colors.black.withOpacity(styles.shadowOpacity / 100),
+        color: colorConvert(styles.shadowFormColor).withOpacity(styles.shadowOpacity / 100),
 //        spreadRadius: 5,
         blurRadius: styles.shadowBlur,
         offset: Offset(cos(deg) * styles.shadowOffset,
@@ -157,10 +137,12 @@ class _ImageViewState extends State<ImageView> {
 
   ImageStyles styleSheet() {
     try {
-//      print(
-//          'Image Styles: ${widget.stylesheets[widget.deviceTypeId][child.id]}');
-      return ImageStyles.fromJson(
-          widget.stylesheets[widget.deviceTypeId][child.id]);
+      Map<String, dynamic> json = widget.stylesheets[child.id];
+      // if (json['display'] != 'none') {
+      //   print('Image View ID: ${child.id}');
+      //   print('Image Styles: $json');
+      // }
+      return ImageStyles.fromJson(json);
     } catch (e) {
       return null;
     }

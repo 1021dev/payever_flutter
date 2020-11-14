@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -7,39 +8,28 @@ import '../../../../theme.dart';
 class ShopCartView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
-  final String deviceTypeId;
-  final SectionStyleSheet sectionStyleSheet;
 
-  const ShopCartView({this.child, this.stylesheets, this.deviceTypeId, this.sectionStyleSheet});
+  const ShopCartView({this.child, this.stylesheets});
 
   @override
-  _ShopCartViewState createState() => _ShopCartViewState(child, sectionStyleSheet);
+  _ShopCartViewState createState() => _ShopCartViewState(child);
 }
 
 class _ShopCartViewState extends State<ShopCartView> {
   final Child child;
-  final SectionStyleSheet sectionStyleSheet;
   ShopCartStyles styles;
 
-  _ShopCartViewState(this.child, this.sectionStyleSheet);
+  _ShopCartViewState(this.child);
 
   @override
   Widget build(BuildContext context) {
     styles = styleSheet();
-    if (styles == null && child.styles != null && child.styles.isNotEmpty) {
-      styles = ShopCartStyles.fromJson(child.styles);
-    }
-    if (styles == null ||
-        styles.display == 'none')
+    if (child.data == null)
       return Container();
-
-    return Opacity(
-      opacity: styles.opacity,
-        child: _body());
+    return body;
   }
 
-  Widget _body() {
-
+  Widget get body {
     String asset = '';
     switch(child.data['variant']) {
       case 'square-cart':
@@ -63,30 +53,32 @@ class _ShopCartViewState extends State<ShopCartView> {
       default:
         break;
     }
-    return Container(
-        width: styles.width,
-        height: styles.height,
-        decoration: decoration,
-        margin: EdgeInsets.only(
-            left: styles.getMarginLeft(sectionStyleSheet),
-            right: styles.marginRight,
-            top: styles.getMarginTop(sectionStyleSheet),
-            bottom: styles.marginBottom),
-        alignment: Alignment.center,
-        child: Badge(
-          padding: EdgeInsets.all(styles.width/8),
-          badgeColor: colorConvert(styles.badgeBackground),
-          badgeContent: Text(
-            '3',
-            style: TextStyle(fontSize: styles.width/3.5, fontWeight: FontWeight.w600, color: colorConvert(styles.badgeColor)),
-          ),
-          child: SvgPicture.asset(
-            asset,
-            color: colorConvert(styles.backgroundColor),
-            width: styles.width,
-            height: styles.height,
-          ),
-        ));
+    double size = min<double>(styles.width, styles.height);
+    return Opacity(
+      opacity: styles.opacity,
+      child: Container(
+          alignment: Alignment.center,
+          child: Badge(
+            padding: EdgeInsets.all(size/10),
+            badgeColor: colorConvert(styles.badgeBackground),
+            badgeContent: Text(
+              '3',
+              style: TextStyle(fontSize: size/4, fontWeight: FontWeight.w600, color: colorConvert(styles.badgeColor)),
+            ),
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: Container(
+                decoration: decoration,
+                child: SvgPicture.asset(
+                  asset,
+                  color: colorConvert(styles.backgroundColor),
+                  width: double.infinity,
+                  height: double.infinity,
+                ),
+              ),
+            ),
+          )),
+    );
   }
 
   get decoration {
@@ -145,9 +137,13 @@ class _ShopCartViewState extends State<ShopCartView> {
 
   ShopCartStyles styleSheet() {
     try {
-      print('Shop Cart Styles: ${ widget.stylesheets[widget.deviceTypeId][child.id]}');
-      return ShopCartStyles.fromJson(
-          widget.stylesheets[widget.deviceTypeId][child.id]);
+      Map<String, dynamic> json = widget.stylesheets[child.id];
+      // if (json['display'] != 'none') {
+      //   print('ShopCartID: ${child.id}');
+      //   print('Shop Cart Styles: $json');
+      // }
+
+      return ShopCartStyles.fromJson(json);
     } catch (e) {
       return null;
     }

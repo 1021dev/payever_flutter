@@ -49,7 +49,10 @@ class ProductCell extends StatelessWidget {
                     ),
                     color: Colors.white,
                     placeholder: (context, url) => Container(
-                      color: Colors.white,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(14),
+                      ),
                       child: Center(
                         child: Container(
                           child: CircularProgressIndicator(

@@ -6,37 +6,25 @@ import '../../../../theme.dart';
 class ShopProductCategoryView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
-  final String deviceTypeId;
-  final SectionStyleSheet sectionStyleSheet;
 
   const ShopProductCategoryView(
       {this.child,
-      this.stylesheets,
-      this.deviceTypeId,
-      this.sectionStyleSheet});
+      this.stylesheets});
 
   @override
   _ShopProductCategoryViewState createState() =>
-      _ShopProductCategoryViewState(child, sectionStyleSheet);
+      _ShopProductCategoryViewState(child);
 }
 
 class _ShopProductCategoryViewState extends State<ShopProductCategoryView> {
   final Child child;
-  final SectionStyleSheet sectionStyleSheet;
   ShopProductCategoryStyles styles;
   CategoryData data;
-  _ShopProductCategoryViewState(this.child, this.sectionStyleSheet);
+  _ShopProductCategoryViewState(this.child);
 
   @override
   Widget build(BuildContext context) {
     styles = styleSheet();
-    if (styles == null && child.styles != null && child.styles.isNotEmpty) {
-      styles = ShopProductCategoryStyles.fromJson(child.styles);
-    }
-    if (styles == null ||
-        styles.display == 'none')
-      return Container();
-
     return _body();
   }
 
@@ -72,8 +60,8 @@ class _ShopProductCategoryViewState extends State<ShopProductCategoryView> {
               'Category Title',
               style: TextStyle(
                 fontSize: styles.categoryTitleFontSize,
-                fontStyle: styles.getCategoryTitleFontStyle(),
-                fontWeight: styles.getCategoryTitleFontWeight(),
+                fontStyle: styles.categoryTitleFontStyle,
+                fontWeight: styles.categoryTitleFontWeight,
                 color: colorConvert(styles.categoryTitleColor),
               ),
             ),
@@ -136,8 +124,8 @@ class _ShopProductCategoryViewState extends State<ShopProductCategoryView> {
                   alignment: Alignment.center,
                   child: SvgPicture.asset(
                     'assets/images/productsicon.svg',
-                    width: 80,
-                    height: 80,
+                    width: 60,
+                    height: 60,
                     color: Colors.grey,
                   ),
                 ),
@@ -149,15 +137,15 @@ class _ShopProductCategoryViewState extends State<ShopProductCategoryView> {
                     child: Container(
                       margin: EdgeInsets.only(top: 5),
                       width: double.infinity,
-                      alignment: styles.getTextAlign(),
                       child: Text(
                         'Product A',
                         style: TextStyle(
                           fontSize: styles.titleFontSize,
-                          fontStyle: styles.getTitleFontStyle(),
-                          fontWeight: styles.getTitleFontWeight(),
+                          fontStyle: styles.titleFontStyle,
+                          fontWeight: styles.titleFontWeight,
                           color: colorConvert(styles.titleColor),
                         ),
+                        textAlign: styles.textAlign,
                       ),
                     ),
                   ),
@@ -165,16 +153,16 @@ class _ShopProductCategoryViewState extends State<ShopProductCategoryView> {
                     visible: !data.hideProductPrice,
                     child: Container(
                       width: double.infinity,
-                      alignment: styles.getTextAlign(),
                       margin: EdgeInsets.symmetric(vertical: 5),
                       child: Text(
                         '\$ 39.00',
                         style: TextStyle(
                           fontSize: styles.priceFontSize,
-                          fontStyle: styles.getPriceFontStyle(),
-                          fontWeight: styles.getPriceFontWeight(),
+                          fontStyle: styles.priceFontStyle,
+                          fontWeight: styles.priceFontWeight,
                           color: colorConvert(styles.priceColor),
                         ),
+                        textAlign: styles.textAlign,
                       ),
                     ),
                   )
@@ -189,12 +177,10 @@ class _ShopProductCategoryViewState extends State<ShopProductCategoryView> {
 
   ShopProductCategoryStyles styleSheet() {
     try {
-      Map<String, dynamic>json = widget.stylesheets[widget.deviceTypeId][child.id];
-      print(
-          'ShopProductCategoryStyles: $json');
-      ShopProductCategoryStyles style = ShopProductCategoryStyles.fromJson(json);
-      print('Columns: ${style.columns}');
-      return style;
+      Map<String, dynamic>json = widget.stylesheets[child.id];
+//      if (json['display'] != 'none')
+//        print('ShopProductCategoryStyles: $json');
+      return ShopProductCategoryStyles.fromJson(json);
     } catch (e) {
       return null;
     }
