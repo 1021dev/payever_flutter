@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:html/parser.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:uuid/uuid.dart';
 import '../../theme.dart';
@@ -62,6 +63,36 @@ class StyleAssist {
     if (fontStyle == null) return FontStyle.normal;
     if (fontStyle == 'italic') return FontStyle.italic;
     return FontStyle.normal;
+  }
+
+  // HTML Text
+  String parseHtmlString(String htmlText) {
+    if (!isHtmlText(htmlText))
+      return htmlText;
+
+    String text = htmlText.replaceAll('<br>', '\n');
+    var document  = parse(text);
+    var elements;
+    if (htmlText.contains('div')) {
+      elements = document.getElementsByTagName('div');
+    } else if (htmlText.contains('font')) {
+      elements = document.getElementsByTagName('font');
+    } else if (htmlText.contains('span')) {
+      elements = document.getElementsByTagName('span');
+    }
+    try {
+      String text = '';
+      (elements as List).forEach((element) { text += '${element.text}\n'; });
+      return text;
+    } catch (e) {
+      return '';
+    }
+  }
+
+  bool isHtmlText(String text) {
+    return (text.contains('<div') ||
+        text.contains('<span') ||
+        text.contains('<font'));
   }
 }
 

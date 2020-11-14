@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/models.dart';
 import '../../../../theme.dart';
-import 'package:html/parser.dart';
 
 class TextView extends StatefulWidget {
   final Child child;
@@ -20,8 +19,7 @@ class TextView extends StatefulWidget {
 }
 
 class _TextViewState extends State<TextView> {
-
-   TextStyles styles;
+  TextStyles styles;
   final FocusNode _focusNode = FocusNode();
   String txt;
   String htmlParseText;
@@ -52,8 +50,7 @@ class _TextViewState extends State<TextView> {
     if (widget.child.data is Map) {
       Data data = Data.fromJson(widget.child.data);
       if (data.text != null) txt = data.text;
-      if (widget.child.data != null)
-        print('Text Data:' + data.text);
+      if (widget.child.data != null) print('Text Data:' + data.text);
     } else {
       return Container();
     }
@@ -64,52 +61,9 @@ class _TextViewState extends State<TextView> {
     // <div style="text-align: center;"><font style="font-size: 41px;">SELECTION</font></div>
     // <font style="font-size: 20px;">NEW IN: THE B27</font>
     // <div style="text-align: center;"><font face="Roboto"><span style="font-size: 18px;">05</span></font></div><div style="text-align: center;"><font face="Roboto"><span style="font-size: 18px;">NOVEMBER</span></font></div>
-    htmlParseText = parseHtmlString(txt);
-    if (widget.isEditState) {
-      controller.text = htmlParseText;
-      return textField;
-    }
-
-    return Container(
-      color: colorConvert(styles.backgroundColor, emptyColor: true),
-      child: Text(htmlParseText,
-        style: TextStyle(
-            color: colorConvert(htmlTextColor(txt)),
-            fontWeight: styles.fontWeight,
-            fontStyle: styles.fontStyle,
-            fontSize: htmlFontSize(txt)),
-        textAlign: htmlAlignment(txt),
-      ),
-    );
-  }
-
-  String parseHtmlString(String string) {
-    if (!isHtmlText)
-      return txt;
-
-    String text = txt.replaceAll('<br>', '\n');
-    var document  = parse(text);
-    var elements;
-    if (string.contains('div')) {
-      elements = document.getElementsByTagName('div');
-    } else if (string.contains('font')) {
-      elements = document.getElementsByTagName('font');
-    } else if (string.contains('span')) {
-      elements = document.getElementsByTagName('span');
-    }
-    try {
-      String text = '';
-      (elements as List).forEach((element) { text += '${element.text}\n'; });
-      return text;
-    } catch (e) {
-      return '';
-    }
-  }
-
-  bool get isHtmlText {
-    return (txt.contains('<div') ||
-        txt.contains('<span') ||
-        txt.contains('<font'));
+    htmlParseText = styles.parseHtmlString(txt);
+    controller.text = htmlParseText;
+    return textField;
   }
 
   TextAlign htmlAlignment(String text) {
@@ -123,9 +77,8 @@ class _TextViewState extends State<TextView> {
     return TextAlign.start;
   }
 
-  String htmlTextColor(String text) {
-    if (!isHtmlText)
-      return styles.color;
+  dynamic htmlTextColor(String text) {
+    if (!styles.isHtmlText(text)) return styles.color;
 
     if (text.contains('color="')) {
       int index = text.indexOf('color="');
@@ -135,22 +88,22 @@ class _TextViewState extends State<TextView> {
     if (text.contains('color: rgb')) {
       int index = text.indexOf('color: rgb');
       String color = text.substring(index + 10, index + 25);
-      return color;
+      String newColor =  color.replaceAll(RegExp(r"[^\s\w]"), '');
+      List<String>colors = newColor.split(' ');
+      return Color.fromRGBO(int.parse(colors[0]), int.parse(colors[1]), int.parse(colors[2]), 1);
     }
     return styles.color;
   }
 
   double htmlFontSize(String text) {
-    if (!isHtmlText)
-      return styles.fontSize;
+    if (!styles.isHtmlText(text)) return styles.fontSize;
 
     if (text.contains('font-size:')) {
       int index = text.indexOf('font-size:');
       String font = text.substring(index + 11, index + 13);
       try {
         return double.parse(font);
-      }
-      catch (e) {
+      } catch (e) {
         return styles.fontSize;
       }
     }
@@ -158,8 +111,7 @@ class _TextViewState extends State<TextView> {
   }
 
   FontWeight htmlFontWeight(String text) {
-    if (!isHtmlText)
-      return styles.fontWeight;
+    if (!styles.isHtmlText(text)) return styles.fontWeight;
 
     if (text.contains('font-weight: normal')) {
       return styles.getFontWeight('normal');
@@ -170,28 +122,31 @@ class _TextViewState extends State<TextView> {
   }
 
   Widget get textField {
+    var textColor = htmlTextColor(txt);
     return Container(
       alignment: styles.textAlign,
       color: colorConvert(styles.backgroundColor, emptyColor: true),
       child: TextField(
         controller: controller,
         focusNode: _focusNode,
+        enabled: widget.isEditState,
         decoration: InputDecoration(
-          contentPadding:
-          EdgeInsets.zero,
+          contentPadding: EdgeInsets.zero,
+          isDense: true,
           // labelText: label,
-          labelStyle: TextStyle(
-            color: Colors.grey,
-            fontSize: 12,
-          ),
+          // labelStyle: TextStyle(
+          //   color: Colors.grey,
+          //   fontSize: 12,
+          // ),
           border: InputBorder.none,
           focusedBorder: InputBorder.none,
           enabledBorder: InputBorder.none,
           errorBorder: InputBorder.none,
           disabledBorder: InputBorder.none,
         ),
+
         style: TextStyle(
-            color: colorConvert(htmlTextColor(txt)),
+            color: textColor is String ? colorConvert(htmlTextColor(txt)) : textColor,
             fontWeight: styles.fontWeight,
             fontStyle: styles.fontStyle,
             fontSize: htmlFontSize(txt)),
