@@ -270,7 +270,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                       onPressed: () {
                         Navigator.of(context).pop();
                         setState(() {});
-                        _updateStyle();
+                        _updateFillColor();
                       },
                     ),
                   ],
@@ -506,7 +506,7 @@ class _TextStyleViewState extends State<TextStyleView> {
         onTap: () {
           setState(() {
             bgColor = textBgColors[index];
-            _updateStyle();
+            _updateFillColor();
           });
         },
         child: item);
@@ -1429,14 +1429,28 @@ class _TextStyleViewState extends State<TextStyleView> {
     );
   }
 
-  void _updateStyle() {
-    var hex = '${bgColor.value.toRadixString(16)}';
+  void _updateFillColor() {
+    String hex = '${bgColor.value.toRadixString(16)}';
     String newBgColor = '#${hex.substring(2)}';
-    print('newBgColor: $newBgColor');
     Map<String, dynamic> sheets = widget.stylesheets[selectedId];
     sheets['backgroundColor'] = newBgColor;
     List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
         selectedId, sheets, screenBloc.state.activeShopPage.stylesheetIds);
+
+    screenBloc.add(UpdateSectionEvent(
+        sectionId: screenBloc.state.selectedSectionId, effects: effects));
+  }
+
+  void _updateTextColor() {
+    String hex = '${textColor.value.toRadixString(16)}';
+    String newBgColor = '#${hex.substring(2)}';
+    Map<String, dynamic> sheets = widget.stylesheets[selectedId];
+    String text = '<font color=\"$newBgColor\">Text test tomorrow morning and let me know </font>';
+    // '<font color="#b51700" style="font-size: 18px;">Text test tomorrow morning and let me know </font>'
+    // '<div style="text-align: center;"><span style="font-size: 18px; color: rgb(181, 23, 0);">Text test tomorrow morning and let me know</span></div>'
+    // <div style="text-align: center;"><span style="font-weight: normal;"><font color="#5e5e5e" style="font-size: 14px;">Men's sneakers</font></span></div>
+    TextStyles styles = TextStyles.fromJson(sheets);
+    List<Map<String, dynamic>> effects = styles.getUpdateTextPayload(screenBloc.state.selectedBlockId, selectedId, sheets, text, screenBloc.state.activeShopPage.templateId);
     print('payload: $effects');
     screenBloc.add(UpdateSectionEvent(
         sectionId: screenBloc.state.selectedSectionId, effects: effects));

@@ -176,7 +176,20 @@ class _TextViewState extends State<TextView> {
       child: TextField(
         controller: controller,
         focusNode: _focusNode,
-        // decoration: widget.tfTextDecoration,
+        decoration: InputDecoration(
+          contentPadding:
+          EdgeInsets.zero,
+          // labelText: label,
+          labelStyle: TextStyle(
+            color: Colors.grey,
+            fontSize: 12,
+          ),
+          border: InputBorder.none,
+          focusedBorder: InputBorder.none,
+          enabledBorder: InputBorder.none,
+          errorBorder: InputBorder.none,
+          disabledBorder: InputBorder.none,
+        ),
         style: TextStyle(
             color: colorConvert(htmlTextColor(txt)),
             fontWeight: styles.fontWeight,
