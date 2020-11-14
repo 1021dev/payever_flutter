@@ -310,7 +310,6 @@ class _SectionViewState extends State<SectionView> {
           isEditState: selectChildId == child.id,
           stylesheets: stylesheets,
           onChangeText: (value) {
-            print('Update Text: $value');
             _updateTextAction(state, value);
           },
         );
@@ -736,7 +735,7 @@ class _SectionViewState extends State<SectionView> {
     List<Map<String, dynamic>> effects = styles.getUpdateTextPayload(section.id, selectChildId, sheets, text, state.activeShopPage.templateId);
     print('payload: $effects');
     screenBloc.add(UpdateSectionEvent(
-        sectionId: screenBloc.state.selectedSectionId, effects: effects));
+        sectionId: state.selectedSectionId, effects: effects));
   }
 
   List<Map<String, dynamic>> get sectionPayload {

@@ -134,18 +134,12 @@ class _TextViewState extends State<TextView> {
         decoration: InputDecoration(
           contentPadding: EdgeInsets.zero,
           isDense: true,
-          // labelText: label,
-          // labelStyle: TextStyle(
-          //   color: Colors.grey,
-          //   fontSize: 12,
-          // ),
           border: InputBorder.none,
           focusedBorder: InputBorder.none,
           enabledBorder: InputBorder.none,
           errorBorder: InputBorder.none,
           disabledBorder: InputBorder.none,
         ),
-
         style: TextStyle(
             color: htmlTextColor(txt),
             fontWeight: styles.fontWeight,

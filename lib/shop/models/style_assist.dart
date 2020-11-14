@@ -98,6 +98,31 @@ class StyleAssist {
     }
   }
 
+  String encodeHtmlString({String text, double fontSize, String textColor, String textAlign, String fontWeight}) {
+    if (fontSize == null && textColor == null && textAlign == null && fontWeight == null)
+      return text;
+
+    if (textAlign == null || textAlign.isEmpty) {
+      if (fontSize == null)
+        return '<font color=\"$textColor\">$text</font>';
+
+      return '<font color=\"$textColor\" style="font-size: ${fontSize}px;">$text</font>';
+    } else {
+      if (fontSize == null && textColor == null)
+        return '<div style=\"text-align: $textAlign;\">$text</div>';
+
+      if (textColor == null)
+        return '<div style=\"text-align: $textAlign;\"><span style=\"font-size: ${fontSize}px;\">$text</span></div>';
+
+      Color color1 = colorConvert(textColor);
+      String divColor = 'rgb(${color1.red}, ${color1.green}, ${color1.blue})';
+      if (fontSize == null)
+        return '<div style=\"text-align: $textAlign;\"><span style=\"color: $divColor;\">$text</span></div>';
+
+      return '<div style=\"text-align: $textAlign;\"><span style=\"font-size: ${fontSize}px; color: $divColor;\">$text</span></div>';
+    }
+  }
+
   bool isHtmlText(String text) {
     return (text.contains('<div') ||
         text.contains('<span') ||
