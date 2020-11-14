@@ -31,7 +31,7 @@ class _TextViewState extends State<TextView> {
   void initState() {
     super.initState();
     _focusNode.addListener(() {
-      print("Has focus: ${_focusNode.hasFocus}");
+      print('Has focus: ${_focusNode.hasFocus} ${controller.text}');
       if (!_focusNode.hasFocus && htmlParseText != controller.text) {
         widget.onChangeText(controller.text);
       }
@@ -147,12 +147,9 @@ class _TextViewState extends State<TextView> {
             fontSize: htmlFontSize(txt)),
         textAlign: htmlAlignment(txt),
         maxLines: 100,
-        // onChanged: (text) {
-        //   widget.onChangeText(text);
-        //   // if (text.trim().isNotEmpty) {
-        //   //
-        //   // }
-        // },
+        onChanged: (text) {
+          // widget.onChangeText(text);
+        },
       ),
     );
   }

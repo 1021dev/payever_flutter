@@ -696,9 +696,9 @@ class _SectionViewState extends State<SectionView> {
       Map<String, dynamic> json =
       screenBloc.state.stylesheets[deviceTypeId][childId];
       if (json['display'] != 'none') {
-        print('==============================================');
-        print('SectionID: $childId');
-        print('Section StyleSheet: $json');
+        // print('==============================================');
+        // print('SectionID: $childId');
+        // print('Section StyleSheet: $json');
       }
       return SectionStyles.fromJson(json);
     } catch (e) {

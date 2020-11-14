@@ -108,6 +108,7 @@ class _TemplateViewState extends State<TemplateView> {
   }
   void onTapSection(String childId) {
     print('Selected SectionID: $childId');
+    FocusScope.of(context).unfocus();
     setState(() {
       selectSectionId = childId;
       screenBloc.add(SelectSectionEvent(

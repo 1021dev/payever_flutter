@@ -62,10 +62,7 @@ class _TextStyleViewState extends State<TextStyleView> {
 
   Widget body(ShopEditScreenState state) {
     if (state.selectedChild == null) return Container();
-    Data data = Data.fromJson(state.selectedChild.data);
-    if (data.text != null) {
-      htmlParseText = styles.parseHtmlString(data.text);
-    }
+
     selectedId = state.selectedChild.id;
     styles = TextStyles.fromJson(widget.stylesheets[selectedId]);
     bgColor = colorConvert(styles.backgroundColor, emptyColor: true);
@@ -87,7 +84,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                 SizedBox(
                   height: 10,
                 ),
-                Expanded(child: mainBody),
+                Expanded(child: mainBody(state)),
               ],
             ),
           ),
@@ -165,27 +162,27 @@ class _TextStyleViewState extends State<TextStyleView> {
     );
   }
 
-  Widget get mainBody {
+  Widget mainBody(ShopEditScreenState state) {
     switch (styleType) {
       case TextStyleType.Style:
-        return _styleBody;
+        return _styleBody(state);
       case TextStyleType.Text:
-        return _textBody;
+        return _textBody(state);
         break;
       case TextStyleType.Arrange:
         return _arrangeBody;
         break;
       default:
-        return _styleBody;
+        return _styleBody(state);
     }
   }
 
   // Style Body
-  Widget get _styleBody {
+  Widget _styleBody(ShopEditScreenState state) {
     List<Widget> textStyleWidgets = [
       _gridViewBody,
-      _fill(ColorType.BackGround),
-      _border,
+      _fill(state, ColorType.BackGround),
+      _border(state),
       _shadow,
       _opacity
     ];
@@ -227,7 +224,7 @@ class _TextStyleViewState extends State<TextStyleView> {
     );
   }
 
-  Widget _fill(ColorType colorType) {
+  Widget _fill(ShopEditScreenState state, ColorType colorType) {
     String title;
     Color pickColor;
     switch(colorType) {
@@ -274,7 +271,10 @@ class _TextStyleViewState extends State<TextStyleView> {
                       onPressed: () {
                         Navigator.of(context).pop();
                         setState(() {});
+                        if (colorType == ColorType.BackGround)
                         _updateFillColor();
+                        else if (colorType == ColorType.Text)
+                          _updateTextColor(state);
                       },
                     ),
                   ],
@@ -296,7 +296,7 @@ class _TextStyleViewState extends State<TextStyleView> {
     );
   }
 
-  get _border {
+  Widget _border(ShopEditScreenState state) {
     return Column(
       children: [
         Container(
@@ -345,7 +345,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                     ],
                   ),
                 ),
-                _fill(ColorType.Border),
+                _fill(state, ColorType.Border),
                 // Container(
                 //   height: 60,
                 //   child: Row(
@@ -582,7 +582,7 @@ class _TextStyleViewState extends State<TextStyleView> {
   }
 
   // Text Body
-  Widget get _textBody {
+  Widget _textBody(ShopEditScreenState state) {
     return Container(
         margin: EdgeInsets.only(top: 16),
         child: SingleChildScrollView(
@@ -591,7 +591,7 @@ class _TextStyleViewState extends State<TextStyleView> {
               _paragraphStyle,
               _fontType,
               _fontSize,
-              _fill(ColorType.Text),
+              _fill(state, ColorType.Text),
               _textHorizontalAlign,
               _textVerticalAlign,
               _verticalText,
@@ -1445,16 +1445,20 @@ class _TextStyleViewState extends State<TextStyleView> {
         sectionId: screenBloc.state.selectedSectionId, effects: effects));
   }
 
-  void _updateTextColor() {
+  void _updateTextColor(ShopEditScreenState state) {
+    Data data = Data.fromJson(state.selectedChild.data);
+    if (data.text != null) {
+      htmlParseText = styles.parseHtmlString(data.text);
+    }
     String hex = '${textColor.value.toRadixString(16)}';
     String newBgColor = '#${hex.substring(2)}';
     Map<String, dynamic> sheets = widget.stylesheets[selectedId];
     // '<font color="#b51700" style="font-size: 18px;">Text test tomorrow morning and let me know </font>'
     // '<div style="text-align: center;"><span style="font-size: 18px; color: rgb(181, 23, 0);">Text test tomorrow morning and let me know</span></div>'
     // <div style="text-align: center;"><span style="font-weight: normal;"><font color="#5e5e5e" style="font-size: 14px;">Men's sneakers</font></span></div>
-    TextStyles styles = TextStyles.fromJson(sheets);
+
     String htmlStr = styles.encodeHtmlString(text: htmlParseText, textColor: newBgColor);
-    List<Map<String, dynamic>> effects = styles.getUpdateTextPayload(screenBloc.state.selectedBlockId, selectedId, sheets, htmlStr, screenBloc.state.activeShopPage.templateId);
+    List<Map<String, dynamic>> effects = styles.getUpdateTextPayload(state.selectedBlockId, selectedId, sheets, htmlStr, state.activeShopPage.templateId);
 
     print('htmlStr: $htmlStr');
     print('payload: $effects');
