@@ -402,8 +402,11 @@ class BaseStyles with BackgroundAssist, StyleAssist, SizeAssist, DecorationAssis
   // String or dynamic
   @JsonKey(name: 'width', defaultValue: 0)
   dynamic width0;
-  get width {
-    return getWidth(width0);
+  double get width {
+    double width1 = getWidth(width0);
+    if (minWidth != null && minWidth > width1)
+      return minWidth * GlobalUtils.shopBuilderWidthFactor;
+    return width1;
   }
   @JsonKey(name: 'height', defaultValue: 0)
   double height;

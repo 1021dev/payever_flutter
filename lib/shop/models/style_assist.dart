@@ -80,13 +80,13 @@ class StyleAssist {
       return htmlText;
 
     String text = htmlText.replaceAll('<br>', '\n');
-    var document  = parse(text);
+    var document = parse(text);
     var elements;
-    if (htmlText.contains('font')) {
+    if (htmlText.contains('<font')) {
       elements = document.getElementsByTagName('font');
-    } else if (htmlText.contains('span')) {
+    } else if (htmlText.contains('<span')) {
       elements = document.getElementsByTagName('span');
-    } else if (htmlText.contains('div')) {
+    } else if (htmlText.contains('<div')) {
       elements = document.getElementsByTagName('div');
     }
     try {
