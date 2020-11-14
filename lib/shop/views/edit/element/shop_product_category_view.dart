@@ -137,7 +137,6 @@ class _ShopProductCategoryViewState extends State<ShopProductCategoryView> {
                     child: Container(
                       margin: EdgeInsets.only(top: 5),
                       width: double.infinity,
-                      alignment: styles.textAlign,
                       child: Text(
                         'Product A',
                         style: TextStyle(
@@ -146,6 +145,7 @@ class _ShopProductCategoryViewState extends State<ShopProductCategoryView> {
                           fontWeight: styles.titleFontWeight,
                           color: colorConvert(styles.titleColor),
                         ),
+                        textAlign: styles.textAlign,
                       ),
                     ),
                   ),
@@ -153,7 +153,6 @@ class _ShopProductCategoryViewState extends State<ShopProductCategoryView> {
                     visible: !data.hideProductPrice,
                     child: Container(
                       width: double.infinity,
-                      alignment: styles.textAlign,
                       margin: EdgeInsets.symmetric(vertical: 5),
                       child: Text(
                         '\$ 39.00',
@@ -163,6 +162,7 @@ class _ShopProductCategoryViewState extends State<ShopProductCategoryView> {
                           fontWeight: styles.priceFontWeight,
                           color: colorConvert(styles.priceColor),
                         ),
+                        textAlign: styles.textAlign,
                       ),
                     ),
                   )

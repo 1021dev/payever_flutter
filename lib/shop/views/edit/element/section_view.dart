@@ -236,9 +236,12 @@ class _SectionViewState extends State<SectionView> {
 
     Widget childElement = getChild(state, child, sectionStyles.first);
     if (childElement == null) return null;
-
+    if (child.type == 'text') {
+      styles = TextStyles.fromJson(state.stylesheets[deviceTypeId][child.id]);
+    }
     double width = styles.width + styles.paddingH * 2;
     double height = styles.height + styles.paddingV * 2;
+
     double marginTop = 0; double marginLeft = 0;
     if (child.isButton && styles.height == 0) {
       height = 22 + styles.paddingV * 2;

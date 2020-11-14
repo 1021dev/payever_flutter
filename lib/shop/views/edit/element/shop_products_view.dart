@@ -72,7 +72,6 @@ class _ShopProductsViewState extends State<ShopProductsView> {
                 Container(
                   margin: EdgeInsets.only(top: 5),
                   width: double.infinity,
-                  alignment: styles.textAlign,
                   child: Text(
                     'Product name',
                     style: TextStyle(
@@ -81,11 +80,11 @@ class _ShopProductsViewState extends State<ShopProductsView> {
                       fontWeight: styles.titleFontWeight,
                       color: colorConvert(styles.titleColor),
                     ),
+                    textAlign: styles.textAlign,
                   ),
                 ),
                 Container(
                   width: double.infinity,
-                  alignment: styles.textAlign,
                   margin: EdgeInsets.symmetric(vertical: 5),
                   child: Text(
                     '\$ 00.00',
@@ -95,6 +94,7 @@ class _ShopProductsViewState extends State<ShopProductsView> {
                       fontWeight: styles.priceFontWeight,
                       color: colorConvert(styles.priceColor),
                     ),
+                    textAlign: styles.textAlign,
                   ),
                 )
               ],

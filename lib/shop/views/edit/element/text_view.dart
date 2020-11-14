@@ -62,11 +62,13 @@ class _TextViewState extends State<TextView> {
     // <font style="font-size: 20px;">NEW IN: THE B27</font>
     // <div style="text-align: center;"><font face="Roboto"><span style="font-size: 18px;">05</span></font></div><div style="text-align: center;"><font face="Roboto"><span style="font-size: 18px;">NOVEMBER</span></font></div>
     htmlParseText = styles.parseHtmlString(txt);
+    print('htmlParseText: $htmlParseText');
     controller.text = htmlParseText;
     return textField;
   }
 
   TextAlign htmlAlignment(String text) {
+    if (!styles.isHtmlText(text)) return styles.textAlign;
     if (text.contains('text-align: center')) {
       return TextAlign.center;
     } else if (text.contains('text-align: left')) {
@@ -74,16 +76,16 @@ class _TextViewState extends State<TextView> {
     } else if (text.contains('text-align: right')) {
       return TextAlign.end;
     }
-    return TextAlign.start;
+    return styles.textAlign;
   }
 
-  dynamic htmlTextColor(String text) {
-    if (!styles.isHtmlText(text)) return styles.color;
+  Color htmlTextColor(String text) {
+    if (!styles.isHtmlText(text)) return colorConvert(styles.color);
 
     if (text.contains('color="')) {
       int index = text.indexOf('color="');
       String color = text.substring(index + 7, index + 14);
-      return color;
+      return colorConvert(color);
     }
     if (text.contains('color: rgb')) {
       int index = text.indexOf('color: rgb');
@@ -92,7 +94,7 @@ class _TextViewState extends State<TextView> {
       List<String>colors = newColor.split(' ');
       return Color.fromRGBO(int.parse(colors[0]), int.parse(colors[1]), int.parse(colors[2]), 1);
     }
-    return styles.color;
+    return colorConvert(styles.color);
   }
 
   double htmlFontSize(String text) {
@@ -122,9 +124,8 @@ class _TextViewState extends State<TextView> {
   }
 
   Widget get textField {
-    var textColor = htmlTextColor(txt);
     return Container(
-      alignment: styles.textAlign,
+      // alignment: styles.textAlign,
       color: colorConvert(styles.backgroundColor, emptyColor: true),
       child: TextField(
         controller: controller,
@@ -146,7 +147,7 @@ class _TextViewState extends State<TextView> {
         ),
 
         style: TextStyle(
-            color: textColor is String ? colorConvert(htmlTextColor(txt)) : textColor,
+            color: htmlTextColor(txt),
             fontWeight: styles.fontWeight,
             fontStyle: styles.fontStyle,
             fontSize: htmlFontSize(txt)),
@@ -165,8 +166,8 @@ class _TextViewState extends State<TextView> {
   TextStyles getStyles() {
     try {
       Map<String, dynamic> json = widget.stylesheets[widget.child.id];
-      // print('Text ID ${child.id}');
-      // print('Text Styles: $json');
+      print('Text ID ${widget.child.id}');
+      print('Text Styles: $json');
       return TextStyles.fromJson(json);
     } catch (e) {
       return null;

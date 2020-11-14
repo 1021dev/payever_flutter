@@ -670,7 +670,6 @@ TextStyles _$TextStylesFromJson(Map<String, dynamic> json) {
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea'] as String
     ..width0 = json['width'] ?? 0
-    ..height = (json['height'] as num)?.toDouble() ?? 0
     ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
     ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
     ..margin = json['margin'] ?? '0 0 0 0'
@@ -701,6 +700,7 @@ TextStyles _$TextStylesFromJson(Map<String, dynamic> json) {
     ..priceFontWeight0 = json['priceFontWeight'] as String ?? 'normal'
     ..priceFontStyle0 = json['priceFontStyle'] as String ?? 'normal'
     ..priceTextDecoration = json['priceTextDecoration']
+    ..height = (json['height'] as num)?.toDouble() ?? 18
     ..backgroundColor = json['backgroundColor'] as String;
 }
 
@@ -729,7 +729,6 @@ Map<String, dynamic> _$TextStylesToJson(TextStyles instance) =>
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
       'width': instance.width0,
-      'height': instance.height,
       'minWidth': instance.minWidth,
       'minHeight': instance.minHeight,
       'margin': instance.margin,
@@ -759,6 +758,7 @@ Map<String, dynamic> _$TextStylesToJson(TextStyles instance) =>
       'priceFontWeight': instance.priceFontWeight0,
       'priceFontStyle': instance.priceFontStyle0,
       'priceTextDecoration': instance.priceTextDecoration,
+      'height': instance.height,
       'backgroundColor': instance.backgroundColor,
     };
 

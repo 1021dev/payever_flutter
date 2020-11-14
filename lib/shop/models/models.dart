@@ -453,8 +453,8 @@ class BaseStyles with BackgroundAssist, StyleAssist, SizeAssist, DecorationAssis
   // textAlign is only For Text, Shop Product, Shop Product Category
   @JsonKey(name: 'textAlign')
   String textAlign0;
-  Alignment get textAlign {
-    return getAlign(textAlign0);
+  TextAlign get textAlign {
+    return getTextAlign(textAlign0);
   }
   double get fontSize {
     return getFontSize(fontSize0);
@@ -577,6 +577,9 @@ class SectionStyles extends BaseStyles {
 @JsonSerializable()
 class TextStyles extends BaseStyles {
   TextStyles();
+
+  @JsonKey(name: 'height', defaultValue: 18)
+  double height;
 
   @JsonKey(name: 'backgroundColor')
   String backgroundColor;

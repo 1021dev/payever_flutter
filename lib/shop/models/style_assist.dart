@@ -37,6 +37,15 @@ class StyleAssist {
     return Alignment.topLeft;
   }
 
+  TextAlign getTextAlign(String align) {
+    if (align == 'center') return TextAlign.center;
+    if (align == 'left') return TextAlign.start;
+    if (align == 'right') return TextAlign.end;
+    if (align == 'start') return TextAlign.start;
+    if (align == 'end') return TextAlign.end;
+    return TextAlign.start;
+  }
+
   double getFontSize(dynamic fontSize0) {
     if (fontSize0 == 'auto') {
       return 15.0;
@@ -73,12 +82,12 @@ class StyleAssist {
     String text = htmlText.replaceAll('<br>', '\n');
     var document  = parse(text);
     var elements;
-    if (htmlText.contains('div')) {
-      elements = document.getElementsByTagName('div');
-    } else if (htmlText.contains('font')) {
+    if (htmlText.contains('font')) {
       elements = document.getElementsByTagName('font');
     } else if (htmlText.contains('span')) {
       elements = document.getElementsByTagName('span');
+    } else if (htmlText.contains('div')) {
+      elements = document.getElementsByTagName('div');
     }
     try {
       String text = '';
