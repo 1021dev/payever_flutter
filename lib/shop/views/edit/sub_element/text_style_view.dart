@@ -1446,7 +1446,10 @@ class _TextStyleViewState extends State<TextStyleView> {
   }
 
   void _updateTextColor(ShopEditScreenState state) {
-    Data data = Data.fromJson(state.selectedChild.data);
+    List sections = state.templates[state.activeShopPage.templateId]['children'] as List;
+    List children = sections.firstWhere((element) => element['id'] == state.selectedSectionId)['children'] as List;
+    Child child = Child.fromJson(children.firstWhere((element) => element['id'] == state.selectedChild.id));
+    Data data = Data.fromJson(child.data);
     if (data.text != null) {
       htmlParseText = styles.parseHtmlString(data.text);
     }

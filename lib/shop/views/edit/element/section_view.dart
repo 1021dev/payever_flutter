@@ -46,13 +46,12 @@ class SectionView extends StatefulWidget {
 
   @override
   _SectionViewState createState() => _SectionViewState(
-      deviceTypeId: deviceTypeId, sectionId: sectionId, screenBloc: screenBloc);
+      deviceTypeId: deviceTypeId, sectionId: sectionId);
 }
 
 class _SectionViewState extends State<SectionView> {
   final String deviceTypeId;
   final String sectionId;
-  final ShopEditScreenBloc screenBloc;
   final double limitSectionHeightChange = 20;
   Template template;
   Child section;
@@ -74,10 +73,7 @@ class _SectionViewState extends State<SectionView> {
   bool blockDragging = false;
   ChildSize blockDraggingSize;
 
-  _SectionViewState({this.deviceTypeId, this.sectionId, this.screenBloc}) {
-    sectionStyles = getSectionStyles(sectionId);
-    widgetHeight = sectionStyles.height;
-  }
+  _SectionViewState({this.deviceTypeId, this.sectionId});
 
   @override
   void dispose() {
@@ -87,6 +83,8 @@ class _SectionViewState extends State<SectionView> {
 
   @override
   Widget build(BuildContext context) {
+    sectionStyles = getSectionStyles(sectionId);
+    widgetHeight = sectionStyles.height;
     activeThemeId = Provider.of<GlobalStateModel>(context, listen: false)
         .activeTheme
         .themeId;
@@ -107,7 +105,7 @@ class _SectionViewState extends State<SectionView> {
                 });
               }
             },
-            bloc: screenBloc,
+            bloc: widget.screenBloc,
             child: BlocBuilder(
               condition: (ShopEditScreenState state1, ShopEditScreenState state2) {
                 if (state2.selectedSectionId != sectionId) {
@@ -118,7 +116,7 @@ class _SectionViewState extends State<SectionView> {
                 }
                 return true;
               },
-              bloc: screenBloc,
+              bloc: widget.screenBloc,
               builder: (BuildContext context, state) {
                 return body(state);
               },
@@ -283,7 +281,7 @@ class _SectionViewState extends State<SectionView> {
         } else {
           blockId = child.blocks.isEmpty ? '' : child.blocks.last.id;
         }
-        screenBloc.add(SelectSectionEvent(
+        widget.screenBloc.add(SelectSectionEvent(
             sectionId: section.id,
             selectedBlockId: blockId,
             selectedBlock: block,
@@ -593,12 +591,12 @@ class _SectionViewState extends State<SectionView> {
   }
 
   void progressResize(TemplateSizeStateModel templateSizeState) {
-    if (screenBloc.state.selectedSectionId != section.id) return;
+    if (widget.screenBloc.state.selectedSectionId != section.id) return;
     if (templateSizeState.shopObject != null) {
       _addNewObject(templateSizeState.shopObject);
       Future.microtask(()=>templateSizeState.setShopObject(null));
     }
-    if (screenBloc.state.selectedChild == null) return;
+    if (widget.screenBloc.state.selectedChild == null) return;
     // Initialize Relative Lines after drag
     if (templateSizeState.updateChildSizeFailed) {
       Future.microtask(() {
@@ -623,7 +621,7 @@ class _SectionViewState extends State<SectionView> {
         // Hint Lines
         progressRelativeLines(templateSizeState.newChildSize);
         // Block Dragging
-        Child selectedChild = screenBloc.state.selectedChild;
+        Child selectedChild = widget.screenBloc.state.selectedChild;
         if (selectedChild.type == 'block' &&
             isDragging(templateSizeState.newChildSize, selectedChild)) {
           setState(() {
@@ -645,17 +643,17 @@ class _SectionViewState extends State<SectionView> {
   }
 
   bool isDragging (ChildSize newSize, Child child) {
-    BaseStyles styles = BaseStyles.fromJson(screenBloc.state.stylesheets[deviceTypeId][child.id]);
+    BaseStyles styles = BaseStyles.fromJson(widget.screenBloc.state.stylesheets[deviceTypeId][child.id]);
     return styles.width == newSize.width && styles.height == newSize.height;
   }
 
   void progressWrongPosition(TemplateSizeStateModel templateSizeState) {
     bool isWrongPosition = sectionStyles.wrongPosition(
-        screenBloc.state.stylesheets[deviceTypeId],
+        widget.screenBloc.state.stylesheets[deviceTypeId],
         section,
         widgetHeight,
         templateSizeState.newChildSize,
-        screenBloc.state.selectedChild);
+        widget.screenBloc.state.selectedChild);
     if (isWrongPosition) {
       if (!templateSizeState.wrongPosition)
         Future.microtask(
@@ -671,13 +669,13 @@ class _SectionViewState extends State<SectionView> {
   void progressRelativeLines(ChildSize newChildSize) {
     setState(() {
       relativeMarginTop = sectionStyles.relativeMarginTop(
-          screenBloc.state.stylesheets[deviceTypeId],
+          widget.screenBloc.state.stylesheets[deviceTypeId],
           section,
           newChildSize,
           widgetHeight,
           selectChildId);
       relativeMarginLeft = sectionStyles.relativeMarginLeft(
-          screenBloc.state.stylesheets[deviceTypeId],
+          widget.screenBloc.state.stylesheets[deviceTypeId],
           section,
           newChildSize,
           selectChildId);
@@ -694,7 +692,7 @@ class _SectionViewState extends State<SectionView> {
   SectionStyles getSectionStyles(String childId) {
     try {
       Map<String, dynamic> json =
-      screenBloc.state.stylesheets[deviceTypeId][childId];
+      widget.screenBloc.state.stylesheets[widget.deviceTypeId][childId];
       if (json['display'] != 'none') {
         // print('==============================================');
         // print('SectionID: $childId');
@@ -726,7 +724,7 @@ class _SectionViewState extends State<SectionView> {
       effects = sectionPayload;
     }
     print('payload: $effects');
-    screenBloc.add(UpdateSectionEvent(sectionId: section.id, effects: effects));
+    widget.screenBloc.add(UpdateSectionEvent(sectionId: section.id, effects: effects));
   }
 
   _updateTextAction(ShopEditScreenState state, String text) {
@@ -734,7 +732,7 @@ class _SectionViewState extends State<SectionView> {
     TextStyles styles = TextStyles.fromJson(sheets);
     List<Map<String, dynamic>> effects = styles.getUpdateTextPayload(section.id, selectChildId, sheets, text, state.activeShopPage.templateId);
     print('payload: $effects');
-    screenBloc.add(UpdateSectionEvent(
+    widget.screenBloc.add(UpdateSectionEvent(
         sectionId: state.selectedSectionId, effects: effects));
   }
 
@@ -764,18 +762,18 @@ class _SectionViewState extends State<SectionView> {
   }
 
   _addNewObject(ShopObject shopObject) {
-    List<Map<String, dynamic>>effects = sectionStyles.getAddNewObjectPayload(shopObject, section.id,screenBloc.state.activeShopPage.stylesheetIds, screenBloc.state.activeShopPage.templateId);
+    List<Map<String, dynamic>>effects = sectionStyles.getAddNewObjectPayload(shopObject, section.id, widget.screenBloc.state.activeShopPage.stylesheetIds, widget.screenBloc.state.activeShopPage.templateId);
     print('payload: $effects');
-    screenBloc.add(UpdateSectionEvent(sectionId: section.id, effects: effects));
+    widget.screenBloc.add(UpdateSectionEvent(sectionId: section.id, effects: effects));
   }
 
   List<Map<String, dynamic>> childPayload(ChildSize newSize) {
     List<Map<String, dynamic>> effects = [];
     BaseStyles baseStyles = getBaseStyles(selectChildId);
-    Child selectedChild = screenBloc.state.selectedChild;
-    Map<String, dynamic>stylesheets = screenBloc.state.stylesheets[deviceTypeId];
+    Child selectedChild = widget.screenBloc.state.selectedChild;
+    Map<String, dynamic>stylesheets = widget.screenBloc.state.stylesheets[deviceTypeId];
 
-    String templateId = screenBloc.state.activeShopPage.templateId;
+    String templateId = widget.screenBloc.state.activeShopPage.templateId;
     effects = baseStyles.getPayload(stylesheets,
         section, selectedChild, newSize, deviceTypeId, templateId);
     // if (baseStyles.isChildOverFromBlockView(stylesheets, section.id, selectedChild, newSize)) {
@@ -789,6 +787,6 @@ class _SectionViewState extends State<SectionView> {
 
   BaseStyles getBaseStyles(String childId) {
     return BaseStyles.fromJson(
-        screenBloc.state.stylesheets[deviceTypeId][childId]);
+        widget.screenBloc.state.stylesheets[deviceTypeId][childId]);
   }
 }

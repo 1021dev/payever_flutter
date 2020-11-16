@@ -25,18 +25,16 @@ class TemplateView extends StatefulWidget {
   @override
   _TemplateViewState createState() => _TemplateViewState(
       shopPage: shopPage,
-      templateId: templateId,
-      screenBloc: screenBloc);
+      templateId: templateId);
 }
 
 class _TemplateViewState extends State<TemplateView> {
   final ShopPage shopPage;
   final String templateId;
-  final ShopEditScreenBloc screenBloc;
   String selectSectionId = '';
 
   _TemplateViewState(
-      {this.shopPage, this.templateId, this.screenBloc});
+      {this.shopPage, this.templateId});
 
   TemplateSizeStateModel templateSizeStateModel/* = TemplateSizeStateModel()*/;
 
@@ -44,7 +42,7 @@ class _TemplateViewState extends State<TemplateView> {
   Widget build(BuildContext context) {
     templateSizeStateModel = Provider.of<TemplateSizeStateModel>(context, listen: true);
     return BlocBuilder(
-      bloc: screenBloc,
+      bloc: widget.screenBloc,
       builder: (BuildContext context, state) {
         return body(state);
       },
@@ -64,7 +62,7 @@ class _TemplateViewState extends State<TemplateView> {
           child.children != null &&
           styleSheet.active) {
         SectionView sectionView = SectionView(
-          screenBloc: screenBloc,
+          screenBloc: widget.screenBloc,
           deviceTypeId: shopPage.stylesheetIds.mobile,
           enableTapChild: widget.enableTapSection,
           templateId: templateId,
@@ -111,7 +109,7 @@ class _TemplateViewState extends State<TemplateView> {
     FocusScope.of(context).unfocus();
     setState(() {
       selectSectionId = childId;
-      screenBloc.add(SelectSectionEvent(
+      widget.screenBloc.add(SelectSectionEvent(
           sectionId: selectSectionId,
           selectedBlock: null,
           selectedBlockId: '',
