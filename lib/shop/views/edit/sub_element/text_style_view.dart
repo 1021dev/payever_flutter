@@ -99,17 +99,7 @@ class _TextStyleViewState extends State<TextStyleView> {
     fontSize = styles.htmlFontSize(htmlText);
     textColor = styles.htmlTextColor(htmlText);
     // font types
-    if (styles.htmlFontWeight(htmlText) == FontWeight.bold)
-      fontTypes.add(TextFontType.Bold);
-
-    if (htmlText.contains('\</i>'))
-      fontTypes.add(TextFontType.Italic);
-
-    if (htmlText.contains('\</u>'))
-      fontTypes.add(TextFontType.Underline);
-
-    if (htmlText.contains('\</strike>'))
-      fontTypes.add(TextFontType.LineThrough);
+    fontTypes = styles.getTextFontTypes(htmlText);
   }
 
   Widget get _segmentedControl {
@@ -608,7 +598,7 @@ class _TextStyleViewState extends State<TextStyleView> {
           child: Column(
             children: [
               _paragraphStyle,
-              _fontType,
+              _fontType(state),
               _fontSize(state),
               _fill(state, ColorType.Text),
               _textHorizontalAlign,
@@ -670,7 +660,7 @@ class _TextStyleViewState extends State<TextStyleView> {
     );
   }
 
-  get _fontType {
+  Widget _fontType(ShopEditScreenState state) {
     return Padding(
       padding: const EdgeInsets.only(top: 20.0),
       child: Column(
@@ -708,7 +698,7 @@ class _TextStyleViewState extends State<TextStyleView> {
               children: [
                 Expanded(
                     child: InkWell(
-                        onTap: () => updateFontType(TextFontType.Bold),
+                        onTap: () => updateFontType(state, TextFontType.Bold),
                         child: Container(
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
@@ -729,7 +719,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                 ),
                 Expanded(
                     child: InkWell(
-                        onTap: () => updateFontType(TextFontType.Italic),
+                        onTap: () => updateFontType(state, TextFontType.Italic),
                         child: Container(
                             alignment: Alignment.center,
                             color: fontTypes.contains(TextFontType.Italic)
@@ -745,7 +735,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                 ),
                 Expanded(
                     child: InkWell(
-                        onTap: () => updateFontType(TextFontType.Underline),
+                        onTap: () => updateFontType(state, TextFontType.Underline),
                         child: Container(
                             alignment: Alignment.center,
                             color: fontTypes.contains(TextFontType.Underline)
@@ -763,7 +753,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                 ),
                 Expanded(
                     child: InkWell(
-                        onTap: () => updateFontType(TextFontType.LineThrough),
+                        onTap: () => updateFontType(state, TextFontType.LineThrough),
                         child: Container(
                             alignment: Alignment.center,
                             color: fontTypes.contains(TextFontType.LineThrough)
@@ -799,22 +789,6 @@ class _TextStyleViewState extends State<TextStyleView> {
     );
   }
 
-  void updateFontType(TextFontType fontType) {
-    if (fontTypes.contains(fontType)) {
-      fontTypes.remove(fontType);
-    } else {
-      if (fontType == TextFontType.Underline) {
-        if (fontTypes.contains(TextFontType.LineThrough))
-          fontTypes.remove(TextFontType.LineThrough);
-      } else if (fontType == TextFontType.LineThrough) {
-        if (fontTypes.contains(TextFontType.Underline))
-          fontTypes.remove(TextFontType.Underline);
-      }
-      fontTypes.add(fontType);
-    }
-    setState(() {
-    });
-  }
   Widget _fontSize(ShopEditScreenState state) {
     return Container(
       margin: EdgeInsets.only(top: 16),
@@ -1474,6 +1448,23 @@ class _TextStyleViewState extends State<TextStyleView> {
     String hex = '${textColor.value.toRadixString(16)}';
     String newTextColor = '#${hex.substring(2)}';
     String htmlStr = styles.encodeHtmlString(htmlText, textColor: newTextColor);
+    _updateTextProperty(state, htmlStr);
+  }
+
+  void updateFontType(ShopEditScreenState state, TextFontType fontType) {
+    if (fontTypes.contains(fontType)) {
+      fontTypes.remove(fontType);
+    } else {
+      if (fontType == TextFontType.Underline) {
+        if (fontTypes.contains(TextFontType.LineThrough))
+          fontTypes.remove(TextFontType.LineThrough);
+      } else if (fontType == TextFontType.LineThrough) {
+        if (fontTypes.contains(TextFontType.Underline))
+          fontTypes.remove(TextFontType.Underline);
+      }
+      fontTypes.add(fontType);
+    }
+    String htmlStr = styles.encodeHtmlString(htmlText, fontTypes: fontTypes);
     _updateTextProperty(state, htmlStr);
   }
 

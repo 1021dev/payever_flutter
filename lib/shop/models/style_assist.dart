@@ -166,9 +166,13 @@ class StyleAssist {
 
   String encodeHtmlString(String htmlText,
       {String newText,
-        String textColor,
-        double fontSize, String textAlign, String fontWeight, String fontStyle, String fontFace, TextFontType fontType}) {
-
+      String textColor,
+      double fontSize,
+      String textAlign,
+      String fontWeight,
+      String fontStyle,
+      String fontFace,
+      List<TextFontType> fontTypes}) {
     // if (fontSize == null && textColor == null && textAlign == null && fontWeight == null)
     //   return htmlText;
 
@@ -177,89 +181,88 @@ class StyleAssist {
     // <div style="text-align: center;"><span style="font-weight: normal;"><font color="#5e5e5e" style="font-size: 14px;">Men's sneakers</font></span></div>
     // <div style="text-align: center;"><i style="color: rgb(255, 250, 126); font-family: Montserrat;"><font style="font-size: 17px;"><u><strike>Text test tomorrow and see</strike></u></font></i></div>
     String parseText = newText ?? decodeHtmlString(htmlText);
-    // if (isHtmlText(htmlText)) {
-      String newHtmlText = '';
-      // font
-      // Text Color
-      bool hasFont = false;
-      if (textColor != null) {
-        newHtmlText = textColorHtml(textColor);
-        hasFont = true;
-      } else if (decodeHtmlTextColor(htmlText) != null) {
-        textColor = encodeColor(decodeHtmlTextColor(htmlText));
-        newHtmlText = textColorHtml(textColor);
-        hasFont = true;
-      }
-      // Text FontSize
-      if (fontSize != null) {
-          newHtmlText += textFontSizeHtml(fontSize);
-          hasFont = true;
-      } else if (decodeHtmlTextFontSize(htmlText) != 0) {
-        fontSize = decodeHtmlTextFontSize(htmlText);
-        newHtmlText += textFontSizeHtml(fontSize);
-        hasFont = true;
-      }
 
-      if (hasFont)
-        newHtmlText = '\<font$newHtmlText>$parseText\</font>';
+    String newHtmlText = '';
+    // LineThrough
+    if (fontTypes != null) {
+      if (fontTypes.contains(TextFontType.LineThrough))
+        parseText = textLineThroughHtml(parseText);
+      else if (fontTypes.contains(TextFontType.Underline))
+        parseText = textUnderlineHtml(parseText);
 
-      // span
-      // font-weight
-      // Text FontSize
-      bool hasSpan = false;
-      if (fontWeight != null) {
-        newHtmlText = textFontWeightHtml(fontWeight) + newHtmlText;
-        hasSpan = true;
-      } else if (decodeHtmlTextFontWeight(htmlText) != null) {
-        fontWeight = decodeHtmlTextFontWeight(htmlText);
-        newHtmlText = textFontWeightHtml(fontWeight) + newHtmlText;
-        hasSpan = true;
-      }
-      if (hasSpan) {
-        if (newHtmlText.contains(parseText))
-          newHtmlText = '\<span$newHtmlText</span>';
-        else
-          newHtmlText = '\<span$newHtmlText>$parseText</span>';
-      }
-      // div
-      bool hasDiv = false;
-      if (textAlign != null) {
-        newHtmlText = textAlignmentHtml(textAlign) + newHtmlText;
-        hasDiv = true;
-      } else if (decodeHtmlTextFontWeight(htmlText) != null) {
-        textAlign = decodeHtmlTextAlignment(htmlText);
-        newHtmlText = textAlignmentHtml(textAlign) + newHtmlText;
-        hasDiv = true;
-      }
-      if (hasDiv) {
-        if (newHtmlText.contains(parseText))
-          newHtmlText = '\<div$newHtmlText</div>';
-        else
-          newHtmlText = '\<div$newHtmlText>$parseText</div>';
-      }
-      return newHtmlText;
+      if (fontTypes.contains(TextFontType.Italic))
+        parseText = textItalicHtml(parseText);
+    }
+    // font
+    // Text Color
+    bool hasFont = false;
+    if (textColor != null) {
+      newHtmlText = textColorHtml(textColor);
+      hasFont = true;
+    } else if (decodeHtmlTextColor(htmlText) != null) {
+      textColor = encodeColor(decodeHtmlTextColor(htmlText));
+      newHtmlText = textColorHtml(textColor);
+      hasFont = true;
+    }
+    // Text FontSize
+    if (fontSize != null) {
+      newHtmlText += textFontSizeHtml(fontSize);
+      hasFont = true;
+    } else if (decodeHtmlTextFontSize(htmlText) != 0) {
+      fontSize = decodeHtmlTextFontSize(htmlText);
+      newHtmlText += textFontSizeHtml(fontSize);
+      hasFont = true;
+    }
 
-    // } else {
-    //   if (textAlign == null || textAlign.isEmpty) {
-    //     if (fontSize == null)
-    //       return '\<font color=\"$textColor\">$parseText</font>';
-    //
-    //     return '\<font color=\"$textColor\" style="font-size: ${fontSize}px;">$parseText</font>';
-    //   } else {
-    //     if (fontSize == null && textColor == null)
-    //       return '\<div style=\"text-align: $textAlign;\">$parseText</div>';
-    //
-    //     if (textColor == null)
-    //       return '\<div style=\"text-align: $textAlign;\"><span style=\"font-size: ${fontSize}px;\">$parseText</span></div>';
-    //
-    //     Color color1 = colorConvert(textColor);
-    //     String divColor = 'rgb(${color1.red}, ${color1.green}, ${color1.blue})';
-    //     if (fontSize == null)
-    //       return '\<div style=\"text-align: $textAlign;\"><span style=\"color: $divColor;\">$parseText</span></div>';
-    //
-    //     return '\<div style=\"text-align: $textAlign;\"><span style=\"font-size: ${fontSize}px; color: $divColor;\">$parseText</span></div>';
-    //   }
-    // }
+    if (hasFont) newHtmlText = '\<font$newHtmlText>$parseText\</font>';
+
+    // span
+    // font-weight
+    // Text FontSize
+    bool hasSpan = false;
+    if (fontWeight != null) {
+      newHtmlText = textFontWeightHtml(fontWeight) + newHtmlText;
+      hasSpan = true;
+    } else if (decodeHtmlTextFontWeight(htmlText) != null) {
+      fontWeight = decodeHtmlTextFontWeight(htmlText);
+      newHtmlText = textFontWeightHtml(fontWeight) + newHtmlText;
+      hasSpan = true;
+    }
+    if (hasSpan) {
+      if (newHtmlText.contains(parseText))
+        newHtmlText = '\<span$newHtmlText</span>';
+      else
+        newHtmlText = '\<span$newHtmlText>$parseText</span>';
+    }
+    // div
+    bool hasDiv = false;
+    if (textAlign != null) {
+      newHtmlText = textAlignmentHtml(textAlign) + newHtmlText;
+      hasDiv = true;
+    } else if (decodeHtmlTextAlignment(htmlText) != null) {
+      textAlign = decodeHtmlTextAlignment(htmlText);
+      newHtmlText = textAlignmentHtml(textAlign) + newHtmlText;
+      hasDiv = true;
+    }
+    if (hasDiv) {
+      if (newHtmlText.contains(parseText))
+        newHtmlText = '\<div$newHtmlText</div>';
+      else
+        newHtmlText = '\<div$newHtmlText>$parseText</div>';
+    }
+    return newHtmlText;
+  }
+
+  String textLineThroughHtml(String text) {
+    return '\<strike>$text</strike>';
+  }
+
+  String textUnderlineHtml(String text) {
+    return '\<u>$text</u>';
+  }
+
+  String textItalicHtml(String text) {
+    return '\<i>$text</i>';
   }
 
   String textColorHtml(String textColor) {
