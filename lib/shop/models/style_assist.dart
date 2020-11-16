@@ -169,7 +169,6 @@ class StyleAssist {
       String textColor,
       double fontSize,
       String textAlign,
-      String fontWeight,
       String fontStyle,
       String fontFace,
       List<TextFontType> fontTypes}) {
@@ -184,6 +183,9 @@ class StyleAssist {
 
     String newHtmlText = '';
     // LineThrough
+    if (fontTypes == null && getTextFontTypes(htmlText).isNotEmpty)
+      fontTypes = getTextFontTypes(htmlText);
+
     if (fontTypes != null) {
       if (fontTypes.contains(TextFontType.LineThrough))
         parseText = textLineThroughHtml(parseText);
@@ -220,14 +222,16 @@ class StyleAssist {
     // font-weight
     // Text FontSize
     bool hasSpan = false;
-    if (fontWeight != null) {
+    if (fontTypes != null) {
+      String fontWeight = fontTypes.contains(TextFontType.Bold) ? 'bold' : 'normal';
       newHtmlText = textFontWeightHtml(fontWeight) + newHtmlText;
       hasSpan = true;
     } else if (decodeHtmlTextFontWeight(htmlText) != null) {
-      fontWeight = decodeHtmlTextFontWeight(htmlText);
+      String fontWeight = decodeHtmlTextFontWeight(htmlText);
       newHtmlText = textFontWeightHtml(fontWeight) + newHtmlText;
       hasSpan = true;
     }
+
     if (hasSpan) {
       if (newHtmlText.contains(parseText))
         newHtmlText = '\<span$newHtmlText</span>';
