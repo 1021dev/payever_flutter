@@ -97,30 +97,165 @@ class StyleAssist {
     }
   }
 
-  String encodeHtmlString(String htmlText, {double fontSize, String textColor, String textAlign, String fontWeight}) {
+  Color decodeHtmlTextColor(String text) {
+    if (text.contains('color="')) {
+      int index = text.indexOf('color="');
+      String color = text.substring(index + 7, index + 14);
+      return colorConvert(color);
+    }
+    if (text.contains('color: rgb')) {
+      int index = text.indexOf('color: rgb');
+      String color = text.substring(index + 10, index + 25);
+      String newColor =  color.replaceAll(RegExp(r"[^\s\w]"), '');
+      List<String>colors = newColor.split(' ');
+      return Color.fromRGBO(int.parse(colors[0]), int.parse(colors[1]), int.parse(colors[2]), 1);
+    }
+    return null;
+  }
+
+  double decodeHtmlTextFontSize(String text) {
+    if (text.contains('font-size:')) {
+      int index = text.indexOf('font-size:');
+      String font = text.substring(index + 11, index + 13);
+      try {
+        return double.parse(font);
+      } catch (e) {
+        return 0;
+      }
+    }
+    return 0;
+  }
+
+  String decodeHtmlTextFontWeight(String text) {
+    if (text.contains('font-weight: normal')) {
+      return 'normal';
+    } else if (text.contains('font-weight: bold')) {
+      return 'bold';
+    }
+    return null;
+  }
+
+  String decodeHtmlTextAlignment(String text) {
+    if (text.contains('text-align: center')) {
+      return 'center';
+    } else if (text.contains('text-align: left')) {
+      return 'left';
+    } else if (text.contains('text-align: right')) {
+      return 'right';
+    }
+    return null;
+  }
+
+  String encodeHtmlString(String htmlText,
+      {String textColor,
+        double fontSize, String textAlign, String fontWeight, String fontStyle, String fontFace}) {
+
     if (fontSize == null && textColor == null && textAlign == null && fontWeight == null)
       return htmlText;
+
+    // '<font color="#b51700" style="font-size: 18px;">Text test tomorrow morning and let me know </font>'
+    // '<div style="text-align: center;"><span style="font-size: 18px; color: rgb(181, 23, 0);">Text test tomorrow morning and let me know</span></div>'
+    // <div style="text-align: center;"><span style="font-weight: normal;"><font color="#5e5e5e" style="font-size: 14px;">Men's sneakers</font></span></div>
     String parseText = decodeHtmlString(htmlText);
+    // if (isHtmlText(htmlText)) {
+      String newHtmlText = '';
+      // font
+      // Text Color
+      bool hasFont = false;
+      if (textColor != null) {
+        newHtmlText = textColorHtml(textColor);
+        hasFont = true;
+      } else if (decodeHtmlTextColor(htmlText) != null) {
+        textColor = encodeColor(decodeHtmlTextColor(htmlText));
+        newHtmlText = textColorHtml(textColor);
+        hasFont = true;
+      }
+      // Text FontSize
+      if (fontSize != null) {
+          newHtmlText += textFontSizeHtml(fontSize);
+          hasFont = true;
+      } else if (decodeHtmlTextFontSize(htmlText) != 0) {
+        fontSize = decodeHtmlTextFontSize(htmlText);
+        newHtmlText += textFontSizeHtml(fontSize);
+        hasFont = true;
+      }
 
-    if (textAlign == null || textAlign.isEmpty) {
-      if (fontSize == null)
-        return '<font color=\"$textColor\">$parseText</font>';
+      if (hasFont)
+        newHtmlText = '\<font$newHtmlText>$parseText</font>';
 
-      return '<font color=\"$textColor\" style="font-size: ${fontSize}px;">$parseText</font>';
-    } else {
-      if (fontSize == null && textColor == null)
-        return '<div style=\"text-align: $textAlign;\">$parseText</div>';
+      // span
+      // font-weight
+      // Text FontSize
+      bool hasSpan = false;
+      if (fontWeight != null) {
+        newHtmlText = textFontWeightHtml(fontWeight) + newHtmlText;
+        hasSpan = true;
+      } else if (decodeHtmlTextFontWeight(htmlText) != null) {
+        fontWeight = decodeHtmlTextFontWeight(htmlText);
+        newHtmlText = textFontWeightHtml(fontWeight) + newHtmlText;
+        hasSpan = true;
+      }
+      if (hasSpan) {
+        if (newHtmlText.contains(parseText))
+          newHtmlText = '\<span$newHtmlText</span>';
+        else
+          newHtmlText = '\<span$newHtmlText>$parseText</span>';
+      }
+      // div
+      bool hasDiv = false;
+      if (textAlign != null) {
+        newHtmlText = textAlignmentHtml(textAlign) + newHtmlText;
+        hasDiv = true;
+      } else if (decodeHtmlTextFontWeight(htmlText) != null) {
+        textAlign = decodeHtmlTextAlignment(htmlText);
+        newHtmlText = textAlignmentHtml(textAlign) + newHtmlText;
+        hasDiv = true;
+      }
+      if (hasDiv) {
+        if (newHtmlText.contains(parseText))
+          newHtmlText = '\<div$newHtmlText</div>';
+        else
+          newHtmlText = '\<div$newHtmlText>$parseText</div>';
+      }
+      return newHtmlText;
 
-      if (textColor == null)
-        return '<div style=\"text-align: $textAlign;\"><span style=\"font-size: ${fontSize}px;\">$parseText</span></div>';
+    // } else {
+    //   if (textAlign == null || textAlign.isEmpty) {
+    //     if (fontSize == null)
+    //       return '\<font color=\"$textColor\">$parseText</font>';
+    //
+    //     return '\<font color=\"$textColor\" style="font-size: ${fontSize}px;">$parseText</font>';
+    //   } else {
+    //     if (fontSize == null && textColor == null)
+    //       return '\<div style=\"text-align: $textAlign;\">$parseText</div>';
+    //
+    //     if (textColor == null)
+    //       return '\<div style=\"text-align: $textAlign;\"><span style=\"font-size: ${fontSize}px;\">$parseText</span></div>';
+    //
+    //     Color color1 = colorConvert(textColor);
+    //     String divColor = 'rgb(${color1.red}, ${color1.green}, ${color1.blue})';
+    //     if (fontSize == null)
+    //       return '\<div style=\"text-align: $textAlign;\"><span style=\"color: $divColor;\">$parseText</span></div>';
+    //
+    //     return '\<div style=\"text-align: $textAlign;\"><span style=\"font-size: ${fontSize}px; color: $divColor;\">$parseText</span></div>';
+    //   }
+    // }
+  }
 
-      Color color1 = colorConvert(textColor);
-      String divColor = 'rgb(${color1.red}, ${color1.green}, ${color1.blue})';
-      if (fontSize == null)
-        return '<div style=\"text-align: $textAlign;\"><span style=\"color: $divColor;\">$parseText</span></div>';
+  String textColorHtml(String textColor) {
+    return ' color=\"$textColor\"';
+  }
 
-      return '<div style=\"text-align: $textAlign;\"><span style=\"font-size: ${fontSize}px; color: $divColor;\">$parseText</span></div>';
-    }
+  String textFontSizeHtml(double fontSize) {
+    return ' style=\"font-size: ${fontSize}px;\"';
+  }
+
+  String textFontWeightHtml(String fontWeight) {
+    return ' style=\"font-weight: $fontWeight;\"';
+  }
+
+  String textAlignmentHtml(String textAlign) {
+    return ' style=\"text-align: $textAlign;\"';
   }
 
   bool isHtmlText(String text) {

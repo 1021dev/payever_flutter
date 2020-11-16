@@ -593,57 +593,33 @@ class TextStyles extends BaseStyles {
 
   Color htmlTextColor(String text) {
     if (!isHtmlText(text)) return colorConvert(color);
-
-    if (text.contains('color="')) {
-      int index = text.indexOf('color="');
-      String color = text.substring(index + 7, index + 14);
-      return colorConvert(color);
-    }
-    if (text.contains('color: rgb')) {
-      int index = text.indexOf('color: rgb');
-      String color = text.substring(index + 10, index + 25);
-      String newColor =  color.replaceAll(RegExp(r"[^\s\w]"), '');
-      List<String>colors = newColor.split(' ');
-      return Color.fromRGBO(int.parse(colors[0]), int.parse(colors[1]), int.parse(colors[2]), 1);
-    }
+    Color decodeColor = decodeHtmlTextColor(text);
+    if (decodeColor != null) return decodeColor;
     return colorConvert(color);
   }
 
   double htmlFontSize(String text) {
     if (!isHtmlText(text)) return fontSize;
-
-    if (text.contains('font-size:')) {
-      int index = text.indexOf('font-size:');
-      String font = text.substring(index + 11, index + 13);
-      try {
-        return double.parse(font);
-      } catch (e) {
-        return fontSize;
-      }
-    }
+    double decodeFontSize = decodeHtmlTextFontSize(text);
+    if (decodeFontSize != 0)
+      return decodeFontSize;
     return fontSize;
   }
 
   FontWeight htmlFontWeight(String text) {
     if (!isHtmlText(text)) return fontWeight;
+    String decodeFontWeight = decodeHtmlTextFontWeight(text);
+    if (decodeFontWeight != null)
+      return getFontWeight(decodeFontWeight);
 
-    if (text.contains('font-weight: normal')) {
-      return getFontWeight('normal');
-    } else if (text.contains('font-weight: bold')) {
-      return getFontWeight('bold');
-    }
     return fontWeight;
   }
 
   TextAlign htmlAlignment(String text) {
     if (!isHtmlText(text)) return textAlign;
-    if (text.contains('text-align: center')) {
-      return TextAlign.center;
-    } else if (text.contains('text-align: left')) {
-      return TextAlign.start;
-    } else if (text.contains('text-align: right')) {
-      return TextAlign.end;
-    }
+    String decodeAlignment = decodeHtmlTextAlignment(text);
+    if (decodeAlignment != null)
+      return getTextAlign(decodeAlignment);
     return textAlign;
   }
 

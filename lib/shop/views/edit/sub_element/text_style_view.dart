@@ -1452,10 +1452,6 @@ class _TextStyleViewState extends State<TextStyleView> {
     String hex = '${textColor.value.toRadixString(16)}';
     String newBgColor = '#${hex.substring(2)}';
     Map<String, dynamic> sheets = widget.stylesheets[selectedId];
-    // '<font color="#b51700" style="font-size: 18px;">Text test tomorrow morning and let me know </font>'
-    // '<div style="text-align: center;"><span style="font-size: 18px; color: rgb(181, 23, 0);">Text test tomorrow morning and let me know</span></div>'
-    // <div style="text-align: center;"><span style="font-weight: normal;"><font color="#5e5e5e" style="font-size: 14px;">Men's sneakers</font></span></div>
-
     String htmlStr = styles.encodeHtmlString(data.text, textColor: newBgColor);
     List<Map<String, dynamic>> effects = styles.getUpdateTextPayload(state.selectedBlockId, selectedId, sheets, htmlStr, state.activeShopPage.templateId);
 

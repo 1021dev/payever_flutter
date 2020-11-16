@@ -261,3 +261,8 @@ Color colorConvert(String color, {bool emptyColor = false}) {
     return emptyColor ? Colors.transparent :Colors.white;
   }
 }
+
+String encodeColor(Color color) {
+  String hex = '${color.value.toRadixString(16)}';
+  return '#${hex.substring(2)}';
+}
