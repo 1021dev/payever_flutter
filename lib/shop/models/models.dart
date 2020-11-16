@@ -584,11 +584,67 @@ class TextStyles extends BaseStyles {
   @JsonKey(name: 'height', defaultValue: 18)
   double height;
 
+  double get textHeight {
+    return (minHeight > height) ? minHeight : height;
+  }
+
   @JsonKey(name: 'backgroundColor')
   String backgroundColor;
 
-  get textHeight {
-      return (minHeight > height) ? minHeight : height;
+  Color htmlTextColor(String text) {
+    if (!isHtmlText(text)) return colorConvert(color);
+
+    if (text.contains('color="')) {
+      int index = text.indexOf('color="');
+      String color = text.substring(index + 7, index + 14);
+      return colorConvert(color);
+    }
+    if (text.contains('color: rgb')) {
+      int index = text.indexOf('color: rgb');
+      String color = text.substring(index + 10, index + 25);
+      String newColor =  color.replaceAll(RegExp(r"[^\s\w]"), '');
+      List<String>colors = newColor.split(' ');
+      return Color.fromRGBO(int.parse(colors[0]), int.parse(colors[1]), int.parse(colors[2]), 1);
+    }
+    return colorConvert(color);
+  }
+
+  double htmlFontSize(String text) {
+    if (!isHtmlText(text)) return fontSize;
+
+    if (text.contains('font-size:')) {
+      int index = text.indexOf('font-size:');
+      String font = text.substring(index + 11, index + 13);
+      try {
+        return double.parse(font);
+      } catch (e) {
+        return fontSize;
+      }
+    }
+    return fontSize;
+  }
+
+  FontWeight htmlFontWeight(String text) {
+    if (!isHtmlText(text)) return fontWeight;
+
+    if (text.contains('font-weight: normal')) {
+      return getFontWeight('normal');
+    } else if (text.contains('font-weight: bold')) {
+      return getFontWeight('bold');
+    }
+    return fontWeight;
+  }
+
+  TextAlign htmlAlignment(String text) {
+    if (!isHtmlText(text)) return textAlign;
+    if (text.contains('text-align: center')) {
+      return TextAlign.center;
+    } else if (text.contains('text-align: left')) {
+      return TextAlign.start;
+    } else if (text.contains('text-align: right')) {
+      return TextAlign.end;
+    }
+    return textAlign;
   }
 
   factory TextStyles.fromJson(Map<String, dynamic> json) => _$TextStylesFromJson(json);

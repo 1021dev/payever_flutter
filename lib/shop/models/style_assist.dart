@@ -74,8 +74,7 @@ class StyleAssist {
     return FontStyle.normal;
   }
 
-  // HTML Text
-  String parseHtmlString(String htmlText) {
+  String decodeHtmlString(String htmlText) {
     if (!isHtmlText(htmlText))
       return htmlText;
 
@@ -98,28 +97,29 @@ class StyleAssist {
     }
   }
 
-  String encodeHtmlString({String text, double fontSize, String textColor, String textAlign, String fontWeight}) {
+  String encodeHtmlString(String htmlText, {double fontSize, String textColor, String textAlign, String fontWeight}) {
     if (fontSize == null && textColor == null && textAlign == null && fontWeight == null)
-      return text;
+      return htmlText;
+    String parseText = decodeHtmlString(htmlText);
 
     if (textAlign == null || textAlign.isEmpty) {
       if (fontSize == null)
-        return '<font color=\"$textColor\">$text</font>';
+        return '<font color=\"$textColor\">$parseText</font>';
 
-      return '<font color=\"$textColor\" style="font-size: ${fontSize}px;">$text</font>';
+      return '<font color=\"$textColor\" style="font-size: ${fontSize}px;">$parseText</font>';
     } else {
       if (fontSize == null && textColor == null)
-        return '<div style=\"text-align: $textAlign;\">$text</div>';
+        return '<div style=\"text-align: $textAlign;\">$parseText</div>';
 
       if (textColor == null)
-        return '<div style=\"text-align: $textAlign;\"><span style=\"font-size: ${fontSize}px;\">$text</span></div>';
+        return '<div style=\"text-align: $textAlign;\"><span style=\"font-size: ${fontSize}px;\">$parseText</span></div>';
 
       Color color1 = colorConvert(textColor);
       String divColor = 'rgb(${color1.red}, ${color1.green}, ${color1.blue})';
       if (fontSize == null)
-        return '<div style=\"text-align: $textAlign;\"><span style=\"color: $divColor;\">$text</span></div>';
+        return '<div style=\"text-align: $textAlign;\"><span style=\"color: $divColor;\">$parseText</span></div>';
 
-      return '<div style=\"text-align: $textAlign;\"><span style=\"font-size: ${fontSize}px; color: $divColor;\">$text</span></div>';
+      return '<div style=\"text-align: $textAlign;\"><span style=\"font-size: ${fontSize}px; color: $divColor;\">$parseText</span></div>';
     }
   }
 

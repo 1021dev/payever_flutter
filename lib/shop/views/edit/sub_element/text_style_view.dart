@@ -46,7 +46,6 @@ class _TextStyleViewState extends State<TextStyleView> {
 
   String selectedId;
   TextStyles styles;
-  String htmlParseText;
 
   @override
   Widget build(BuildContext context) {
@@ -1450,9 +1449,6 @@ class _TextStyleViewState extends State<TextStyleView> {
     List children = sections.firstWhere((element) => element['id'] == state.selectedSectionId)['children'] as List;
     Child child = Child.fromJson(children.firstWhere((element) => element['id'] == state.selectedChild.id));
     Data data = Data.fromJson(child.data);
-    if (data.text != null) {
-      htmlParseText = styles.parseHtmlString(data.text);
-    }
     String hex = '${textColor.value.toRadixString(16)}';
     String newBgColor = '#${hex.substring(2)}';
     Map<String, dynamic> sheets = widget.stylesheets[selectedId];
@@ -1460,7 +1456,7 @@ class _TextStyleViewState extends State<TextStyleView> {
     // '<div style="text-align: center;"><span style="font-size: 18px; color: rgb(181, 23, 0);">Text test tomorrow morning and let me know</span></div>'
     // <div style="text-align: center;"><span style="font-weight: normal;"><font color="#5e5e5e" style="font-size: 14px;">Men's sneakers</font></span></div>
 
-    String htmlStr = styles.encodeHtmlString(text: htmlParseText, textColor: newBgColor);
+    String htmlStr = styles.encodeHtmlString(data.text, textColor: newBgColor);
     List<Map<String, dynamic>> effects = styles.getUpdateTextPayload(state.selectedBlockId, selectedId, sheets, htmlStr, state.activeShopPage.templateId);
 
     print('htmlStr: $htmlStr');
