@@ -62,7 +62,7 @@ class _TextViewState extends State<TextView> {
     // <font style="font-size: 20px;">NEW IN: THE B27</font>
     // <div style="text-align: center;"><font face="Roboto"><span style="font-size: 18px;">05</span></font></div><div style="text-align: center;"><font face="Roboto"><span style="font-size: 18px;">NOVEMBER</span></font></div>
     parseText = styles.decodeHtmlString(htmlText);
-    print('htmlParseText: $parseText');
+    // print('htmlParseText: $parseText');
     controller.text = parseText;
     return textField;
   }
@@ -101,8 +101,8 @@ class _TextViewState extends State<TextView> {
   TextStyles getStyles() {
     try {
       Map<String, dynamic> json = widget.stylesheets[widget.child.id];
-      print('Text ID ${widget.child.id}');
-      print('Text Styles: $json');
+      // print('Text ID ${widget.child.id}');
+      // print('Text Styles: $json');
       return TextStyles.fromJson(json);
     } catch (e) {
       return null;

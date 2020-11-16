@@ -4,6 +4,7 @@ import 'package:html/parser.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:uuid/uuid.dart';
 import '../../theme.dart';
+import 'constant.dart';
 import 'models.dart';
 
 class BackgroundAssist {
@@ -148,7 +149,7 @@ class StyleAssist {
 
   String encodeHtmlString(String htmlText,
       {String textColor,
-        double fontSize, String textAlign, String fontWeight, String fontStyle, String fontFace}) {
+        double fontSize, String textAlign, String fontWeight, String fontStyle, String fontFace, TextFontType fontType}) {
 
     if (fontSize == null && textColor == null && textAlign == null && fontWeight == null)
       return htmlText;
@@ -156,6 +157,7 @@ class StyleAssist {
     // '<font color="#b51700" style="font-size: 18px;">Text test tomorrow morning and let me know </font>'
     // '<div style="text-align: center;"><span style="font-size: 18px; color: rgb(181, 23, 0);">Text test tomorrow morning and let me know</span></div>'
     // <div style="text-align: center;"><span style="font-weight: normal;"><font color="#5e5e5e" style="font-size: 14px;">Men's sneakers</font></span></div>
+    // <div style="text-align: center;"><i style="color: rgb(255, 250, 126); font-family: Montserrat;"><font style="font-size: 17px;"><u><strike>Text test tomorrow and see</strike></u></font></i></div>
     String parseText = decodeHtmlString(htmlText);
     // if (isHtmlText(htmlText)) {
       String newHtmlText = '';
@@ -247,15 +249,15 @@ class StyleAssist {
   }
 
   String textFontSizeHtml(double fontSize) {
-    return ' style=\"font-size: ${fontSize}px;\"';
+    return ' style=\"font-size: ${fontSize.toInt()}px;\"';
   }
 
   String textFontWeightHtml(String fontWeight) {
-    return ' style=\"font-weight: $fontWeight;\"';
+    return ' style=\"font-weight: $fontWeight;\">';
   }
 
   String textAlignmentHtml(String textAlign) {
-    return ' style=\"text-align: $textAlign;\"';
+    return ' style=\"text-align: $textAlign;\">';
   }
 
   bool isHtmlText(String text) {

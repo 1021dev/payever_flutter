@@ -116,3 +116,5 @@ List<String>ligatures = [
   'None',
   'All',
 ];
+
+const minTextFontSize = 8;

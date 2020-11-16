@@ -30,9 +30,12 @@ class _TextStyleViewState extends State<TextStyleView> {
 
   bool isPortrait;
   bool isTablet;
+
+  String htmlText;
   Color bgColor;
   Color textColor;
   Color borderColor;
+  double fontSize;
 
   bool borderExpanded = false;
   bool shadowExpanded = false;
@@ -51,6 +54,7 @@ class _TextStyleViewState extends State<TextStyleView> {
   Widget build(BuildContext context) {
     isPortrait = GlobalUtils.isPortrait(context);
     isTablet = GlobalUtils.isTablet(context);
+
     return BlocBuilder(
       bloc: screenBloc,
       builder: (BuildContext context, state) {
@@ -61,13 +65,7 @@ class _TextStyleViewState extends State<TextStyleView> {
 
   Widget body(ShopEditScreenState state) {
     if (state.selectedChild == null) return Container();
-
-    selectedId = state.selectedChild.id;
-    styles = TextStyles.fromJson(widget.stylesheets[selectedId]);
-    bgColor = colorConvert(styles.backgroundColor, emptyColor: true);
-    borderColor = colorConvert(styles.borderColor, emptyColor: true);
-    textColor = colorConvert(styles.color, emptyColor: true);
-
+    _initTextProperties(state);
     return Container(
       height: 400,
       child: Scaffold(
@@ -90,6 +88,24 @@ class _TextStyleViewState extends State<TextStyleView> {
         ),
       ),
     );
+  }
+
+  void _initTextProperties (ShopEditScreenState state) {
+    selectedId = state.selectedChild.id;
+    styles = TextStyles.fromJson(widget.stylesheets[selectedId]);
+    bgColor = colorConvert(styles.backgroundColor, emptyColor: true);
+    borderColor = colorConvert(styles.borderColor, emptyColor: true);
+    textColor = colorConvert(styles.color, emptyColor: true);
+
+    List sections = state.templates[state.activeShopPage.templateId]['children'] as List;
+    List children = sections.firstWhere((element) => element['id'] == state.selectedSectionId)['children'] as List;
+    Child child = Child.fromJson(children.firstWhere((element) => element['id'] == state.selectedChild.id));
+    Data data = Data.fromJson(child.data);
+    if (data != null)
+      htmlText = data.text;
+    else
+      htmlText = '';
+    fontSize = styles.htmlFontSize(htmlText);
   }
 
   Widget get _segmentedControl {
@@ -589,7 +605,7 @@ class _TextStyleViewState extends State<TextStyleView> {
             children: [
               _paragraphStyle,
               _fontType,
-              _fontSize,
+              _fontSize(state),
               _fill(state, ColorType.Text),
               _textHorizontalAlign,
               _textVerticalAlign,
@@ -797,7 +813,7 @@ class _TextStyleViewState extends State<TextStyleView> {
     );
   }
 
-  get _fontSize {
+  Widget _fontSize(ShopEditScreenState state) {
     return Container(
       margin: EdgeInsets.only(top: 16),
       height: 40,
@@ -809,7 +825,7 @@ class _TextStyleViewState extends State<TextStyleView> {
           ),
           Spacer(),
           Text(
-            '16 pt',
+            '${fontSize.toInt()} pt',
             style: TextStyle(color: Colors.blue, fontSize: 15),
           ),
           SizedBox(
@@ -821,6 +837,11 @@ class _TextStyleViewState extends State<TextStyleView> {
               children: [
                 Expanded(
                   child: InkWell(
+                    onTap: () {
+                      if (fontSize > minTextFontSize) {
+                        _updateTextSize(state, fontSize -1);
+                      }
+                    },
                     child: Container(
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
@@ -841,6 +862,9 @@ class _TextStyleViewState extends State<TextStyleView> {
                 ),
                 Expanded(
                   child: InkWell(
+                    onTap: () {
+                      _updateTextSize(state, fontSize + 1);
+                    },
                     child: Container(
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
@@ -1445,20 +1469,25 @@ class _TextStyleViewState extends State<TextStyleView> {
   }
 
   void _updateTextColor(ShopEditScreenState state) {
-    List sections = state.templates[state.activeShopPage.templateId]['children'] as List;
-    List children = sections.firstWhere((element) => element['id'] == state.selectedSectionId)['children'] as List;
-    Child child = Child.fromJson(children.firstWhere((element) => element['id'] == state.selectedChild.id));
-    Data data = Data.fromJson(child.data);
     String hex = '${textColor.value.toRadixString(16)}';
-    String newBgColor = '#${hex.substring(2)}';
-    Map<String, dynamic> sheets = widget.stylesheets[selectedId];
-    String htmlStr = styles.encodeHtmlString(data.text, textColor: newBgColor);
-    List<Map<String, dynamic>> effects = styles.getUpdateTextPayload(state.selectedBlockId, selectedId, sheets, htmlStr, state.activeShopPage.templateId);
+    String newTextColor = '#${hex.substring(2)}';
+    String htmlStr = styles.encodeHtmlString(htmlText, textColor: newTextColor);
+    _updateTextProperty(state, htmlStr);
+  }
 
-    print('htmlStr: $htmlStr');
+  void _updateTextSize(ShopEditScreenState state, double newFontSize) {
+    String htmlStr = styles.encodeHtmlString(htmlText, fontSize: newFontSize);
+    _updateTextProperty(state, htmlStr);
+  }
+
+  void _updateTextProperty(ShopEditScreenState state, String newHtmlText) {
+    Map<String, dynamic> sheets = widget.stylesheets[selectedId];
+    List<Map<String, dynamic>> effects = styles.getUpdateTextPayload(state.selectedBlockId, selectedId, sheets, newHtmlText, state.activeShopPage.templateId);
+
+    print('htmlStr: $newHtmlText');
     print('payload: $effects');
-    // screenBloc.add(UpdateSectionEvent(
-    //     sectionId: screenBloc.state.selectedSectionId, effects: effects));
+    screenBloc.add(UpdateSectionEvent(
+        sectionId: screenBloc.state.selectedSectionId, effects: effects));
   }
 
   void navigateSubView(Widget subview) {
