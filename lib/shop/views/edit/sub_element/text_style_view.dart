@@ -20,13 +20,12 @@ class TextStyleView extends StatefulWidget {
   const TextStyleView({this.screenBloc, this.stylesheets});
 
   @override
-  _TextStyleViewState createState() => _TextStyleViewState(screenBloc);
+  _TextStyleViewState createState() => _TextStyleViewState();
 }
 
 class _TextStyleViewState extends State<TextStyleView> {
-  final ShopEditScreenBloc screenBloc;
 
-  _TextStyleViewState(this.screenBloc);
+  _TextStyleViewState();
 
   bool isPortrait;
   bool isTablet;
@@ -56,7 +55,7 @@ class _TextStyleViewState extends State<TextStyleView> {
     isTablet = GlobalUtils.isTablet(context);
 
     return BlocBuilder(
-      bloc: screenBloc,
+      bloc: widget.screenBloc,
       builder: (BuildContext context, state) {
         return body(state);
       },
@@ -95,17 +94,10 @@ class _TextStyleViewState extends State<TextStyleView> {
     styles = TextStyles.fromJson(widget.stylesheets[selectedId]);
     bgColor = colorConvert(styles.backgroundColor, emptyColor: true);
     borderColor = colorConvert(styles.borderColor, emptyColor: true);
-    textColor = colorConvert(styles.color, emptyColor: true);
 
-    List sections = state.templates[state.activeShopPage.templateId]['children'] as List;
-    List children = sections.firstWhere((element) => element['id'] == state.selectedSectionId)['children'] as List;
-    Child child = Child.fromJson(children.firstWhere((element) => element['id'] == state.selectedChild.id));
-    Data data = Data.fromJson(child.data);
-    if (data != null)
-      htmlText = data.text;
-    else
-      htmlText = '';
+    htmlText = widget.screenBloc.htmlText();
     fontSize = styles.htmlFontSize(htmlText);
+    textColor = styles.htmlTextColor(htmlText);
   }
 
   Widget get _segmentedControl {
@@ -195,7 +187,7 @@ class _TextStyleViewState extends State<TextStyleView> {
   // Style Body
   Widget _styleBody(ShopEditScreenState state) {
     List<Widget> textStyleWidgets = [
-      _gridViewBody,
+      _gridViewBody(state),
       _fill(state, ColorType.BackGround),
       _border(state),
       _shadow,
@@ -218,7 +210,7 @@ class _TextStyleViewState extends State<TextStyleView> {
     );
   }
 
-  get _gridViewBody {
+  Widget _gridViewBody(ShopEditScreenState state) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 18),
       child: GridView.count(
@@ -232,7 +224,7 @@ class _TextStyleViewState extends State<TextStyleView> {
         children: List.generate(
           6,
           (index) {
-            return _textBackgroundGridItem(index);
+            return _textBackgroundGridItem(state, index);
           },
         ),
       ),
@@ -287,7 +279,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                         Navigator.of(context).pop();
                         setState(() {});
                         if (colorType == ColorType.BackGround)
-                        _updateFillColor();
+                        _updateFillColor(state);
                         else if (colorType == ColorType.Text)
                           _updateTextColor(state);
                       },
@@ -507,7 +499,7 @@ class _TextStyleViewState extends State<TextStyleView> {
       borderColor = color;
   }
 
-  Widget _textBackgroundGridItem(int index) {
+  Widget _textBackgroundGridItem(ShopEditScreenState state, int index) {
     Widget item = Container(
       alignment: Alignment.center,
       decoration: BoxDecoration(
@@ -525,7 +517,7 @@ class _TextStyleViewState extends State<TextStyleView> {
         onTap: () {
           setState(() {
             bgColor = textBgColors[index];
-            _updateFillColor();
+            _updateFillColor(state);
           });
         },
         child: item);
@@ -639,7 +631,7 @@ class _TextStyleViewState extends State<TextStyleView> {
           InkWell(
             onTap: () async {
               navigateSubView(ParagraphView(
-                screenBloc: screenBloc,
+                screenBloc: widget.screenBloc,
                 stylesheets: widget.stylesheets,
               ));
             },
@@ -672,7 +664,7 @@ class _TextStyleViewState extends State<TextStyleView> {
       child: Column(
         children: [
           InkWell(
-            onTap: () => navigateSubView(FontsView(screenBloc: screenBloc, stylesheets: widget.stylesheets,)),
+            onTap: () => navigateSubView(FontsView(screenBloc: widget.screenBloc, stylesheets: widget.stylesheets,)),
             child: Row(
               children: [
                 Text(
@@ -793,7 +785,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                 ),
                 Expanded(
                     child: InkWell(
-                        onTap: () => navigateSubView(TextOptionsView(screenBloc: screenBloc, stylesheets: widget.stylesheets,)),
+                        onTap: () => navigateSubView(TextOptionsView(screenBloc: widget.screenBloc, stylesheets: widget.stylesheets,)),
                         child: Container(
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
@@ -1456,16 +1448,16 @@ class _TextStyleViewState extends State<TextStyleView> {
     );
   }
 
-  void _updateFillColor() {
+  void _updateFillColor(ShopEditScreenState state) {
     String hex = '${bgColor.value.toRadixString(16)}';
     String newBgColor = '#${hex.substring(2)}';
     Map<String, dynamic> sheets = widget.stylesheets[selectedId];
     sheets['backgroundColor'] = newBgColor;
     List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
-        selectedId, sheets, screenBloc.state.activeShopPage.stylesheetIds);
+        selectedId, sheets, state.activeShopPage.stylesheetIds);
 
-    screenBloc.add(UpdateSectionEvent(
-        sectionId: screenBloc.state.selectedSectionId, effects: effects));
+    widget.screenBloc.add(UpdateSectionEvent(
+        sectionId: state.selectedSectionId, effects: effects));
   }
 
   void _updateTextColor(ShopEditScreenState state) {
@@ -1486,8 +1478,8 @@ class _TextStyleViewState extends State<TextStyleView> {
 
     print('htmlStr: $newHtmlText');
     print('payload: $effects');
-    screenBloc.add(UpdateSectionEvent(
-        sectionId: screenBloc.state.selectedSectionId, effects: effects));
+    widget.screenBloc.add(UpdateSectionEvent(
+        sectionId: state.selectedSectionId, effects: effects));
   }
 
   void navigateSubView(Widget subview) {

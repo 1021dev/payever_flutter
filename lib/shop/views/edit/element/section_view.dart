@@ -91,12 +91,7 @@ class _SectionViewState extends State<SectionView> {
 
     return Consumer<TemplateSizeStateModel>(
         builder: (context, templateSizeState, child1) {
-          try{
-            progressResize(templateSizeState);
-          }catch(e){
-            print('Consumer Error: ${e.toString()}');
-          }
-
+          progressResize(templateSizeState);
           return BlocListener(
             listener: (BuildContext context, ShopEditScreenState state) async {
               if (state.selectedSectionId == sectionId && state.selectedChild == null) {
@@ -552,7 +547,7 @@ class _SectionViewState extends State<SectionView> {
               print('onVerticalDragDown dy = ${details.globalPosition.dy}');
             },
             onVerticalDragEnd: (DragEndDetails details) {
-              _changeSectionAction();
+              // _changeSectionAction();
             },
             onVerticalDragStart: (details) {
               print('onVerticalDragDown dy = ${details.globalPosition.dy}');
@@ -591,11 +586,13 @@ class _SectionViewState extends State<SectionView> {
   }
 
   void progressResize(TemplateSizeStateModel templateSizeState) {
-    if (widget.screenBloc.state.selectedSectionId != section.id) return;
+    if (section == null || widget.screenBloc.state.selectedSectionId != section.id) return;
+
     if (templateSizeState.shopObject != null) {
       _addNewObject(templateSizeState.shopObject);
       Future.microtask(()=>templateSizeState.setShopObject(null));
     }
+
     if (widget.screenBloc.state.selectedChild == null) return;
     // Initialize Relative Lines after drag
     if (templateSizeState.updateChildSizeFailed) {
@@ -718,19 +715,25 @@ class _SectionViewState extends State<SectionView> {
 
   _changeSectionAction({ChildSize childSize}) {
     List<Map<String, dynamic>> effects = [];
-    if (selectChildId != null && childSize != null) {
-      effects = childPayload(childSize);
+    if (selectChildId.isNotEmpty && childSize != null) {
+      try {
+        effects = childPayload(childSize);
+      } catch (e) {
+        print('Get Child Payload error:${e.toString()}');
+      }
     } else {
       effects = sectionPayload;
     }
     print('payload: $effects');
-    widget.screenBloc.add(UpdateSectionEvent(sectionId: section.id, effects: effects));
+    if (effects.isNotEmpty)
+      widget.screenBloc.add(UpdateSectionEvent(sectionId: section.id, effects: effects));
   }
 
   _updateTextAction(ShopEditScreenState state, String text) {
     Map<String, dynamic> sheets = state.stylesheets[deviceTypeId][selectChildId];
     TextStyles styles = TextStyles.fromJson(sheets);
-    List<Map<String, dynamic>> effects = styles.getUpdateTextPayload(section.id, selectChildId, sheets, text, state.activeShopPage.templateId);
+    String htmlStr = styles.encodeHtmlString(widget.screenBloc.htmlText(), newText: text);
+    List<Map<String, dynamic>> effects = styles.getUpdateTextPayload(section.id, selectChildId, sheets, htmlStr, state.activeShopPage.templateId);
     print('payload: $effects');
     widget.screenBloc.add(UpdateSectionEvent(
         sectionId: state.selectedSectionId, effects: effects));

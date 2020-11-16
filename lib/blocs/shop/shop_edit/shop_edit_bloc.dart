@@ -178,16 +178,13 @@ class ShopEditScreenBloc
 
       List newChildren = children.map((element) {
         if (element['id'] == id) {
-          print('Text Element: ${element.toString()}');
           element = event.effects.first['payload'];
-          print('Text Element update: ${element.toString()}');
         }
         return element;
       }).toList();
-
       sections.firstWhere((element) => element['id'] == event.sectionId)['children'] = newChildren;
     }
-    
+
     Map<String, dynamic>payload = event.effects.first['payload'];
     try{
       payload.keys.forEach((key) {
@@ -251,4 +248,17 @@ class ShopEditScreenBloc
         pages: pages, stylesheets: stylesheets, templates: templates);
   }
 
+  String htmlText() {
+    if (state.selectedChild == null || state.selectedChild.type != 'text')
+      return null;
+
+    List sections = state.templates[state.activeShopPage.templateId]['children'] as List;
+    List children = sections.firstWhere((element) => element['id'] == state.selectedSectionId)['children'] as List;
+    Child child = Child.fromJson(children.firstWhere((element) => element['id'] == state.selectedChild.id));
+    Data data = Data.fromJson(child.data);
+    if (data != null)
+      return data.text;
+    else
+      return '';
+  }
 }

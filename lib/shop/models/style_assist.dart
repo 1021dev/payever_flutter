@@ -91,7 +91,7 @@ class StyleAssist {
     }
     try {
       String text = '';
-      (elements as List).forEach((element) { text += '${element.text}\n'; });
+      (elements as List).forEach((element) { text += text.isEmpty ? element.text : '\n${element.text}'; });
       return text;
     } catch (e) {
       return '';
@@ -148,17 +148,18 @@ class StyleAssist {
   }
 
   String encodeHtmlString(String htmlText,
-      {String textColor,
+      {String newText,
+        String textColor,
         double fontSize, String textAlign, String fontWeight, String fontStyle, String fontFace, TextFontType fontType}) {
 
-    if (fontSize == null && textColor == null && textAlign == null && fontWeight == null)
-      return htmlText;
+    // if (fontSize == null && textColor == null && textAlign == null && fontWeight == null)
+    //   return htmlText;
 
     // '<font color="#b51700" style="font-size: 18px;">Text test tomorrow morning and let me know </font>'
     // '<div style="text-align: center;"><span style="font-size: 18px; color: rgb(181, 23, 0);">Text test tomorrow morning and let me know</span></div>'
     // <div style="text-align: center;"><span style="font-weight: normal;"><font color="#5e5e5e" style="font-size: 14px;">Men's sneakers</font></span></div>
     // <div style="text-align: center;"><i style="color: rgb(255, 250, 126); font-family: Montserrat;"><font style="font-size: 17px;"><u><strike>Text test tomorrow and see</strike></u></font></i></div>
-    String parseText = decodeHtmlString(htmlText);
+    String parseText = newText ?? decodeHtmlString(htmlText);
     // if (isHtmlText(htmlText)) {
       String newHtmlText = '';
       // font
@@ -183,7 +184,7 @@ class StyleAssist {
       }
 
       if (hasFont)
-        newHtmlText = '\<font$newHtmlText>$parseText</font>';
+        newHtmlText = '\<font$newHtmlText>$parseText\</font>';
 
       // span
       // font-weight
@@ -555,6 +556,7 @@ class SizeAssist {
     Map<String, dynamic> payload = {};
 
     payload['childrenRefs'] = {};
+    payload['children'] = [];
     Map<String, dynamic> data = {'text': text, 'sync': false};
     payload['id'] = selectedChildId;
     payload['data'] = data;
@@ -1010,6 +1012,7 @@ class SizeAssist {
 
   List<Child>getAllSectionChildren(Child section){
     List<Child>allElements = [];
+    if (section.children == null || section.children.isEmpty) return [];
     section.children.forEach((element) {
       allElements.add(element);
       element.children.forEach((element) {
