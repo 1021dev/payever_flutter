@@ -615,6 +615,14 @@ class TextStyles extends BaseStyles {
     return fontWeight;
   }
 
+  FontStyle htmlFontStyle(String text) {
+    if (!isHtmlText(text)) return fontStyle;
+    if (text.contains('\</i>'))
+      return FontStyle.italic;
+
+    return fontStyle;
+  }
+
   TextAlign htmlAlignment(String text) {
     if (!isHtmlText(text)) return textAlign;
     String decodeAlignment = decodeHtmlTextAlignment(text);

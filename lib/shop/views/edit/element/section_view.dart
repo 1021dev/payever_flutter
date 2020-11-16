@@ -547,7 +547,8 @@ class _SectionViewState extends State<SectionView> {
               print('onVerticalDragDown dy = ${details.globalPosition.dy}');
             },
             onVerticalDragEnd: (DragEndDetails details) {
-              // _changeSectionAction();
+              // Change Section height
+              _changeSectionAction();
             },
             onVerticalDragStart: (details) {
               print('onVerticalDragDown dy = ${details.globalPosition.dy}');

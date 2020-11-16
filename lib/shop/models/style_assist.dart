@@ -147,6 +147,23 @@ class StyleAssist {
     return null;
   }
 
+  List<TextFontType> getTextFontTypes(String text) {
+    List<TextFontType> fontTypes = [];
+    if (decodeHtmlTextFontWeight(text) == 'bold')
+      fontTypes.add(TextFontType.Bold);
+
+    if (text.contains('\</i>'))
+      fontTypes.add(TextFontType.Italic);
+
+    if (text.contains('\</u>'))
+      fontTypes.add(TextFontType.Underline);
+
+    if (text.contains('\</strike>'))
+      fontTypes.add(TextFontType.LineThrough);
+
+    return fontTypes;
+  }
+
   String encodeHtmlString(String htmlText,
       {String newText,
         String textColor,

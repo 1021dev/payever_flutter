@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
 import '../../../../theme.dart';
 
@@ -31,7 +32,6 @@ class _TextViewState extends State<TextView> {
   void initState() {
     super.initState();
     _focusNode.addListener(() {
-      print('Has focus: ${_focusNode.hasFocus} ${controller.text}');
       if (!_focusNode.hasFocus && parseText != controller.text) {
         widget.onChangeText(controller.text);
       }
@@ -58,11 +58,7 @@ class _TextViewState extends State<TextView> {
   }
 
   Widget get body {
-    // <div style="text-align: center;"><font style="font-size: 41px;">SELECTION</font></div>
-    // <font style="font-size: 20px;">NEW IN: THE B27</font>
-    // <div style="text-align: center;"><font face="Roboto"><span style="font-size: 18px;">05</span></font></div><div style="text-align: center;"><font face="Roboto"><span style="font-size: 18px;">NOVEMBER</span></font></div>
     parseText = styles.decodeHtmlString(htmlText);
-    // print('htmlParseText: $parseText');
     controller.text = parseText;
     return textField;
   }
@@ -87,8 +83,10 @@ class _TextViewState extends State<TextView> {
         style: TextStyle(
             color: styles.htmlTextColor(htmlText),
             fontWeight: styles.htmlFontWeight(htmlText),
-            fontStyle: styles.fontStyle,
-            fontSize: styles.htmlFontSize(htmlText)),
+            fontStyle: styles.htmlFontStyle(htmlText),
+            fontSize: styles.htmlFontSize(htmlText),
+            decoration: textDecoration,
+        ),
         textAlign: styles.htmlAlignment(htmlText),
         maxLines: 100,
         onChanged: (text) {
@@ -96,6 +94,17 @@ class _TextViewState extends State<TextView> {
         },
       ),
     );
+  }
+
+  TextDecoration get textDecoration {
+    List<TextFontType> fontTypes = styles.getTextFontTypes(htmlText);
+    if (fontTypes.contains(TextFontType.Underline))
+      return TextDecoration.underline;
+
+    if (fontTypes.contains(TextFontType.LineThrough))
+      return TextDecoration.lineThrough;
+
+    return null;
   }
 
   TextStyles getStyles() {
