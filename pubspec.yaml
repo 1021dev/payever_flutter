@@ -92,6 +92,7 @@ flutter:
   assets:
     - assets/images/
     - assets/json/currency.json
+    - assets/json/paragraphs.json
     - assets/json/businesses_template.json
     - assets/json/wallpapers_template.json
     - assets/json/user_template.json
@@ -164,7 +165,6 @@ flutter:
         - asset: assets/fonts/Rubik/Rubik-Light.ttf
         - asset: assets/fonts/Rubik/Rubik-Medium.ttf
         - asset: assets/fonts/Rubik/Rubik-Regular.ttf
-        - asset: assets/fonts/Rubik/Rubik-Thin.ttf
     - family: SpaceMono
       fonts:
         - asset: assets/fonts/SpaceMono/SpaceMono-Bold.ttf

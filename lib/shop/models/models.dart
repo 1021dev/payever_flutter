@@ -945,3 +945,16 @@ class ShopObject {
   String name;
   ShopObject({this.name,});
 }
+
+@JsonSerializable()
+class Paragraph {
+  Paragraph();
+
+  @JsonKey(name: 'name')  String name;
+  @JsonKey(name: 'size')  num size;
+  @JsonKey(name: 'fontWeight')  String fontWeight;
+  @JsonKey(name: 'fontStyle')  String fontStyle;
+
+  factory Paragraph.fromJson(Map<String, dynamic> json) => _$ParagraphFromJson(json);
+  Map<String, dynamic> toJson() => _$ParagraphToJson(this);
+}

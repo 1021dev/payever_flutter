@@ -1904,3 +1904,18 @@ Map<String, dynamic> _$ChildSizeToJson(ChildSize instance) => <String, dynamic>{
       'top': instance.top,
       'left': instance.left,
     };
+
+Paragraph _$ParagraphFromJson(Map<String, dynamic> json) {
+  return Paragraph()
+    ..name = json['name'] as String
+    ..size = json['size'] as num
+    ..fontWeight = json['fontWeight'] as String
+    ..fontStyle = json['fontStyle'] as String;
+}
+
+Map<String, dynamic> _$ParagraphToJson(Paragraph instance) => <String, dynamic>{
+      'name': instance.name,
+      'size': instance.size,
+      'fontWeight': instance.fontWeight,
+      'fontStyle': instance.fontStyle,
+    };
