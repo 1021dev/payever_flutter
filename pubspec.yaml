@@ -121,38 +121,10 @@ flutter:
   fonts:
     - family: HelveticaNeue
       fonts:
-        - asset: assets/fonts/HelveticaNeue.ttf
-    - family: HelveticaNeueBold
-      fonts:
-        - asset: assets/fonts/HelveticaNeueBold.ttf
-    - family: HelveticaNeueMed
-      fonts:
-        - asset: assets/fonts/HelveticaNeueMedium.ttf
-    - family: HelveticaNeueLight
-      fonts:
-        - asset: assets/fonts/HelveticaNeueLight.ttf
-    - family: Roboto
-      fonts:
-        - asset: assets/fonts/Roboto-Regular.ttf
-    - family: Roboto-Bold
-      fonts:
-        - asset: assets/fonts/Roboto-Bold.ttf
-    - family: Roboto-Italic
-      fonts:
-        - asset: assets/fonts/Roboto-Italic.ttf
-    - family: Roboto-Black
-      fonts:
-        - asset: assets/fonts/Roboto-Black.ttf
-          weight: 500
-    - family: Roboto-Light
-      fonts:
-        - asset: assets/fonts/Roboto-Light.ttf
-    - family: Roboto-Medium
-      fonts:
-        - asset: assets/fonts/Roboto-Medium.ttf
-    - family: Roboto-Thin
-      fonts:
-        - asset: assets/fonts/Roboto-Thin.ttf
+        - asset: assets/fonts/HelveticaNeue/HelveticaNeue.ttf
+        - asset: assets/fonts/HelveticaNeue/HelveticaNeueBold.ttf
+        - asset: assets/fonts/HelveticaNeue/HelveticaNeueMedium.ttf
+        - asset: assets/fonts/HelveticaNeue/HelveticaNeueLight.ttf
     - family: Montserrat
       fonts:
         - asset: assets/fonts/Montserrat/Montserrat-Black.ttf
@@ -163,3 +135,34 @@ flutter:
         - asset: assets/fonts/Montserrat/Montserrat-Light.ttf
         - asset: assets/fonts/Montserrat/Montserrat-Medium.ttf
         - asset: assets/fonts/Montserrat/Montserrat-Regular.ttf
+        - asset: assets/fonts/Montserrat/Montserrat-Thin.ttf
+    - family: Lato
+      fonts:
+        - asset: assets/fonts/Lato/Lato-Black.ttf
+        - asset: assets/fonts/Lato/Lato-BlackItalic.ttf
+        - asset: assets/fonts/Lato/Lato-Bold.ttf
+        - asset: assets/fonts/Lato/Lato-BoldItalic.ttf
+        - asset: assets/fonts/Lato/Lato-Italic.ttf
+        - asset: assets/fonts/Lato/Lato-Light.ttf
+        - asset: assets/fonts/Lato/Lato-Regular.ttf
+        - asset: assets/fonts/Lato/Lato-Thin.ttf
+    - family: PTSans
+      fonts:
+        - asset: assets/fonts/PTSans/PTSans-Bold.ttf
+        - asset: assets/fonts/PTSans/PTSans-BoldItalic.ttf
+        - asset: assets/fonts/PTSans/PTSans-Italic.ttf
+        - asset: assets/fonts/PTSans/PTSans-Regular.ttf
+    - family: Rubik
+      fonts:
+        - asset: assets/fonts/Rubik/Rubik-Italic-VariableFont_wght.ttf
+        - asset: assets/fonts/Rubik/Rubik-VariableFont_wght.ttf
+    - family: SpaceMono
+      fonts:
+        - asset: assets/fonts/SpaceMono/SpaceMono-Bold.ttf
+        - asset: assets/fonts/SpaceMono/SpaceMono-BoldItalic.ttf
+        - asset: assets/fonts/SpaceMono/SpaceMono-Italic.ttf
+        - asset: assets/fonts/SpaceMono/SpaceMono-Regular.ttf
+    - family: WorkSans
+      fonts:
+        - asset: assets/fonts/WorkSans/WorkSans-Italic-VariableFont_wght.ttf
+        - asset: assets/fonts/WorkSans/WorkSans-VariableFont_wght.ttf
