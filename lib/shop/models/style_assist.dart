@@ -128,6 +128,24 @@ class StyleAssist {
     return 0;
   }
 
+  String decodeHtmlTextFontFamily(String text) {
+    if (text.contains('font-family:') || text.contains('face=')) {
+      if (text.contains('Montserrat'))
+        return 'Montserrat';
+      if (text.contains('PT Sans'))
+        return 'PTSans';
+      if (text.contains('Lato'))
+        return 'Lato';
+      if (text.contains('Space Mono'))
+        return 'SpaceMono';
+      if (text.contains('WorkSans'))
+        return 'Work Sans';
+      if (text.contains('Rubik'))
+        return 'Rubik';
+    }
+    return null;
+  }
+
   String decodeHtmlTextFontWeight(String text) {
     if (text.contains('font-weight: normal')) {
       return 'normal';
