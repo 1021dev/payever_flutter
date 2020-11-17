@@ -56,17 +56,17 @@ enum ColorType {
   Text
 }
 
-List<String>paragraphStyles = [
-  'Title',
-  'Title Small',
-  'Subtitle',
-  'Body',
-  'Body Small',
-  'Caption',
-  'Caption Red',
-  'Quote',
-  'Attribution',
-];
+// List<String>paragraphStyles = [
+//   'Title',
+//   'Title Small',
+//   'Subtitle',
+//   'Body',
+//   'Body Small',
+//   'Caption',
+//   'Caption Red',
+//   'Quote',
+//   'Attribution',
+// ];
 
 List<String>fonts = [
   'Roboto',

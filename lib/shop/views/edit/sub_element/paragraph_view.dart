@@ -4,13 +4,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/shop/shop_edit/shop_edit_bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
-import 'package:payever/shop/models/constant.dart';
+import 'package:payever/shop/models/models.dart';
 
 class ParagraphView extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
   final Map<String, dynamic> stylesheets;
+  final List<Paragraph> paragraphs;
+  final Function onUpdateParagraph;
 
-  const ParagraphView({this.screenBloc, this.stylesheets});
+  const ParagraphView(
+      {this.screenBloc,
+      this.stylesheets,
+      this.paragraphs,
+      this.onUpdateParagraph});
 
   @override
   _ParagraphViewState createState() => _ParagraphViewState(screenBloc);
@@ -131,7 +137,7 @@ class _ParagraphViewState extends State<ParagraphView> {
     if (!isEdit)
     return ListView.separated(
       shrinkWrap: true,
-      itemCount: paragraphStyles.length,
+      itemCount: widget.paragraphs.length,
       itemBuilder: (context, index) {
         return paragraphItem(index);
       },
@@ -150,7 +156,7 @@ class _ParagraphViewState extends State<ParagraphView> {
       onReorder: _onReorder,
       scrollDirection: Axis.vertical,
       children: List.generate(
-        paragraphStyles.length,
+        widget.paragraphs.length,
             (index) {
           return paragraphItem(index);
         },
@@ -159,10 +165,10 @@ class _ParagraphViewState extends State<ParagraphView> {
   }
 
   Widget paragraphItem(int index) {
-    TextStyle textStyle;
-    String style = paragraphStyles[index];
+    Paragraph paragraph = widget.paragraphs[index];
+    TextStyle textStyle ;
     bool isCaptionRed = false;
-    switch (style) {
+    switch (paragraph.name) {
       case 'Title':
       case 'Title Small':
         textStyle = TextStyle(
@@ -198,6 +204,7 @@ class _ParagraphViewState extends State<ParagraphView> {
     return InkWell(
       key: Key('$index'),
       onTap: () {
+        widget.onUpdateParagraph(paragraph);
         setState(() {
           selectedIndex = index;
         });
@@ -221,7 +228,7 @@ class _ParagraphViewState extends State<ParagraphView> {
                 ),
               ),
             Text(
-              paragraphStyles[index],
+              paragraph.name ?? '',
               style: textStyle,
             ),
             Spacer(),
@@ -251,8 +258,8 @@ class _ParagraphViewState extends State<ParagraphView> {
         if (newIndex > oldIndex) {
           newIndex -= 1;
         }
-        final String item = paragraphStyles.removeAt(oldIndex);
-        paragraphStyles.insert(newIndex, item);
+        final Paragraph item = widget.paragraphs.removeAt(oldIndex);
+        widget.paragraphs.insert(newIndex, item);
       },
     );
   }
@@ -260,7 +267,7 @@ class _ParagraphViewState extends State<ParagraphView> {
   void _onRemove(int index) {
     setState(
           () {
-        paragraphStyles.removeAt(index);
+            widget.paragraphs.removeAt(index);
       },
     );
   }

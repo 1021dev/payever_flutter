@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,6 +44,7 @@ class _TextStyleViewState extends State<TextStyleView> {
 
   TextStyleType styleType = TextStyleType.Style;
   List<TextFontType> fontTypes = [];
+  List<Paragraph> paragraphs = [];
 
   TextAlign textAlign;
   TextVAlign vAlign;
@@ -50,11 +53,29 @@ class _TextStyleViewState extends State<TextStyleView> {
   String selectedId;
   TextStyles styles;
 
+  static const ptFontFactor = 26/116;
+
+  @override
+  void initState() {
+    DefaultAssetBundle.of(context)
+        .loadString('assets/json/paragraphs.json', cache: true)
+        .then((value) {
+      dynamic map = JsonDecoder().convert(value);
+      paragraphs.clear();
+      map.forEach((item) {
+        paragraphs.add(Paragraph.fromJson(item));
+      });
+      print('paragraphs length:${paragraphs.length}');
+    }).catchError((onError) {
+      print(onError);
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     isPortrait = GlobalUtils.isPortrait(context);
     isTablet = GlobalUtils.isTablet(context);
-
     return BlocBuilder(
       bloc: widget.screenBloc,
       builder: (BuildContext context, state) {
@@ -600,7 +621,7 @@ class _TextStyleViewState extends State<TextStyleView> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              _paragraphStyle,
+              _paragraphStyle(state),
               _fontType(state),
               _fontSize(state),
               _fill(state, ColorType.Text),
@@ -617,7 +638,7 @@ class _TextStyleViewState extends State<TextStyleView> {
         ));
   }
 
-  get _paragraphStyle {
+  Widget _paragraphStyle(ShopEditScreenState state) {
     return Container(
       padding: EdgeInsets.only(bottom: 16),
       child: Column(
@@ -638,6 +659,12 @@ class _TextStyleViewState extends State<TextStyleView> {
               navigateSubView(ParagraphView(
                 screenBloc: widget.screenBloc,
                 stylesheets: widget.stylesheets,
+                paragraphs: paragraphs,
+                onUpdateParagraph: (paragraph) {
+                  double fontSize = paragraph.size * ptFontFactor;
+                  String newHtmlText = styles.encodeHtmlString(htmlText, fontSize: fontSize, fontTypes: paragraph.fontWeight == 'bold' ? [TextFontType.Bold] : null );
+                  _updateTextProperty(state, newHtmlText);
+                },
               ));
             },
             child: Container(
@@ -686,7 +713,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                 ),
                 Spacer(),
                 Text(
-                  'Helvetica Neue',
+                  styles.decodeHtmlTextFontFamily(widget.screenBloc.htmlText()) ?? 'Roboto',
                   style: TextStyle(color: Colors.blue, fontSize: 15),
                 ),
                 SizedBox(
