@@ -42,7 +42,8 @@ class _TextStyleViewState extends State<TextStyleView> {
 
   TextStyleType styleType = TextStyleType.Style;
   List<TextFontType> fontTypes = [];
-  TextHAlign hAlign;
+
+  TextAlign textAlign;
   TextVAlign vAlign;
   BulletList bulletList;
 
@@ -100,6 +101,8 @@ class _TextStyleViewState extends State<TextStyleView> {
     textColor = styles.htmlTextColor(htmlText);
     // font types
     fontTypes = styles.getTextFontTypes(htmlText);
+    // HAlign
+    textAlign = styles.htmlAlignment(htmlText);
   }
 
   Widget get _segmentedControl {
@@ -601,7 +604,7 @@ class _TextStyleViewState extends State<TextStyleView> {
               _fontType(state),
               _fontSize(state),
               _fill(state, ColorType.Text),
-              _textHorizontalAlign,
+              _textHorizontalAlign(state),
               _textVerticalAlign,
               _verticalText,
               _bullets,
@@ -864,7 +867,7 @@ class _TextStyleViewState extends State<TextStyleView> {
     );
   }
 
-  get _textHorizontalAlign {
+  Widget _textHorizontalAlign(ShopEditScreenState state) {
     return Container(
       margin: const EdgeInsets.only(top: 20.0),
       height: 50,
@@ -872,15 +875,11 @@ class _TextStyleViewState extends State<TextStyleView> {
         children: [
           Expanded(
               child: InkWell(
-                  onTap: () {
-                    setState(() {
-                      hAlign = TextHAlign.Start;
-                    });
-                  },
+                  onTap: () => updateTextAlign(state, 'left'),
                   child: Container(
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: hAlign != TextHAlign.Start
+                        color: textAlign != TextAlign.left
                             ? Color.fromRGBO(51, 48, 53, 1)
                             : Color.fromRGBO(0, 135, 255, 1),
                         borderRadius: BorderRadius.only(
@@ -893,14 +892,10 @@ class _TextStyleViewState extends State<TextStyleView> {
           ),
           Expanded(
               child: InkWell(
-                  onTap: () {
-                    setState(() {
-                      hAlign = TextHAlign.Center;
-                    });
-                  },
+                  onTap: () => updateTextAlign(state, 'center'),
                   child: Container(
                       alignment: Alignment.center,
-                      color: hAlign != TextHAlign.Center
+                      color: textAlign != TextAlign.center
                           ? Color.fromRGBO(51, 48, 53, 1)
                           : Color.fromRGBO(0, 135, 255, 1),
                       child: SvgPicture.asset('assets/images/align-center.svg')))),
@@ -909,14 +904,10 @@ class _TextStyleViewState extends State<TextStyleView> {
           ),
           Expanded(
               child: InkWell(
-                  onTap: () {
-                    setState(() {
-                      hAlign = TextHAlign.End;
-                    });
-                  },
+                  onTap: () => updateTextAlign(state, 'right'),
                   child: Container(
                       alignment: Alignment.center,
-                      color: hAlign != TextHAlign.End
+                      color: textAlign != TextAlign.right
                           ? Color.fromRGBO(51, 48, 53, 1)
                           : Color.fromRGBO(0, 135, 255, 1),
                       child: SvgPicture.asset('assets/images/align-right.svg')))),
@@ -925,15 +916,11 @@ class _TextStyleViewState extends State<TextStyleView> {
           ),
           Expanded(
               child: InkWell(
-                  onTap: () {
-                    setState(() {
-                      hAlign = TextHAlign.Stretch;
-                    });
-                  },
+                  onTap: () => updateTextAlign(state, 'justify'),
                   child: Container(
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: hAlign != TextHAlign.Stretch
+                        color: textAlign != TextAlign.justify
                             ? Color.fromRGBO(51, 48, 53, 1)
                             : Color.fromRGBO(0, 135, 255, 1),
                         borderRadius: BorderRadius.only(
@@ -1465,6 +1452,11 @@ class _TextStyleViewState extends State<TextStyleView> {
       fontTypes.add(fontType);
     }
     String htmlStr = styles.encodeHtmlString(htmlText, fontTypes: fontTypes);
+    _updateTextProperty(state, htmlStr);
+  }
+
+  void updateTextAlign(ShopEditScreenState state, String align) {
+    String htmlStr = styles.encodeHtmlString(htmlText, textAlign: align);
     _updateTextProperty(state, htmlStr);
   }
 
