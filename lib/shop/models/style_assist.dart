@@ -40,8 +40,9 @@ class StyleAssist {
 
   TextAlign getTextAlign(String align) {
     if (align == 'center') return TextAlign.center;
-    if (align == 'left') return TextAlign.start;
-    if (align == 'right') return TextAlign.end;
+    if (align == 'left') return TextAlign.left;
+    if (align == 'right') return TextAlign.right;
+    if (align == 'justify') return TextAlign.justify;
     if (align == 'start') return TextAlign.start;
     if (align == 'end') return TextAlign.end;
     return TextAlign.start;
@@ -143,6 +144,8 @@ class StyleAssist {
       return 'left';
     } else if (text.contains('text-align: right')) {
       return 'right';
+    } else if (text.contains('text-align: justify')) {
+      return 'justify';
     }
     return null;
   }
@@ -216,23 +219,23 @@ class StyleAssist {
       hasFont = true;
     }
 
-    if (hasFont) newHtmlText = '\<font$newHtmlText>$parseText\</font>';
+    if (hasFont) newHtmlText = '\<font$newHtmlText>$parseText</font>';
 
     // span
     // font-weight
     // Text FontSize
     bool hasSpan = false;
+    String fontWeight;
     if (fontTypes != null) {
-      String fontWeight = fontTypes.contains(TextFontType.Bold) ? 'bold' : 'normal';
-      newHtmlText = textFontWeightHtml(fontWeight) + newHtmlText;
+      fontWeight = fontTypes.contains(TextFontType.Bold) ? 'bold' : 'normal';
       hasSpan = true;
     } else if (decodeHtmlTextFontWeight(htmlText) != null) {
-      String fontWeight = decodeHtmlTextFontWeight(htmlText);
-      newHtmlText = textFontWeightHtml(fontWeight) + newHtmlText;
+      fontWeight = decodeHtmlTextFontWeight(htmlText);
       hasSpan = true;
     }
 
     if (hasSpan) {
+      newHtmlText = textFontWeightHtml(fontWeight) + newHtmlText;
       if (newHtmlText.contains(parseText))
         newHtmlText = '\<span$newHtmlText</span>';
       else
@@ -241,14 +244,13 @@ class StyleAssist {
     // div
     bool hasDiv = false;
     if (textAlign != null) {
-      newHtmlText = textAlignmentHtml(textAlign) + newHtmlText;
       hasDiv = true;
     } else if (decodeHtmlTextAlignment(htmlText) != null) {
       textAlign = decodeHtmlTextAlignment(htmlText);
-      newHtmlText = textAlignmentHtml(textAlign) + newHtmlText;
       hasDiv = true;
     }
     if (hasDiv) {
+      newHtmlText = textAlignmentHtml(textAlign) + newHtmlText;
       if (newHtmlText.contains(parseText))
         newHtmlText = '\<div$newHtmlText</div>';
       else

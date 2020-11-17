@@ -39,13 +39,6 @@ enum TextFontType {
   LineThrough
 }
 
-enum TextHAlign {
-  Start,
-  Center,
-  End,
-  Stretch
-}
-
 enum TextVAlign {
   Top,
   Center,
