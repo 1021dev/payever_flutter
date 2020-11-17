@@ -156,6 +156,15 @@ flutter:
       fonts:
         - asset: assets/fonts/Rubik/Rubik-Italic-VariableFont_wght.ttf
         - asset: assets/fonts/Rubik/Rubik-VariableFont_wght.ttf
+        - asset: assets/fonts/Rubik/Rubik-Black.ttf
+        - asset: assets/fonts/Rubik/Rubik-BlackItalic.ttf
+        - asset: assets/fonts/Rubik/Rubik-Bold.ttf
+        - asset: assets/fonts/Rubik/Rubik-BoldItalic.ttf
+        - asset: assets/fonts/Rubik/Rubik-Italic.ttf
+        - asset: assets/fonts/Rubik/Rubik-Light.ttf
+        - asset: assets/fonts/Rubik/Rubik-Medium.ttf
+        - asset: assets/fonts/Rubik/Rubik-Regular.ttf
+        - asset: assets/fonts/Rubik/Rubik-Thin.ttf
     - family: SpaceMono
       fonts:
         - asset: assets/fonts/SpaceMono/SpaceMono-Bold.ttf
@@ -166,3 +175,12 @@ flutter:
       fonts:
         - asset: assets/fonts/WorkSans/WorkSans-Italic-VariableFont_wght.ttf
         - asset: assets/fonts/WorkSans/WorkSans-VariableFont_wght.ttf
+        - asset: assets/fonts/WorkSans/WorkSans-Black.ttf
+        - asset: assets/fonts/WorkSans/WorkSans-BlackItalic.ttf
+        - asset: assets/fonts/WorkSans/WorkSans-Bold.ttf
+        - asset: assets/fonts/WorkSans/WorkSans-BoldItalic.ttf
+        - asset: assets/fonts/WorkSans/WorkSans-Italic.ttf
+        - asset: assets/fonts/WorkSans/WorkSans-Light.ttf
+        - asset: assets/fonts/WorkSans/WorkSans-Medium.ttf
+        - asset: assets/fonts/WorkSans/WorkSans-Regular.ttf
+        - asset: assets/fonts/WorkSans/WorkSans-Thin.ttf
