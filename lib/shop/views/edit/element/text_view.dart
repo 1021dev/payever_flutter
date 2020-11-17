@@ -86,7 +86,7 @@ class _TextViewState extends State<TextView> {
             fontStyle: styles.htmlFontStyle(htmlText),
             fontSize: styles.htmlFontSize(htmlText),
             decoration: textDecoration,
-            fontFamily:styles.decodeHtmlTextFontFamily(htmlText),
+            fontFamily: styles.decodeHtmlTextFontFamily(htmlText, realFontFamilyName: true),
         ),
         textAlign: styles.htmlAlignment(htmlText),
         maxLines: 100,

@@ -128,20 +128,25 @@ class StyleAssist {
     return 0;
   }
 
-  String decodeHtmlTextFontFamily(String text) {
+  String decodeHtmlTextFontFamily(String text, {bool realFontFamilyName = false}) {
     if (text.contains('font-family:') || text.contains('face=')) {
+      String fontFamily;
       if (text.contains('Montserrat'))
-        return 'Montserrat';
-      if (text.contains('PT Sans'))
-        return 'PTSans';
-      if (text.contains('Lato'))
-        return 'Lato';
-      if (text.contains('Space Mono'))
-        return 'SpaceMono';
-      if (text.contains('WorkSans'))
-        return 'Work Sans';
-      if (text.contains('Rubik'))
-        return 'Rubik';
+        fontFamily = 'Montserrat';
+      else if (text.contains('PT Sans'))
+        fontFamily = 'PT Sans';
+      else if (text.contains('Lato'))
+        fontFamily = 'Lato';
+      else if (text.contains('Space Mono'))
+        fontFamily = 'Space Mono';
+      else if (text.contains('Work Sans'))
+        fontFamily = 'Work Sans';
+      else if (text.contains('Rubik'))
+        fontFamily = 'Rubik';
+      else
+        fontFamily = 'Roboto';
+
+      return realFontFamilyName ? fontFamily.replaceAll(' ', '') : fontFamily;
     }
     return null;
   }
@@ -190,8 +195,7 @@ class StyleAssist {
       String textColor,
       double fontSize,
       String textAlign,
-      String fontStyle,
-      String fontFace,
+      String fontFamily,
       List<TextFontType> fontTypes}) {
     // if (fontSize == null && textColor == null && textAlign == null && fontWeight == null)
     //   return htmlText;
@@ -219,21 +223,27 @@ class StyleAssist {
     // font
     // Text Color
     bool hasFont = false;
+    if (textColor == null && decodeHtmlTextColor(htmlText) != null)
+      textColor = encodeColor(decodeHtmlTextColor(htmlText));
+
     if (textColor != null) {
       newHtmlText = textColorHtml(textColor);
       hasFont = true;
-    } else if (decodeHtmlTextColor(htmlText) != null) {
-      textColor = encodeColor(decodeHtmlTextColor(htmlText));
-      newHtmlText = textColorHtml(textColor);
-      hasFont = true;
     }
-    // Text FontSize
+    // Font Size
+    if (fontSize == null && decodeHtmlTextFontSize(htmlText) != 0)
+      fontSize = decodeHtmlTextFontSize(htmlText);
+
     if (fontSize != null) {
       newHtmlText += textFontSizeHtml(fontSize);
       hasFont = true;
-    } else if (decodeHtmlTextFontSize(htmlText) != 0) {
-      fontSize = decodeHtmlTextFontSize(htmlText);
-      newHtmlText += textFontSizeHtml(fontSize);
+    }
+    // Font Family
+    if (fontFamily == null && decodeHtmlTextFontFamily(htmlText) != null)
+      fontFamily = decodeHtmlTextFontFamily(htmlText);
+
+    if (fontFamily != null) {
+      newHtmlText += textFontFamilyHtml(fontFamily);
       hasFont = true;
     }
 
@@ -241,18 +251,13 @@ class StyleAssist {
 
     // span
     // font-weight
-    // Text FontSize
-    bool hasSpan = false;
     String fontWeight;
-    if (fontTypes != null) {
+    if (fontTypes != null)
       fontWeight = fontTypes.contains(TextFontType.Bold) ? 'bold' : 'normal';
-      hasSpan = true;
-    } else if (decodeHtmlTextFontWeight(htmlText) != null) {
+    else if (decodeHtmlTextFontWeight(htmlText) != null)
       fontWeight = decodeHtmlTextFontWeight(htmlText);
-      hasSpan = true;
-    }
 
-    if (hasSpan) {
+    if (fontWeight != null) {
       newHtmlText = textFontWeightHtml(fontWeight) + newHtmlText;
       if (newHtmlText.contains(parseText))
         newHtmlText = '\<span$newHtmlText</span>';
@@ -260,14 +265,10 @@ class StyleAssist {
         newHtmlText = '\<span$newHtmlText>$parseText</span>';
     }
     // div
-    bool hasDiv = false;
-    if (textAlign != null) {
-      hasDiv = true;
-    } else if (decodeHtmlTextAlignment(htmlText) != null) {
+    if (textAlign == null && decodeHtmlTextAlignment(htmlText) != null)
       textAlign = decodeHtmlTextAlignment(htmlText);
-      hasDiv = true;
-    }
-    if (hasDiv) {
+
+    if (textAlign != null) {
       newHtmlText = textAlignmentHtml(textAlign) + newHtmlText;
       if (newHtmlText.contains(parseText))
         newHtmlText = '\<div$newHtmlText</div>';
@@ -295,6 +296,10 @@ class StyleAssist {
 
   String textFontSizeHtml(double fontSize) {
     return ' style=\"font-size: ${fontSize.toInt()}px;\"';
+  }
+
+  String textFontFamilyHtml(String fontFamily) {
+    return ' face=\"$fontFamily\"';
   }
 
   String textFontWeightHtml(String fontWeight) {

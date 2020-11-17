@@ -10,28 +10,27 @@ import 'package:payever/shop/models/models.dart';
 class FontsView extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
   final Map<String, dynamic> stylesheets;
-
-  const FontsView({this.screenBloc, this.stylesheets});
+  final Function onUpdateFontFamily;
+  const FontsView({this.screenBloc, this.stylesheets, @required this.onUpdateFontFamily});
 
   @override
-  _FontsViewState createState() => _FontsViewState(screenBloc);
+  _FontsViewState createState() => _FontsViewState();
 }
 
 class _FontsViewState extends State<FontsView> {
-  final ShopEditScreenBloc screenBloc;
 
-  _FontsViewState(this.screenBloc);
+  _FontsViewState();
 
   bool isPortrait;
   bool isTablet;
-  int selectedIndex = -1;
+  String _fontFamily;
 
   @override
   Widget build(BuildContext context) {
     isPortrait = GlobalUtils.isPortrait(context);
     isTablet = GlobalUtils.isTablet(context);
     return BlocBuilder(
-      bloc: screenBloc,
+      bloc: widget.screenBloc,
       builder: (BuildContext context, state) {
         return body(state);
       },
@@ -40,6 +39,9 @@ class _FontsViewState extends State<FontsView> {
 
   Widget body(ShopEditScreenState state) {
     if (state.selectedChild == null) return Container();
+    TextStyles styles = TextStyles.fromJson(widget.stylesheets[state.selectedSectionId]);
+    _fontFamily = styles.decodeHtmlTextFontFamily(widget.screenBloc.htmlText()) ?? 'Roboto';
+
     return Container(
       height: 400,
       child: Scaffold(
@@ -135,23 +137,17 @@ class _FontsViewState extends State<FontsView> {
   }
 
   Widget fontItem(int index) {
-    String font = fonts[index];
-    TextStyle textStyle = getTextStyle(font);
-
+    String fontFamily = fonts[index];
     return InkWell(
       key: Key('$index'),
-      onTap: () {
-        setState(() {
-          selectedIndex = index;
-        });
-      },
+      onTap: ()=> widget.onUpdateFontFamily(fontFamily),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20),
         height: 50,
         child: Row(
           children: [
             Opacity(
-              opacity: selectedIndex == index ? 1 : 0,
+              opacity: fontFamily == _fontFamily ? 1 : 0,
               child: Icon(
                 Icons.check,
                 color: Colors.blue,

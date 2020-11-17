@@ -669,7 +669,15 @@ class _TextStyleViewState extends State<TextStyleView> {
       child: Column(
         children: [
           InkWell(
-            onTap: () => navigateSubView(FontsView(screenBloc: widget.screenBloc, stylesheets: widget.stylesheets,)),
+            onTap: () => navigateSubView(FontsView(
+              screenBloc: widget.screenBloc,
+              stylesheets: widget.stylesheets,
+              onUpdateFontFamily: (fontFamily) {
+                String htmlStr =
+                    styles.encodeHtmlString(htmlText, fontFamily: fontFamily);
+                _updateTextProperty(state, htmlStr);
+              },
+            )),
             child: Row(
               children: [
                 Text(
