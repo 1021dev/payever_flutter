@@ -37,7 +37,7 @@ class _TextOptionsViewState extends State<TextOptionsView> {
   Widget build(BuildContext context) {
     isPortrait = GlobalUtils.isPortrait(context);
     isTablet = GlobalUtils.isTablet(context);
-    TextStyles styles = TextStyles.fromJson(widget.stylesheets[screenBloc.state.selectedChild.id]);
+    TextStyles styles = TextStyles.fromJson(widget.stylesheets);
     bgColor = colorConvert(styles.backgroundColor, emptyColor: true);
     return BlocBuilder(
       bloc: screenBloc,

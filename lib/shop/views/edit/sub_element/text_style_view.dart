@@ -114,7 +114,7 @@ class _TextStyleViewState extends State<TextStyleView> {
 
   void _initTextProperties (ShopEditScreenState state) {
     selectedId = state.selectedChild.id;
-    styles = TextStyles.fromJson(widget.stylesheets[selectedId]);
+    styles = TextStyles.fromJson(widget.stylesheets);
     fillColor = colorConvert(styles.backgroundColor, emptyColor: true);
     borderColor = colorConvert(styles.borderColor, emptyColor: true);
 
@@ -289,7 +289,7 @@ class _TextStyleViewState extends State<TextStyleView> {
             onTap: () {
               if (colorType == ColorType.BackGround) {
                 navigateSubView(FillView(
-                  stylesheets: widget.stylesheets[selectedId],
+                  stylesheets: widget.stylesheets,
                   onUpdateColor: (Color color) {
                     setState(() {
                       fillColor = color;
@@ -1490,7 +1490,7 @@ class _TextStyleViewState extends State<TextStyleView> {
     } else {
       newBgColor = encodeColor(fillColor);
     }
-    Map<String, dynamic> sheets = widget.stylesheets[selectedId];
+    Map<String, dynamic> sheets = widget.stylesheets;
     sheets['backgroundColor'] = newBgColor;
     sheets['backgroundImage'] = '';
     List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
@@ -1504,7 +1504,7 @@ class _TextStyleViewState extends State<TextStyleView> {
     // backgroundImage: "linear-gradient(90deg, #ff0000ff, #fffef8ff)"
     String color1 = encodeColor(startColor);
     String color2 = encodeColor(endColor);
-    Map<String, dynamic> sheets = widget.stylesheets[selectedId];
+    Map<String, dynamic> sheets = widget.stylesheets;
     sheets['backgroundColor'] = '';
     sheets['backgroundImage'] = 'linear-gradient(${angle}deg, $color1, $color2)';
     List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
@@ -1549,7 +1549,7 @@ class _TextStyleViewState extends State<TextStyleView> {
   }
 
   void _updateTextProperty(ShopEditScreenState state, String newHtmlText) {
-    Map<String, dynamic> sheets = widget.stylesheets[selectedId];
+    Map<String, dynamic> sheets = widget.stylesheets;
     List<Map<String, dynamic>> effects = styles.getUpdateTextPayload(state.selectedBlockId, selectedId, sheets, newHtmlText, state.activeShopPage.templateId);
 
     print('htmlStr: $newHtmlText');

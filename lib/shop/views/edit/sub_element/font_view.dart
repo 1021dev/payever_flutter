@@ -39,7 +39,7 @@ class _FontsViewState extends State<FontsView> {
 
   Widget body(ShopEditScreenState state) {
     if (state.selectedChild == null) return Container();
-    TextStyles styles = TextStyles.fromJson(widget.stylesheets[state.selectedSectionId]);
+    TextStyles styles = TextStyles.fromJson(widget.stylesheets);
     _fontFamily = styles.decodeHtmlTextFontFamily(widget.screenBloc.htmlText()) ?? 'Roboto';
 
     return Container(
