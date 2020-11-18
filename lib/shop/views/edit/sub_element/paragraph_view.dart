@@ -1,51 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:payever/blocs/bloc.dart';
-import 'package:payever/blocs/shop/shop_edit/shop_edit_bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
 
 class ParagraphView extends StatefulWidget {
-  final ShopEditScreenBloc screenBloc;
-  final Map<String, dynamic> stylesheets;
   final List<Paragraph> paragraphs;
+  final Paragraph selectedParagraph;
   final Function onUpdateParagraph;
 
   const ParagraphView(
-      {this.screenBloc,
-      this.stylesheets,
-      this.paragraphs,
+      {this.paragraphs,
+      this.selectedParagraph,
       this.onUpdateParagraph});
 
   @override
-  _ParagraphViewState createState() => _ParagraphViewState(screenBloc);
+  _ParagraphViewState createState() => _ParagraphViewState(selectedParagraph);
 }
 
 class _ParagraphViewState extends State<ParagraphView> {
-  final ShopEditScreenBloc screenBloc;
 
-  _ParagraphViewState(this.screenBloc);
+  _ParagraphViewState(this.selectedParagraph);
 
   bool isPortrait;
   bool isTablet;
-  int selectedIndex = -1;
+  Paragraph selectedParagraph;
+  // int selectedIndex = -1;
   bool isEdit = false;
 
   @override
   Widget build(BuildContext context) {
     isPortrait = GlobalUtils.isPortrait(context);
     isTablet = GlobalUtils.isTablet(context);
-    return BlocBuilder(
-      bloc: screenBloc,
-      builder: (BuildContext context, state) {
-        return body(state);
-      },
-    );
+    return body();
   }
 
-  Widget body(ShopEditScreenState state) {
-    if (state.selectedChild == null) return Container();
+  Widget body() {
     return Container(
       height: 400,
       child: Scaffold(
@@ -204,10 +193,10 @@ class _ParagraphViewState extends State<ParagraphView> {
     return InkWell(
       key: Key('$index'),
       onTap: () {
-        widget.onUpdateParagraph(paragraph);
         setState(() {
-          selectedIndex = index;
+          selectedParagraph = paragraph;
         });
+        widget.onUpdateParagraph(paragraph);
       },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20),
@@ -232,7 +221,7 @@ class _ParagraphViewState extends State<ParagraphView> {
               style: textStyle,
             ),
             Spacer(),
-            if (!isEdit && selectedIndex == index)
+            if (!isEdit && selectedParagraph?.name == paragraph.name)
               Icon(
                 Icons.check,
                 color: Colors.blue,

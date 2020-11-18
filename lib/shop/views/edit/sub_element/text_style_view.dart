@@ -53,7 +53,7 @@ class _TextStyleViewState extends State<TextStyleView> {
   String selectedId;
   TextStyles styles;
 
-  static const ptFontFactor = 26/116;
+  final double ptFontFactor = 26/116;
 
   @override
   void initState() {
@@ -639,6 +639,24 @@ class _TextStyleViewState extends State<TextStyleView> {
   }
 
   Widget _paragraphStyle(ShopEditScreenState state) {
+    Paragraph selectedParagraph;
+    List<TextFontType>fontTypes = styles.getTextFontTypes(htmlText);
+    if (fontTypes.contains(TextFontType.Underline) ||
+        fontTypes.contains(TextFontType.LineThrough)) {
+
+    } else {
+      String fontWeight = styles.decodeHtmlTextFontWeight(htmlText) ?? 'normal';
+      double fontSize = styles.htmlFontSize(htmlText);
+      FontStyle fontStyle = styles.htmlFontStyle(htmlText);
+      paragraphs.forEach((paragraph) {
+        double fontSize1 = paragraph.size * ptFontFactor;
+        String fontWeight1 = paragraph.fontWeight;
+        FontStyle fontStyle1 = paragraph.fontStyle == 'italic' ? FontStyle.italic : FontStyle.normal;
+        if (fontSize.toInt() == fontSize1.toInt() && fontWeight == fontWeight1 && fontStyle == fontStyle1)
+          selectedParagraph = paragraph;
+      });
+    }
+
     return Container(
       padding: EdgeInsets.only(bottom: 16),
       child: Column(
@@ -655,14 +673,20 @@ class _TextStyleViewState extends State<TextStyleView> {
             height: 10,
           ),
           InkWell(
-            onTap: () async {
+            onTap: () {
               navigateSubView(ParagraphView(
-                screenBloc: widget.screenBloc,
-                stylesheets: widget.stylesheets,
                 paragraphs: paragraphs,
-                onUpdateParagraph: (paragraph) {
+                selectedParagraph: selectedParagraph,
+                onUpdateParagraph: (Paragraph paragraph) {
                   double fontSize = paragraph.size * ptFontFactor;
-                  String newHtmlText = styles.encodeHtmlString(htmlText, fontSize: fontSize, fontTypes: paragraph.fontWeight == 'bold' ? [TextFontType.Bold] : null );
+                  List<TextFontType>fontTypes = [];
+                  if (paragraph.fontWeight == 'bold')
+                    fontTypes.add(TextFontType.Bold);
+
+                  if (paragraph.fontStyle == 'italic')
+                    fontTypes.add(TextFontType.Italic);
+
+                  String newHtmlText = styles.encodeHtmlString(htmlText, fontSize: fontSize, fontTypes: fontTypes);
                   _updateTextProperty(state, newHtmlText);
                 },
               ));
@@ -676,7 +700,7 @@ class _TextStyleViewState extends State<TextStyleView> {
               child: Row(
                 children: [
                   Text(
-                    'Label ',
+                    selectedParagraph?.name ?? 'Label',
                     style: TextStyle(color: Colors.white, fontSize: 24),
                   ),
                   Spacer(),
@@ -839,7 +863,7 @@ class _TextStyleViewState extends State<TextStyleView> {
           ),
           Spacer(),
           Text(
-            '${fontSize.toInt()} pt',
+            '${fontSize ~/ ptFontFactor} pt',
             style: TextStyle(color: Colors.blue, fontSize: 15),
           ),
           SizedBox(

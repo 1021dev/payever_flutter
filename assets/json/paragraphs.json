@@ -1,11 +1,11 @@
 [
   {"name": "Title",       "size": 116, "fontWeight": "bold",   "fontStyle": "normal"},
-  {"name": "Title Small", "size": 85,  "fontWeight": "bold",   "fontStyle": "normal"},
-  {"name": "Subtitle",    "size": 55,  "fontWeight": "bold",   "fontStyle": "normal"},
-  {"name": "Body",        "size": 48,  "fontWeight": "normal", "fontStyle": "normal"},
-  {"name": "Body Small",  "size": 35,  "fontWeight": "normal", "fontStyle": "normal"},
-  {"name": "Caption",     "size": 24,  "fontWeight": "normal", "fontStyle": "normal"},
-  {"name": "Caption Red", "size": 24,  "fontWeight": "normal", "fontStyle": "normal"},
-  {"name": "Quote",       "size": 85,  "fontWeight": "normal", "fontStyle": "normal"},
-  {"name": "Attribution", "size": 36,  "fontWeight": "bold",   "fontStyle": "italic"}
+  {"name": "Title Small", "size": 100,  "fontWeight": "bold",   "fontStyle": "normal"},
+  {"name": "Subtitle",    "size": 81,  "fontWeight": "bold",   "fontStyle": "normal"},
+  {"name": "Body",        "size": 71,  "fontWeight": "normal", "fontStyle": "normal"},
+  {"name": "Body Small",  "size": 60,  "fontWeight": "normal", "fontStyle": "normal"},
+  {"name": "Caption",     "size": 53,  "fontWeight": "normal", "fontStyle": "normal"},
+  {"name": "Caption Red", "size": 53,  "fontWeight": "bold", "fontStyle": "normal"},
+  {"name": "Quote",       "size": 81,  "fontWeight": "normal", "fontStyle": "normal"},
+  {"name": "Attribution", "size": 60,  "fontWeight": "bold",   "fontStyle": "italic"}
 ]
