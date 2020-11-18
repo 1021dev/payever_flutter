@@ -969,11 +969,9 @@ class Paragraph {
 
   TextStyle get textStyle {
     return TextStyle(
-      fontStyle: _getFontStyle,
-      fontWeight: _getFontWeight,
-        color: isCaptionRed
-            ? Colors.red
-            : Colors.white,
+        fontStyle: _getFontStyle,
+        fontWeight: _getFontWeight,
+        color: isCaptionRed ? Colors.red : Colors.white,
         fontSize: 24);
   }
 

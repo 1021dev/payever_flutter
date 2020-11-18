@@ -4,28 +4,33 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
 
-import '../../../../theme.dart';
-
 class FillView extends StatefulWidget {
 
   final Function onUpdateColor;
-  final Color bgColor;
+  final Color fillColor;
+  final Color startColor;
+  final Color endColor;
+
   const FillView(
-      {this.bgColor,
-      this.onUpdateColor});
+      {this.fillColor,
+      this.onUpdateColor,
+      this.startColor = Colors.white,
+      this.endColor = Colors.white});
 
   @override
-  _FillViewState createState() => _FillViewState();
+  _FillViewState createState() => _FillViewState(fillColor, startColor, endColor);
 }
 
 class _FillViewState extends State<FillView> {
 
-  _FillViewState();
+  _FillViewState(this.fillColor, this.startColor, this.endColor);
 
   bool isPortrait;
   bool isTablet;
-  TextStyles styles;
 
+  TextStyles styles;
+  Color fillColor;
+  Color startColor, endColor;
   int selectedItemIndex = 0;
 
   List<String> fillTypes = [
@@ -138,6 +143,8 @@ class _FillViewState extends State<FillView> {
     bool isSelected = selectedItemIndex == index;
     return InkWell(
       onTap: () {
+        if (index == 1)
+          _showColorPicker();
         setState(() {
           selectedItemIndex = index;
         });
@@ -161,11 +168,57 @@ class _FillViewState extends State<FillView> {
     );
   }
 
+  void _showColorPicker() {
+    showDialog(
+      context: context,
+      child: AlertDialog(
+        title: const Text('Pick a color!'),
+        content: SingleChildScrollView(
+          child: ColorPicker(
+            pickerColor: fillColor,
+            onColorChanged: (color) => fillColor == color,
+            showLabel: true,
+            pickerAreaHeightPercent: 0.8,
+          ),
+        ),
+        actions: <Widget>[
+          FlatButton(
+            child: const Text('Got it'),
+            onPressed: () {
+              Navigator.of(context).pop();
+              widget.onUpdateColor(fillColor);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget mainBody() {
+    switch (selectedItemIndex) {
+      case 0:
+        return MaterialPicker(
+          pickerColor: fillColor,
+          onColorChanged: (color)=> widget.onUpdateColor(color),
+          enableLabel: true,
+        );
+      case 1:
+        return BlockPicker(
+          pickerColor: fillColor,
+          onColorChanged: (color)=> widget.onUpdateColor(color),
+        );
+      case 2:
+        return gradient();
+      default:
+        return gradient();
+    }
+  }
+
+  Widget preset() {
     return Container(
       child: MaterialPicker(
-        pickerColor: widget.bgColor,
-        onColorChanged: changeColor,
+        pickerColor: fillColor,
+        onColorChanged: (color)=> widget.onUpdateColor(color),
         enableLabel: true,
       ),
       // SlidePicker(
@@ -181,15 +234,85 @@ class _FillViewState extends State<FillView> {
       //     top: const Radius.circular(25.0),
       //   ),
       // ),
-      // BlockPicker(
-      //   pickerColor: widget.bgColor,
-      //   onColorChanged: changeColor,
-      // ),
     );
   }
 
-  changeColor(color) {
+  Widget gradient() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        children: [
+          _fill(true),
+          _fill(false),
+        ],
+      ),
+    );
+  }
 
+  Widget _fill(bool isStart) {
+    String title = isStart ? 'Start Color' : 'End Color';
+    Color pickColor = isStart ? startColor : endColor;
+    return Container(
+      height: 60,
+      child: Row(
+        children: [
+          Text(
+            title,
+            style: TextStyle(color: Colors.white, fontSize: 15),
+          ),
+          Spacer(),
+          GestureDetector(
+            onTap: () {
+              showDialog(
+                context: context,
+                child: AlertDialog(
+                  title: const Text('Pick a color!'),
+                  content: SingleChildScrollView(
+                    child: ColorPicker(
+                      paletteType: PaletteType.hsl,
+                      pickerColor: pickColor,
+                      onColorChanged: (color) =>
+                          changeColor(color, isStart),
+                      showLabel: true,
+                      pickerAreaHeightPercent: 0.8,
+                    ),
+                  ),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: const Text('Got it'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        setState(() {});
+                        // if (colorType == ColorType.BackGround)
+                        //   _updateFillColor(state);
+                        // else if (colorType == ColorType.Text)
+                        //   _updateTextColor(state);
+                      },
+                    ),
+                  ],
+                ),
+              );
+            },
+            child: Container(
+              width: 100,
+              height: 40,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey, width: 1),
+                color: pickColor,
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  changeColor(Color color, bool isStart) {
+    if (isStart)
+      startColor = color;
+    else
+      endColor = color;
   }
 
 }

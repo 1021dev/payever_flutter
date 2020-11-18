@@ -288,10 +288,12 @@ class _TextStyleViewState extends State<TextStyleView> {
             onTap: () {
               if (colorType == ColorType.BackGround) {
                 navigateSubView(FillView(
-                  bgColor: bgColor,
-                  onUpdateColor: (Paragraph paragraph) {
-                    String newHtmlText = styles.encodeHtmlString(htmlText, fontSize: fontSize, fontTypes: fontTypes);
-                    _updateTextProperty(state, newHtmlText);
+                  fillColor: bgColor,
+                  onUpdateColor: (Color color) {
+                    setState(() {
+                      bgColor = color;
+                    });
+                    _updateFillColor(state);
                   },
                 ));
                 return;
