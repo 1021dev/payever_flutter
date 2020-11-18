@@ -698,7 +698,8 @@ class _TextStyleViewState extends State<TextStyleView> {
                   if (paragraph.fontStyle == 'italic')
                     fontTypes.add(TextFontType.Italic);
 
-                  String newHtmlText = styles.encodeHtmlString(htmlText, fontSize: fontSize, fontTypes: fontTypes);
+                  String textColor = encodeColor(paragraph.isCaptionRed ? Colors.red : Colors.black);
+                  String newHtmlText = styles.encodeHtmlString(htmlText, fontSize: fontSize, fontTypes: fontTypes, textColor: textColor);
                   _updateTextProperty(state, newHtmlText);
                 },
               ));
@@ -713,10 +714,9 @@ class _TextStyleViewState extends State<TextStyleView> {
                 children: [
                   Text(
                     selectedParagraph?.name ?? 'Label',
-                    style: TextStyle(
-                        color: selectedParagraph?.name == 'Caption Red'
-                            ? Colors.red
-                            : Colors.white,
+                    style: selectedParagraph?.textStyle ??
+                    TextStyle(
+                        color: Colors.white,
                         fontSize: 24),
                   ),
                   Spacer(),

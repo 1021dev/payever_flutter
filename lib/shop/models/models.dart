@@ -950,10 +950,32 @@ class ShopObject {
 class Paragraph {
   Paragraph();
 
-  @JsonKey(name: 'name')  String name;
-  @JsonKey(name: 'size')  num size;
+  @JsonKey(name: 'name')        String name;
+  @JsonKey(name: 'size')        num size;
   @JsonKey(name: 'fontWeight')  String fontWeight;
-  @JsonKey(name: 'fontStyle')  String fontStyle;
+  @JsonKey(name: 'fontStyle')   String fontStyle;
+
+  bool get isCaptionRed {
+    return name == 'Caption Red';
+  }
+
+  FontWeight get _getFontWeight {
+    return fontWeight == 'bold' ? FontWeight.bold : FontWeight.normal;
+  }
+
+  FontStyle get _getFontStyle {
+    return fontStyle == 'italic' ? FontStyle.italic : FontStyle.normal;
+  }
+
+  TextStyle get textStyle {
+    return TextStyle(
+      fontStyle: _getFontStyle,
+      fontWeight: _getFontWeight,
+        color: isCaptionRed
+            ? Colors.red
+            : Colors.white,
+        fontSize: 24);
+  }
 
   factory Paragraph.fromJson(Map<String, dynamic> json) => _$ParagraphFromJson(json);
   Map<String, dynamic> toJson() => _$ParagraphToJson(this);
