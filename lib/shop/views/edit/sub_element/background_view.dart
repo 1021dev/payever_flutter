@@ -9,13 +9,12 @@ class BackgroundView extends StatefulWidget {
   const BackgroundView({this.styles});
 
   @override
-  _BackgroundViewState createState() => _BackgroundViewState(styles);
+  _BackgroundViewState createState() => _BackgroundViewState();
 }
 
 class _BackgroundViewState extends State<BackgroundView> {
-  final BaseStyles styles;
 
-  _BackgroundViewState(this.styles);
+  _BackgroundViewState();
 
   @override
   Widget build(BuildContext context) {
@@ -23,50 +22,50 @@ class _BackgroundViewState extends State<BackgroundView> {
   }
 
   Widget background() {
-    if (styles.backgroundImage == null || styles.backgroundImage.isEmpty)
+    if (widget.styles.backgroundImage == null || widget.styles.backgroundImage.isEmpty)
       return Container(
         width: double.infinity,
         height: double.infinity,
-        color: colorConvert(styles.backgroundColor),
+        color: colorConvert(widget.styles.backgroundColor),
       );
     // Gradient
-    if (styles.backgroundImage.contains('linear-gradient')) {
+    if (widget.styles.backgroundImage.contains('linear-gradient')) {
       return Container(
           width: double.infinity,
           height: double.infinity,
           decoration: BoxDecoration(
-            gradient: styles.gradient,
+            gradient: widget.styles.gradient,
           )
 
       );
     }
 
     // Image
-    if (styles.backgroundSize == null) {
+    if (widget.styles.backgroundSize == null) {
       return CachedNetworkImage(
-        imageUrl: styles.backgroundImage,
+        imageUrl: widget.styles.backgroundImage,
         height: double.infinity,
         repeat: imageRepeat ? ImageRepeat.repeat : ImageRepeat.noRepeat,
       );
     }
 
-    if (styles.backgroundPosition == 'initial') {
+    if (widget.styles.backgroundPosition == 'initial') {
       return CachedNetworkImage(
         width: double.infinity,
         height: double.infinity,
-        imageUrl: styles.backgroundImage,
+        imageUrl: widget.styles.backgroundImage,
         alignment: Alignment.topLeft,
-        fit: imageFit(styles.backgroundSize),
+        fit: imageFit(widget.styles.backgroundSize),
       );
     }
 
     return CachedNetworkImage(
-      imageUrl: styles.backgroundImage,
+      imageUrl: widget.styles.backgroundImage,
       imageBuilder: (context, imageProvider) => Container(
         decoration: BoxDecoration(
           image: DecorationImage(
             image: imageProvider,
-            fit: imageFit(styles.backgroundSize),
+            fit: imageFit(widget.styles.backgroundSize),
           ),
         ),
       ),
@@ -83,7 +82,7 @@ class _BackgroundViewState extends State<BackgroundView> {
   }
 
   get imageRepeat {
-    return styles.backgroundRepeat == 'repeat' ||
-        styles.backgroundRepeat == 'space';
+    return widget.styles.backgroundRepeat == 'repeat' ||
+        widget.styles.backgroundRepeat == 'space';
   }
 }

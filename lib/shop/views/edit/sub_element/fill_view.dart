@@ -35,12 +35,14 @@ class _FillViewState extends State<FillView> {
   double angle;
 
   int selectedItemIndex = 0;
+  int originItemIndex = 0;
 
   List<String> fillTypes = [
     'Preset',
     'Color',
     'Gradient',
     'Image',
+    'None'
   ];
 
   @override
@@ -81,7 +83,7 @@ class _FillViewState extends State<FillView> {
                 SizedBox(
                   height: 10,
                 ),
-                Expanded(child: mainBody()),
+                Expanded(child: mainBody(selectedItemIndex != 4 ? selectedItemIndex : originItemIndex)),
               ],
             ),
           ),
@@ -162,8 +164,13 @@ class _FillViewState extends State<FillView> {
       onTap: () {
         if (index == 1)
           _showColorPicker();
+        if (index == 4)
+          widget.onUpdateColor(Colors.transparent);
+
         setState(() {
           selectedItemIndex = index;
+          if (selectedItemIndex != 4)
+            originItemIndex = selectedItemIndex;
         });
       },
       child: Container(
@@ -211,8 +218,8 @@ class _FillViewState extends State<FillView> {
     );
   }
 
-  Widget mainBody() {
-    switch (selectedItemIndex) {
+  Widget mainBody(int index) {
+    switch (index) {
       case 0:
         return MaterialPicker(
           pickerColor: fillColor,
@@ -226,6 +233,10 @@ class _FillViewState extends State<FillView> {
         );
       case 2:
         return gradient();
+      case 3:
+        return Container();
+      case 4:
+        return Container();
       default:
         return gradient();
     }
@@ -267,6 +278,7 @@ class _FillViewState extends State<FillView> {
                 Color tempStart = endColor;
                 endColor = startColor;
                 startColor = tempStart;
+                _updateGradientFill();
               });
             },
             child: Container(

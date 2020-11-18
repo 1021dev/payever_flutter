@@ -1484,8 +1484,12 @@ class _TextStyleViewState extends State<TextStyleView> {
   }
 
   void _updateFillColor(ShopEditScreenState state) {
-    String hex = '${fillColor.value.toRadixString(16)}';
-    String newBgColor = '#${hex.substring(2)}';
+    String newBgColor;
+    if (fillColor == Colors.transparent) {
+      newBgColor = '';
+    } else {
+      newBgColor = encodeColor(fillColor);
+    }
     Map<String, dynamic> sheets = widget.stylesheets[selectedId];
     sheets['backgroundColor'] = newBgColor;
     sheets['backgroundImage'] = '';

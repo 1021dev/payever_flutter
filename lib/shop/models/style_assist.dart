@@ -8,6 +8,7 @@ import 'constant.dart';
 import 'models.dart';
 
 class BackgroundAssist {
+
   GradientModel getGradientModel(String backgroundImage) {
     String txt = backgroundImage
         .replaceAll('linear-gradient', '')
