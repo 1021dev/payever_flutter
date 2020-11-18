@@ -4,34 +4,27 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
 
+import '../../../../theme.dart';
+
 class FillView extends StatefulWidget {
 
+  final Map<String, dynamic> stylesheets;
   final Function onUpdateColor;
   final Function onUpdateGradientFill;
-  final Color fillColor;
-  final Color startColor;
-  final Color endColor;
-  final double angle;
+
 
   const FillView(
-      {this.fillColor,
+      {this.stylesheets,
       this.onUpdateColor,
-      this.onUpdateGradientFill,
-      this.startColor = Colors.white,
-      this.endColor = Colors.white,
-      this.angle = 90});
+      this.onUpdateGradientFill});
 
   @override
-  _FillViewState createState() => _FillViewState(
-      fillColor: fillColor,
-      startColor: startColor,
-      endColor: endColor,
-      angle: angle);
+  _FillViewState createState() => _FillViewState();
 }
 
 class _FillViewState extends State<FillView> {
 
-  _FillViewState({this.fillColor, this.startColor, this.endColor, this.angle});
+  _FillViewState();
 
   bool isPortrait;
   bool isTablet;
@@ -49,6 +42,20 @@ class _FillViewState extends State<FillView> {
     'Gradient',
     'Image',
   ];
+
+  @override
+  void initState() {
+    styles = TextStyles.fromJson(widget.stylesheets);
+    fillColor = colorConvert(styles.backgroundColor, emptyColor: true);
+    GradientModel gradientModel;
+    if (styles.backgroundImage != null && styles.backgroundImage.contains('linear-gradient')) {
+      gradientModel = styles.getGradientModel(styles.backgroundImage);
+      startColor = gradientModel.startColor;
+      endColor = gradientModel.endColor;
+      angle = gradientModel.angle;
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

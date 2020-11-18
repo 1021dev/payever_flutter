@@ -8,7 +8,7 @@ import 'constant.dart';
 import 'models.dart';
 
 class BackgroundAssist {
-  Gradient getGradient(String backgroundImage) {
+  GradientModel getGradientModel(String backgroundImage) {
     String txt = backgroundImage
         .replaceAll('linear-gradient', '')
         .replaceAll(RegExp(r"[^\s\w]"), '');
@@ -16,13 +16,25 @@ class BackgroundAssist {
     double degree = double.parse(txts[0].replaceAll('deg', ''));
     String color1 = txts[1];
     String color2 = txts[2];
+    return GradientModel(
+        angle: degree,
+        startColor: colorConvert(color1),
+        endColor: colorConvert(color2));
+  }
+
+  Gradient getGradient(String backgroundImage) {
+    GradientModel gradientModel = getGradientModel(backgroundImage);
+    double degree = gradientModel.angle;
+    Color color1 = gradientModel.startColor;
+    Color color2 = gradientModel.endColor;
+
     double deg = degree * pi / 180;
     return LinearGradient(
         begin: Alignment(-sin(deg), cos(deg)),
         end: Alignment(sin(deg), -cos(deg)),
         colors: <Color>[
-          colorConvert(color1),
-          colorConvert(color2),
+          color1,
+          color2,
         ]);
   }
 }

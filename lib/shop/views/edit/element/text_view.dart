@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/sub_element/background_view.dart';
 import '../../../../theme.dart';
 
 class TextView extends StatefulWidget {
@@ -60,13 +61,22 @@ class _TextViewState extends State<TextView> {
   Widget get body {
     parseText = styles.decodeHtmlString(htmlText);
     controller.text = parseText;
-    return textField;
+    return Stack(
+      children: [
+        BackgroundView(
+          styles: styles,
+        ),
+        textField,
+      ],
+    );
+
+    // return textField;
   }
 
   Widget get textField {
     return Container(
       // alignment: styles.textAlign,
-      color: colorConvert(styles.backgroundColor, emptyColor: true),
+      // color: colorConvert(styles.backgroundColor, emptyColor: true),
       child: TextField(
         controller: controller,
         focusNode: _focusNode,

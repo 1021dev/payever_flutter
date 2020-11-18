@@ -978,3 +978,11 @@ class Paragraph {
   factory Paragraph.fromJson(Map<String, dynamic> json) => _$ParagraphFromJson(json);
   Map<String, dynamic> toJson() => _$ParagraphToJson(this);
 }
+
+class GradientModel {
+  double angle;
+  Color startColor;
+  Color endColor;
+
+  GradientModel({this.angle, this.startColor, this.endColor});
+}

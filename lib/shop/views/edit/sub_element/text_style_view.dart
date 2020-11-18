@@ -34,7 +34,7 @@ class _TextStyleViewState extends State<TextStyleView> {
   bool isTablet;
 
   String htmlText;
-  Color bgColor;
+  Color fillColor;
   Color textColor;
   Color borderColor;
   double fontSize;
@@ -115,7 +115,7 @@ class _TextStyleViewState extends State<TextStyleView> {
   void _initTextProperties (ShopEditScreenState state) {
     selectedId = state.selectedChild.id;
     styles = TextStyles.fromJson(widget.stylesheets[selectedId]);
-    bgColor = colorConvert(styles.backgroundColor, emptyColor: true);
+    fillColor = colorConvert(styles.backgroundColor, emptyColor: true);
     borderColor = colorConvert(styles.borderColor, emptyColor: true);
 
     htmlText = widget.screenBloc.htmlText();
@@ -261,10 +261,11 @@ class _TextStyleViewState extends State<TextStyleView> {
   Widget _fill(ShopEditScreenState state, ColorType colorType) {
     String title;
     Color pickColor;
+
     switch(colorType) {
       case ColorType.BackGround:
         title = 'Fill';
-        pickColor = bgColor;
+        pickColor = fillColor;
         break;
       case ColorType.Border:
         title = 'Color';
@@ -288,10 +289,10 @@ class _TextStyleViewState extends State<TextStyleView> {
             onTap: () {
               if (colorType == ColorType.BackGround) {
                 navigateSubView(FillView(
-                  fillColor: bgColor,
+                  stylesheets: widget.stylesheets[selectedId],
                   onUpdateColor: (Color color) {
                     setState(() {
-                      bgColor = color;
+                      fillColor = color;
                     });
                     _updateFillColor(state);
                   },
@@ -397,31 +398,6 @@ class _TextStyleViewState extends State<TextStyleView> {
                   ),
                 ),
                 _fill(state, ColorType.Border),
-                // Container(
-                //   height: 60,
-                //   child: Row(
-                //     children: [
-                //       Text(
-                //         'Color',
-                //         style: TextStyle(color: Colors.white, fontSize: 15),
-                //       ),
-                //       Spacer(),
-                //       Container(
-                //         width: 100,
-                //         height: 40,
-                //         decoration: BoxDecoration(
-                //           border: Border.all(color: Colors.grey, width: 1),
-                //           color: bgColor,
-                //           borderRadius: BorderRadius.circular(8),
-                //         ),
-                //       ),
-                //       SizedBox(
-                //         width: 10,
-                //       ),
-                //       Icon(Icons.arrow_forward_ios),
-                //     ],
-                //   ),
-                // ),
                 Container(
                   height: 60,
                   child: Row(
@@ -536,7 +512,7 @@ class _TextStyleViewState extends State<TextStyleView> {
 
   void changeColor(Color color, ColorType colorType) {
     if (colorType == ColorType.BackGround)
-      bgColor = color;
+      fillColor = color;
     else if (colorType == ColorType.Text)
       textColor = color;
     else
@@ -560,7 +536,7 @@ class _TextStyleViewState extends State<TextStyleView> {
     return InkWell(
         onTap: () {
           setState(() {
-            bgColor = textBgColors[index];
+            fillColor = textBgColors[index];
             _updateFillColor(state);
           });
         },
@@ -1501,16 +1477,16 @@ class _TextStyleViewState extends State<TextStyleView> {
   }
 
   void _updateFillColor(ShopEditScreenState state) {
-    String hex = '${bgColor.value.toRadixString(16)}';
+    String hex = '${fillColor.value.toRadixString(16)}';
     String newBgColor = '#${hex.substring(2)}';
     Map<String, dynamic> sheets = widget.stylesheets[selectedId];
     sheets['backgroundColor'] = newBgColor;
+    sheets['backgroundImage'] = '';
     List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
         selectedId, sheets, state.activeShopPage.stylesheetIds);
 
     widget.screenBloc.add(UpdateSectionEvent(
         sectionId: state.selectedSectionId, effects: effects));
-
     // backgroundImage: "linear-gradient(90deg, #ff0000ff, #fffef8ff)"
   }
 
@@ -1519,6 +1495,7 @@ class _TextStyleViewState extends State<TextStyleView> {
     String color1 = encodeColor(startColor);
     String color2 = encodeColor(endColor);
     Map<String, dynamic> sheets = widget.stylesheets[selectedId];
+    sheets['backgroundColor'] = '';
     sheets['backgroundImage'] = 'linear-gradient(${angle}deg, $color1, $color2)';
     List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
         selectedId, sheets, state.activeShopPage.stylesheetIds);
