@@ -10,6 +10,7 @@ import 'package:payever/blocs/shop/shop_edit/shop_edit_bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/sub_element/fill_view.dart';
 import 'package:payever/shop/views/edit/sub_element/font_view.dart';
 import 'package:payever/shop/views/edit/sub_element/paragraph_view.dart';
 import 'package:payever/shop/views/edit/sub_element/text_options_view.dart';
@@ -285,12 +286,32 @@ class _TextStyleViewState extends State<TextStyleView> {
           Spacer(),
           GestureDetector(
             onTap: () {
+              if (colorType == ColorType.BackGround) {
+                navigateSubView(FillView(
+                  paragraphs: paragraphs,
+
+                  onUpdateParagraph: (Paragraph paragraph) {
+                    double fontSize = paragraph.size * ptFontFactor;
+                    List<TextFontType>fontTypes = [];
+                    if (paragraph.fontWeight == 'bold')
+                      fontTypes.add(TextFontType.Bold);
+
+                    if (paragraph.fontStyle == 'italic')
+                      fontTypes.add(TextFontType.Italic);
+
+                    String newHtmlText = styles.encodeHtmlString(htmlText, fontSize: fontSize, fontTypes: fontTypes);
+                    _updateTextProperty(state, newHtmlText);
+                  },
+                ));
+                return;
+              }
               showDialog(
                 context: context,
                 child: AlertDialog(
                   title: const Text('Pick a color!'),
                   content: SingleChildScrollView(
                     child: ColorPicker(
+                      paletteType: PaletteType.hsl,
                       pickerColor: pickColor,
                       onColorChanged: (color) =>
                           changeColor(color, colorType),
@@ -643,7 +664,7 @@ class _TextStyleViewState extends State<TextStyleView> {
     List<TextFontType>fontTypes = styles.getTextFontTypes(htmlText);
     if (fontTypes.contains(TextFontType.Underline) ||
         fontTypes.contains(TextFontType.LineThrough)) {
-
+      selectedParagraph = null;
     } else {
       String fontWeight = styles.decodeHtmlTextFontWeight(htmlText) ?? 'normal';
       double fontSize = styles.htmlFontSize(htmlText);
