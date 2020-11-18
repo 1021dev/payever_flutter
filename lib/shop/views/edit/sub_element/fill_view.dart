@@ -48,12 +48,12 @@ class _FillViewState extends State<FillView> {
     styles = TextStyles.fromJson(widget.stylesheets);
     fillColor = colorConvert(styles.backgroundColor, emptyColor: true);
     GradientModel gradientModel;
-    if (styles.backgroundImage != null && styles.backgroundImage.contains('linear-gradient')) {
+    if (styles.backgroundImage != null && styles.backgroundImage.contains('linear-gradient'))
       gradientModel = styles.getGradientModel(styles.backgroundImage);
-      startColor = gradientModel.startColor;
-      endColor = gradientModel.endColor;
-      angle = gradientModel.angle;
-    }
+
+    startColor = gradientModel?.startColor ?? Colors.white;
+    endColor = gradientModel?.endColor ?? Colors.white;
+    angle = gradientModel?.angle ?? 90;
     super.initState();
   }
 

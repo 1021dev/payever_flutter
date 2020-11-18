@@ -336,11 +336,18 @@ class _TextStyleViewState extends State<TextStyleView> {
             child: Container(
               width: 100,
               height: 40,
+              padding: EdgeInsets.all(2),
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey, width: 1),
                 color: pickColor,
                 borderRadius: BorderRadius.circular(8),
               ),
+              child: pickColor == Colors.transparent ? ClipPath(
+                child: Container(
+                  color: Colors.red[900],
+                ),
+                clipper: CustomClipPath(),
+              ) : Container(),
             ),
           ),
         ],
@@ -1487,7 +1494,6 @@ class _TextStyleViewState extends State<TextStyleView> {
 
     widget.screenBloc.add(UpdateSectionEvent(
         sectionId: state.selectedSectionId, effects: effects));
-    // backgroundImage: "linear-gradient(90deg, #ff0000ff, #fffef8ff)"
   }
 
   void _updateGradientFillColor(ShopEditScreenState state, int angle, Color startColor, Color endColor) {
@@ -1557,4 +1563,22 @@ class _TextStyleViewState extends State<TextStyleView> {
           return subview;
         });
   }
+}
+
+class CustomClipPath extends CustomClipper<Path> {
+  final double radius = 0.5;
+
+  @override
+  Path getClip(Size size) {
+    final path = Path();
+    path.moveTo(size.width, 0.0 - radius);
+    path.lineTo(0.0 - radius, size.height - radius);
+    path.lineTo(radius, size.height + radius);
+    path.lineTo(size.width + radius, radius);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipPath oldClipper) => false;
 }
