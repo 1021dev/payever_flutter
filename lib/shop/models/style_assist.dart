@@ -122,7 +122,12 @@ class StyleAssist {
       try {
         return double.parse(font);
       } catch (e) {
-        return 0;
+        font = text.substring(index + 11, index + 12);
+        try {
+          return double.parse(font);
+        } catch (e) {
+          return 0;
+        }
       }
     }
     return 0;

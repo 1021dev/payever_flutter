@@ -1,31 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
 
-class FillView extends StatefulWidget {
-  final List<Paragraph> paragraphs;
-  final Paragraph selectedParagraph;
-  final Function onUpdateParagraph;
+import '../../../../theme.dart';
 
+class FillView extends StatefulWidget {
+
+  final Function onUpdateColor;
+  final Color bgColor;
   const FillView(
-      {this.paragraphs,
-      this.selectedParagraph,
-      this.onUpdateParagraph});
+      {this.bgColor,
+      this.onUpdateColor});
 
   @override
-  _FillViewState createState() => _FillViewState(selectedParagraph);
+  _FillViewState createState() => _FillViewState();
 }
 
 class _FillViewState extends State<FillView> {
 
-  _FillViewState(this.selectedParagraph);
+  _FillViewState();
 
   bool isPortrait;
   bool isTablet;
-  Paragraph selectedParagraph;
+  TextStyles styles;
+
   int selectedItemIndex = 0;
-  bool isEdit = false;
+
   List<String> fillTypes = [
     'Preset',
     'Color',
@@ -122,6 +124,7 @@ class _FillViewState extends State<FillView> {
     return Container(
       height: 50,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: fillTypes.map((e) {
           int idx = fillTypes.indexOf(e);
           return _secondAppBarItem(e, idx);
@@ -160,7 +163,33 @@ class _FillViewState extends State<FillView> {
 
   Widget mainBody() {
     return Container(
-      color: Colors.amber,
+      child: MaterialPicker(
+        pickerColor: widget.bgColor,
+        onColorChanged: changeColor,
+        enableLabel: true,
+      ),
+      // SlidePicker(
+      //   pickerColor: widget.bgColor,
+      //   onColorChanged: changeColor,
+      //   paletteType: PaletteType.rgb,
+      //   enableAlpha: false,
+      //   displayThumbColor: true,
+      //   showLabel: false,
+      //   showIndicator: true,
+      //   indicatorBorderRadius:
+      //   const BorderRadius.vertical(
+      //     top: const Radius.circular(25.0),
+      //   ),
+      // ),
+      // BlockPicker(
+      //   pickerColor: widget.bgColor,
+      //   onColorChanged: changeColor,
+      // ),
     );
   }
+
+  changeColor(color) {
+
+  }
+
 }

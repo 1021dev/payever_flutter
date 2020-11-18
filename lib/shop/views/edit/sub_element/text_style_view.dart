@@ -54,7 +54,7 @@ class _TextStyleViewState extends State<TextStyleView> {
   String selectedId;
   TextStyles styles;
 
-  final double ptFontFactor = 26/116;
+  final double ptFontFactor = 30/112;
 
   @override
   void initState() {
@@ -288,17 +288,8 @@ class _TextStyleViewState extends State<TextStyleView> {
             onTap: () {
               if (colorType == ColorType.BackGround) {
                 navigateSubView(FillView(
-                  paragraphs: paragraphs,
-
-                  onUpdateParagraph: (Paragraph paragraph) {
-                    double fontSize = paragraph.size * ptFontFactor;
-                    List<TextFontType>fontTypes = [];
-                    if (paragraph.fontWeight == 'bold')
-                      fontTypes.add(TextFontType.Bold);
-
-                    if (paragraph.fontStyle == 'italic')
-                      fontTypes.add(TextFontType.Italic);
-
+                  bgColor: bgColor,
+                  onUpdateColor: (Paragraph paragraph) {
                     String newHtmlText = styles.encodeHtmlString(htmlText, fontSize: fontSize, fontTypes: fontTypes);
                     _updateTextProperty(state, newHtmlText);
                   },
@@ -722,7 +713,11 @@ class _TextStyleViewState extends State<TextStyleView> {
                 children: [
                   Text(
                     selectedParagraph?.name ?? 'Label',
-                    style: TextStyle(color: Colors.white, fontSize: 24),
+                    style: TextStyle(
+                        color: selectedParagraph?.name == 'Caption Red'
+                            ? Colors.red
+                            : Colors.white,
+                        fontSize: 24),
                   ),
                   Spacer(),
                   Icon(Icons.arrow_forward_ios, color: Colors.grey[600]),
