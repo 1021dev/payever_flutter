@@ -7,23 +7,31 @@ import 'package:payever/shop/models/models.dart';
 class FillView extends StatefulWidget {
 
   final Function onUpdateColor;
+  final Function onUpdateGradientFill;
   final Color fillColor;
   final Color startColor;
   final Color endColor;
+  final double angle;
 
   const FillView(
       {this.fillColor,
       this.onUpdateColor,
+      this.onUpdateGradientFill,
       this.startColor = Colors.white,
-      this.endColor = Colors.white});
+      this.endColor = Colors.white,
+      this.angle = 90});
 
   @override
-  _FillViewState createState() => _FillViewState(fillColor, startColor, endColor);
+  _FillViewState createState() => _FillViewState(
+      fillColor: fillColor,
+      startColor: startColor,
+      endColor: endColor,
+      angle: angle);
 }
 
 class _FillViewState extends State<FillView> {
 
-  _FillViewState(this.fillColor, this.startColor, this.endColor);
+  _FillViewState({this.fillColor, this.startColor, this.endColor, this.angle});
 
   bool isPortrait;
   bool isTablet;
@@ -31,6 +39,8 @@ class _FillViewState extends State<FillView> {
   TextStyles styles;
   Color fillColor;
   Color startColor, endColor;
+  double angle;
+
   int selectedItemIndex = 0;
 
   List<String> fillTypes = [
@@ -244,6 +254,33 @@ class _FillViewState extends State<FillView> {
         children: [
           _fill(true),
           _fill(false),
+          InkWell(
+            onTap: (){
+              setState(() {
+                Color tempStart = endColor;
+                endColor = startColor;
+                startColor = tempStart;
+              });
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              height: 50,
+              decoration: BoxDecoration(
+                  color: Color.fromRGBO(51, 48, 53, 1),
+                  borderRadius: BorderRadius.circular(8)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.compare_arrows),
+                  Text(
+                    'Flip Color',
+                    style: TextStyle(color: Colors.white, fontSize: 15),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          _angle,
         ],
       ),
     );
@@ -283,10 +320,7 @@ class _FillViewState extends State<FillView> {
                       onPressed: () {
                         Navigator.of(context).pop();
                         setState(() {});
-                        // if (colorType == ColorType.BackGround)
-                        //   _updateFillColor(state);
-                        // else if (colorType == ColorType.Text)
-                        //   _updateTextColor(state);
+                        _updateGradientFill();
                       },
                     ),
                   ],
@@ -315,4 +349,49 @@ class _FillViewState extends State<FillView> {
       endColor = color;
   }
 
+  get _angle {
+    return Container(
+      margin: EdgeInsets.only(top: 20),
+      height: 60,
+      child: Row(
+        children: [
+          Text(
+            'Angle',
+            style: TextStyle(color: Colors.white, fontSize: 15),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: Slider(
+              value: angle,
+              min: 0,
+              max: 360,
+              onChanged: (double value) {
+                setState(() {
+                  angle = value;
+                });
+              },
+              onChangeEnd: (double value) {
+                angle = value;
+                _updateGradientFill();
+              },
+            ),
+          ),
+          Container(
+            width: 40,
+            alignment: Alignment.centerRight,
+            child: Text(
+              '${angle.toInt()}\u00B0',
+              style: TextStyle(color: Colors.white, fontSize: 15),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  _updateGradientFill() {
+    widget.onUpdateGradientFill(angle.toInt(), startColor, endColor);
+  }
 }

@@ -295,9 +295,13 @@ class _TextStyleViewState extends State<TextStyleView> {
                     });
                     _updateFillColor(state);
                   },
+                  onUpdateGradientFill: (int angle, Color color1,
+                          Color color2) =>
+                      _updateGradientFillColor(state, angle, color1, color2),
                 ));
                 return;
               }
+
               showDialog(
                 context: context,
                 child: AlertDialog(
@@ -1501,6 +1505,21 @@ class _TextStyleViewState extends State<TextStyleView> {
     String newBgColor = '#${hex.substring(2)}';
     Map<String, dynamic> sheets = widget.stylesheets[selectedId];
     sheets['backgroundColor'] = newBgColor;
+    List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
+        selectedId, sheets, state.activeShopPage.stylesheetIds);
+
+    widget.screenBloc.add(UpdateSectionEvent(
+        sectionId: state.selectedSectionId, effects: effects));
+
+    // backgroundImage: "linear-gradient(90deg, #ff0000ff, #fffef8ff)"
+  }
+
+  void _updateGradientFillColor(ShopEditScreenState state, int angle, Color startColor, Color endColor) {
+    // backgroundImage: "linear-gradient(90deg, #ff0000ff, #fffef8ff)"
+    String color1 = encodeColor(startColor);
+    String color2 = encodeColor(endColor);
+    Map<String, dynamic> sheets = widget.stylesheets[selectedId];
+    sheets['backgroundImage'] = 'linear-gradient(${angle}deg, $color1, $color2)';
     List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
         selectedId, sheets, state.activeShopPage.stylesheetIds);
 
