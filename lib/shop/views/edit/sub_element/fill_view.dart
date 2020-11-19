@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/pos/widgets/pos_top_button.dart';
 import 'package:payever/shop/models/models.dart';
 
 import '../../../../theme.dart';
@@ -49,7 +51,7 @@ class _FillViewState extends State<FillView> {
   ];
 
   List<String>imageItemTitles = ['Original Size', 'Stretch', 'Tile', 'Scale to Fill', 'Scale to Fit'];
-  List<String>imageItemIcons = ['columns', 'columns', 'columns', 'columns', 'columns'];
+  List<String>imageItemIcons = ['origin-size', 'stretch', 'tile', 'scale-to-fill', 'scale-to-fit'];
 
   @override
   void initState() {
@@ -296,7 +298,7 @@ class _FillViewState extends State<FillView> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.compare_arrows),
+                  SvgPicture.asset('assets/images/flip-color.svg'),
                   Text(
                     'Flip Color',
                     style: TextStyle(color: Colors.white, fontSize: 15),
@@ -435,7 +437,39 @@ class _FillViewState extends State<FillView> {
                     color: Colors.white,
                   ),
                   SizedBox(width: 16,),
-                  Text('Change Image', style: TextStyle(color: Colors.blue, fontSize: 15),)
+                  PopupMenuButton<OverflowMenuItem>(
+                    child: Container(
+                      width: 100,
+                        child: Text('Change Image', style: TextStyle(color: Colors.blue, fontSize: 15),)),
+                    offset: Offset(0, 100),
+                    onSelected: (OverflowMenuItem item) => item.onTap(),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    color: overlayFilterViewBackground(),
+                    itemBuilder: (BuildContext context) {
+                      return appBarPopUpActions(context)
+                          .map((OverflowMenuItem item) {
+                        return PopupMenuItem<OverflowMenuItem>(
+                          value: item,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  item.title,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                ),
+                              ),
+                              item.iconData,
+                            ],
+                          ),
+                        );
+                      }).toList();
+                    },
+                  ),
                 ],
               ),
             ),
@@ -550,4 +584,57 @@ class _FillViewState extends State<FillView> {
       ],
     );
   }
+
+  List<OverflowMenuItem> appBarPopUpActions(BuildContext context) {
+    return [
+      OverflowMenuItem(
+        title: 'Take Photo',
+        iconData: Icon(Icons.camera_alt_outlined),
+        onTap: () {
+          setState(() {
+
+          });
+        },
+      ),
+      OverflowMenuItem(
+        title: 'Choose Photo',
+        iconData: Icon(Icons.photo,),
+        onTap: () {
+          setState(() {
+
+          });
+        },
+      ),
+      OverflowMenuItem(
+        title: 'From Studio',
+        iconData: Container(
+          width: 24,
+          height: 24,
+          alignment: Alignment.center,
+          child: CachedNetworkImage(
+            imageUrl: 'https://payever.azureedge.net/icons-png/icon-commerceos-studio-64.png',
+          ),
+        ),
+        onTap: () {
+          setState(() {
+
+          });
+        },
+      ),
+    ];
+  }
+}
+
+class OverflowMenuItem {
+  final String title;
+  final Color textColor;
+  final Widget iconData;
+  final Function onTap;
+
+  OverflowMenuItem({
+    this.title,
+    this.iconData,
+    this.textColor = Colors.black,
+    this.onTap,
+  });
 }
