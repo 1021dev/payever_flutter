@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/shop_edit_templetes_screen.dart';
 import 'package:payever/shop/views/edit/template_detail_screen.dart';
@@ -13,8 +14,8 @@ import 'sub_element/shop_edit_appbar.dart';
 
 class ShopEditScreen extends StatefulWidget {
   final ShopScreenBloc shopScreenBloc;
-
-  const ShopEditScreen(this.shopScreenBloc);
+  final GlobalStateModel globalStateModel;
+  const ShopEditScreen(this.shopScreenBloc, this.globalStateModel);
 
   @override
   _ShopEditScreenState createState() => _ShopEditScreenState();
@@ -28,7 +29,7 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
 
   @override
   void initState() {
-    screenBloc = ShopEditScreenBloc(widget.shopScreenBloc)
+    screenBloc = ShopEditScreenBloc(widget.shopScreenBloc, widget.globalStateModel)
       ..add(ShopEditScreenInitEvent());
     super.initState();
   }

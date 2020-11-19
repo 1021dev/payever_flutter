@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -5,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:uuid/uuid.dart';
 import 'shop_edit.dart';
@@ -12,8 +15,9 @@ import 'shop_edit.dart';
 class ShopEditScreenBloc
     extends Bloc<ShopEditScreenEvent, ShopEditScreenState> {
   final ShopScreenBloc shopScreenBloc;
+  final GlobalStateModel globalStateModel;
 
-  ShopEditScreenBloc(this.shopScreenBloc);
+  ShopEditScreenBloc(this.shopScreenBloc, this.globalStateModel);
 
   ApiService api = ApiService();
 
@@ -50,6 +54,8 @@ class ShopEditScreenBloc
       print('updated shop page: ${state.activeShopPage.id}');
     } else if(event is FetchPageEvent) {
       yield* updatePage(event.response);
+    } else if(event is UploadPhotoEvent) {
+      yield *uploadPhoto(event.image);
     }
   }
 
@@ -246,6 +252,14 @@ class ShopEditScreenBloc
     }
     yield state.copyWith(
         pages: pages, stylesheets: stylesheets, templates: templates);
+  }
+
+  Stream<ShopEditScreenState> uploadPhoto(File file) async* {
+    yield state.copyWith(isUpdating: true);
+    String id = Uuid().v4();
+    dynamic response = await api.postImageToBuilder(file, globalStateModel.currentBusiness.id, id, GlobalUtils.activeToken.accessToken);
+    String blobName = response['blobName'];
+    yield state.copyWith(isUpdating: false, blobName: blobName);
   }
 
   String htmlText() {

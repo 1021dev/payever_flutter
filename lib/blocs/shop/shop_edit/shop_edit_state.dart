@@ -15,6 +15,7 @@ class ShopEditScreenState {
   final Child selectedBlock;
   final Child selectedChild;
   final ShopPage activeShopPage;
+  final String blobName;
 
   ShopEditScreenState({
     this.activeShopPage,
@@ -31,6 +32,7 @@ class ShopEditScreenState {
     this.selectedBlockId,
     this.selectedBlock,
     this.selectedChild,
+    this.blobName,
   });
 
   List<Object> get props => [
@@ -48,6 +50,7 @@ class ShopEditScreenState {
     this.selectedBlock,
     this.selectedChild,
     this.selectedBlockId,
+    this.blobName,
   ];
 
   ShopEditScreenState copyWith({
@@ -65,6 +68,7 @@ class ShopEditScreenState {
     Child selectedChild,
     ShopPage activeShopPage,
     String selectedBlockId,
+    String blobName,
   }) {
     return ShopEditScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -81,6 +85,7 @@ class ShopEditScreenState {
       selectedBlockId: selectedBlockId ?? this.selectedBlockId,
       selectedBlock: selectedBlock ?? this.selectedBlock,
       selectedChild: selectedChild ?? this.selectedChild,
+      blobName: blobName ?? this.blobName,
     );
   }
 
@@ -101,6 +106,7 @@ class ShopEditScreenState {
       templates: this.templates,
       actions: this.actions,
       activeShopPage: this.activeShopPage,
+      blobName: this.blobName,
       selectedSectionId: selectedSectionId ?? this.selectedSectionId,
       selectedBlockId: selectedBlockId ?? this.selectedBlockId,
       selectedBlock: selectedBlock,

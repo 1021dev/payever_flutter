@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:equatable/equatable.dart';
 import 'package:payever/shop/models/models.dart';
 
@@ -73,4 +75,9 @@ class AddNewShopObjectEvent extends ShopEditScreenEvent {
   List<Object> get props => [
     this.shopObject,
   ];
+}
+
+class UploadPhotoEvent extends ShopEditScreenEvent {
+  final File image;
+  UploadPhotoEvent({this.image});
 }

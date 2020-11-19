@@ -77,11 +77,19 @@ class _TextStyleViewState extends State<TextStyleView> {
   Widget build(BuildContext context) {
     isPortrait = GlobalUtils.isPortrait(context);
     isTablet = GlobalUtils.isTablet(context);
-    return BlocBuilder(
-      bloc: widget.screenBloc,
-      builder: (BuildContext context, state) {
-        return body(state);
+    return BlocListener(
+      listener: (BuildContext context, ShopEditScreenState state) async {
+        if (state.blobName.isNotEmpty) {
+          _updateGradientFillColor(state, angle, startColor, endColor)
+        }
       },
+      bloc: widget.screenBloc,
+      child: BlocBuilder(
+        bloc: widget.screenBloc,
+        builder: (BuildContext context, state) {
+          return body(state);
+        },
+      ),
     );
   }
 
@@ -288,7 +296,7 @@ class _TextStyleViewState extends State<TextStyleView> {
           GestureDetector(
             onTap: () {
               if (colorType == ColorType.BackGround) {
-                navigateSubView(FillView(
+                navigateSubView(FillView(widget.screenBloc,
                   stylesheets: widget.stylesheets,
                   onUpdateColor: (Color color) {
                     setState(() {
@@ -1507,6 +1515,16 @@ class _TextStyleViewState extends State<TextStyleView> {
     Map<String, dynamic> sheets = widget.stylesheets;
     sheets['backgroundColor'] = '';
     sheets['backgroundImage'] = 'linear-gradient(${angle}deg, $color1, $color2)';
+    List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
+        selectedId, sheets, state.activeShopPage.stylesheetIds);
+
+    widget.screenBloc.add(UpdateSectionEvent(
+        sectionId: state.selectedSectionId, effects: effects));
+  }
+  void _updateImageFill(ShopEditScreenState state, String blobName) {
+    Map<String, dynamic> sheets = widget.stylesheets;
+    sheets['backgroundColor'] = '';
+    sheets['backgroundImage'] = 'https://payeverproduction.blob.core.windows.net/builder/$blobName';
     List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
         selectedId, sheets, state.activeShopPage.stylesheetIds);
 

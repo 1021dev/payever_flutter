@@ -1,22 +1,28 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
-import 'package:payever/pos/widgets/pos_top_button.dart';
 import 'package:payever/shop/models/models.dart';
-
 import '../../../../theme.dart';
 
 class FillView extends StatefulWidget {
 
+  final ShopEditScreenBloc screenBloc;
   final Map<String, dynamic> stylesheets;
   final Function onUpdateColor;
   final Function onUpdateGradientFill;
 
 
   const FillView(
+      this.screenBloc,
       {this.stylesheets,
       this.onUpdateColor,
       this.onUpdateGradientFill});
@@ -51,7 +57,7 @@ class _FillViewState extends State<FillView> {
   ];
 
   List<String>imageItemTitles = ['Original Size', 'Stretch', 'Tile', 'Scale to Fill', 'Scale to Fit'];
-  List<String>imageItemIcons = ['origin-size', 'stretch', 'tile', 'scale-to-fill', 'scale-to-fit'];
+  List<String>imageItemIcons = ['original-size', 'stretch', 'tile', 'scale-to-fill', 'scale-to-fit'];
 
   @override
   void initState() {
@@ -71,10 +77,15 @@ class _FillViewState extends State<FillView> {
   Widget build(BuildContext context) {
     isPortrait = GlobalUtils.isPortrait(context);
     isTablet = GlobalUtils.isTablet(context);
-    return body();
+    return BlocBuilder(
+      bloc: widget.screenBloc,
+      builder: (BuildContext context, state) {
+        return body(state);
+      },
+    );
   }
 
-  Widget body() {
+  Widget body(ShopEditScreenState state) {
     return Container(
       height: 400,
       child: Scaffold(
@@ -299,6 +310,7 @@ class _FillViewState extends State<FillView> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SvgPicture.asset('assets/images/flip-color.svg'),
+                  SizedBox(width: 10,),
                   Text(
                     'Flip Color',
                     style: TextStyle(color: Colors.white, fontSize: 15),
@@ -585,24 +597,67 @@ class _FillViewState extends State<FillView> {
     );
   }
 
+  Future getImage(int type) async {
+    ImagePicker imagePicker = ImagePicker();
+    var image = await imagePicker.getImage(
+      source: type == 1 ? ImageSource.gallery : ImageSource.camera,
+    );
+    if (image != null) {
+      await _cropImage(File(image.path));
+    }
+  }
+
+  Future<Null> _cropImage(File imageFile) async {
+    File croppedFile = await ImageCropper.cropImage(
+        sourcePath: imageFile.path,
+        aspectRatioPresets: Platform.isAndroid
+            ? [
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio16x9
+        ]
+            : [
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio5x3,
+          CropAspectRatioPreset.ratio5x4,
+          CropAspectRatioPreset.ratio7x5,
+          CropAspectRatioPreset.ratio16x9
+        ],
+        androidUiSettings: AndroidUiSettings(
+            toolbarTitle: 'Cropper',
+            toolbarColor: Colors.deepOrange,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false),
+        iosUiSettings: IOSUiSettings(
+          title: 'Cropper',
+        ));
+
+    if (croppedFile != null) {
+      widget.screenBloc.add(UploadPhotoEvent(image: croppedFile));
+    }
+
+  }
+
   List<OverflowMenuItem> appBarPopUpActions(BuildContext context) {
     return [
       OverflowMenuItem(
         title: 'Take Photo',
         iconData: Icon(Icons.camera_alt_outlined),
         onTap: () {
-          setState(() {
-
-          });
+          getImage(0);
         },
       ),
       OverflowMenuItem(
         title: 'Choose Photo',
         iconData: Icon(Icons.photo,),
         onTap: () {
-          setState(() {
-
-          });
+          getImage(1);
         },
       ),
       OverflowMenuItem(

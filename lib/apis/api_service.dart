@@ -1908,6 +1908,29 @@ class ApiService {
     return upload;
   }
 
+  Future<dynamic> postImageToBuilder(
+      File logo,
+      String business,
+      String blobName,
+      String token,
+      ) async {
+    print('$TAG - postImageToBuilder()');
+
+    String fileName = logo.path.split('/').last;
+    FormData formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile(
+        logo.path,
+        filename: fileName,
+      ),
+    });
+    dynamic upload = await _client.postForm(
+        '$mediaBusiness${business}builder/$blobName',
+        body: formData,
+        headers: _getHeaders(token, imageUpload: true)
+    );
+    return upload;
+  }
+
   Future<dynamic> createShop(String token, String idBusiness, String name, String logo) async {
     try {
       print('$TAG - createShop()');
@@ -3051,14 +3074,13 @@ class ApiService {
   ///****                      UTILS                                       *****
   ///***************************************************************************
 
-  Map<String, String>_getHeaders(String token) {
+  Map<String, String>_getHeaders(String token, {bool imageUpload = false}) {
     return {
       HttpHeaders.authorizationHeader: 'Bearer $token',
-      HttpHeaders.contentTypeHeader: 'application/json',
+      HttpHeaders.contentTypeHeader: imageUpload ? '*/*' : 'application/json',
       HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
     };
   }
-
 
   String randomString(int strlen) {
     const chars = "0123456789";
