@@ -32,7 +32,7 @@ class ShopEditScreenState {
     this.selectedBlockId,
     this.selectedBlock,
     this.selectedChild,
-    this.blobName,
+    this.blobName = '',
   });
 
   List<Object> get props => [

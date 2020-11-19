@@ -80,7 +80,8 @@ class _TextStyleViewState extends State<TextStyleView> {
     return BlocListener(
       listener: (BuildContext context, ShopEditScreenState state) async {
         if (state.blobName.isNotEmpty) {
-          _updateGradientFillColor(state, angle, startColor, endColor)
+          _updateImageFill(state, state.blobName);
+          widget.screenBloc.add(InitBlobNameEvent());
         }
       },
       bloc: widget.screenBloc,
@@ -1521,10 +1522,15 @@ class _TextStyleViewState extends State<TextStyleView> {
     widget.screenBloc.add(UpdateSectionEvent(
         sectionId: state.selectedSectionId, effects: effects));
   }
+
   void _updateImageFill(ShopEditScreenState state, String blobName) {
     Map<String, dynamic> sheets = widget.stylesheets;
     sheets['backgroundColor'] = '';
     sheets['backgroundImage'] = 'https://payeverproduction.blob.core.windows.net/builder/$blobName';
+    sheets['backgroundPosition'] =  "center";
+    sheets['backgroundRepeat'] =  "no-repeat";
+    sheets['backgroundSize'] =  "100%";
+
     List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
         selectedId, sheets, state.activeShopPage.stylesheetIds);
 

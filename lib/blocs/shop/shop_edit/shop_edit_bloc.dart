@@ -51,11 +51,12 @@ class ShopEditScreenBloc
       yield* updateSection(event);
     } else if (event is ActiveShopPageEvent) {
       yield state.copyWith(activeShopPage: event.activeShopPage);
-      print('updated shop page: ${state.activeShopPage.id}');
     } else if(event is FetchPageEvent) {
       yield* updatePage(event.response);
     } else if(event is UploadPhotoEvent) {
       yield *uploadPhoto(event.image);
+    } else if(event is InitBlobNameEvent) {
+      yield state.copyWith(blobName: '');
     }
   }
 

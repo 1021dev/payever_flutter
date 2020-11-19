@@ -81,3 +81,5 @@ class UploadPhotoEvent extends ShopEditScreenEvent {
   final File image;
   UploadPhotoEvent({this.image});
 }
+
+class InitBlobNameEvent extends ShopEditScreenEvent {}

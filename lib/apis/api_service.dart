@@ -1924,7 +1924,7 @@ class ApiService {
       ),
     });
     dynamic upload = await _client.postForm(
-        '$mediaBusiness${business}builder/$blobName',
+        '$mediaBusiness$business/builder/$blobName',
         body: formData,
         headers: _getHeaders(token, imageUpload: true)
     );
