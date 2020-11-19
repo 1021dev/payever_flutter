@@ -233,8 +233,8 @@ class _TextStyleViewState extends State<TextStyleView> {
       _gridViewBody(state),
       _fill(state, ColorType.BackGround),
       _border(state),
-      _shadow,
-      _opacity
+      _shadow(state),
+      _opacity(state),
     ];
     return ListView.separated(
       shrinkWrap: true,
@@ -450,7 +450,7 @@ class _TextStyleViewState extends State<TextStyleView> {
     );
   }
 
-  get _shadow {
+  Widget _shadow(ShopEditScreenState state) {
     return Column(
       children: [
         Container(
@@ -503,7 +503,7 @@ class _TextStyleViewState extends State<TextStyleView> {
     );
   }
 
-  get _opacity {
+  Widget _opacity(ShopEditScreenState state) {
     return Container(
       height: 60,
       child: Row(
@@ -520,13 +520,22 @@ class _TextStyleViewState extends State<TextStyleView> {
               value: opacityValue,
               min: 0,
               max: 1,
-              divisions: 10,
-              label: opacityValue.toString(),
               onChanged: (double value) {
                 setState(() {
                   opacityValue = value;
                 });
               },
+              onChangeEnd: (double value) {
+                _updateOpacity(state);
+              },
+            ),
+          ),
+          Container(
+            width: 30,
+            alignment: Alignment.center,
+            child: Text(
+              '${opacityValue.toStringAsFixed(1)}',
+              style: TextStyle(color: Colors.white, fontSize: 15),
             ),
           ),
         ],
@@ -782,7 +791,7 @@ class _TextStyleViewState extends State<TextStyleView> {
               children: [
                 Expanded(
                     child: InkWell(
-                        onTap: () => updateFontType(state, TextFontType.Bold),
+                        onTap: () => _updateFontType(state, TextFontType.Bold),
                         child: Container(
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
@@ -803,7 +812,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                 ),
                 Expanded(
                     child: InkWell(
-                        onTap: () => updateFontType(state, TextFontType.Italic),
+                        onTap: () => _updateFontType(state, TextFontType.Italic),
                         child: Container(
                             alignment: Alignment.center,
                             color: fontTypes.contains(TextFontType.Italic)
@@ -819,7 +828,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                 ),
                 Expanded(
                     child: InkWell(
-                        onTap: () => updateFontType(state, TextFontType.Underline),
+                        onTap: () => _updateFontType(state, TextFontType.Underline),
                         child: Container(
                             alignment: Alignment.center,
                             color: fontTypes.contains(TextFontType.Underline)
@@ -837,7 +846,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                 ),
                 Expanded(
                     child: InkWell(
-                        onTap: () => updateFontType(state, TextFontType.LineThrough),
+                        onTap: () => _updateFontType(state, TextFontType.LineThrough),
                         child: Container(
                             alignment: Alignment.center,
                             color: fontTypes.contains(TextFontType.LineThrough)
@@ -956,7 +965,7 @@ class _TextStyleViewState extends State<TextStyleView> {
         children: [
           Expanded(
               child: InkWell(
-                  onTap: () => updateTextAlign(state, 'left'),
+                  onTap: () => _updateTextAlign(state, 'left'),
                   child: Container(
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
@@ -973,7 +982,7 @@ class _TextStyleViewState extends State<TextStyleView> {
           ),
           Expanded(
               child: InkWell(
-                  onTap: () => updateTextAlign(state, 'center'),
+                  onTap: () => _updateTextAlign(state, 'center'),
                   child: Container(
                       alignment: Alignment.center,
                       color: textAlign != TextAlign.center
@@ -985,7 +994,7 @@ class _TextStyleViewState extends State<TextStyleView> {
           ),
           Expanded(
               child: InkWell(
-                  onTap: () => updateTextAlign(state, 'right'),
+                  onTap: () => _updateTextAlign(state, 'right'),
                   child: Container(
                       alignment: Alignment.center,
                       color: textAlign != TextAlign.right
@@ -997,7 +1006,7 @@ class _TextStyleViewState extends State<TextStyleView> {
           ),
           Expanded(
               child: InkWell(
-                  onTap: () => updateTextAlign(state, 'justify'),
+                  onTap: () => _updateTextAlign(state, 'justify'),
                   child: Container(
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
@@ -1546,6 +1555,17 @@ class _TextStyleViewState extends State<TextStyleView> {
         sectionId: state.selectedSectionId, effects: effects));
   }
 
+  void _updateOpacity(ShopEditScreenState state) {
+    Map<String, dynamic> sheets = widget.stylesheets;
+    sheets['opacity'] = num.parse(opacityValue.toStringAsFixed(1));
+
+    List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
+        selectedId, sheets, state.activeShopPage.stylesheetIds);
+
+    widget.screenBloc.add(UpdateSectionEvent(
+        sectionId: state.selectedSectionId, effects: effects));
+  }
+
   void _updateTextColor(ShopEditScreenState state) {
     String hex = '${textColor.value.toRadixString(16)}';
     String newTextColor = '#${hex.substring(2)}';
@@ -1553,7 +1573,7 @@ class _TextStyleViewState extends State<TextStyleView> {
     _updateTextProperty(state, htmlStr);
   }
 
-  void updateFontType(ShopEditScreenState state, TextFontType fontType) {
+  void _updateFontType(ShopEditScreenState state, TextFontType fontType) {
     if (fontTypes.contains(fontType)) {
       fontTypes.remove(fontType);
     } else {
@@ -1570,7 +1590,7 @@ class _TextStyleViewState extends State<TextStyleView> {
     _updateTextProperty(state, htmlStr);
   }
 
-  void updateTextAlign(ShopEditScreenState state, String align) {
+  void _updateTextAlign(ShopEditScreenState state, String align) {
     String htmlStr = styles.encodeHtmlString(htmlText, textAlign: align);
     _updateTextProperty(state, htmlStr);
   }

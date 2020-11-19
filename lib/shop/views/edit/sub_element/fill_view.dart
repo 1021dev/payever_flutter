@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+
 import 'package:flutter_svg/svg.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/commons/utils/block_picker.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
 import '../../../../theme.dart';
@@ -51,8 +53,6 @@ class _FillViewState extends State<FillView> {
   double scale = 100;
 
   int selectedItemIndex = 0;
-  int originItemIndex = 0;
-
   int selectedImageSizeIndex = -1;
 
   bool colorOverlay = false;
@@ -61,10 +61,7 @@ class _FillViewState extends State<FillView> {
     'Color',
     'Gradient',
     'Image',
-    'None'
   ];
-
-
 
   List<String>imageItemTitles = ['Original Size', 'Stretch', 'Tile', 'Scale to Fill', 'Scale to Fit'];
   List<String>imageItemIcons = ['original-size', 'stretch', 'tile', 'scale-to-fill', 'scale-to-fit'];
@@ -120,7 +117,7 @@ class _FillViewState extends State<FillView> {
                 SizedBox(
                   height: 10,
                 ),
-                Expanded(child: mainBody(selectedItemIndex != 4 ? selectedItemIndex : originItemIndex)),
+                Expanded(child: mainBody(selectedItemIndex)),
               ],
             ),
           ),
@@ -199,15 +196,8 @@ class _FillViewState extends State<FillView> {
     bool isSelected = selectedItemIndex == index;
     return InkWell(
       onTap: () {
-        if (index == 1)
-          _showColorPicker();
-        if (index == 4)
-          widget.onUpdateColor(Colors.transparent);
-
         setState(() {
           selectedItemIndex = index;
-          if (selectedItemIndex != 4)
-            originItemIndex = selectedItemIndex;
         });
       },
       child: Container(
@@ -237,7 +227,9 @@ class _FillViewState extends State<FillView> {
         content: SingleChildScrollView(
           child: ColorPicker(
             pickerColor: fillColor,
-            onColorChanged: (color) => fillColor == color,
+            onColorChanged: (color) {
+                fillColor = color;
+            },
             showLabel: true,
             pickerAreaHeightPercent: 0.8,
           ),
@@ -264,45 +256,69 @@ class _FillViewState extends State<FillView> {
           enableLabel: true,
         );
       case 1:
-        return BlockPicker(
-          pickerColor: fillColor,
-          onColorChanged: (color)=> widget.onUpdateColor(color),
-        );
+        return _colorView;
       case 2:
-        return gradient();
+        return _gradientView;
       case 3:
-        return _image();
-      case 4:
-        return Container();
-      default:
-        return gradient();
+        return _imageView;
     }
   }
 
-  Widget preset() {
-    return Container(
-      child: MaterialPicker(
-        pickerColor: fillColor,
-        onColorChanged: (color)=> widget.onUpdateColor(color),
-        enableLabel: true,
+  Widget get _colorView {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Container(
+            height: 50,
+            width: 280,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      widget.onUpdateColor(Colors.transparent);
+                      setState(() {
+                        fillColor = Colors.transparent;
+                      });
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey, width: 1)
+                      ),
+                      alignment: Alignment.center,
+                      child: Text('No Fill'),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 5,),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: ()=> _showColorPicker(),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey, width: 1)
+                      ),
+                      alignment: Alignment.center,
+                      child: Text('More'),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 20,),
+          BlockColorPicker(
+            pickerColor: fillColor,
+            onColorChanged: (color)=> widget.onUpdateColor(color),
+          ),
+          SizedBox(height: 30),
+        ],
       ),
-      // SlidePicker(
-      //   pickerColor: widget.bgColor,
-      //   onColorChanged: changeColor,
-      //   paletteType: PaletteType.rgb,
-      //   enableAlpha: false,
-      //   displayThumbColor: true,
-      //   showLabel: false,
-      //   showIndicator: true,
-      //   indicatorBorderRadius:
-      //   const BorderRadius.vertical(
-      //     top: const Radius.circular(25.0),
-      //   ),
-      // ),
     );
   }
 
-  Widget gradient() {
+  Widget get _gradientView {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -462,7 +478,7 @@ class _FillViewState extends State<FillView> {
     ));
   }
 
-  Widget _image() {
+  Widget get _imageView {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal:16.0),
       child: SingleChildScrollView(

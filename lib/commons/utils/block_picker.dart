@@ -35,8 +35,8 @@ typedef PickerItem = Widget Function(Color color);
 typedef PickerItemBuilder = Widget Function(
     Color color, bool isCurrentColor, Function changeColor);
 
-class BlockPicker extends StatefulWidget {
-  const BlockPicker({
+class BlockColorPicker extends StatefulWidget {
+  const BlockColorPicker({
     @required this.pickerColor,
     @required this.onColorChanged,
     this.availableColors = _defaultColors,
@@ -56,11 +56,12 @@ class BlockPicker extends StatefulWidget {
 
     return Container(
       width: orientation == Orientation.portrait ? 300.0 : 300.0,
-      height: orientation == Orientation.portrait ? 360.0 : 200.0,
+      height: orientation == Orientation.portrait ? 400.0 : 200.0,
       child: GridView.count(
         crossAxisCount: orientation == Orientation.portrait ? 4 : 6,
         crossAxisSpacing: 5.0,
         mainAxisSpacing: 5.0,
+        physics: NeverScrollableScrollPhysics(),
         children: colors.map((Color color) => child(color)).toList(),
       ),
     );
@@ -100,10 +101,10 @@ class BlockPicker extends StatefulWidget {
   }
 
   @override
-  State<StatefulWidget> createState() => _BlockPickerState();
+  State<StatefulWidget> createState() => _BlockColorPickerState();
 }
 
-class _BlockPickerState extends State<BlockPicker> {
+class _BlockColorPickerState extends State<BlockColorPicker> {
   Color _currentColor;
 
   @override
