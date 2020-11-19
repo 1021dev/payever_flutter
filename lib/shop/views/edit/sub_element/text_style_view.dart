@@ -312,9 +312,8 @@ class _TextStyleViewState extends State<TextStyleView> {
                     });
                     _updateFillColor(state);
                   },
-                  onUpdateGradientFill: (int angle, Color color1,
-                          Color color2) =>
-                      _updateGradientFillColor(state, angle, color1, color2),
+                  onUpdateGradientFill: (GradientModel model, bool updateApi) =>
+                      _updateGradientFillColor(state, model, updateApi: updateApi),
                   onUpdateImageFill: (BackGroundModel model) => _updateImageFill(state, model),
                 ));
                 return;
@@ -523,6 +522,7 @@ class _TextStyleViewState extends State<TextStyleView> {
               onChanged: (double value) {
                 setState(() {
                   opacityValue = value;
+                  _updateOpacity(state, updateApi: false);
                 });
               },
               onChangeEnd: (double value) {
@@ -1526,18 +1526,18 @@ class _TextStyleViewState extends State<TextStyleView> {
         sectionId: state.selectedSectionId, effects: effects));
   }
 
-  void _updateGradientFillColor(ShopEditScreenState state, int angle, Color startColor, Color endColor) {
+  void _updateGradientFillColor(ShopEditScreenState state, GradientModel model, {bool updateApi = true}) {
     // backgroundImage: "linear-gradient(90deg, #ff0000ff, #fffef8ff)"
-    String color1 = encodeColor(startColor);
-    String color2 = encodeColor(endColor);
+    String color1 = encodeColor(model.startColor);
+    String color2 = encodeColor(model.endColor);
     Map<String, dynamic> sheets = widget.stylesheets;
     sheets['backgroundColor'] = '';
-    sheets['backgroundImage'] = 'linear-gradient(${angle}deg, $color1, $color2)';
+    sheets['backgroundImage'] = 'linear-gradient(${model.angle.toInt()}deg, $color1, $color2)';
     List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
         selectedId, sheets, state.activeShopPage.stylesheetIds);
 
     widget.screenBloc.add(UpdateSectionEvent(
-        sectionId: state.selectedSectionId, effects: effects));
+        sectionId: state.selectedSectionId, effects: effects, updateApi: updateApi));
   }
 
   void _updateImageFill(ShopEditScreenState state, BackGroundModel backgroundModel) {
@@ -1555,7 +1555,7 @@ class _TextStyleViewState extends State<TextStyleView> {
         sectionId: state.selectedSectionId, effects: effects));
   }
 
-  void _updateOpacity(ShopEditScreenState state) {
+  void _updateOpacity(ShopEditScreenState state, {bool updateApi = true}) {
     Map<String, dynamic> sheets = widget.stylesheets;
     sheets['opacity'] = num.parse(opacityValue.toStringAsFixed(1));
 
@@ -1563,7 +1563,7 @@ class _TextStyleViewState extends State<TextStyleView> {
         selectedId, sheets, state.activeShopPage.stylesheetIds);
 
     widget.screenBloc.add(UpdateSectionEvent(
-        sectionId: state.selectedSectionId, effects: effects));
+        sectionId: state.selectedSectionId, effects: effects, updateApi: updateApi));
   }
 
   void _updateTextColor(ShopEditScreenState state) {

@@ -988,7 +988,10 @@ class GradientModel {
   Color startColor;
   Color endColor;
 
-  GradientModel({this.angle, this.startColor, this.endColor});
+  GradientModel(
+      {@required this.angle,
+      @required this.startColor,
+      @required this.endColor});
 }
 
 class BackGroundModel {

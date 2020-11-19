@@ -47,8 +47,8 @@ class ActiveShopPageEvent extends ShopEditScreenEvent {
 class UpdateSectionEvent extends ShopEditScreenEvent {
   final String sectionId;
   final List<Map> effects;
-
-  UpdateSectionEvent({this.sectionId, this.effects});
+  final bool updateApi;
+  UpdateSectionEvent({this.sectionId, this.effects, this.updateApi = true});
 
   @override
   List<Object> get props => [

@@ -443,6 +443,7 @@ class _FillViewState extends State<FillView> {
               onChanged: (double value) {
                 setState(() {
                   angle = value;
+                  _updateGradientFill(updateApi: false);
                 });
               },
               onChangeEnd: (double value) {
@@ -464,8 +465,10 @@ class _FillViewState extends State<FillView> {
     );
   }
 
-  _updateGradientFill() {
-    widget.onUpdateGradientFill(angle.toInt(), startColor, endColor);
+  _updateGradientFill({bool updateApi = true}) {
+    widget.onUpdateGradientFill(
+        GradientModel(angle: angle, startColor: startColor, endColor: endColor),
+        updateApi);
   }
 
   _updateImageFill() {
