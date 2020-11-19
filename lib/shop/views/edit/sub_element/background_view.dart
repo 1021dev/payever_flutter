@@ -29,7 +29,7 @@ class _BackgroundViewState extends State<BackgroundView> {
         color: colorConvert(widget.styles.backgroundColor),
       );
     // Gradient
-    if (widget.styles.backgroundImage.contains('linear-gradient')) {
+    if (widget.styles.isGradientBackGround) {
       return Container(
           width: double.infinity,
           height: double.infinity,

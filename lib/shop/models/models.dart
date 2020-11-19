@@ -330,6 +330,10 @@ class BaseStyles with BackgroundAssist, StyleAssist, SizeAssist, DecorationAssis
   String backgroundColor;
   @JsonKey(name: 'backgroundImage', defaultValue: '')
   String backgroundImage;
+
+  bool get isGradientBackGround {
+    return backgroundImage.contains('linear-gradient');
+  }
   // ------------------------------------------------------
   // ------------------------------------------------------
   // Only for Section and Shape Background
@@ -985,4 +989,22 @@ class GradientModel {
   Color endColor;
 
   GradientModel({this.angle, this.startColor, this.endColor});
+}
+
+class NoBackGroundFillClipPath extends CustomClipper<Path> {
+  final double radius = 0.5;
+
+  @override
+  Path getClip(Size size) {
+    final path = Path();
+    path.moveTo(size.width, 0.0 - radius);
+    path.lineTo(0.0 - radius, size.height - radius);
+    path.lineTo(radius, size.height + radius);
+    path.lineTo(size.width + radius, radius);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(NoBackGroundFillClipPath oldClipper) => false;
 }

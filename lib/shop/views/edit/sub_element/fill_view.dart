@@ -42,7 +42,7 @@ class _FillViewState extends State<FillView> {
   Color fillColor;
   Color startColor, endColor;
   double angle;
-  double scale = 50;
+  double scale = 100;
 
   int selectedItemIndex = 0;
   int originItemIndex = 0;
@@ -64,12 +64,16 @@ class _FillViewState extends State<FillView> {
     styles = TextStyles.fromJson(widget.stylesheets);
     fillColor = colorConvert(styles.backgroundColor, emptyColor: true);
     GradientModel gradientModel;
-    if (styles.backgroundImage != null && styles.backgroundImage.contains('linear-gradient'))
+    if (styles.isGradientBackGround)
       gradientModel = styles.getGradientModel(styles.backgroundImage);
 
     startColor = gradientModel?.startColor ?? Colors.white;
     endColor = gradientModel?.endColor ?? Colors.white;
     angle = gradientModel?.angle ?? 90;
+    try {
+      scale = double.parse(styles.backgroundSize.replaceAll('%', ''));
+    } catch (e) {}
+
     super.initState();
   }
 
@@ -446,7 +450,18 @@ class _FillViewState extends State<FillView> {
                 children: [
                   Container(
                     width: 150,
-                    color: Colors.white,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey, width: 1),
+                    ),
+                    child: styles.backgroundImage.isEmpty || styles.isGradientBackGround ? ClipPath(
+                      child: Container(
+                        color: Colors.red[900],
+                      ),
+                      clipper: NoBackGroundFillClipPath(),
+                    ) : CachedNetworkImage(
+                      fit: BoxFit.cover,
+                      imageUrl: styles.backgroundImage,
+                    ),
                   ),
                   SizedBox(width: 16,),
                   PopupMenuButton<OverflowMenuItem>(
@@ -551,12 +566,12 @@ class _FillViewState extends State<FillView> {
             },
             onChangeEnd: (double value) {
               scale = value;
-              // _updateGradientFill();
+              _updateGradientFill();
             },
           ),
         ),
         Container(
-          width: 40,
+          width: 45,
           alignment: Alignment.centerRight,
           child: Text(
             '${scale.toInt()}%',

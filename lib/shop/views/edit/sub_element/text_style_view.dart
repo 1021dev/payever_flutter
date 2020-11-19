@@ -355,7 +355,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                 child: Container(
                   color: Colors.red[900],
                 ),
-                clipper: CustomClipPath(),
+                clipper: NoBackGroundFillClipPath(),
               ) : Container(),
             ),
           ),
@@ -1591,22 +1591,4 @@ class _TextStyleViewState extends State<TextStyleView> {
           return subview;
         });
   }
-}
-
-class CustomClipPath extends CustomClipper<Path> {
-  final double radius = 0.5;
-
-  @override
-  Path getClip(Size size) {
-    final path = Path();
-    path.moveTo(size.width, 0.0 - radius);
-    path.lineTo(0.0 - radius, size.height - radius);
-    path.lineTo(radius, size.height + radius);
-    path.lineTo(size.width + radius, radius);
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipPath oldClipper) => false;
 }
