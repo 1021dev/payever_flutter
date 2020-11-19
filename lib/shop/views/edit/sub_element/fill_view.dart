@@ -19,13 +19,14 @@ class FillView extends StatefulWidget {
   final Map<String, dynamic> stylesheets;
   final Function onUpdateColor;
   final Function onUpdateGradientFill;
-
+  final Function onUpdateImageFill;
 
   const FillView(
       this.screenBloc,
       {this.stylesheets,
       this.onUpdateColor,
-      this.onUpdateGradientFill});
+      this.onUpdateGradientFill,
+      this.onUpdateImageFill});
 
   @override
   _FillViewState createState() => _FillViewState();
@@ -42,10 +43,17 @@ class _FillViewState extends State<FillView> {
   Color fillColor;
   Color startColor, endColor;
   double angle;
+
+  String backgroundImage;
+  String backgroundPosition;
+  String backgroundRepeat;
+  String backgroundSize;
   double scale = 100;
 
   int selectedItemIndex = 0;
   int originItemIndex = 0;
+
+  int selectedImageSizeIndex = -1;
 
   bool colorOverlay = false;
   List<String> fillTypes = [
@@ -55,6 +63,8 @@ class _FillViewState extends State<FillView> {
     'Image',
     'None'
   ];
+
+
 
   List<String>imageItemTitles = ['Original Size', 'Stretch', 'Tile', 'Scale to Fill', 'Scale to Fit'];
   List<String>imageItemIcons = ['original-size', 'stretch', 'tile', 'scale-to-fill', 'scale-to-fit'];
@@ -73,6 +83,10 @@ class _FillViewState extends State<FillView> {
     try {
       scale = double.parse(styles.backgroundSize.replaceAll('%', ''));
     } catch (e) {}
+
+    backgroundImage = styles.backgroundImage;
+    backgroundPosition = styles.backgroundPosition;
+    backgroundRepeat = styles.backgroundRepeat;
 
     super.initState();
   }
@@ -438,6 +452,16 @@ class _FillViewState extends State<FillView> {
     widget.onUpdateGradientFill(angle.toInt(), startColor, endColor);
   }
 
+  _updateImageFill() {
+    widget.onUpdateImageFill(BackGroundModel(
+      backgroundColor: '',
+      backgroundImage: backgroundImage,
+      backgroundPosition: backgroundPosition,
+      backgroundRepeat: backgroundRepeat,
+      backgroundSize: backgroundSize,
+    ));
+  }
+
   Widget _image() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal:16.0),
@@ -506,12 +530,10 @@ class _FillViewState extends State<FillView> {
               shrinkWrap: true,
               itemCount: imageItemTitles.length,
               physics: NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                return imageListItem(index);
-              },
+              itemBuilder: (context, index) => imageListItem(index),
               separatorBuilder: (context, index) {
                 return Divider(
-                  height: 25,
+                  height: 10,
                   thickness: 0.5,
                   color: Colors.transparent,
                 );
@@ -527,20 +549,60 @@ class _FillViewState extends State<FillView> {
   }
 
   Widget imageListItem(int index) {
-    return Row(
-      children: [
-        SvgPicture.asset('assets/images/${imageItemIcons[index]}.svg'),
-        SizedBox(width: 16,),
-        Text(
-          imageItemTitles[index],
-          style: TextStyle(color: Colors.white, fontSize: 15),
+    return InkWell(
+      onTap: () {
+        setState(() {
+          selectedImageSizeIndex = index;
+        });
+        switch (index) {
+          case 0:
+            backgroundPosition = 'center';
+            backgroundRepeat = 'no-repeat';
+            backgroundSize = null;
+            break;
+          case 1:
+            backgroundPosition = 'initial';
+            backgroundSize = '100% 100%';
+            backgroundRepeat = 'no-repeat';
+            break;
+          case 2:
+            backgroundPosition = 'center';
+            backgroundRepeat = 'space';
+            backgroundSize = null;
+            break;
+          case 3:
+            backgroundPosition = 'initial';
+            backgroundRepeat = 'no-repeat';
+            backgroundSize = 'cover';
+            break;
+          case 4:
+            backgroundPosition = 'initial';
+            backgroundRepeat = 'no-repeat';
+            backgroundSize = 'contain';
+            break;
+        }
+        _updateImageFill();
+      },
+
+      child: Container(
+        height: 40,
+        child: Row(
+          children: [
+            SvgPicture.asset('assets/images/${imageItemIcons[index]}.svg'),
+            SizedBox(width: 16,),
+            Text(
+              imageItemTitles[index],
+              style: TextStyle(color: Colors.white, fontSize: 15),
+            ),
+            Spacer(),
+            if (selectedImageSizeIndex == index)
+            Icon(
+              Icons.check,
+              color: Colors.blue,
+            ),
+          ],
         ),
-        Spacer(),
-        Icon(
-          Icons.check,
-          color: Colors.blue,
-        ),
-      ],
+      ),
     );
   }
 
@@ -566,7 +628,8 @@ class _FillViewState extends State<FillView> {
             },
             onChangeEnd: (double value) {
               scale = value;
-              _updateGradientFill();
+              backgroundSize = '${scale.toInt()}%';
+              _updateImageFill();
             },
           ),
         ),

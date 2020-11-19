@@ -991,6 +991,22 @@ class GradientModel {
   GradientModel({this.angle, this.startColor, this.endColor});
 }
 
+class BackGroundModel {
+
+  String backgroundColor;
+  String backgroundImage;
+  String backgroundPosition;
+  String backgroundRepeat;
+  String backgroundSize;
+
+  BackGroundModel(
+      {@required this.backgroundColor,
+        @required this.backgroundImage,
+        @required this.backgroundPosition,
+        @required this.backgroundRepeat,
+        @required this.backgroundSize});
+}
+
 class NoBackGroundFillClipPath extends CustomClipper<Path> {
   final double radius = 0.5;
 

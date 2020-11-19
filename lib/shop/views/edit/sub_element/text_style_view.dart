@@ -80,7 +80,14 @@ class _TextStyleViewState extends State<TextStyleView> {
     return BlocListener(
       listener: (BuildContext context, ShopEditScreenState state) async {
         if (state.blobName.isNotEmpty) {
-          _updateImageFill(state, state.blobName);
+          BackGroundModel model = BackGroundModel(
+              backgroundColor: '',
+              backgroundImage:
+                  'https://payeverproduction.blob.core.windows.net/builder/${state.blobName}',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: '100%');
+          _updateImageFill(state, model);
           widget.screenBloc.add(InitBlobNameEvent());
         }
       },
@@ -308,6 +315,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                   onUpdateGradientFill: (int angle, Color color1,
                           Color color2) =>
                       _updateGradientFillColor(state, angle, color1, color2),
+                  onUpdateImageFill: (BackGroundModel model) => _updateImageFill(state, model),
                 ));
                 return;
               }
@@ -1523,13 +1531,13 @@ class _TextStyleViewState extends State<TextStyleView> {
         sectionId: state.selectedSectionId, effects: effects));
   }
 
-  void _updateImageFill(ShopEditScreenState state, String blobName) {
+  void _updateImageFill(ShopEditScreenState state, BackGroundModel backgroundModel) {
     Map<String, dynamic> sheets = widget.stylesheets;
-    sheets['backgroundColor'] = '';
-    sheets['backgroundImage'] = 'https://payeverproduction.blob.core.windows.net/builder/$blobName';
-    sheets['backgroundPosition'] =  "center";
-    sheets['backgroundRepeat'] =  "no-repeat";
-    sheets['backgroundSize'] =  "100%";
+    sheets['backgroundColor'] = backgroundModel.backgroundColor;
+    sheets['backgroundImage'] = backgroundModel.backgroundImage;
+    sheets['backgroundPosition'] =  backgroundModel.backgroundPosition;
+    sheets['backgroundRepeat'] =  backgroundModel.backgroundRepeat;
+    sheets['backgroundSize'] =  backgroundModel.backgroundSize;
 
     List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
         selectedId, sheets, state.activeShopPage.stylesheetIds);
