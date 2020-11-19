@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
 
@@ -33,10 +34,12 @@ class _FillViewState extends State<FillView> {
   Color fillColor;
   Color startColor, endColor;
   double angle;
+  double scale = 50;
 
   int selectedItemIndex = 0;
   int originItemIndex = 0;
 
+  bool colorOverlay = false;
   List<String> fillTypes = [
     'Preset',
     'Color',
@@ -44,6 +47,9 @@ class _FillViewState extends State<FillView> {
     'Image',
     'None'
   ];
+
+  List<String>imageItemTitles = ['Original Size', 'Stretch', 'Tile', 'Scale to Fill', 'Scale to Fit'];
+  List<String>imageItemIcons = ['columns', 'columns', 'columns', 'columns', 'columns'];
 
   @override
   void initState() {
@@ -234,7 +240,7 @@ class _FillViewState extends State<FillView> {
       case 2:
         return gradient();
       case 3:
-        return Container();
+        return _image();
       case 4:
         return Container();
       default:
@@ -412,5 +418,136 @@ class _FillViewState extends State<FillView> {
 
   _updateGradientFill() {
     widget.onUpdateGradientFill(angle.toInt(), startColor, endColor);
+  }
+
+  Widget _image() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal:16.0),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              height: 100,
+              child: Row(
+                children: [
+                  Container(
+                    width: 150,
+                    color: Colors.white,
+                  ),
+                  SizedBox(width: 16,),
+                  Text('Change Image', style: TextStyle(color: Colors.blue, fontSize: 15),)
+                ],
+              ),
+            ),
+            Divider(height: 30, thickness: 0.5,),
+            SizedBox(height: 16,),
+            ListView.separated(
+              shrinkWrap: true,
+              itemCount: imageItemTitles.length,
+              physics: NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                return imageListItem(index);
+              },
+              separatorBuilder: (context, index) {
+                return Divider(
+                  height: 25,
+                  thickness: 0.5,
+                  color: Colors.transparent,
+                );
+              },
+            ),
+            _scale,
+            _colorOverlay,
+            SizedBox(height: 30,),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget imageListItem(int index) {
+    return Row(
+      children: [
+        SvgPicture.asset('assets/images/${imageItemIcons[index]}.svg'),
+        SizedBox(width: 16,),
+        Text(
+          imageItemTitles[index],
+          style: TextStyle(color: Colors.white, fontSize: 15),
+        ),
+        Spacer(),
+        Icon(
+          Icons.check,
+          color: Colors.blue,
+        ),
+      ],
+    );
+  }
+
+  get _scale {
+    return Row(
+      children: [
+        Text(
+          'Scale',
+          style: TextStyle(color: Colors.white, fontSize: 15),
+        ),
+        SizedBox(
+          width: 10,
+        ),
+        Expanded(
+          child: Slider(
+            value: scale,
+            min: 0,
+            max: 200,
+            onChanged: (double value) {
+              setState(() {
+                scale = value;
+              });
+            },
+            onChangeEnd: (double value) {
+              scale = value;
+              // _updateGradientFill();
+            },
+          ),
+        ),
+        Container(
+          width: 40,
+          alignment: Alignment.centerRight,
+          child: Text(
+            '${scale.toInt()}%',
+            style: TextStyle(color: Colors.white, fontSize: 15),
+          ),
+        ),
+      ],
+    );
+  }
+
+  get _colorOverlay {
+    return Column(
+      children: [
+        Container(
+          height: 60,
+          child: Row(
+            children: [
+              Text(
+                'Color Overlay',
+                style: TextStyle(color: Colors.white, fontSize: 15),
+              ),
+              Spacer(),
+              Transform.scale(
+                scale: 0.8,
+                child: CupertinoSwitch(
+                  value: colorOverlay,
+                  onChanged: (value) {
+                    setState(() {
+                      colorOverlay = value;
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }

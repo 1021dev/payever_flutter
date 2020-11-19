@@ -131,7 +131,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
         builder: (builder) {
           return TextStyleView(
             screenBloc: screenBloc,
-            stylesheets: state.stylesheets[state.activeShopPage.stylesheetIds.mobile][state.selectedChild],
+            stylesheets: state.stylesheets[state.activeShopPage.stylesheetIds.mobile][state.selectedChild.id],
           );
         });
   }
