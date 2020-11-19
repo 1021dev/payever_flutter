@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:intl/intl.dart';
 import 'package:iso_countries/iso_countries.dart';
 import 'package:payever/blocs/bloc.dart';
@@ -753,6 +755,39 @@ class GlobalUtils {
   static double mainWidth = 0;
   static double shopBuilderWidthFactor = 0;
 
+  static Future<dynamic> cropImage(File imageFile) async {
+    File croppedFile = await ImageCropper.cropImage(
+        sourcePath: imageFile.path,
+        aspectRatioPresets: Platform.isAndroid
+            ? [
+                CropAspectRatioPreset.square,
+                CropAspectRatioPreset.ratio3x2,
+                CropAspectRatioPreset.original,
+                CropAspectRatioPreset.ratio4x3,
+                CropAspectRatioPreset.ratio16x9
+              ]
+            : [
+                CropAspectRatioPreset.original,
+                CropAspectRatioPreset.square,
+                CropAspectRatioPreset.ratio3x2,
+                CropAspectRatioPreset.ratio4x3,
+                CropAspectRatioPreset.ratio5x3,
+                CropAspectRatioPreset.ratio5x4,
+                CropAspectRatioPreset.ratio7x5,
+                CropAspectRatioPreset.ratio16x9
+              ],
+        androidUiSettings: AndroidUiSettings(
+            toolbarTitle: 'Cropper',
+            toolbarColor: Colors.deepOrange,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false),
+        iosUiSettings: IOSUiSettings(
+          title: 'Cropper',
+        ));
+
+    return croppedFile;
+  }
 }
 
 String imageBase = Env.storage + '/images/';

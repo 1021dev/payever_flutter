@@ -16,6 +16,8 @@ import 'package:payever/shop/views/edit/sub_element/paragraph_view.dart';
 import 'package:payever/shop/views/edit/sub_element/text_options_view.dart';
 import 'package:payever/theme.dart';
 
+import 'background_view.dart';
+
 class TextStyleView extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
   final Map<String, dynamic> stylesheets;
@@ -349,25 +351,48 @@ class _TextStyleViewState extends State<TextStyleView> {
                 ),
               );
             },
-            child: Container(
-              width: 100,
-              height: 40,
-              padding: EdgeInsets.all(2),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey, width: 1),
-                color: pickColor,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: pickColor == Colors.transparent ? ClipPath(
-                child: Container(
-                  color: Colors.red[900],
-                ),
-                clipper: NoBackGroundFillClipPath(),
-              ) : Container(),
-            ),
+            child: getFillContainer(colorType, pickColor),
           ),
         ],
       ),
+    );
+  }
+
+  Widget getFillContainer(ColorType type, Color pickColor) {
+    if (type == ColorType.BackGround)
+      return Container(
+        width: 100,
+        height: 40,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey, width: 1),
+          color: pickColor,
+        ),
+        child: styles.backgroundImage.isNotEmpty
+            ? BackgroundView(styles: styles)
+            : pickColor == Colors.transparent
+                ? ClipPath(
+                    child: Container(
+                      color: Colors.red[900],
+                    ),
+                    clipper: NoBackGroundFillClipPath(),
+                  )
+                : Container(),
+      );
+
+    return Container(
+      width: 100,
+      height: 40,
+      padding: EdgeInsets.all(2),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey, width: 1),
+        color: pickColor,
+      ),
+      child: pickColor == Colors.transparent ? ClipPath(
+        child: Container(
+          color: Colors.red[900],
+        ),
+        clipper: NoBackGroundFillClipPath(),
+      ) : Container(),
     );
   }
 

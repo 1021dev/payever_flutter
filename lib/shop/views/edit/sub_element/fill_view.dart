@@ -101,6 +101,7 @@ class _FillViewState extends State<FillView> {
   }
 
   Widget body(ShopEditScreenState state) {
+    styles = TextStyles.fromJson(widget.stylesheets);
     return Container(
       height: 400,
       child: Scaffold(
@@ -694,51 +695,16 @@ class _FillViewState extends State<FillView> {
     );
   }
 
-  Future getImage(int type) async {
+  void getImage(int type) async {
     ImagePicker imagePicker = ImagePicker();
     var image = await imagePicker.getImage(
       source: type == 1 ? ImageSource.gallery : ImageSource.camera,
     );
     if (image != null) {
-      await _cropImage(File(image.path));
+      File croppedFile = await GlobalUtils.cropImage(File(image.path));
+      if (croppedFile != null)
+        widget.screenBloc.add(UploadPhotoEvent(image: croppedFile));
     }
-  }
-
-  Future<Null> _cropImage(File imageFile) async {
-    File croppedFile = await ImageCropper.cropImage(
-        sourcePath: imageFile.path,
-        aspectRatioPresets: Platform.isAndroid
-            ? [
-          CropAspectRatioPreset.square,
-          CropAspectRatioPreset.ratio3x2,
-          CropAspectRatioPreset.original,
-          CropAspectRatioPreset.ratio4x3,
-          CropAspectRatioPreset.ratio16x9
-        ]
-            : [
-          CropAspectRatioPreset.original,
-          CropAspectRatioPreset.square,
-          CropAspectRatioPreset.ratio3x2,
-          CropAspectRatioPreset.ratio4x3,
-          CropAspectRatioPreset.ratio5x3,
-          CropAspectRatioPreset.ratio5x4,
-          CropAspectRatioPreset.ratio7x5,
-          CropAspectRatioPreset.ratio16x9
-        ],
-        androidUiSettings: AndroidUiSettings(
-            toolbarTitle: 'Cropper',
-            toolbarColor: Colors.deepOrange,
-            toolbarWidgetColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.original,
-            lockAspectRatio: false),
-        iosUiSettings: IOSUiSettings(
-          title: 'Cropper',
-        ));
-
-    if (croppedFile != null) {
-      widget.screenBloc.add(UploadPhotoEvent(image: croppedFile));
-    }
-
   }
 
   List<OverflowMenuItem> appBarPopUpActions(BuildContext context) {
