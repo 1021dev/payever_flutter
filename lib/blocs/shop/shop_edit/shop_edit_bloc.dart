@@ -279,4 +279,8 @@ class ShopEditScreenBloc
     else
       return '';
   }
+
+  bool isTextSelected() {
+    return !(state.selectedChild == null || state.selectedChild.type != 'text');
+  }
 }

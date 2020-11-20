@@ -133,16 +133,24 @@ class _TextStyleViewState extends State<TextStyleView> {
   void _initTextProperties (ShopEditScreenState state) {
     selectedId = state.selectedChild.id;
     styles = TextStyles.fromJson(widget.stylesheets);
+    opacityValue = styles.opacity;
     fillColor = colorConvert(styles.backgroundColor, emptyColor: true);
     borderColor = colorConvert(styles.borderColor, emptyColor: true);
 
-    htmlText = widget.screenBloc.htmlText();
-    fontSize = styles.htmlFontSize(htmlText);
-    textColor = styles.htmlTextColor(htmlText);
-    // font types
-    fontTypes = styles.getTextFontTypes(htmlText);
-    // HAlign
-    textAlign = styles.htmlAlignment(htmlText);
+    if (state.selectedChild.type == 'text') {
+      htmlText = widget.screenBloc.htmlText();
+      fontSize = styles.htmlFontSize(htmlText);
+      textColor = styles.htmlTextColor(htmlText);
+      // font types
+      fontTypes = styles.getTextFontTypes(htmlText);
+      // HAlign
+      textAlign = styles.htmlAlignment(htmlText);
+    } else if (state.selectedChild.type == 'shape') {
+
+    } else if (state.selectedChild.type == 'button') {
+
+    }
+
   }
 
   Widget get _segmentedControl {
@@ -169,15 +177,16 @@ class _TextStyleViewState extends State<TextStyleView> {
                           fontWeight: FontWeight.w400,
                           color: Colors.white),
                     )),
-                TextStyleType.Text: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(
-                      'Text',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white),
-                    )),
+                if (widget.screenBloc.isTextSelected())
+                  TextStyleType.Text: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        'Text',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white),
+                      )),
                 TextStyleType.Arrange: Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Text(
@@ -584,11 +593,15 @@ class _TextStyleViewState extends State<TextStyleView> {
         color: textBgColors[index],
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Text(
-        'Text',
-        style: TextStyle(
-            color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
-      ),
+      child: widget.screenBloc.isTextSelected()
+          ? Text(
+              'Text',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold),
+            )
+          : Container(),
     );
 
     return InkWell(

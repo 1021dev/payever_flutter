@@ -26,7 +26,7 @@ class _ShapeViewState extends State<ShapeView> {
   @override
   Widget build(BuildContext context) {
     styles = styleSheet();
-    return body;
+    return Opacity(opacity: styles.opacity, child: body);
   }
 
   Widget get body {
@@ -82,7 +82,6 @@ class _ShapeViewState extends State<ShapeView> {
   Widget squareShape() {
     return Container(
       decoration: styles.decoration,
-//      color: colorConvert(styles.backgroundColor),
       alignment: Alignment.center,
       child: ClipRRect(
           child: BackgroundView(
