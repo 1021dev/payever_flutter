@@ -20,6 +20,7 @@ import 'package:payever/theme.dart';
 import 'background_view.dart';
 import 'border_view.dart';
 import 'fill_color_view.dart';
+import 'opacity_view.dart';
 
 class TextStyleView extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
@@ -46,7 +47,6 @@ class _TextStyleViewState extends State<TextStyleView> {
 
   bool borderExpanded = false;
   bool shadowExpanded = false;
-  double opacityValue = 1.0;
 
   TextStyleType styleType = TextStyleType.Style;
   List<TextFontType> fontTypes = [];
@@ -136,7 +136,6 @@ class _TextStyleViewState extends State<TextStyleView> {
   void _initTextProperties (ShopEditScreenState state) {
     selectedId = state.selectedChild.id;
     styles = TextStyles.fromJson(widget.stylesheets);
-    opacityValue = styles.opacity;
     fillColor = colorConvert(styles.backgroundColor, emptyColor: true);
     borderColor = colorConvert(styles.borderColor, emptyColor: true);
 
@@ -264,7 +263,12 @@ class _TextStyleViewState extends State<TextStyleView> {
       ),
       BorderView(),
       ShadowView(),
-      _opacity(state),
+      OpacityView(
+        styles: styles,
+        onUpdateOpacity: (value, updateApi) =>
+            _updateOpacity(state, value, updateApi: updateApi),
+      )
+      // _opacity(state),
     ];
     return ListView.separated(
       shrinkWrap: true,
@@ -299,47 +303,6 @@ class _TextStyleViewState extends State<TextStyleView> {
             return _textBackgroundGridItem(state, index);
           },
         ),
-      ),
-    );
-  }
-
-  Widget _opacity(ShopEditScreenState state) {
-    return Container(
-      height: 60,
-      child: Row(
-        children: [
-          Text(
-            'Opacity',
-            style: TextStyle(color: Colors.white, fontSize: 15),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          Expanded(
-            child: Slider(
-              value: opacityValue,
-              min: 0,
-              max: 1,
-              onChanged: (double value) {
-                setState(() {
-                  opacityValue = value;
-                  _updateOpacity(state, updateApi: false);
-                });
-              },
-              onChangeEnd: (double value) {
-                _updateOpacity(state);
-              },
-            ),
-          ),
-          Container(
-            width: 30,
-            alignment: Alignment.center,
-            child: Text(
-              '${opacityValue.toStringAsFixed(1)}',
-              style: TextStyle(color: Colors.white, fontSize: 15),
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -1127,14 +1090,14 @@ class _TextStyleViewState extends State<TextStyleView> {
                 SvgPicture.asset('assets/images/send-to-back.svg'),
                 Expanded(
                   child: Slider(
-                    value: opacityValue,
+                    value: 0,
                     min: 0,
                     max: 1,
                     divisions: 10,
-                    label: opacityValue.toString(),
+                    // label: opacityValue.toString(),
                     onChanged: (double value) {
                       setState(() {
-                        opacityValue = value;
+                        // opacityValue = value;
                       });
                     },
                   ),
@@ -1291,9 +1254,9 @@ class _TextStyleViewState extends State<TextStyleView> {
         sectionId: state.selectedSectionId, effects: effects));
   }
 
-  void _updateOpacity(ShopEditScreenState state, {bool updateApi = true}) {
+  void _updateOpacity(ShopEditScreenState state, double value, {bool updateApi = true}) {
     Map<String, dynamic> sheets = widget.stylesheets;
-    sheets['opacity'] = num.parse(opacityValue.toStringAsFixed(1));
+    sheets['opacity'] = num.parse(value.toStringAsFixed(1));
 
     List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
         selectedId, sheets, state.activeShopPage.stylesheetIds);
