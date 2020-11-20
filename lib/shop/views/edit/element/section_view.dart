@@ -307,12 +307,14 @@ class _SectionViewState extends State<SectionView> {
                     PopupMenuItem(
                       child: Text(
                         'Cut',
+                        style: TextStyle(color: Colors.white),
                       ),
                       value: ClipboardType.Cut,
                     ),
                     PopupMenuItem(
                       child: Text(
                         'Copy',
+                        style: TextStyle(color: Colors.white),
                       ),
                       value: ClipboardType.Copy,
                     ),
@@ -329,6 +331,7 @@ class _SectionViewState extends State<SectionView> {
                     PopupMenuItem(
                       child: Text(
                         'Paste',
+                        style: TextStyle(color: Colors.white),
                       ),
                       value: ClipboardType.Paste,
                     ),

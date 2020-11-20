@@ -19,6 +19,7 @@ import 'package:payever/theme.dart';
 
 import 'background_view.dart';
 import 'border_view.dart';
+import 'fill_color_grid_view.dart';
 import 'fill_color_view.dart';
 import 'opacity_view.dart';
 
@@ -243,7 +244,10 @@ class _TextStyleViewState extends State<TextStyleView> {
   // Style Body
   Widget _styleBody(ShopEditScreenState state) {
     List<Widget> textStyleWidgets = [
-      _gridViewBody(state),
+      FillColorGridView(
+        onUpdateColor: (color) => _updateFillColor(state, color),
+        hasText: widget.screenBloc.isTextSelected() || state.selectedChild.type == 'button',
+      ),
       FillColorView(
         pickColor: fillColor,
         styles: styles,
@@ -268,7 +272,6 @@ class _TextStyleViewState extends State<TextStyleView> {
         onUpdateOpacity: (value, updateApi) =>
             _updateOpacity(state, value, updateApi: updateApi),
       )
-      // _opacity(state),
     ];
     return ListView.separated(
       shrinkWrap: true,
@@ -284,54 +287,6 @@ class _TextStyleViewState extends State<TextStyleView> {
         );
       },
     );
-  }
-
-  Widget _gridViewBody(ShopEditScreenState state) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 18),
-      child: GridView.count(
-        padding: EdgeInsets.zero,
-        shrinkWrap: true,
-        crossAxisCount: isTablet ? 5 : (isPortrait ? 3 : 5),
-        crossAxisSpacing: isTablet ? 40 : (isPortrait ? 40 : 40),
-        mainAxisSpacing: isTablet ? 20 : (isPortrait ? 20 : 20),
-        childAspectRatio: 1 / 0.7,
-        physics: NeverScrollableScrollPhysics(),
-        children: List.generate(
-          6,
-          (index) {
-            return _textBackgroundGridItem(state, index);
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget _textBackgroundGridItem(ShopEditScreenState state, int index) {
-    Widget item = Container(
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: textBgColors[index],
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: widget.screenBloc.isTextSelected()
-          ? Text(
-              'Text',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold),
-            )
-          : Container(),
-    );
-
-    return InkWell(
-        onTap: () {
-          setState(() {
-            _updateFillColor(state, textBgColors[index]);
-          });
-        },
-        child: item);
   }
 
   // Text Body
