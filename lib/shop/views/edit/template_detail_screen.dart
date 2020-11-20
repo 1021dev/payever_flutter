@@ -99,19 +99,22 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
     ShopObject shopObject;
     switch(result) {
       case 0:
-        shopObject = ShopObject(name: 'text');
+        shopObject = ShopObject(name: 'text', type: 'text');
         break;
       case 1:
-        shopObject = ShopObject(name: 'square');
+        shopObject = ShopObject(name: 'square', type: 'shape');
         break;
       case 2:
-        shopObject = ShopObject(name: 'rounded-square');
+        shopObject = ShopObject(name: 'circle', type: 'shape');
         break;
       case 3:
-        shopObject = ShopObject(name: 'circle');
+        shopObject = ShopObject(name: 'triangle', type: 'shape');
         break;
       case 4:
-        shopObject = ShopObject(name: 'Triangle');
+        shopObject = ShopObject(name: 'button', type: 'shape');
+        break;
+      case 5:
+        shopObject = ShopObject(name: 'rounded-button', type: 'shape');
         break;
     }
 

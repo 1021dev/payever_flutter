@@ -947,7 +947,39 @@ class ChildSize {
 
 class ShopObject {
   String name;
-  ShopObject({this.name,});
+  String type;
+
+  get styles {
+    switch (this.type) {
+      case 'text':
+        return {
+          'fontSize': 15,
+          'fontWeight': "bold",
+          'height': 18,
+          'margin': "0 0 0 0",
+          'width': 32,
+        };
+      case 'shape':
+        return {
+          'backgroundColor': "#d4d4d4",
+          'content': "Text content",
+          'height': 100,
+          'margin': "0 0 0 0",
+          'width': 100,
+        };
+    }
+  }
+  
+  get data {
+    switch (this.type) {
+      case 'text':
+        return {'text': 'Text', 'sync': false};
+      case 'shape':
+        return {'variant': 'square', 'text': ''};
+    }
+  }
+  // data: {variant: "square", text: ""}
+  ShopObject({@required this.name, @required this.type});
 }
 
 @JsonSerializable()

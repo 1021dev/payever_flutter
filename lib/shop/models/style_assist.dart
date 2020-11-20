@@ -564,9 +564,9 @@ class SizeAssist {
     Map<String, dynamic>element = {};
     String elementId = Uuid().v4();
     element['children'] = [];
-    element['data'] = {'text': 'Text', 'sync': false};
+    element['data'] = shopObject.data;
     element['id'] = elementId;
-    element['type'] = 'text';
+    element['type'] = shopObject.type;
 
     Map<String, dynamic>payload = {'element': element, 'to': sectionId};
 
@@ -587,16 +587,8 @@ class SizeAssist {
     effect2['type'] = 'stylesheet:update';
     effects.add(effect2);
 
-    // Add Element Style
-    Map<String, dynamic>styles = {
-      'fontSize': 15,
-      'fontWeight': "bold",
-      'height': 18,
-      'margin': "0 0 0 0",
-      'width': 32,
-    };
 
-    Map<String, dynamic>payload3 = {elementId: styles};
+    Map<String, dynamic>payload3 = {elementId: shopObject.styles};
     Map<String, dynamic>effect3 = {'payload':payload3};
     effect3['target'] = 'stylesheets:${styleSheetIds.mobile}';
     effect3['type'] = 'stylesheet:update';

@@ -94,7 +94,7 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
           crossAxisSpacing: isTablet ? 60 : (isPortrait ? 50 : 60),
           mainAxisSpacing: isTablet ? 60 : (isPortrait ? 50 : 60),
           children: List.generate(
-            5,
+            6,
             (index) {
               return _objectGridItem(index);
             },
@@ -152,19 +152,11 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
         item = Container(
           decoration: BoxDecoration(
             color: Colors.grey[300],
-            borderRadius: BorderRadius.circular(16),
-          ),
-        );
-        break;
-      case 3:
-        item = Container(
-          decoration: BoxDecoration(
-            color: Colors.grey[300],
             shape: BoxShape.circle,
           ),
         );
         break;
-      case 4:
+      case 3:
         item = Transform.rotate(
           angle: pi,
           child: ShapeOfView(
@@ -176,6 +168,43 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
                   color: Colors.grey[300],
                 ),
               )),
+        );
+        break;
+      case 4:
+        item = Container(
+          alignment: Alignment.center,
+          child: AspectRatio(
+            aspectRatio: 1/0.6,
+            child: Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+              ),
+              child: Text(
+                'Button',
+                style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w700),
+              ),
+            ),
+          ),
+        );
+        break;
+      case 5:
+        item = Container(
+          alignment: Alignment.center,
+          child: AspectRatio(
+            aspectRatio: 1/0.6,
+            child: Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(8)
+              ),
+              child: Text(
+                'Button',
+                style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w700),
+              ),
+            ),
+          ),
         );
         break;
     }
