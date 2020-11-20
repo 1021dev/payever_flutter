@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_colorpicker/src/utils.dart';
 
+const moreColor = Colors.black87;
 const List<Color> _defaultColors = [
   Colors.red,
   Colors.pink,
@@ -27,6 +28,8 @@ const List<Color> _defaultColors = [
   Colors.grey,
   Colors.blueGrey,
   Colors.black,
+  Colors.transparent,
+  moreColor,
 ];
 
 typedef PickerLayoutBuilder = Widget Function(
@@ -56,12 +59,12 @@ class BlockColorPicker extends StatefulWidget {
 
     return Container(
       width: orientation == Orientation.portrait ? 300.0 : 300.0,
-      height: orientation == Orientation.portrait ? 400.0 : 200.0,
+      height: orientation == Orientation.portrait ? 460.0 : 200.0,
       child: GridView.count(
         crossAxisCount: orientation == Orientation.portrait ? 4 : 6,
         crossAxisSpacing: 5.0,
         mainAxisSpacing: 5.0,
-        physics: NeverScrollableScrollPhysics(),
+
         children: colors.map((Color color) => child(color)).toList(),
       ),
     );
@@ -89,8 +92,10 @@ class BlockColorPicker extends StatefulWidget {
           borderRadius: BorderRadius.circular(50.0),
           child: AnimatedOpacity(
             duration: const Duration(milliseconds: 210),
-            opacity: isCurrentColor ? 1.0 : 0.0,
-            child: Icon(
+            opacity: (isCurrentColor || isNoFillOrMore(color)) ? 1.0 : 0.0,
+            child: isNoFillOrMore(color) ? Container(
+              alignment: Alignment.center,
+                child: Text(color == Colors.transparent ? 'No Fill' : 'More')) : Icon(
               Icons.done,
               color: useWhiteForeground(color) ? Colors.white : Colors.black,
             ),
@@ -102,6 +107,10 @@ class BlockColorPicker extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() => _BlockColorPickerState();
+
+  static bool isNoFillOrMore(Color color) {
+    return color == Colors.transparent || color == moreColor;
+  }
 }
 
 class _BlockColorPickerState extends State<BlockColorPicker> {

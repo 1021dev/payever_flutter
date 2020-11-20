@@ -265,56 +265,14 @@ class _FillViewState extends State<FillView> {
   }
 
   Widget get _colorView {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Container(
-            height: 50,
-            width: 280,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      widget.onUpdateColor(Colors.transparent);
-                      setState(() {
-                        fillColor = Colors.transparent;
-                      });
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey, width: 1)
-                      ),
-                      alignment: Alignment.center,
-                      child: Text('No Fill'),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 5,),
-                Expanded(
-                  child: GestureDetector(
-                    onTap: ()=> _showColorPicker(),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey, width: 1)
-                      ),
-                      alignment: Alignment.center,
-                      child: Text('More'),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: 20,),
-          BlockColorPicker(
-            pickerColor: fillColor,
-            onColorChanged: (color)=> widget.onUpdateColor(color),
-          ),
-          SizedBox(height: 30),
-        ],
-      ),
+    return  BlockColorPicker(
+      pickerColor: fillColor,
+      onColorChanged: (color) {
+        if (color == moreColor)
+          _showColorPicker();
+        else
+          widget.onUpdateColor(color);
+      },
     );
   }
 
