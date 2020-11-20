@@ -111,10 +111,10 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
         shopObject = ShopObject(name: 'triangle', type: 'shape');
         break;
       case 4:
-        shopObject = ShopObject(name: 'button', type: 'shape');
+        shopObject = ShopObject(name: 'button', type: 'button');
         break;
       case 5:
-        shopObject = ShopObject(name: 'rounded-button', type: 'shape');
+        shopObject = ShopObject(name: 'button--rounded', type: 'button');
         break;
     }
 

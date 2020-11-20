@@ -949,6 +949,17 @@ class ShopObject {
   String name;
   String type;
 
+  get data {
+    switch (this.type) {
+      case 'text':
+        return {'text': 'Text', 'sync': false};
+      case 'shape':
+        return {'variant': this.name, 'text': ''};
+      case 'button':
+        return {'variant': this.name, 'text': 'Button text'};
+    }
+  }
+
   get styles {
     switch (this.type) {
       case 'text':
@@ -967,17 +978,18 @@ class ShopObject {
           'margin': "0 0 0 0",
           'width': 100,
         };
+      case 'button':
+        return {
+          'backgroundColor': "#d4d4d4",
+          'borderRadius': this.name == 'button' ? "0" : "15",
+          'height': 20,
+          'margin': "0 0 0 0",
+          'width': 80,
+        };
     }
   }
-  
-  get data {
-    switch (this.type) {
-      case 'text':
-        return {'text': 'Text', 'sync': false};
-      case 'shape':
-        return {'variant': 'square', 'text': ''};
-    }
-  }
+
+
   // data: {variant: "square", text: ""}
   ShopObject({@required this.name, @required this.type});
 }
