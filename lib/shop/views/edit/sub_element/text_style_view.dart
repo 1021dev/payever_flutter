@@ -13,10 +13,13 @@ import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/sub_element/fill_view.dart';
 import 'package:payever/shop/views/edit/sub_element/font_view.dart';
 import 'package:payever/shop/views/edit/sub_element/paragraph_view.dart';
+import 'package:payever/shop/views/edit/sub_element/shadow_view.dart';
 import 'package:payever/shop/views/edit/sub_element/text_options_view.dart';
 import 'package:payever/theme.dart';
 
 import 'background_view.dart';
+import 'border_view.dart';
+import 'fill_color_view.dart';
 
 class TextStyleView extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
@@ -242,9 +245,25 @@ class _TextStyleViewState extends State<TextStyleView> {
   Widget _styleBody(ShopEditScreenState state) {
     List<Widget> textStyleWidgets = [
       _gridViewBody(state),
-      _fill(state, ColorType.BackGround),
-      _border(state),
-      _shadow(state),
+      FillColorView(
+        pickColor: fillColor,
+        styles: styles,
+        colorType: ColorType.BackGround,
+        onUpdateColor: (color) => _updateFillColor(state, color),
+        onTapFillView: () {
+          navigateSubView(FillView(
+            widget.screenBloc,
+            stylesheets: widget.stylesheets,
+            onUpdateColor: (Color color)=> _updateFillColor(state, color),
+            onUpdateGradientFill: (GradientModel model, bool updateApi) =>
+                _updateGradientFillColor(state, model, updateApi: updateApi),
+            onUpdateImageFill: (BackGroundModel model) =>
+                _updateImageFill(state, model),
+          ));
+        },
+      ),
+      BorderView(),
+      ShadowView(),
       _opacity(state),
     ];
     return ListView.separated(
@@ -258,7 +277,6 @@ class _TextStyleViewState extends State<TextStyleView> {
         return Divider(
           height: 0,
           thickness: 0.5,
-          color: Colors.grey,
         );
       },
     );
@@ -282,257 +300,6 @@ class _TextStyleViewState extends State<TextStyleView> {
           },
         ),
       ),
-    );
-  }
-
-  Widget _fill(ShopEditScreenState state, ColorType colorType) {
-    String title;
-    Color pickColor;
-
-    switch(colorType) {
-      case ColorType.BackGround:
-        title = 'Fill';
-        pickColor = fillColor;
-        break;
-      case ColorType.Border:
-        title = 'Color';
-        pickColor = borderColor;
-        break;
-      case ColorType.Text:
-        title = 'Text Color';
-        pickColor = textColor;
-        break;
-    }
-    return Container(
-      height: 60,
-      child: Row(
-        children: [
-          Text(
-            title,
-            style: TextStyle(color: Colors.white, fontSize: 15),
-          ),
-          Spacer(),
-          GestureDetector(
-            onTap: () {
-              if (colorType == ColorType.BackGround) {
-                navigateSubView(FillView(widget.screenBloc,
-                  stylesheets: widget.stylesheets,
-                  onUpdateColor: (Color color) {
-                    setState(() {
-                      fillColor = color;
-                    });
-                    _updateFillColor(state);
-                  },
-                  onUpdateGradientFill: (GradientModel model, bool updateApi) =>
-                      _updateGradientFillColor(state, model, updateApi: updateApi),
-                  onUpdateImageFill: (BackGroundModel model) => _updateImageFill(state, model),
-                ));
-                return;
-              }
-
-              showDialog(
-                context: context,
-                child: AlertDialog(
-                  title: const Text('Pick a color!'),
-                  content: SingleChildScrollView(
-                    child: ColorPicker(
-                      paletteType: PaletteType.hsl,
-                      pickerColor: pickColor,
-                      onColorChanged: (color) =>
-                          changeColor(color, colorType),
-                      showLabel: true,
-                      pickerAreaHeightPercent: 0.8,
-                    ),
-                  ),
-                  actions: <Widget>[
-                    FlatButton(
-                      child: const Text('Got it'),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        setState(() {});
-                        if (colorType == ColorType.BackGround)
-                        _updateFillColor(state);
-                        else if (colorType == ColorType.Text)
-                          _updateTextColor(state);
-                      },
-                    ),
-                  ],
-                ),
-              );
-            },
-            child: getFillContainer(colorType, pickColor),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget getFillContainer(ColorType type, Color pickColor) {
-    if (type == ColorType.BackGround)
-      return Container(
-        width: 100,
-        height: 40,
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey, width: 1),
-          color: pickColor,
-        ),
-        child: styles.backgroundImage.isNotEmpty
-            ? BackgroundView(styles: styles)
-            : pickColor == Colors.transparent
-                ? ClipPath(
-                    child: Container(
-                      color: Colors.red[900],
-                    ),
-                    clipper: NoBackGroundFillClipPath(),
-                  )
-                : Container(),
-      );
-
-    return Container(
-      width: 100,
-      height: 40,
-      padding: EdgeInsets.all(2),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey, width: 1),
-        color: pickColor,
-      ),
-      child: pickColor == Colors.transparent ? ClipPath(
-        child: Container(
-          color: Colors.red[900],
-        ),
-        clipper: NoBackGroundFillClipPath(),
-      ) : Container(),
-    );
-  }
-
-  Widget _border(ShopEditScreenState state) {
-    return Column(
-      children: [
-        Container(
-          height: 60,
-          child: Row(
-            children: [
-              Text(
-                'Border',
-                style: TextStyle(color: Colors.white, fontSize: 15),
-              ),
-              Spacer(),
-              Transform.scale(
-                scale: 0.8,
-                child: CupertinoSwitch(
-                  value: borderExpanded,
-                  onChanged: (value) {
-                    setState(() {
-                      borderExpanded = value;
-                    });
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-        if (borderExpanded)
-          Container(
-            padding: EdgeInsets.only(left: 16),
-            child: Column(
-              children: [
-                Container(
-                  height: 60,
-                  child: Row(
-                    children: [
-                      Text(
-                        'Style',
-                        style: TextStyle(color: Colors.white, fontSize: 15),
-                      ),
-                      Expanded(
-                          child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 10),
-                        height: 4,
-                        color: Colors.white,
-                      )),
-                      Icon(Icons.arrow_forward_ios),
-                    ],
-                  ),
-                ),
-                _fill(state, ColorType.Border),
-                Container(
-                  height: 60,
-                  child: Row(
-                    children: [
-                      Text(
-                        'Width',
-                        style: TextStyle(color: Colors.white, fontSize: 15),
-                      ),
-                      Expanded(
-                          child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 10),
-                        height: 4,
-                        color: Colors.white,
-                      )),
-                      Text(
-                        '1 pt',
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          )
-      ],
-    );
-  }
-
-  Widget _shadow(ShopEditScreenState state) {
-    return Column(
-      children: [
-        Container(
-          height: 60,
-          child: Row(
-            children: [
-              Text(
-                'Shadow',
-                style: TextStyle(color: Colors.white, fontSize: 15),
-              ),
-              Spacer(),
-              Transform.scale(
-                scale: 0.8,
-                child: CupertinoSwitch(
-                  value: shadowExpanded,
-                  onChanged: (value) {
-                    setState(() {
-                      shadowExpanded = value;
-                    });
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-        if (shadowExpanded)
-          Container(
-            alignment: Alignment.center,
-            padding: EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.grey[800],
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: GridView.count(
-              padding: EdgeInsets.all(10),
-              shrinkWrap: true,
-              crossAxisCount: isTablet ? 5 : (isPortrait ? 3 : 5),
-              crossAxisSpacing: isTablet ? 40 : (isPortrait ? 40 : 40),
-              mainAxisSpacing: isTablet ? 20 : (isPortrait ? 20 : 20),
-              physics: NeverScrollableScrollPhysics(),
-              children: List.generate(
-                6,
-                (index) {
-                  return _shadowGridItem(index);
-                },
-              ),
-            ),
-          )
-      ],
     );
   }
 
@@ -577,15 +344,6 @@ class _TextStyleViewState extends State<TextStyleView> {
     );
   }
 
-  void changeColor(Color color, ColorType colorType) {
-    if (colorType == ColorType.BackGround)
-      fillColor = color;
-    else if (colorType == ColorType.Text)
-      textColor = color;
-    else
-      borderColor = color;
-  }
-
   Widget _textBackgroundGridItem(ShopEditScreenState state, int index) {
     Widget item = Container(
       alignment: Alignment.center,
@@ -607,74 +365,8 @@ class _TextStyleViewState extends State<TextStyleView> {
     return InkWell(
         onTap: () {
           setState(() {
-            fillColor = textBgColors[index];
-            _updateFillColor(state);
+            _updateFillColor(state, textBgColors[index]);
           });
-        },
-        child: item);
-  }
-
-  Widget _shadowGridItem(int index) {
-    double offsetX = 0;
-    double offsetY = 0;
-    double blurRadius = 5;
-    switch (index) {
-      case 0:
-        offsetX = 0;
-        offsetY = 5;
-        break;
-      case 1:
-        offsetX = 5;
-        offsetY = 5;
-        break;
-      case 2:
-        offsetX = -5;
-        offsetY = 5;
-        break;
-      case 3:
-        offsetX = -5;
-        offsetY = 0;
-        break;
-      case 4:
-        offsetX = 0;
-        offsetY = 0;
-        blurRadius = 0;
-        break;
-      case 5:
-        offsetX = -5;
-        offsetY = -5;
-        break;
-    }
-
-    Widget item = Stack(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black,
-                blurRadius: blurRadius,
-                offset: Offset(offsetX, offsetY), // changes position of shadow
-              ),
-            ],
-          ),
-//      color: colorConvert(styles.backgroundColor),
-          alignment: Alignment.center,
-        ),
-        Positioned(
-            bottom: 10,
-            right: 10,
-            child: Icon(
-              Icons.check_circle,
-              color: Colors.blue,
-            ))
-      ],
-    );
-
-    return InkWell(
-        onTap: () {
-          Navigator.pop(context, index);
         },
         child: item);
   }
@@ -689,7 +381,12 @@ class _TextStyleViewState extends State<TextStyleView> {
               _paragraphStyle(state),
               _fontType(state),
               _fontSize(state),
-              _fill(state, ColorType.Text),
+              FillColorView(
+                pickColor: textColor,
+                styles: styles,
+                colorType: ColorType.Text,
+                onUpdateColor: (color) => _updateTextColor(state, color),
+              ),
               _textHorizontalAlign(state),
               _textVerticalAlign,
               _verticalText,
@@ -1547,12 +1244,13 @@ class _TextStyleViewState extends State<TextStyleView> {
     );
   }
 
-  void _updateFillColor(ShopEditScreenState state) {
+  void _updateFillColor(ShopEditScreenState state, Color color) {
+    fillColor = color;
     String newBgColor;
-    if (fillColor == Colors.transparent) {
+    if (color == Colors.transparent) {
       newBgColor = '';
     } else {
-      newBgColor = encodeColor(fillColor);
+      newBgColor = encodeColor(color);
     }
     Map<String, dynamic> sheets = widget.stylesheets;
     sheets['backgroundColor'] = newBgColor;
@@ -1603,8 +1301,10 @@ class _TextStyleViewState extends State<TextStyleView> {
     widget.screenBloc.add(UpdateSectionEvent(
         sectionId: state.selectedSectionId, effects: effects, updateApi: updateApi));
   }
+  // drop-shadow(7.071067811865474pt 7.071067811865477pt 5pt rgba(0,0,0,1))
 
-  void _updateTextColor(ShopEditScreenState state) {
+  void _updateTextColor(ShopEditScreenState state, Color color) {
+    textColor = color;
     String hex = '${textColor.value.toRadixString(16)}';
     String newTextColor = '#${hex.substring(2)}';
     String htmlStr = styles.encodeHtmlString(htmlText, textColor: newTextColor);

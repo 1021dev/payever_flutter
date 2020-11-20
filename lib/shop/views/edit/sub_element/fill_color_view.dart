@@ -12,12 +12,14 @@ class FillColorView extends StatefulWidget {
   final ColorType colorType;
   final Color pickColor;
   final Function onUpdateColor;
+  final Function onTapFillView;
 
   const FillColorView(
       {@required this.styles,
       @required this.colorType,
       @required this.pickColor,
-      @required this.onUpdateColor});
+      @required this.onUpdateColor,
+      this.onTapFillView});
 
   @override
   _FillColorViewState createState() => _FillColorViewState();
@@ -54,18 +56,7 @@ class _FillColorViewState extends State<FillColorView> {
           GestureDetector(
             onTap: () {
               if (widget.colorType == ColorType.BackGround) {
-                // navigateSubView(FillView(widget.screenBloc,
-                //   stylesheets: widget.stylesheets,
-                //   onUpdateColor: (Color color) {
-                //     setState(() {
-                //       fillColor = color;
-                //     });
-                //     _updateFillColor(state);
-                //   },
-                //   onUpdateGradientFill: (GradientModel model, bool updateApi) =>
-                //       _updateGradientFillColor(state, model, updateApi: updateApi),
-                //   onUpdateImageFill: (BackGroundModel model) => _updateImageFill(state, model),
-                // ));
+                widget.onTapFillView();
                 return;
               }
 
