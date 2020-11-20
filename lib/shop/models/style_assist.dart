@@ -600,6 +600,16 @@ class SizeAssist {
     return effects;
   }
 
+  List<Map<String, dynamic>> getDeleteObject(String selectedChildId, String templateId) {
+    List<Map<String, dynamic>> effects = [];
+    Map<String, dynamic>effect = {};
+    effect['payload'] = selectedChildId;
+    effect['target'] = 'templates:$templateId';
+    effect['type'] = 'template:delete-element';
+    effects.add(effect);
+    return effects;
+  }
+
   List<Map<String, dynamic>> getUpdateTextStylePayload(String selectedChildId, Map<String, dynamic>styles, StyleSheetIds styleSheetIds) {
     List<Map<String, dynamic>> effects = [];
     Map<String, dynamic>payload = {selectedChildId: styles};

@@ -287,6 +287,54 @@ class _SectionViewState extends State<SectionView> {
         });
       }
           : null,
+      onLongPress: () {
+        RenderBox box = key.currentContext.findRenderObject();
+        Offset position1 = box.localToGlobal(Offset.zero);
+        final RenderBox overlay = Overlay.of(context).context.findRenderObject();
+        var _tapPosition = Offset(marginLeft, marginTop + position1.dy - height/2 - 20);
+        showMenu(
+          context: context,
+          position:  RelativeRect.fromRect(
+              _tapPosition & Size(40, 40), // smaller rect, the touch area
+              Offset.zero & overlay.size // Bigger rect, the entire screen
+          ),
+          items: [
+            PopupMenuItem(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: <Widget>[
+                    PopupMenuItem(
+                      child: Text(
+                        'Cut',
+                      ),
+                    ),
+                    PopupMenuItem(
+                      child: Text(
+                        'Copy',
+                      ),
+                    ),
+                    PopupMenuItem(
+                      child: Text(
+                        'Delete',
+                        style: Theme.of(context)
+                            .textTheme
+                            .body2
+                            .copyWith(color: Colors.red),
+                      ),
+                    ),
+                    PopupMenuItem(
+                      child: Text(
+                        'Paste',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+      },
       child: childWidget,
     );
     return element;

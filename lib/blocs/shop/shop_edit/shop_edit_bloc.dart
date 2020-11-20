@@ -166,13 +166,8 @@ class ShopEditScreenBloc
     if (actionType == 'template:append-element') {
       Map<String, dynamic>newTextMap = event.effects.first['payload']['element'];
       String id = newTextMap['id'];
-      Map<String, dynamic>styles = {
-        'fontSize': 15,
-        'fontWeight': "bold",
-        'height': 18,
-        'margin': "0 0 0 0",
-        'width': 32,
-      };
+      Map<String, dynamic>styles = event.effects[3]['payload'][id];
+      print('Styles: $styles');
       stylesheets[state.activeShopPage.stylesheetIds.mobile][id] = styles;
       List children = templates[state.activeShopPage.templateId]['children'] as List;
       (children.firstWhere((element) => element['id'] == event.sectionId)['children'] as List).add(newTextMap);
