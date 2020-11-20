@@ -167,37 +167,44 @@ class ShopEditScreenBloc
       Map<String, dynamic>newTextMap = event.effects.first['payload']['element'];
       String id = newTextMap['id'];
       Map<String, dynamic>styles = event.effects[3]['payload'][id];
-      print('Styles: $styles');
       stylesheets[state.activeShopPage.stylesheetIds.mobile][id] = styles;
       List children = templates[state.activeShopPage.templateId]['children'] as List;
       (children.firstWhere((element) => element['id'] == event.sectionId)['children'] as List).add(newTextMap);
-    }
-
-    if ((event.effects.first['payload'] as Map).containsKey('id')) {
-      String id = event.effects.first['payload']['id'];
+    } else if (actionType == 'template:delete-element') {
+      String id = event.effects.first['payload'];
       List sections = templates[state.activeShopPage.templateId]['children'] as List;
-      List children = sections.firstWhere((element) => element['id'] == event.sectionId)['children'] as List;
-
-      List newChildren = children.map((element) {
-        if (element['id'] == id) {
-          element = event.effects.first['payload'];
-        }
-        return element;
-      }).toList();
-      sections.firstWhere((element) => element['id'] == event.sectionId)['children'] = newChildren;
+      Map<String, dynamic> child = (sections.firstWhere((element) => element['id'] == event.sectionId)['children'] as List).firstWhere((element) => element['id'] == id);
+      if (child != null)
+        (sections.firstWhere((element) => element['id'] == event.sectionId)['children'] as List).remove(child);
     }
 
-    Map<String, dynamic>payload = event.effects.first['payload'];
-    try{
-      payload.keys.forEach((key) {
-        Map<String, dynamic>updatejson =  payload[key];
-        Map<String, dynamic>json = stylesheets[state.activeShopPage.stylesheetIds.mobile][key];
-        updatejson.keys.forEach((element) {
-          json[element] = updatejson[element];
+    if (actionType != 'template:delete-element') {
+      if ((event.effects.first['payload'] as Map).containsKey('id')) {
+        String id = event.effects.first['payload']['id'];
+        List sections = templates[state.activeShopPage.templateId]['children'] as List;
+        List children = sections.firstWhere((element) => element['id'] == event.sectionId)['children'] as List;
+
+        List newChildren = children.map((element) {
+          if (element['id'] == id) {
+            element = event.effects.first['payload'];
+          }
+          return element;
+        }).toList();
+        sections.firstWhere((element) => element['id'] == event.sectionId)['children'] = newChildren;
+      }
+
+      Map<String, dynamic>payload = event.effects.first['payload'];
+      try{
+        payload.keys.forEach((key) {
+          Map<String, dynamic>updatejson =  payload[key];
+          Map<String, dynamic>json = stylesheets[state.activeShopPage.stylesheetIds.mobile][key];
+          updatejson.keys.forEach((element) {
+            json[element] = updatejson[element];
+          });
+          stylesheets[state.activeShopPage.stylesheetIds.mobile][key] = json;
         });
-        stylesheets[state.activeShopPage.stylesheetIds.mobile][key] = json;
-      });
-    } catch(e) {}
+      } catch(e) {}
+    }
 
     String token = GlobalUtils.activeToken.accessToken;
     String themeId = state.activeTheme.themeId;

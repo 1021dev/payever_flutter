@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,6 +6,7 @@ import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/shop/shop_edit/shop_edit_bloc.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/models/template_size_state_model.dart';
 import 'package:payever/shop/views/edit/element/block_view.dart';
@@ -308,11 +308,13 @@ class _SectionViewState extends State<SectionView> {
                       child: Text(
                         'Cut',
                       ),
+                      value: ClipboardType.Cut,
                     ),
                     PopupMenuItem(
                       child: Text(
                         'Copy',
                       ),
+                      value: ClipboardType.Copy,
                     ),
                     PopupMenuItem(
                       child: Text(
@@ -322,18 +324,23 @@ class _SectionViewState extends State<SectionView> {
                             .body2
                             .copyWith(color: Colors.red),
                       ),
+                      value: ClipboardType.Delete,
                     ),
                     PopupMenuItem(
                       child: Text(
                         'Paste',
                       ),
+                      value: ClipboardType.Paste,
                     ),
                   ],
                 ),
               ),
             ),
           ],
-        );
+          color: Colors.black
+        ).then((value) {
+          _actionClipboard(state, value);
+        });
       },
       child: childWidget,
     );
@@ -835,6 +842,28 @@ class _SectionViewState extends State<SectionView> {
     //   section.children.firstWhere((element) => element.id == selectedChild.blocks.first.id).children.remove(selectedChild);
     // }
     return effects;
+  }
+
+  _actionClipboard(ShopEditScreenState state, ClipboardType type) {
+    print('value $type');
+    List<Map<String, dynamic>>effects = [];
+    switch(type) {
+      case ClipboardType.Cut:
+        // TODO: Handle this case.
+        break;
+      case ClipboardType.Copy:
+        // TODO: Handle this case.
+        break;
+      case ClipboardType.Paste:
+        // TODO: Handle this case.
+        break;
+      case ClipboardType.Delete:
+        effects = sectionStyles.getDeleteObject(state.selectedChild.id, state.activeShopPage.templateId);
+        break;
+    }
+    print('payload: $effects');
+    if (effects.isNotEmpty)
+      widget.screenBloc.add(UpdateSectionEvent(sectionId: section.id, effects: effects));
   }
 
   BaseStyles getBaseStyles(String childId) {

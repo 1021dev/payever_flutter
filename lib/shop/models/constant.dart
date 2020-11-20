@@ -56,6 +56,13 @@ enum ColorType {
   Text
 }
 
+enum ClipboardType {
+  Cut,
+  Copy,
+  Paste,
+  Delete
+}
+
 // List<String>paragraphStyles = [
 //   'Title',
 //   'Title Small',
