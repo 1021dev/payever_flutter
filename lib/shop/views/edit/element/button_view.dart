@@ -44,7 +44,7 @@ class _ButtonViewState extends State<ButtonView> {
   }
 
   get decoration {
-    print('ButtonStyle: ${styles.toJson()}');
+    // print('ButtonStyle: ${styles.toJson()}');
     switch (backgroundType(styles)) {
       case 0:
         return BoxDecoration(

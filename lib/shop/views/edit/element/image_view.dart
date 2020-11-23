@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:payever/libraries/utils/px_dp.dart';
 import 'package:payever/shop/models/models.dart';
 import '../../../../theme.dart';
 
@@ -105,9 +106,9 @@ class _ImageViewState extends State<ImageView> {
       return Border.all(color: Colors.transparent, width: 0);
     }
     List<String> borderAttrs = styles.border.toString().split(' ');
-    double borderWidth = double.parse(borderAttrs.first.replaceAll('px', ''));
+    int borderWidth = int.parse(borderAttrs.first.replaceAll('px', ''));
     String borderColor = borderAttrs.last;
-    return Border.all(color: colorConvert(borderColor), width: borderWidth);
+    return Border.all(color: colorConvert(borderColor), width: PxDp.d2u(px: borderWidth));
   }
 
   get getBoxShadow {

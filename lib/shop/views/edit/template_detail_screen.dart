@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/shop/shop_edit/shop_edit_bloc.dart';
+import 'package:payever/libraries/utils/px_dp.dart';
+import 'package:payever/libraries/utils/px_dp_design.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/models/template_size_state_model.dart';
 import 'package:payever/shop/views/edit/add_object_screen.dart';
@@ -50,6 +52,8 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    PxDp.init(context);
+    PxDp.load(PxDpDesign.fromCompare(540.0, 1080));
     return MultiProvider(
       providers: [
         Provider.value(value: templateSizeStateModel),
