@@ -7,9 +7,10 @@ import 'package:payever/shop/models/models.dart';
 class ShadowView extends StatefulWidget {
 
   final TextStyles styles;
+  final String type;
   final Function onUpdateShadow;
 
-  const ShadowView({@required this.styles, @required this.onUpdateShadow});
+  const ShadowView({@required this.styles, @required this.type, @required this.onUpdateShadow});
 
   @override
   _ShadowViewState createState() => _ShadowViewState();
@@ -51,29 +52,104 @@ class _ShadowViewState extends State<ShadowView> {
           ),
         ),
         if (shadowExpanded)
-          Container(
-            alignment: Alignment.center,
-            padding: EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.grey[800],
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: GridView.count(
-              padding: EdgeInsets.all(10),
-              shrinkWrap: true,
-              crossAxisCount: isTablet ? 5 : (isPortrait ? 3 : 5),
-              crossAxisSpacing: isTablet ? 40 : (isPortrait ? 40 : 40),
-              mainAxisSpacing: isTablet ? 20 : (isPortrait ? 20 : 20),
-              physics: NeverScrollableScrollPhysics(),
-              children: List.generate(
-                6,
-                    (index) {
-                  return _shadowGridItem(index);
-                },
-              ),
-            ),
-          )
+          expandedView
+
       ],
+    );
+  }
+
+  Widget get expandedView {
+    if (widget.type == 'button')
+      return buttonShadow;
+
+    return Container(
+      alignment: Alignment.center,
+      padding: EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.grey[800],
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: GridView.count(
+        padding: EdgeInsets.all(10),
+        shrinkWrap: true,
+        crossAxisCount: isTablet ? 5 : (isPortrait ? 3 : 5),
+        crossAxisSpacing: isTablet ? 40 : (isPortrait ? 40 : 40),
+        mainAxisSpacing: isTablet ? 20 : (isPortrait ? 20 : 20),
+        physics: NeverScrollableScrollPhysics(),
+        children: List.generate(
+          6,
+              (index) {
+            return _shadowGridItem(index);
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget get buttonShadow {
+    return Container(
+      padding: EdgeInsets.only(left: 16),
+      height: 60,
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Text(
+                'Corners',
+                style: TextStyle(color: Colors.white, fontSize: 15),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: Slider(
+                  value: shadowModel.blurRadius,
+                  min: 0,
+                  max: 100,
+                  onChanged: (double value) => widget.onUpdateShadow(value, false),
+                  onChangeEnd: (double value) => widget.onUpdateShadow(value, true),
+                ),
+              ),
+              Container(
+                width: 50,
+                alignment: Alignment.center,
+                child: Text(
+                  '${shadowModel.blurRadius.toInt()} px',
+                  style: TextStyle(color: Colors.white, fontSize: 15),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Text(
+                'Corners',
+                style: TextStyle(color: Colors.white, fontSize: 15),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: Slider(
+                  value: shadowModel.blurRadius,
+                  min: 0,
+                  max: 100,
+                  onChanged: (double value) => widget.onUpdateShadow(value, false),
+                  onChangeEnd: (double value) => widget.onUpdateShadow(value, true),
+                ),
+              ),
+              Container(
+                width: 50,
+                alignment: Alignment.center,
+                child: Text(
+                  '${shadowModel.blurRadius.toInt()} px',
+                  style: TextStyle(color: Colors.white, fontSize: 15),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 

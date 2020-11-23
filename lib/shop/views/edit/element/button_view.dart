@@ -63,6 +63,8 @@ class _ButtonViewState extends State<ButtonView> {
   }
 
   get getBoxShadow {
+    print('styles.boxShadow: ${styles.boxShadow}');
+
     if (styles.boxShadow == null || styles.boxShadow == false) {
       return [
         BoxShadow(
@@ -75,6 +77,8 @@ class _ButtonViewState extends State<ButtonView> {
     }
 //    rgba(0,0,0,0.7) 0 2 13 8
     List<String> attrs0 = styles.boxShadow.split(' ');
+    if (attrs0.length < 2)
+      return null;
     List<String> attrs = attrs0.map((element) {
       if (element.contains('rgb'))
         return element

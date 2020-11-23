@@ -265,9 +265,14 @@ class _TextStyleViewState extends State<TextStyleView> {
           ));
         },
       ),
-      BorderView(),
+      BorderView(
+          styles: styles,
+          type: state.selectedChild.type,
+          onUpdateBorder: (radius, updateApi) =>
+              _updateBorder(state, radius, updateApi: updateApi)),
       ShadowView(
         styles: styles,
+        type: state.selectedChild.type,
         onUpdateShadow: (ShadowModel model) => _updateShadow(state, model),
       ),
       OpacityView(
@@ -1234,6 +1239,16 @@ class _TextStyleViewState extends State<TextStyleView> {
         sectionId: state.selectedSectionId, effects: effects));
   }
 
+  void _updateBorder(ShopEditScreenState state, double radius, {bool updateApi = true}) {
+    Map<String, dynamic> sheets = widget.stylesheets;
+    sheets['borderRadius'] = radius.toInt();
+
+    List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
+        selectedId, sheets, state.activeShopPage.stylesheetIds);
+
+    widget.screenBloc.add(UpdateSectionEvent(
+        sectionId: state.selectedSectionId, effects: effects, updateApi: updateApi));
+  }
 
   void _updateTextColor(ShopEditScreenState state, Color color) {
     textColor = color;
