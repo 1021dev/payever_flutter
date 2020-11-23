@@ -1,13 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
 
 class ShadowView extends StatefulWidget {
 
+  final TextStyles styles;
   final Function onUpdateShadow;
 
-  const ShadowView({@required this.onUpdateShadow});
+  const ShadowView({@required this.styles, @required this.onUpdateShadow});
 
   @override
   _ShadowViewState createState() => _ShadowViewState();
@@ -17,11 +19,13 @@ class _ShadowViewState extends State<ShadowView> {
   bool shadowExpanded = false;
   bool isPortrait;
   bool isTablet;
-
+  ShadowModel shadowModel;
   @override
   Widget build(BuildContext context) {
     isPortrait = GlobalUtils.isPortrait(context);
     isTablet = GlobalUtils.isTablet(context);
+    shadowModel = widget.styles.parseShadowFromString(widget.styles.shadow);
+    shadowExpanded = shadowModel != null;
 
     return Column(
       children: [
@@ -120,24 +124,45 @@ class _ShadowViewState extends State<ShadowView> {
               ),
             ],
           ),
-//      color: colorConvert(styles.backgroundColor),
           alignment: Alignment.center,
         ),
-        Positioned(
-            bottom: 10,
-            right: 10,
-            child: Icon(
-              Icons.check_circle,
-              color: Colors.blue,
-            ))
+        if (shadowType.index == index)
+          Positioned(
+              bottom: 10,
+              right: 10,
+              child: Icon(
+                Icons.check_circle,
+                color: Colors.blue,
+              ))
       ],
     );
 
     return InkWell(
         onTap: () {
-          ShadowModel model = ShadowModel(blurRadius: blurRadius, offsetX: offsetX, offsetY: offsetY, color: Colors.black, opacity: 1);
+          ShadowModel model = ShadowModel(blurRadius: blurRadius, offsetX: offsetX, offsetY: offsetY, color: Colors.black);
           widget.onUpdateShadow(model);
         },
         child: item);
+  }
+
+  ShadowType get shadowType {
+    double blurRadius; double offsetX; double offsetY;
+
+    if (shadowModel == null) return ShadowType.None;
+
+    if (blurRadius == 5 && offsetX == 0 && offsetY == 5)
+      return ShadowType.Bottom;
+    if (blurRadius == 5 && offsetX == 5 && offsetY == 5)
+      return ShadowType.BottomRight;
+    if (blurRadius == 5 && offsetX == -5 && offsetY == 5)
+      return ShadowType.BottomLeft;
+    if (blurRadius == 5 && offsetX == -5 && offsetY == 0)
+      return ShadowType.Right;
+    if (blurRadius == 0 && offsetX == 0 && offsetY == 0)
+      return ShadowType.None;
+    if (blurRadius == 5 && offsetX == -5 && offsetY == -5)
+      return ShadowType.TopRight;
+
+    return ShadowType.Unknown;
   }
 }

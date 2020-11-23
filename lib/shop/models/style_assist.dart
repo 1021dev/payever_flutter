@@ -362,19 +362,9 @@ class DecorationAssist {
     return Border.all(color: colorConvert(borderColor), width: borderWidth);
   }
 
-  List<BoxShadow> getBoxShadow1(String shadow) {
-    if (shadow == null || shadow.isEmpty) {
-      return [
-        BoxShadow(
-          color: Colors.transparent,
-          spreadRadius: 0,
-          blurRadius: 0,
-          offset: Offset.zero, // changes position of shadow
-        )
-      ];
-    }
+  ShadowModel parseShadowFromString(String shadow) {
+    if (shadow == null || shadow.isEmpty) return null;
 
-//    drop-shadow(7.071067811865474pt 7.071067811865477pt 5pt rgba(0,0,0,1))
     List<String> attrs0 = shadow.replaceAll('drop-shadow', '').split(' ');
     List<String> attrs = attrs0.map((element) {
       if (element.contains('rgb'))
@@ -393,11 +383,32 @@ class DecorationAssist {
     int colorG = int.parse(colors[1]);
     int colorB = int.parse(colors[2]);
     double opacity = double.parse(colors[3]);
+
+    return ShadowModel(
+        blurRadius: blurRadius,
+        offsetX: offsetX,
+        offsetY: offsetY,
+        color: Color.fromRGBO(colorR, colorG, colorB, opacity));
+  }
+
+  List<BoxShadow> getBoxShadow1(String shadow) {
+    ShadowModel model = parseShadowFromString(shadow);
+    if (model == null) {
+      return [
+        BoxShadow(
+          color: Colors.transparent,
+          spreadRadius: 0,
+          blurRadius: 0,
+          offset: Offset.zero, // changes position of shadow
+        )
+      ];
+    }
+
     return [
       BoxShadow(
-        color: Color.fromRGBO(colorR, colorG, colorB, opacity),
-        blurRadius: blurRadius,
-        offset: Offset(offsetX, offsetY), // changes position of shadow
+        color: model.color,
+        blurRadius: model.blurRadius,
+        offset: Offset(model.offsetX, model.offsetY), // changes position of shadow
       ),
     ];
   }

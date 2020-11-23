@@ -5,6 +5,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:payever/theme.dart';
 
+import 'constant.dart';
 import 'style_assist.dart';
 part 'models.g.dart';
 
@@ -1059,19 +1060,18 @@ class ShadowModel {
   double blurRadius;
   double offsetX;
   double offsetY;
-  double opacity;
   Color color;
 
   String get shadowString {
-    return 'drop-shadow(${offsetX}pt ${offsetY}pt ${blurRadius}pt rgba(${color.red},${color.green},${color.blue},$opacity))';
+    return 'drop-shadow(${offsetX}pt ${offsetY}pt ${blurRadius}pt rgba(${color.red},${color.green},${color.blue},${color.opacity}))';
   }
 
   ShadowModel(
       {@required this.blurRadius,
       @required this.offsetX,
       @required this.offsetY,
-      @required this.color,
-      @required this.opacity});
+      @required this.color});
+
 }
 
 class NoBackGroundFillClipPath extends CustomClipper<Path> {

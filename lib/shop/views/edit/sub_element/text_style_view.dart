@@ -266,7 +266,10 @@ class _TextStyleViewState extends State<TextStyleView> {
         },
       ),
       BorderView(),
-      ShadowView(onUpdateShadow: (ShadowModel model) => _updateShadow(state, model),),
+      ShadowView(
+        styles: styles,
+        onUpdateShadow: (ShadowModel model) => _updateShadow(state, model),
+      ),
       OpacityView(
         styles: styles,
         onUpdateOpacity: (value, updateApi) =>

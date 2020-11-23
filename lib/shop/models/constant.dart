@@ -110,6 +110,16 @@ enum BaseLine {
   Bottom,
 }
 
+enum ShadowType {
+  Bottom,
+  BottomRight,
+  BottomLeft,
+  Right,
+  None,
+  TopRight,
+  Unknown,
+}
+
 List<String>capitalizations = [
   'None',
   'All Caps',
