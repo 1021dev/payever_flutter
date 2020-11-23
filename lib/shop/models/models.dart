@@ -958,6 +958,10 @@ class ShopObject {
         return {'variant': this.name, 'text': ''};
       case 'button':
         return {'variant': this.name, 'text': 'Button text'};
+      case 'menu':
+        return {'variant': this.name, 'text': '', 'routes': [{'title': "Page"}]};
+      case 'cart':
+        return {'variant': this.name, 'text': ''};
     }
   }
 
@@ -986,6 +990,22 @@ class ShopObject {
           'height': 20,
           'margin': "0 0 0 0",
           'width': 80,
+        };
+      case 'menu':
+        return {
+          'backgroundColor': 'transparent',
+          'fontFamily': 'Roboto',
+          'fontSize': 16,
+          'height': 40,
+          'width': 40,
+        };
+      case 'cart':
+        return {
+          'backgroundColor': '#d4d4d4',
+          'content': 'Text content',
+          'height': 100,
+          'margin': '0 0 0 0',
+          'width': 125,
         };
     }
   }

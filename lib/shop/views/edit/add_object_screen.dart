@@ -94,9 +94,9 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
           crossAxisSpacing: isTablet ? 60 : (isPortrait ? 50 : 60),
           mainAxisSpacing: isTablet ? 60 : (isPortrait ? 50 : 60),
           children: List.generate(
-            6,
+            selectedItemIndex == 0 ? 7 : 6,
             (index) {
-              return _objectGridItem(index);
+              return selectedItemIndex == 0 ? _objectGridItem(index) : _cartGridItem(index);
             },
           ),
         ),
@@ -207,10 +207,67 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
           ),
         );
         break;
+      case 6:
+        item = Container(
+          alignment: Alignment.center,
+          child: Text(
+            'Menu',
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+          ),
+        );
+        break;
     }
     return InkWell(
         onTap: () {
           Navigator.pop(context, index);
+        },
+        child: item);
+  }
+
+  Widget _cartGridItem(int index) {
+    Widget item;
+    switch (index) {
+      case 0:
+        item = Container(
+          padding: EdgeInsets.all(10),
+          child: SvgPicture.asset('assets/images/shop-edit-cart1.svg'),
+        );
+        break;
+      case 1:
+        item = Container(
+          padding: EdgeInsets.all(10),
+          child: SvgPicture.asset('assets/images/shop-edit-cart2.svg'),
+        );
+        break;
+      case 2:
+        item = Container(
+          padding: EdgeInsets.all(10),
+          child: SvgPicture.asset('assets/images/shop-edit-cart3.svg'),
+        );
+        break;
+      case 3:
+        item = Container(
+          padding: EdgeInsets.all(10),
+          child: SvgPicture.asset('assets/images/shop-edit-cart4.svg'),
+        );
+        break;
+      case 4:
+        item = Container(
+          padding: EdgeInsets.all(10),
+          child: SvgPicture.asset('assets/images/shop-edit-cart5.svg'),
+        );
+        break;
+      case 5:
+        item = Container(
+          padding: EdgeInsets.all(10),
+          child: SvgPicture.asset('assets/images/shop-edit-cart5.svg'),
+        );
+        break;
+    }
+
+    return InkWell(
+        onTap: () {
+          Navigator.pop(context, 7 + index);
         },
         child: item);
   }
