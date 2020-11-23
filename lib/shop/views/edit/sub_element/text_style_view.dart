@@ -1225,7 +1225,7 @@ class _TextStyleViewState extends State<TextStyleView> {
 
   void _updateShadow(ShopEditScreenState state, ShadowModel model) {
     Map<String, dynamic> sheets = widget.stylesheets;
-    sheets['shadow'] = model.shadowString;
+    sheets['shadow'] = model == null ? null : model.shadowString;
 
     List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
         selectedId, sheets, state.activeShopPage.stylesheetIds);

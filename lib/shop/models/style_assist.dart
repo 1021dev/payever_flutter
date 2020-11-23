@@ -412,6 +412,42 @@ class DecorationAssist {
       ),
     ];
   }
+
+  ShadowModel getShadowModel(ShadowType type, Color color) {
+    double offsetX = 0;
+    double offsetY = 0;
+    double blurRadius = 5;
+    switch(type) {
+      case ShadowType.Bottom:
+        offsetX = 0;
+        offsetY = 5;
+        break;
+      case ShadowType.BottomRight:
+        offsetX = 5;
+        offsetY = 5;
+        break;
+      case ShadowType.BottomLeft:
+        offsetX = -5;
+        offsetY = 5;
+        break;
+      case ShadowType.Right:
+        offsetX = -5;
+        offsetY = 0;
+        break;
+      case ShadowType.None:
+        offsetX = 0;
+        offsetY = 0;
+        blurRadius = 0;
+        break;
+      case ShadowType.TopRight:
+        offsetX = -5;
+        offsetY = -5;
+        break;
+      case ShadowType.Unknown:
+        break;
+    }
+    return ShadowModel(blurRadius: blurRadius, offsetX: offsetX, offsetY: offsetY, color: color);
+  }
 }
 
 class SizeAssist {

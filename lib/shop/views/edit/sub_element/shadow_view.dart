@@ -20,6 +20,8 @@ class _ShadowViewState extends State<ShadowView> {
   bool isPortrait;
   bool isTablet;
   ShadowModel shadowModel;
+  final ShadowModel defaultShadow = ShadowModel(blurRadius: 5, offsetX: 5, offsetY: 5, color: Colors.black);
+
   @override
   Widget build(BuildContext context) {
     isPortrait = GlobalUtils.isPortrait(context);
@@ -42,11 +44,7 @@ class _ShadowViewState extends State<ShadowView> {
                 scale: 0.8,
                 child: CupertinoSwitch(
                   value: shadowExpanded,
-                  onChanged: (value) {
-                    setState(() {
-                      shadowExpanded = value;
-                    });
-                  },
+                  onChanged: (value) => widget.onUpdateShadow(value ? defaultShadow : null),
                 ),
               ),
             ],
@@ -80,37 +78,8 @@ class _ShadowViewState extends State<ShadowView> {
   }
 
   Widget _shadowGridItem(int index) {
-    double offsetX = 0;
-    double offsetY = 0;
-    double blurRadius = 5;
-    switch (index) {
-      case 0:
-        offsetX = 0;
-        offsetY = 5;
-        break;
-      case 1:
-        offsetX = 5;
-        offsetY = 5;
-        break;
-      case 2:
-        offsetX = -5;
-        offsetY = 5;
-        break;
-      case 3:
-        offsetX = -5;
-        offsetY = 0;
-        break;
-      case 4:
-        offsetX = 0;
-        offsetY = 0;
-        blurRadius = 0;
-        break;
-      case 5:
-        offsetX = -5;
-        offsetY = -5;
-        break;
-    }
-
+    ShadowModel model = widget.styles.getShadowModel(ShadowType.values[index], Colors.black);
+    print('shadowType :${shadowType.index}');
     Widget item = Stack(
       children: [
         Container(
@@ -119,8 +88,8 @@ class _ShadowViewState extends State<ShadowView> {
             boxShadow: [
               BoxShadow(
                 color: Colors.black,
-                blurRadius: blurRadius,
-                offset: Offset(offsetX, offsetY), // changes position of shadow
+                blurRadius: model.blurRadius,
+                offset: Offset(model.offsetX, model.offsetY), // changes position of shadow
               ),
             ],
           ),
@@ -138,17 +107,17 @@ class _ShadowViewState extends State<ShadowView> {
     );
 
     return InkWell(
-        onTap: () {
-          ShadowModel model = ShadowModel(blurRadius: blurRadius, offsetX: offsetX, offsetY: offsetY, color: Colors.black);
-          widget.onUpdateShadow(model);
-        },
+        onTap: () => widget.onUpdateShadow(model),
         child: item);
   }
 
   ShadowType get shadowType {
+    if (shadowModel == null) return ShadowType.None;
     double blurRadius; double offsetX; double offsetY;
 
-    if (shadowModel == null) return ShadowType.None;
+    blurRadius = shadowModel.blurRadius;
+    offsetX = shadowModel.offsetX;
+    offsetY = shadowModel.offsetY;
 
     if (blurRadius == 5 && offsetX == 0 && offsetY == 5)
       return ShadowType.Bottom;
