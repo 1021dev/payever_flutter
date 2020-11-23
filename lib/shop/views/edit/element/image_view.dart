@@ -14,22 +14,20 @@ class ImageView extends StatefulWidget {
       this.stylesheets});
 
   @override
-  _ImageViewState createState() => _ImageViewState(child);
+  _ImageViewState createState() => _ImageViewState();
 }
 
 class _ImageViewState extends State<ImageView> {
-  final Child child;
-
   ImageStyles styles;
   ImageData data;
   String url = '';
-  _ImageViewState(this.child);
+  _ImageViewState();
 
   @override
   Widget build(BuildContext context) {
     styles = styleSheet();
     try {
-      data = ImageData.fromJson(child.data);
+      data = ImageData.fromJson(widget.child.data);
     } catch (e) {}
 
     if (styles.background.isNotEmpty) {
@@ -137,7 +135,7 @@ class _ImageViewState extends State<ImageView> {
 
   ImageStyles styleSheet() {
     try {
-      Map<String, dynamic> json = widget.stylesheets[child.id];
+      Map<String, dynamic> json = widget.stylesheets[widget.child.id];
       // if (json['display'] != 'none') {
       //   print('Image View ID: ${child.id}');
       //   print('Image Styles: $json');

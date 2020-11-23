@@ -13,15 +13,14 @@ class VideoView extends StatefulWidget {
       this.stylesheets});
 
   @override
-  _VideoViewState createState() => _VideoViewState(child);
+  _VideoViewState createState() => _VideoViewState();
 }
 
 class _VideoViewState extends State<VideoView> {
-  final Child child;
    ImageStyles styles;
   VideoData data;
 
-  _VideoViewState(this.child);
+  _VideoViewState();
 
   VideoPlayerController _controller;
   bool videoLoading = false;
@@ -43,7 +42,7 @@ class _VideoViewState extends State<VideoView> {
   Widget build(BuildContext context) {
     styles = styleSheet();
     try {
-      data = VideoData.fromJson(child.data);
+      data = VideoData.fromJson(widget.child.data);
     } catch (e) {}
 
     if (data == null /* || data.preview == null || data.preview.isEmpty*/)
@@ -160,7 +159,7 @@ class _VideoViewState extends State<VideoView> {
 
   ImageStyles styleSheet() {
     try {
-      Map<String, dynamic> json = widget.stylesheets[child.id];
+      Map<String, dynamic> json = widget.stylesheets[widget.child.id];
 //      if (json['display'] != 'none')
 //        print('Video Styles: $json');
       return ImageStyles.fromJson(json);

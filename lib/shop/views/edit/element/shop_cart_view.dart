@@ -12,26 +12,25 @@ class ShopCartView extends StatefulWidget {
   const ShopCartView({this.child, this.stylesheets});
 
   @override
-  _ShopCartViewState createState() => _ShopCartViewState(child);
+  _ShopCartViewState createState() => _ShopCartViewState();
 }
 
 class _ShopCartViewState extends State<ShopCartView> {
-  final Child child;
-  ShopCartStyles styles;
+   ShopCartStyles styles;
 
-  _ShopCartViewState(this.child);
+  _ShopCartViewState();
 
   @override
   Widget build(BuildContext context) {
     styles = styleSheet();
-    if (child.data == null)
+    if (widget.child.data == null)
       return Container();
     return body;
   }
 
   Widget get body {
     String asset = '';
-    switch(child.data['variant']) {
+    switch(widget.child.data['variant']) {
       case 'square-cart':
         asset = 'assets/images/shop-edit-cart1.svg';
         break;
@@ -137,7 +136,7 @@ class _ShopCartViewState extends State<ShopCartView> {
 
   ShopCartStyles styleSheet() {
     try {
-      Map<String, dynamic> json = widget.stylesheets[child.id];
+      Map<String, dynamic> json = widget.stylesheets[widget.child.id];
       // if (json['display'] != 'none') {
       //   print('ShopCartID: ${child.id}');
       //   print('Shop Cart Styles: $json');

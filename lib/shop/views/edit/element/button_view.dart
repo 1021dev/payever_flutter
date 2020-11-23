@@ -11,22 +11,21 @@ class ButtonView extends StatefulWidget {
       this.stylesheets});
 
   @override
-  _ButtonViewState createState() => _ButtonViewState(child);
+  _ButtonViewState createState() => _ButtonViewState();
 }
 
 class _ButtonViewState extends State<ButtonView> {
   final String TAG = 'ButtonView : ';
 
-  final Child child;
   ButtonStyles styles;
   ButtonData data;
 
-  _ButtonViewState(this.child);
+  _ButtonViewState();
 
   @override
   Widget build(BuildContext context) {
     styles = styleSheet();
-    data = ButtonData.fromJson(child.data);
+    data = ButtonData.fromJson(widget.child.data);
     return body;
   }
 
@@ -107,7 +106,7 @@ class _ButtonViewState extends State<ButtonView> {
 
   ButtonStyles styleSheet() {
     try {
-      Map<String, dynamic> json = widget.stylesheets[child.id];
+      Map<String, dynamic> json = widget.stylesheets[widget.child.id];
 
       // print('Button ID: ${child.id}');
       // print('Button Styles Sheets: $json');

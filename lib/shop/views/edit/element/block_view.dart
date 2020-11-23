@@ -9,19 +9,16 @@ class BlockView extends StatefulWidget {
       {this.child, this.stylesheets});
 
   @override
-  _BlockViewState createState() => _BlockViewState(
-      block: child);
+  _BlockViewState createState() => _BlockViewState();
 }
 
 class _BlockViewState extends State<BlockView> {
-  final Child block;
-
 
   SectionStyles blockStyles;
   final String TAG = 'BlockView : ';
   String selectChildId = '';
 
-  _BlockViewState({this.block});
+  _BlockViewState();
 
   @override
   void dispose() {
@@ -44,7 +41,7 @@ class _BlockViewState extends State<BlockView> {
   SectionStyles getSectionStyleSheet() {
     try {
       Map<String, dynamic> json =
-          widget.stylesheets[block.id];
+          widget.stylesheets[widget.child.id];
       if (json == null || json['display'] == 'none') return null;
       // print('$TAG Block ID ${block.id}');
       // print('$TAG Bloc style: $json');

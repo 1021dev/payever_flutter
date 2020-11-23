@@ -14,14 +14,13 @@ class ShopProductsView extends StatefulWidget {
 
   @override
   _ShopProductsViewState createState() =>
-      _ShopProductsViewState(child);
+      _ShopProductsViewState();
 }
 
 class _ShopProductsViewState extends State<ShopProductsView> {
-  final Child child;
   ShopProductsStyles styles;
 
-  _ShopProductsViewState(this.child);
+  _ShopProductsViewState();
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +106,7 @@ class _ShopProductsViewState extends State<ShopProductsView> {
 
   ShopProductsStyles styleSheet() {
     try {
-      Map<String, dynamic> json = widget.stylesheets[child.id];
+      Map<String, dynamic> json = widget.stylesheets[widget.child.id];
      // if (json['display'] != 'none') {
      //   print('Shop Products ID: ${child.id}');
      //   print('Shop Products Styles: $json');

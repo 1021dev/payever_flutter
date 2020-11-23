@@ -14,14 +14,13 @@ class ShapeView extends StatefulWidget {
       this.stylesheets});
 
   @override
-  _ShapeViewState createState() => _ShapeViewState(child);
+  _ShapeViewState createState() => _ShapeViewState();
 }
 
 class _ShapeViewState extends State<ShapeView> {
-  final Child child;
   ShapeStyles styles;
 
-  _ShapeViewState(this.child);
+  _ShapeViewState();
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +29,7 @@ class _ShapeViewState extends State<ShapeView> {
   }
 
   Widget get body {
-    switch (child.data['variant']) {
+    switch (widget.child.data['variant']) {
       case 'circle':
         return circleShape();
       case 'triangle':
@@ -38,7 +37,7 @@ class _ShapeViewState extends State<ShapeView> {
       case 'square':
         return squareShape();
       default:
-        print('special variant: ${child.data['variant']}');
+        print('special variant: ${widget.child.data['variant']}');
         return Container();
     }
   }
@@ -92,7 +91,7 @@ class _ShapeViewState extends State<ShapeView> {
 
   ShapeStyles styleSheet() {
     try {
-      Map<String, dynamic> json = widget.stylesheets[child.id];
+      Map<String, dynamic> json = widget.stylesheets[widget.child.id];
 //      if (json['display'] != 'none')
 //        print('Shape Styles: $json');
       return ShapeStyles.fromJson(json);

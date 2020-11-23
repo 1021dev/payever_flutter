@@ -4,6 +4,9 @@ import 'package:payever/commons/utils/common_utils.dart';
 
 class ShadowView extends StatefulWidget {
 
+  final Function onUpdateShadow;
+
+  const ShadowView({this.onUpdateShadow});
 
   @override
   _ShadowViewState createState() => _ShadowViewState();

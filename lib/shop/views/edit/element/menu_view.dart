@@ -10,14 +10,13 @@ class MenuView extends StatefulWidget {
       this.stylesheets});
 
   @override
-  _MenuViewState createState() => _MenuViewState(child);
+  _MenuViewState createState() => _MenuViewState();
 }
 
 class _MenuViewState extends State<MenuView> {
-  final Child child;
   ShapeStyles styles;
 
-  _MenuViewState(this.child);
+  _MenuViewState();
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +39,7 @@ class _MenuViewState extends State<MenuView> {
 
   ShapeStyles styleSheet() {
     try {
-      Map json = widget.stylesheets[child.id];
+      Map json = widget.stylesheets[widget.child.id];
 //      if (json['display'] != 'none')
 //        print('Menu Styles: $json');
 

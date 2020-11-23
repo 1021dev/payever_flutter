@@ -14,17 +14,15 @@ class LogoView extends StatefulWidget {
       this.stylesheets});
 
   @override
-  _LogoViewState createState() => _LogoViewState(child);
+  _LogoViewState createState() => _LogoViewState();
 }
 
 class _LogoViewState extends State<LogoView> {
-  final Child child;
 
   ImageStyles styles;
   GlobalStateModel globalStateModel;
   GlobalKey key = GlobalKey();
-  _LogoViewState(this.child);
-
+  _LogoViewState();
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +64,7 @@ class _LogoViewState extends State<LogoView> {
 
   ImageStyles styleSheet() {
     try {
-      Map<String, dynamic> json = widget.stylesheets[child.id];
+      Map<String, dynamic> json = widget.stylesheets[widget.child.id];
 //      if (json['display'] != 'none')
 //        print('Logo Styles: $json');
       return ImageStyles.fromJson(json);
