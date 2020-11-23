@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/shop/models/models.dart';
 
 class ShadowView extends StatefulWidget {
 
   final Function onUpdateShadow;
 
-  const ShadowView({this.onUpdateShadow});
+  const ShadowView({@required this.onUpdateShadow});
 
   @override
   _ShadowViewState createState() => _ShadowViewState();
@@ -134,7 +135,8 @@ class _ShadowViewState extends State<ShadowView> {
 
     return InkWell(
         onTap: () {
-          Navigator.pop(context, index);
+          ShadowModel model = ShadowModel(blurRadius: blurRadius, offsetX: offsetX, offsetY: offsetY, color: Colors.black, opacity: 1);
+          widget.onUpdateShadow(model);
         },
         child: item);
   }

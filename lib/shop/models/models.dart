@@ -1054,6 +1054,26 @@ class BackGroundModel {
         @required this.backgroundSize});
 }
 
+class ShadowModel {
+  // drop-shadow(8.485281374238568pt 8.485281374238571pt 5pt rgba(44,118,181,1))
+  double blurRadius;
+  double offsetX;
+  double offsetY;
+  double opacity;
+  Color color;
+
+  String get shadowString {
+    return 'drop-shadow(${offsetX}pt ${offsetY}pt ${blurRadius}pt rgba(${color.red},${color.green},${color.blue},$opacity))';
+  }
+
+  ShadowModel(
+      {@required this.blurRadius,
+      @required this.offsetX,
+      @required this.offsetY,
+      @required this.color,
+      @required this.opacity});
+}
+
 class NoBackGroundFillClipPath extends CustomClipper<Path> {
   final double radius = 0.5;
 

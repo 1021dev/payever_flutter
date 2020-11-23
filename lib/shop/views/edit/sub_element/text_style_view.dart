@@ -266,7 +266,7 @@ class _TextStyleViewState extends State<TextStyleView> {
         },
       ),
       BorderView(),
-      ShadowView(),
+      ShadowView(onUpdateShadow: (ShadowModel model) => _updateShadow(state, model),),
       OpacityView(
         styles: styles,
         onUpdateOpacity: (value, updateApi) =>
@@ -1219,7 +1219,18 @@ class _TextStyleViewState extends State<TextStyleView> {
     widget.screenBloc.add(UpdateSectionEvent(
         sectionId: state.selectedSectionId, effects: effects, updateApi: updateApi));
   }
-  // drop-shadow(7.071067811865474pt 7.071067811865477pt 5pt rgba(0,0,0,1))
+
+  void _updateShadow(ShopEditScreenState state, ShadowModel model) {
+    Map<String, dynamic> sheets = widget.stylesheets;
+    sheets['shadow'] = model.shadowString;
+
+    List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
+        selectedId, sheets, state.activeShopPage.stylesheetIds);
+
+    widget.screenBloc.add(UpdateSectionEvent(
+        sectionId: state.selectedSectionId, effects: effects));
+  }
+
 
   void _updateTextColor(ShopEditScreenState state, Color color) {
     textColor = color;
