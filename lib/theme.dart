@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:payever/commons/commons.dart';
 
+import 'shop/models/models.dart';
+
 const Color primaryColor = Color(0xFF000000);
 const Color secondaryColor = Color(0xFFFFFFFF);
 
@@ -259,6 +261,20 @@ Color colorConvert(String color, {bool emptyColor = false}) {
     return Color(int.parse("0xFF"+color.substring(0, 6)));
   } else {
     return emptyColor ? Colors.transparent :Colors.white;
+  }
+}
+
+int backgroundType(BaseStyles style) {
+  if (style.backgroundColor != '') {
+    return 0;
+  } else if (style.backgroundImage != '') {
+    if (style.backgroundImage.contains('gradient')) {
+      return 1;
+    } else {
+      return 2;
+    }
+  } else {
+    return 3;
   }
 }
 

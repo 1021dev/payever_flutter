@@ -51,35 +51,38 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-        providers: [
-          Provider.value(value: templateSizeStateModel),
-          ChangeNotifierProvider<TemplateSizeStateModel>(
-              create: (_) => templateSizeStateModel),
-        ],
-        child: BlocListener(
-          listener: (BuildContext context, ShopEditScreenState state) async {},
+      providers: [
+        Provider.value(value: templateSizeStateModel),
+        ChangeNotifierProvider<TemplateSizeStateModel>(
+            create: (_) => templateSizeStateModel),
+      ],
+      child: BlocListener(
+        listener: (BuildContext context, ShopEditScreenState state) async {},
+        bloc: screenBloc,
+        child: BlocBuilder(
           bloc: screenBloc,
-          child: BlocBuilder(
-            bloc: screenBloc,
-            builder: (BuildContext context, state) {
-              return Scaffold(
-                  key: scaffoldKey,
-                  appBar: ShopEditAppbar(
-                    onTapAdd: () => _addObject(state),
-                    onTapStyle: () => _showStyleDialogView(state),
-                  ),
-                  backgroundColor: Colors.grey[800],
-                  body: SafeArea(
-                      bottom: false,
-                      child: TemplateView(
-                        screenBloc: screenBloc,
-                        shopPage: shopPage,
-                        templateId: templateId,
-                        enableTapSection: true,
-                      )));
-            },
-          ),
-        ));
+          builder: (BuildContext context, state) {
+            return Scaffold(
+              key: scaffoldKey,
+              appBar: ShopEditAppbar(
+                onTapAdd: () => _addObject(state),
+                onTapStyle: () => _showStyleDialogView(state),
+              ),
+              backgroundColor: Colors.grey[800],
+              body: SafeArea(
+                bottom: false,
+                child: TemplateView(
+                  screenBloc: screenBloc,
+                  shopPage: shopPage,
+                  templateId: templateId,
+                  enableTapSection: true,
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
   }
 
   void _addObject(ShopEditScreenState state) async {

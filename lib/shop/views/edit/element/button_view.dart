@@ -44,12 +44,27 @@ class _ButtonViewState extends State<ButtonView> {
   }
 
   get decoration {
-    return BoxDecoration(
-      color: colorConvert(styles.backgroundColor),
-      border: getBorder,
-      borderRadius: BorderRadius.circular(styles.buttonBorderRadius()),
-      boxShadow: getBoxShadow,
-    );
+    print('ButtonStyle: ${styles.toJson()}');
+    switch (backgroundType(styles)) {
+      case 0:
+        return BoxDecoration(
+          color: colorConvert(styles.backgroundColor),
+          border: getBorder,
+          borderRadius: BorderRadius.circular(styles.buttonBorderRadius()),
+          boxShadow: getBoxShadow,
+        );
+        break;
+      case 1:
+        return BoxDecoration(
+          border: getBorder,
+          borderRadius: BorderRadius.circular(styles.buttonBorderRadius()),
+          boxShadow: getBoxShadow,
+          gradient: styles.gradient,
+        );
+        break;
+      default:
+        break;
+    }
   }
 
   get getBorder {
