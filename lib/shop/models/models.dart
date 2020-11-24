@@ -1128,7 +1128,9 @@ class ShadowModel {
   Color color;
   double spread;
 
-  String get shadowString {
+  String shadowString({bool isButton = false}) {
+    if (isButton)
+      return 'rgba(${color.red},${color.green},${color.blue},${color.opacity}) $offsetX $offsetY $blurRadius $spread';
     return 'drop-shadow(${offsetX}pt ${offsetY}pt ${blurRadius}pt rgba(${color.red},${color.green},${color.blue},${color.opacity}))';
   }
 

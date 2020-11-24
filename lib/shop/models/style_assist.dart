@@ -404,7 +404,7 @@ class DecorationAssist {
       }).toList();
       blurRadius = double.parse(attrs[3]);
       spread = double.parse(attrs[4]);
-      offsetX = double.parse(attrs[2]);
+      offsetX = double.parse(attrs[1]);
       offsetY = double.parse(attrs[2]);
 
       List<String> colors = attrs[0].split(' ');

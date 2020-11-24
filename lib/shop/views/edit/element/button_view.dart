@@ -49,14 +49,14 @@ class _ButtonViewState extends State<ButtonView> {
       case 0:
         return BoxDecoration(
           color: colorConvert(styles.backgroundColor),
-          border: getBorder,
+          border: styles.getBorder,
           borderRadius: BorderRadius.circular(styles.buttonBorderRadius()),
           boxShadow: styles.getBoxShadow(isButton: true),
         );
         break;
       case 1:
         return BoxDecoration(
-          border: getBorder,
+          border: styles.getBorder,
           borderRadius: BorderRadius.circular(styles.buttonBorderRadius()),
           boxShadow: styles.getBoxShadow(isButton: true),
           gradient: styles.gradient,
@@ -67,23 +67,12 @@ class _ButtonViewState extends State<ButtonView> {
     }
   }
 
-  get getBorder {
-    if (styles.border == null || styles.border == false) {
-      return Border.all(color: Colors.transparent, width: 0);
-    }
-    List<String> borderAttrs = styles.border.toString().split(' ');
-    double borderWidth = double.parse(borderAttrs.first.replaceAll('px', ''));
-    String borderColor = borderAttrs.last;
-    return Border.all(color: colorConvert(borderColor), width: borderWidth);
-  }
 
   ButtonStyles styleSheet() {
     try {
       Map<String, dynamic> json = widget.stylesheets[widget.child.id];
-
-      // print('Button ID: ${child.id}');
-      // print('Button Styles Sheets: $json');
-
+      print('Button ID: ${widget.child.id}');
+      print('Button Styles Sheets: $json');
       return ButtonStyles.fromJson(json);
     } catch (e) {
       return null;
