@@ -17,7 +17,7 @@ class VideoView extends StatefulWidget {
 }
 
 class _VideoViewState extends State<VideoView> {
-   ImageStyles styles;
+  ImageStyles styles;
   VideoData data;
 
   _VideoViewState();
@@ -45,7 +45,7 @@ class _VideoViewState extends State<VideoView> {
       data = VideoData.fromJson(widget.child.data);
     } catch (e) {}
 
-    if (data == null /* || data.preview == null || data.preview.isEmpty*/)
+    if (data == null)
       return Container();
     return body;
   }

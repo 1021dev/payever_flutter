@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_html/style.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
@@ -393,7 +392,7 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
         child: Container(
           padding: EdgeInsets.all(10),
           child:
-          SvgPicture.asset(mediaItem['icon']),
+          SvgPicture.asset(mediaItem['icon'], color: Colors.white,),
         ));
   }
 

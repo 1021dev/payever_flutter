@@ -976,7 +976,7 @@ class ShopObject {
       case 'image':
         return {'src': '', 'description': '', 'text': ''};
       case 'video':
-        return {'text': ''};
+        return {'source': '', 'preview': '', 'autoplay': false, 'loop': false, 'text': ''};
     }
   }
 
