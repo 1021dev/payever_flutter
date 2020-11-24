@@ -1,23 +1,5 @@
 import 'dart:ui';
 
-List<String> objectTitles = [
-  'Basic',
-  'Cart',
-  'Objects',
-  'Animals',
-  'Nature',
-  'Food',
-  'Symbols',
-  'Education',
-  'Arts',
-  'Science',
-  'People',
-  'Places',
-  'Activities',
-  'Transportation',
-  'Work',
-  'Ornaments'
-];
 
 List<Color>textBgColors = [Color.fromRGBO(0, 168, 255, 1),
   Color.fromRGBO(96, 234, 50, 1),

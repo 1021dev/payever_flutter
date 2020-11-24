@@ -959,9 +959,18 @@ class ShopObject {
       case 'button':
         return {'variant': this.name, 'text': 'Button text'};
       case 'menu':
-        return {'variant': this.name, 'text': '', 'routes': [{'title': "Page"}]};
+        return {'variant': this.name, 'text': '', 'routes': [{'title': 'Page'}]};
       case 'shop-cart':
         return {'variant': this.name, 'text': ''};
+      case 'logo':
+        return {'variant': this.name, 'text': ''};
+      case 'social-icon':
+        return {
+          'link': '',
+          'text': '',
+          'type': this.name,
+          'variant': this.name,
+        };
     }
   }
 
@@ -970,23 +979,23 @@ class ShopObject {
       case 'text':
         return {
           'fontSize': 15,
-          'fontWeight': "bold",
+          'fontWeight': 'bold',
           'height': 18,
           'margin': "0 0 0 0",
           'width': 32,
         };
       case 'shape':
         return {
-          'backgroundColor': "#d4d4d4",
-          'content': "Text content",
+          'backgroundColor': '#d4d4d4',
+          'content': 'Text content',
           'height': 100,
           'margin': "0 0 0 0",
           'width': 100,
         };
       case 'button':
         return {
-          'backgroundColor': "#d4d4d4",
-          'borderRadius': this.name == 'button' ? "0" : "15",
+          'backgroundColor': '#d4d4d4',
+          'borderRadius': this.name == 'button' ? '0' : '15',
           'height': 20,
           'margin': "0 0 0 0",
           'width': 80,
@@ -1006,6 +1015,21 @@ class ShopObject {
           'height': 100,
           'margin': '0 0 0 0',
           'width': 125,
+        };
+      case 'logo':
+        return {
+          'backgroundColor': '#d4d4d4',
+          'height': 100,
+          'margin': '0 0 0 0',
+          'width': 100,
+        };
+      case 'social-icon':
+        return {
+          'backgroundColor': '#d4d4d4',
+          'content': 'Text content',
+          'height': 24,
+          'margin': '0 0 0 0',
+          'width': 24,
         };
     }
   }

@@ -14,6 +14,7 @@ import '../../../theme.dart';
 class AddObjectScreen extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
   final TemplateSizeStateModel templateSizeStateModel;
+
   const AddObjectScreen({this.screenBloc, this.templateSizeStateModel});
 
   @override
@@ -25,6 +26,44 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
   bool isTablet;
   int selectedItemIndex = 0;
   final ShopEditScreenBloc screenBloc;
+
+  List<String> objectTitles = [
+    'Basic',
+    'Cart',
+    'Social'
+        'Objects',
+    'Animals',
+    'Nature',
+    'Food',
+    'Symbols',
+    'Education',
+    'Arts',
+    'Science',
+    'People',
+    'Places',
+    'Activities',
+    'Transportation',
+    'Work',
+    'Ornaments'
+  ];
+
+  List<String> socialIcons = [
+    'instagram',
+    'facebook',
+    'youtube',
+    'linkedin',
+    'google',
+    'twitter',
+    'telegram',
+    'messenger',
+    'pinterest',
+    'dribble',
+    'tiktok',
+    'whatsapp',
+    'mail'
+  ];
+
+  List<String>shopCarts = ['square-cart', 'angular-cart', 'flat-cart', 'square-cart--empty', 'angular-cart--empty', 'flat-cart--empty'];
 
   _AddObjectScreenState(this.screenBloc);
 
@@ -87,6 +126,22 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
   }
 
   Widget _gridViewBody() {
+    int count = 0;
+    switch (selectedItemIndex) {
+      case 0:
+        count = 8;
+        break;
+      case 1:
+        count = shopCarts.length;
+        break;
+      case 2:
+        count = socialIcons.length;
+        break;
+      default:
+        count = 8;
+        break;
+    }
+
     return Expanded(
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 18),
@@ -95,9 +150,18 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
           crossAxisSpacing: isTablet ? 60 : (isPortrait ? 50 : 60),
           mainAxisSpacing: isTablet ? 60 : (isPortrait ? 50 : 60),
           children: List.generate(
-            selectedItemIndex == 0 ? 7 : 6,
+            count,
             (index) {
-              return selectedItemIndex == 0 ? _objectGridItem(index) : _cartGridItem(index);
+              switch (selectedItemIndex) {
+                case 0:
+                  return _objectGridItem(index);
+                case 1:
+                  return _cartGridItem(index);
+                case 2:
+                  return _socialGridItem(index);
+                default:
+                  return _objectGridItem(index);
+              }
             },
           ),
         ),
@@ -181,7 +245,7 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
         item = Container(
           alignment: Alignment.center,
           child: AspectRatio(
-            aspectRatio: 1/0.6,
+            aspectRatio: 1 / 0.6,
             child: Container(
               alignment: Alignment.center,
               decoration: BoxDecoration(
@@ -189,7 +253,10 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
               ),
               child: Text(
                 'Button',
-                style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w700),
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700),
               ),
             ),
           ),
@@ -200,16 +267,18 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
         item = Container(
           alignment: Alignment.center,
           child: AspectRatio(
-            aspectRatio: 1/0.6,
+            aspectRatio: 1 / 0.6,
             child: Container(
               alignment: Alignment.center,
               decoration: BoxDecoration(
                   color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(8)
-              ),
+                  borderRadius: BorderRadius.circular(8)),
               child: Text(
                 'Button',
-                style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w700),
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700),
               ),
             ),
           ),
@@ -225,6 +294,17 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
           ),
         );
         break;
+      case 7:
+        shopObject = ShopObject(name: 'logo', type: 'logo');
+        item = Container(
+          alignment: Alignment.center,
+          decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.grey[300],),
+          child: Text(
+            'LOGO',
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+          ),
+        );
+        break;
     }
     return InkWell(
         onTap: () {
@@ -234,57 +314,27 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
   }
 
   Widget _cartGridItem(int index) {
-    ShopObject shopObject;
-    Widget item;
-    switch (index) {
-      case 0:
-        shopObject = ShopObject(name: 'square-cart', type: 'shop-cart');
-        item = Container(
-          padding: EdgeInsets.all(10),
-          child: SvgPicture.asset('assets/images/shop-edit-cart1.svg'),
-        );
-        break;
-      case 1:
-        shopObject = ShopObject(name: 'angular-cart', type: 'shop-cart');
-        item = Container(
-          padding: EdgeInsets.all(10),
-          child: SvgPicture.asset('assets/images/shop-edit-cart2.svg'),
-        );
-        break;
-      case 2:
-        shopObject = ShopObject(name: 'flat-cart', type: 'shop-cart');
-        item = Container(
-          padding: EdgeInsets.all(10),
-          child: SvgPicture.asset('assets/images/shop-edit-cart3.svg'),
-        );
-        break;
-      case 3:
-        shopObject = ShopObject(name: 'square-cart--empty', type: 'shop-cart');
-        item = Container(
-          padding: EdgeInsets.all(10),
-          child: SvgPicture.asset('assets/images/shop-edit-cart4.svg'),
-        );
-        break;
-      case 4:
-        shopObject = ShopObject(name: 'angular-cart--empty', type: 'shop-cart');
-        item = Container(
-          padding: EdgeInsets.all(10),
-          child: SvgPicture.asset('assets/images/shop-edit-cart5.svg'),
-        );
-        break;
-      case 5:
-        shopObject = ShopObject(name: 'flat-cart--empty', type: 'shop-cart');
-        item = Container(
-          padding: EdgeInsets.all(10),
-          child: SvgPicture.asset('assets/images/shop-edit-cart5.svg'),
-        );
-        break;
-    }
-
+    ShopObject shopObject = ShopObject(name: shopCarts[index], type: 'shop-cart');
     return InkWell(
         onTap: () {
           Navigator.pop(context, shopObject);
         },
-        child: item);
+        child: Container(
+          padding: EdgeInsets.all(10),
+          child:
+              SvgPicture.asset('assets/images/shop-edit-cart${index + 1}.svg'),
+        ));
+  }
+
+  Widget _socialGridItem(int index) {
+    ShopObject shopObject = ShopObject(name: socialIcons[index], type: 'social-icon');
+    return InkWell(
+        onTap: () {
+          Navigator.pop(context, shopObject);
+        },
+        child: Container(
+          padding: EdgeInsets.all(10),
+          child: SvgPicture.asset('assets/images/social-icon-${socialIcons[index]}.svg', color: Colors.white,),
+        ));
   }
 }
