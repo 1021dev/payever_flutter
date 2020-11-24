@@ -274,6 +274,7 @@ class _TextStyleViewState extends State<TextStyleView> {
         styles: styles,
         type: state.selectedChild.type,
         onUpdateShadow: (ShadowModel model) => _updateShadow(state, model),
+        onUpdateBoxShadow: (model, updateApi)=> _updateBoxShadow(state, model, updateApi: updateApi ?? true),
       ),
       OpacityView(
         styles: styles,
@@ -1230,13 +1231,24 @@ class _TextStyleViewState extends State<TextStyleView> {
 
   void _updateShadow(ShopEditScreenState state, ShadowModel model) {
     Map<String, dynamic> sheets = widget.stylesheets;
-    sheets['shadow'] = model == null ? null : model.shadowString;
+    sheets['shadow'] = model == null ? null : model.shadowString();
 
     List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
         selectedId, sheets, state.activeShopPage.stylesheetIds);
 
     widget.screenBloc.add(UpdateSectionEvent(
         sectionId: state.selectedSectionId, effects: effects));
+  }
+
+  void _updateBoxShadow(ShopEditScreenState state, ShadowModel model, {bool updateApi = true}) {
+    Map<String, dynamic> sheets = widget.stylesheets;
+    sheets['boxShadow'] = model == null ? null : model.shadowString(isButton: true);
+
+    List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
+        selectedId, sheets, state.activeShopPage.stylesheetIds);
+
+    widget.screenBloc.add(UpdateSectionEvent(
+        sectionId: state.selectedSectionId, effects: effects, updateApi: updateApi));
   }
 
   void _updateBorder(ShopEditScreenState state, double radius, {bool updateApi = true}) {

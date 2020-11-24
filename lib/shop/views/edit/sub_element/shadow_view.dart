@@ -5,12 +5,16 @@ import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
 
 class ShadowView extends StatefulWidget {
-
   final TextStyles styles;
   final String type;
   final Function onUpdateShadow;
+  final Function onUpdateBoxShadow;
 
-  const ShadowView({@required this.styles, @required this.type, @required this.onUpdateShadow});
+  const ShadowView(
+      {@required this.styles,
+      @required this.type,
+      @required this.onUpdateShadow,
+      @required this.onUpdateBoxShadow});
 
   @override
   _ShadowViewState createState() => _ShadowViewState();
@@ -20,14 +24,33 @@ class _ShadowViewState extends State<ShadowView> {
   bool shadowExpanded = false;
   bool isPortrait;
   bool isTablet;
+
+  bool isButton;
   ShadowModel shadowModel;
-  final ShadowModel defaultShadow = ShadowModel(blurRadius: 5, offsetX: 5, offsetY: 5, color: Colors.black);
+  ShadowModel defaultShadow;
 
   @override
   Widget build(BuildContext context) {
+
     isPortrait = GlobalUtils.isPortrait(context);
     isTablet = GlobalUtils.isTablet(context);
-    shadowModel = widget.styles.parseShadowFromString(widget.styles.shadow);
+    isButton = widget.type == 'button';
+    if (isButton) {
+      defaultShadow =  ShadowModel(
+          blurRadius: 9,
+          spread: 9,
+          offsetX: 0,
+          offsetY: 2,
+          color: Color.fromRGBO(0, 0, 0, 0.7));
+      shadowModel = widget.styles
+          .parseShadowFromString(widget.styles.boxShadow, isButton);
+
+    } else {
+      defaultShadow = ShadowModel(
+          blurRadius: 5, offsetX: 5, offsetY: 5, color: Colors.black);
+      shadowModel = widget.styles
+          .parseShadowFromString(widget.styles.shadow, isButton);
+    }
     shadowExpanded = shadowModel != null;
 
     return Column(
@@ -45,22 +68,26 @@ class _ShadowViewState extends State<ShadowView> {
                 scale: 0.8,
                 child: CupertinoSwitch(
                   value: shadowExpanded,
-                  onChanged: (value) => widget.onUpdateShadow(value ? defaultShadow : null),
+                  onChanged: (value) {
+                    if (isButton) {
+                      widget.onUpdateBoxShadow(value ? defaultShadow : null, true);
+                    } else {
+                      widget.onUpdateShadow(value ? defaultShadow : null);
+                    }
+
+                  },
                 ),
               ),
             ],
           ),
         ),
-        if (shadowExpanded)
-          expandedView
-
+        if (shadowExpanded) expandedView
       ],
     );
   }
 
   Widget get expandedView {
-    if (widget.type == 'button')
-      return buttonShadow;
+    if (widget.type == 'button') return buttonShadow;
 
     return Container(
       alignment: Alignment.center,
@@ -78,7 +105,7 @@ class _ShadowViewState extends State<ShadowView> {
         physics: NeverScrollableScrollPhysics(),
         children: List.generate(
           6,
-              (index) {
+          (index) {
             return _shadowGridItem(index);
           },
         ),
@@ -89,14 +116,16 @@ class _ShadowViewState extends State<ShadowView> {
   Widget get buttonShadow {
     return Container(
       padding: EdgeInsets.only(left: 16),
-      height: 60,
       child: Column(
         children: [
           Row(
             children: [
-              Text(
-                'Corners',
-                style: TextStyle(color: Colors.white, fontSize: 15),
+              Container(
+                width: 50,
+                child: Text(
+                  'Blur',
+                  style: TextStyle(color: Colors.white, fontSize: 15),
+                ),
               ),
               SizedBox(
                 width: 10,
@@ -106,8 +135,8 @@ class _ShadowViewState extends State<ShadowView> {
                   value: shadowModel.blurRadius,
                   min: 0,
                   max: 100,
-                  onChanged: (double value) => widget.onUpdateShadow(value, false),
-                  onChangeEnd: (double value) => widget.onUpdateShadow(value, true),
+                  onChanged: (double value) => _onUpdateBoxShadow(blur: value, updateApi: false),
+                  onChangeEnd: (double value) => _onUpdateBoxShadow(blur: value, updateApi: true),
                 ),
               ),
               Container(
@@ -122,27 +151,30 @@ class _ShadowViewState extends State<ShadowView> {
           ),
           Row(
             children: [
-              Text(
-                'Corners',
-                style: TextStyle(color: Colors.white, fontSize: 15),
+              Container(
+                width: 50,
+                child: Text(
+                  'Spread',
+                  style: TextStyle(color: Colors.white, fontSize: 15),
+                ),
               ),
               SizedBox(
                 width: 10,
               ),
               Expanded(
                 child: Slider(
-                  value: shadowModel.blurRadius,
+                  value: shadowModel.spread,
                   min: 0,
                   max: 100,
-                  onChanged: (double value) => widget.onUpdateShadow(value, false),
-                  onChangeEnd: (double value) => widget.onUpdateShadow(value, true),
+                  onChanged: (double value) => _onUpdateBoxShadow(spread: value, updateApi: false),
+                  onChangeEnd: (double value) => _onUpdateBoxShadow(spread: value, updateApi: true),
                 ),
               ),
               Container(
                 width: 50,
                 alignment: Alignment.center,
                 child: Text(
-                  '${shadowModel.blurRadius.toInt()} px',
+                  '${shadowModel.spread.toInt()} px',
                   style: TextStyle(color: Colors.white, fontSize: 15),
                 ),
               ),
@@ -153,8 +185,19 @@ class _ShadowViewState extends State<ShadowView> {
     );
   }
 
+  _onUpdateBoxShadow({double blur, double spread, bool updateApi}) {
+    ShadowModel model = ShadowModel(
+        blurRadius: blur ?? shadowModel.blurRadius,
+        spread: spread ?? shadowModel.spread,
+        offsetX: 0,
+        offsetY: 2,
+        color: Color.fromRGBO(0, 0, 0, 0.7));
+    widget.onUpdateBoxShadow(model, updateApi);
+  }
+
   Widget _shadowGridItem(int index) {
-    ShadowModel model = widget.styles.getShadowModel(ShadowType.values[index], Colors.black);
+    ShadowModel model =
+        widget.styles.getShadowModel(ShadowType.values[index], Colors.black);
     print('shadowType :${shadowType.index}');
     Widget item = Stack(
       children: [
@@ -165,7 +208,8 @@ class _ShadowViewState extends State<ShadowView> {
               BoxShadow(
                 color: Colors.black,
                 blurRadius: model.blurRadius,
-                offset: Offset(model.offsetX, model.offsetY), // changes position of shadow
+                offset: Offset(
+                    model.offsetX, model.offsetY), // changes position of shadow
               ),
             ],
           ),
@@ -182,14 +226,14 @@ class _ShadowViewState extends State<ShadowView> {
       ],
     );
 
-    return InkWell(
-        onTap: () => widget.onUpdateShadow(model),
-        child: item);
+    return InkWell(onTap: () => widget.onUpdateShadow(model), child: item);
   }
 
   ShadowType get shadowType {
     if (shadowModel == null) return ShadowType.None;
-    double blurRadius; double offsetX; double offsetY;
+    double blurRadius;
+    double offsetX;
+    double offsetY;
 
     blurRadius = shadowModel.blurRadius;
     offsetX = shadowModel.offsetX;
@@ -203,8 +247,7 @@ class _ShadowViewState extends State<ShadowView> {
       return ShadowType.BottomLeft;
     if (blurRadius == 5 && offsetX == -5 && offsetY == 0)
       return ShadowType.Right;
-    if (blurRadius == 0 && offsetX == 0 && offsetY == 0)
-      return ShadowType.None;
+    if (blurRadius == 0 && offsetX == 0 && offsetY == 0) return ShadowType.None;
     if (blurRadius == 5 && offsetX == -5 && offsetY == -5)
       return ShadowType.TopRight;
 

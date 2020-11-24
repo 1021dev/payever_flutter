@@ -37,7 +37,7 @@ class _BorderViewState extends State<BorderView> {
                 scale: 0.8,
                 child: CupertinoSwitch(
                   value: borderExpanded,
-                  onChanged: (value) => widget.onUpdateBorder(value? 15.0 : 0, true),
+                  onChanged: (value) => widget.onUpdateBorder(value? 15.0 : 0.0, true),
                 ),
               ),
             ],
