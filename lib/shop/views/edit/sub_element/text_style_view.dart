@@ -1,9 +1,7 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/shop/shop_edit/shop_edit_bloc.dart';
@@ -16,8 +14,6 @@ import 'package:payever/shop/views/edit/sub_element/paragraph_view.dart';
 import 'package:payever/shop/views/edit/sub_element/shadow_view.dart';
 import 'package:payever/shop/views/edit/sub_element/text_options_view.dart';
 import 'package:payever/theme.dart';
-
-import 'background_view.dart';
 import 'border_view.dart';
 import 'fill_color_grid_view.dart';
 import 'fill_color_view.dart';
@@ -61,6 +57,8 @@ class _TextStyleViewState extends State<TextStyleView> {
   TextStyles styles;
 
   final double ptFontFactor = 30/112;
+  final List<String>hasBorderChildren = ['button', 'image', 'social-icon', 'logo', 'shop-cart'];
+  final List<String>hasShadowChildren = ['button', 'image', 'shape', 'social-icon', 'logo', 'shop-cart'];
 
   @override
   void initState() {
@@ -72,7 +70,6 @@ class _TextStyleViewState extends State<TextStyleView> {
       map.forEach((item) {
         paragraphs.add(Paragraph.fromJson(item));
       });
-      print('paragraphs length:${paragraphs.length}');
     }).catchError((onError) {
       print(onError);
     });
@@ -83,6 +80,7 @@ class _TextStyleViewState extends State<TextStyleView> {
   Widget build(BuildContext context) {
     isPortrait = GlobalUtils.isPortrait(context);
     isTablet = GlobalUtils.isTablet(context);
+
     return BlocListener(
       listener: (BuildContext context, ShopEditScreenState state) async {
         if (state.blobName.isNotEmpty) {
@@ -265,17 +263,23 @@ class _TextStyleViewState extends State<TextStyleView> {
           ));
         },
       ),
-      BorderView(
+      if (hasBorder)
+        BorderView(
           styles: styles,
           type: state.selectedChild.type,
-          onUpdateBorder: (radius, updateApi) =>
-              _updateBorder(state, radius, updateApi: updateApi)),
-      ShadowView(
-        styles: styles,
-        type: state.selectedChild.type,
-        onUpdateShadow: (ShadowModel model) => _updateShadow(state, model),
-        onUpdateBoxShadow: (model, updateApi)=> _updateBoxShadow(state, model, updateApi: updateApi ?? true),
-      ),
+          onUpdateBorderRadius: (radius, updateApi) =>
+              _updateBorderRadius(state, radius, updateApi: updateApi),
+          onUpdateBorderWidth: (value, updateApi) {},
+          onUpdateBorderColor: (value) {},
+        ),
+      if (hasBorder)
+        ShadowView(
+          styles: styles,
+          type: state.selectedChild.type,
+          onUpdateShadow: (ShadowModel model) => _updateShadow(state, model),
+          onUpdateBoxShadow: (model, updateApi) =>
+              _updateBoxShadow(state, model, updateApi: updateApi ?? true),
+        ),
       OpacityView(
         styles: styles,
         onUpdateOpacity: (value, updateApi) =>
@@ -296,6 +300,14 @@ class _TextStyleViewState extends State<TextStyleView> {
         );
       },
     );
+  }
+
+  bool get hasBorder {
+    return hasBorderChildren.contains(widget.screenBloc.state.selectedChild.type);
+  }
+
+  bool get hasShadow {
+    return hasBorderChildren.contains(widget.screenBloc.state.selectedChild.type);
   }
 
   // Text Body
@@ -1251,7 +1263,7 @@ class _TextStyleViewState extends State<TextStyleView> {
         sectionId: state.selectedSectionId, effects: effects, updateApi: updateApi));
   }
 
-  void _updateBorder(ShopEditScreenState state, double radius, {bool updateApi = true}) {
+  void _updateBorderRadius(ShopEditScreenState state, double radius, {bool updateApi = true}) {
     Map<String, dynamic> sheets = widget.stylesheets;
     sheets['borderRadius'] = radius.toInt();
 

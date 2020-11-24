@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart';
 import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/libraries/utils/px_dp.dart';
 import 'package:uuid/uuid.dart';
 import '../../theme.dart';
 import 'constant.dart';
@@ -354,12 +355,12 @@ class DecorationAssist {
 
   Border getBorder1(dynamic border) {
     if (border == null || border == false) {
-      return Border.all(width: 0);
+      return Border.all(color: Colors.transparent, width: 0);
     }
     List<String> borderAttrs = border.toString().split(' ');
-    double borderWidth = double.parse(borderAttrs.first.replaceAll('px', ''));
+    int borderWidth = int.parse(borderAttrs.first.replaceAll('px', ''));
     String borderColor = borderAttrs.last;
-    return Border.all(color: colorConvert(borderColor), width: borderWidth);
+    return Border.all(color: colorConvert(borderColor), width: PxDp.d2u(px: borderWidth));
   }
 
   ShadowModel parseShadowFromString(String shadow, bool isButton) {

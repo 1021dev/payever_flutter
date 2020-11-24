@@ -2,7 +2,6 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:payever/libraries/utils/px_dp.dart';
 import 'package:payever/shop/models/models.dart';
 import '../../../../theme.dart';
 
@@ -95,20 +94,10 @@ class _ImageViewState extends State<ImageView> {
 
   get decoration {
     return BoxDecoration(
-      border: getBorder,
+      border: styles.getBorder,
       borderRadius: BorderRadius.circular(styles.getBorderRadius(styles.borderRadius)),
       boxShadow: getBoxShadow,
     );
-  }
-
-  get getBorder {
-    if (styles.border == null || styles.border == false) {
-      return Border.all(color: Colors.transparent, width: 0);
-    }
-    List<String> borderAttrs = styles.border.toString().split(' ');
-    int borderWidth = int.parse(borderAttrs.first.replaceAll('px', ''));
-    String borderColor = borderAttrs.last;
-    return Border.all(color: colorConvert(borderColor), width: PxDp.d2u(px: borderWidth));
   }
 
   get getBoxShadow {
@@ -126,7 +115,6 @@ class _ImageViewState extends State<ImageView> {
     return [
       BoxShadow(
         color: colorConvert(styles.shadowFormColor).withOpacity(styles.shadowOpacity / 100),
-//        spreadRadius: 5,
         blurRadius: styles.shadowBlur,
         offset: Offset(cos(deg) * styles.shadowOffset,
             -styles.shadowOffset * sin(deg)), // changes position of shadow
