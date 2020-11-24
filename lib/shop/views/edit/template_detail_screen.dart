@@ -103,52 +103,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
 
     print('result: $result');
     if (result == null) return;
-    ShopObject shopObject;
-    switch(result) {
-      case 0:
-        shopObject = ShopObject(name: 'text', type: 'text');
-        break;
-      case 1:
-        shopObject = ShopObject(name: 'square', type: 'shape');
-        break;
-      case 2:
-        shopObject = ShopObject(name: 'circle', type: 'shape');
-        break;
-      case 3:
-        shopObject = ShopObject(name: 'triangle', type: 'shape');
-        break;
-      case 4:
-        shopObject = ShopObject(name: 'button', type: 'button');
-        break;
-      case 5:
-        shopObject = ShopObject(name: 'button--rounded', type: 'button');
-        break;
-      case 6:
-        shopObject = ShopObject(name: 'menu', type: 'menu');
-        break;
-      case 7:
-        shopObject = ShopObject(name: 'square-cart', type: 'cart');
-        break;
-      case 8:
-        shopObject = ShopObject(name: 'angular-cart', type: 'cart');
-        break;
-      case 9:
-        shopObject = ShopObject(name: 'flat-cart', type: 'cart');
-        break;
-      case 10:
-        shopObject = ShopObject(name: 'square-cart--empty', type: 'cart');
-        break;
-      case 11:
-        shopObject = ShopObject(name: 'angular-cart--empty', type: 'cart');
-        break;
-      case 12:
-        shopObject = ShopObject(name: 'flat-cart--empty', type: 'cart');
-        break;
-
-    }
-
-    if (shopObject == null) return;
-    templateSizeStateModel.setShopObject(shopObject);
+    templateSizeStateModel.setShopObject(result as ShopObject);
   }
 
   void _showStyleDialogView(ShopEditScreenState state) {

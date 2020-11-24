@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/constant.dart';
+import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/models/template_size_state_model.dart';
 import 'package:payever/shop/views/edit/sub_element/add_object_appbar.dart';
 import 'package:shape_of_view/shape_of_view.dart';
@@ -132,9 +133,11 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
   }
 
   Widget _objectGridItem(int index) {
+    ShopObject shopObject;
     Widget item;
     switch (index) {
       case 0:
+        shopObject = ShopObject(name: 'text', type: 'text');
         item = Container(
           alignment: Alignment.center,
           child: Text(
@@ -144,11 +147,13 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
         );
         break;
       case 1:
+        shopObject = ShopObject(name: 'square', type: 'shape');
         item = Container(
           color: Colors.grey[300],
         );
         break;
       case 2:
+        shopObject = ShopObject(name: 'circle', type: 'shape');
         item = Container(
           decoration: BoxDecoration(
             color: Colors.grey[300],
@@ -157,6 +162,7 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
         );
         break;
       case 3:
+        shopObject = ShopObject(name: 'triangle', type: 'shape');
         item = Transform.rotate(
           angle: pi,
           child: ShapeOfView(
@@ -171,6 +177,7 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
         );
         break;
       case 4:
+        shopObject = ShopObject(name: 'button', type: 'button');
         item = Container(
           alignment: Alignment.center,
           child: AspectRatio(
@@ -189,6 +196,7 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
         );
         break;
       case 5:
+        shopObject = ShopObject(name: 'button--rounded', type: 'button');
         item = Container(
           alignment: Alignment.center,
           child: AspectRatio(
@@ -208,6 +216,7 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
         );
         break;
       case 6:
+        shopObject = ShopObject(name: 'menu', type: 'menu');
         item = Container(
           alignment: Alignment.center,
           child: Text(
@@ -219,45 +228,52 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
     }
     return InkWell(
         onTap: () {
-          Navigator.pop(context, index);
+          Navigator.pop(context, shopObject);
         },
         child: item);
   }
 
   Widget _cartGridItem(int index) {
+    ShopObject shopObject;
     Widget item;
     switch (index) {
       case 0:
+        shopObject = ShopObject(name: 'square-cart', type: 'shop-cart');
         item = Container(
           padding: EdgeInsets.all(10),
           child: SvgPicture.asset('assets/images/shop-edit-cart1.svg'),
         );
         break;
       case 1:
+        shopObject = ShopObject(name: 'angular-cart', type: 'shop-cart');
         item = Container(
           padding: EdgeInsets.all(10),
           child: SvgPicture.asset('assets/images/shop-edit-cart2.svg'),
         );
         break;
       case 2:
+        shopObject = ShopObject(name: 'flat-cart', type: 'shop-cart');
         item = Container(
           padding: EdgeInsets.all(10),
           child: SvgPicture.asset('assets/images/shop-edit-cart3.svg'),
         );
         break;
       case 3:
+        shopObject = ShopObject(name: 'square-cart--empty', type: 'shop-cart');
         item = Container(
           padding: EdgeInsets.all(10),
           child: SvgPicture.asset('assets/images/shop-edit-cart4.svg'),
         );
         break;
       case 4:
+        shopObject = ShopObject(name: 'angular-cart--empty', type: 'shop-cart');
         item = Container(
           padding: EdgeInsets.all(10),
           child: SvgPicture.asset('assets/images/shop-edit-cart5.svg'),
         );
         break;
       case 5:
+        shopObject = ShopObject(name: 'flat-cart--empty', type: 'shop-cart');
         item = Container(
           padding: EdgeInsets.all(10),
           child: SvgPicture.asset('assets/images/shop-edit-cart5.svg'),
@@ -267,7 +283,7 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
 
     return InkWell(
         onTap: () {
-          Navigator.pop(context, 7 + index);
+          Navigator.pop(context, shopObject);
         },
         child: item);
   }

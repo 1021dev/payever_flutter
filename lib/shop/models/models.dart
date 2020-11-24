@@ -960,7 +960,7 @@ class ShopObject {
         return {'variant': this.name, 'text': 'Button text'};
       case 'menu':
         return {'variant': this.name, 'text': '', 'routes': [{'title': "Page"}]};
-      case 'cart':
+      case 'shop-cart':
         return {'variant': this.name, 'text': ''};
     }
   }
@@ -999,7 +999,7 @@ class ShopObject {
           'height': 40,
           'width': 40,
         };
-      case 'cart':
+      case 'shop-cart':
         return {
           'backgroundColor': '#d4d4d4',
           'content': 'Text content',
