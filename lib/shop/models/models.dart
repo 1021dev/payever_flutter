@@ -542,7 +542,7 @@ class BaseStyles with BackgroundAssist, StyleAssist, SizeAssist, DecorationAssis
     return BoxDecoration(
 //      border: getBorder,
       borderRadius: BorderRadius.circular(getBorderRadius(borderRadius)),
-      boxShadow: getBoxShadow,
+      boxShadow: getBoxShadow(),
     );
   }
 
@@ -550,8 +550,8 @@ class BaseStyles with BackgroundAssist, StyleAssist, SizeAssist, DecorationAssis
     return getBorder1(border);
   }
 
-  List<BoxShadow> get getBoxShadow {
-    return getBoxShadow1(shadow);
+  List<BoxShadow> getBoxShadow({bool isButton = false}) {
+    return getBoxShadow1((isButton ? boxShadow :shadow), isButton);
   }
 
   factory BaseStyles.fromJson(Map<String, dynamic> json) => _$BaseStylesFromJson(json);
@@ -1126,6 +1126,7 @@ class ShadowModel {
   double offsetX;
   double offsetY;
   Color color;
+  double spread;
 
   String get shadowString {
     return 'drop-shadow(${offsetX}pt ${offsetY}pt ${blurRadius}pt rgba(${color.red},${color.green},${color.blue},${color.opacity}))';
@@ -1135,8 +1136,8 @@ class ShadowModel {
       {@required this.blurRadius,
       @required this.offsetX,
       @required this.offsetY,
-      @required this.color});
-
+      @required this.color,
+      this.spread = 0});
 }
 
 class NoBackGroundFillClipPath extends CustomClipper<Path> {

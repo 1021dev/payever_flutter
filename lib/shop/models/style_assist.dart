@@ -362,37 +362,69 @@ class DecorationAssist {
     return Border.all(color: colorConvert(borderColor), width: borderWidth);
   }
 
-  ShadowModel parseShadowFromString(String shadow) {
+  ShadowModel parseShadowFromString(String shadow, bool isButton) {
+    double blurRadius;
+    double offsetX;
+    double offsetY;
+    double spread = 0;
+    Color color;
     if (shadow == null || shadow.isEmpty) return null;
+    if (isButton == false) {
+      List<String> attrs0 = shadow.replaceAll('drop-shadow', '').split(' ');
+      List<String> attrs = attrs0.map((element) {
+        if (element.contains('rgb'))
+          return element
+              .replaceAll('rgba', '')
+              .replaceAll(',', ' ')
+              .replaceAll('(', '')
+              .replaceAll(')', '');
+        return element.replaceAll('pt', '').replaceAll('(', '');
+      }).toList();
+      blurRadius = double.parse(attrs[2]);
+      offsetX = double.parse(attrs[0]);
+      offsetY = double.parse(attrs[1]);
+      List<String> colors = attrs[3].split(' ');
+      int colorR = int.parse(colors[0]);
+      int colorG = int.parse(colors[1]);
+      int colorB = int.parse(colors[2]);
+      double opacity = double.parse(colors[3]);
+      color = Color.fromRGBO(colorR, colorG, colorB, opacity);
+    } else {
+      List<String> attrs0 = shadow.split(' ');
+      if (attrs0.length < 2)
+        return null;
+      List<String> attrs = attrs0.map((element) {
+        if (element.contains('rgb'))
+          return element
+              .replaceAll('rgba', '')
+              .replaceAll(',', ' ')
+              .replaceAll('(', '')
+              .replaceAll(')', '');
+        return element.replaceAll('pt', '');
+      }).toList();
+      blurRadius = double.parse(attrs[3]);
+      spread = double.parse(attrs[4]);
+      offsetX = double.parse(attrs[2]);
+      offsetY = double.parse(attrs[2]);
 
-    List<String> attrs0 = shadow.replaceAll('drop-shadow', '').split(' ');
-    List<String> attrs = attrs0.map((element) {
-      if (element.contains('rgb'))
-        return element
-            .replaceAll('rgba', '')
-            .replaceAll(',', ' ')
-            .replaceAll('(', '')
-            .replaceAll(')', '');
-      return element.replaceAll('pt', '').replaceAll('(', '');
-    }).toList();
-    double blurRadius = double.parse(attrs[2]);
-    double offsetX = double.parse(attrs[0]);
-    double offsetY = double.parse(attrs[1]);
-    List<String> colors = attrs[3].split(' ');
-    int colorR = int.parse(colors[0]);
-    int colorG = int.parse(colors[1]);
-    int colorB = int.parse(colors[2]);
-    double opacity = double.parse(colors[3]);
+      List<String> colors = attrs[0].split(' ');
+      int colorR = int.parse(colors[0]);
+      int colorG = int.parse(colors[1]);
+      int colorB = int.parse(colors[2]);
+      double opacity = double.parse(colors[3]);
+      color = Color.fromRGBO(colorR, colorG, colorB, opacity);
+    }
 
     return ShadowModel(
         blurRadius: blurRadius,
         offsetX: offsetX,
         offsetY: offsetY,
-        color: Color.fromRGBO(colorR, colorG, colorB, opacity));
+        color: color,
+        spread: spread);
   }
 
-  List<BoxShadow> getBoxShadow1(String shadow) {
-    ShadowModel model = parseShadowFromString(shadow);
+  List<BoxShadow> getBoxShadow1(String shadow, bool isButton) {
+    ShadowModel model = parseShadowFromString(shadow, isButton);
     if (model == null) {
       return [
         BoxShadow(
@@ -408,6 +440,7 @@ class DecorationAssist {
       BoxShadow(
         color: model.color,
         blurRadius: model.blurRadius,
+        spreadRadius: model.spread,
         offset: Offset(model.offsetX, model.offsetY), // changes position of shadow
       ),
     ];

@@ -51,14 +51,14 @@ class _ButtonViewState extends State<ButtonView> {
           color: colorConvert(styles.backgroundColor),
           border: getBorder,
           borderRadius: BorderRadius.circular(styles.buttonBorderRadius()),
-          boxShadow: getBoxShadow,
+          boxShadow: styles.getBoxShadow(isButton: true),
         );
         break;
       case 1:
         return BoxDecoration(
           border: getBorder,
           borderRadius: BorderRadius.circular(styles.buttonBorderRadius()),
-          boxShadow: getBoxShadow,
+          boxShadow: styles.getBoxShadow(isButton: true),
           gradient: styles.gradient,
         );
         break;
@@ -75,52 +75,6 @@ class _ButtonViewState extends State<ButtonView> {
     double borderWidth = double.parse(borderAttrs.first.replaceAll('px', ''));
     String borderColor = borderAttrs.last;
     return Border.all(color: colorConvert(borderColor), width: borderWidth);
-  }
-
-  get getBoxShadow {
-    print('styles.boxShadow: ${styles.boxShadow}');
-
-    if (styles.boxShadow == null || styles.boxShadow == false) {
-      return [
-        BoxShadow(
-          color: Colors.transparent,
-          spreadRadius: 0,
-          blurRadius: 0,
-          offset: Offset.zero, // changes position of shadow
-        )
-      ];
-    }
-//    rgba(0,0,0,0.7) 0 2 13 8
-    List<String> attrs0 = styles.boxShadow.split(' ');
-    if (attrs0.length < 2)
-      return null;
-    List<String> attrs = attrs0.map((element) {
-      if (element.contains('rgb'))
-        return element
-            .replaceAll('rgba', '')
-            .replaceAll(',', ' ')
-            .replaceAll('(', '')
-            .replaceAll(')', '');
-      return element.replaceAll('pt', '');
-    }).toList();
-    double blurRadius = double.parse(attrs[3]);
-    double spread = double.parse(attrs[4]);
-    double offsetX = double.parse(attrs[2]);
-    double offsetY = double.parse(attrs[2]);
-
-    List<String> colors = attrs[0].split(' ');
-    int colorR = int.parse(colors[0]);
-    int colorG = int.parse(colors[1]);
-    int colorB = int.parse(colors[2]);
-    double opacity = double.parse(colors[3]);
-    return [
-      BoxShadow(
-        color: Color.fromRGBO(colorR, colorG, colorB, opacity),
-        spreadRadius: spread,
-        blurRadius: blurRadius,
-        offset: Offset(offsetX, offsetY), // changes position of shadow
-      ),
-    ];
   }
 
   ButtonStyles styleSheet() {
