@@ -954,14 +954,12 @@ class ShopObject {
     switch (this.type) {
       case 'text':
         return {'text': 'Text', 'sync': false};
-      case 'shape':
-        return {'variant': this.name, 'text': ''};
       case 'button':
         return {'variant': this.name, 'text': 'Button text'};
       case 'menu':
         return {'variant': this.name, 'text': '', 'routes': [{'title': 'Page'}]};
+      case 'shape':
       case 'shop-cart':
-        return {'variant': this.name, 'text': ''};
       case 'logo':
         return {'variant': this.name, 'text': ''};
       case 'social-icon':
@@ -971,6 +969,14 @@ class ShopObject {
           'type': this.name,
           'variant': this.name,
         };
+      case 'shop-products':
+      case 'shop-product-details':
+      case 'shop-category':
+        return {'text': ''};
+      case 'image':
+        return {'src': '', 'description': '', 'text': ''};
+      case 'video':
+        return {'text': ''};
     }
   }
 
@@ -985,6 +991,8 @@ class ShopObject {
           'width': 32,
         };
       case 'shape':
+      case 'image':
+      case 'video':
         return {
           'backgroundColor': '#d4d4d4',
           'content': 'Text content',
@@ -1031,11 +1039,24 @@ class ShopObject {
           'margin': '0 0 0 0',
           'width': 24,
         };
+      case 'shop-products':
+        return {
+          'backgroundColor': '#ffffff',
+          'height': 280,
+          'productTemplateColumns': 1,
+          'productTemplateRows': 1,
+          'width': 220,
+        };
+      case 'shop-product-details':
+      case 'shop-category':
+        return {
+          'backgroundColor': '#ffffff',
+          'height': null,
+          'width': null,
+        };
     }
   }
 
-
-  // data: {variant: "square", text: ""}
   ShopObject({@required this.name, @required this.type});
 }
 

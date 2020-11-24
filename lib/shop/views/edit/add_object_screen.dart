@@ -1,10 +1,10 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_html/style.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
-import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/models/template_size_state_model.dart';
 import 'package:payever/shop/views/edit/sub_element/add_object_appbar.dart';
@@ -28,10 +28,12 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
   final ShopEditScreenBloc screenBloc;
 
   List<String> objectTitles = [
+    'Product',
     'Basic',
+    'Media',
     'Cart',
     'Social'
-        'Objects',
+    'Objects',
     'Animals',
     'Nature',
     'Food',
@@ -45,6 +47,37 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
     'Transportation',
     'Work',
     'Ornaments'
+  ];
+
+  List<Map<String, dynamic>> productsItems = [
+    {
+      'name': 'Product',
+      'type': 'shop-products',
+      'icon': 'assets/images/productsicon.svg'
+    },
+    {
+      'name': 'Product Detail',
+      'type': 'shop-product-details',
+      'icon': 'assets/images/product_detail.svg'
+    },
+    {
+      'name': 'Catalog',
+      'type': 'shop-category',
+      'icon': 'assets/images/catalog.svg'
+    }
+  ];
+
+  List<Map<String, dynamic>> mediaItems = [
+    {
+      'name': 'Image',
+      'type': 'image',
+      'icon': 'assets/images/no_image.svg'
+    },
+    {
+      'name': 'Video',
+      'type': 'video',
+      'icon': 'assets/images/no_video.svg'
+    }
   ];
 
   List<String> socialIcons = [
@@ -63,7 +96,14 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
     'mail'
   ];
 
-  List<String>shopCarts = ['square-cart', 'angular-cart', 'flat-cart', 'square-cart--empty', 'angular-cart--empty', 'flat-cart--empty'];
+  List<String> shopCarts = [
+    'square-cart',
+    'angular-cart',
+    'flat-cart',
+    'square-cart--empty',
+    'angular-cart--empty',
+    'flat-cart--empty',
+  ];
 
   _AddObjectScreenState(this.screenBloc);
 
@@ -129,12 +169,18 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
     int count = 0;
     switch (selectedItemIndex) {
       case 0:
-        count = 8;
+        count = productsItems.length;
         break;
       case 1:
-        count = shopCarts.length;
+        count = 8;
         break;
       case 2:
+        count = mediaItems.length;
+        break;
+      case 3:
+        count = shopCarts.length;
+        break;
+      case 4:
         count = socialIcons.length;
         break;
       default:
@@ -154,10 +200,14 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
             (index) {
               switch (selectedItemIndex) {
                 case 0:
-                  return _objectGridItem(index);
+                  return _productGridItem(index);
                 case 1:
-                  return _cartGridItem(index);
+                  return _objectGridItem(index);
                 case 2:
+                  return _mediaGridItem(index);
+                case 3:
+                  return _cartGridItem(index);
+                case 4:
                   return _socialGridItem(index);
                 default:
                   return _objectGridItem(index);
@@ -194,6 +244,27 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
         ),
       ),
     );
+  }
+
+  Widget _productGridItem(int index) {
+    Map<String, dynamic>productItem = productsItems[index];
+    return InkWell(
+        onTap: () {
+          Navigator.pop(context, ShopObject(name: shopCarts[index], type: productItem['type']));
+        },
+        child: Container(
+          child: Column(
+            children: [
+              Expanded(child: Container(child: SvgPicture.asset(productItem['icon'], width: double.infinity,))),
+              SizedBox(height: 10,),
+              Text(
+                productItem['name'],
+                style: TextStyle(color: Colors.white, fontSize: 14),
+                maxLines: 1,
+              )
+            ],
+          ),
+        ));
   }
 
   Widget _objectGridItem(int index) {
@@ -311,6 +382,19 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
           Navigator.pop(context, shopObject);
         },
         child: item);
+  }
+
+  Widget _mediaGridItem(int index) {
+    Map<String, dynamic>mediaItem = mediaItems[index];
+    return InkWell(
+        onTap: () {
+          Navigator.pop(context, ShopObject(name: shopCarts[index], type: mediaItem['type']));
+        },
+        child: Container(
+          padding: EdgeInsets.all(10),
+          child:
+          SvgPicture.asset(mediaItem['icon']),
+        ));
   }
 
   Widget _cartGridItem(int index) {
