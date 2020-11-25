@@ -1122,16 +1122,14 @@ class BackGroundModel {
 
 class ImageBorderModel {
   String borderColor;
+  double borderSize;
+  String borderType;
 
   get border {
     if (borderSize == 0)
       return false;
-
     return '${borderSize.toInt()}px $borderType $borderColor';
   }
-
-  double borderSize;
-  String borderType;
 
   ImageBorderModel({
     this.borderColor = '#000000',
@@ -1141,21 +1139,6 @@ class ImageBorderModel {
 }
 
 class ImageShadowModel {
-  get boxShadow {
-    if (shadowBlur == 0 && shadowOffset == 0)
-      return false;
-
-    double deg = shadowAngle * pi / 180;
-    Color color = colorConvert(shadowFormColor);
-    double offsetX = cos(deg) * shadowOffset;
-    double offsetY = - sin(deg) * shadowOffset;
-    return '${offsetX.toStringAsFixed(1)}px ${offsetY.toStringAsFixed(1)}px ${shadowBlur}px rgba(${color.red}, ${color.green}, ${color.blue}, ${shadowOpacity.toInt() / 100})';
-  }
-  get shadowColor {
-    Color color = colorConvert(shadowFormColor);
-    return 'rgba(${color.red}, ${color.green}, ${color.blue})';
-  }
-
   double shadowAngle;
   double shadowBlur;
   String shadowFormColor;
@@ -1169,28 +1152,75 @@ class ImageShadowModel {
     this.shadowOffset = 10,
     this.shadowOpacity = 100,
   });
+
+  get boxShadow {
+    if (shadowBlur == 0 && shadowOffset == 0)
+      return false;
+
+    double deg = shadowAngle * pi / 180;
+    Color color = colorConvert(shadowFormColor);
+    double offsetX = cos(deg) * shadowOffset;
+    double offsetY = - sin(deg) * shadowOffset;
+    return '${offsetX.toStringAsFixed(1)}px ${offsetY.toStringAsFixed(1)}px ${shadowBlur}px rgba(${color.red}, ${color.green}, ${color.blue}, ${shadowOpacity.toInt() / 100})';
+  }
+
+  get shadowColor {
+    Color color = colorConvert(shadowFormColor);
+    return 'rgba(${color.red}, ${color.green}, ${color.blue})';
+  }
 }
 
 class ShadowModel {
-  // drop-shadow(8.485281374238568pt 8.485281374238571pt 5pt rgba(44,118,181,1))
+  String type;
   double blurRadius;
+  Color color;
   double offsetX;
   double offsetY;
-  Color color;
+  // Button Attributes
   double spread;
+  ShadowModel(
+      {this.type,
+      this.blurRadius,
+      this.offsetX,
+      this.offsetY,
+      this.color,
+      this.spread = 0});
 
-  String shadowString({bool isButton = false}) {
-    if (isButton)
-      return 'rgba(${color.red},${color.green},${color.blue},${color.opacity}) $offsetX $offsetY $blurRadius $spread';
+  String get shadowString {
+    if (type == 'button') return buttonShadowString;
+    if (type == 'shape') return shapeShadowString;
+
+    throw ('unknown child error');
+  }
+
+  get buttonShadowString {
+    return 'rgba(${color.red},${color.green},${color.blue},${color.opacity}) $offsetX $offsetY $blurRadius $spread';
+  }
+
+  get shapeShadowString {
     return 'drop-shadow(${offsetX}pt ${offsetY}pt ${blurRadius}pt rgba(${color.red},${color.green},${color.blue},${color.opacity}))';
   }
-  // blurRadius: 5, offsetX: 5, offsetY: 5, color: Colors.black
-  ShadowModel(
-      {@required this.blurRadius,
-      @required this.offsetX,
-      @required this.offsetY,
-      @required this.color,
-      this.spread = 0});
+}
+
+class ButtonShadowModel extends ShadowModel {
+  ButtonShadowModel()
+      : super(
+            type: 'button',
+            blurRadius: 4,
+            offsetX: 0,
+            offsetY: 2,
+            color: Colors.black,
+            spread: 1);
+}
+
+class ShapeShadowModel extends ShadowModel {
+  ShapeShadowModel()
+      : super(
+            type: 'shape',
+            blurRadius: 5,
+            offsetX: 7.071067811865474,
+            offsetY: 7.071067811865474,
+            color: Colors.black);
 }
 
 class NoBackGroundFillClipPath extends CustomClipper<Path> {

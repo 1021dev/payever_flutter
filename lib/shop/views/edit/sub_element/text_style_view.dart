@@ -58,7 +58,7 @@ class _TextStyleViewState extends State<TextStyleView> {
 
   final double ptFontFactor = 30/112;
   final List<String>hasBorderChildren = ['button', 'image', 'social-icon', 'logo', 'shop-cart'];
-  final List<String>hasShadowChildren = ['button', 'image', 'shape', 'social-icon', 'logo', 'shop-cart'];
+  final List<String>hasShadowChildren = ['button', 'shape', 'image',  'social-icon', 'logo', 'shop-cart'];
 
   @override
   void initState() {
@@ -272,13 +272,11 @@ class _TextStyleViewState extends State<TextStyleView> {
             _updateImageBorderModel(state, model, updateApi: updateApi);
           },
         ),
-      if (hasBorder)
+      if (hasShadow)
         ShadowView(
           styles: styles,
           type: state.selectedChild.type,
-          onUpdateShadow: (ShadowModel model) => _updateShadow(state, model),
-          onUpdateBoxShadow: (model, updateApi) =>
-              _updateBoxShadow(state, model, updateApi: updateApi ?? true),
+          onUpdateShadow: (ShadowModel model, updateApi) => _updateShadow(state, model, updateApi: updateApi ?? true),
           onUpdateImageBoxShadow: (model, updateApi) =>
               _updateImageShadowModel(state, model, updateApi: updateApi),
         ),
@@ -309,7 +307,7 @@ class _TextStyleViewState extends State<TextStyleView> {
   }
 
   bool get hasShadow {
-    return hasBorderChildren.contains(widget.screenBloc.state.selectedChild.type);
+    return hasShadowChildren.contains(widget.screenBloc.state.selectedChild.type);
   }
 
   // Text Body
@@ -1243,20 +1241,21 @@ class _TextStyleViewState extends State<TextStyleView> {
         sectionId: state.selectedSectionId, effects: effects, updateApi: updateApi));
   }
 
-  void _updateShadow(ShopEditScreenState state, ShadowModel model) {
+  // void _updateShadow(ShopEditScreenState state, ShadowModel model) {
+  //   Map<String, dynamic> sheets = widget.stylesheets;
+  //   sheets['shadow'] = model == null ? null : model.shadowString;
+  //
+  //   List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
+  //       selectedId, sheets, state.activeShopPage.stylesheetIds);
+  //
+  //   widget.screenBloc.add(UpdateSectionEvent(
+  //       sectionId: state.selectedSectionId, effects: effects));
+  // }
+
+  void _updateShadow(ShopEditScreenState state, ShadowModel model, {bool updateApi = true}) {
     Map<String, dynamic> sheets = widget.stylesheets;
-    sheets['shadow'] = model == null ? null : model.shadowString();
-
-    List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
-        selectedId, sheets, state.activeShopPage.stylesheetIds);
-
-    widget.screenBloc.add(UpdateSectionEvent(
-        sectionId: state.selectedSectionId, effects: effects));
-  }
-
-  void _updateBoxShadow(ShopEditScreenState state, ShadowModel model, {bool updateApi = true}) {
-    Map<String, dynamic> sheets = widget.stylesheets;
-    sheets['boxShadow'] = model == null ? null : model.shadowString(isButton: true);
+    String field = state.selectedChild.type == 'shape' ? 'shadow' : 'boxShadow';
+    sheets[field] = model == null ? null : model.shadowString;
 
     List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
         selectedId, sheets, state.activeShopPage.stylesheetIds);

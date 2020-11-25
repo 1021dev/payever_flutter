@@ -8,14 +8,12 @@ class ShadowView extends StatefulWidget {
   final TextStyles styles;
   final String type;
   final Function onUpdateShadow;
-  final Function onUpdateBoxShadow;
   final Function onUpdateImageBoxShadow;
 
   const ShadowView(
       {@required this.styles,
       @required this.type,
       @required this.onUpdateShadow,
-      @required this.onUpdateBoxShadow,
       @required this.onUpdateImageBoxShadow});
 
   @override
@@ -28,7 +26,6 @@ class _ShadowViewState extends State<ShadowView> {
   bool isTablet;
 
   ShadowModel shadowModel;
-  ShadowModel defaultShadow;
 
   @override
   Widget build(BuildContext context) {
@@ -37,30 +34,24 @@ class _ShadowViewState extends State<ShadowView> {
     isTablet = GlobalUtils.isTablet(context);
 
     if (widget.type == 'button') {
-      defaultShadow =  ShadowModel(
-          blurRadius: 9,
-          spread: 9,
-          offsetX: 0,
-          offsetY: 2,
-          color: Color.fromRGBO(0, 0, 0, 0.7));
       shadowModel = widget.styles
-          .parseShadowFromString(widget.styles.boxShadow, isButton);
+          .parseShadowFromString(widget.styles.boxShadow, true);
 
-    } else if (widget.type == 'button') {
-      defaultShadow =  ShadowModel(
-          blurRadius: 9,
-          spread: 9,
-          offsetX: 0,
-          offsetY: 2,
-          color: Color.fromRGBO(0, 0, 0, 0.7));
+
+    } else if (widget.type == 'image') {
+      // defaultShadow =  ShadowModel(
+      //     blurRadius: 9,
+      //     spread: 9,
+      //     offsetX: 0,
+      //     offsetY: 2,
+      //     color: Color.fromRGBO(0, 0, 0, 0.7));
+      // shadowModel = widget.styles
+      //     .parseShadowFromString(widget.styles.boxShadow, isButton);
+    } else if (widget.type == 'shape') {
       shadowModel = widget.styles
-          .parseShadowFromString(widget.styles.boxShadow, isButton);
-    } else {
-      defaultShadow = ShadowModel(
-          blurRadius: 5, offsetX: 5, offsetY: 5, color: Colors.black);
-      shadowModel = widget.styles
-          .parseShadowFromString(widget.styles.shadow, isButton);
+          .parseShadowFromString(widget.styles.shadow, false);
     }
+    shadowModel?.type = widget.type;
     shadowExpanded = shadowModel != null;
 
     return Column(
@@ -79,16 +70,16 @@ class _ShadowViewState extends State<ShadowView> {
                 child: CupertinoSwitch(
                   value: shadowExpanded,
                   onChanged: (value) {
-                    if (isButton) {
-                      widget.onUpdateBoxShadow(value ? defaultShadow : null, true);
-                    } else {
-                      if (widget.type == 'image') {
-                        ImageShadowModel model = value? ImageShadowModel() : ImageShadowModel(shadowBlur: 0, shadowOffset: 0);
-                        widget.onUpdateImageBoxShadow(model, true);
-                      } else
-                        widget.onUpdateShadow(value ? defaultShadow : null);
-                    }
-
+                    if (widget.type == 'button') {
+                      widget.onUpdateShadow(
+                          value ? ButtonShadowModel() : null, true);
+                    } else if (widget.type == 'image') {
+                      ImageShadowModel model = value
+                          ? ImageShadowModel()
+                          : ImageShadowModel(shadowBlur: 0, shadowOffset: 0);
+                      widget.onUpdateImageBoxShadow(model, true);
+                    } else
+                      widget.onUpdateShadow(value ? ShapeShadowModel() : null, true);
                   },
                 ),
               ),
@@ -200,19 +191,15 @@ class _ShadowViewState extends State<ShadowView> {
   }
 
   _onUpdateBoxShadow({double blur, double spread, bool updateApi}) {
-    ShadowModel model = ShadowModel(
-        blurRadius: blur ?? shadowModel.blurRadius,
-        spread: spread ?? shadowModel.spread,
-        offsetX: 0,
-        offsetY: 2,
-        color: Color.fromRGBO(0, 0, 0, 0.7));
-    widget.onUpdateBoxShadow(model, updateApi);
+    shadowModel.blurRadius = blur ?? shadowModel.blurRadius;
+    shadowModel.spread = spread ?? shadowModel.spread;
+    widget.onUpdateShadow(shadowModel, updateApi);
   }
 
   Widget _shadowGridItem(int index) {
     ShadowModel model =
         widget.styles.getShadowModel(ShadowType.values[index], Colors.black);
-    print('shadowType :${shadowType.index}');
+    model.type = widget.type;
     Widget item = Stack(
       children: [
         Container(
@@ -240,7 +227,7 @@ class _ShadowViewState extends State<ShadowView> {
       ],
     );
 
-    return InkWell(onTap: () => widget.onUpdateShadow(model), child: item);
+    return InkWell(onTap: () => widget.onUpdateShadow(model, true), child: item);
   }
 
   ShadowType get shadowType {
