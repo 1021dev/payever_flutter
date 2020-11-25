@@ -1138,38 +1138,6 @@ class ImageBorderModel {
   });
 }
 
-class ImageShadowModel {
-  double shadowAngle;
-  double shadowBlur;
-  String shadowFormColor;
-  double shadowOffset;
-  double shadowOpacity;
-
-  ImageShadowModel({
-    this.shadowAngle = 315,
-    this.shadowBlur = 5,
-    this.shadowFormColor = '#000000',
-    this.shadowOffset = 10,
-    this.shadowOpacity = 100,
-  });
-
-  get boxShadow {
-    if (shadowBlur == 0 && shadowOffset == 0)
-      return false;
-
-    double deg = shadowAngle * pi / 180;
-    Color color = colorConvert(shadowFormColor);
-    double offsetX = cos(deg) * shadowOffset;
-    double offsetY = - sin(deg) * shadowOffset;
-    return '${offsetX.toStringAsFixed(1)}px ${offsetY.toStringAsFixed(1)}px ${shadowBlur}px rgba(${color.red}, ${color.green}, ${color.blue}, ${shadowOpacity.toInt() / 100})';
-  }
-
-  get shadowColor {
-    Color color = colorConvert(shadowFormColor);
-    return 'rgba(${color.red}, ${color.green}, ${color.blue})';
-  }
-}
-
 class ShadowModel {
   String type;
   double blurRadius;
@@ -1178,19 +1146,42 @@ class ShadowModel {
   double offsetY;
   // Button Attributes
   double spread;
+  // Image Attributes
+  double shadowAngle;
+  double shadowBlur;
+  String shadowFormColor;
+  double shadowOffset;
+  double shadowOpacity;
+
   ShadowModel(
       {this.type,
       this.blurRadius,
       this.offsetX,
       this.offsetY,
       this.color,
-      this.spread = 0});
+      /*button attrs*/
+      this.spread = 0,
+      /*image attrs*/
+      this.shadowAngle,
+      this.shadowBlur,
+      this.shadowFormColor,
+      this.shadowOffset,
+      this.shadowOpacity});
 
   String get shadowString {
     if (type == 'button') return buttonShadowString;
     if (type == 'shape') return shapeShadowString;
+    if (type == 'image') return imageShadowString;
 
-    throw ('unknown child error');
+    throw ('unknown child type error');
+  }
+
+  String get shadowColor {
+    if (type == 'image') {
+      Color color = colorConvert(shadowFormColor);
+      return 'rgba(${color.red}, ${color.green}, ${color.blue})';
+    }
+    throw ('no image type error');
   }
 
   get buttonShadowString {
@@ -1199,6 +1190,14 @@ class ShadowModel {
 
   get shapeShadowString {
     return 'drop-shadow(${offsetX}pt ${offsetY}pt ${blurRadius}pt rgba(${color.red},${color.green},${color.blue},${color.opacity}))';
+  }
+
+  get imageShadowString {
+    double deg = shadowAngle * pi / 180;
+    Color color = colorConvert(shadowFormColor);
+    double offsetX = cos(deg) * shadowOffset;
+    double offsetY = - sin(deg) * shadowOffset;
+    return '${offsetX.toStringAsFixed(1)}px ${offsetY.toStringAsFixed(1)}px ${shadowBlur}px rgba(${color.red}, ${color.green}, ${color.blue}, ${shadowOpacity.toInt() / 100})';
   }
 }
 
@@ -1221,6 +1220,18 @@ class ShapeShadowModel extends ShadowModel {
             offsetX: 7.071067811865474,
             offsetY: 7.071067811865474,
             color: Colors.black);
+}
+
+class ImageShadowModel extends ShadowModel {
+  ImageShadowModel()
+      : super(
+    type: 'image',
+    shadowAngle: 315,
+    shadowBlur: 5,
+    shadowFormColor: '#000000',
+    shadowOffset: 10,
+    shadowOpacity: 100,
+  );
 }
 
 class NoBackGroundFillClipPath extends CustomClipper<Path> {

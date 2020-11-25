@@ -370,13 +370,16 @@ class DecorationAssist {
     return Border.all(color: colorConvert(model.borderColor), width: PxDp.d2u(px: model.borderSize.toInt()));
   }
 
+  /*Only for Button And Shape*/
   ShadowModel parseShadowFromString(String shadow, bool isButton) {
+    if (shadow == null || shadow.isEmpty) return null;
+
     double blurRadius;
     double offsetX;
     double offsetY;
     double spread = 0;
     Color color;
-    if (shadow == null || shadow.isEmpty) return null;
+
     if (isButton == false) {
       List<String> attrs0 = shadow.replaceAll('drop-shadow', '').split(' ');
       List<String> attrs = attrs0.map((element) {

@@ -277,8 +277,6 @@ class _TextStyleViewState extends State<TextStyleView> {
           styles: styles,
           type: state.selectedChild.type,
           onUpdateShadow: (ShadowModel model, updateApi) => _updateShadow(state, model, updateApi: updateApi ?? true),
-          onUpdateImageBoxShadow: (model, updateApi) =>
-              _updateImageShadowModel(state, model, updateApi: updateApi),
         ),
       OpacityView(
         styles: styles,
@@ -1241,22 +1239,19 @@ class _TextStyleViewState extends State<TextStyleView> {
         sectionId: state.selectedSectionId, effects: effects, updateApi: updateApi));
   }
 
-  // void _updateShadow(ShopEditScreenState state, ShadowModel model) {
-  //   Map<String, dynamic> sheets = widget.stylesheets;
-  //   sheets['shadow'] = model == null ? null : model.shadowString;
-  //
-  //   List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
-  //       selectedId, sheets, state.activeShopPage.stylesheetIds);
-  //
-  //   widget.screenBloc.add(UpdateSectionEvent(
-  //       sectionId: state.selectedSectionId, effects: effects));
-  // }
-
   void _updateShadow(ShopEditScreenState state, ShadowModel model, {bool updateApi = true}) {
     Map<String, dynamic> sheets = widget.stylesheets;
     String field = state.selectedChild.type == 'shape' ? 'shadow' : 'boxShadow';
     sheets[field] = model == null ? null : model.shadowString;
-
+    if (state.selectedChild.type == 'image') {
+      sheets['shadowAngle'] =  model?.shadowAngle?.toInt();
+      sheets['shadowBlur'] =  model?.shadowBlur?.toInt();
+      sheets['shadowColor'] =  model?.shadowColor;
+      sheets['shadowFormColor'] =  model?.shadowFormColor;
+      sheets['shadowOffset'] =  model?.shadowOffset?.toInt();
+      sheets['shadowOpacity'] =  model?.shadowOpacity?.toInt();
+      sheets[field] = model?.shadowString ?? false;
+    }
     List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
         selectedId, sheets, state.activeShopPage.stylesheetIds);
 
@@ -1281,23 +1276,6 @@ class _TextStyleViewState extends State<TextStyleView> {
     sheets['borderColor'] =  model.borderColor;
     sheets['borderSize'] =  model.borderSize;
     sheets['borderType'] =  model.borderType;
-
-    List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
-        selectedId, sheets, state.activeShopPage.stylesheetIds);
-
-    widget.screenBloc.add(UpdateSectionEvent(
-        sectionId: state.selectedSectionId, effects: effects, updateApi: updateApi));
-  }
-
-  void _updateImageShadowModel(ShopEditScreenState state, ImageShadowModel model, {bool updateApi = true}) {
-    Map<String, dynamic> sheets = widget.stylesheets;
-    sheets['boxShadow'] = model.boxShadow;
-    sheets['shadowAngle'] =  model.shadowAngle.toInt();
-    sheets['shadowBlur'] =  model.shadowBlur.toInt();
-    sheets['shadowColor'] =  model.shadowColor;
-    sheets['shadowFormColor'] =  model.shadowFormColor;
-    sheets['shadowOffset'] =  model.shadowOffset.toInt();
-    sheets['shadowOpacity'] =  model.shadowOpacity.toInt();
 
     List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
         selectedId, sheets, state.activeShopPage.stylesheetIds);

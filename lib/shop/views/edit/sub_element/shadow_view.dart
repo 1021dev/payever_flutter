@@ -8,13 +8,11 @@ class ShadowView extends StatefulWidget {
   final TextStyles styles;
   final String type;
   final Function onUpdateShadow;
-  final Function onUpdateImageBoxShadow;
 
   const ShadowView(
       {@required this.styles,
       @required this.type,
-      @required this.onUpdateShadow,
-      @required this.onUpdateImageBoxShadow});
+      @required this.onUpdateShadow});
 
   @override
   _ShadowViewState createState() => _ShadowViewState();
@@ -36,17 +34,11 @@ class _ShadowViewState extends State<ShadowView> {
     if (widget.type == 'button') {
       shadowModel = widget.styles
           .parseShadowFromString(widget.styles.boxShadow, true);
-
-
     } else if (widget.type == 'image') {
-      // defaultShadow =  ShadowModel(
-      //     blurRadius: 9,
-      //     spread: 9,
-      //     offsetX: 0,
-      //     offsetY: 2,
-      //     color: Color.fromRGBO(0, 0, 0, 0.7));
-      // shadowModel = widget.styles
-      //     .parseShadowFromString(widget.styles.boxShadow, isButton);
+
+
+      shadowModel = widget.styles
+          .parseShadowFromString(widget.styles.boxShadow, true);
     } else if (widget.type == 'shape') {
       shadowModel = widget.styles
           .parseShadowFromString(widget.styles.shadow, false);
@@ -74,10 +66,8 @@ class _ShadowViewState extends State<ShadowView> {
                       widget.onUpdateShadow(
                           value ? ButtonShadowModel() : null, true);
                     } else if (widget.type == 'image') {
-                      ImageShadowModel model = value
-                          ? ImageShadowModel()
-                          : ImageShadowModel(shadowBlur: 0, shadowOffset: 0);
-                      widget.onUpdateImageBoxShadow(model, true);
+                      widget.onUpdateShadow(
+                          value ? ImageShadowModel() : null, true);
                     } else
                       widget.onUpdateShadow(value ? ShapeShadowModel() : null, true);
                   },
