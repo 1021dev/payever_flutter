@@ -24,17 +24,20 @@ class BorderView extends StatefulWidget {
 }
 
 class _BorderViewState extends State<BorderView> {
-  bool borderExpanded;
+  bool borderExpanded = false;
   double borderRadius;
-  double borderWidth;
-  String borderColor;
+
 
   @override
   Widget build(BuildContext context) {
+
     borderRadius = widget.styles.getBorderRadius(widget.styles.borderRadius);
-    borderWidth = widget.styles.borderWidth;
-    borderColor = widget.styles.borderColor;
-    borderExpanded = borderRadius > 0;
+
+    if (widget.type == 'button') {
+      borderExpanded = borderRadius > 0;
+    } else if (widget.type == 'image') {
+      borderExpanded = widget.styles.getBorder != null;
+    }
 
     return Column(
       children: [
@@ -107,6 +110,10 @@ class _BorderViewState extends State<BorderView> {
   }
 
   Widget get imageBorder {
+    BorderModel borderModel = widget.styles.parseBorderFromString(widget.styles.border);
+    int borderWidth = borderModel.borderWidth;
+    Color borderColor = borderModel.borderColor;
+
     return Container(
       padding: EdgeInsets.only(left: 16),
       child: Column(
@@ -146,7 +153,7 @@ class _BorderViewState extends State<BorderView> {
                 ),
                 Expanded(
                   child: Slider(
-                    value: widget.styles.borderWidth,
+                    value: borderWidth.toDouble(),
                     min: 0,
                     max: 100,
                     onChanged: (double value) =>
@@ -156,14 +163,14 @@ class _BorderViewState extends State<BorderView> {
                   ),
                 ),
                 Text(
-                  '1 pt',
+                  '$borderWidth px',
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ],
             ),
           ),
           FillColorView(
-            pickColor: Colors.white,
+            pickColor: borderColor,
             styles: widget.styles,
             colorType: ColorType.Border,
             onUpdateColor: (color) => widget.onUpdateBorderColor(color),

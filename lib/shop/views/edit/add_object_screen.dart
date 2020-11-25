@@ -31,7 +31,7 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
     'Basic',
     'Media',
     'Cart',
-    'Social'
+    'Social',
     'Objects',
     'Animals',
     'Nature',

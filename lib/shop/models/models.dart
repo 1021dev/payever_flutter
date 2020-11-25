@@ -1120,6 +1120,16 @@ class BackGroundModel {
         @required this.backgroundSize});
 }
 
+class BorderModel {
+  int borderWidth;
+  Color borderColor;
+
+  BorderModel({
+    @required this.borderWidth,
+    @required this.borderColor,
+  });
+}
+
 class ShadowModel {
   // drop-shadow(8.485281374238568pt 8.485281374238571pt 5pt rgba(44,118,181,1))
   double blurRadius;

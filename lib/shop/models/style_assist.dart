@@ -352,15 +352,22 @@ class DecorationAssist {
     }
     return 0;
   }
+  BorderModel parseBorderFromString(dynamic border) {
+    if (border == null || border == false)
+      return null;
 
-  Border getBorder1(dynamic border) {
-    if (border == null || border == false) {
-      return Border.all(color: Colors.transparent, width: 0);
-    }
     List<String> borderAttrs = border.toString().split(' ');
     int borderWidth = int.parse(borderAttrs.first.replaceAll('px', ''));
     String borderColor = borderAttrs.last;
-    return Border.all(color: colorConvert(borderColor), width: PxDp.d2u(px: borderWidth));
+    return BorderModel(borderWidth: borderWidth, borderColor: colorConvert(borderColor));
+  }
+
+  Border getBorder1(dynamic border) {
+    BorderModel model = parseBorderFromString(border);
+    if (model == null)
+      return Border.all(color: Colors.transparent, width: 0);
+
+    return Border.all(color: model.borderColor, width: PxDp.d2u(px: model.borderWidth));
   }
 
   ShadowModel parseShadowFromString(String shadow, bool isButton) {

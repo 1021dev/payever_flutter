@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-
 List<Color>textBgColors = [Color.fromRGBO(0, 168, 255, 1),
   Color.fromRGBO(96, 234, 50, 1),
   Color.fromRGBO(255, 22, 1, 1),
@@ -44,18 +43,6 @@ enum ClipboardType {
   Paste,
   Delete
 }
-
-// List<String>paragraphStyles = [
-//   'Title',
-//   'Title Small',
-//   'Subtitle',
-//   'Body',
-//   'Body Small',
-//   'Caption',
-//   'Caption Red',
-//   'Quote',
-//   'Attribution',
-// ];
 
 List<String>fonts = [
   'Roboto',
