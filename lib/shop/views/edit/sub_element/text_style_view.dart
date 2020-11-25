@@ -274,6 +274,7 @@ class _TextStyleViewState extends State<TextStyleView> {
         ),
       if (hasShadow)
         ShadowView(
+          stylesheets: widget.stylesheets,
           styles: styles,
           type: state.selectedChild.type,
           onUpdateShadow: (ShadowModel model, updateApi) => _updateShadow(state, model, updateApi: updateApi ?? true),

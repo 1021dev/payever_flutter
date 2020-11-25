@@ -457,7 +457,7 @@ class DecorationAssist {
     ];
   }
 
-  ShadowModel getShadowModel(ShadowType type, Color color) {
+  ShadowModel getShadowModel(ShadowType type, Color color, String childType) {
     double offsetX = 0;
     double offsetY = 0;
     double blurRadius = 5;
@@ -490,7 +490,33 @@ class DecorationAssist {
       case ShadowType.Unknown:
         break;
     }
-    return ShadowModel(blurRadius: blurRadius, offsetX: offsetX, offsetY: offsetY, color: color);
+
+    if (childType == 'button' || childType == 'shape')
+      return ShadowModel(
+          blurRadius: blurRadius,
+          offsetX: offsetX,
+          offsetY: offsetY,
+          color: color);
+
+    if (childType == 'image') {
+      if (type == ShadowType.None)
+        return null;
+
+      double deg = - atan(offsetY/offsetX);
+      double shadowAngle = deg * 180 / pi;
+      double shadowOffset = offsetX / cos(deg);
+      if (shadowOffset == 0)
+        shadowOffset = offsetY / -sin(deg);
+
+      return ShadowModel(
+          shadowBlur: blurRadius,
+          shadowOffset: shadowOffset,
+          shadowAngle: shadowAngle,
+          shadowOpacity: 100,
+          shadowFormColor: encodeColor(color));
+    }
+
+    throw ('unknown child type error');
   }
 }
 

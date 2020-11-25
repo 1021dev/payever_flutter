@@ -5,12 +5,14 @@ import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
 
 class ShadowView extends StatefulWidget {
+  final Map<String, dynamic>stylesheets;
   final TextStyles styles;
   final String type;
   final Function onUpdateShadow;
 
   const ShadowView(
-      {@required this.styles,
+      {@required this.stylesheets,
+      @required this.styles,
       @required this.type,
       @required this.onUpdateShadow});
 
@@ -35,10 +37,16 @@ class _ShadowViewState extends State<ShadowView> {
       shadowModel = widget.styles
           .parseShadowFromString(widget.styles.boxShadow, true);
     } else if (widget.type == 'image') {
-
-
-      shadowModel = widget.styles
-          .parseShadowFromString(widget.styles.boxShadow, true);
+      ImageStyles styles = ImageStyles.fromJson(widget.stylesheets);
+      if (styles.boxShadow != null && styles.boxShadow != false)
+        shadowModel = ShadowModel(
+          type: 'image',
+          shadowAngle: styles.shadowAngle,
+          shadowBlur: styles.shadowBlur,
+          shadowFormColor: styles.shadowFormColor,
+          shadowOffset: styles.shadowOffset,
+          shadowOpacity: styles.shadowOpacity,
+        );
     } else if (widget.type == 'shape') {
       shadowModel = widget.styles
           .parseShadowFromString(widget.styles.shadow, false);
@@ -188,19 +196,20 @@ class _ShadowViewState extends State<ShadowView> {
 
   Widget _shadowGridItem(int index) {
     ShadowModel model =
-        widget.styles.getShadowModel(ShadowType.values[index], Colors.black);
-    model.type = widget.type;
+        widget.styles.getShadowModel(ShadowType.values[index], Colors.black, widget.type);
+    model?.type = widget.type;
+
     Widget item = Stack(
       children: [
         Container(
           decoration: BoxDecoration(
             color: Colors.white,
-            boxShadow: [
+            boxShadow: model == null ? null : [
               BoxShadow(
                 color: Colors.black,
-                blurRadius: model.blurRadius,
+                blurRadius: model.getBlur,
                 offset: Offset(
-                    model.offsetX, model.offsetY), // changes position of shadow
+                    model.getOffSetX, model.getOffSetY), // changes position of shadow
               ),
             ],
           ),
@@ -225,10 +234,15 @@ class _ShadowViewState extends State<ShadowView> {
     double blurRadius;
     double offsetX;
     double offsetY;
-
-    blurRadius = shadowModel.blurRadius;
-    offsetX = shadowModel.offsetX;
-    offsetY = shadowModel.offsetY;
+    if (widget.type == 'shape') {
+      blurRadius = shadowModel.blurRadius;
+      offsetX = shadowModel.offsetX;
+      offsetY = shadowModel.offsetY;
+    } else if (widget.type == 'image') {
+      blurRadius = shadowModel.shadowBlur;
+      offsetX = shadowModel.getOffSetX;
+      offsetY = shadowModel.getOffSetY;
+    }
 
     if (blurRadius == 5 && offsetX == 0 && offsetY == 5)
       return ShadowType.Bottom;

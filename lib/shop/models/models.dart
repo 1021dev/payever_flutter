@@ -1138,6 +1138,7 @@ class ImageBorderModel {
   });
 }
 
+@JsonSerializable()
 class ShadowModel {
   String type;
   double blurRadius;
@@ -1173,6 +1174,31 @@ class ShadowModel {
     if (type == 'shape') return shapeShadowString;
     if (type == 'image') return imageShadowString;
 
+    throw ('unknown child type error');
+  }
+
+  double get getBlur {
+    if (type == 'button' || type == 'shape') return blurRadius;
+    if (type == 'image') return shadowBlur;
+
+    throw ('unknown child type error');
+  }
+
+  double get getOffSetX {
+    if (type == 'shape') return offsetX;
+    if (type == 'image') {
+      double deg = shadowAngle * pi / 180;
+      return cos(deg) * shadowOffset;
+    }
+    throw ('unknown child type error');
+  }
+
+  double get getOffSetY {
+    if (type == 'shape') return offsetY;
+    if (type == 'image') {
+      double deg = shadowAngle * pi / 180;
+      return -shadowOffset * sin(deg);
+    }
     throw ('unknown child type error');
   }
 
