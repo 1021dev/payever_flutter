@@ -570,7 +570,7 @@ class BaseStyles with BackgroundAssist, StyleAssist, SizeAssist, DecorationAssis
       shadowString = shadow;
     } else if (childType == 'social-icon') {
       shadowString = filter;
-    }  else {
+    } else {
       shadowString = boxShadow;
     }
     return getBoxShadow1(shadowString, childType);
@@ -1195,6 +1195,7 @@ class ShadowModel {
     if (type == 'button') return buttonShadowString;
     if (type == 'shape') return shapeShadowString;
     if (type == 'image') return imageShadowString;
+    if (type == 'shop-cart') return cartShadowString;
 
     throw ('unknown child type error');
   }
@@ -1240,6 +1241,10 @@ class ShadowModel {
     return 'drop-shadow(${offsetX}pt ${offsetY}pt ${blurRadius}pt rgba(${color.red},${color.green},${color.blue},${color.opacity}))';
   }
 
+  get cartShadowString {
+    return '${offsetX}pt ${offsetY}pt ${blurRadius}pt 0 rgba(${color.red},${color.green},${color.blue},${color.opacity})';
+  }
+
   get imageShadowString {
     double deg = shadowAngle * pi / 180;
     Color color = colorConvert(shadowFormColor);
@@ -1281,6 +1286,19 @@ class ImageShadowModel extends ShadowModel {
     shadowOpacity: 100,
   );
 }
+
+class CartShadowModel extends ShadowModel {
+  // 14.142135623730947pt 14.142135623730955pt 5pt 0 rgba(0,0,0,1)
+  CartShadowModel()
+      : super(
+            type: 'shop-cart',
+            blurRadius: 5,
+            offsetX: 14.142135623730947,
+            offsetY: 14.142135623730947,
+            shadowOpacity: 100,
+            color: Colors.black);
+}
+
 
 class NoBackGroundFillClipPath extends CustomClipper<Path> {
   final double radius = 0.5;

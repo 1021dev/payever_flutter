@@ -461,6 +461,8 @@ class DecorationAssist {
       int colorB = int.parse(colors[2]);
       double opacity = double.parse(colors[3]);
       color = Color.fromRGBO(colorR, colorG, colorB, opacity);
+    } else {
+      return null;
     }
 
     return ShadowModel(
@@ -489,7 +491,7 @@ class DecorationAssist {
         color: model.color,
         blurRadius: model.blurRadius,
         spreadRadius: model.spread,
-        offset: Offset(model.offsetX, model.offsetY), // changes position of shadow
+        offset: Offset(model.offsetX, model.offsetY),
       ),
     ];
   }

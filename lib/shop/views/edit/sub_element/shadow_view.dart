@@ -35,7 +35,7 @@ class _ShadowViewState extends State<ShadowView> {
     isTablet = GlobalUtils.isTablet(context);
     shadowModel = null;
 
-    if (widget.type == 'button') {
+    if (widget.type == 'button' || widget.type == 'shop-cart') {
       shadowModel = widget.styles
           .parseShadowFromString(widget.styles.boxShadow, widget.type);
     } else if (widget.type == 'image') {
@@ -52,6 +52,9 @@ class _ShadowViewState extends State<ShadowView> {
     } else if (widget.type == 'shape') {
       shadowModel = widget.styles
           .parseShadowFromString(widget.styles.shadow, widget.type);
+    } else if (widget.type == 'social-icon') {
+      shadowModel = widget.styles
+          .parseShadowFromString(widget.styles.filter, widget.type);
     } else {
 
     }
@@ -80,8 +83,13 @@ class _ShadowViewState extends State<ShadowView> {
                     } else if (widget.type == 'image') {
                       widget.onUpdateShadow(
                           value ? ImageShadowModel() : null, true);
-                    } else
-                      widget.onUpdateShadow(value ? ShapeShadowModel() : null, true);
+                    } else if (widget.type == 'shape') {
+                      widget.onUpdateShadow(
+                          value ? ShapeShadowModel() : null, true);
+                    } else if (widget.type == 'shop-cart') {
+                      widget.onUpdateShadow(
+                          value ? CartShadowModel() : null, true);
+                    }
                   },
                 ),
               ),
@@ -238,7 +246,7 @@ class _ShadowViewState extends State<ShadowView> {
               Container(
                 width: 50,
                 child: Text(
-                  'Spread',
+                  'Offset',
                   style: TextStyle(color: Colors.white, fontSize: 15),
                 ),
               ),
@@ -247,7 +255,7 @@ class _ShadowViewState extends State<ShadowView> {
               ),
               Expanded(
                 child: Slider(
-                  value: shadowModel.spread,
+                  value: shadowModel.offsetX,
                   min: 0,
                   max: 100,
                   onChanged: (double value) => _onUpdateBoxShadow(spread: value, updateApi: false),
@@ -259,6 +267,37 @@ class _ShadowViewState extends State<ShadowView> {
                 alignment: Alignment.center,
                 child: Text(
                   '${shadowModel.spread.toInt()} px',
+                  style: TextStyle(color: Colors.white, fontSize: 15),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Container(
+                width: 50,
+                child: Text(
+                  'Opacity',
+                  style: TextStyle(color: Colors.white, fontSize: 15),
+                ),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: Slider(
+                  value: shadowModel.color.opacity * 100,
+                  min: 0,
+                  max: 100,
+                  onChanged: (double value) => _onUpdateBoxShadow(spread: value, updateApi: false),
+                  onChangeEnd: (double value) => _onUpdateBoxShadow(spread: value, updateApi: true),
+                ),
+              ),
+              Container(
+                width: 50,
+                alignment: Alignment.center,
+                child: Text(
+                  '${shadowModel.color.opacity * 100} px',
                   style: TextStyle(color: Colors.white, fontSize: 15),
                 ),
               ),
