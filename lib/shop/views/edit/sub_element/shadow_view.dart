@@ -37,7 +37,7 @@ class _ShadowViewState extends State<ShadowView> {
 
     if (widget.type == 'button') {
       shadowModel = widget.styles
-          .parseShadowFromString(widget.styles.boxShadow, true);
+          .parseShadowFromString(widget.styles.boxShadow, widget.type);
     } else if (widget.type == 'image') {
       ImageStyles styles = ImageStyles.fromJson(widget.stylesheets);
       if (styles.boxShadow != null && styles.boxShadow != false)
@@ -51,7 +51,7 @@ class _ShadowViewState extends State<ShadowView> {
         );
     } else if (widget.type == 'shape') {
       shadowModel = widget.styles
-          .parseShadowFromString(widget.styles.shadow, false);
+          .parseShadowFromString(widget.styles.shadow, widget.type);
     } else {
 
     }
@@ -321,8 +321,8 @@ class _ShadowViewState extends State<ShadowView> {
       offsetY = shadowModel.offsetY;
     } else if (widget.type == 'image') {
       blurRadius = shadowModel.shadowBlur;
-      offsetX = shadowModel.getOffSetX;
-      offsetY = shadowModel.getOffSetY;
+      offsetX = shadowModel.getOffSetX.floor().toDouble();
+      offsetY = shadowModel.getOffSetY.floor().toDouble();
     }
 
     if (blurRadius == 5 && offsetX == 0 && offsetY == 5)

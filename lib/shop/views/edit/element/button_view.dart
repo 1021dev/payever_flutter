@@ -31,7 +31,7 @@ class _ButtonViewState extends State<ButtonView> {
 
   Widget get body {
     return Container(
-      decoration: decoration,
+      decoration: styles.decoration(widget.child.type),
       alignment: Alignment.center,
       child: Text(
         data.text,
@@ -42,31 +42,6 @@ class _ButtonViewState extends State<ButtonView> {
       ),
     );
   }
-
-  get decoration {
-    // print('ButtonStyle: ${styles.toJson()}');
-    switch (backgroundType(styles)) {
-      case 0:
-        return BoxDecoration(
-          color: colorConvert(styles.backgroundColor),
-          border: styles.getBorder,
-          borderRadius: BorderRadius.circular(styles.buttonBorderRadius()),
-          boxShadow: styles.getBoxShadow(isButton: true),
-        );
-        break;
-      case 1:
-        return BoxDecoration(
-          border: styles.getBorder,
-          borderRadius: BorderRadius.circular(styles.buttonBorderRadius()),
-          boxShadow: styles.getBoxShadow(isButton: true),
-          gradient: styles.gradient,
-        );
-        break;
-      default:
-        break;
-    }
-  }
-
 
   ButtonStyles styleSheet() {
     try {

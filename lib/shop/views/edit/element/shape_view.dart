@@ -45,7 +45,7 @@ class _ShapeViewState extends State<ShapeView> {
   Widget circleShape() {
     return ClipShadow(
       clipper: OvalClipper(x: styles.width, y: styles.height, w: 0),
-      boxShadow: styles.getBoxShadow(),
+      boxShadow: styles.getBoxShadow(widget.child.type),
       child: ClipRRect(
           borderRadius: BorderRadius.all(
               Radius.elliptical(double.infinity, double.infinity)),
@@ -59,9 +59,9 @@ class _ShapeViewState extends State<ShapeView> {
     return Container(
       child: ClipShadow(
         clipper: TriangleClipper(),
-        boxShadow: styles.getBoxShadow(),
+        boxShadow: styles.getBoxShadow(widget.child.type),
         child: Container(
-          decoration: styles.decoration,
+          decoration: styles.decoration(widget.child.type),
           child: Transform.rotate(
             angle: pi,
             child: ShapeOfView(
@@ -80,7 +80,7 @@ class _ShapeViewState extends State<ShapeView> {
 
   Widget squareShape() {
     return Container(
-      decoration: styles.decoration,
+      decoration: styles.decoration(widget.child.type),
       alignment: Alignment.center,
       child: ClipRRect(
           child: BackgroundView(

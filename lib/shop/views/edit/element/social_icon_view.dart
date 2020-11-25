@@ -31,7 +31,7 @@ class _SocialIconViewState extends State<SocialIconView> {
     return Opacity(
       opacity: styles.opacity,
       child: Container(
-          decoration: styles.decoration,
+          decoration: styles.decoration(widget.child.type),
           child: SvgPicture.asset(
             'assets/images/social-icon-${widget.child.data['variant']}.svg',
             color: colorConvert(styles.backgroundColor),

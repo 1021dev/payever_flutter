@@ -371,7 +371,7 @@ class DecorationAssist {
   }
 
   /*Only for Button And Shape*/
-  ShadowModel parseShadowFromString(String shadow, bool isButton) {
+  ShadowModel parseShadowFromString(String shadow, String childType) {
     if (shadow == null || shadow.isEmpty) return null;
 
     double blurRadius;
@@ -380,7 +380,7 @@ class DecorationAssist {
     double spread = 0;
     Color color;
 
-    if (isButton == false) {
+    if (childType == 'shape') {
       List<String> attrs0 = shadow.replaceAll('drop-shadow', '').split(' ');
       List<String> attrs = attrs0.map((element) {
         if (element.contains('rgb'))
@@ -400,7 +400,7 @@ class DecorationAssist {
       int colorB = int.parse(colors[2]);
       double opacity = double.parse(colors[3]);
       color = Color.fromRGBO(colorR, colorG, colorB, opacity);
-    } else {
+    } else if (childType == 'button') {
       List<String> attrs0 = shadow.split(' ');
       if (attrs0.length < 2)
         return null;
@@ -424,6 +424,43 @@ class DecorationAssist {
       int colorB = int.parse(colors[2]);
       double opacity = double.parse(colors[3]);
       color = Color.fromRGBO(colorR, colorG, colorB, opacity);
+    } else if (childType == 'shop-cart') {
+      List<String>attrs0 = shadow.split(' ');
+      List<String>attrs =  attrs0.map((element) {
+        if (element.contains('rgb'))
+          return element.replaceAll('rgba', '').replaceAll(',', ' ').replaceAll('(', '').replaceAll(')', '');
+        return element.replaceAll('pt', '');
+      }).toList();
+      blurRadius = double.parse(attrs[2]);
+      offsetX = double.parse(attrs[0]);
+      offsetY = double.parse(attrs[1]);
+      List<String>colors = attrs[4].split(' ');
+      int colorR = int.parse(colors[0]);
+      int colorG = int.parse(colors[1]);
+      int colorB = int.parse(colors[2]);
+      double opacity = double.parse(colors[3]);
+      color = Color.fromRGBO(colorR, colorG, colorB, opacity);
+    } else if (childType == 'social-icon') {
+      // drop-shadow(14.142135623730947pt 14.142135623730955pt 5pt rgba(0,0,0,1))
+      List<String> attrs0 = shadow.replaceAll('drop-shadow', '').split(' ');
+      List<String> attrs = attrs0.map((element) {
+        if (element.contains('rgb'))
+          return element
+              .replaceAll('rgba', '')
+              .replaceAll(',', ' ')
+              .replaceAll('(', '')
+              .replaceAll(')', '');
+        return element.replaceAll('pt', '').replaceAll('(', '');
+      }).toList();
+      blurRadius = double.parse(attrs[2]);
+      offsetX = double.parse(attrs[0]);
+      offsetY = double.parse(attrs[1]);
+      List<String> colors = attrs[3].split(' ');
+      int colorR = int.parse(colors[0]);
+      int colorG = int.parse(colors[1]);
+      int colorB = int.parse(colors[2]);
+      double opacity = double.parse(colors[3]);
+      color = Color.fromRGBO(colorR, colorG, colorB, opacity);
     }
 
     return ShadowModel(
@@ -434,8 +471,8 @@ class DecorationAssist {
         spread: spread);
   }
 
-  List<BoxShadow> getBoxShadow1(String shadow, bool isButton) {
-    ShadowModel model = parseShadowFromString(shadow, isButton);
+  List<BoxShadow> getBoxShadow1(String shadow, String childType) {
+    ShadowModel model = parseShadowFromString(shadow, childType);
     if (model == null) {
       return [
         BoxShadow(

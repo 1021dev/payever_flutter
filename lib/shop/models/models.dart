@@ -538,11 +538,25 @@ class BaseStyles with BackgroundAssist, StyleAssist, SizeAssist, DecorationAssis
     return getMarginLeftAssist(marginLeft, sectionStyleSheet.gridTemplateColumns, gridColumn);
   }
 
-  Decoration get decoration {
+  Decoration decoration(String childType) {
+    Border border2;
+    Color color2;
+    double borderRadius2 = getBorderRadius(borderRadius);
+    if (childType == 'button') {
+      border2 = getBorder;
+      color2 = colorConvert(backgroundColor);
+    }
+
+    if (childType == 'shop-cart' || childType == 'social-icon') {
+      borderRadius2 = min(width, height) / 8;
+    }
+
     return BoxDecoration(
-//      border: getBorder,
-      borderRadius: BorderRadius.circular(getBorderRadius(borderRadius)),
-      boxShadow: getBoxShadow(),
+      border: border2,
+      color: color2,
+      borderRadius: BorderRadius.circular(borderRadius2),
+      boxShadow: getBoxShadow(childType),
+      gradient: isGradientBackGround? gradient : null
     );
   }
 
@@ -550,8 +564,16 @@ class BaseStyles with BackgroundAssist, StyleAssist, SizeAssist, DecorationAssis
     return getBorder1(border);
   }
 
-  List<BoxShadow> getBoxShadow({bool isButton = false}) {
-    return getBoxShadow1((isButton ? boxShadow :shadow), isButton);
+  List<BoxShadow> getBoxShadow(String childType) {
+    String shadowString;
+    if (childType == 'shape') {
+      shadowString = shadow;
+    } else if (childType == 'social-icon') {
+      shadowString = filter;
+    }  else {
+      shadowString = boxShadow;
+    }
+    return getBoxShadow1(shadowString, childType);
   }
 
   factory BaseStyles.fromJson(Map<String, dynamic> json) => _$BaseStylesFromJson(json);
