@@ -9,12 +9,14 @@ class ShadowView extends StatefulWidget {
   final String type;
   final Function onUpdateShadow;
   final Function onUpdateBoxShadow;
+  final Function onUpdateImageBoxShadow;
 
   const ShadowView(
       {@required this.styles,
       @required this.type,
       @required this.onUpdateShadow,
-      @required this.onUpdateBoxShadow});
+      @required this.onUpdateBoxShadow,
+      @required this.onUpdateImageBoxShadow});
 
   @override
   _ShadowViewState createState() => _ShadowViewState();
@@ -25,7 +27,6 @@ class _ShadowViewState extends State<ShadowView> {
   bool isPortrait;
   bool isTablet;
 
-  bool isButton;
   ShadowModel shadowModel;
   ShadowModel defaultShadow;
 
@@ -34,8 +35,8 @@ class _ShadowViewState extends State<ShadowView> {
 
     isPortrait = GlobalUtils.isPortrait(context);
     isTablet = GlobalUtils.isTablet(context);
-    isButton = widget.type == 'button';
-    if (isButton) {
+
+    if (widget.type == 'button') {
       defaultShadow =  ShadowModel(
           blurRadius: 9,
           spread: 9,
@@ -45,6 +46,15 @@ class _ShadowViewState extends State<ShadowView> {
       shadowModel = widget.styles
           .parseShadowFromString(widget.styles.boxShadow, isButton);
 
+    } else if (widget.type == 'button') {
+      defaultShadow =  ShadowModel(
+          blurRadius: 9,
+          spread: 9,
+          offsetX: 0,
+          offsetY: 2,
+          color: Color.fromRGBO(0, 0, 0, 0.7));
+      shadowModel = widget.styles
+          .parseShadowFromString(widget.styles.boxShadow, isButton);
     } else {
       defaultShadow = ShadowModel(
           blurRadius: 5, offsetX: 5, offsetY: 5, color: Colors.black);
@@ -72,7 +82,11 @@ class _ShadowViewState extends State<ShadowView> {
                     if (isButton) {
                       widget.onUpdateBoxShadow(value ? defaultShadow : null, true);
                     } else {
-                      widget.onUpdateShadow(value ? defaultShadow : null);
+                      if (widget.type == 'image') {
+                        ImageShadowModel model = value? ImageShadowModel() : ImageShadowModel(shadowBlur: 0, shadowOffset: 0);
+                        widget.onUpdateImageBoxShadow(model, true);
+                      } else
+                        widget.onUpdateShadow(value ? defaultShadow : null);
                     }
 
                   },

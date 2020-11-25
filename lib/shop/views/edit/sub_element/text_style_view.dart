@@ -151,7 +151,6 @@ class _TextStyleViewState extends State<TextStyleView> {
     } else if (state.selectedChild.type == 'button') {
 
     }
-
   }
 
   Widget get _segmentedControl {
@@ -269,8 +268,9 @@ class _TextStyleViewState extends State<TextStyleView> {
           type: state.selectedChild.type,
           onUpdateBorderRadius: (radius, updateApi) =>
               _updateBorderRadius(state, radius, updateApi: updateApi),
-          onUpdateBorderWidth: (value, updateApi) {},
-          onUpdateBorderColor: (value) {},
+          onUpdateBorderModel: (model, updateApi) {
+            _updateImageBorderModel(state, model, updateApi: updateApi);
+          },
         ),
       if (hasBorder)
         ShadowView(
@@ -279,6 +279,8 @@ class _TextStyleViewState extends State<TextStyleView> {
           onUpdateShadow: (ShadowModel model) => _updateShadow(state, model),
           onUpdateBoxShadow: (model, updateApi) =>
               _updateBoxShadow(state, model, updateApi: updateApi ?? true),
+          onUpdateImageBoxShadow: (model, updateApi) =>
+              _updateImageShadowModel(state, model, updateApi: updateApi),
         ),
       OpacityView(
         styles: styles,
@@ -1266,6 +1268,37 @@ class _TextStyleViewState extends State<TextStyleView> {
   void _updateBorderRadius(ShopEditScreenState state, double radius, {bool updateApi = true}) {
     Map<String, dynamic> sheets = widget.stylesheets;
     sheets['borderRadius'] = radius.toInt();
+
+    List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
+        selectedId, sheets, state.activeShopPage.stylesheetIds);
+
+    widget.screenBloc.add(UpdateSectionEvent(
+        sectionId: state.selectedSectionId, effects: effects, updateApi: updateApi));
+  }
+
+  void _updateImageBorderModel(ShopEditScreenState state, ImageBorderModel model, {bool updateApi = true}) {
+    Map<String, dynamic> sheets = widget.stylesheets;
+    sheets['border'] = model.border;
+    sheets['borderColor'] =  model.borderColor;
+    sheets['borderSize'] =  model.borderSize;
+    sheets['borderType'] =  model.borderType;
+
+    List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
+        selectedId, sheets, state.activeShopPage.stylesheetIds);
+
+    widget.screenBloc.add(UpdateSectionEvent(
+        sectionId: state.selectedSectionId, effects: effects, updateApi: updateApi));
+  }
+
+  void _updateImageShadowModel(ShopEditScreenState state, ImageShadowModel model, {bool updateApi = true}) {
+    Map<String, dynamic> sheets = widget.stylesheets;
+    sheets['boxShadow'] = model.boxShadow;
+    sheets['shadowAngle'] =  model.shadowAngle.toInt();
+    sheets['shadowBlur'] =  model.shadowBlur.toInt();
+    sheets['shadowColor'] =  model.shadowColor;
+    sheets['shadowFormColor'] =  model.shadowFormColor;
+    sheets['shadowOffset'] =  model.shadowOffset.toInt();
+    sheets['shadowOpacity'] =  model.shadowOpacity.toInt();
 
     List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
         selectedId, sheets, state.activeShopPage.stylesheetIds);

@@ -1120,13 +1120,54 @@ class BackGroundModel {
         @required this.backgroundSize});
 }
 
-class BorderModel {
-  int borderWidth;
-  Color borderColor;
+class ImageBorderModel {
+  String borderColor;
 
-  BorderModel({
-    @required this.borderWidth,
-    @required this.borderColor,
+  get border {
+    if (borderSize == 0)
+      return false;
+
+    return '${borderSize.toInt()}px $borderType $borderColor';
+  }
+
+  double borderSize;
+  String borderType;
+
+  ImageBorderModel({
+    this.borderColor = '#000000',
+    this.borderSize = 1,
+    this.borderType = 'solid',
+  });
+}
+
+class ImageShadowModel {
+  get boxShadow {
+    if (shadowBlur == 0 && shadowOffset == 0)
+      return false;
+
+    double deg = shadowAngle * pi / 180;
+    Color color = colorConvert(shadowFormColor);
+    double offsetX = cos(deg) * shadowOffset;
+    double offsetY = - sin(deg) * shadowOffset;
+    return '${offsetX.toStringAsFixed(1)}px ${offsetY.toStringAsFixed(1)}px ${shadowBlur}px rgba(${color.red}, ${color.green}, ${color.blue}, ${shadowOpacity.toInt() / 100})';
+  }
+  get shadowColor {
+    Color color = colorConvert(shadowFormColor);
+    return 'rgba(${color.red}, ${color.green}, ${color.blue})';
+  }
+
+  double shadowAngle;
+  double shadowBlur;
+  String shadowFormColor;
+  double shadowOffset;
+  double shadowOpacity;
+
+  ImageShadowModel({
+    this.shadowAngle = 315,
+    this.shadowBlur = 5,
+    this.shadowFormColor = '#000000',
+    this.shadowOffset = 10,
+    this.shadowOpacity = 100,
   });
 }
 
@@ -1143,7 +1184,7 @@ class ShadowModel {
       return 'rgba(${color.red},${color.green},${color.blue},${color.opacity}) $offsetX $offsetY $blurRadius $spread';
     return 'drop-shadow(${offsetX}pt ${offsetY}pt ${blurRadius}pt rgba(${color.red},${color.green},${color.blue},${color.opacity}))';
   }
-
+  // blurRadius: 5, offsetX: 5, offsetY: 5, color: Colors.black
   ShadowModel(
       {@required this.blurRadius,
       @required this.offsetX,

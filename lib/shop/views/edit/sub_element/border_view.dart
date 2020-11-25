@@ -2,21 +2,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/theme.dart';
 
 import 'fill_color_view.dart';
 
 class BorderView extends StatefulWidget {
   final TextStyles styles;
   final Function onUpdateBorderRadius;
-  final Function onUpdateBorderWidth;
-  final Function onUpdateBorderColor;
+  final Function onUpdateBorderModel;
   final String type;
 
   const BorderView(
       {this.styles,
       this.onUpdateBorderRadius,
-      this.onUpdateBorderWidth,
-      this.onUpdateBorderColor,
+      this.onUpdateBorderModel,
       this.type});
 
   @override
@@ -26,17 +25,17 @@ class BorderView extends StatefulWidget {
 class _BorderViewState extends State<BorderView> {
   bool borderExpanded = false;
   double borderRadius;
-
+  ImageBorderModel borderModel;
 
   @override
   Widget build(BuildContext context) {
 
     borderRadius = widget.styles.getBorderRadius(widget.styles.borderRadius);
-
+    borderModel = widget.styles.parseBorderFromString(widget.styles.border);
     if (widget.type == 'button') {
       borderExpanded = borderRadius > 0;
     } else if (widget.type == 'image') {
-      borderExpanded = widget.styles.getBorder != null;
+      borderExpanded = borderModel != null;
     }
 
     return Column(
@@ -54,8 +53,14 @@ class _BorderViewState extends State<BorderView> {
                 scale: 0.8,
                 child: CupertinoSwitch(
                   value: borderExpanded,
-                  onChanged: (value) =>
-                      widget.onUpdateBorderRadius(value ? 15.0 : 0.0, true),
+                  onChanged: (value) {
+                    if (widget.type == 'button')
+                      widget.onUpdateBorderRadius(value ? 15.0 : 0.0, true);
+                    else if (widget.type == 'image') {
+                      ImageBorderModel model = value ? ImageBorderModel() : ImageBorderModel(borderSize: 0);
+                      widget.onUpdateBorderModel(model, true);
+                    }
+                  },
                 ),
               ),
             ],
@@ -109,10 +114,9 @@ class _BorderViewState extends State<BorderView> {
     );
   }
 
-  Widget get imageBorder {
-    BorderModel borderModel = widget.styles.parseBorderFromString(widget.styles.border);
-    int borderWidth = borderModel.borderWidth;
-    Color borderColor = borderModel.borderColor;
+  Widget get imageBorder {  
+    double borderSize = borderModel.borderSize;
+    Color borderColor = colorConvert(borderModel.borderColor);
 
     return Container(
       padding: EdgeInsets.only(left: 16),
@@ -153,17 +157,21 @@ class _BorderViewState extends State<BorderView> {
                 ),
                 Expanded(
                   child: Slider(
-                    value: borderWidth.toDouble(),
+                    value: borderSize,
                     min: 0,
                     max: 100,
-                    onChanged: (double value) =>
-                        widget.onUpdateBorderWidth(value, false),
-                    onChangeEnd: (double value) =>
-                        widget.onUpdateBorderWidth(value, true),
+                    onChanged: (double value) {
+                      borderModel.borderSize = value;
+                      _updateBorderModel(false);
+                    },
+                    onChangeEnd:  (double value) {
+                      borderModel.borderSize = value;
+                      _updateBorderModel(true);
+                    },
                   ),
                 ),
                 Text(
-                  '$borderWidth px',
+                  '${borderSize.toInt()} px',
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ],
@@ -173,10 +181,17 @@ class _BorderViewState extends State<BorderView> {
             pickColor: borderColor,
             styles: widget.styles,
             colorType: ColorType.Border,
-            onUpdateColor: (color) => widget.onUpdateBorderColor(color),
+            onUpdateColor: (Color color) {
+              borderModel.borderColor = encodeColor(color);
+              _updateBorderModel(true);
+            } ,
           ),
         ],
       ),
     );
+  }
+
+  _updateBorderModel(bool updateApi) {
+    widget.onUpdateBorderModel(borderModel, updateApi);
   }
 }
