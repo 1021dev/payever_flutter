@@ -21,6 +21,7 @@ class ShadowView extends StatefulWidget {
 }
 
 class _ShadowViewState extends State<ShadowView> {
+
   bool shadowExpanded = false;
   bool isPortrait;
   bool isTablet;
@@ -32,6 +33,7 @@ class _ShadowViewState extends State<ShadowView> {
 
     isPortrait = GlobalUtils.isPortrait(context);
     isTablet = GlobalUtils.isTablet(context);
+    shadowModel = null;
 
     if (widget.type == 'button') {
       shadowModel = widget.styles
@@ -50,6 +52,8 @@ class _ShadowViewState extends State<ShadowView> {
     } else if (widget.type == 'shape') {
       shadowModel = widget.styles
           .parseShadowFromString(widget.styles.shadow, false);
+    } else {
+
     }
     shadowModel?.type = widget.type;
     shadowExpanded = shadowModel != null;
@@ -91,7 +95,84 @@ class _ShadowViewState extends State<ShadowView> {
 
   Widget get expandedView {
     if (widget.type == 'button') return buttonShadow;
+    if (widget.type == 'shape' || widget.type == 'image') return shapeShadow;
+    if (widget.type == 'shop-cart') return cartShadow;
+    return Container();
+  }
 
+  Widget get buttonShadow {
+    return Container(
+      padding: EdgeInsets.only(left: 16),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 50,
+                child: Text(
+                  'Blur',
+                  style: TextStyle(color: Colors.white, fontSize: 15),
+                ),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: Slider(
+                  value: shadowModel.blurRadius,
+                  min: 0,
+                  max: 100,
+                  onChanged: (double value) => _onUpdateBoxShadow(blur: value, updateApi: false),
+                  onChangeEnd: (double value) => _onUpdateBoxShadow(blur: value, updateApi: true),
+                ),
+              ),
+              Container(
+                width: 50,
+                alignment: Alignment.center,
+                child: Text(
+                  '${shadowModel.blurRadius.toInt()} px',
+                  style: TextStyle(color: Colors.white, fontSize: 15),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Container(
+                width: 50,
+                child: Text(
+                  'Spread',
+                  style: TextStyle(color: Colors.white, fontSize: 15),
+                ),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: Slider(
+                  value: shadowModel.spread,
+                  min: 0,
+                  max: 100,
+                  onChanged: (double value) => _onUpdateBoxShadow(spread: value, updateApi: false),
+                  onChangeEnd: (double value) => _onUpdateBoxShadow(spread: value, updateApi: true),
+                ),
+              ),
+              Container(
+                width: 50,
+                alignment: Alignment.center,
+                child: Text(
+                  '${shadowModel.spread.toInt()} px',
+                  style: TextStyle(color: Colors.white, fontSize: 15),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget get shapeShadow {
     return Container(
       alignment: Alignment.center,
       padding: EdgeInsets.all(12),
@@ -108,7 +189,7 @@ class _ShadowViewState extends State<ShadowView> {
         physics: NeverScrollableScrollPhysics(),
         children: List.generate(
           6,
-          (index) {
+              (index) {
             return _shadowGridItem(index);
           },
         ),
@@ -116,7 +197,7 @@ class _ShadowViewState extends State<ShadowView> {
     );
   }
 
-  Widget get buttonShadow {
+  Widget get cartShadow {
     return Container(
       padding: EdgeInsets.only(left: 16),
       child: Column(

@@ -50,7 +50,7 @@ class _TextViewState extends State<TextView> {
     if (widget.child.data is Map) {
       Data data = Data.fromJson(widget.child.data);
       if (data.text != null) htmlText = data.text;
-      if (widget.child.data != null) print('Text Data:' + data.text);
+      // if (widget.child.data != null) print('Text Data:' + data.text);
     } else {
       return Container();
     }

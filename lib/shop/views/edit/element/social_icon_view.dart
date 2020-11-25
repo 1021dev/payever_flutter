@@ -17,8 +17,8 @@ class SocialIconView extends StatefulWidget {
 }
 
 class _SocialIconViewState extends State<SocialIconView> {
-   SocialIconStyles styles;
 
+   SocialIconStyles styles;
   _SocialIconViewState();
 
   @override
@@ -43,10 +43,9 @@ class _SocialIconViewState extends State<SocialIconView> {
     try {
       Map<String, dynamic> json = widget.stylesheets[widget.child.id];
      // if (json['display'] != 'none') {
-     //   print('SocialID: ${child.id}');
+     //   print('SocialID: ${widget.child.id}');
      //   print('Social Icon Styles: $json');
      // }
-
       return SocialIconStyles.fromJson(json);
     } catch (e) {
       return null;

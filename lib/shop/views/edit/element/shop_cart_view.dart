@@ -52,6 +52,7 @@ class _ShopCartViewState extends State<ShopCartView> {
       default:
         break;
     }
+
     double size = min<double>(styles.width, styles.height);
     return Opacity(
       opacity: styles.opacity,
@@ -83,7 +84,7 @@ class _ShopCartViewState extends State<ShopCartView> {
   get decoration {
     return BoxDecoration(
       border: getBorder,
-      borderRadius: BorderRadius.circular(10/*styles.getBorderRadius(styles.borderRadius)*/),
+      borderRadius: BorderRadius.circular(min(styles.width, styles.height) / 8),
       boxShadow: getBoxShadow,
     );
   }
