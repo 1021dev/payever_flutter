@@ -425,8 +425,9 @@ class DecorationAssist {
       double opacity = double.parse(colors[3]);
       color = Color.fromRGBO(colorR, colorG, colorB, opacity);
     } else if (childType == 'shop-cart') {
+      print('ShopCart shadow: $shadow');
       List<String>attrs0 = shadow.split(' ');
-      List<String>attrs =  attrs0.map((element) {
+      List<String>attrs = attrs0.map((element) {
         if (element.contains('rgb'))
           return element.replaceAll('rgba', '').replaceAll(',', ' ').replaceAll('(', '').replaceAll(')', '');
         return element.replaceAll('pt', '');
@@ -440,6 +441,20 @@ class DecorationAssist {
       int colorB = int.parse(colors[2]);
       double opacity = double.parse(colors[3]);
       color = Color.fromRGBO(colorR, colorG, colorB, opacity);
+
+      double shadowAngle = getOffsetAndShadowAngle(offsetX, offsetY).last;
+      double shadowOffset = getOffsetAndShadowAngle(offsetX, offsetY).first;
+      print('ShopCart shadowOffset: $shadowOffset  $shadowAngle');
+      return ShadowModel(
+          blurRadius: blurRadius,
+          offsetX: offsetX,
+          offsetY: offsetY,
+          color: color,
+          shadowAngle: shadowAngle,
+          shadowOffset: shadowOffset,
+          shadowOpacity: opacity);
+      // drop-shadow(28.284271247461895pt 28.28427124746191pt 5pt rgba(0,0,0,1)) : 40/315
+      // drop-shadow(2.4492935982947065e-15pt -40pt 5pt rgba(0,0,0,1)): 40/ 90
     } else if (childType == 'social-icon') {
       // drop-shadow(14.142135623730947pt 14.142135623730955pt 5pt rgba(0,0,0,1))
       List<String> attrs0 = shadow.replaceAll('drop-shadow', '').split(' ');
@@ -461,20 +476,6 @@ class DecorationAssist {
       int colorB = int.parse(colors[2]);
       double opacity = double.parse(colors[3]);
       color = Color.fromRGBO(colorR, colorG, colorB, opacity);
-      double deg = - atan(offsetY/offsetX);
-      double shadowAngle = deg * 180 / pi;
-      double shadowOffset = offsetX / cos(deg);
-      if (shadowOffset == 0)
-        shadowOffset = offsetY / -sin(deg);
-
-      return ShadowModel(
-          shadowBlur: blurRadius,
-          shadowFormColor: encodeColor(color),
-          shadowAngle: shadowAngle,
-          shadowOffset: shadowOffset,
-          shadowOpacity: opacity);
-      // drop-shadow(28.284271247461895pt 28.28427124746191pt 5pt rgba(0,0,0,1)) : 40/315
-      // drop-shadow(2.4492935982947065e-15pt -40pt 5pt rgba(0,0,0,1)): 40/ 90
     } else {
       return null;
     }
@@ -485,6 +486,20 @@ class DecorationAssist {
         offsetY: offsetY,
         color: color,
         spread: spread);
+  }
+
+  List<double> getOffsetAndShadowAngle(double offsetX, double offsetY) {
+    if (offsetX == 0 && offsetY == 0)
+      return [0.0, 0.0];
+    double deg = - atan(offsetY/offsetX);
+    double shadowAngle = deg * 180 / pi;
+    double shadowOffset = offsetX / cos(deg);
+    if (shadowOffset == 0)
+      shadowOffset = offsetY / -sin(deg);
+    if (shadowOffset < 0)
+      shadowOffset = shadowOffset.abs();
+
+    return [shadowOffset, shadowAngle];
   }
 
   List<BoxShadow> getBoxShadow1(String shadow, String childType) {
@@ -560,7 +575,8 @@ class DecorationAssist {
       double shadowOffset = offsetX / cos(deg);
       if (shadowOffset == 0)
         shadowOffset = offsetY / -sin(deg);
-
+      // double shadowAngle = getOffsetAndShadowAngle(offsetX, offsetY).last;
+      // double shadowOffset = getOffsetAndShadowAngle(offsetX, offsetY).first;
       return ShadowModel(
           shadowBlur: blurRadius,
           shadowOffset: shadowOffset,

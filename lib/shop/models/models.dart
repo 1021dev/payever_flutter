@@ -1242,7 +1242,10 @@ class ShadowModel {
   }
 
   get cartShadowString {
-    return '${offsetX}pt ${offsetY}pt ${blurRadius}pt 0 rgba(${color.red},${color.green},${color.blue},${color.opacity})';
+    double deg = shadowAngle * pi / 180;
+    double offsetX = cos(deg) * shadowOffset;
+    double offsetY = - sin(deg) * shadowOffset;
+    return '${offsetX}pt ${offsetY}pt ${blurRadius}pt 0 rgba(${color.red},${color.green},${color.blue},${shadowOpacity.toStringAsFixed(1)})';
   }
 
   get imageShadowString {

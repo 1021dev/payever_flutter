@@ -1244,6 +1244,7 @@ class _TextStyleViewState extends State<TextStyleView> {
     Map<String, dynamic> sheets = widget.stylesheets;
     String field = state.selectedChild.type == 'shape' ? 'shadow' : 'boxShadow';
     sheets[field] = model == null ? null : model.shadowString;
+    print('shadowString: ${model.shadowString}');
     if (state.selectedChild.type == 'image') {
       sheets['shadowAngle'] =  model?.shadowAngle?.toInt();
       sheets['shadowBlur'] =  model?.shadowBlur?.toInt();
@@ -1257,7 +1258,7 @@ class _TextStyleViewState extends State<TextStyleView> {
         selectedId, sheets, state.activeShopPage.stylesheetIds);
 
     widget.screenBloc.add(UpdateSectionEvent(
-        sectionId: state.selectedSectionId, effects: effects, updateApi: updateApi));
+        sectionId: state.selectedSectionId, effects: effects, updateApi: false/*updateApi*/));
   }
 
   void _updateBorderRadius(ShopEditScreenState state, double radius, {bool updateApi = true}) {

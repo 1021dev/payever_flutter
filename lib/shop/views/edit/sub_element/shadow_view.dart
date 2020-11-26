@@ -4,6 +4,7 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/sub_element/fill_color_view.dart';
+import 'package:payever/theme.dart';
 
 class ShadowView extends StatefulWidget {
   final Map<String, dynamic>stylesheets;
@@ -207,6 +208,7 @@ class _ShadowViewState extends State<ShadowView> {
   }
 
   Widget get cartShadow {
+    double shadowAngle = shadowModel.shadowAngle/* < 0 ? 360 + shadowModel.shadowAngle: shadowModel.shadowAngle*/;
     return Container(
       padding: EdgeInsets.only(left: 16),
       child: Column(
@@ -236,7 +238,7 @@ class _ShadowViewState extends State<ShadowView> {
                 width: 50,
                 alignment: Alignment.center,
                 child: Text(
-                  '${shadowModel.blurRadius.toInt()} px',
+                  '${shadowModel.blurRadius.floor()} pt',
                   style: TextStyle(color: Colors.white, fontSize: 15),
                 ),
               ),
@@ -259,15 +261,15 @@ class _ShadowViewState extends State<ShadowView> {
                   value: shadowModel.shadowOffset,
                   min: 0,
                   max: 100,
-                  onChanged: (double value) => _onUpdateBoxShadow(spread: value, updateApi: false),
-                  onChangeEnd: (double value) => _onUpdateBoxShadow(spread: value, updateApi: true),
+                  onChanged: (double value) => _onUpdateBoxShadow(shadowOffset: value, updateApi: false),
+                  onChangeEnd: (double value) => _onUpdateBoxShadow(shadowOffset: value, updateApi: true),
                 ),
               ),
               Container(
                 width: 50,
                 alignment: Alignment.center,
                 child: Text(
-                  '${shadowModel.shadowOffset.toInt()} px',
+                  '${shadowModel.shadowOffset.floor()} px',
                   style: TextStyle(color: Colors.white, fontSize: 15),
                 ),
               ),
@@ -287,18 +289,18 @@ class _ShadowViewState extends State<ShadowView> {
               ),
               Expanded(
                 child: Slider(
-                  value: shadowModel.color.opacity,
+                  value: shadowModel.shadowOpacity,
                   min: 0,
                   max: 1,
-                  onChanged: (double value) => _onUpdateBoxShadow(spread: value, updateApi: false),
-                  onChangeEnd: (double value) => _onUpdateBoxShadow(spread: value, updateApi: true),
+                  onChanged: (double value) => _onUpdateBoxShadow(shadowOpacity: value, updateApi: false),
+                  onChangeEnd: (double value) => _onUpdateBoxShadow(shadowOpacity: value, updateApi: true),
                 ),
               ),
               Container(
                 width: 50,
                 alignment: Alignment.center,
                 child: Text(
-                  '${shadowModel.color.opacity} px',
+                  '${shadowModel.shadowOpacity} px',
                   style: TextStyle(color: Colors.white, fontSize: 15),
                 ),
               ),
@@ -318,18 +320,18 @@ class _ShadowViewState extends State<ShadowView> {
               ),
               Expanded(
                 child: Slider(
-                  value: shadowModel.color.opacity,
-                  min: 0,
-                  max: 1,
-                  onChanged: (double value) => _onUpdateBoxShadow(spread: value, updateApi: false),
-                  onChangeEnd: (double value) => _onUpdateBoxShadow(spread: value, updateApi: true),
+                  value: shadowAngle,
+                  min: -90,
+                  max: 180,
+                  onChanged: (double value) => _onUpdateBoxShadow(shadowAngle: value, updateApi: false),
+                  onChangeEnd: (double value) => _onUpdateBoxShadow(shadowAngle: value, updateApi: true),
                 ),
               ),
               Container(
                 width: 50,
                 alignment: Alignment.center,
                 child: Text(
-                  '${shadowModel.shadowAngle.toInt()}\u00B0',
+                  '${shadowAngle.floor()}\u00B0',
                   style: TextStyle(color: Colors.white, fontSize: 15),
                 ),
               ),
@@ -339,7 +341,7 @@ class _ShadowViewState extends State<ShadowView> {
               styles: widget.styles,
               colorType: ColorType.Shadow,
               pickColor: shadowModel.color,
-              onUpdateColor: (color) {})
+              onUpdateColor: (color)=>_onUpdateBoxShadow(color: color, updateApi: true))
         ],
       ),
     );
@@ -348,6 +350,7 @@ class _ShadowViewState extends State<ShadowView> {
   _onUpdateBoxShadow(
       {double blur,
       double spread,
+      Color color,
       double shadowBlur,
       double shadowOffset,
       double shadowAngle,
@@ -355,6 +358,7 @@ class _ShadowViewState extends State<ShadowView> {
       double shadowFormColor,
       bool updateApi}) {
     shadowModel.blurRadius = blur ?? shadowModel.blurRadius;
+    shadowModel.color = color ?? shadowModel.color;
     shadowModel.spread = spread ?? shadowModel.spread;
     shadowModel.shadowBlur = shadowBlur ?? shadowModel.shadowBlur;
     shadowModel.shadowOffset = shadowOffset ?? shadowModel.shadowOffset;
