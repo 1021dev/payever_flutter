@@ -1144,19 +1144,19 @@ class BackGroundModel {
 
 class ImageBorderModel {
   String borderColor;
-  double borderSize;
-  String borderType;
+  double borderWidth;
+  String borderStyle;
 
   get border {
-    if (borderSize == 0)
+    if (borderWidth == 0)
       return false;
-    return '${borderSize.toInt()}px $borderType $borderColor';
+    return '${borderWidth.floor()}px $borderStyle $borderColor';
   }
   // solid, dashed, dotted
   ImageBorderModel({
     this.borderColor = '#000000',
-    this.borderSize = 1,
-    this.borderType = 'solid',
+    this.borderWidth = 1,
+    this.borderStyle = 'solid',
   });
 }
 

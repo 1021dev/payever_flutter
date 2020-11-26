@@ -1279,8 +1279,8 @@ class _TextStyleViewState extends State<TextStyleView> {
     Map<String, dynamic> sheets = widget.stylesheets;
     sheets['border'] = model.border;
     sheets['borderColor'] =  model.borderColor;
-    sheets['borderSize'] =  model.borderSize;
-    sheets['borderType'] =  model.borderType;
+    sheets['borderSize'] =  model.borderWidth;
+    sheets['borderType'] =  model.borderStyle;
 
     List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
         selectedId, sheets, state.activeShopPage.stylesheetIds);

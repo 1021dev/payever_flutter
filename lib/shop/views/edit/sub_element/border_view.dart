@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/sub_element/border_style_view.dart';
 import 'package:payever/theme.dart';
 
 import 'fill_color_view.dart';
@@ -36,6 +37,8 @@ class _BorderViewState extends State<BorderView> {
       borderExpanded = borderRadius > 0;
     } else if (widget.type == 'image') {
       borderExpanded = borderModel != null;
+    } else if (widget.type == 'logo') {
+      borderExpanded = widget.styles.borderWidth > 0;
     }
 
     return Column(
@@ -57,7 +60,7 @@ class _BorderViewState extends State<BorderView> {
                     if (widget.type == 'button')
                       widget.onUpdateBorderRadius(value ? 15.0 : 0.0, true);
                     else if (widget.type == 'image') {
-                      ImageBorderModel model = value ? ImageBorderModel() : ImageBorderModel(borderSize: 0);
+                      ImageBorderModel model = value ? ImageBorderModel() : ImageBorderModel(borderWidth: 0);
                       widget.onUpdateBorderModel(model, true);
                     }
                   },
@@ -73,7 +76,7 @@ class _BorderViewState extends State<BorderView> {
 
   Widget get expandedBorderView {
     if (widget.type == 'button') return buttonBorder;
-    if (widget.type == 'image') return imageBorder;
+    if (widget.type == 'image' || widget.type == 'logo') return imageBorder;
     return Container();
   }
 
@@ -115,32 +118,46 @@ class _BorderViewState extends State<BorderView> {
   }
 
   Widget get imageBorder {  
-    double borderSize = borderModel.borderSize;
-    Color borderColor = colorConvert(borderModel.borderColor);
-
+    double borderSize ;
+    Color borderColor;
+    if (widget.type == 'image') {
+      borderSize = borderModel.borderWidth;
+      borderColor = colorConvert(borderModel.borderColor);
+    } else {
+      borderSize = widget.styles.borderWidth;
+      borderColor = colorConvert(widget.styles.borderColor);
+    }
     return Container(
       padding: EdgeInsets.only(left: 16),
       child: Column(
         children: [
-          Container(
-            height: 60,
-            child: Row(
-              children: [
-                Container(
-                  width: 50,
-                  child: Text(
-                    'Style',
-                    style: TextStyle(color: Colors.white, fontSize: 15),
+          InkWell(
+            onTap: () {
+              navigateSubView(BorderStyleView(
+                borderStyle: BorderType.dashed,
+                onChangeBorderStyle:(style){},
+              ));
+            },
+            child: Container(
+              height: 60,
+              child: Row(
+                children: [
+                  Container(
+                    width: 50,
+                    child: Text(
+                      'Style',
+                      style: TextStyle(color: Colors.white, fontSize: 15),
+                    ),
                   ),
-                ),
-                Expanded(
-                    child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 10),
-                  height: 4,
-                  color: Colors.white,
-                )),
-                Icon(Icons.arrow_forward_ios),
-              ],
+                  Expanded(
+                      child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 10),
+                    height: 4,
+                    color: Colors.white,
+                  )),
+                  Icon(Icons.arrow_forward_ios),
+                ],
+              ),
             ),
           ),
           // _fill(state, ColorType.Border),
@@ -161,11 +178,11 @@ class _BorderViewState extends State<BorderView> {
                     min: 0,
                     max: 100,
                     onChanged: (double value) {
-                      borderModel.borderSize = value;
+                      borderModel.borderWidth = value;
                       _updateBorderModel(false);
                     },
                     onChangeEnd:  (double value) {
-                      borderModel.borderSize = value;
+                      borderModel.borderWidth = value;
                       _updateBorderModel(true);
                     },
                   ),
@@ -193,5 +210,15 @@ class _BorderViewState extends State<BorderView> {
 
   _updateBorderModel(bool updateApi) {
     widget.onUpdateBorderModel(borderModel, updateApi);
+  }
+
+  void navigateSubView(Widget subview) {
+    showModalBottomSheet(
+        context: context,
+        barrierColor: Colors.transparent,
+        // isScrollControlled: true,
+        builder: (builder) {
+          return subview;
+        });
   }
 }

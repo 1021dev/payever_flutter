@@ -359,7 +359,7 @@ class DecorationAssist {
     List<String> borderAttrs = border.toString().split(' ');
     int borderWidth = int.parse(borderAttrs.first.replaceAll('px', ''));
     String borderColor = borderAttrs.last;
-    return ImageBorderModel(borderSize: borderWidth.toDouble(), borderColor: borderColor);
+    return ImageBorderModel(borderWidth: borderWidth.toDouble(), borderColor: borderColor);
   }
 
   Border getBorder1(dynamic border) {
@@ -367,7 +367,7 @@ class DecorationAssist {
     if (model == null)
       return Border.all(color: Colors.transparent, width: 0);
 
-    return Border.all(color: colorConvert(model.borderColor), width: PxDp.d2u(px: model.borderSize.toInt()));
+    return Border.all(color: colorConvert(model.borderColor), width: PxDp.d2u(px: model.borderWidth.toInt()));
   }
 
   ShadowModel parseShadowFromString(String shadow, String childType) {
