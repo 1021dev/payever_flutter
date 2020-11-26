@@ -461,6 +461,20 @@ class DecorationAssist {
       int colorB = int.parse(colors[2]);
       double opacity = double.parse(colors[3]);
       color = Color.fromRGBO(colorR, colorG, colorB, opacity);
+      double deg = - atan(offsetY/offsetX);
+      double shadowAngle = deg * 180 / pi;
+      double shadowOffset = offsetX / cos(deg);
+      if (shadowOffset == 0)
+        shadowOffset = offsetY / -sin(deg);
+
+      return ShadowModel(
+          shadowBlur: blurRadius,
+          shadowFormColor: encodeColor(color),
+          shadowAngle: shadowAngle,
+          shadowOffset: shadowOffset,
+          shadowOpacity: opacity);
+      // drop-shadow(28.284271247461895pt 28.28427124746191pt 5pt rgba(0,0,0,1)) : 40/315
+      // drop-shadow(2.4492935982947065e-15pt -40pt 5pt rgba(0,0,0,1)): 40/ 90
     } else {
       return null;
     }

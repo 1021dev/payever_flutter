@@ -1184,7 +1184,7 @@ class ShadowModel {
       this.color,
       /*button attrs*/
       this.spread = 0,
-      /*image attrs*/
+      /*image, shop-cart attrs*/
       this.shadowAngle,
       this.shadowBlur,
       this.shadowFormColor,

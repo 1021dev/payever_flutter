@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/sub_element/fill_color_view.dart';
 
 class ShadowView extends StatefulWidget {
   final Map<String, dynamic>stylesheets;
@@ -255,7 +256,7 @@ class _ShadowViewState extends State<ShadowView> {
               ),
               Expanded(
                 child: Slider(
-                  value: shadowModel.offsetX,
+                  value: shadowModel.shadowOffset,
                   min: 0,
                   max: 100,
                   onChanged: (double value) => _onUpdateBoxShadow(spread: value, updateApi: false),
@@ -266,7 +267,7 @@ class _ShadowViewState extends State<ShadowView> {
                 width: 50,
                 alignment: Alignment.center,
                 child: Text(
-                  '${shadowModel.spread.toInt()} px',
+                  '${shadowModel.shadowOffset.toInt()} px',
                   style: TextStyle(color: Colors.white, fontSize: 15),
                 ),
               ),
@@ -275,7 +276,7 @@ class _ShadowViewState extends State<ShadowView> {
           Row(
             children: [
               Container(
-                width: 50,
+                width: 53,
                 child: Text(
                   'Opacity',
                   style: TextStyle(color: Colors.white, fontSize: 15),
@@ -286,9 +287,9 @@ class _ShadowViewState extends State<ShadowView> {
               ),
               Expanded(
                 child: Slider(
-                  value: shadowModel.color.opacity * 100,
+                  value: shadowModel.color.opacity,
                   min: 0,
-                  max: 100,
+                  max: 1,
                   onChanged: (double value) => _onUpdateBoxShadow(spread: value, updateApi: false),
                   onChangeEnd: (double value) => _onUpdateBoxShadow(spread: value, updateApi: true),
                 ),
@@ -297,20 +298,69 @@ class _ShadowViewState extends State<ShadowView> {
                 width: 50,
                 alignment: Alignment.center,
                 child: Text(
-                  '${shadowModel.color.opacity * 100} px',
+                  '${shadowModel.color.opacity} px',
                   style: TextStyle(color: Colors.white, fontSize: 15),
                 ),
               ),
             ],
           ),
+          Row(
+            children: [
+              Container(
+                width: 53,
+                child: Text(
+                  'Angle',
+                  style: TextStyle(color: Colors.white, fontSize: 15),
+                ),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: Slider(
+                  value: shadowModel.color.opacity,
+                  min: 0,
+                  max: 1,
+                  onChanged: (double value) => _onUpdateBoxShadow(spread: value, updateApi: false),
+                  onChangeEnd: (double value) => _onUpdateBoxShadow(spread: value, updateApi: true),
+                ),
+              ),
+              Container(
+                width: 50,
+                alignment: Alignment.center,
+                child: Text(
+                  '${shadowModel.shadowAngle.toInt()}\u00B0',
+                  style: TextStyle(color: Colors.white, fontSize: 15),
+                ),
+              ),
+            ],
+          ),
+          FillColorView(
+              styles: widget.styles,
+              colorType: ColorType.Shadow,
+              pickColor: shadowModel.color,
+              onUpdateColor: (color) {})
         ],
       ),
     );
   }
 
-  _onUpdateBoxShadow({double blur, double spread, bool updateApi}) {
+  _onUpdateBoxShadow(
+      {double blur,
+      double spread,
+      double shadowBlur,
+      double shadowOffset,
+      double shadowAngle,
+      double shadowOpacity,
+      double shadowFormColor,
+      bool updateApi}) {
     shadowModel.blurRadius = blur ?? shadowModel.blurRadius;
     shadowModel.spread = spread ?? shadowModel.spread;
+    shadowModel.shadowBlur = shadowBlur ?? shadowModel.shadowBlur;
+    shadowModel.shadowOffset = shadowOffset ?? shadowModel.shadowOffset;
+    shadowModel.shadowAngle = shadowAngle ?? shadowModel.shadowAngle;
+    shadowModel.shadowOpacity = shadowOpacity ?? shadowModel.shadowOpacity;
+    shadowModel.shadowFormColor = shadowFormColor ?? shadowModel.shadowFormColor;
     widget.onUpdateShadow(shadowModel, updateApi);
   }
 

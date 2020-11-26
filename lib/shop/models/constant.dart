@@ -34,7 +34,8 @@ enum BulletList {
 enum ColorType {
   BackGround,
   Border,
-  Text
+  Text,
+  Shadow
 }
 
 enum ClipboardType {

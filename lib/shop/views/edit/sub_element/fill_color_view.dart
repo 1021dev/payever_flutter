@@ -36,12 +36,15 @@ class _FillColorViewState extends State<FillColorView> {
       case ColorType.BackGround:
         title = 'Fill';
         break;
-      case ColorType.Border:
-        title = 'Color';
-        break;
       case ColorType.Text:
         title = 'Text Color';
         break;
+      case ColorType.Border:
+      case ColorType.Shadow:
+        title = 'Color';
+        break;
+      default:
+        title = 'Color';
     }
 
     return Container(
