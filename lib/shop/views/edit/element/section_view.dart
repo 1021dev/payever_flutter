@@ -309,14 +309,14 @@ class _SectionViewState extends State<SectionView> {
                         'Cut',
                         style: TextStyle(color: Colors.white),
                       ),
-                      value: ClipboardType.Cut,
+                      value: ClipboardType.cut,
                     ),
                     PopupMenuItem(
                       child: Text(
                         'Copy',
                         style: TextStyle(color: Colors.white),
                       ),
-                      value: ClipboardType.Copy,
+                      value: ClipboardType.copy,
                     ),
                     PopupMenuItem(
                       child: Text(
@@ -326,14 +326,14 @@ class _SectionViewState extends State<SectionView> {
                             .body2
                             .copyWith(color: Colors.red),
                       ),
-                      value: ClipboardType.Delete,
+                      value: ClipboardType.delete,
                     ),
                     PopupMenuItem(
                       child: Text(
                         'Paste',
                         style: TextStyle(color: Colors.white),
                       ),
-                      value: ClipboardType.Paste,
+                      value: ClipboardType.paste,
                     ),
                   ],
                 ),
@@ -851,16 +851,16 @@ class _SectionViewState extends State<SectionView> {
     print('value $type');
     List<Map<String, dynamic>>effects = [];
     switch(type) {
-      case ClipboardType.Cut:
+      case ClipboardType.cut:
         // TODO: Handle this case.
         break;
-      case ClipboardType.Copy:
+      case ClipboardType.copy:
         // TODO: Handle this case.
         break;
-      case ClipboardType.Paste:
+      case ClipboardType.paste:
         // TODO: Handle this case.
         break;
-      case ClipboardType.Delete:
+      case ClipboardType.delete:
         effects = sectionStyles.getDeleteObject(state.selectedChild.id, state.activeShopPage.templateId);
         break;
     }

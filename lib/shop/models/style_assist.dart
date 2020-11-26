@@ -195,16 +195,16 @@ class StyleAssist {
   List<TextFontType> getTextFontTypes(String text) {
     List<TextFontType> fontTypes = [];
     if (decodeHtmlTextFontWeight(text) == 'bold')
-      fontTypes.add(TextFontType.Bold);
+      fontTypes.add(TextFontType.bold);
 
     if (text.contains('\</i>'))
-      fontTypes.add(TextFontType.Italic);
+      fontTypes.add(TextFontType.italic);
 
     if (text.contains('\</u>'))
-      fontTypes.add(TextFontType.Underline);
+      fontTypes.add(TextFontType.underline);
 
     if (text.contains('\</strike>'))
-      fontTypes.add(TextFontType.LineThrough);
+      fontTypes.add(TextFontType.lineThrough);
 
     return fontTypes;
   }
@@ -231,12 +231,12 @@ class StyleAssist {
       fontTypes = getTextFontTypes(htmlText);
 
     if (fontTypes != null) {
-      if (fontTypes.contains(TextFontType.LineThrough))
+      if (fontTypes.contains(TextFontType.lineThrough))
         parseText = textLineThroughHtml(parseText);
-      else if (fontTypes.contains(TextFontType.Underline))
+      else if (fontTypes.contains(TextFontType.underline))
         parseText = textUnderlineHtml(parseText);
 
-      if (fontTypes.contains(TextFontType.Italic))
+      if (fontTypes.contains(TextFontType.italic))
         parseText = textItalicHtml(parseText);
     }
     // font
@@ -272,7 +272,7 @@ class StyleAssist {
     // font-weight
     String fontWeight;
     if (fontTypes != null)
-      fontWeight = fontTypes.contains(TextFontType.Bold) ? 'bold' : 'normal';
+      fontWeight = fontTypes.contains(TextFontType.bold) ? 'bold' : 'normal';
     else if (decodeHtmlTextFontWeight(htmlText) != null)
       fontWeight = decodeHtmlTextFontWeight(htmlText);
 
@@ -553,32 +553,32 @@ class DecorationAssist {
     double offsetY = 0;
     double blurRadius = 5;
     switch(type) {
-      case ShadowType.Bottom:
+      case ShadowType.bottom:
         offsetX = 0;
         offsetY = 5;
         break;
-      case ShadowType.BottomRight:
+      case ShadowType.bottomRight:
         offsetX = 5;
         offsetY = 5;
         break;
-      case ShadowType.BottomLeft:
+      case ShadowType.bottomLeft:
         offsetX = -5;
         offsetY = 5;
         break;
-      case ShadowType.Right:
+      case ShadowType.right:
         offsetX = -5;
         offsetY = 0;
         break;
-      case ShadowType.None:
+      case ShadowType.none:
         offsetX = 0;
         offsetY = 0;
         blurRadius = 0;
         break;
-      case ShadowType.TopRight:
+      case ShadowType.topRight:
         offsetX = -5;
         offsetY = -5;
         break;
-      case ShadowType.Unknown:
+      case ShadowType.unknown:
         break;
     }
 
@@ -590,7 +590,7 @@ class DecorationAssist {
           color: color);
 
     if (childType == 'image') {
-      if (type == ShadowType.None)
+      if (type == ShadowType.none)
         return null;
 
       double deg = - atan(offsetY/offsetX);

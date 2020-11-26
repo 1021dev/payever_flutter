@@ -111,10 +111,10 @@ class _TextViewState extends State<TextView> {
 
   TextDecoration get textDecoration {
     List<TextFontType> fontTypes = styles.getTextFontTypes(htmlText);
-    if (fontTypes.contains(TextFontType.Underline))
+    if (fontTypes.contains(TextFontType.underline))
       return TextDecoration.underline;
 
-    if (fontTypes.contains(TextFontType.LineThrough))
+    if (fontTypes.contains(TextFontType.lineThrough))
       return TextDecoration.lineThrough;
 
     return null;

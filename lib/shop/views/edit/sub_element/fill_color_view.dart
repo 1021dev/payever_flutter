@@ -33,14 +33,14 @@ class _FillColorViewState extends State<FillColorView> {
     String title;
 
     switch(widget.colorType) {
-      case ColorType.BackGround:
+      case ColorType.backGround:
         title = 'Fill';
         break;
-      case ColorType.Text:
+      case ColorType.text:
         title = 'Text Color';
         break;
-      case ColorType.Border:
-      case ColorType.Shadow:
+      case ColorType.border:
+      case ColorType.shadow:
         title = 'Color';
         break;
       default:
@@ -58,7 +58,7 @@ class _FillColorViewState extends State<FillColorView> {
           Spacer(),
           GestureDetector(
             onTap: () {
-              if (widget.colorType == ColorType.BackGround) {
+              if (widget.colorType == ColorType.backGround) {
                 widget.onTapFillView();
                 return;
               }
@@ -96,7 +96,7 @@ class _FillColorViewState extends State<FillColorView> {
   }
 
   Widget getFillContainer() {
-    if (widget.colorType == ColorType.BackGround)
+    if (widget.colorType == ColorType.backGround)
       return Container(
         width: 100,
         height: 40,

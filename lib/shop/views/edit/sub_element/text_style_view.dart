@@ -45,7 +45,7 @@ class _TextStyleViewState extends State<TextStyleView> {
   bool borderExpanded = false;
   bool shadowExpanded = false;
 
-  TextStyleType styleType = TextStyleType.Style;
+  TextStyleType styleType = TextStyleType.style;
   List<TextFontType> fontTypes = [];
   List<Paragraph> paragraphs = [];
 
@@ -166,7 +166,7 @@ class _TextStyleViewState extends State<TextStyleView> {
               unselectedColor: Color.fromRGBO(46, 45, 50, 1),
               borderColor: Color.fromRGBO(23, 23, 25, 1),
               children: <TextStyleType, Widget>{
-                TextStyleType.Style: Container(
+                TextStyleType.style: Container(
                     padding: EdgeInsets.all(8.0),
                     alignment: Alignment.center,
                     width: 100,
@@ -178,7 +178,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                           color: Colors.white),
                     )),
                 if (widget.screenBloc.isTextSelected())
-                  TextStyleType.Text: Padding(
+                  TextStyleType.text: Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Text(
                         'Text',
@@ -187,7 +187,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                             fontWeight: FontWeight.w400,
                             color: Colors.white),
                       )),
-                TextStyleType.Arrange: Padding(
+                TextStyleType.arrange: Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Text(
                       'Arrange',
@@ -225,12 +225,12 @@ class _TextStyleViewState extends State<TextStyleView> {
 
   Widget mainBody(ShopEditScreenState state) {
     switch (styleType) {
-      case TextStyleType.Style:
+      case TextStyleType.style:
         return _styleBody(state);
-      case TextStyleType.Text:
+      case TextStyleType.text:
         return _textBody(state);
         break;
-      case TextStyleType.Arrange:
+      case TextStyleType.arrange:
         return _arrangeBody;
         break;
       default:
@@ -248,7 +248,7 @@ class _TextStyleViewState extends State<TextStyleView> {
       FillColorView(
         pickColor: fillColor,
         styles: styles,
-        colorType: ColorType.BackGround,
+        colorType: ColorType.backGround,
         onUpdateColor: (color) => _updateFillColor(state, color),
         onTapFillView: () {
           navigateSubView(FillView(
@@ -322,7 +322,7 @@ class _TextStyleViewState extends State<TextStyleView> {
               FillColorView(
                 pickColor: textColor,
                 styles: styles,
-                colorType: ColorType.Text,
+                colorType: ColorType.text,
                 onUpdateColor: (color) => _updateTextColor(state, color),
               ),
               _textHorizontalAlign(state),
@@ -341,8 +341,8 @@ class _TextStyleViewState extends State<TextStyleView> {
   Widget _paragraphStyle(ShopEditScreenState state) {
     Paragraph selectedParagraph;
     List<TextFontType>fontTypes = styles.getTextFontTypes(htmlText);
-    if (fontTypes.contains(TextFontType.Underline) ||
-        fontTypes.contains(TextFontType.LineThrough)) {
+    if (fontTypes.contains(TextFontType.underline) ||
+        fontTypes.contains(TextFontType.lineThrough)) {
       selectedParagraph = null;
     } else {
       String fontWeight = styles.decodeHtmlTextFontWeight(htmlText) ?? 'normal';
@@ -381,10 +381,10 @@ class _TextStyleViewState extends State<TextStyleView> {
                   double fontSize = paragraph.size * ptFontFactor;
                   List<TextFontType>fontTypes = [];
                   if (paragraph.fontWeight == 'bold')
-                    fontTypes.add(TextFontType.Bold);
+                    fontTypes.add(TextFontType.bold);
 
                   if (paragraph.fontStyle == 'italic')
-                    fontTypes.add(TextFontType.Italic);
+                    fontTypes.add(TextFontType.italic);
 
                   String textColor = encodeColor(paragraph.isCaptionRed ? Colors.red : Colors.black);
                   String newHtmlText = styles.encodeHtmlString(htmlText, fontSize: fontSize, fontTypes: fontTypes, textColor: textColor);
@@ -464,11 +464,11 @@ class _TextStyleViewState extends State<TextStyleView> {
               children: [
                 Expanded(
                     child: InkWell(
-                        onTap: () => _updateFontType(state, TextFontType.Bold),
+                        onTap: () => _updateFontType(state, TextFontType.bold),
                         child: Container(
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: fontTypes.contains(TextFontType.Bold)
+                              color: fontTypes.contains(TextFontType.bold)
                                   ? Color.fromRGBO(0, 135, 255, 1)
                                   : Color.fromRGBO(51, 48, 53, 1),
                               borderRadius: BorderRadius.only(
@@ -485,10 +485,10 @@ class _TextStyleViewState extends State<TextStyleView> {
                 ),
                 Expanded(
                     child: InkWell(
-                        onTap: () => _updateFontType(state, TextFontType.Italic),
+                        onTap: () => _updateFontType(state, TextFontType.italic),
                         child: Container(
                             alignment: Alignment.center,
-                            color: fontTypes.contains(TextFontType.Italic)
+                            color: fontTypes.contains(TextFontType.italic)
                                 ? Color.fromRGBO(0, 135, 255, 1)
                                 : Color.fromRGBO(51, 48, 53, 1),
                             child: Text(
@@ -501,10 +501,10 @@ class _TextStyleViewState extends State<TextStyleView> {
                 ),
                 Expanded(
                     child: InkWell(
-                        onTap: () => _updateFontType(state, TextFontType.Underline),
+                        onTap: () => _updateFontType(state, TextFontType.underline),
                         child: Container(
                             alignment: Alignment.center,
-                            color: fontTypes.contains(TextFontType.Underline)
+                            color: fontTypes.contains(TextFontType.underline)
                                 ? Color.fromRGBO(0, 135, 255, 1)
                                 : Color.fromRGBO(51, 48, 53, 1),
                             child: Text(
@@ -519,10 +519,10 @@ class _TextStyleViewState extends State<TextStyleView> {
                 ),
                 Expanded(
                     child: InkWell(
-                        onTap: () => _updateFontType(state, TextFontType.LineThrough),
+                        onTap: () => _updateFontType(state, TextFontType.lineThrough),
                         child: Container(
                             alignment: Alignment.center,
-                            color: fontTypes.contains(TextFontType.LineThrough)
+                            color: fontTypes.contains(TextFontType.lineThrough)
                                 ? Color.fromRGBO(0, 135, 255, 1)
                                 : Color.fromRGBO(51, 48, 53, 1),
                             child: Text(
@@ -706,13 +706,13 @@ class _TextStyleViewState extends State<TextStyleView> {
               child: InkWell(
                   onTap: () {
                     setState(() {
-                      vAlign = TextVAlign.Top;
+                      vAlign = TextVAlign.top;
                     });
                   },
                   child: Container(
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: vAlign != TextVAlign.Top
+                        color: vAlign != TextVAlign.top
                             ? Color.fromRGBO(51, 48, 53, 1)
                             : Color.fromRGBO(0, 135, 255, 1),
                         borderRadius: BorderRadius.only(
@@ -727,12 +727,12 @@ class _TextStyleViewState extends State<TextStyleView> {
               child: InkWell(
                   onTap: () {
                     setState(() {
-                      vAlign = TextVAlign.Center;
+                      vAlign = TextVAlign.center;
                     });
                   },
                   child: Container(
                       alignment: Alignment.center,
-                      color: vAlign != TextVAlign.Center
+                      color: vAlign != TextVAlign.center
                           ? Color.fromRGBO(51, 48, 53, 1)
                           : Color.fromRGBO(0, 135, 255, 1),
                       child: SvgPicture.asset('assets/images/align-v-center.svg')))),
@@ -743,13 +743,13 @@ class _TextStyleViewState extends State<TextStyleView> {
               child: InkWell(
                   onTap: () {
                     setState(() {
-                      vAlign = TextVAlign.Bottom;
+                      vAlign = TextVAlign.bottom;
                     });
                   },
                   child: Container(
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: vAlign != TextVAlign.Bottom
+                        color: vAlign != TextVAlign.bottom
                             ? Color.fromRGBO(51, 48, 53, 1)
                             : Color.fromRGBO(0, 135, 255, 1),
                         borderRadius: BorderRadius.only(
@@ -827,13 +827,13 @@ class _TextStyleViewState extends State<TextStyleView> {
                     child: InkWell(
                         onTap: () {
                           setState(() {
-                            bulletList = BulletList.Bullet;
+                            bulletList = BulletList.bullet;
                           });
                         },
                         child: Container(
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: bulletList != BulletList.Bullet
+                              color: bulletList != BulletList.bullet
                                   ? Color.fromRGBO(51, 48, 53, 1)
                                   : Color.fromRGBO(0, 135, 255, 1),
                               borderRadius: BorderRadius.only(
@@ -848,13 +848,13 @@ class _TextStyleViewState extends State<TextStyleView> {
                     child: InkWell(
                         onTap: () {
                           setState(() {
-                            bulletList = BulletList.List;
+                            bulletList = BulletList.list;
                           });
                         },
                         child: Container(
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: bulletList != BulletList.List
+                              color: bulletList != BulletList.list
                                   ? Color.fromRGBO(51, 48, 53, 1)
                                   : Color.fromRGBO(0, 135, 255, 1),
                               borderRadius: BorderRadius.only(
@@ -1301,12 +1301,12 @@ class _TextStyleViewState extends State<TextStyleView> {
     if (fontTypes.contains(fontType)) {
       fontTypes.remove(fontType);
     } else {
-      if (fontType == TextFontType.Underline) {
-        if (fontTypes.contains(TextFontType.LineThrough))
-          fontTypes.remove(TextFontType.LineThrough);
-      } else if (fontType == TextFontType.LineThrough) {
-        if (fontTypes.contains(TextFontType.Underline))
-          fontTypes.remove(TextFontType.Underline);
+      if (fontType == TextFontType.underline) {
+        if (fontTypes.contains(TextFontType.lineThrough))
+          fontTypes.remove(TextFontType.lineThrough);
+      } else if (fontType == TextFontType.lineThrough) {
+        if (fontTypes.contains(TextFontType.underline))
+          fontTypes.remove(TextFontType.underline);
       }
       fontTypes.add(fontType);
     }

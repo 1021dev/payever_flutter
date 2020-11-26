@@ -340,7 +340,7 @@ class _ShadowViewState extends State<ShadowView> {
           ),
           FillColorView(
               styles: widget.styles,
-              colorType: ColorType.Shadow,
+              colorType: ColorType.shadow,
               pickColor: shadowModel.color,
               onUpdateColor: (color)=>_onUpdateBoxShadow(color: color, updateApi: true))
         ],
@@ -405,7 +405,7 @@ class _ShadowViewState extends State<ShadowView> {
   }
 
   ShadowType get shadowType {
-    if (shadowModel == null) return ShadowType.None;
+    if (shadowModel == null) return ShadowType.none;
     double blurRadius;
     double offsetX;
     double offsetY;
@@ -420,17 +420,17 @@ class _ShadowViewState extends State<ShadowView> {
     }
 
     if (blurRadius == 5 && offsetX == 0 && offsetY == 5)
-      return ShadowType.Bottom;
+      return ShadowType.bottom;
     if (blurRadius == 5 && offsetX == 5 && offsetY == 5)
-      return ShadowType.BottomRight;
+      return ShadowType.bottomRight;
     if (blurRadius == 5 && offsetX == -5 && offsetY == 5)
-      return ShadowType.BottomLeft;
+      return ShadowType.bottomLeft;
     if (blurRadius == 5 && offsetX == -5 && offsetY == 0)
-      return ShadowType.Right;
-    if (blurRadius == 0 && offsetX == 0 && offsetY == 0) return ShadowType.None;
+      return ShadowType.right;
+    if (blurRadius == 0 && offsetX == 0 && offsetY == 0) return ShadowType.none;
     if (blurRadius == 5 && offsetX == -5 && offsetY == -5)
-      return ShadowType.TopRight;
+      return ShadowType.topRight;
 
-    return ShadowType.Unknown;
+    return ShadowType.unknown;
   }
 }

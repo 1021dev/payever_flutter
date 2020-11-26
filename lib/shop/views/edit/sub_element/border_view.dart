@@ -180,7 +180,7 @@ class _BorderViewState extends State<BorderView> {
           FillColorView(
             pickColor: borderColor,
             styles: widget.styles,
-            colorType: ColorType.Border,
+            colorType: ColorType.border,
             onUpdateColor: (Color color) {
               borderModel.borderColor = encodeColor(color);
               _updateBorderModel(true);

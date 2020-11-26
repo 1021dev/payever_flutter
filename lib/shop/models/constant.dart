@@ -8,41 +8,47 @@ List<Color>textBgColors = [Color.fromRGBO(0, 168, 255, 1),
   Color.fromRGBO(0, 0, 0, 1)];
 
 enum TextStyleType {
-  Style,
-  Text,
-  Arrange
+  style,
+  text,
+  arrange
 }
 
 enum TextFontType {
-  Bold,
-  Italic,
-  Underline,
-  LineThrough
+  bold,
+  italic,
+  underline,
+  lineThrough
 }
 
 enum TextVAlign {
-  Top,
-  Center,
-  Bottom,
+  top,
+  center,
+  bottom,
 }
 
 enum BulletList {
-  Bullet,
-  List,
+  bullet,
+  list,
 }
 
 enum ColorType {
-  BackGround,
-  Border,
-  Text,
-  Shadow
+  backGround,
+  border,
+  text,
+  shadow
 }
 
 enum ClipboardType {
-  Cut,
-  Copy,
-  Paste,
-  Delete
+  cut,
+  copy,
+  paste,
+  delete
+}
+
+enum BorderStyle {
+  solid,
+  dashed,
+  dotted
 }
 
 List<String>fonts = [
@@ -76,18 +82,18 @@ List<String>fonts = [
 ];
 
 enum BaseLine {
-  Top,
-  Bottom,
+  top,
+  bottom,
 }
 
 enum ShadowType {
-  Bottom,
-  BottomRight,
-  BottomLeft,
-  Right,
-  None,
-  TopRight,
-  Unknown,
+  bottom,
+  bottomRight,
+  bottomLeft,
+  right,
+  none,
+  topRight,
+  unknown,
 }
 
 List<String>capitalizations = [

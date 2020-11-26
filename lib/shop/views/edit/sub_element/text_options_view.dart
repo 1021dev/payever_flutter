@@ -212,13 +212,13 @@ class _TextOptionsViewState extends State<TextOptionsView> {
                     child: InkWell(
                         onTap: () {
                           setState(() {
-                            baseLine = BaseLine.Top;
+                            baseLine = BaseLine.top;
                           });
                         },
                         child: Container(
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: baseLine != BaseLine.Top
+                              color: baseLine != BaseLine.top
                                   ? Color.fromRGBO(51, 48, 53, 1)
                                   : Color.fromRGBO(0, 135, 255, 1),
                               borderRadius: BorderRadius.only(
@@ -234,13 +234,13 @@ class _TextOptionsViewState extends State<TextOptionsView> {
                     child: InkWell(
                         onTap: () {
                           setState(() {
-                            baseLine = BaseLine.Bottom;
+                            baseLine = BaseLine.bottom;
                           });
                         },
                         child: Container(
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: baseLine != BaseLine.Bottom
+                              color: baseLine != BaseLine.bottom
                                   ? Color.fromRGBO(51, 48, 53, 1)
                                   : Color.fromRGBO(0, 135, 255, 1),
                               borderRadius: BorderRadius.only(
