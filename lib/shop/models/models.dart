@@ -1152,7 +1152,7 @@ class ImageBorderModel {
       return false;
     return '${borderSize.toInt()}px $borderType $borderColor';
   }
-
+  // solid, dashed, dotted
   ImageBorderModel({
     this.borderColor = '#000000',
     this.borderSize = 1,

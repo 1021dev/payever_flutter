@@ -57,7 +57,7 @@ class _TextStyleViewState extends State<TextStyleView> {
   TextStyles styles;
 
   final double ptFontFactor = 30/112;
-  final List<String>hasBorderChildren = ['button', 'image', 'logo', 'shop-cart'];
+  final List<String>hasBorderChildren = ['button', 'image', 'logo'];
   final List<String>hasShadowChildren = ['button', 'shape', 'image',  'social-icon', 'logo', 'shop-cart'];
 
   @override
