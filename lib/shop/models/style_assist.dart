@@ -425,7 +425,7 @@ class DecorationAssist {
       double opacity = double.parse(colors[3]);
       color = Color.fromRGBO(colorR, colorG, colorB, opacity);
     } else if (childType == 'shop-cart') {
-      print('ShopCart shadow: $shadow');
+      // print('ShopCart shadow: $shadow');
       List<String>attrs0 = shadow.split(' ');
       List<String>attrs = attrs0.map((element) {
         if (element.contains('rgb'))
@@ -444,7 +444,7 @@ class DecorationAssist {
 
       double shadowAngle = getOffsetAndShadowAngle(offsetX, offsetY).last;
       double shadowOffset = getOffsetAndShadowAngle(offsetX, offsetY).first;
-      print('ShopCart shadowOffset: $shadowOffset  $shadowAngle');
+      // print('ShopCart shadowOffset: $shadowOffset  $shadowAngle');
       return ShadowModel(
           blurRadius: blurRadius,
           offsetX: offsetX,
@@ -491,13 +491,32 @@ class DecorationAssist {
   List<double> getOffsetAndShadowAngle(double offsetX, double offsetY) {
     if (offsetX == 0 && offsetY == 0)
       return [0.0, 0.0];
-    double deg = - atan(offsetY/offsetX);
-    double shadowAngle = deg * 180 / pi;
+    double deg = atan(offsetY/offsetX);
+    double shadowAngle;
+    if (offsetX == 0){
+      if (offsetY >= 0) {
+        shadowAngle = 90 / pi;
+      } else {
+        shadowAngle = 270 / pi;
+      }
+    } else if (offsetX > 0) {
+      if (offsetY >= 0) {
+        shadowAngle = deg * 180 / pi;
+      } else {
+        shadowAngle = deg * 180 / pi + 360;
+      }
+    } else {
+      shadowAngle = deg * 180 / pi + 180;
+    }
+    if (shadowAngle != 0)
+      shadowAngle = 360 - shadowAngle;
+
     double shadowOffset = offsetX / cos(deg);
     if (shadowOffset == 0)
       shadowOffset = offsetY / -sin(deg);
     if (shadowOffset < 0)
       shadowOffset = shadowOffset.abs();
+
 
     return [shadowOffset, shadowAngle];
   }

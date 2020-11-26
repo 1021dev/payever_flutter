@@ -208,7 +208,6 @@ class _ShadowViewState extends State<ShadowView> {
   }
 
   Widget get cartShadow {
-    double shadowAngle = shadowModel.shadowAngle/* < 0 ? 360 + shadowModel.shadowAngle: shadowModel.shadowAngle*/;
     return Container(
       padding: EdgeInsets.only(left: 16),
       child: Column(
@@ -320,9 +319,9 @@ class _ShadowViewState extends State<ShadowView> {
               ),
               Expanded(
                 child: Slider(
-                  value: shadowAngle,
-                  min: -90,
-                  max: 180,
+                  value: shadowModel.shadowAngle,
+                  min: 0,
+                  max: 360,
                   onChanged: (double value) => _onUpdateBoxShadow(shadowAngle: value, updateApi: false),
                   onChangeEnd: (double value) => _onUpdateBoxShadow(shadowAngle: value, updateApi: true),
                 ),
@@ -331,7 +330,7 @@ class _ShadowViewState extends State<ShadowView> {
                 width: 50,
                 alignment: Alignment.center,
                 child: Text(
-                  '${shadowAngle.floor()}\u00B0',
+                  '${shadowModel.shadowAngle.floor()}\u00B0',
                   style: TextStyle(color: Colors.white, fontSize: 15),
                 ),
               ),
