@@ -134,7 +134,7 @@ class _BorderViewState extends State<BorderView> {
           InkWell(
             onTap: () {
               navigateSubView(BorderStyleView(
-                borderStyle: BorderType.dashed,
+                borderStyle: BorderStyles.dashed,
                 onChangeBorderStyle:(style){},
               ));
             },

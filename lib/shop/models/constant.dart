@@ -45,7 +45,7 @@ enum ClipboardType {
   delete
 }
 
-enum BorderType {
+enum BorderStyles {
   solid,
   dashed,
   dotted

@@ -1,8 +1,10 @@
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/constant.dart';
+import 'package:dotted_line/dotted_line.dart';
 
 class BorderStyleView extends StatefulWidget {
-  final BorderType borderStyle;
+  final BorderStyles borderStyle;
   final Function onChangeBorderStyle;
 
   const BorderStyleView(
@@ -14,7 +16,7 @@ class BorderStyleView extends StatefulWidget {
 }
 
 class _BorderStyleViewState extends State<BorderStyleView> {
-  BorderType borderStyle;
+  BorderStyles borderStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -106,15 +108,15 @@ class _BorderStyleViewState extends State<BorderStyleView> {
       padding: EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: [
-          listItem(BorderType.solid),
-          listItem(BorderType.dashed),
-          listItem(BorderType.dotted),
+          listItem(BorderStyles.solid),
+          listItem(BorderStyles.dashed),
+          listItem(BorderStyles.dotted),
         ],
       ),
     );
   }
 
-  Widget listItem(BorderType style) {
+  Widget listItem(BorderStyles style) {
     return InkWell(
       onTap: () {
         setState(() {
@@ -127,10 +129,7 @@ class _BorderStyleViewState extends State<BorderStyleView> {
         child: Row(
           children: [
             Expanded(
-                child: Container(
-              height: 4,
-              color: Colors.white,
-            )),
+                child: borderStyleWidget(style)),
             SizedBox(width: 10,),
             Opacity(
               opacity: (borderStyle == style) ? 1 : 0,
@@ -145,19 +144,26 @@ class _BorderStyleViewState extends State<BorderStyleView> {
     );
   }
 
-  Widget borderStyleWidget(BorderType style) {
-    switch(style) {
-      case BorderType.solid:
+  Widget borderStyleWidget(BorderStyles style) {
+    switch (style) {
+      case BorderStyles.solid:
         return Container(
           height: 4,
           color: Colors.white,
         );
-      case BorderType.dashed:
-        // TODO: Handle this case.
-        break;
-      case BorderType.dotted:
-        // TODO: Handle this case.
-        break;
+      case BorderStyles.dashed:
+        return DottedLine(
+          lineThickness: 4,
+          dashLength: 8,
+          dashGapLength: 4,
+          dashColor: Colors.white,
+        );
+      case BorderStyles.dotted:
+        return DottedLine(dashColor: Colors.white, lineThickness: 4);
     }
+    return Container(
+      height: 4,
+      color: Colors.white,
+    );
   }
 }
