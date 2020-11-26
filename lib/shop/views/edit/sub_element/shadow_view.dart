@@ -4,7 +4,6 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/sub_element/fill_color_view.dart';
-import 'package:payever/theme.dart';
 
 class ShadowView extends StatefulWidget {
   final Map<String, dynamic>stylesheets;
@@ -91,6 +90,9 @@ class _ShadowViewState extends State<ShadowView> {
                     } else if (widget.type == 'shop-cart') {
                       widget.onUpdateShadow(
                           value ? CartShadowModel() : null, true);
+                    } else if (widget.type == 'social-icon') {
+                      widget.onUpdateShadow(
+                          value ? SocialIconShadowModel() : null, true);
                     }
                   },
                 ),
@@ -106,7 +108,7 @@ class _ShadowViewState extends State<ShadowView> {
   Widget get expandedView {
     if (widget.type == 'button') return buttonShadow;
     if (widget.type == 'shape' || widget.type == 'image') return shapeShadow;
-    if (widget.type == 'shop-cart') return cartShadow;
+    if (widget.type == 'shop-cart' || widget.type == 'social-icon') return cartShadow;
     return Container();
   }
 

@@ -1196,6 +1196,7 @@ class ShadowModel {
     if (type == 'shape') return shapeShadowString;
     if (type == 'image') return imageShadowString;
     if (type == 'shop-cart') return cartShadowString;
+    if (type == 'social-icon') return socialIconShadowString;
 
     throw ('unknown child type error');
   }
@@ -1248,6 +1249,13 @@ class ShadowModel {
     return '${offsetX}pt ${offsetY}pt ${blurRadius}pt 0 rgba(${color.red},${color.green},${color.blue},${shadowOpacity.toStringAsFixed(1)})';
   }
 
+  get socialIconShadowString {
+    double deg = shadowAngle * pi / 180;
+    double offsetX = cos(deg) * shadowOffset;
+    double offsetY = -sin(deg) * shadowOffset;
+    return 'drop-shadow(${offsetX}pt ${offsetY}pt ${blurRadius}pt rgba(${color.red},${color.green},${color.blue},${shadowOpacity.toStringAsFixed(1)}))';
+  }
+
   get imageShadowString {
     double deg = shadowAngle * pi / 180;
     Color color = colorConvert(shadowFormColor);
@@ -1291,15 +1299,25 @@ class ImageShadowModel extends ShadowModel {
 }
 
 class CartShadowModel extends ShadowModel {
-  // 14.142135623730947pt 14.142135623730955pt 5pt 0 rgba(0,0,0,1)
   CartShadowModel()
       : super(
             type: 'shop-cart',
             blurRadius: 5,
-            offsetX: 14.142135623730947,
-            offsetY: 14.142135623730947,
-            shadowOpacity: 100,
+            shadowOpacity: 1,
+            shadowAngle: 315,
+            shadowOffset: 20,
             color: Colors.black);
+}
+
+class SocialIconShadowModel extends ShadowModel {
+  SocialIconShadowModel()
+      : super(
+      type: 'social-icon',
+      blurRadius: 5,
+      shadowOpacity: 1,
+      shadowAngle: 315,
+      shadowOffset: 20,
+      color: Colors.black);
 }
 
 

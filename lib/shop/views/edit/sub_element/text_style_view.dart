@@ -57,7 +57,7 @@ class _TextStyleViewState extends State<TextStyleView> {
   TextStyles styles;
 
   final double ptFontFactor = 30/112;
-  final List<String>hasBorderChildren = ['button', 'image', 'social-icon', 'logo', 'shop-cart'];
+  final List<String>hasBorderChildren = ['button', 'image', 'logo', 'shop-cart'];
   final List<String>hasShadowChildren = ['button', 'shape', 'image',  'social-icon', 'logo', 'shop-cart'];
 
   @override
@@ -1243,8 +1243,11 @@ class _TextStyleViewState extends State<TextStyleView> {
   void _updateShadow(ShopEditScreenState state, ShadowModel model, {bool updateApi = true}) {
     Map<String, dynamic> sheets = widget.stylesheets;
     String field = state.selectedChild.type == 'shape' ? 'shadow' : 'boxShadow';
-    sheets[field] = model == null ? null : model.shadowString;
-    print('shadowString: ${model.shadowString}');
+    if (state.selectedChild.type == 'social-icon') {
+      field = 'filter';
+    }
+    sheets[field] = model?.shadowString;
+    print('shadowString: ${model?.shadowString}');
     if (state.selectedChild.type == 'image') {
       sheets['shadowAngle'] =  model?.shadowAngle?.toInt();
       sheets['shadowBlur'] =  model?.shadowBlur?.toInt();
