@@ -22,8 +22,8 @@ import 'opacity_view.dart';
 class StyleControlView extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
   final Map<String, dynamic> stylesheets;
-
-  const StyleControlView({this.screenBloc, this.stylesheets});
+  final Function onClose;
+  const StyleControlView({this.screenBloc, this.stylesheets, this.onClose});
 
   @override
   _StyleControlViewState createState() => _StyleControlViewState();
@@ -222,6 +222,7 @@ class _StyleControlViewState extends State<StyleControlView> {
           ),
           InkWell(
             onTap: () => Navigator.pop(context),
+            // onTap: () => widget.onClose(),
             child: Container(
               width: 30,
               height: 30,

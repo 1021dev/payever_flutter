@@ -35,9 +35,12 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
   final String templateId;
   final ShopEditScreenBloc screenBloc;
   TemplateSizeStateModel templateSizeStateModel = TemplateSizeStateModel();
-  _TemplateDetailScreenState(
-      {this.shopPage, this.templateId, this.screenBloc});
+
+  _TemplateDetailScreenState({this.shopPage, this.templateId, this.screenBloc});
+
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  bool showStyleControlView = false;
+
   @override
   void initState() {
     screenBloc.add(ActiveShopPageEvent(activeShopPage: widget.shopPage));
@@ -61,7 +64,11 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
             create: (_) => templateSizeStateModel),
       ],
       child: BlocListener(
-        listener: (BuildContext context, ShopEditScreenState state) async {},
+        listener: (BuildContext context, ShopEditScreenState state) async {
+          if (state.selectedChild == null) {
+            showStyleControlView = false;
+          }
+        },
         bloc: screenBloc,
         child: BlocBuilder(
           bloc: screenBloc,
@@ -71,15 +78,48 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
               appBar: ShopEditAppbar(
                 onTapAdd: () => _addObject(state),
                 onTapStyle: () => _showStyleDialogView(state),
+                // onTapStyle: () {
+                //   setState(() {
+                //     showStyleControlView = true;
+                //   });
+                // },
               ),
               backgroundColor: Colors.grey[800],
               body: SafeArea(
                 bottom: false,
-                child: TemplateView(
-                  screenBloc: screenBloc,
-                  shopPage: shopPage,
-                  templateId: templateId,
-                  enableTapSection: true,
+                child: Stack(
+                  children: [
+                    TemplateView(
+                      screenBloc: screenBloc,
+                      shopPage: shopPage,
+                      templateId: templateId,
+                      enableTapSection: true,
+                    ),
+                    // AnimatedPositioned(
+                    //   left: 0,
+                    //   right: 0,
+                    //   duration: Duration(milliseconds: 500),
+                    //   bottom: showStyleControlView
+                    //       ? -MediaQuery.of(context).padding.bottom
+                    //       : -500,
+                    //   child: state.selectedChild == null
+                    //       ? Container()
+                    //       : state.selectedChild == null
+                    //           ? Container()
+                    //           : StyleControlView(
+                    //               screenBloc: screenBloc,
+                    //               stylesheets: state.stylesheets[state
+                    //                   .activeShopPage
+                    //                   .stylesheetIds
+                    //                   .mobile][state.selectedChild.id],
+                    //               onClose: () {
+                    //                 setState(() {
+                    //                   showStyleControlView = false;
+                    //                 });
+                    //               },
+                    //             ),
+                    // )
+                  ],
                 ),
               ),
             );
