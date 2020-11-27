@@ -109,6 +109,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
                               ? Container()
                               : StyleControlView(
                                   screenBloc: screenBloc,
+                                  templateId: widget.templateId,
                                   stylesheets: state.stylesheets[state
                                       .activeShopPage
                                       .stylesheetIds

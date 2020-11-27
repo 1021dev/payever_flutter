@@ -25,7 +25,9 @@ class StyleControlView extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
   final Map<String, dynamic> stylesheets;
   final Function onClose;
-  const StyleControlView({this.screenBloc, this.stylesheets, this.onClose});
+  final String templateId;
+
+  const StyleControlView({this.screenBloc, this.stylesheets, this.onClose, this.templateId});
 
   @override
   _StyleControlViewState createState() => _StyleControlViewState();
@@ -272,7 +274,10 @@ class _StyleControlViewState extends State<StyleControlView> {
       case TextStyleType.text:
         return _textBody(state);
       case TextStyleType.image:
-        ImageData data = ImageData.fromJson(state.selectedChild.data);
+        Template template =  Template.fromJson(state.templates[widget.templateId]);
+        Child section = template.children.firstWhere((element) => element.id == state.selectedSectionId);
+        Child imageChild = section.children.firstWhere((element) => element.id == state.selectedChild.id);
+        ImageData data = ImageData.fromJson(imageChild.data);
         return ImageStyleView(
           styles: styles,
           screenBloc: widget.screenBloc,
@@ -1312,8 +1317,8 @@ class _StyleControlViewState extends State<StyleControlView> {
         description,
         state.activeShopPage.templateId);
 
-    // widget.screenBloc.add(UpdateSectionEvent(
-    //     sectionId: state.selectedSectionId, effects: effects));
+    widget.screenBloc.add(UpdateSectionEvent(
+        sectionId: state.selectedSectionId, effects: effects));
   }
 
   void _updateOpacity(ShopEditScreenState state, double value, {bool updateApi = true}) {

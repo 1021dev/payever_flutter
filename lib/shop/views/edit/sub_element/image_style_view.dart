@@ -28,7 +28,7 @@ class _ImageStyleViewState extends State<ImageStyleView> {
   @override
   void initState() {
     super.initState();
-
+    descriptionExpanded = widget.description != null && widget.description.isNotEmpty;
     controller.text = widget.description;
     _focusNode.addListener(() {
       if (!_focusNode.hasFocus && widget.description != controller.text) {
@@ -210,6 +210,7 @@ class _ImageStyleViewState extends State<ImageStyleView> {
             child: TextField(
               focusNode: _focusNode,
               controller: controller,
+              textInputAction: TextInputAction.done,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.all(8),
                 // border: InputBorder.none,
