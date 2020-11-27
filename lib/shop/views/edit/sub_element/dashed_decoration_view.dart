@@ -23,7 +23,7 @@ class _DashedDecorationViewState extends State<DashedDecorationView> {
     return DottedBorder(
       // strokeCap : StrokeCap.square,
       dashPattern: dashPattern,
-      borderType: BorderType.Rect,
+      // borderType: BorderType.Rect,
       strokeWidth: widget.borderModel.borderWidth,
       color: colorConvert(widget.borderModel.borderColor),
       child: widget.child,

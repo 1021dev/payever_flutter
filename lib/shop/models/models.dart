@@ -360,8 +360,12 @@ class BaseStyles with BackgroundAssist, StyleAssist, SizeAssist, DecorationAssis
   // if String border is active in case default value is '0px solid #000000'
   @JsonKey(name: 'border')
   dynamic border;
+  // For Image
   @JsonKey(name: 'borderType', defaultValue: 'solid')
   String borderType;
+  // For Logo
+  @JsonKey(name: 'borderStyle', defaultValue: 'solid')
+  String borderStyle;
   // String '0', '50%' or double
   @JsonKey(name: 'borderRadius', defaultValue: 0)
   dynamic borderRadius;
@@ -1163,7 +1167,6 @@ class BorderModel {
   });
 }
 
-@JsonSerializable()
 class ShadowModel {
   String type;
   double blurRadius;

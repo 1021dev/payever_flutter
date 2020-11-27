@@ -39,7 +39,7 @@ class _BorderViewState extends State<BorderView> {
     } else if (widget.type == 'logo') {
       borderModel = BorderModel(
           borderColor: widget.styles.borderColor,
-          borderStyle: widget.styles.borderType,
+          borderStyle: widget.styles.borderStyle,
           borderWidth: widget.styles.borderWidth);
       borderExpanded = widget.styles.borderWidth > 0;
     }

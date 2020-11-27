@@ -416,6 +416,7 @@ BaseStyles _$BaseStylesFromJson(Map<String, dynamic> json) {
     ..backgroundRepeat = json['backgroundRepeat'] as String ?? 'no-repeat'
     ..border = json['border']
     ..borderType = json['borderType'] as String ?? 'solid'
+    ..borderStyle = json['borderStyle'] as String ?? 'solid'
     ..borderRadius = json['borderRadius'] ?? 0
     ..borderWidth = (json['borderWidth'] as num)?.toDouble() ?? 0
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
@@ -475,6 +476,7 @@ Map<String, dynamic> _$BaseStylesToJson(BaseStyles instance) =>
       'backgroundRepeat': instance.backgroundRepeat,
       'border': instance.border,
       'borderType': instance.borderType,
+      'borderStyle': instance.borderStyle,
       'borderRadius': instance.borderRadius,
       'borderWidth': instance.borderWidth,
       'borderColor': instance.borderColor,
@@ -533,6 +535,7 @@ SectionStyles _$SectionStylesFromJson(Map<String, dynamic> json) {
     ..backgroundRepeat = json['backgroundRepeat'] as String ?? 'no-repeat'
     ..border = json['border']
     ..borderType = json['borderType'] as String ?? 'solid'
+    ..borderStyle = json['borderStyle'] as String ?? 'solid'
     ..borderRadius = json['borderRadius'] ?? 0
     ..borderWidth = (json['borderWidth'] as num)?.toDouble() ?? 0
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
@@ -595,6 +598,7 @@ Map<String, dynamic> _$SectionStylesToJson(SectionStyles instance) =>
       'backgroundRepeat': instance.backgroundRepeat,
       'border': instance.border,
       'borderType': instance.borderType,
+      'borderStyle': instance.borderStyle,
       'borderRadius': instance.borderRadius,
       'borderWidth': instance.borderWidth,
       'borderColor': instance.borderColor,
@@ -655,6 +659,7 @@ TextStyles _$TextStylesFromJson(Map<String, dynamic> json) {
     ..backgroundRepeat = json['backgroundRepeat'] as String ?? 'no-repeat'
     ..border = json['border']
     ..borderType = json['borderType'] as String ?? 'solid'
+    ..borderStyle = json['borderStyle'] as String ?? 'solid'
     ..borderRadius = json['borderRadius'] ?? 0
     ..borderWidth = (json['borderWidth'] as num)?.toDouble() ?? 0
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
@@ -714,6 +719,7 @@ Map<String, dynamic> _$TextStylesToJson(TextStyles instance) =>
       'backgroundRepeat': instance.backgroundRepeat,
       'border': instance.border,
       'borderType': instance.borderType,
+      'borderStyle': instance.borderStyle,
       'borderRadius': instance.borderRadius,
       'borderWidth': instance.borderWidth,
       'borderColor': instance.borderColor,
@@ -773,6 +779,7 @@ ButtonStyles _$ButtonStylesFromJson(Map<String, dynamic> json) {
     ..backgroundRepeat = json['backgroundRepeat'] as String ?? 'no-repeat'
     ..border = json['border']
     ..borderType = json['borderType'] as String ?? 'solid'
+    ..borderStyle = json['borderStyle'] as String ?? 'solid'
     ..borderRadius = json['borderRadius'] ?? 0
     ..borderWidth = (json['borderWidth'] as num)?.toDouble() ?? 0
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
@@ -832,6 +839,7 @@ Map<String, dynamic> _$ButtonStylesToJson(ButtonStyles instance) =>
       'backgroundRepeat': instance.backgroundRepeat,
       'border': instance.border,
       'borderType': instance.borderType,
+      'borderStyle': instance.borderStyle,
       'borderRadius': instance.borderRadius,
       'borderWidth': instance.borderWidth,
       'borderColor': instance.borderColor,
@@ -890,6 +898,7 @@ ShopCartStyles _$ShopCartStylesFromJson(Map<String, dynamic> json) {
     ..backgroundRepeat = json['backgroundRepeat'] as String ?? 'no-repeat'
     ..border = json['border']
     ..borderType = json['borderType'] as String ?? 'solid'
+    ..borderStyle = json['borderStyle'] as String ?? 'solid'
     ..borderRadius = json['borderRadius'] ?? 0
     ..borderWidth = (json['borderWidth'] as num)?.toDouble() ?? 0
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
@@ -954,6 +963,7 @@ Map<String, dynamic> _$ShopCartStylesToJson(ShopCartStyles instance) =>
       'backgroundRepeat': instance.backgroundRepeat,
       'border': instance.border,
       'borderType': instance.borderType,
+      'borderStyle': instance.borderStyle,
       'borderRadius': instance.borderRadius,
       'borderWidth': instance.borderWidth,
       'borderColor': instance.borderColor,
@@ -1017,6 +1027,7 @@ ShapeStyles _$ShapeStylesFromJson(Map<String, dynamic> json) {
     ..backgroundRepeat = json['backgroundRepeat'] as String ?? 'no-repeat'
     ..border = json['border']
     ..borderType = json['borderType'] as String ?? 'solid'
+    ..borderStyle = json['borderStyle'] as String ?? 'solid'
     ..borderRadius = json['borderRadius'] ?? 0
     ..borderWidth = (json['borderWidth'] as num)?.toDouble() ?? 0
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
@@ -1076,6 +1087,7 @@ Map<String, dynamic> _$ShapeStylesToJson(ShapeStyles instance) =>
       'backgroundRepeat': instance.backgroundRepeat,
       'border': instance.border,
       'borderType': instance.borderType,
+      'borderStyle': instance.borderStyle,
       'borderRadius': instance.borderRadius,
       'borderWidth': instance.borderWidth,
       'borderColor': instance.borderColor,
@@ -1134,6 +1146,7 @@ ImageStyles _$ImageStylesFromJson(Map<String, dynamic> json) {
     ..backgroundRepeat = json['backgroundRepeat'] as String ?? 'no-repeat'
     ..border = json['border']
     ..borderType = json['borderType'] as String ?? 'solid'
+    ..borderStyle = json['borderStyle'] as String ?? 'solid'
     ..borderRadius = json['borderRadius'] ?? 0
     ..borderWidth = (json['borderWidth'] as num)?.toDouble() ?? 0
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
@@ -1200,6 +1213,7 @@ Map<String, dynamic> _$ImageStylesToJson(ImageStyles instance) =>
       'backgroundRepeat': instance.backgroundRepeat,
       'border': instance.border,
       'borderType': instance.borderType,
+      'borderStyle': instance.borderStyle,
       'borderRadius': instance.borderRadius,
       'borderWidth': instance.borderWidth,
       'borderColor': instance.borderColor,
@@ -1265,6 +1279,7 @@ SocialIconStyles _$SocialIconStylesFromJson(Map<String, dynamic> json) {
     ..backgroundRepeat = json['backgroundRepeat'] as String ?? 'no-repeat'
     ..border = json['border']
     ..borderType = json['borderType'] as String ?? 'solid'
+    ..borderStyle = json['borderStyle'] as String ?? 'solid'
     ..borderRadius = json['borderRadius'] ?? 0
     ..borderWidth = (json['borderWidth'] as num)?.toDouble() ?? 0
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
@@ -1324,6 +1339,7 @@ Map<String, dynamic> _$SocialIconStylesToJson(SocialIconStyles instance) =>
       'backgroundRepeat': instance.backgroundRepeat,
       'border': instance.border,
       'borderType': instance.borderType,
+      'borderStyle': instance.borderStyle,
       'borderRadius': instance.borderRadius,
       'borderWidth': instance.borderWidth,
       'borderColor': instance.borderColor,
@@ -1382,6 +1398,7 @@ ShopProductsStyles _$ShopProductsStylesFromJson(Map<String, dynamic> json) {
     ..backgroundRepeat = json['backgroundRepeat'] as String ?? 'no-repeat'
     ..border = json['border']
     ..borderType = json['borderType'] as String ?? 'solid'
+    ..borderStyle = json['borderStyle'] as String ?? 'solid'
     ..borderRadius = json['borderRadius'] ?? 0
     ..borderWidth = (json['borderWidth'] as num)?.toDouble() ?? 0
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
@@ -1445,6 +1462,7 @@ Map<String, dynamic> _$ShopProductsStylesToJson(ShopProductsStyles instance) =>
       'backgroundRepeat': instance.backgroundRepeat,
       'border': instance.border,
       'borderType': instance.borderType,
+      'borderStyle': instance.borderStyle,
       'borderRadius': instance.borderRadius,
       'borderWidth': instance.borderWidth,
       'borderColor': instance.borderColor,
@@ -1508,6 +1526,7 @@ ShopProductDetailStyles _$ShopProductDetailStylesFromJson(
     ..backgroundRepeat = json['backgroundRepeat'] as String ?? 'no-repeat'
     ..border = json['border']
     ..borderType = json['borderType'] as String ?? 'solid'
+    ..borderStyle = json['borderStyle'] as String ?? 'solid'
     ..borderRadius = json['borderRadius'] ?? 0
     ..borderWidth = (json['borderWidth'] as num)?.toDouble() ?? 0
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
@@ -1573,6 +1592,7 @@ Map<String, dynamic> _$ShopProductDetailStylesToJson(
       'backgroundRepeat': instance.backgroundRepeat,
       'border': instance.border,
       'borderType': instance.borderType,
+      'borderStyle': instance.borderStyle,
       'borderRadius': instance.borderRadius,
       'borderWidth': instance.borderWidth,
       'borderColor': instance.borderColor,
@@ -1637,6 +1657,7 @@ ShopProductCategoryStyles _$ShopProductCategoryStylesFromJson(
     ..backgroundRepeat = json['backgroundRepeat'] as String ?? 'no-repeat'
     ..border = json['border']
     ..borderType = json['borderType'] as String ?? 'solid'
+    ..borderStyle = json['borderStyle'] as String ?? 'solid'
     ..borderRadius = json['borderRadius'] ?? 0
     ..borderWidth = (json['borderWidth'] as num)?.toDouble() ?? 0
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
@@ -1715,6 +1736,7 @@ Map<String, dynamic> _$ShopProductCategoryStylesToJson(
       'backgroundRepeat': instance.backgroundRepeat,
       'border': instance.border,
       'borderType': instance.borderType,
+      'borderStyle': instance.borderStyle,
       'borderRadius': instance.borderRadius,
       'borderWidth': instance.borderWidth,
       'borderColor': instance.borderColor,

@@ -110,7 +110,6 @@ List<String>ligatures = [
 const minTextFontSize = 8;
 
 Widget borderStyleWidget(String style) {
-  print('BorderStyle: $style');
   switch (style) {
     case 'solid':
       return Container(
