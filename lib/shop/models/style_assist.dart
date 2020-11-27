@@ -353,25 +353,25 @@ class DecorationAssist {
     return 0;
   }
 
-  ImageBorderModel parseBorderFromString(dynamic border) {
+  BorderModel parseBorderFromString(dynamic border) {
     if (border == null || border == false) return null;
 
     List<String> borderAttrs = border.toString().split(' ');
-    int borderWidth = int.parse(borderAttrs.first.replaceAll('px', ''));
+    double borderWidth = double.parse(borderAttrs.first.replaceAll('px', ''));
     String borderStyle = borderAttrs[1];
     String borderColor = borderAttrs.last;
-    return ImageBorderModel(
-        borderWidth: borderWidth.toDouble(),
+    return BorderModel(
+        borderWidth: borderWidth,
         borderColor: borderColor,
         borderStyle: borderStyle);
   }
 
   Border getBorder1(dynamic border) {
-    ImageBorderModel model = parseBorderFromString(border);
+    BorderModel model = parseBorderFromString(border);
     if (model == null)
       return Border.all(color: Colors.transparent, width: 0);
 
-    return Border.all(color: colorConvert(model.borderColor), width: PxDp.d2u(px: model.borderWidth.toInt()));
+    return Border.all(color: colorConvert(model.borderColor), width: model.borderWidth /*PxDp.d2u(px: model.borderWidth.toInt())*/);
   }
 
   ShadowModel parseShadowFromString(String shadow, String childType) {

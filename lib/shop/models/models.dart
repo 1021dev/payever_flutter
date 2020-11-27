@@ -1145,7 +1145,7 @@ class BackGroundModel {
         @required this.backgroundSize});
 }
 
-class ImageBorderModel {
+class BorderModel {
   String borderColor;
   double borderWidth;
   String borderStyle;
@@ -1156,7 +1156,7 @@ class ImageBorderModel {
     return '${borderWidth.floor()}px $borderStyle $borderColor';
   }
   // solid, dashed, dotted
-  ImageBorderModel({
+  BorderModel({
     this.borderColor = '#000000',
     this.borderWidth = 1,
     this.borderStyle = 'solid',

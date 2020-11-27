@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/sub_element/dashed_decoration_view.dart';
 import '../../../../theme.dart';
 
 class ImageView extends StatefulWidget {
@@ -40,11 +41,15 @@ class _ImageViewState extends State<ImageView> {
   }
 
   Widget get body {
+    BorderModel borderModel = styles.parseBorderFromString(styles.border);
     return Opacity(
       opacity: styles.opacity,
-      child: Container(
-        decoration: decoration,
-        child: getImage(url),
+      child: DashedDecorationView(
+        borderModel: borderModel,
+        child: Container(
+          decoration: decoration,
+          child: getImage(url),
+        ),
       ),
     );
   }

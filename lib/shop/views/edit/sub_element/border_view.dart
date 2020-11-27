@@ -26,7 +26,7 @@ class BorderView extends StatefulWidget {
 class _BorderViewState extends State<BorderView> {
   bool borderExpanded = false;
   double borderRadius;
-  ImageBorderModel borderModel;
+  BorderModel borderModel;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class _BorderViewState extends State<BorderView> {
       borderModel = widget.styles.parseBorderFromString(widget.styles.border);
       borderExpanded = borderModel != null;
     } else if (widget.type == 'logo') {
-      borderModel = ImageBorderModel(
+      borderModel = BorderModel(
           borderColor: widget.styles.borderColor,
           borderStyle: widget.styles.borderType,
           borderWidth: widget.styles.borderWidth);
@@ -63,9 +63,9 @@ class _BorderViewState extends State<BorderView> {
                     if (widget.type == 'button')
                       widget.onUpdateBorderRadius(value ? 15.0 : 0.0, true);
                     else if (widget.type == 'image') {
-                      ImageBorderModel model = value
-                          ? ImageBorderModel()
-                          : ImageBorderModel(borderWidth: 0);
+                      BorderModel model = value
+                          ? BorderModel()
+                          : BorderModel(borderWidth: 0);
                       widget.onUpdateBorderModel(model, true);
                     }
                   },
@@ -170,9 +170,9 @@ class _BorderViewState extends State<BorderView> {
                 ),
                 Expanded(
                   child: Slider(
-                    value: borderModel.borderWidth,
+                    value: borderModel.borderWidth > 10 ? 10 : borderModel.borderWidth,
                     min: 0,
-                    max: 100,
+                    max: 10,
                     onChanged: (double value) {
                       borderModel.borderWidth = value;
                       _updateBorderModel(false);

@@ -5,7 +5,7 @@ import 'package:payever/theme.dart';
 
 class DashedDecorationView extends StatefulWidget {
   final Widget child;
-  final ImageBorderModel borderModel;
+  final BorderModel borderModel;
 
   const DashedDecorationView({Key key, @required this.borderModel, @required this.child})
       : super(key: key);
@@ -17,11 +17,13 @@ class DashedDecorationView extends StatefulWidget {
 class _DashedDecorationViewState extends State<DashedDecorationView> {
   @override
   Widget build(BuildContext context) {
-    if (widget.borderModel == null)
+    if (widget.borderModel == null || widget.borderModel.borderStyle == 'solid')
       return widget.child;
 
     return DottedBorder(
+      // strokeCap : StrokeCap.square,
       dashPattern: dashPattern,
+      borderType: BorderType.Rect,
       strokeWidth: widget.borderModel.borderWidth,
       color: colorConvert(widget.borderModel.borderColor),
       child: widget.child,
@@ -32,9 +34,9 @@ class _DashedDecorationViewState extends State<DashedDecorationView> {
     switch(widget.borderModel.borderStyle) {
       case 'solid':
         return [8, 0];
-      case 'solid':
+      case 'dashed':
         return [8, 4];
-      case 'solid':
+      case 'dotted':
         return [3, 1];
     }
     throw('Error: wrong border style');

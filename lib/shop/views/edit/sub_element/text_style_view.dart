@@ -1275,7 +1275,7 @@ class _TextStyleViewState extends State<TextStyleView> {
         sectionId: state.selectedSectionId, effects: effects, updateApi: updateApi));
   }
 
-  void _updateImageBorderModel(ShopEditScreenState state, ImageBorderModel model, {bool updateApi = true}) {
+  void _updateImageBorderModel(ShopEditScreenState state, BorderModel model, {bool updateApi = true}) {
     Map<String, dynamic> sheets = widget.stylesheets;
     sheets['border'] = model.border;
     sheets['borderColor'] =  model.borderColor;
