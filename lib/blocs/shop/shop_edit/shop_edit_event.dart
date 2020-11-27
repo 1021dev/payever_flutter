@@ -88,4 +88,5 @@ class UploadPhotoEvent extends ShopEditScreenEvent {
   List<Object> get props => [this.image, this.isBackground];
 }
 
+class InitSelectedSectionEvent extends ShopEditScreenEvent {}
 class InitBlobNameEvent extends ShopEditScreenEvent {}

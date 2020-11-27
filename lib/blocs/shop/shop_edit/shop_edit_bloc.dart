@@ -46,7 +46,12 @@ class ShopEditScreenBloc
             selectedBlock: event.selectedBlock,
             selectedChild: event.selectedChild);
       }
-
+    } else if (event is InitSelectedSectionEvent) {
+      yield state.initSelectedChild(
+          selectedSectionId: '',
+          selectedBlockId: '',
+          selectedBlock: null,
+          selectedChild: null);
     } else if (event is UpdateSectionEvent) {
       yield* updateSection(event);
     } else if (event is ActiveShopPageEvent) {

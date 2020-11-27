@@ -834,7 +834,12 @@ class SizeAssist {
     return effects;
   }
 
-  List<Map<String, dynamic>> getUpdateTextPayload(String sectionId, String selectedChildId, Map<String, dynamic>styles, String text, String templateId) {
+  List<Map<String, dynamic>> getUpdateTextPayload(
+      String sectionId,
+      String selectedChildId,
+      Map<String, dynamic> styles,
+      String text,
+      String templateId) {
     List<Map<String, dynamic>> effects = [];
     Map<String, dynamic> payload = {};
 
@@ -844,6 +849,36 @@ class SizeAssist {
     payload['id'] = selectedChildId;
     payload['data'] = data;
     payload['type'] = 'text';
+    Map<String, dynamic> parent = {'id': sectionId, 'slot': 'host'};
+    payload['parent'] = parent;
+    payload['styles'] = styles;
+
+    Map<String, dynamic> effect = {'payload': payload};
+    effect['target'] = 'templates:$templateId';
+    effect['type'] = 'template:update-element';
+    effects.add(effect);
+    return effects;
+  }
+
+  List<Map<String, dynamic>> getImageDescriptionPayload(
+      String sectionId,
+      String selectedChildId,
+      Map<String, dynamic> styles,
+      String description,
+      String templateId) {
+    List<Map<String, dynamic>> effects = [];
+    Map<String, dynamic> payload = {};
+
+    payload['childrenRefs'] = {};
+    payload['children'] = [];
+    Map<String, dynamic> data = {
+      'description': description,
+      'text': '',
+      'sync': false
+    };
+    payload['id'] = selectedChildId;
+    payload['data'] = data;
+    payload['type'] = 'image';
     Map<String, dynamic> parent = {'id': sectionId, 'slot': 'host'};
     payload['parent'] = parent;
     payload['styles'] = styles;

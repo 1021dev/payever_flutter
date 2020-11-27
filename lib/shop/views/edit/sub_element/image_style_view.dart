@@ -7,9 +7,11 @@ import 'upload_image_view.dart';
 class ImageStyleView extends StatefulWidget {
   final TextStyles styles;
   final ShopEditScreenBloc screenBloc;
+  final Function onChangeDescription;
+  final String description;
 
-  const ImageStyleView({Key key, this.styles, this.screenBloc})
-      : super(key: key);
+  const ImageStyleView(
+      {this.styles, this.screenBloc, this.onChangeDescription, this.description});
 
   @override
   _ImageStyleViewState createState() => _ImageStyleViewState();
@@ -21,7 +23,25 @@ class _ImageStyleViewState extends State<ImageStyleView> {
   double exposure = 0;
   double saturate = 0;
   TextEditingController controller = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
 
+  @override
+  void initState() {
+    super.initState();
+
+    controller.text = widget.description;
+    _focusNode.addListener(() {
+      if (!_focusNode.hasFocus && widget.description != controller.text) {
+        widget.onChangeDescription(controller.text);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -188,6 +208,7 @@ class _ImageStyleViewState extends State<ImageStyleView> {
               borderRadius: BorderRadius.circular(8),
             ),
             child: TextField(
+              focusNode: _focusNode,
               controller: controller,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.all(8),

@@ -1829,13 +1829,15 @@ ImageData _$ImageDataFromJson(Map<String, dynamic> json) {
   return ImageData()
     ..text = json['text'] as String
     ..name = json['name'] as String
-    ..src = json['src'] as String;
+    ..src = json['src'] as String
+    ..description = json['description'] as String;
 }
 
 Map<String, dynamic> _$ImageDataToJson(ImageData instance) => <String, dynamic>{
       'text': instance.text,
       'name': instance.name,
       'src': instance.src,
+      'description': instance.description,
     };
 
 VideoData _$VideoDataFromJson(Map<String, dynamic> json) {

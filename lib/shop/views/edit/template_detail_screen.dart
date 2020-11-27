@@ -50,6 +50,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
   @override
   void dispose() {
     // screenBloc.add(ActiveShopPageEvent(activeShopPage: null));
+    screenBloc.add(InitSelectedSectionEvent());
     super.dispose();
   }
 
@@ -77,12 +78,12 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
               key: scaffoldKey,
               appBar: ShopEditAppbar(
                 onTapAdd: () => _addObject(state),
-                onTapStyle: () => _showStyleDialogView(state),
-                // onTapStyle: () {
-                //   setState(() {
-                //     showStyleControlView = true;
-                //   });
-                // },
+                // onTapStyle: () => _showStyleDialogView(state),
+                onTapStyle: () {
+                  setState(() {
+                    showStyleControlView = true;
+                  });
+                },
               ),
               backgroundColor: Colors.grey[800],
               body: SafeArea(
@@ -95,30 +96,31 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
                       templateId: templateId,
                       enableTapSection: true,
                     ),
-                    // AnimatedPositioned(
-                    //   left: 0,
-                    //   right: 0,
-                    //   duration: Duration(milliseconds: 500),
-                    //   bottom: showStyleControlView
-                    //       ? -MediaQuery.of(context).padding.bottom
-                    //       : -500,
-                    //   child: state.selectedChild == null
-                    //       ? Container()
-                    //       : state.selectedChild == null
-                    //           ? Container()
-                    //           : StyleControlView(
-                    //               screenBloc: screenBloc,
-                    //               stylesheets: state.stylesheets[state
-                    //                   .activeShopPage
-                    //                   .stylesheetIds
-                    //                   .mobile][state.selectedChild.id],
-                    //               onClose: () {
-                    //                 setState(() {
-                    //                   showStyleControlView = false;
-                    //                 });
-                    //               },
-                    //             ),
-                    // )
+                    AnimatedPositioned(
+                      left: 0,
+                      right: 0,
+                      duration: Duration(milliseconds: 400),
+                      bottom: showStyleControlView
+                          ? -MediaQuery.of(context).padding.bottom
+                          : -500,
+                      child: state.selectedChild == null
+                          ? Container()
+                          : state.selectedChild == null
+                              ? Container()
+                              : StyleControlView(
+                                  screenBloc: screenBloc,
+                                  stylesheets: state.stylesheets[state
+                                      .activeShopPage
+                                      .stylesheetIds
+                                      .mobile][state.selectedChild.id],
+                                  onClose: () {
+                                    FocusScope.of(context).unfocus();
+                                    setState(() {
+                                      showStyleControlView = false;
+                                    });
+                                  },
+                                ),
+                    )
                   ],
                 ),
               ),

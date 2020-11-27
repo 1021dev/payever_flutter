@@ -887,8 +887,8 @@ class ButtonData extends Data {
 @JsonSerializable()
 class ImageData extends Data {
   ImageData();
-
-  @JsonKey(name: 'src')       String src;
+  @JsonKey(name: 'src')           String src;
+  @JsonKey(name: 'description')   String description;
 
   factory ImageData.fromJson(Map<String, dynamic> json) => _$ImageDataFromJson(json);
   Map<String, dynamic> toJson() => _$ImageDataToJson(this);

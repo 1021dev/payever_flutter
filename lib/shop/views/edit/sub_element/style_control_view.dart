@@ -14,6 +14,7 @@ import 'package:payever/shop/views/edit/sub_element/image_style_view.dart';
 import 'package:payever/shop/views/edit/sub_element/paragraph_view.dart';
 import 'package:payever/shop/views/edit/sub_element/shadow_view.dart';
 import 'package:payever/shop/views/edit/sub_element/text_options_view.dart';
+import 'package:payever/shop/views/edit/sub_element/video_style_view.dart';
 import 'package:payever/theme.dart';
 import 'border_view.dart';
 import 'fill_color_grid_view.dart';
@@ -246,8 +247,8 @@ class _StyleControlViewState extends State<StyleControlView> {
             ),
           ),
           InkWell(
-            onTap: () => Navigator.pop(context),
-            // onTap: () => widget.onClose(),
+            // onTap: () => Navigator.pop(context),
+            onTap: () => widget.onClose(),
             child: Container(
               width: 30,
               height: 30,
@@ -271,8 +272,15 @@ class _StyleControlViewState extends State<StyleControlView> {
       case TextStyleType.text:
         return _textBody(state);
       case TextStyleType.image:
+        ImageData data = ImageData.fromJson(state.selectedChild.data);
+        return ImageStyleView(
+          styles: styles,
+          screenBloc: widget.screenBloc,
+          description: data?.description,
+          onChangeDescription: (value) => _updateImageDescription(state, value),
+        );
       case TextStyleType.video:
-        return ImageStyleView(styles: styles, screenBloc: widget.screenBloc,);
+        return VideoStyleView();
       case TextStyleType.arrange:
         return _arrangeBody;
       default:
@@ -1292,6 +1300,20 @@ class _StyleControlViewState extends State<StyleControlView> {
 
     widget.screenBloc.add(UpdateSectionEvent(
         sectionId: state.selectedSectionId, effects: effects));
+  }
+
+  void _updateImageDescription(ShopEditScreenState state, String description) {
+    print('description: $description');
+    Map<String, dynamic> sheets = widget.stylesheets;
+    List<Map<String, dynamic>> effects = styles.getImageDescriptionPayload(
+        state.selectedBlockId,
+        selectedId,
+        sheets,
+        description,
+        state.activeShopPage.templateId);
+
+    // widget.screenBloc.add(UpdateSectionEvent(
+    //     sectionId: state.selectedSectionId, effects: effects));
   }
 
   void _updateOpacity(ShopEditScreenState state, double value, {bool updateApi = true}) {
