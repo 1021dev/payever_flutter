@@ -1,5 +1,8 @@
 import 'dart:ui';
 
+import 'package:dotted_line/dotted_line.dart';
+import 'package:flutter/material.dart';
+
 List<Color>textBgColors = [Color.fromRGBO(0, 168, 255, 1),
   Color.fromRGBO(96, 234, 50, 1),
   Color.fromRGBO(255, 22, 1, 1),
@@ -43,12 +46,6 @@ enum ClipboardType {
   copy,
   paste,
   delete
-}
-
-enum BorderStyles {
-  solid,
-  dashed,
-  dotted
 }
 
 List<String>fonts = [
@@ -111,3 +108,24 @@ List<String>ligatures = [
 ];
 
 const minTextFontSize = 8;
+
+Widget borderStyleWidget(String style) {
+  print('BorderStyle: $style');
+  switch (style) {
+    case 'solid':
+      return Container(
+        height: 4,
+        color: Colors.white,
+      );
+    case 'dashed':
+      return DottedLine(
+        lineThickness: 4,
+        dashLength: 8,
+        dashGapLength: 4,
+        dashColor: Colors.white,
+      );
+    case 'dotted':
+      return DottedLine(dashColor: Colors.white, lineThickness: 4);
+  }
+  throw('Error: wrong border style');
+}

@@ -30,14 +30,17 @@ class _BorderViewState extends State<BorderView> {
 
   @override
   Widget build(BuildContext context) {
-
     borderRadius = widget.styles.getBorderRadius(widget.styles.borderRadius);
-    borderModel = widget.styles.parseBorderFromString(widget.styles.border);
     if (widget.type == 'button') {
       borderExpanded = borderRadius > 0;
     } else if (widget.type == 'image') {
+      borderModel = widget.styles.parseBorderFromString(widget.styles.border);
       borderExpanded = borderModel != null;
     } else if (widget.type == 'logo') {
+      borderModel = ImageBorderModel(
+          borderColor: widget.styles.borderColor,
+          borderStyle: widget.styles.borderType,
+          borderWidth: widget.styles.borderWidth);
       borderExpanded = widget.styles.borderWidth > 0;
     }
 
@@ -60,7 +63,9 @@ class _BorderViewState extends State<BorderView> {
                     if (widget.type == 'button')
                       widget.onUpdateBorderRadius(value ? 15.0 : 0.0, true);
                     else if (widget.type == 'image') {
-                      ImageBorderModel model = value ? ImageBorderModel() : ImageBorderModel(borderWidth: 0);
+                      ImageBorderModel model = value
+                          ? ImageBorderModel()
+                          : ImageBorderModel(borderWidth: 0);
                       widget.onUpdateBorderModel(model, true);
                     }
                   },
@@ -117,16 +122,7 @@ class _BorderViewState extends State<BorderView> {
     );
   }
 
-  Widget get imageBorder {  
-    double borderSize ;
-    Color borderColor;
-    if (widget.type == 'image') {
-      borderSize = borderModel.borderWidth;
-      borderColor = colorConvert(borderModel.borderColor);
-    } else {
-      borderSize = widget.styles.borderWidth;
-      borderColor = colorConvert(widget.styles.borderColor);
-    }
+  Widget get imageBorder {
     return Container(
       padding: EdgeInsets.only(left: 16),
       child: Column(
@@ -134,8 +130,11 @@ class _BorderViewState extends State<BorderView> {
           InkWell(
             onTap: () {
               navigateSubView(BorderStyleView(
-                borderStyle: BorderStyles.dashed,
-                onChangeBorderStyle:(style){},
+                borderStyle: borderModel.borderStyle,
+                onChangeBorderStyle: (style) {
+                  borderModel.borderStyle = style;
+                  _updateBorderModel(true);
+                },
               ));
             },
             child: Container(
@@ -149,12 +148,9 @@ class _BorderViewState extends State<BorderView> {
                       style: TextStyle(color: Colors.white, fontSize: 15),
                     ),
                   ),
-                  Expanded(
-                      child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 10),
-                    height: 4,
-                    color: Colors.white,
-                  )),
+                  SizedBox(width: 16,),
+                  Expanded(child: borderStyleWidget(borderModel.borderStyle)),
+                  SizedBox(width: 16,),
                   Icon(Icons.arrow_forward_ios),
                 ],
               ),
@@ -166,7 +162,7 @@ class _BorderViewState extends State<BorderView> {
             child: Row(
               children: [
                 Container(
-                  width:50,
+                  width: 50,
                   child: Text(
                     'Width',
                     style: TextStyle(color: Colors.white, fontSize: 15),
@@ -174,34 +170,34 @@ class _BorderViewState extends State<BorderView> {
                 ),
                 Expanded(
                   child: Slider(
-                    value: borderSize,
+                    value: borderModel.borderWidth,
                     min: 0,
                     max: 100,
                     onChanged: (double value) {
                       borderModel.borderWidth = value;
                       _updateBorderModel(false);
                     },
-                    onChangeEnd:  (double value) {
+                    onChangeEnd: (double value) {
                       borderModel.borderWidth = value;
                       _updateBorderModel(true);
                     },
                   ),
                 ),
                 Text(
-                  '${borderSize.toInt()} px',
+                  '${borderModel.borderWidth.floor()} px',
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ],
             ),
           ),
           FillColorView(
-            pickColor: borderColor,
+            pickColor: colorConvert(borderModel.borderColor),
             styles: widget.styles,
             colorType: ColorType.border,
             onUpdateColor: (Color color) {
               borderModel.borderColor = encodeColor(color);
               _updateBorderModel(true);
-            } ,
+            },
           ),
         ],
       ),

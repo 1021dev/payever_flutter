@@ -352,14 +352,18 @@ class DecorationAssist {
     }
     return 0;
   }
+
   ImageBorderModel parseBorderFromString(dynamic border) {
-    if (border == null || border == false)
-      return null;
+    if (border == null || border == false) return null;
 
     List<String> borderAttrs = border.toString().split(' ');
     int borderWidth = int.parse(borderAttrs.first.replaceAll('px', ''));
+    String borderStyle = borderAttrs[1];
     String borderColor = borderAttrs.last;
-    return ImageBorderModel(borderWidth: borderWidth.toDouble(), borderColor: borderColor);
+    return ImageBorderModel(
+        borderWidth: borderWidth.toDouble(),
+        borderColor: borderColor,
+        borderStyle: borderStyle);
   }
 
   Border getBorder1(dynamic border) {

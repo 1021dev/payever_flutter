@@ -561,6 +561,9 @@ class BaseStyles with BackgroundAssist, StyleAssist, SizeAssist, DecorationAssis
   }
 
   Border get getBorder {
+    if (borderType != 'solid')
+      return null;
+
     return getBorder1(border);
   }
 

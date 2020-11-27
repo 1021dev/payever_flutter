@@ -1,10 +1,8 @@
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/constant.dart';
-import 'package:dotted_line/dotted_line.dart';
 
 class BorderStyleView extends StatefulWidget {
-  final BorderStyles borderStyle;
+  final String borderStyle;
   final Function onChangeBorderStyle;
 
   const BorderStyleView(
@@ -16,7 +14,7 @@ class BorderStyleView extends StatefulWidget {
 }
 
 class _BorderStyleViewState extends State<BorderStyleView> {
-  BorderStyles borderStyle;
+  String borderStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -108,15 +106,15 @@ class _BorderStyleViewState extends State<BorderStyleView> {
       padding: EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: [
-          listItem(BorderStyles.solid),
-          listItem(BorderStyles.dashed),
-          listItem(BorderStyles.dotted),
+          listItem('solid'),
+          listItem('dashed'),
+          listItem('dotted'),
         ],
       ),
     );
   }
 
-  Widget listItem(BorderStyles style) {
+  Widget listItem(String style) {
     return InkWell(
       onTap: () {
         setState(() {
@@ -144,26 +142,4 @@ class _BorderStyleViewState extends State<BorderStyleView> {
     );
   }
 
-  Widget borderStyleWidget(BorderStyles style) {
-    switch (style) {
-      case BorderStyles.solid:
-        return Container(
-          height: 4,
-          color: Colors.white,
-        );
-      case BorderStyles.dashed:
-        return DottedLine(
-          lineThickness: 4,
-          dashLength: 8,
-          dashGapLength: 4,
-          dashColor: Colors.white,
-        );
-      case BorderStyles.dotted:
-        return DottedLine(dashColor: Colors.white, lineThickness: 4);
-    }
-    return Container(
-      height: 4,
-      color: Colors.white,
-    );
-  }
 }
