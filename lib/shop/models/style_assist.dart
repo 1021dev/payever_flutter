@@ -353,6 +353,7 @@ class DecorationAssist {
     return 0;
   }
 
+  // For image
   BorderModel parseBorderFromString(dynamic border) {
     if (border == null || border == false) return null;
 

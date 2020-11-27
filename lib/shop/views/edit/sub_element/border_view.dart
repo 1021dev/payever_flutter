@@ -67,6 +67,11 @@ class _BorderViewState extends State<BorderView> {
                           ? BorderModel()
                           : BorderModel(borderWidth: 0);
                       widget.onUpdateBorderModel(model, true);
+                    } else if (widget.type == 'logo') {
+                      BorderModel model = value
+                          ? BorderModel()
+                          : BorderModel(borderWidth: 0);
+                      widget.onUpdateBorderModel(model, true);
                     }
                   },
                 ),

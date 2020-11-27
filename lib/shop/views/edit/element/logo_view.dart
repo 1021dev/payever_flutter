@@ -43,11 +43,11 @@ class _LogoViewState extends State<LogoView> {
         key: key,
         width: styles.width,
         height: styles.height,
-        // decoration: styles.decoration(widget.child.type),
-        child: Container(
-          alignment: Alignment.center,
-          child: DashedDecorationView(
-            borderModel: borderModel,
+        alignment: Alignment.center,
+        child: DashedDecorationView(
+          borderModel: borderModel,
+          child: Container(
+            decoration: styles.decoration(widget.child.type),
             child: CachedNetworkImage(
               imageUrl: '${globalStateModel.activeShop.picture}',
             ),

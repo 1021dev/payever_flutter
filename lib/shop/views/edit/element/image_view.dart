@@ -99,7 +99,7 @@ class _ImageViewState extends State<ImageView> {
 
   get decoration {
     return BoxDecoration(
-      border: styles.getBorder,
+      border: styles.borderType == 'solid' ? styles.getBorder : null,
       borderRadius: BorderRadius.circular(styles.getBorderRadius(styles.borderRadius)),
       boxShadow: getBoxShadow,
     );

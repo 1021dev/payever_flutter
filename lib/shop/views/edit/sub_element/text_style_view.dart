@@ -1277,10 +1277,15 @@ class _TextStyleViewState extends State<TextStyleView> {
 
   void _updateImageBorderModel(ShopEditScreenState state, BorderModel model, {bool updateApi = true}) {
     Map<String, dynamic> sheets = widget.stylesheets;
-    sheets['border'] = model.border;
     sheets['borderColor'] =  model.borderColor;
-    sheets['borderSize'] =  model.borderWidth;
-    sheets['borderType'] =  model.borderStyle;
+    if (state.selectedChild.type == 'image') {
+      sheets['border'] = model.border;
+      sheets['borderSize'] =  model.borderWidth;
+      sheets['borderType'] =  model.borderStyle;
+    } else if (state.selectedChild.type == 'logo') {
+      sheets['borderWidth'] =  model.borderWidth;
+      sheets['borderStyle'] =  model.borderStyle;
+    }
 
     List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
         selectedId, sheets, state.activeShopPage.stylesheetIds);

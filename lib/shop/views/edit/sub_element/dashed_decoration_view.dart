@@ -31,13 +31,15 @@ class _DashedDecorationViewState extends State<DashedDecorationView> {
   }
 
   List<double> get dashPattern {
+    double borderWidth = widget.borderModel.borderWidth;
+    if (borderWidth < 2) borderWidth = 2;
     switch(widget.borderModel.borderStyle) {
       case 'solid':
-        return [8, 0];
+        return [borderWidth, 0];
       case 'dashed':
-        return [8, 4];
+        return [borderWidth * 2, borderWidth];
       case 'dotted':
-        return [3, 1];
+        return [borderWidth, borderWidth];
     }
     throw('Error: wrong border style');
   }

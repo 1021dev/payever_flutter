@@ -549,6 +549,8 @@ class BaseStyles with BackgroundAssist, StyleAssist, SizeAssist, DecorationAssis
     if (childType == 'button') {
       border2 = getBorder;
       color2 = colorConvert(backgroundColor);
+    } else if (childType == 'logo') {
+      border2 = (borderStyle == 'solid' && borderWidth > 0) ? Border.all(color: colorConvert(borderColor), width: borderWidth) : null;
     }
 
     if (childType == 'shop-cart' || childType == 'social-icon') {
@@ -565,9 +567,6 @@ class BaseStyles with BackgroundAssist, StyleAssist, SizeAssist, DecorationAssis
   }
 
   Border get getBorder {
-    if (borderType != 'solid')
-      return null;
-
     return getBorder1(border);
   }
 
