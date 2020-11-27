@@ -189,7 +189,7 @@ class _BorderViewState extends State<BorderView> {
                   ),
                 ),
                 Text(
-                  '${borderModel.borderWidth.floor()} px',
+                  '${borderModel.borderWidth.round()} px',
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ],

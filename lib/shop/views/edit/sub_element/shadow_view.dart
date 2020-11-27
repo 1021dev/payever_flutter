@@ -36,7 +36,7 @@ class _ShadowViewState extends State<ShadowView> {
     isTablet = GlobalUtils.isTablet(context);
     shadowModel = null;
 
-    if (widget.type == 'button' || widget.type == 'shop-cart') {
+    if (widget.type == 'button' || widget.type == 'shop-cart' || widget.type == 'logo') {
       shadowModel = widget.styles
           .parseShadowFromString(widget.styles.boxShadow, widget.type);
     } else if (widget.type == 'image') {
@@ -87,7 +87,7 @@ class _ShadowViewState extends State<ShadowView> {
                     } else if (widget.type == 'shape') {
                       widget.onUpdateShadow(
                           value ? ShapeShadowModel() : null, true);
-                    } else if (widget.type == 'shop-cart') {
+                    } else if (widget.type == 'shop-cart' || widget.type == 'logo') {
                       widget.onUpdateShadow(
                           value ? CartShadowModel() : null, true);
                     } else if (widget.type == 'social-icon') {
@@ -108,7 +108,7 @@ class _ShadowViewState extends State<ShadowView> {
   Widget get expandedView {
     if (widget.type == 'button') return buttonShadow;
     if (widget.type == 'shape' || widget.type == 'image') return shapeShadow;
-    if (widget.type == 'shop-cart' || widget.type == 'social-icon') return cartShadow;
+    if (widget.type == 'shop-cart' || widget.type == 'social-icon'|| widget.type == 'logo') return cartShadow;
     return Container();
   }
 
@@ -142,7 +142,7 @@ class _ShadowViewState extends State<ShadowView> {
                 width: 50,
                 alignment: Alignment.center,
                 child: Text(
-                  '${shadowModel.blurRadius.toInt()} px',
+                  '${shadowModel.blurRadius.round()} px',
                   style: TextStyle(color: Colors.white, fontSize: 15),
                 ),
               ),
@@ -173,7 +173,7 @@ class _ShadowViewState extends State<ShadowView> {
                 width: 50,
                 alignment: Alignment.center,
                 child: Text(
-                  '${shadowModel.spread.toInt()} px',
+                  '${shadowModel.spread.round()} px',
                   style: TextStyle(color: Colors.white, fontSize: 15),
                 ),
               ),
@@ -210,6 +210,7 @@ class _ShadowViewState extends State<ShadowView> {
   }
 
   Widget get cartShadow {
+    print('shadowModel.blurRadius: ${shadowModel.blurRadius}');
     return Container(
       padding: EdgeInsets.only(left: 16),
       child: Column(
@@ -239,7 +240,7 @@ class _ShadowViewState extends State<ShadowView> {
                 width: 50,
                 alignment: Alignment.center,
                 child: Text(
-                  '${shadowModel.blurRadius.floor()} pt',
+                  '${shadowModel.blurRadius.round()} pt',
                   style: TextStyle(color: Colors.white, fontSize: 15),
                 ),
               ),
@@ -270,7 +271,7 @@ class _ShadowViewState extends State<ShadowView> {
                 width: 50,
                 alignment: Alignment.center,
                 child: Text(
-                  '${shadowModel.shadowOffset.floor()} px',
+                  '${shadowModel.shadowOffset.round()} px',
                   style: TextStyle(color: Colors.white, fontSize: 15),
                 ),
               ),
@@ -332,7 +333,7 @@ class _ShadowViewState extends State<ShadowView> {
                 width: 50,
                 alignment: Alignment.center,
                 child: Text(
-                  '${shadowModel.shadowAngle.floor()}\u00B0',
+                  '${shadowModel.shadowAngle.round()}\u00B0',
                   style: TextStyle(color: Colors.white, fontSize: 15),
                 ),
               ),
@@ -415,8 +416,8 @@ class _ShadowViewState extends State<ShadowView> {
       offsetY = shadowModel.offsetY;
     } else if (widget.type == 'image') {
       blurRadius = shadowModel.shadowBlur;
-      offsetX = shadowModel.getOffSetX.floor().toDouble();
-      offsetY = shadowModel.getOffSetY.floor().toDouble();
+      offsetX = shadowModel.getOffSetX.roundToDouble();
+      offsetY = shadowModel.getOffSetY.roundToDouble();
     }
 
     if (blurRadius == 5 && offsetX == 0 && offsetY == 5)

@@ -1247,6 +1247,11 @@ class _TextStyleViewState extends State<TextStyleView> {
       field = 'filter';
     }
     sheets[field] = model?.shadowString;
+    if (state.selectedChild.type == 'logo') {
+      sheets['dropShadow'] = model?.logoShadowString;
+      sheets['filter'] = model?.logoShadowString;
+      print('logoShadowString: ${model?.logoShadowString}');
+    }
     print('shadowString: ${model?.shadowString}');
     if (state.selectedChild.type == 'image') {
       sheets['shadowAngle'] =  model?.shadowAngle?.toInt();
@@ -1261,7 +1266,7 @@ class _TextStyleViewState extends State<TextStyleView> {
         selectedId, sheets, state.activeShopPage.stylesheetIds);
 
     widget.screenBloc.add(UpdateSectionEvent(
-        sectionId: state.selectedSectionId, effects: effects, updateApi: false/*updateApi*/));
+        sectionId: state.selectedSectionId, effects: effects, updateApi: false));
   }
 
   void _updateBorderRadius(ShopEditScreenState state, double radius, {bool updateApi = true}) {

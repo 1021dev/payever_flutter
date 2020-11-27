@@ -428,7 +428,7 @@ class DecorationAssist {
       int colorB = int.parse(colors[2]);
       double opacity = double.parse(colors[3]);
       color = Color.fromRGBO(colorR, colorG, colorB, opacity);
-    } else if (childType == 'shop-cart') {
+    } else if (childType == 'shop-cart' || childType == 'logo') {
       List<String>attrs0 = shadow.split(' ');
       List<String>attrs = attrs0.map((element) {
         if (element.contains('rgb'))

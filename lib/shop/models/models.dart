@@ -547,10 +547,13 @@ class BaseStyles with BackgroundAssist, StyleAssist, SizeAssist, DecorationAssis
     Color color2;
     double borderRadius2 = getBorderRadius(borderRadius);
     if (childType == 'button') {
-      border2 = getBorder;
       color2 = colorConvert(backgroundColor);
     } else if (childType == 'logo') {
-      border2 = (borderStyle == 'solid' && borderWidth > 0) ? Border.all(color: colorConvert(borderColor), width: borderWidth) : null;
+      border2 = (borderStyle == 'solid' && borderWidth > 0)
+          ? Border.all(color: colorConvert(borderColor), width: borderWidth)
+          : null;
+    } else if (childType == 'image') {
+      border2 = getBorder;
     }
 
     if (childType == 'shop-cart' || childType == 'social-icon') {
@@ -1156,7 +1159,7 @@ class BorderModel {
   get border {
     if (borderWidth == 0)
       return false;
-    return '${borderWidth.floor()}px $borderStyle $borderColor';
+    return '${borderWidth.round()}px $borderStyle $borderColor';
   }
   // solid, dashed, dotted
   BorderModel({
@@ -1200,7 +1203,7 @@ class ShadowModel {
     if (type == 'button') return buttonShadowString;
     if (type == 'shape') return shapeShadowString;
     if (type == 'image') return imageShadowString;
-    if (type == 'shop-cart') return cartShadowString;
+    if (type == 'shop-cart' || type == 'logo') return cartShadowString;
     if (type == 'social-icon') return socialIconShadowString;
 
     throw ('unknown child type error');
@@ -1252,6 +1255,13 @@ class ShadowModel {
     double offsetX = cos(deg) * shadowOffset;
     double offsetY = - sin(deg) * shadowOffset;
     return '${offsetX}pt ${offsetY}pt ${blurRadius}pt 0 rgba(${color.red},${color.green},${color.blue},${shadowOpacity.toStringAsFixed(1)})';
+  }
+
+  get logoShadowString {
+    double deg = shadowAngle * pi / 180;
+    double offsetX = cos(deg) * shadowOffset;
+    double offsetY = - sin(deg) * shadowOffset;
+    return 'drop-shadow(${offsetX}pt ${offsetY}pt ${blurRadius}pt rgba(${color.red},${color.green},${color.blue},${shadowOpacity.toStringAsFixed(1)}))';
   }
 
   get socialIconShadowString {
