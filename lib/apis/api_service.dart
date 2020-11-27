@@ -1912,6 +1912,7 @@ class ApiService {
       File logo,
       String business,
       String blobName,
+      bool isBackground,
       String token,
       ) async {
     print('$TAG - postImageToBuilder()');
@@ -1923,8 +1924,14 @@ class ApiService {
         filename: fileName,
       ),
     });
+    String url;
+    if (isBackground) {
+      url = '$mediaBusiness$business/builder/$blobName';
+    } else {
+      url = '$mediaBusiness$business/builder';
+    }
     dynamic upload = await _client.postForm(
-        '$mediaBusiness$business/builder/$blobName',
+        url,
         body: formData,
         headers: _getHeaders(token, imageUpload: true)
     );

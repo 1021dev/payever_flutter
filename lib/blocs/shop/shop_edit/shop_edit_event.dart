@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:payever/shop/models/models.dart';
 
 abstract class ShopEditScreenEvent extends Equatable {
@@ -79,7 +80,12 @@ class AddNewShopObjectEvent extends ShopEditScreenEvent {
 
 class UploadPhotoEvent extends ShopEditScreenEvent {
   final File image;
-  UploadPhotoEvent({this.image});
+  final bool isBackground;
+
+  UploadPhotoEvent({@required this.image, @required this.isBackground});
+
+  @override
+  List<Object> get props => [this.image, this.isBackground];
 }
 
 class InitBlobNameEvent extends ShopEditScreenEvent {}

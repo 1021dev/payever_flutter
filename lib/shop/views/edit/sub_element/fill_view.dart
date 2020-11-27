@@ -1,15 +1,13 @@
-import 'dart:io';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/block_picker.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/sub_element/upload_image_view.dart';
 import '../../../../theme.dart';
 
 class FillView extends StatefulWidget {
@@ -77,6 +75,7 @@ class _FillViewState extends State<FillView> {
     backgroundImage = styles.backgroundImage;
     backgroundPosition = styles.backgroundPosition;
     backgroundRepeat = styles.backgroundRepeat;
+
     if (widget.hasComplexFill) {
       fillTypes = [
         'Preset',
@@ -451,62 +450,12 @@ class _FillViewState extends State<FillView> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
-              height: 100,
-              child: Row(
-                children: [
-                  Container(
-                    width: 150,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey, width: 1),
-                    ),
-                    child: styles.backgroundImage.isEmpty || styles.isGradientBackGround ? ClipPath(
-                      child: Container(
-                        color: Colors.red[900],
-                      ),
-                      clipper: NoBackGroundFillClipPath(),
-                    ) : CachedNetworkImage(
-                      fit: BoxFit.cover,
-                      imageUrl: styles.backgroundImage,
-                    ),
-                  ),
-                  SizedBox(width: 16,),
-                  PopupMenuButton<OverflowMenuItem>(
-                    child: Container(
-                      width: 100,
-                        child: Text('Change Image', style: TextStyle(color: Colors.blue, fontSize: 15),)),
-                    offset: Offset(0, 100),
-                    onSelected: (OverflowMenuItem item) => item.onTap(),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    color: overlayFilterViewBackground(),
-                    itemBuilder: (BuildContext context) {
-                      return appBarPopUpActions(context)
-                          .map((OverflowMenuItem item) {
-                        return PopupMenuItem<OverflowMenuItem>(
-                          value: item,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  item.title,
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w300,
-                                  ),
-                                ),
-                              ),
-                              item.iconData,
-                            ],
-                          ),
-                        );
-                      }).toList();
-                    },
-                  ),
-                ],
-              ),
-            ),
+            UploadImageView(styles: styles,
+                screenBloc: widget.screenBloc,
+                hasImage: !(styles.backgroundImage.isEmpty ||
+                    styles.isGradientBackGround),
+                isBackground: true,
+                imageUrl: styles.backgroundImage),
             Divider(height: 30, thickness: 0.5,),
             SizedBox(height: 16,),
             ListView.separated(
@@ -657,65 +606,4 @@ class _FillViewState extends State<FillView> {
       ],
     );
   }
-
-  void getImage(int type) async {
-    ImagePicker imagePicker = ImagePicker();
-    var image = await imagePicker.getImage(
-      source: type == 1 ? ImageSource.gallery : ImageSource.camera,
-    );
-    if (image != null) {
-      File croppedFile = await GlobalUtils.cropImage(File(image.path));
-      if (croppedFile != null)
-        widget.screenBloc.add(UploadPhotoEvent(image: croppedFile));
-    }
-  }
-
-  List<OverflowMenuItem> appBarPopUpActions(BuildContext context) {
-    return [
-      OverflowMenuItem(
-        title: 'Take Photo',
-        iconData: Icon(Icons.camera_alt_outlined),
-        onTap: () {
-          getImage(0);
-        },
-      ),
-      OverflowMenuItem(
-        title: 'Choose Photo',
-        iconData: Icon(Icons.photo,),
-        onTap: () {
-          getImage(1);
-        },
-      ),
-      OverflowMenuItem(
-        title: 'From Studio',
-        iconData: Container(
-          width: 24,
-          height: 24,
-          alignment: Alignment.center,
-          child: CachedNetworkImage(
-            imageUrl: 'https://payever.azureedge.net/icons-png/icon-commerceos-studio-64.png',
-          ),
-        ),
-        onTap: () {
-          setState(() {
-
-          });
-        },
-      ),
-    ];
-  }
-}
-
-class OverflowMenuItem {
-  final String title;
-  final Color textColor;
-  final Widget iconData;
-  final Function onTap;
-
-  OverflowMenuItem({
-    this.title,
-    this.iconData,
-    this.textColor = Colors.black,
-    this.onTap,
-  });
 }

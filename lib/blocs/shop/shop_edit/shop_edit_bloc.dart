@@ -54,7 +54,7 @@ class ShopEditScreenBloc
     } else if(event is FetchPageEvent) {
       yield* updatePage(event.response);
     } else if(event is UploadPhotoEvent) {
-      yield *uploadPhoto(event.image);
+      yield *uploadPhoto(event.image, event.isBackground);
     } else if(event is InitBlobNameEvent) {
       yield state.copyWith(blobName: '');
     }
@@ -258,10 +258,10 @@ class ShopEditScreenBloc
         pages: pages, stylesheets: stylesheets, templates: templates);
   }
 
-  Stream<ShopEditScreenState> uploadPhoto(File file) async* {
+  Stream<ShopEditScreenState> uploadPhoto(File file, bool isBackground) async* {
     yield state.copyWith(isUpdating: true);
     String id = Uuid().v4();
-    dynamic response = await api.postImageToBuilder(file, globalStateModel.currentBusiness.id, id, GlobalUtils.activeToken.accessToken);
+    dynamic response = await api.postImageToBuilder(file, globalStateModel.currentBusiness.id, id, isBackground, GlobalUtils.activeToken.accessToken);
     String blobName = response['blobName'];
     yield state.copyWith(isUpdating: false, blobName: blobName);
   }

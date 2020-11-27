@@ -13,6 +13,8 @@ List<Color>textBgColors = [Color.fromRGBO(0, 168, 255, 1),
 enum TextStyleType {
   style,
   text,
+  image,
+  video,
   arrange
 }
 

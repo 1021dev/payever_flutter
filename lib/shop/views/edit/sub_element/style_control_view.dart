@@ -10,6 +10,7 @@ import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/sub_element/fill_view.dart';
 import 'package:payever/shop/views/edit/sub_element/font_view.dart';
+import 'package:payever/shop/views/edit/sub_element/image_style_view.dart';
 import 'package:payever/shop/views/edit/sub_element/paragraph_view.dart';
 import 'package:payever/shop/views/edit/sub_element/shadow_view.dart';
 import 'package:payever/shop/views/edit/sub_element/text_options_view.dart';
@@ -99,14 +100,18 @@ class _StyleControlViewState extends State<StyleControlView> {
     return BlocListener(
       listener: (BuildContext context, ShopEditScreenState state) async {
         if (state.blobName.isNotEmpty) {
-          BackGroundModel model = BackGroundModel(
-              backgroundColor: '',
-              backgroundImage:
-                  'https://payeverproduction.blob.core.windows.net/builder/${state.blobName}',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
-              backgroundSize: '100%');
-          _updateImageFill(state, model);
+          if (state.selectedChild.type == 'image') {
+            _updateImage(state, 'https://payeverproduction.blob.core.windows.net/builder/${state.blobName}');
+          } else {
+            BackGroundModel model = BackGroundModel(
+                backgroundColor: '',
+                backgroundImage:
+                'https://payeverproduction.blob.core.windows.net/builder/${state.blobName}',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: '100%');
+            _updateImageFill(state, model);
+          }
           widget.screenBloc.add(InitBlobNameEvent());
         }
       },
@@ -134,7 +139,7 @@ class _StyleControlViewState extends State<StyleControlView> {
             padding: EdgeInsets.only(left: 16, right: 16, top: 18, bottom: 34),
             child: Column(
               children: [
-                _segmentedControl,
+                _segmentedControl(state),
                 SizedBox(
                   height: 10,
                 ),
@@ -168,7 +173,7 @@ class _StyleControlViewState extends State<StyleControlView> {
     }
   }
 
-  Widget get _segmentedControl {
+  Widget _segmentedControl(ShopEditScreenState state) {
     return Container(
       child: Row(
         children: [
@@ -197,6 +202,26 @@ class _StyleControlViewState extends State<StyleControlView> {
                       padding: EdgeInsets.all(8.0),
                       child: Text(
                         'Text',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white),
+                      )),
+                if (state.selectedChild.type == 'image')
+                  TextStyleType.image: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        'Image',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white),
+                      )),
+                if (state.selectedChild.type == 'video')
+                  TextStyleType.video: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        'Video',
                         style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
@@ -245,10 +270,11 @@ class _StyleControlViewState extends State<StyleControlView> {
         return _styleBody(state);
       case TextStyleType.text:
         return _textBody(state);
-        break;
+      case TextStyleType.image:
+      case TextStyleType.video:
+        return ImageStyleView(styles: styles, screenBloc: widget.screenBloc,);
       case TextStyleType.arrange:
         return _arrangeBody;
-        break;
       default:
         return _styleBody(state);
     }
@@ -1251,6 +1277,16 @@ class _StyleControlViewState extends State<StyleControlView> {
     sheets['backgroundRepeat'] =  backgroundModel.backgroundRepeat;
     sheets['backgroundSize'] =  backgroundModel.backgroundSize;
 
+    List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
+        selectedId, sheets, state.activeShopPage.stylesheetIds);
+
+    widget.screenBloc.add(UpdateSectionEvent(
+        sectionId: state.selectedSectionId, effects: effects));
+  }
+
+  void _updateImage(ShopEditScreenState state, String url) {
+    Map<String, dynamic> sheets = widget.stylesheets;
+    sheets['background'] = url;
     List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
         selectedId, sheets, state.activeShopPage.stylesheetIds);
 
