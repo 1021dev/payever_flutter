@@ -210,7 +210,6 @@ class _ShadowViewState extends State<ShadowView> {
   }
 
   Widget get cartShadow {
-    print('shadowModel.blurRadius: ${shadowModel.blurRadius}');
     return Container(
       padding: EdgeInsets.only(left: 16),
       child: Column(
@@ -302,7 +301,7 @@ class _ShadowViewState extends State<ShadowView> {
                 width: 50,
                 alignment: Alignment.center,
                 child: Text(
-                  '${shadowModel.shadowOpacity} px',
+                  '${shadowModel.shadowOpacity}',
                   style: TextStyle(color: Colors.white, fontSize: 15),
                 ),
               ),

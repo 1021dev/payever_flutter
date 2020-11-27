@@ -1,11 +1,9 @@
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:payever/blocs/bloc.dart';
@@ -21,13 +19,14 @@ class FillView extends StatefulWidget {
   final Function onUpdateColor;
   final Function onUpdateGradientFill;
   final Function onUpdateImageFill;
-
+  final bool hasComplexFill;
   const FillView(
       this.screenBloc,
       {this.stylesheets,
       this.onUpdateColor,
       this.onUpdateGradientFill,
-      this.onUpdateImageFill});
+      this.onUpdateImageFill,
+      this.hasComplexFill = false});
 
   @override
   _FillViewState createState() => _FillViewState();
@@ -55,12 +54,7 @@ class _FillViewState extends State<FillView> {
   int selectedImageSizeIndex = -1;
 
   bool colorOverlay = false;
-  List<String> fillTypes = [
-    'Preset',
-    'Color',
-    'Gradient',
-    'Image',
-  ];
+  List<String> fillTypes;
 
   List<String>imageItemTitles = ['Original Size', 'Stretch', 'Tile', 'Scale to Fill', 'Scale to Fit'];
   List<String>imageItemIcons = ['original-size', 'stretch', 'tile', 'scale-to-fill', 'scale-to-fit'];
@@ -83,7 +77,19 @@ class _FillViewState extends State<FillView> {
     backgroundImage = styles.backgroundImage;
     backgroundPosition = styles.backgroundPosition;
     backgroundRepeat = styles.backgroundRepeat;
-
+    if (widget.hasComplexFill) {
+      fillTypes = [
+        'Preset',
+        'Color',
+        'Gradient',
+        'Image',
+      ];
+    } else {
+      fillTypes = [
+        'Preset',
+        'Color',
+      ];
+    }
     super.initState();
   }
 

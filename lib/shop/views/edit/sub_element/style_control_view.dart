@@ -19,19 +19,19 @@ import 'fill_color_grid_view.dart';
 import 'fill_color_view.dart';
 import 'opacity_view.dart';
 
-class TextStyleView extends StatefulWidget {
+class StyleControlView extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
   final Map<String, dynamic> stylesheets;
 
-  const TextStyleView({this.screenBloc, this.stylesheets});
+  const StyleControlView({this.screenBloc, this.stylesheets});
 
   @override
-  _TextStyleViewState createState() => _TextStyleViewState();
+  _StyleControlViewState createState() => _StyleControlViewState();
 }
 
-class _TextStyleViewState extends State<TextStyleView> {
+class _StyleControlViewState extends State<StyleControlView> {
 
-  _TextStyleViewState();
+  _StyleControlViewState();
 
   bool isPortrait;
   bool isTablet;
@@ -56,9 +56,24 @@ class _TextStyleViewState extends State<TextStyleView> {
   String selectedId;
   TextStyles styles;
 
-  final double ptFontFactor = 30/112;
-  final List<String>hasBorderChildren = ['button', 'image', 'logo'];
-  final List<String>hasShadowChildren = ['button', 'shape', 'image',  'social-icon', 'logo', 'shop-cart'];
+  final double ptFontFactor = 30 / 112;
+  final List<String> hasFillChildren = [
+    'text',
+    'button',
+    'shape',
+    'shop-cart',
+    'social-icon',
+  ];
+  final List<String> hasComplexFillChildren = ['text', 'button', 'shape'];
+  final List<String> hasBorderChildren = ['button', 'image', 'logo'];
+  final List<String> hasShadowChildren = [
+    'button',
+    'shape',
+    'image',
+    'social-icon',
+    'logo',
+    'shop-cart'
+  ];
 
   @override
   void initState() {
@@ -241,27 +256,31 @@ class _TextStyleViewState extends State<TextStyleView> {
   // Style Body
   Widget _styleBody(ShopEditScreenState state) {
     List<Widget> textStyleWidgets = [
-      FillColorGridView(
-        onUpdateColor: (color) => _updateFillColor(state, color),
-        hasText: widget.screenBloc.isTextSelected() || state.selectedChild.type == 'button',
-      ),
-      FillColorView(
-        pickColor: fillColor,
-        styles: styles,
-        colorType: ColorType.backGround,
-        onUpdateColor: (color) => _updateFillColor(state, color),
-        onTapFillView: () {
-          navigateSubView(FillView(
-            widget.screenBloc,
-            stylesheets: widget.stylesheets,
-            onUpdateColor: (Color color)=> _updateFillColor(state, color),
-            onUpdateGradientFill: (GradientModel model, bool updateApi) =>
-                _updateGradientFillColor(state, model, updateApi: updateApi),
-            onUpdateImageFill: (BackGroundModel model) =>
-                _updateImageFill(state, model),
-          ));
-        },
-      ),
+      if (hasFill)
+        FillColorGridView(
+          onUpdateColor: (color) => _updateFillColor(state, color),
+          hasText: widget.screenBloc.isTextSelected() ||
+              state.selectedChild.type == 'button',
+        ),
+      if (hasFill)
+        FillColorView(
+          pickColor: fillColor,
+          styles: styles,
+          colorType: ColorType.backGround,
+          onUpdateColor: (color) => _updateFillColor(state, color),
+          onTapFillView: () {
+            navigateSubView(FillView(
+              widget.screenBloc,
+              stylesheets: widget.stylesheets,
+              hasComplexFill: hasComplexFill,
+              onUpdateColor: (Color color) => _updateFillColor(state, color),
+              onUpdateGradientFill: (GradientModel model, bool updateApi) =>
+                  _updateGradientFillColor(state, model, updateApi: updateApi),
+              onUpdateImageFill: (BackGroundModel model) =>
+                  _updateImageFill(state, model),
+            ));
+          },
+        ),
       if (hasBorder)
         BorderView(
           styles: styles,
@@ -300,6 +319,15 @@ class _TextStyleViewState extends State<TextStyleView> {
       },
     );
   }
+
+  bool get hasFill {
+    return hasFillChildren.contains(widget.screenBloc.state.selectedChild.type);
+  }
+
+  bool get hasComplexFill {
+    return hasComplexFillChildren.contains(widget.screenBloc.state.selectedChild.type);
+  }
+
 
   bool get hasBorder {
     return hasBorderChildren.contains(widget.screenBloc.state.selectedChild.type);
@@ -1247,11 +1275,12 @@ class _TextStyleViewState extends State<TextStyleView> {
       field = 'filter';
     }
     sheets[field] = model?.shadowString;
+
     if (state.selectedChild.type == 'logo') {
       sheets['dropShadow'] = model?.logoShadowString;
       sheets['filter'] = model?.logoShadowString;
-      print('logoShadowString: ${model?.logoShadowString}');
     }
+
     print('shadowString: ${model?.shadowString}');
     if (state.selectedChild.type == 'image') {
       sheets['shadowAngle'] =  model?.shadowAngle?.toInt();
@@ -1266,7 +1295,7 @@ class _TextStyleViewState extends State<TextStyleView> {
         selectedId, sheets, state.activeShopPage.stylesheetIds);
 
     widget.screenBloc.add(UpdateSectionEvent(
-        sectionId: state.selectedSectionId, effects: effects, updateApi: false));
+        sectionId: state.selectedSectionId, effects: effects, updateApi: updateApi));
   }
 
   void _updateBorderRadius(ShopEditScreenState state, double radius, {bool updateApi = true}) {

@@ -9,7 +9,7 @@ import 'package:payever/libraries/utils/px_dp_design.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/models/template_size_state_model.dart';
 import 'package:payever/shop/views/edit/add_object_screen.dart';
-import 'package:payever/shop/views/edit/sub_element/text_style_view.dart';
+import 'package:payever/shop/views/edit/sub_element/style_control_view.dart';
 import 'package:payever/shop/views/edit/template_view.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:provider/provider.dart';
@@ -116,7 +116,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
         barrierColor: Colors.transparent,
         // isScrollControlled: true,
         builder: (builder) {
-          return TextStyleView(
+          return StyleControlView(
             screenBloc: screenBloc,
             stylesheets: state.stylesheets[state.activeShopPage.stylesheetIds.mobile][state.selectedChild.id],
           );
