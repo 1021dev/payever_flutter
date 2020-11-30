@@ -767,6 +767,12 @@ class ShopProductsStyles extends BaseStyles {
   @JsonKey(name: 'productTemplateRows', defaultValue: 0)
   num productTemplateRows;
 
+  @JsonKey(name: 'columnGap', defaultValue: 15)
+  num columnGap;
+
+  @JsonKey(name: 'rowGap', defaultValue: 15)
+  num rowGap;
+
   factory ShopProductsStyles.fromJson(Map<String, dynamic> json) => _$ShopProductsStylesFromJson(json);
   Map<String, dynamic> toJson() => _$ShopProductsStylesToJson(this);
 }

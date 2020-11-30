@@ -107,10 +107,9 @@ class _ShopProductsViewState extends State<ShopProductsView> {
   ShopProductsStyles styleSheet() {
     try {
       Map<String, dynamic> json = widget.stylesheets[widget.child.id];
-     // if (json['display'] != 'none') {
-     //   print('Shop Products ID: ${child.id}');
-     //   print('Shop Products Styles: $json');
-     // }
+     if (json['display'] != 'none') {
+       print('Shop Products Styles: $json');
+     }
      return ShopProductsStyles.fromJson(json);
     } catch (e) {
       return null;

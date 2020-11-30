@@ -12,6 +12,7 @@ import 'package:payever/shop/views/edit/sub_element/fill_view.dart';
 import 'package:payever/shop/views/edit/sub_element/font_view.dart';
 import 'package:payever/shop/views/edit/sub_element/image_style_view.dart';
 import 'package:payever/shop/views/edit/sub_element/paragraph_view.dart';
+import 'package:payever/shop/views/edit/sub_element/products_style_view.dart';
 import 'package:payever/shop/views/edit/sub_element/shadow_view.dart';
 import 'package:payever/shop/views/edit/sub_element/text_options_view.dart';
 import 'package:payever/shop/views/edit/sub_element/video_style_view.dart';
@@ -305,6 +306,12 @@ class _StyleControlViewState extends State<StyleControlView> {
         );
       case TextStyleType.arrange:
         return _arrangeBody;
+      case TextStyleType.products:
+        ShopProductsStyles productsStyles = ShopProductsStyles.fromJson(widget.stylesheets);
+        return ProductsStyleView(
+          styles: productsStyles,
+          onChangeGaps: (value, updateApi) => _updateProductsGaps(state, value, updateApi: updateApi),
+        );
       default:
         return _styleBody(state);
     }
@@ -1378,6 +1385,18 @@ class _StyleControlViewState extends State<StyleControlView> {
         sectionId: state.selectedSectionId, effects: effects));
   }
   // endregion
+
+  void _updateProductsGaps(ShopEditScreenState state, Map<String, dynamic> value, {bool updateApi = true}) {
+    Map<String, dynamic> sheets = widget.stylesheets;
+    sheets['columnGap'] = value['columnGap'];
+    sheets['rowGap'] = value['rowGap'];
+    List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
+        selectedId, sheets, state.activeShopPage.stylesheetIds);
+
+    widget.screenBloc.add(UpdateSectionEvent(
+        sectionId: state.selectedSectionId, effects: effects, updateApi: updateApi));
+  }
+
   void _updateOpacity(ShopEditScreenState state, double value, {bool updateApi = true}) {
     Map<String, dynamic> sheets = widget.stylesheets;
     sheets['opacity'] = num.parse(value.toStringAsFixed(1));
@@ -1495,10 +1514,6 @@ class _StyleControlViewState extends State<StyleControlView> {
   }
   // endregion
 
-  // region Products Body
-
-
-  // endregion
   Map<String, dynamic> getData(ShopEditScreenState state) {
     Template template =  Template.fromJson(state.templates[widget.templateId]);
     Child section = template.children.firstWhere((element) => element.id == state.selectedSectionId);

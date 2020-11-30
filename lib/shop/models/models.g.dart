@@ -1448,7 +1448,9 @@ ShopProductsStyles _$ShopProductsStylesFromJson(Map<String, dynamic> json) {
     ..itemHeight = (json['itemHeight'] as num)?.toDouble() ?? 0
     ..textAlign0 = json['textAlign'] as String ?? 'center'
     ..productTemplateColumns = json['productTemplateColumns'] as num ?? 0
-    ..productTemplateRows = json['productTemplateRows'] as num ?? 0;
+    ..productTemplateRows = json['productTemplateRows'] as num ?? 0
+    ..columnGap = json['columnGap'] as num ?? 15
+    ..rowGap = json['rowGap'] as num ?? 15;
 }
 
 Map<String, dynamic> _$ShopProductsStylesToJson(ShopProductsStyles instance) =>
@@ -1512,6 +1514,8 @@ Map<String, dynamic> _$ShopProductsStylesToJson(ShopProductsStyles instance) =>
       'textAlign': instance.textAlign0,
       'productTemplateColumns': instance.productTemplateColumns,
       'productTemplateRows': instance.productTemplateRows,
+      'columnGap': instance.columnGap,
+      'rowGap': instance.rowGap,
     };
 
 ShopProductDetailStyles _$ShopProductDetailStylesFromJson(
