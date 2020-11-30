@@ -42,6 +42,7 @@ class _VideoViewState extends State<VideoView> {
   Widget build(BuildContext context) {
     styles = styleSheet();
     try {
+      print('Video Data: ${widget.child.data}');
       data = VideoData.fromJson(widget.child.data);
     } catch (e) {}
 
@@ -68,8 +69,16 @@ class _VideoViewState extends State<VideoView> {
   }
 
   get previewView {
+    String preview = '';
+    if (data.preview != null && data.preview.isNotEmpty) {
+      if (data.preview.contains('http'))
+        preview = data.preview;
+      else
+        preview = 'https://payeverproduction.blob.core.windows.net/builder-video/${data.preview}';
+    }
+
     return CachedNetworkImage(
-      imageUrl: data.preview,
+      imageUrl: preview,
       imageBuilder: (context, imageProvider) => Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -160,8 +169,8 @@ class _VideoViewState extends State<VideoView> {
   ImageStyles styleSheet() {
     try {
       Map<String, dynamic> json = widget.stylesheets[widget.child.id];
-//      if (json['display'] != 'none')
-//        print('Video Styles: $json');
+     // if (json['display'] != 'none')
+     //   print('Video Styles: $json');
       return ImageStyles.fromJson(json);
     } catch (e) {
       return null;

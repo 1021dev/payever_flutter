@@ -81,11 +81,11 @@ class AddNewShopObjectEvent extends ShopEditScreenEvent {
 class UploadPhotoEvent extends ShopEditScreenEvent {
   final File image;
   final bool isBackground;
-
-  UploadPhotoEvent({@required this.image, @required this.isBackground});
+  final bool isVideo;
+  UploadPhotoEvent({@required this.image, @required this.isBackground, this.isVideo = false});
 
   @override
-  List<Object> get props => [this.image, this.isBackground];
+  List<Object> get props => [this.image, this.isBackground, this.isVideo];
 }
 
 class InitSelectedSectionEvent extends ShopEditScreenEvent {}

@@ -840,24 +840,8 @@ class SizeAssist {
       Map<String, dynamic> styles,
       String text,
       String templateId) {
-    List<Map<String, dynamic>> effects = [];
-    Map<String, dynamic> payload = {};
-
-    payload['childrenRefs'] = {};
-    payload['children'] = [];
     Map<String, dynamic> data = {'text': text, 'sync': false};
-    payload['id'] = selectedChildId;
-    payload['data'] = data;
-    payload['type'] = 'text';
-    Map<String, dynamic> parent = {'id': sectionId, 'slot': 'host'};
-    payload['parent'] = parent;
-    payload['styles'] = styles;
-
-    Map<String, dynamic> effect = {'payload': payload};
-    effect['target'] = 'templates:$templateId';
-    effect['type'] = 'template:update-element';
-    effects.add(effect);
-    return effects;
+    return getDataPayload(sectionId, selectedChildId, styles, data, 'text', templateId);
   }
 
   List<Map<String, dynamic>> getImageDescriptionPayload(
@@ -866,19 +850,30 @@ class SizeAssist {
       Map<String, dynamic> styles,
       String description,
       String templateId) {
-    List<Map<String, dynamic>> effects = [];
-    Map<String, dynamic> payload = {};
-
-    payload['childrenRefs'] = {};
-    payload['children'] = [];
     Map<String, dynamic> data = {
       'description': description,
       'text': '',
       'sync': false
     };
+    return getDataPayload(sectionId, selectedChildId, styles, data, 'image', templateId);
+  }
+
+  List<Map<String, dynamic>> getDataPayload(
+      String sectionId,
+      String selectedChildId,
+      Map<String, dynamic> styles,
+      Map<String, dynamic> data,
+      String type,
+      String templateId) {
+    List<Map<String, dynamic>> effects = [];
+    Map<String, dynamic> payload = {};
+
+    payload['childrenRefs'] = {};
+    payload['children'] = [];
+
     payload['id'] = selectedChildId;
     payload['data'] = data;
-    payload['type'] = 'image';
+    payload['type'] = type;
     Map<String, dynamic> parent = {'id': sectionId, 'slot': 'host'};
     payload['parent'] = parent;
     payload['styles'] = styles;

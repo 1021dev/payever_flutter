@@ -105,6 +105,8 @@ class _StyleControlViewState extends State<StyleControlView> {
         if (state.blobName.isNotEmpty) {
           if (state.selectedChild.type == 'image') {
             _updateImage(state, 'https://payeverproduction.blob.core.windows.net/builder/${state.blobName}');
+          } else if(state.selectedChild.type == 'video') {
+            _updateVideo(state, 'https://payeverproduction.blob.core.windows.net/builder-video/${state.blobName}');
           } else {
             BackGroundModel model = BackGroundModel(
                 backgroundColor: '',
@@ -274,10 +276,8 @@ class _StyleControlViewState extends State<StyleControlView> {
       case TextStyleType.text:
         return _textBody(state);
       case TextStyleType.image:
-        Template template =  Template.fromJson(state.templates[widget.templateId]);
-        Child section = template.children.firstWhere((element) => element.id == state.selectedSectionId);
-        Child imageChild = section.children.firstWhere((element) => element.id == state.selectedChild.id);
-        ImageData data = ImageData.fromJson(imageChild.data);
+        Map<String, dynamic>map = getData(state);
+        ImageData data = (map == null) ? null : ImageData.fromJson(map);
         return ImageStyleView(
           styles: styles,
           screenBloc: widget.screenBloc,
@@ -285,7 +285,14 @@ class _StyleControlViewState extends State<StyleControlView> {
           onChangeDescription: (value) => _updateImageDescription(state, value),
         );
       case TextStyleType.video:
-        return VideoStyleView();
+        Map<String, dynamic>map = getData(state);
+        VideoData data = (map == null) ? null : VideoData.fromJson(map);
+        return VideoStyleView(
+          styles: styles,
+          screenBloc: widget.screenBloc,
+          data: data,
+          onChangeData: (value) => _updateVideoData(state, value),
+        );
       case TextStyleType.arrange:
         return _arrangeBody;
       default:
@@ -1250,6 +1257,13 @@ class _StyleControlViewState extends State<StyleControlView> {
     );
   }
 
+  Map<String, dynamic> getData(ShopEditScreenState state) {
+    Template template =  Template.fromJson(state.templates[widget.templateId]);
+    Child section = template.children.firstWhere((element) => element.id == state.selectedSectionId);
+    Child child = section.children.firstWhere((element) => element.id == state.selectedChild.id);
+    return child.data;
+  }
+  // region Update Styles
   void _updateFillColor(ShopEditScreenState state, Color color) {
     fillColor = color;
     String newBgColor;
@@ -1307,11 +1321,13 @@ class _StyleControlViewState extends State<StyleControlView> {
         sectionId: state.selectedSectionId, effects: effects));
   }
 
+
+
   void _updateImageDescription(ShopEditScreenState state, String description) {
     print('description: $description');
     Map<String, dynamic> sheets = widget.stylesheets;
     List<Map<String, dynamic>> effects = styles.getImageDescriptionPayload(
-        state.selectedBlockId,
+        state.selectedSectionId,
         selectedId,
         sheets,
         description,
@@ -1321,6 +1337,39 @@ class _StyleControlViewState extends State<StyleControlView> {
         sectionId: state.selectedSectionId, effects: effects));
   }
 
+  // region Video
+  void _updateVideo(ShopEditScreenState state, String url) {
+    Map<String, dynamic> sheets = widget.stylesheets;
+    Map<String, dynamic> map = getData(state);
+    VideoData data = VideoData.fromJson(map);
+    data.source = url;
+    List<Map<String, dynamic>> effects = styles.getDataPayload(
+        state.selectedSectionId,
+        selectedId,
+        sheets,
+        data.toJson(),
+        'video',
+        state.activeShopPage.templateId);
+
+    widget.screenBloc.add(UpdateSectionEvent(
+        sectionId: state.selectedSectionId, effects: effects));
+  }
+
+  void _updateVideoData(ShopEditScreenState state, VideoData data) {
+    print('updateVideoData: ${data.toJson()}');
+    Map<String, dynamic> sheets = widget.stylesheets;
+    List<Map<String, dynamic>> effects = styles.getDataPayload(
+        state.selectedSectionId,
+        selectedId,
+        sheets,
+        data.toJson(),
+        'video',
+        state.activeShopPage.templateId);
+
+    // widget.screenBloc.add(UpdateSectionEvent(
+    //     sectionId: state.selectedSectionId, effects: effects));
+  }
+  // endregion
   void _updateOpacity(ShopEditScreenState state, double value, {bool updateApi = true}) {
     Map<String, dynamic> sheets = widget.stylesheets;
     sheets['opacity'] = num.parse(value.toStringAsFixed(1));
@@ -1429,13 +1478,14 @@ class _StyleControlViewState extends State<StyleControlView> {
 
   void _updateTextProperty(ShopEditScreenState state, String newHtmlText) {
     Map<String, dynamic> sheets = widget.stylesheets;
-    List<Map<String, dynamic>> effects = styles.getUpdateTextPayload(state.selectedBlockId, selectedId, sheets, newHtmlText, state.activeShopPage.templateId);
+    List<Map<String, dynamic>> effects = styles.getUpdateTextPayload(state.selectedSectionId, selectedId, sheets, newHtmlText, state.activeShopPage.templateId);
 
     print('htmlStr: $newHtmlText');
     print('payload: $effects');
     widget.screenBloc.add(UpdateSectionEvent(
         sectionId: state.selectedSectionId, effects: effects));
   }
+  // endregion
 
   void navigateSubView(Widget subview) {
     showModalBottomSheet(

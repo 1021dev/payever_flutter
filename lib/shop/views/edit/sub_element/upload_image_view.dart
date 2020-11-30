@@ -15,21 +15,37 @@ class UploadImageView extends StatefulWidget {
   final bool hasImage;
   final bool isBackground;
   final String imageUrl;
+  final bool isVideo;
 
   const UploadImageView(
       {@required this.styles,
       @required this.screenBloc,
       @required this.hasImage,
       @required this.isBackground,
-      @required this.imageUrl});
+      @required this.imageUrl,
+      this.isVideo = false});
 
   @override
   _UploadImageViewState createState() => _UploadImageViewState();
 }
 
 class _UploadImageViewState extends State<UploadImageView> {
+  String url;
+  String media;
+
+  @override
+  void initState() {
+    url = widget.imageUrl;
+    if (widget.isVideo && widget.hasImage && !url.contains('http'))
+      url = 'https://payeverproduction.blob.core.windows.net/builder-video/${widget.imageUrl}';
+    media = widget.isVideo ? 'Video' : 'Photo';
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal:16.0),
       child: SingleChildScrollView(
@@ -50,7 +66,7 @@ class _UploadImageViewState extends State<UploadImageView> {
                       ),
                       clipper: NoBackGroundFillClipPath(),
                     ) : CachedNetworkImage(
-                      imageUrl: widget.imageUrl,
+                      imageUrl: url,
                       imageBuilder: (context, imageProvider) => Container(
                         decoration: BoxDecoration(
                           color: Colors.transparent /*background.backgroundColor*/,
@@ -75,7 +91,7 @@ class _UploadImageViewState extends State<UploadImageView> {
                   PopupMenuButton<OverflowMenuItem>(
                     child: Container(
                         width: 100,
-                        child: Text(widget.hasImage ? 'Change Image' : 'Upload Image', style: TextStyle(color: Colors.blue, fontSize: 15),)),
+                        child: Text(widget.hasImage ? 'Change $media' : 'Upload $media', style: TextStyle(color: Colors.blue, fontSize: 15),)),
                     offset: Offset(0, 100),
                     onSelected: (OverflowMenuItem item) => item.onTap(),
                     shape: RoundedRectangleBorder(
@@ -117,14 +133,14 @@ class _UploadImageViewState extends State<UploadImageView> {
   List<OverflowMenuItem> appBarPopUpActions(BuildContext context) {
     return [
       OverflowMenuItem(
-        title: 'Take Photo',
+        title: 'Take $media',
         iconData: Icon(Icons.camera_alt_outlined),
         onTap: () {
           getImage(0);
         },
       ),
       OverflowMenuItem(
-        title: 'Choose Photo',
+        title: 'Choose $media',
         iconData: Icon(Icons.photo,),
         onTap: () {
           getImage(1);
@@ -151,16 +167,25 @@ class _UploadImageViewState extends State<UploadImageView> {
 
   void getImage(int type) async {
     ImagePicker imagePicker = ImagePicker();
-    var image = await imagePicker.getImage(
-      source: type == 1 ? ImageSource.gallery : ImageSource.camera,
-    );
-    if (image != null) {
-      File croppedFile = await GlobalUtils.cropImage(File(image.path));
-      if (croppedFile != null)
-        widget.screenBloc.add(UploadPhotoEvent(image: croppedFile, isBackground: widget.isBackground));
+    if (widget.isVideo == true) {
+      var video = await imagePicker.getVideo(
+        source: type == 1 ? ImageSource.gallery : ImageSource.camera,
+      );
+      if (video != null)
+        widget.screenBloc.add(UploadPhotoEvent(
+            image: File(video.path), isBackground: widget.isBackground, isVideo: true));
+    } else {
+      var image = await imagePicker.getImage(
+        source: type == 1 ? ImageSource.gallery : ImageSource.camera,
+      );
+      if (image != null) {
+        File croppedFile = await GlobalUtils.cropImage(File(image.path));
+        if (croppedFile != null)
+          widget.screenBloc.add(UploadPhotoEvent(
+              image: croppedFile, isBackground: widget.isBackground, isVideo: false));
+      }
     }
   }
-
 }
 
 class OverflowMenuItem {

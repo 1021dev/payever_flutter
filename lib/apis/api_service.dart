@@ -79,6 +79,7 @@ class ApiService {
 
   static String mediaBase = Env.media;
   static String mediaBusiness = '$mediaBase/api/image/business/';
+  static String mediaVideoBusiness = '$mediaBase/api/video/business/';
   static String mediaImageEnd = '/images';
   static String mediaProductsEnd = '/products';
 
@@ -1913,7 +1914,7 @@ class ApiService {
       String business,
       String blobName,
       bool isBackground,
-      String token,
+      String token
       ) async {
     print('$TAG - postImageToBuilder()');
 
@@ -1930,6 +1931,29 @@ class ApiService {
     } else {
       url = '$mediaBusiness$business/builder';
     }
+    dynamic upload = await _client.postForm(
+        url,
+        body: formData,
+        headers: _getHeaders(token, imageUpload: true)
+    );
+    return upload;
+  }
+
+  Future<dynamic> postVideoToBuilder(
+      File file,
+      String business,
+      String token
+      ) async {
+    print('$TAG - postImageToBuilder()');
+
+    String fileName = file.path.split('/').last;
+    FormData formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile(
+        file.path,
+        filename: fileName,
+      ),
+    });
+    String url = '$mediaVideoBusiness$business/builder-video';
     dynamic upload = await _client.postForm(
         url,
         body: formData,
