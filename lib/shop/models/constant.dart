@@ -15,7 +15,8 @@ enum TextStyleType {
   text,
   image,
   video,
-  arrange
+  arrange,
+  products,
 }
 
 enum TextFontType {

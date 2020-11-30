@@ -258,6 +258,11 @@ class _SectionViewState extends State<SectionView> {
           sizeChangeable: child.type != 'shop-products',
           isSelected: selectChildId == child.id,
           child: childElement);
+      // childWidget = Container(
+      //     width: width,
+      //     height: height,
+      //     margin: EdgeInsets.only(left: marginLeft, top: marginTop),
+      //     child: childElement);
     }
 
     bool isSection = sectionStyles.length == 1;

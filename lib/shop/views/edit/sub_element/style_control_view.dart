@@ -191,6 +191,16 @@ class _StyleControlViewState extends State<StyleControlView> {
               unselectedColor: Color.fromRGBO(46, 45, 50, 1),
               borderColor: Color.fromRGBO(23, 23, 25, 1),
               children: <TextStyleType, Widget>{
+                if (state.selectedChild.type == 'shop-products')
+                  TextStyleType.products: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        'Products',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white),
+                      )),
                 TextStyleType.style: Container(
                     padding: EdgeInsets.all(8.0),
                     alignment: Alignment.center,
@@ -300,7 +310,7 @@ class _StyleControlViewState extends State<StyleControlView> {
     }
   }
 
-  // Style Body
+  // region Style Body
   Widget _styleBody(ShopEditScreenState state) {
     List<Widget> textStyleWidgets = [
       if (hasFill)
@@ -383,8 +393,9 @@ class _StyleControlViewState extends State<StyleControlView> {
   bool get hasShadow {
     return hasShadowChildren.contains(widget.screenBloc.state.selectedChild.type);
   }
+  // endregion
 
-  // Text Body
+  // region Text Body
   Widget _textBody(ShopEditScreenState state) {
     return Container(
         margin: EdgeInsets.only(top: 16),
@@ -1102,7 +1113,9 @@ class _StyleControlViewState extends State<StyleControlView> {
     );
   }
 
-  // Arrange Body
+  // endregion
+
+  // region Arrange Body
   Widget get _arrangeBody {
     return Container(
         margin: EdgeInsets.only(top: 16),
@@ -1256,13 +1269,8 @@ class _StyleControlViewState extends State<StyleControlView> {
       ),
     );
   }
+  // endregion
 
-  Map<String, dynamic> getData(ShopEditScreenState state) {
-    Template template =  Template.fromJson(state.templates[widget.templateId]);
-    Child section = template.children.firstWhere((element) => element.id == state.selectedSectionId);
-    Child child = section.children.firstWhere((element) => element.id == state.selectedChild.id);
-    return child.data;
-  }
   // region Update Styles
   void _updateFillColor(ShopEditScreenState state, Color color) {
     fillColor = color;
@@ -1366,8 +1374,8 @@ class _StyleControlViewState extends State<StyleControlView> {
         'video',
         state.activeShopPage.templateId);
 
-    // widget.screenBloc.add(UpdateSectionEvent(
-    //     sectionId: state.selectedSectionId, effects: effects));
+    widget.screenBloc.add(UpdateSectionEvent(
+        sectionId: state.selectedSectionId, effects: effects));
   }
   // endregion
   void _updateOpacity(ShopEditScreenState state, double value, {bool updateApi = true}) {
@@ -1486,6 +1494,17 @@ class _StyleControlViewState extends State<StyleControlView> {
         sectionId: state.selectedSectionId, effects: effects));
   }
   // endregion
+
+  // region Products Body
+
+
+  // endregion
+  Map<String, dynamic> getData(ShopEditScreenState state) {
+    Template template =  Template.fromJson(state.templates[widget.templateId]);
+    Child section = template.children.firstWhere((element) => element.id == state.selectedSectionId);
+    Child child = section.children.firstWhere((element) => element.id == state.selectedChild.id);
+    return child.data;
+  }
 
   void navigateSubView(Widget subview) {
     showModalBottomSheet(
