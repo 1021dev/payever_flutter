@@ -187,7 +187,7 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
       preview = state.previews[page.id]['previewUrl'];
     }
     String pageName = page == null ? 'Empty' : page.name;
-    // print('Page Name: $pageName PageID:${page.id} Template Id: ${page.templateId}');
+    print('Page Name: $pageName PageID:${page.id} Template Id: ${page.templateId}');
 
     return Container(
       color: (showName && page.variant == 'front') ? Colors.blue : Colors.transparent,

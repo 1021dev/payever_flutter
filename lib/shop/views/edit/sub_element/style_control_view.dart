@@ -309,6 +309,7 @@ class _StyleControlViewState extends State<StyleControlView> {
       case TextStyleType.products:
         ShopProductsStyles productsStyles = ShopProductsStyles.fromJson(widget.stylesheets);
         return ProductsStyleView(
+          screenBloc: widget.screenBloc,
           styles: productsStyles,
           onChangeGaps: (value, updateApi) => _updateProductsGaps(state, value, updateApi: updateApi),
         );

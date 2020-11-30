@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:payever/blocs/bloc.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/add_product_screen.dart';
 
 class ProductsStyleView extends StatefulWidget {
   final Function onChangeGridColumn;
   final Function onChangeGaps;
   final ShopProductsStyles styles;
-
-  const ProductsStyleView({this.styles, this.onChangeGridColumn, this.onChangeGaps});
+  final ShopEditScreenBloc screenBloc;
+  const ProductsStyleView({this.screenBloc, this.styles, this.onChangeGridColumn, this.onChangeGaps});
 
   @override
   _ProductsStyleViewState createState() => _ProductsStyleViewState();
@@ -40,7 +43,12 @@ class _ProductsStyleViewState extends State<ProductsStyleView> {
         child: Column(
           children: [
             InkWell(
-              onTap: () {},
+              onTap: () {
+                Navigator.push(context, PageTransition(
+                  child: AddProductsScreen(widget.screenBloc),
+                  type: PageTransitionType.fade,
+                ));
+              },
               child: Container(
                 alignment: Alignment.center,
                 height: 40,

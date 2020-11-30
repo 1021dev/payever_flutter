@@ -1,3 +1,4 @@
+import 'package:payever/products/models/models.dart';
 import 'package:payever/shop/models/models.dart';
 
 class ShopEditScreenState {
@@ -5,6 +6,7 @@ class ShopEditScreenState {
   final bool isUpdating;
   final ShopDetailModel activeShop;
   final ThemeModel activeTheme;
+  final Map<String, dynamic>contextSchemas;
   final Map<String, dynamic> previews;
   final List<ShopPage> pages;
   final Map<String, dynamic> stylesheets;
@@ -16,6 +18,7 @@ class ShopEditScreenState {
   final Child selectedChild;
   final ShopPage activeShopPage;
   final String blobName;
+  final List<ProductsModel> products;
 
   ShopEditScreenState({
     this.activeShopPage,
@@ -23,6 +26,7 @@ class ShopEditScreenState {
     this.isUpdating = false,
     this.activeShop,
     this.activeTheme,
+    this.contextSchemas = const {},
     this.previews = const {},
     this.pages = const [],
     this.stylesheets = const {},
@@ -33,6 +37,7 @@ class ShopEditScreenState {
     this.selectedBlock,
     this.selectedChild,
     this.blobName = '',
+    this.products = const [],
   });
 
   List<Object> get props => [
@@ -41,6 +46,7 @@ class ShopEditScreenState {
     this.isUpdating,
     this.activeShop,
     this.activeTheme,
+    this.contextSchemas,
     this.previews,
     this.pages,
     this.stylesheets,
@@ -51,6 +57,7 @@ class ShopEditScreenState {
     this.selectedChild,
     this.selectedBlockId,
     this.blobName,
+    this.products,
   ];
 
   ShopEditScreenState copyWith({
@@ -58,6 +65,7 @@ class ShopEditScreenState {
     bool isUpdating,
     ShopDetailModel activeShop,
     ThemeModel activeTheme,
+    Map<String, dynamic>contextSchemas,
     Map<String, dynamic>previews,
     List<ShopPage> pages,
     Map<String, dynamic> stylesheets,
@@ -69,12 +77,14 @@ class ShopEditScreenState {
     ShopPage activeShopPage,
     String selectedBlockId,
     String blobName,
+    List<ProductsModel> products,
   }) {
     return ShopEditScreenState(
       isLoading: isLoading ?? this.isLoading,
       isUpdating: isUpdating ?? this.isUpdating,
       activeShop: activeShop ?? this.activeShop,
       activeTheme: activeTheme ?? this.activeTheme,
+      contextSchemas: contextSchemas ?? this.contextSchemas,
       previews: previews ?? this.previews,
       pages: pages ?? this.pages,
       stylesheets: stylesheets ?? this.stylesheets,
@@ -86,6 +96,7 @@ class ShopEditScreenState {
       selectedBlock: selectedBlock ?? this.selectedBlock,
       selectedChild: selectedChild ?? this.selectedChild,
       blobName: blobName ?? this.blobName,
+      products: products ?? this.products,
     );
   }
 
@@ -100,6 +111,7 @@ class ShopEditScreenState {
       isUpdating: this.isUpdating,
       activeShop: this.activeShop,
       activeTheme: this.activeTheme,
+      contextSchemas: this.contextSchemas,
       previews: this.previews,
       pages: this.pages,
       stylesheets: this.stylesheets,
@@ -107,6 +119,7 @@ class ShopEditScreenState {
       actions: this.actions,
       activeShopPage: this.activeShopPage,
       blobName: this.blobName,
+      products: this.products,
       selectedSectionId: selectedSectionId ?? this.selectedSectionId,
       selectedBlockId: selectedBlockId ?? this.selectedBlockId,
       selectedBlock: selectedBlock,

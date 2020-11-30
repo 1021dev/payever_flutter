@@ -29,16 +29,6 @@ import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/theme.dart';
 
-bool _isPortrait;
-bool _isTablet;
-
-List<String> productTypes = [
-  'Service',
-  'Digital',
-  'Physical',
-];
-final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
-
 // ignore: must_be_immutable
 class ProductDetailScreen extends StatefulWidget {
 
@@ -59,6 +49,16 @@ class ProductDetailScreen extends StatefulWidget {
 }
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
+
+  bool _isPortrait;
+  bool _isTablet;
+
+  List<String> productTypes = [
+    'Service',
+    'Digital',
+    'Physical',
+  ];
+
   String imageBase = Env.storage + '/images/';
   TextEditingController categoryController;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();

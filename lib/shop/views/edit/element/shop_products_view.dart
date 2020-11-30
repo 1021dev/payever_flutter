@@ -7,10 +7,11 @@ import '../../../../theme.dart';
 class ShopProductsView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
+  final Map<String, dynamic> contextSchemas;
 
   const ShopProductsView(
       {this.child,
-      this.stylesheets});
+      this.stylesheets, this.contextSchemas});
 
   @override
   _ShopProductsViewState createState() =>
@@ -18,13 +19,20 @@ class ShopProductsView extends StatefulWidget {
 }
 
 class _ShopProductsViewState extends State<ShopProductsView> {
-  ShopProductsStyles styles;
-
   _ShopProductsViewState();
+
+  ShopProductsStyles styles;
+  ContextSchema schema;
+
 
   @override
   Widget build(BuildContext context) {
     styles = styleSheet();
+    if (widget.contextSchemas != null && widget.contextSchemas.isNotEmpty) {
+      schema = ContextSchema.fromJson(widget.contextSchemas[widget.child.id]);
+    }
+
+    print('Shop Products Data: ${widget.child.toJson()}');
     return body;
   }
 

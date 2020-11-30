@@ -8,6 +8,7 @@ import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
+import 'package:payever/products/models/models.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:uuid/uuid.dart';
 import 'shop_edit.dart';
@@ -62,6 +63,8 @@ class ShopEditScreenBloc
       yield *uploadPhoto(event.image, event.isBackground, event.isVideo);
     } else if(event is InitBlobNameEvent) {
       yield state.copyWith(blobName: '');
+    } else if(event is FetchProductsInitEvent) {
+      yield* fetchProducts();
     }
   }
 
@@ -84,6 +87,7 @@ class ShopEditScreenBloc
     Map<String, dynamic> previews = {};
     List<ShopPage> pages = [];
     Map<String, dynamic> templates = {};
+    Map<String, dynamic> contextSchemas = {};
     List<Action>actions = [];
     Map<String, dynamic> stylesheets = {};
     dynamic response =
@@ -104,6 +108,13 @@ class ShopEditScreenBloc
     if (response1 is DioError) {
       yield state.copyWith(isLoading: false);
     } else {
+      // Context
+      // contextSchemas Map /{method: "getByIds",
+      // params: [["cd4117e3-e6da-45b2-a5eb-932d019a8fff"]],
+      // service: "products"}
+      if (response1['contextSchemas'] != null && response1['contextSchemas'] is Map) {
+        contextSchemas = response1['contextSchemas'];
+      }
       // Pages
       if (response1['pages'] != null && response1['pages'] is Map) {
         Map<String, dynamic> obj = response1['pages'];
@@ -139,6 +150,7 @@ class ShopEditScreenBloc
     }
 
     yield state.copyWith(
+        contextSchemas: contextSchemas,
         previews: previews,
         pages: pages,
         stylesheets: stylesheets,
@@ -274,6 +286,33 @@ class ShopEditScreenBloc
 
     String blobName = response['blobName'];
     yield state.copyWith(isUpdating: false, blobName: blobName);
+  }
+
+  Stream<ShopEditScreenState> fetchProducts() async* {
+    yield state.copyWith(isLoading: true);
+    Map<String, dynamic> body = {
+      "query":
+          "{getProducts(\n        businessUuid: \"d0de55b4-5a2a-41a9-a0de-f38256f541ee\",\n        \n        pageNumber: 1,\n        paginationLimit: 100,\n      ) {\n        products {\n          images\n          _id\n          title\n          description\n          price\n          salePrice\n          currency\n          active\n          categories { id title }\n        }\n      }}"
+    };
+    dynamic response =
+        await api.getProducts(GlobalUtils.activeToken.accessToken, body);
+
+    List<ProductsModel> products = [];
+    if (response is Map) {
+      dynamic data = response['data'];
+      if (data != null) {
+        dynamic getProducts = data['getProducts'];
+        if (getProducts != null) {
+          List productsObj = getProducts['products'];
+          if (productsObj != null) {
+            productsObj.forEach((element) {
+              products.add(ProductsModel.toMap(element));
+            });
+          }
+        }
+      }
+    }
+    yield state.copyWith(isLoading: false, products: products);
   }
 
   String htmlText() {

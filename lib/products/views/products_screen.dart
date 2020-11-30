@@ -31,11 +31,6 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
 
-bool _isPortrait;
-bool _isTablet;
-
-final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
-
 class ProductsInitScreen extends StatelessWidget {
   final ProductsModel productModel;
   final DashboardScreenBloc dashboardScreenBloc;
@@ -55,6 +50,7 @@ class ProductsInitScreen extends StatelessWidget {
 }
 
 class ProductsScreen extends StatefulWidget {
+
   final ProductsModel productModel;
   final DashboardScreenBloc dashboardScreenBloc;
   final GlobalStateModel globalStateModel;
@@ -70,6 +66,10 @@ class ProductsScreen extends StatefulWidget {
 }
 
 class _ProductsScreenState extends State<ProductsScreen> {
+  bool _isPortrait;
+  bool _isTablet;
+
+  final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
 
   InAppWebViewController webView;
   double progress = 0;

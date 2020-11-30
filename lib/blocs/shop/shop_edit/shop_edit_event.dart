@@ -90,3 +90,5 @@ class UploadPhotoEvent extends ShopEditScreenEvent {
 
 class InitSelectedSectionEvent extends ShopEditScreenEvent {}
 class InitBlobNameEvent extends ShopEditScreenEvent {}
+
+class FetchProductsInitEvent extends ShopEditScreenEvent {}

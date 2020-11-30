@@ -272,6 +272,7 @@ class Child {
   @JsonKey(name: 'styles')          Map<String, dynamic> styles;
   @JsonKey(name: 'type')            String type;
   @JsonKey(name: 'data')            dynamic data;
+  @JsonKey(name: 'params')          dynamic params;
 
   @JsonKey(ignore: true)
   List<Child> blocks = [];
@@ -283,6 +284,21 @@ class Child {
   Map<String, dynamic> toJson() => _$ChildToJson(this);
 }
 
+@JsonSerializable()
+class ContextSchema {
+  ContextSchema();
+
+  @JsonKey(name: 'method')
+  String method;
+  @JsonKey(name: 'params', defaultValue: [])
+  dynamic params;
+  @JsonKey(name: 'service')
+  String service;
+
+  factory ContextSchema.fromJson(Map<String, dynamic> json) =>
+      _$ContextSchemaFromJson(json);
+  Map<String, dynamic> toJson() => _$ContextSchemaToJson(this);
+}
 
 @JsonSerializable()
 class Context {

@@ -360,7 +360,8 @@ Child _$ChildFromJson(Map<String, dynamic> json) {
         : Parent.fromJson(json['parent'] as Map<String, dynamic>)
     ..styles = json['styles'] as Map<String, dynamic>
     ..type = json['type'] as String
-    ..data = json['data'];
+    ..data = json['data']
+    ..params = json['params'];
 }
 
 Map<String, dynamic> _$ChildToJson(Child instance) => <String, dynamic>{
@@ -373,6 +374,21 @@ Map<String, dynamic> _$ChildToJson(Child instance) => <String, dynamic>{
       'styles': instance.styles,
       'type': instance.type,
       'data': instance.data,
+      'params': instance.params,
+    };
+
+ContextSchema _$ContextSchemaFromJson(Map<String, dynamic> json) {
+  return ContextSchema()
+    ..method = json['method'] as String
+    ..params = json['params'] ?? []
+    ..service = json['service'] as String;
+}
+
+Map<String, dynamic> _$ContextSchemaToJson(ContextSchema instance) =>
+    <String, dynamic>{
+      'method': instance.method,
+      'params': instance.params,
+      'service': instance.service,
     };
 
 Context _$ContextFromJson(Map<String, dynamic> json) {

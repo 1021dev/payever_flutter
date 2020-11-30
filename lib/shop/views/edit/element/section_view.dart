@@ -83,6 +83,7 @@ class _SectionViewState extends State<SectionView> {
 
   @override
   Widget build(BuildContext context) {
+    print('Device ID: ${widget.deviceTypeId}');
     sectionStyles = getSectionStyles(sectionId);
     widgetHeight = sectionStyles.height;
     activeThemeId = Provider.of<GlobalStateModel>(context, listen: false)
@@ -437,6 +438,7 @@ class _SectionViewState extends State<SectionView> {
         childView = ShopProductsView(
           child: child,
           stylesheets: stylesheets,
+          contextSchemas: state.activeShopPage?.contextId == null ? null : state.contextSchemas[state.activeShopPage.contextId],
         );
         break;
       case 'shop-product-details':
