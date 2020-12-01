@@ -1512,9 +1512,13 @@ class _StyleControlViewState extends State<StyleControlView> {
   void _updateTextProperty(ShopEditScreenState state, String newHtmlText) {
     Map<String, dynamic> sheets = widget.stylesheets;
     Map<String, dynamic> data = {'text': newHtmlText, 'sync': false};
-    List<Map<String, dynamic>> effects = styles.getUpdateDataPayload(state.selectedSectionId, selectedId, sheets, data, 'text', state.activeShopPage.templateId);
-
-    print('htmlStr: $newHtmlText');
+    List<Map<String, dynamic>> effects = styles.getUpdateDataPayload(
+        state.selectedSectionId,
+        selectedId,
+        sheets,
+        data,
+        'text',
+        state.activeShopPage.templateId);
     print('payload: $effects');
     widget.screenBloc.add(UpdateSectionEvent(
         sectionId: state.selectedSectionId, effects: effects));

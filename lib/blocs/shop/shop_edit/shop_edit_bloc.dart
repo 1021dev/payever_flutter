@@ -63,7 +63,7 @@ class ShopEditScreenBloc
       yield *uploadPhoto(event.image, event.isBackground, event.isVideo);
     } else if(event is InitBlobNameEvent) {
       yield state.copyWith(blobName: '');
-    } else if(event is FetchProductsInitEvent) {
+    } else if(event is FetchProductsEvent) {
       yield* fetchProducts();
     }
   }
@@ -294,6 +294,7 @@ class ShopEditScreenBloc
       "query":
           "{getProducts(\n        businessUuid: \"d0de55b4-5a2a-41a9-a0de-f38256f541ee\",\n        \n        pageNumber: 1,\n        paginationLimit: 100,\n      ) {\n        products {\n          images\n          _id\n          title\n          description\n          price\n          salePrice\n          currency\n          active\n          categories { id title }\n        }\n      }}"
     };
+
     dynamic response =
         await api.getProducts(GlobalUtils.activeToken.accessToken, body);
 

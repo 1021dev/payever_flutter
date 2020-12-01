@@ -9,12 +9,13 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/products/models/models.dart';
 import 'package:payever/products/widgets/product_item_image_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:payever/shop/models/models.dart';
 import '../../../theme.dart';
 
 class AddProductsScreen extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
-
-  AddProductsScreen(this.screenBloc);
+  final ShopProductsStyles styles;
+  AddProductsScreen(this.screenBloc, this.styles);
 
   @override
   createState() => _AddProductsScreenState();
@@ -35,7 +36,7 @@ class _AddProductsScreenState extends State<AddProductsScreen> {
 
   @override
   void initState() {
-    widget.screenBloc.add(FetchProductsInitEvent());
+    widget.screenBloc.add(FetchProductsEvent());
     super.initState();
   }
 
@@ -186,7 +187,15 @@ class _AddProductsScreenState extends State<AddProductsScreen> {
                     child: Container(
                       child: InkWell(
                         onTap: () {
-                          // onTap(product);
+                          String contextId = state.activeShopPage.contextId;
+                          print('businessUuid: ${productsModel.toDictionary()} contextId:$contextId');
+                          Map<String, dynamic> payloadData = {'method': 'getByIds',
+                            'params': [[productsModel.id]],
+                            'service': 'products'};
+                          List<Map<String, dynamic>> effects = widget.styles.getUpdateContextSchemePayload(
+                              state.selectedChild.id, contextId, payloadData);
+                          widget.screenBloc.add(UpdateSectionEvent(
+                              sectionId: state.selectedSectionId, effects: effects));
                         },
                         child: Center(
                             child: Text(

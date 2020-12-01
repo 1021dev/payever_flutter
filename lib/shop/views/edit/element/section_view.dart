@@ -438,7 +438,9 @@ class _SectionViewState extends State<SectionView> {
         childView = ShopProductsView(
           child: child,
           stylesheets: stylesheets,
-          contextSchemas: state.activeShopPage?.contextId == null ? null : state.contextSchemas[state.activeShopPage.contextId],
+          contextSchemas: state.activeShopPage?.contextId == null
+              ? null
+              : state.contextSchemas[state.activeShopPage.contextId],
         );
         break;
       case 'shop-product-details':
@@ -799,7 +801,14 @@ class _SectionViewState extends State<SectionView> {
     Map<String, dynamic> sheets = state.stylesheets[deviceTypeId][selectChildId];
     TextStyles styles = TextStyles.fromJson(sheets);
     String htmlStr = styles.encodeHtmlString(widget.screenBloc.htmlText(), newText: text);
-    List<Map<String, dynamic>> effects = styles.getUpdateTextPayload(section.id, selectChildId, sheets, htmlStr, state.activeShopPage.templateId);
+    Map<String, dynamic> data = {'text': htmlStr, 'sync': false};
+    List<Map<String, dynamic>> effects = styles.getUpdateDataPayload(
+        state.selectedSectionId,
+        selectChildId,
+        sheets,
+        data,
+        'text',
+        state.activeShopPage.templateId);
     print('payload: $effects');
     widget.screenBloc.add(UpdateSectionEvent(
         sectionId: state.selectedSectionId, effects: effects));

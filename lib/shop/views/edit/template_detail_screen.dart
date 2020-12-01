@@ -43,6 +43,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
 
   @override
   void initState() {
+    print('Active page: ${widget.shopPage.id}');
     screenBloc.add(ActiveShopPageEvent(activeShopPage: widget.shopPage));
     super.initState();
   }

@@ -45,7 +45,7 @@ class _ProductsStyleViewState extends State<ProductsStyleView> {
             InkWell(
               onTap: () {
                 Navigator.push(context, PageTransition(
-                  child: AddProductsScreen(widget.screenBloc),
+                  child: AddProductsScreen(widget.screenBloc, widget.styles),
                   type: PageTransitionType.fade,
                 ));
               },
