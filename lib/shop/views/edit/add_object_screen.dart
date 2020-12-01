@@ -7,6 +7,7 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/models/template_size_state_model.dart';
 import 'package:payever/shop/views/edit/appbar/add_object_appbar.dart';
+import 'package:payever/shop/views/edit/table_category_view.dart';
 import 'package:shape_of_view/shape_of_view.dart';
 import '../../../theme.dart';
 
@@ -24,6 +25,7 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
   bool isPortrait;
   bool isTablet;
   int selectedItemIndex = 0;
+  int selectedCategory = 0;
   final ShopEditScreenBloc screenBloc;
 
   List<String> objectTitles = [
@@ -116,7 +118,9 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
       builder: (BuildContext context, state) {
         return Scaffold(
             appBar: AddObjectAppbar(onSelected: (index) {
-
+              setState(() {
+                selectedCategory = index;
+              });
             }),
             backgroundColor: Colors.grey[800],
             body: SafeArea(bottom: false, child: _body()));
@@ -124,6 +128,32 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
     );
   }
 
+  Widget _body() {
+    switch (selectedCategory) {
+      case 0:
+        return TableCategoryView(onCreateTable: (type) {
+          ShopObject shopObject = ShopObject(name: '$type', type: 'table');
+          Navigator.pop(context, shopObject);
+        },);
+      case 1:
+        return _objectView();
+      default:
+        return _objectView();
+    }
+  }
+
+  Widget _tableView() {
+    return Container();
+  }
+
+  Widget _objectView() {
+    return Column(
+      children: [
+        _secondAppbar(),
+        _gridViewBody(),
+      ],
+    );
+  }
   Widget _secondAppbar() {
     return Container(
       height: 50,
@@ -154,15 +184,6 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _body() {
-    return Column(
-      children: [
-        _secondAppbar(),
-        _gridViewBody(),
-      ],
     );
   }
 

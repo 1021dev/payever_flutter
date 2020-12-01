@@ -18,6 +18,7 @@ import 'package:payever/shop/views/edit/element/shop_product_category_view.dart'
 import 'package:payever/shop/views/edit/element/shop_product_detail_view.dart';
 import 'package:payever/shop/views/edit/element/shop_products_view.dart';
 import 'package:payever/shop/views/edit/element/social_icon_view.dart';
+import 'package:payever/shop/views/edit/element/table_view.dart';
 import 'package:payever/shop/views/edit/element/text_view.dart';
 import 'package:payever/shop/views/edit/element/video_view.dart';
 import 'package:payever/shop/views/edit/element/widget/background_view.dart';
@@ -83,7 +84,6 @@ class _SectionViewState extends State<SectionView> {
 
   @override
   Widget build(BuildContext context) {
-    print('Device ID: ${widget.deviceTypeId}');
     sectionStyles = getSectionStyles(sectionId);
     widgetHeight = sectionStyles.height;
     activeThemeId = Provider.of<GlobalStateModel>(context, listen: false)
@@ -248,7 +248,7 @@ class _SectionViewState extends State<SectionView> {
     }
 
     Widget childWidget;
-    if (child.type == 'shop-category'|| child.type == 'shop-product-details') {
+    if (child.type == 'shop-category'|| child.type == 'shop-product-details'|| child.type == 'table') {
       childWidget = childElement;
     } else {
       childWidget = ResizeableView(
@@ -259,11 +259,6 @@ class _SectionViewState extends State<SectionView> {
           sizeChangeable: child.type != 'shop-products',
           isSelected: selectChildId == child.id,
           child: childElement);
-      // childWidget = Container(
-      //     width: width,
-      //     height: height,
-      //     margin: EdgeInsets.only(left: marginLeft, top: marginTop),
-      //     child: childElement);
     }
 
     bool isSection = sectionStyles.length == 1;
@@ -457,6 +452,12 @@ class _SectionViewState extends State<SectionView> {
         break;
       case 'social-icon':
         childView = SocialIconView(
+          child: child,
+          stylesheets: stylesheets,
+        );
+        break;
+      case 'table':
+        childView = TableView(
           child: child,
           stylesheets: stylesheets,
         );

@@ -231,13 +231,13 @@ class ShopEditScreenBloc
         selectedSectionId: event.sectionId, stylesheets: stylesheets, templates: templates);
 
     if (!event.updateApi) return;
-    api.shopEditAction(token, themeId, body).then((response) {
-      if (response is DioError) {
-        Fluttertoast.showToast(msg: response.error);
-      } else {
-        // _fetchPage();
-      }
-    });
+    // api.shopEditAction(token, themeId, body).then((response) {
+    //   if (response is DioError) {
+    //     Fluttertoast.showToast(msg: response.error);
+    //   } else {
+    //     // _fetchPage();
+    //   }
+    // });
   }
 
   _fetchPage() {

@@ -1025,6 +1025,7 @@ class ShopObject {
       case 'shop-products':
       case 'shop-product-details':
       case 'shop-category':
+      case 'table':
         return {'text': ''};
       case 'image':
         return {'src': '', 'description': '', 'text': ''};
@@ -1105,6 +1106,12 @@ class ShopObject {
         return {
           'backgroundColor': '#ffffff',
           'height': null,
+          'width': null,
+        };
+      case 'table':
+        return {
+          'backgroundColor': '#ffffff',
+          'height': 300,
           'width': null,
         };
     }
