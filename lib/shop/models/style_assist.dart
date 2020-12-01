@@ -2,7 +2,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart';
 import 'package:payever/commons/utils/common_utils.dart';
-import 'package:payever/libraries/utils/px_dp.dart';
 import 'package:uuid/uuid.dart';
 import '../../theme.dart';
 import 'constant.dart';
@@ -619,6 +618,7 @@ class DecorationAssist {
 
 class SizeAssist {
   final double relativeError = 2;
+  // region Margin
   double getWidth(dynamic width0) {
     if (width0 == '100%') return Measurements.width /*double.infinity*/;
     if (width0 is num) {
@@ -668,7 +668,11 @@ class SizeAssist {
       return margin * GlobalUtils.shopBuilderWidthFactor;
     }
   }
+  // endregion
 
+  // region Payload
+
+  // region Resizing Object
   List<Map<String, dynamic>> getPayload(Map<String, dynamic> stylesheets,
       Child section, Child selectedChild, ChildSize newSize, String deviceTypeId, String templateId) {
     List<Map<String, dynamic>>effects = [];
@@ -771,126 +775,6 @@ class SizeAssist {
     };
     effects.insert(0, effect);
     return effects;
-  }
-
-  List<Map<String, dynamic>> getAddNewObjectPayload(ShopObject shopObject, String sectionId, StyleSheetIds styleSheetIds, String templateId) {
-    List<Map<String, dynamic>> effects = [];
-    Map<String, dynamic>element = {};
-    String elementId = Uuid().v4();
-    element['children'] = [];
-    element['data'] = shopObject.data;
-    element['id'] = elementId;
-    element['type'] = shopObject.type;
-
-    Map<String, dynamic>payload = {'element': element, 'to': sectionId};
-
-    Map<String, dynamic>effect = {'payload':payload};
-    effect['target'] = 'templates:$templateId';
-    effect['type'] = 'template:append-element';
-    effects.add(effect);
-
-    // Display None for Desktop and Tablet
-    Map<String, dynamic>payload1 = {elementId: {'display': 'none'}};
-    Map<String, dynamic>effect1 = {'payload':payload1};
-    effect1['target'] = 'stylesheets:${styleSheetIds.desktop}';
-    effect1['type'] = 'stylesheet:update';
-    effects.add(effect1);
-
-    Map<String, dynamic>effect2 = {'payload':payload1};
-    effect2['target'] = 'stylesheets:${styleSheetIds.tablet}';
-    effect2['type'] = 'stylesheet:update';
-    effects.add(effect2);
-
-
-    Map<String, dynamic>payload3 = {elementId: shopObject.styles};
-    Map<String, dynamic>effect3 = {'payload':payload3};
-    effect3['target'] = 'stylesheets:${styleSheetIds.mobile}';
-    effect3['type'] = 'stylesheet:update';
-    effects.add(effect3);
-
-    // payload: null
-    // target: "contextSchemas:d3cfbd81-a677-40a5-84cb-66e980d55e5f"
-    // type: "context-schema:update"
-    return effects;
-  }
-
-  List<Map<String, dynamic>> getDeleteObject(String selectedChildId, String templateId) {
-    List<Map<String, dynamic>> effects = [];
-    Map<String, dynamic>effect = {};
-    effect['payload'] = selectedChildId;
-    effect['target'] = 'templates:$templateId';
-    effect['type'] = 'template:delete-element';
-    effects.add(effect);
-    return effects;
-  }
-
-  List<Map<String, dynamic>> getUpdateTextStylePayload(String selectedChildId, Map<String, dynamic>styles, StyleSheetIds styleSheetIds) {
-    List<Map<String, dynamic>> effects = [];
-    Map<String, dynamic>payload = {selectedChildId: styles};
-    Map<String, dynamic>effect = {'payload':payload};
-    effect['target'] = 'stylesheets:${styleSheetIds.mobile}';
-    effect['type'] = 'stylesheet:update';
-    effects.add(effect);
-    return effects;
-  }
-
-  List<Map<String, dynamic>> getUpdateTextPayload(
-      String sectionId,
-      String selectedChildId,
-      Map<String, dynamic> styles,
-      String text,
-      String templateId) {
-    Map<String, dynamic> data = {'text': text, 'sync': false};
-    return getDataPayload(sectionId, selectedChildId, styles, data, 'text', templateId);
-  }
-
-  List<Map<String, dynamic>> getImageDescriptionPayload(
-      String sectionId,
-      String selectedChildId,
-      Map<String, dynamic> styles,
-      String description,
-      String templateId) {
-    Map<String, dynamic> data = {
-      'description': description,
-      'text': '',
-      'sync': false
-    };
-    return getDataPayload(sectionId, selectedChildId, styles, data, 'image', templateId);
-  }
-
-  List<Map<String, dynamic>> getDataPayload(
-      String sectionId,
-      String selectedChildId,
-      Map<String, dynamic> styles,
-      Map<String, dynamic> data,
-      String type,
-      String templateId) {
-    List<Map<String, dynamic>> effects = [];
-    Map<String, dynamic> payload = {};
-
-    payload['childrenRefs'] = {};
-    payload['children'] = [];
-
-    payload['id'] = selectedChildId;
-    payload['data'] = data;
-    payload['type'] = type;
-    Map<String, dynamic> parent = {'id': sectionId, 'slot': 'host'};
-    payload['parent'] = parent;
-    payload['styles'] = styles;
-
-    Map<String, dynamic> effect = {'payload': payload};
-    effect['target'] = 'templates:$templateId';
-    effect['type'] = 'template:update-element';
-    effects.add(effect);
-    return effects;
-  }
-
-  bool isChildOverFromBlockView(Map<String, dynamic> stylesheets, String sectionId, Child selectedChild, ChildSize newSize) {
-    for (Child block in selectedChild.blocks) {
-      ChildSize blockSize = absoluteSize(stylesheets, sectionId, block);
-      if(isIntersectionTwoChild(newSize, blockSize) == false) return true;
-    }
-    return false;
   }
 
   Map<String, dynamic> getChildPayload(
@@ -1002,7 +886,7 @@ class SizeAssist {
       ChildSize newSize,
       String updatedChildId) {
     SectionStyles sectionStyles =
-        SectionStyles.fromJson(stylesheets[section.id]);
+    SectionStyles.fromJson(stylesheets[section.id]);
     Map<String, dynamic> payloadSection = {};
     if (gridTemplateRows.length == 0) {
       payloadSection['gridTemplateRows'] = null;
@@ -1037,7 +921,7 @@ class SizeAssist {
       String gridTemplateRowsStr = '';
       gridRows.forEach((element) {
         gridTemplateRowsStr +=
-            gridTemplateRowsStr.isEmpty ? '$element' : ' $element';
+        gridTemplateRowsStr.isEmpty ? '$element' : ' $element';
       });
       payloadSection['gridTemplateRows'] = gridTemplateRowsStr;
     }
@@ -1076,13 +960,14 @@ class SizeAssist {
       String gridTemplateColumnsStr = '';
       gridColumns.forEach((element) {
         gridTemplateColumnsStr +=
-            gridTemplateColumnsStr.isEmpty ? '$element' : ' $element';
+        gridTemplateColumnsStr.isEmpty ? '$element' : ' $element';
       });
       payloadSection['gridTemplateColumns'] = gridTemplateColumnsStr;
     }
     print('payloadSection: $payloadSection');
     return payloadSection;
   }
+
 
   Map<String, List<String>> getGridTemplateRows(
       Map<String, dynamic> stylesheets,
@@ -1091,7 +976,7 @@ class SizeAssist {
       String updatedChildId) {
     int rows = 0;
     SectionStyles sectionStyles =
-        SectionStyles.fromJson(stylesheets[section.id]);
+    SectionStyles.fromJson(stylesheets[section.id]);
     List<String> overlayChildren = [];
     Map<String, List<String>> gridTemplateRows = {};
     // Sort from Top to bottom
@@ -1164,7 +1049,7 @@ class SizeAssist {
       String updatedChildId) {
     int rows = 0;
     SectionStyles sectionStyles =
-        SectionStyles.fromJson(stylesheets[section.id]);
+    SectionStyles.fromJson(stylesheets[section.id]);
     List<String> overlayChildren = [];
     Map<String, List<String>> gridTemplateColumns = {};
     // Sort from Left to Right
@@ -1231,6 +1116,111 @@ class SizeAssist {
     return gridTemplateColumns;
   }
 
+  // endregion
+
+  // region Change Attributes
+  List<Map<String, dynamic>> getAddNewObjectPayload(ShopObject shopObject, String sectionId, StyleSheetIds styleSheetIds, String templateId) {
+    List<Map<String, dynamic>> effects = [];
+    Map<String, dynamic>element = {};
+    String elementId = Uuid().v4();
+    element['children'] = [];
+    element['data'] = shopObject.data;
+    element['id'] = elementId;
+    element['type'] = shopObject.type;
+
+    Map<String, dynamic>payload = {'element': element, 'to': sectionId};
+
+    Map<String, dynamic>effect = {'payload':payload};
+    effect['target'] = 'templates:$templateId';
+    effect['type'] = 'template:append-element';
+    effects.add(effect);
+
+    // Display None for Desktop and Tablet
+    Map<String, dynamic>payload1 = {elementId: {'display': 'none'}};
+    Map<String, dynamic>effect1 = {'payload':payload1};
+    effect1['target'] = 'stylesheets:${styleSheetIds.desktop}';
+    effect1['type'] = 'stylesheet:update';
+    effects.add(effect1);
+
+    Map<String, dynamic>effect2 = {'payload':payload1};
+    effect2['target'] = 'stylesheets:${styleSheetIds.tablet}';
+    effect2['type'] = 'stylesheet:update';
+    effects.add(effect2);
+
+
+    Map<String, dynamic>payload3 = {elementId: shopObject.styles};
+    Map<String, dynamic>effect3 = {'payload':payload3};
+    effect3['target'] = 'stylesheets:${styleSheetIds.mobile}';
+    effect3['type'] = 'stylesheet:update';
+    effects.add(effect3);
+
+    return effects;
+  }
+
+  List<Map<String, dynamic>> getDeleteObject(String selectedChildId, String templateId) {
+    List<Map<String, dynamic>> effects = [];
+    Map<String, dynamic>effect = {};
+    effect['payload'] = selectedChildId;
+    effect['target'] = 'templates:$templateId';
+    effect['type'] = 'template:delete-element';
+    effects.add(effect);
+    return effects;
+  }
+
+  List<Map<String, dynamic>> getUpdateTextStylePayload(String selectedChildId, Map<String, dynamic>styles, StyleSheetIds styleSheetIds) {
+    List<Map<String, dynamic>> effects = [];
+    Map<String, dynamic>payload = {selectedChildId: styles};
+    Map<String, dynamic>effect = {'payload':payload};
+    effect['target'] = 'stylesheets:${styleSheetIds.mobile}';
+    effect['type'] = 'stylesheet:update';
+    effects.add(effect);
+    return effects;
+  }
+  
+  List<Map<String, dynamic>> getUpdateDataPayload(
+      String sectionId,
+      String selectedChildId,
+      Map<String, dynamic> styles,
+      Map<String, dynamic> data,
+      String type,
+      String templateId) {
+    List<Map<String, dynamic>> effects = [];
+    Map<String, dynamic> payload = {};
+
+    payload['childrenRefs'] = {};
+    payload['children'] = [];
+
+    payload['id'] = selectedChildId;
+    payload['data'] = data;
+    payload['type'] = type;
+    Map<String, dynamic> parent = {'id': sectionId, 'slot': 'host'};
+    payload['parent'] = parent;
+    payload['styles'] = styles;
+
+    Map<String, dynamic> effect = {'payload': payload};
+    effect['target'] = 'templates:$templateId';
+    effect['type'] = 'template:update-element';
+    effects.add(effect);
+    return effects;
+  }
+
+  List<Map<String, dynamic>> getUpdateContextSchemePayload(
+      String selectedChildId,
+      String contextId,
+      Map<String, dynamic> payloadData) {
+    List<Map<String, dynamic>> effects = [];
+    Map<String, dynamic>payload = {selectedChildId: payloadData};
+    Map<String, dynamic> effect = {'payload': payload};
+    effect['target'] = 'contextSchemas::$contextId';
+    effect['type'] = 'context-schema:update';
+    effects.add(effect);
+    return effects;
+  }
+  // endregion
+
+  // endregion
+
+  // region Check Wrong position
   bool wrongPosition(
       Map<String, dynamic> stylesheets,
       Child section,
@@ -1389,6 +1379,47 @@ class SizeAssist {
     return false;
   }
 
+  bool isIntersectionTwoChild(ChildSize size1, ChildSize size2) {
+    return !(size1.left + size1.width < size2.left ||
+        size2.left + size2.width < size1.left ||
+        size1.top + size1.height < size2.top ||
+        size2.top + size2.height < size1.top);
+  }
+
+  bool isContainChild({ChildSize childSize, ChildSize containerSize}) {
+    return (childSize.left >= containerSize.left &&
+        childSize.left + childSize.width <= containerSize.left + containerSize.width &&
+        childSize.top >= containerSize.top &&
+        childSize.top + childSize.height <= containerSize.top + containerSize.height);
+  }
+
+  ChildSize absoluteSize(Map<String, dynamic> stylesheets, String sectionId, Child child) {
+    SectionStyles sectionStyle = SectionStyles.fromJson(stylesheets[sectionId]);
+    BaseStyles styles = BaseStyles.fromJson(stylesheets[child.id]);
+    double width = styles.width + styles.paddingH * 2;
+    double height = styles.height + styles.paddingV * 2;
+    double marginTop = 0;
+    double marginLeft = 0;
+    List<SectionStyles> sectionStyles = [];
+    if (child.blocks != null && child.blocks.isNotEmpty) {
+      for (Child block in child.blocks) {
+        SectionStyles blockStyle = SectionStyles.fromJson(
+            stylesheets[block.id]);
+        sectionStyles.add(blockStyle);
+      }
+    }
+    sectionStyles.add(sectionStyle);
+    for (int i = 0; i < sectionStyles.length; i++) {
+      SectionStyles sectionStyle = sectionStyles[i];
+      marginLeft += styles.getMarginLeft(sectionStyle);
+      marginTop += styles.getMarginTop(sectionStyle);
+      styles = sectionStyle;
+    }
+    return ChildSize(width: width, height: height, left: marginLeft, top: marginTop);
+  }
+  // endregion
+
+  // region Hint Relative Lines
   double relativeMarginTop(
       Map<String, dynamic> stylesheets,
       Child section,
@@ -1472,42 +1503,5 @@ class SizeAssist {
     return -1;
   }
 
-  bool isIntersectionTwoChild(ChildSize size1, ChildSize size2) {
-    return !(size1.left + size1.width < size2.left ||
-        size2.left + size2.width < size1.left ||
-        size1.top + size1.height < size2.top ||
-        size2.top + size2.height < size1.top);
-  }
-
-  bool isContainChild({ChildSize childSize, ChildSize containerSize}) {
-    return (childSize.left >= containerSize.left &&
-        childSize.left + childSize.width <= containerSize.left + containerSize.width &&
-        childSize.top >= containerSize.top &&
-        childSize.top + childSize.height <= containerSize.top + containerSize.height);
-  }
-
-  ChildSize absoluteSize(Map<String, dynamic> stylesheets, String sectionId, Child child) {
-    SectionStyles sectionStyle = SectionStyles.fromJson(stylesheets[sectionId]);
-    BaseStyles styles = BaseStyles.fromJson(stylesheets[child.id]);
-    double width = styles.width + styles.paddingH * 2;
-    double height = styles.height + styles.paddingV * 2;
-    double marginTop = 0;
-    double marginLeft = 0;
-    List<SectionStyles> sectionStyles = [];
-    if (child.blocks != null && child.blocks.isNotEmpty) {
-      for (Child block in child.blocks) {
-        SectionStyles blockStyle = SectionStyles.fromJson(
-            stylesheets[block.id]);
-        sectionStyles.add(blockStyle);
-      }
-    }
-    sectionStyles.add(sectionStyle);
-    for (int i = 0; i < sectionStyles.length; i++) {
-      SectionStyles sectionStyle = sectionStyles[i];
-      marginLeft += styles.getMarginLeft(sectionStyle);
-      marginTop += styles.getMarginTop(sectionStyle);
-      styles = sectionStyle;
-    }
-    return ChildSize(width: width, height: height, left: marginLeft, top: marginTop);
-  }
+  // endregion
 }

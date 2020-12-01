@@ -845,12 +845,6 @@ class _SectionViewState extends State<SectionView> {
     String templateId = widget.screenBloc.state.activeShopPage.templateId;
     effects = baseStyles.getPayload(stylesheets,
         section, selectedChild, newSize, deviceTypeId, templateId);
-    // if (baseStyles.isChildOverFromBlockView(stylesheets, section.id, selectedChild, newSize)) {
-    //   selectedChild.blocks.first.children.remove(selectedChild);
-    //   selectedChild.blocks = [];
-    //   section.children.add(selectedChild);
-    //   section.children.firstWhere((element) => element.id == selectedChild.blocks.first.id).children.remove(selectedChild);
-    // }
     return effects;
   }
 

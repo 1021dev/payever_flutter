@@ -1340,13 +1340,18 @@ class _StyleControlViewState extends State<StyleControlView> {
 
 
   void _updateImageDescription(ShopEditScreenState state, String description) {
-    print('description: $description');
     Map<String, dynamic> sheets = widget.stylesheets;
-    List<Map<String, dynamic>> effects = styles.getImageDescriptionPayload(
+    Map<String, dynamic> data = {
+      'description': description,
+      'text': '',
+      'sync': false
+    };
+    List<Map<String, dynamic>> effects = styles.getUpdateDataPayload(
         state.selectedSectionId,
         selectedId,
         sheets,
-        description,
+        data,
+        'image',
         state.activeShopPage.templateId);
 
     widget.screenBloc.add(UpdateSectionEvent(
@@ -1359,7 +1364,7 @@ class _StyleControlViewState extends State<StyleControlView> {
     Map<String, dynamic> map = getData(state);
     VideoData data = VideoData.fromJson(map);
     data.source = url;
-    List<Map<String, dynamic>> effects = styles.getDataPayload(
+    List<Map<String, dynamic>> effects = styles.getUpdateDataPayload(
         state.selectedSectionId,
         selectedId,
         sheets,
@@ -1374,7 +1379,7 @@ class _StyleControlViewState extends State<StyleControlView> {
   void _updateVideoData(ShopEditScreenState state, VideoData data) {
     print('updateVideoData: ${data.toJson()}');
     Map<String, dynamic> sheets = widget.stylesheets;
-    List<Map<String, dynamic>> effects = styles.getDataPayload(
+    List<Map<String, dynamic>> effects = styles.getUpdateDataPayload(
         state.selectedSectionId,
         selectedId,
         sheets,
@@ -1506,7 +1511,8 @@ class _StyleControlViewState extends State<StyleControlView> {
 
   void _updateTextProperty(ShopEditScreenState state, String newHtmlText) {
     Map<String, dynamic> sheets = widget.stylesheets;
-    List<Map<String, dynamic>> effects = styles.getUpdateTextPayload(state.selectedSectionId, selectedId, sheets, newHtmlText, state.activeShopPage.templateId);
+    Map<String, dynamic> data = {'text': newHtmlText, 'sync': false};
+    List<Map<String, dynamic>> effects = styles.getUpdateDataPayload(state.selectedSectionId, selectedId, sheets, data, 'text', state.activeShopPage.templateId);
 
     print('htmlStr: $newHtmlText');
     print('payload: $effects');
