@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/shop/models/models.dart';
-import 'upload_image_view.dart';
+import 'sub_view/upload_image_view.dart';
 
 class ImageStyleView extends StatefulWidget {
   final TextStyles styles;

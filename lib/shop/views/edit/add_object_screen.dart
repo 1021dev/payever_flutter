@@ -6,7 +6,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/models/template_size_state_model.dart';
-import 'package:payever/shop/views/edit/sub_element/add_object_appbar.dart';
+import 'package:payever/shop/views/edit/appbar/add_object_appbar.dart';
 import 'package:shape_of_view/shape_of_view.dart';
 import '../../../theme.dart';
 
@@ -115,7 +115,9 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
       bloc: screenBloc,
       builder: (BuildContext context, state) {
         return Scaffold(
-            appBar: AddObjectAppbar(onTapAdd: () {}),
+            appBar: AddObjectAppbar(onSelected: (index) {
+
+            }),
             backgroundColor: Colors.grey[800],
             body: SafeArea(bottom: false, child: _body()));
       },

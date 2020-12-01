@@ -9,11 +9,11 @@ import 'package:payever/libraries/utils/px_dp_design.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/models/template_size_state_model.dart';
 import 'package:payever/shop/views/edit/add_object_screen.dart';
-import 'package:payever/shop/views/edit/sub_element/style_control_view.dart';
+import 'package:payever/shop/views/edit/style_vew/style_control_view.dart';
 import 'package:payever/shop/views/edit/template_view.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:provider/provider.dart';
-import 'sub_element/shop_edit_appbar.dart';
+import 'appbar/shop_edit_appbar.dart';
 
 class TemplateDetailScreen extends StatefulWidget {
   final ShopPage shopPage;

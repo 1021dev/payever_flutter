@@ -10,7 +10,7 @@ import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/shop_edit_templetes_screen.dart';
 import 'package:payever/shop/views/edit/template_detail_screen.dart';
 
-import 'sub_element/shop_edit_appbar.dart';
+import 'appbar/shop_edit_appbar.dart';
 
 class ShopEditScreen extends StatefulWidget {
   final ShopScreenBloc shopScreenBloc;
@@ -54,7 +54,7 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
         bloc: screenBloc,
         builder: (BuildContext context, state) {
           return Scaffold(
-              appBar: ShopEditAppbar(onTapAdd: ()=> _navigateTemplatesScreen(),),
+              appBar: ShopEditAppbar(onTapAdd: ()=> _navigateTemplatesScreen()),
               backgroundColor: Colors.grey[800],
               body: SafeArea(bottom: false, child: _body(state)));
         },

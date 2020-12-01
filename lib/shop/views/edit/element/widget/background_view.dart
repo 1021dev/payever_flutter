@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/models.dart';
-import '../../../../theme.dart';
+import '../../../../../theme.dart';
 
 class BackgroundView extends StatefulWidget {
   final BaseStyles styles;

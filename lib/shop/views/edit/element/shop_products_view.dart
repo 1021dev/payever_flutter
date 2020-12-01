@@ -29,10 +29,8 @@ class _ShopProductsViewState extends State<ShopProductsView> {
   @override
   void initState() {
     if (widget.contextSchemas != null && widget.contextSchemas.isNotEmpty) {
-      print('ContextSchema: ${widget.contextSchemas[widget.child.id]}');
       schema = ContextSchema.fromJson(widget.contextSchemas[widget.child.id]);
       try {
-        print('schema.params: ' + schema.params.runtimeType.toString());
         List<dynamic> productIds = schema.params as List;
         String productId = productIds[0].first as String;
         Map<String, dynamic> body = {
@@ -74,7 +72,6 @@ class _ShopProductsViewState extends State<ShopProductsView> {
   @override
   Widget build(BuildContext context) {
     styles = styleSheet();
-
     return body;
   }
 

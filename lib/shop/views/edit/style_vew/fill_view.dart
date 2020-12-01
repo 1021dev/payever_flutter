@@ -7,7 +7,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/block_picker.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
-import 'package:payever/shop/views/edit/sub_element/upload_image_view.dart';
+import 'package:payever/shop/views/edit/style_vew/sub_view/upload_image_view.dart';
 import '../../../../theme.dart';
 
 class FillView extends StatefulWidget {

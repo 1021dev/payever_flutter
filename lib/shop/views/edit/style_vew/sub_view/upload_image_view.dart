@@ -6,7 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
-import '../../../../theme.dart';
+import '../../../../../theme.dart';
 
 
 class UploadImageView extends StatefulWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
-import 'package:payever/shop/views/edit/sub_element/background_view.dart';
+import 'package:payever/shop/views/edit/element/widget/background_view.dart';
 
 class TextView extends StatefulWidget {
   final Child child;

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
-import 'package:payever/shop/views/edit/sub_element/fill_color_view.dart';
+import 'package:payever/shop/views/edit/style_vew/fill_color_view.dart';
 
 class ShadowView extends StatefulWidget {
   final Map<String, dynamic>stylesheets;

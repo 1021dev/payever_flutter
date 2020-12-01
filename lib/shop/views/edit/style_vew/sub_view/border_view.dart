@@ -2,10 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
-import 'package:payever/shop/views/edit/sub_element/border_style_view.dart';
+import 'package:payever/shop/views/edit/style_vew/sub_view/border_style_view.dart';
 import 'package:payever/theme.dart';
 
-import 'fill_color_view.dart';
+import '../fill_color_view.dart';
 
 class BorderView extends StatefulWidget {
   final TextStyles styles;

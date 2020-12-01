@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/shop/models/models.dart';
-import 'package:payever/shop/views/edit/sub_element/upload_image_view.dart';
+import 'package:payever/shop/views/edit/style_vew/sub_view/upload_image_view.dart';
 
 class VideoStyleView extends StatefulWidget {
 
