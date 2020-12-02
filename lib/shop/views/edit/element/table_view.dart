@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/style_vew/table/editable.dart';
+import 'package:payever/theme.dart';
 
 class TableView extends StatefulWidget {
   final Child child;
@@ -17,29 +18,52 @@ class TableView extends StatefulWidget {
 class _TableViewState extends State<TableView> {
   List alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
       .map((e) => {'title' : e}).toList();
-  ButtonStyles styles;
-  ButtonData data;
+  TableStyles styles;
   int columnCount = 4;
   int rowCount = 5;
+  Color headerColumnColor;
+  Color headerRowColor;
+
   final _editableKey = GlobalKey<EditableState>();
+
   _TableViewState();
 
   @override
   void initState() {
+
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
     styles = styleSheet();
-    data = ButtonData.fromJson(widget.child.data);
+    columnCount = styles.columnCount;
+    rowCount = styles.rowCount;
+    headerColumnColor = colorConvert(styles.headerColumnColor);
+    headerRowColor = colorConvert(styles.headerRowColor);
     return body;
   }
 
   Widget get body {
+    double tableWidth, tableHeight;
+    double cellWidth, cellHeight;
+
+    if (styles.width == null || styles.width == 0)
+      tableWidth = MediaQuery.of(context).size.width;
+    else
+      tableWidth = styles.width;
+    tableHeight = styles.height;
+
+    cellWidth = (tableWidth - 40) / columnCount;
+    cellHeight = (tableHeight - 40) / rowCount;
+
     return Editable(
       columns: alphabet.sublist(0, columnCount),
       key: _editableKey,
       columnCount: columnCount,
+      headerColumnColor: headerColumnColor,
+      headerRowColor: headerRowColor,
+      trWidth: cellWidth,
+      trHeight: cellHeight,
       rowCount: rowCount,
       zebraStripe: true,
       stripeColor2: Colors.grey[200],
@@ -53,8 +77,6 @@ class _TableViewState extends State<TableView> {
         color: Colors.black,
       ),
       borderColor: Colors.blueGrey,
-      showSaveIcon: false,
-      showCreateButton: true,
     );
   }
 
@@ -75,12 +97,12 @@ class _TableViewState extends State<TableView> {
     print(editedRows);
   }
 
-  ButtonStyles styleSheet() {
+  TableStyles styleSheet() {
     try {
       Map<String, dynamic> json = widget.stylesheets[widget.child.id];
       // print('Button ID: ${widget.child.id}');
       // print('Button Styles Sheets: $json');
-      return ButtonStyles.fromJson(json);
+      return TableStyles.fromJson(json);
     } catch (e) {
       return null;
     }

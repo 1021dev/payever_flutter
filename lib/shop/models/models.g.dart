@@ -903,6 +903,133 @@ Map<String, dynamic> _$ButtonStylesToJson(ButtonStyles instance) =>
       'color': instance.color,
     };
 
+TableStyles _$TableStylesFromJson(Map<String, dynamic> json) {
+  return TableStyles()
+    ..display = json['display'] as String ?? 'flex'
+    ..background = json['background'] as String ?? '#ffffff'
+    ..backgroundColor = json['backgroundColor'] as String ?? '#ffffff'
+    ..backgroundImage = json['backgroundImage'] as String ?? ''
+    ..backgroundSize = json['backgroundSize'] as String
+    ..backgroundPosition = json['backgroundPosition'] as String ?? 'center'
+    ..backgroundRepeat = json['backgroundRepeat'] as String ?? 'no-repeat'
+    ..border = json['border']
+    ..borderType = json['borderType'] as String ?? 'solid'
+    ..borderStyle = json['borderStyle'] as String ?? 'solid'
+    ..borderRadius = json['borderRadius'] ?? 0
+    ..borderWidth = (json['borderWidth'] as num)?.toDouble() ?? 0
+    ..borderColor = json['borderColor'] as String ?? '#ffffff'
+    ..borderSize = (json['borderSize'] as num)?.toDouble() ?? 0
+    ..opacity = (json['opacity'] as num)?.toDouble() ?? 1
+    ..stroke = json['stroke'] as String ?? '#000000'
+    ..strokeDasharray = json['strokeDasharray'] as String ?? ''
+    ..strokeWidth = (json['strokeWidth'] as num)?.toDouble() ?? 0
+    ..boxShadow = json['boxShadow']
+    ..filter = json['filter'] as String ?? ''
+    ..shadow = json['shadow'] as String
+    ..gridColumn = json['gridColumn'] as String ?? '1 / span 1'
+    ..gridRow = json['gridRow'] as String ?? '1 / span 1'
+    ..gridArea = json['gridArea'] as String
+    ..width0 = json['width'] ?? 0
+    ..height = (json['height'] as num)?.toDouble() ?? 0
+    ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
+    ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
+    ..margin = json['margin'] ?? '0 0 0 0'
+    ..padding = json['padding'] as String ?? '0 0'
+    ..position = json['position'] as String ?? 'absolute'
+    ..marginBottom = (json['marginBottom'] as num)?.toDouble() ?? 0
+    ..marginLeft = (json['marginLeft'] as num)?.toDouble() ?? 0
+    ..marginRight = (json['marginRight'] as num)?.toDouble() ?? 0
+    ..marginTop = (json['marginTop'] as num)?.toDouble() ?? 0
+    ..top = (json['top'] as num)?.toDouble() ?? 0
+    ..left = (json['left'] as num)?.toDouble() ?? 0
+    ..color = json['color'] as String ?? '#000000'
+    ..fontSize0 = json['fontSize'] ?? 15
+    ..fontStyle0 = json['fontStyle'] as String ?? 'normal'
+    ..fontWeight0 = json['fontWeight'] ?? 400
+    ..fontFamily = json['fontFamily'] as String ??
+        'Helvetica Neue,Helvetica,Arial,sans-serif'
+    ..textAlign0 = json['textAlign'] as String
+    ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
+    ..titleColor = json['titleColor'] as String ?? '#000000'
+    ..titleFontFamily = json['titleFontFamily'] as String ?? 'Roboto'
+    ..titleFontWeight0 = json['titleFontWeight'] as String ?? 'bold'
+    ..titleFontStyle0 = json['titleFontStyle'] as String ?? 'normal'
+    ..titleTextDecoration = json['titleTextDecoration']
+    ..priceFontSize = (json['priceFontSize'] as num)?.toDouble() ?? 12
+    ..priceColor = json['priceColor'] as String ?? '#a5a5a5'
+    ..priceFontFamily = json['priceFontFamily'] as String ?? 'Roboto'
+    ..priceFontWeight0 = json['priceFontWeight'] as String ?? 'normal'
+    ..priceFontStyle0 = json['priceFontStyle'] as String ?? 'normal'
+    ..priceTextDecoration = json['priceTextDecoration']
+    ..columnCount = json['columnCount'] as int ?? 4
+    ..rowCount = json['rowCount'] as int ?? 5
+    ..headerColumnColor = json['headerColumnColor'] as String ?? '#FFFFFF'
+    ..headerRowColor = json['headerRowColor'] as String ?? '#FFFFFF';
+}
+
+Map<String, dynamic> _$TableStylesToJson(TableStyles instance) =>
+    <String, dynamic>{
+      'display': instance.display,
+      'background': instance.background,
+      'backgroundColor': instance.backgroundColor,
+      'backgroundImage': instance.backgroundImage,
+      'backgroundSize': instance.backgroundSize,
+      'backgroundPosition': instance.backgroundPosition,
+      'backgroundRepeat': instance.backgroundRepeat,
+      'border': instance.border,
+      'borderType': instance.borderType,
+      'borderStyle': instance.borderStyle,
+      'borderRadius': instance.borderRadius,
+      'borderWidth': instance.borderWidth,
+      'borderColor': instance.borderColor,
+      'borderSize': instance.borderSize,
+      'opacity': instance.opacity,
+      'stroke': instance.stroke,
+      'strokeDasharray': instance.strokeDasharray,
+      'strokeWidth': instance.strokeWidth,
+      'boxShadow': instance.boxShadow,
+      'filter': instance.filter,
+      'shadow': instance.shadow,
+      'gridColumn': instance.gridColumn,
+      'gridRow': instance.gridRow,
+      'gridArea': instance.gridArea,
+      'width': instance.width0,
+      'height': instance.height,
+      'minWidth': instance.minWidth,
+      'minHeight': instance.minHeight,
+      'margin': instance.margin,
+      'padding': instance.padding,
+      'position': instance.position,
+      'marginBottom': instance.marginBottom,
+      'marginLeft': instance.marginLeft,
+      'marginRight': instance.marginRight,
+      'marginTop': instance.marginTop,
+      'top': instance.top,
+      'left': instance.left,
+      'color': instance.color,
+      'fontSize': instance.fontSize0,
+      'fontStyle': instance.fontStyle0,
+      'fontWeight': instance.fontWeight0,
+      'fontFamily': instance.fontFamily,
+      'textAlign': instance.textAlign0,
+      'titleFontSize': instance.titleFontSize,
+      'titleColor': instance.titleColor,
+      'titleFontFamily': instance.titleFontFamily,
+      'titleFontWeight': instance.titleFontWeight0,
+      'titleFontStyle': instance.titleFontStyle0,
+      'titleTextDecoration': instance.titleTextDecoration,
+      'priceFontSize': instance.priceFontSize,
+      'priceColor': instance.priceColor,
+      'priceFontFamily': instance.priceFontFamily,
+      'priceFontWeight': instance.priceFontWeight0,
+      'priceFontStyle': instance.priceFontStyle0,
+      'priceTextDecoration': instance.priceTextDecoration,
+      'columnCount': instance.columnCount,
+      'rowCount': instance.rowCount,
+      'headerColumnColor': instance.headerColumnColor,
+      'headerRowColor': instance.headerRowColor,
+    };
+
 ShopCartStyles _$ShopCartStylesFromJson(Map<String, dynamic> json) {
   return ShopCartStyles()
     ..display = json['display'] as String ?? 'flex'

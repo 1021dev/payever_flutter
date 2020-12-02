@@ -131,8 +131,8 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
   Widget _body() {
     switch (selectedCategory) {
       case 0:
-        return TableCategoryView(onCreateTable: (type) {
-          ShopObject shopObject = ShopObject(name: '$type', type: 'table');
+        return TableCategoryView(onCreateTable: (type, index) {
+          ShopObject shopObject = ShopObject(name: '$type-$index', type: 'table');
           Navigator.pop(context, shopObject);
         },);
       case 1:

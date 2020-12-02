@@ -187,7 +187,7 @@ class _StyleControlViewState extends State<StyleControlView> {
       child: Row(
         children: [
           SizedBox(
-            width: 30,
+            width: 20,
           ),
           Expanded(
             child: CupertinoSegmentedControl<StyleType>(

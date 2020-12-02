@@ -53,6 +53,8 @@ class Editable extends StatefulWidget {
       this.onRowSaved,
       this.columnCount = 0,
       this.rowCount = 0,
+      this.headerColumnColor = Colors.white,
+      this.headerRowColor = Colors.white,
       this.borderColor = Colors.grey,
       this.tdPaddingLeft = 8.0,
       this.tdPaddingTop = 0.0,
@@ -62,6 +64,7 @@ class Editable extends StatefulWidget {
       this.thPaddingTop = 0.0,
       this.thPaddingRight = 0.0,
       this.thPaddingBottom = 0.0,
+      this.trWidth = 50.0,
       this.trHeight = 50.0,
       this.borderWidth = 0.5,
       this.thWeight = FontWeight.w600,
@@ -142,6 +145,9 @@ class Editable extends StatefulWidget {
   /// 0.8 indicates 80 percent width per column
   final double columnRatio;
 
+  /// Colors of Header
+  final Color headerColumnColor;
+  final Color headerRowColor;
   /// Color of table border
   final Color borderColor;
 
@@ -178,6 +184,7 @@ class Editable extends StatefulWidget {
   /// Table header cell padding bottom
   final double thPaddingBottom;
 
+  final double trWidth;
   /// Table Row Height
   /// cannot be less than 40.0
   final double trHeight;
@@ -292,6 +299,7 @@ class EditableState extends State<Editable> {
                 widthRatio: columns[index]['widthFactor'] != null
                     ? columns[index]['widthFactor'].toDouble()
                     : widget.columnRatio,
+                trWidth: widget.trWidth,
                 thPaddingLeft: widget.thPaddingLeft,
                 thPaddingTop: widget.thPaddingTop,
                 thPaddingBottom: widget.thPaddingBottom,
@@ -324,13 +332,17 @@ class EditableState extends State<Editable> {
                     height: widget.trHeight,
                     child: Text(
                       '${index + 1}',
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(fontWeight: widget.thWeight, fontSize: widget.thSize, color: Colors.grey[600]),
                     ),
                   )
                 : RowBuilder(
                     index: index,
+                    column: rowIndex - 1,
                     col: ckeys[rowIndex - 1],
+                    trWidth: widget.trWidth,
                     trHeight: widget.trHeight,
+                    headerColumnColor: widget.headerColumnColor,
+                    headerRowColor: widget.headerRowColor,
                     borderColor: widget.borderColor,
                     borderWidth: widget.borderWidth,
                     cellData: list[ckeys[rowIndex - 1]],

@@ -706,6 +706,30 @@ class ButtonStyles extends BaseStyles{
 }
 
 @JsonSerializable()
+class TableStyles extends BaseStyles {
+  TableStyles();
+
+  @JsonKey(name: 'columnCount', defaultValue: 4)
+  int columnCount;
+
+  @JsonKey(name: 'rowCount', defaultValue: 5)
+  int rowCount;
+
+  @JsonKey(name: 'headerColumnColor', defaultValue: '#FFFFFF')
+  String headerColumnColor;
+
+  @JsonKey(name: 'headerRowColor', defaultValue: '#FFFFFF')
+  String headerRowColor;
+
+  double buttonBorderRadius() {
+    return getBorderRadius(borderRadius);
+  }
+
+  factory TableStyles.fromJson(Map<String, dynamic> json) => _$TableStylesFromJson(json);
+  Map<String, dynamic> toJson() => _$TableStylesToJson(this);
+}
+
+@JsonSerializable()
 class ShopCartStyles extends BaseStyles{
   ShopCartStyles();
 
@@ -1109,10 +1133,78 @@ class ShopObject {
           'width': null,
         };
       case 'table':
+        String headerColumnColor, headerRowColor;
+        switch(name) {
+          case '0-0':
+            headerColumnColor = '#38719F';
+            headerRowColor = '#428CC8';
+            break;
+          case '0-1':
+            headerColumnColor = '#38719F';
+            headerRowColor = '#ffffff';
+            break;
+          case '0-3':
+            headerColumnColor = '#38719F';
+            headerRowColor = '#428CC8';
+            break;
+          case '1-0':
+            headerColumnColor = '#459138';
+            headerRowColor = '#61C348';
+            break;
+          case '1-1':
+            headerColumnColor = '#459138';
+            headerRowColor = '#ffffff';
+            break;
+          case '1-3':
+            headerColumnColor = '#459138';
+            headerRowColor = '#61C348';
+            break;
+          case '2-0':
+            headerColumnColor = '#F7B950';
+            headerRowColor = '#F9CD54';
+            break;
+          case '2-1':
+            headerColumnColor = '#F7B950';
+            headerRowColor = '#ffffff';
+            break;
+          case '2-3':
+            headerColumnColor = '#F7B950';
+            headerRowColor = '#F9CD54';
+            break;
+          case '3-0':
+            headerColumnColor = '#D576A8';
+            headerRowColor = '#AA3E7A';
+            break;
+          case '3-1':
+            headerColumnColor = '#D576A8';
+            headerRowColor = '#ffffff';
+            break;
+          case '3-3':
+            headerColumnColor = '#D576A8';
+            headerRowColor = '#AA3E7A';
+            break;
+          case '4-0':
+            headerColumnColor = '#9EA2AC';
+            headerRowColor = '#73767E';
+            break;
+          case '4-1':
+            headerColumnColor = '#9EA2AC';
+            headerRowColor = '#ffffff';
+            break;
+          case '4-3':
+            headerColumnColor = '#9EA2AC';
+            headerRowColor = '#73767E';
+            break;
+          default:
+            headerColumnColor = '#ffffff';
+            headerRowColor = '#ffffff';
+        }
         return {
           'backgroundColor': '#ffffff',
           'height': 300,
           'width': null,
+          'headerColumnColor': headerColumnColor,
+          'headerRowColor': headerRowColor,
         };
     }
   }

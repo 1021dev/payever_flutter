@@ -60,7 +60,7 @@ class _TableCategoryViewState extends State<TableCategoryView> {
           4,
               (index) {
             return InkWell(
-              onTap: ()=> widget.onCreateTable(index),
+              onTap: ()=> widget.onCreateTable(pageIndex, index),
               child: Image.asset(
                   'assets/images/table${pageIndex + 1}-${index + 1}.png'),
             );

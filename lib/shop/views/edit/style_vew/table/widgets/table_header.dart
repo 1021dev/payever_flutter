@@ -8,6 +8,7 @@ class THeader extends StatelessWidget {
       @required this.thPaddingTop,
       @required this.thPaddingBottom,
       @required this.thPaddingRight,
+      @required this.trWidth,
       @required List headers,
       @required FontWeight thWeight,
       @required double thSize,
@@ -26,6 +27,7 @@ class THeader extends StatelessWidget {
   final double thPaddingRight;
   final List _headers;
   final FontWeight _thWeight;
+  final double trWidth;
   final double _thSize;
   final int _index;
   final double _widthRatio;
@@ -35,7 +37,8 @@ class THeader extends StatelessWidget {
     return Flexible(
       fit: FlexFit.loose,
       child: Container(
-        width: width * _widthRatio,
+        height: 20,
+        width: trWidth,
         child: Text(
           _headers != null || _headers.isNotEmpty
               ? _headers[_index]['title']
