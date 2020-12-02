@@ -281,33 +281,6 @@ class EditableState extends State<Editable> {
     columns = columns ?? columnBlueprint(columnCount, columns);
     rows = rows ?? rowBlueprint(rowCount, columns, rows);
 
-    /// Builds saveIcon widget
-    Widget _saveIcon(index) {
-      return Flexible(
-        fit: FlexFit.loose,
-        child: Visibility(
-          visible: widget.showSaveIcon,
-          child: IconButton(
-            padding: EdgeInsets.only(right: widget.tdPaddingRight),
-            hoverColor: Colors.transparent,
-            icon: Icon(
-              widget.saveIcon,
-              color: widget.saveIconColor,
-              size: widget.saveIconSize,
-            ),
-            onPressed: () {
-              int rowIndex = editedRows.indexWhere(
-                  (element) => element['row'] == index ? true : false);
-              if (rowIndex != -1) {
-                widget.onRowSaved(editedRows[rowIndex]);
-              } else {
-                widget.onRowSaved('no edit');
-              }
-            },
-          ),
-        ),
-      );
-    }
 
     /// Generates table columns
     List<Widget> _tableHeaders() {
@@ -344,15 +317,23 @@ class EditableState extends State<Editable> {
               cwidths.add(e['widthFactor'] ?? widget.columnRatio);
             });
             var list = rows[index];
-            return columnCount + 1 == (rowIndex + 1)
-                ? _saveIcon(index)
+            return rowIndex == 0
+                ? Container(
+                    alignment: Alignment.center,
+                    width: 20,
+                    height: widget.trHeight,
+                    child: Text(
+                      '${index + 1}',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  )
                 : RowBuilder(
                     index: index,
-                    col: ckeys[rowIndex],
+                    col: ckeys[rowIndex - 1],
                     trHeight: widget.trHeight,
                     borderColor: widget.borderColor,
                     borderWidth: widget.borderWidth,
-                    cellData: list[ckeys[rowIndex]],
+                    cellData: list[ckeys[rowIndex - 1]],
                     tdPaddingLeft: widget.tdPaddingLeft,
                     tdPaddingTop: widget.tdPaddingTop,
                     tdPaddingBottom: widget.tdPaddingBottom,
@@ -360,7 +341,7 @@ class EditableState extends State<Editable> {
                     tdAlignment: widget.tdAlignment,
                     tdStyle: widget.tdStyle,
                     onSubmitted: widget.onSubmitted,
-                    widthRatio: cwidths[rowIndex].toDouble(),
+                    widthRatio: cwidths[rowIndex - 1].toDouble(),
                     zebraStripe: widget.zebraStripe,
                     stripeColor1: widget.stripeColor1,
                     stripeColor2: widget.stripeColor2,
@@ -397,6 +378,7 @@ class EditableState extends State<Editable> {
             //Table Header
             createButton(),
             Container(
+              margin: EdgeInsets.only(left: 20),
               padding: EdgeInsets.only(bottom: widget.thPaddingBottom),
               decoration: BoxDecoration(
                   border: Border(
@@ -406,7 +388,6 @@ class EditableState extends State<Editable> {
               child: Row(
                   mainAxisSize: MainAxisSize.min, children: _tableHeaders()),
             ),
-
             Expanded(
               child: SingleChildScrollView(
                 child: Column(

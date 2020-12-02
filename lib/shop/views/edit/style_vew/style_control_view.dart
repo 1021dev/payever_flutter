@@ -249,48 +249,55 @@ class _StyleControlViewState extends State<StyleControlView> {
   }
 
   Widget mainBody(ShopEditScreenState state) {
-    switch (styleType) {
-      case StyleType.style:
-        return _styleBody(state);
-      case StyleType.text:
-        return _textBody(state);
-      case StyleType.image:
-        Map<String, dynamic>map = getData(state);
-        ImageData data = (map == null) ? null : ImageData.fromJson(map);
-        return ImageStyleView(
-          styles: styles,
-          screenBloc: widget.screenBloc,
-          description: data?.description,
-          onChangeDescription: (value) => _updateImageDescription(state, value),
-        );
-      case StyleType.video:
-        Map<String, dynamic>map = getData(state);
-        VideoData data = (map == null) ? null : VideoData.fromJson(map);
-        return VideoStyleView(
-          styles: styles,
-          screenBloc: widget.screenBloc,
-          data: data,
-          onChangeData: (value) => _updateVideoData(state, value),
-        );
-      case StyleType.arrange:
-        return _arrangeBody;
-      case StyleType.products:
-        ShopProductsStyles productsStyles = ShopProductsStyles.fromJson(widget.stylesheets);
-        return ProductsStyleView(
-          screenBloc: widget.screenBloc,
-          styles: productsStyles,
-          onChangeGaps: (value, updateApi) => _updateProductsGaps(state, value, updateApi: updateApi),
-        );
-      case StyleType.table:
-        return TableStyleView();
-      case StyleType.cell:
-        return CellStyleView();
-      case StyleType.format:
-        return FormatStyleView();
-      default:
-        return TableStyleView();
-        // return _styleBody(state);
+    try{
+      switch (styleType) {
+        case StyleType.style:
+          if (state.selectedChild.type == 'table')
+            return TableStyleView();
+          return _styleBody(state);
+        case StyleType.text:
+          return _textBody(state);
+        case StyleType.image:
+          Map<String, dynamic>map = getData(state);
+          ImageData data = (map == null) ? null : ImageData.fromJson(map);
+          return ImageStyleView(
+            styles: styles,
+            screenBloc: widget.screenBloc,
+            description: data?.description,
+            onChangeDescription: (value) => _updateImageDescription(state, value),
+          );
+        case StyleType.video:
+          Map<String, dynamic>map = getData(state);
+          VideoData data = (map == null) ? null : VideoData.fromJson(map);
+          return VideoStyleView(
+            styles: styles,
+            screenBloc: widget.screenBloc,
+            data: data,
+            onChangeData: (value) => _updateVideoData(state, value),
+          );
+        case StyleType.arrange:
+          return _arrangeBody;
+        case StyleType.products:
+          ShopProductsStyles productsStyles = ShopProductsStyles.fromJson(widget.stylesheets);
+          return ProductsStyleView(
+            screenBloc: widget.screenBloc,
+            styles: productsStyles,
+            onChangeGaps: (value, updateApi) => _updateProductsGaps(state, value, updateApi: updateApi),
+          );
+        case StyleType.table:
+          return TableStyleView();
+        case StyleType.cell:
+          return CellStyleView();
+        case StyleType.format:
+          return FormatStyleView();
+        default:
+          return _styleBody(state);
+      }
+    }catch(e) {
+      styleType = StyleType.style;
+      return _styleBody(state);
     }
+
   }
 
   // region Style Body

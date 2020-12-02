@@ -15,12 +15,19 @@ class TableView extends StatefulWidget {
 }
 
 class _TableViewState extends State<TableView> {
-
+  List alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
+      .map((e) => {'title' : e}).toList();
   ButtonStyles styles;
   ButtonData data;
+  int columnCount = 4;
+  int rowCount = 5;
   final _editableKey = GlobalKey<EditableState>();
   _TableViewState();
 
+  @override
+  void initState() {
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     styles = styleSheet();
@@ -30,9 +37,10 @@ class _TableViewState extends State<TableView> {
 
   Widget get body {
     return Editable(
+      columns: alphabet.sublist(0, columnCount),
       key: _editableKey,
-      columnCount: 4,
-      rowCount: 5,
+      columnCount: columnCount,
+      rowCount: rowCount,
       zebraStripe: true,
       stripeColor2: Colors.grey[200],
       // onRowSaved: (value) {
@@ -46,10 +54,11 @@ class _TableViewState extends State<TableView> {
       ),
       borderColor: Colors.blueGrey,
       showSaveIcon: false,
-      saveIconColor: Colors.black,
       showCreateButton: true,
     );
   }
+
+
 
   /// Function to add a new row
   /// Using the global key assigined to Editable widget

@@ -36,18 +36,12 @@ class THeader extends StatelessWidget {
       fit: FlexFit.loose,
       child: Container(
         width: width * _widthRatio,
-        child: Padding(
-          padding: EdgeInsets.only(
-              left: thPaddingLeft,
-              top: thPaddingTop,
-              bottom: thPaddingBottom,
-              right: thPaddingRight),
-          child: Text(
-            _headers != null || _headers.isNotEmpty
-                ? _headers[_index]['title']
-                : '',
-            style: TextStyle(fontWeight: _thWeight, fontSize: _thSize),
-          ),
+        child: Text(
+          _headers != null || _headers.isNotEmpty
+              ? _headers[_index]['title']
+              : '',
+          style: TextStyle(fontWeight: _thWeight, fontSize: _thSize, color: Colors.grey[600]),
+          textAlign: TextAlign.center,
         ),
       ),
     );
