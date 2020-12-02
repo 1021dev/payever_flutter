@@ -253,7 +253,7 @@ class _StyleControlViewState extends State<StyleControlView> {
       switch (styleType) {
         case StyleType.style:
           if (state.selectedChild.type == 'table')
-            return TableStyleView();
+            return TableStyleView(screenBloc: widget.screenBloc, stylesheets: widget.stylesheets,);
           return _styleBody(state);
         case StyleType.text:
           return _textBody(state);

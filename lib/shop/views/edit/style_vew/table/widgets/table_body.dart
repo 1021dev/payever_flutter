@@ -62,7 +62,6 @@ class RowBuilder extends StatefulWidget {
 class _RowBuilderState extends State<RowBuilder> {
   @override
   Widget build(BuildContext context) {
-    print('column: ${widget.column} index: ${widget.index}');
     Color bgColor;
     if (widget.index == 0) {
       bgColor = widget.headerColumnColor;
@@ -73,6 +72,11 @@ class _RowBuilderState extends State<RowBuilder> {
           ? widget.stripeColor2
           : widget.stripeColor1;
     }
+    if (widget.headerColumnColor == Colors.white && widget.headerRowColor == Colors.white)
+      bgColor = widget.index % 2 == 1.0
+          ? widget.stripeColor2
+          : widget.stripeColor1;
+
     return Flexible(
       fit: FlexFit.loose,
       flex: 6,
