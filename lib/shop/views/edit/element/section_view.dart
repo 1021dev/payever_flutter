@@ -248,9 +248,11 @@ class _SectionViewState extends State<SectionView> {
     }
 
     Widget childWidget;
-    if (child.type == 'shop-category'|| child.type == 'shop-product-details' || child.type == 'table') {
+    if (child.type == 'shop-category'|| child.type == 'shop-product-details') {
       childWidget = childElement;
     } else {
+      if (child.type == 'table')
+        width = double.infinity;
       childWidget = ResizeableView(
           width: width,
           height: height,

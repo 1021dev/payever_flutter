@@ -14,6 +14,9 @@ import 'package:payever/shop/views/edit/style_vew/image_style_view.dart';
 import 'package:payever/shop/views/edit/style_vew/paragraph_view.dart';
 import 'package:payever/shop/views/edit/style_vew/products_style_view.dart';
 import 'package:payever/shop/views/edit/style_vew/shadow_view.dart';
+import 'package:payever/shop/views/edit/style_vew/table/cell_style_view.dart';
+import 'package:payever/shop/views/edit/style_vew/table/format_style_view.dart';
+import 'package:payever/shop/views/edit/style_vew/table/table_style_view.dart';
 import 'package:payever/shop/views/edit/style_vew/text_options_view.dart';
 import 'package:payever/shop/views/edit/style_vew/video_style_view.dart';
 import 'package:payever/theme.dart';
@@ -50,7 +53,7 @@ class _StyleControlViewState extends State<StyleControlView> {
   bool borderExpanded = false;
   bool shadowExpanded = false;
 
-  TextStyleType styleType = TextStyleType.style;
+  StyleType styleType = StyleType.style;
   List<TextFontType> fontTypes = [];
   List<Paragraph> paragraphs = [];
 
@@ -187,73 +190,28 @@ class _StyleControlViewState extends State<StyleControlView> {
             width: 30,
           ),
           Expanded(
-            child: CupertinoSegmentedControl<TextStyleType>(
+            child: CupertinoSegmentedControl<StyleType>(
               selectedColor: Color.fromRGBO(110, 109, 116, 1),
               unselectedColor: Color.fromRGBO(46, 45, 50, 1),
               borderColor: Color.fromRGBO(23, 23, 25, 1),
-              children: <TextStyleType, Widget>{
+              children: <StyleType, Widget>{
                 if (state.selectedChild.type == 'shop-products')
-                  TextStyleType.products: Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text(
-                        'Products',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.white),
-                      )),
-                TextStyleType.style: Container(
-                    padding: EdgeInsets.all(8.0),
-                    alignment: Alignment.center,
-                    width: 100,
-                    child: Text(
-                      'Style',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white),
-                    )),
+                  StyleType.products: segmentTitleWidget('Products'),
+                StyleType.style: segmentTitleWidget(
+                    state.selectedChild.type == 'table' ? 'Table' : 'Style'),
+                if (state.selectedChild.type == 'table')
+                  StyleType.cell: segmentTitleWidget('Cell'),
+                if (state.selectedChild.type == 'table')
+                  StyleType.format: segmentTitleWidget('Format'),
                 if (widget.screenBloc.isTextSelected())
-                  TextStyleType.text: Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text(
-                        'Text',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.white),
-                      )),
+                  StyleType.text: segmentTitleWidget('Text'),
                 if (state.selectedChild.type == 'image')
-                  TextStyleType.image: Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text(
-                        'Image',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.white),
-                      )),
+                  StyleType.image: segmentTitleWidget('Image'),
                 if (state.selectedChild.type == 'video')
-                  TextStyleType.video: Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text(
-                        'Video',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.white),
-                      )),
-                TextStyleType.arrange: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(
-                      'Arrange',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white),
-                    )),
+                  StyleType.video: segmentTitleWidget('video'),
+                StyleType.arrange: segmentTitleWidget('Arrange'),
               },
-              onValueChanged: (TextStyleType value) {
+              onValueChanged: (StyleType value) {
                 setState(() {
                   styleType = value;
                 });
@@ -280,13 +238,23 @@ class _StyleControlViewState extends State<StyleControlView> {
     );
   }
 
+  Widget segmentTitleWidget(String title) {
+    return Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Text(
+          title,
+          style: TextStyle(
+              fontSize: 16, fontWeight: FontWeight.w400, color: Colors.white),
+        ));
+  }
+
   Widget mainBody(ShopEditScreenState state) {
     switch (styleType) {
-      case TextStyleType.style:
+      case StyleType.style:
         return _styleBody(state);
-      case TextStyleType.text:
+      case StyleType.text:
         return _textBody(state);
-      case TextStyleType.image:
+      case StyleType.image:
         Map<String, dynamic>map = getData(state);
         ImageData data = (map == null) ? null : ImageData.fromJson(map);
         return ImageStyleView(
@@ -295,7 +263,7 @@ class _StyleControlViewState extends State<StyleControlView> {
           description: data?.description,
           onChangeDescription: (value) => _updateImageDescription(state, value),
         );
-      case TextStyleType.video:
+      case StyleType.video:
         Map<String, dynamic>map = getData(state);
         VideoData data = (map == null) ? null : VideoData.fromJson(map);
         return VideoStyleView(
@@ -304,17 +272,24 @@ class _StyleControlViewState extends State<StyleControlView> {
           data: data,
           onChangeData: (value) => _updateVideoData(state, value),
         );
-      case TextStyleType.arrange:
+      case StyleType.arrange:
         return _arrangeBody;
-      case TextStyleType.products:
+      case StyleType.products:
         ShopProductsStyles productsStyles = ShopProductsStyles.fromJson(widget.stylesheets);
         return ProductsStyleView(
           screenBloc: widget.screenBloc,
           styles: productsStyles,
           onChangeGaps: (value, updateApi) => _updateProductsGaps(state, value, updateApi: updateApi),
         );
+      case StyleType.table:
+        return TableStyleView();
+      case StyleType.cell:
+        return CellStyleView();
+      case StyleType.format:
+        return FormatStyleView();
       default:
-        return _styleBody(state);
+        return TableStyleView();
+        // return _styleBody(state);
     }
   }
 

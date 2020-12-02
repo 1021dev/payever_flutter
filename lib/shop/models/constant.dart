@@ -10,13 +10,16 @@ List<Color>textBgColors = [Color.fromRGBO(0, 168, 255, 1),
   Color.fromRGBO(255, 91, 175, 1),
   Color.fromRGBO(0, 0, 0, 1)];
 
-enum TextStyleType {
+enum StyleType {
   style,
   text,
   image,
   video,
   arrange,
   products,
+  table,
+  cell,
+  format,
 }
 
 enum TextFontType {
