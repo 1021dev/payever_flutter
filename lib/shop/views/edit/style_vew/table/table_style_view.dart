@@ -4,14 +4,16 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/style_vew/table/tabe_header_footer_view.dart';
 
-import '../font_view.dart';
+import '../font_family_view.dart';
 
 class TableStyleView extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
   final Map<String, dynamic> stylesheets;
+  final Function onClose;
 
-  const TableStyleView({@required this.screenBloc, @required this.stylesheets,});
+  const TableStyleView({@required this.screenBloc, @required this.stylesheets, @required this.onClose});
 
   @override
   _TableStyleViewState createState() => _TableStyleViewState();
@@ -30,7 +32,7 @@ class _TableStyleViewState extends State<TableStyleView> {
   bool tableOutlineEnabled = false;
   bool alternatingRowsEnabled = false;
 
-  String fontType;
+  String fontFamily;
   double fontSize;
 
   @override
@@ -39,6 +41,7 @@ class _TableStyleViewState extends State<TableStyleView> {
     rowController = TextEditingController(text: '${styles.rowCount}');
     columnController = TextEditingController(text: '${styles.columnCount}');
     fontSize = styles.fontSize;
+    fontFamily = styles.fontFamily ?? 'Roboto';
     super.initState();
   }
 
@@ -128,13 +131,28 @@ class _TableStyleViewState extends State<TableStyleView> {
   }
 
   Widget get headerFooter {
-    return Container(
-      height: 50,
-      child: Row(
-        children: [
-          Expanded(child: Text('Headers & Footer', style: TextStyle(fontSize: 15, color: Colors.white),)),
-          Icon(Icons.arrow_forward_ios, color: Colors.grey,),
-        ],
+    return InkWell(
+      onTap: () {
+        Widget subview = TableHeaderFooterView(
+          screenBloc: widget.screenBloc,
+          stylesheets: widget.stylesheets,
+          onUpdateFontFamily: (_fontFamily) {
+            fontFamily = _fontFamily;
+            _updateTextSize();
+          },
+          onClose: widget.onClose,
+          fontFamily: fontFamily,
+        );
+        navigateSubView(subview);
+      },
+      child: Container(
+        height: 50,
+        child: Row(
+          children: [
+            Expanded(child: Text('Headers & Footer', style: TextStyle(fontSize: 15, color: Colors.white),)),
+            Icon(Icons.arrow_forward_ios, color: Colors.grey,),
+          ],
+        ),
       ),
     );
   }
@@ -331,13 +349,15 @@ class _TableStyleViewState extends State<TableStyleView> {
     return Padding(
       padding: const EdgeInsets.only(top: 20.0),
       child: InkWell(
-        onTap: () => navigateSubView(FontsView(
+        onTap: () => navigateSubView(FontFamilyView(
           screenBloc: widget.screenBloc,
           stylesheets: widget.stylesheets,
-          onUpdateFontFamily: (fontFamily) {
-            fontType = fontFamily;
+          onUpdateFontFamily: (_fontFamily) {
+            fontFamily = _fontFamily;
             _updateTextSize();
-          }, onClose: null,
+          },
+          onClose: widget.onClose,
+          fontFamily: fontFamily,
         )),
         child: Row(
           children: [
@@ -347,7 +367,7 @@ class _TableStyleViewState extends State<TableStyleView> {
             ),
             Spacer(),
             Text(
-              fontType ?? 'Roboto',
+              fontFamily ?? 'Roboto',
               style: TextStyle(color: Colors.blue, fontSize: 15),
             ),
             SizedBox(
@@ -461,6 +481,14 @@ class _TableStyleViewState extends State<TableStyleView> {
   void _updateTextSize() {
     setState(() {
     });
+    ShopEditScreenState state = widget.screenBloc.state;
+    Map<String, dynamic> sheets = widget.stylesheets;
+    sheets['fontSize'] = fontSize;
+    sheets['fontFamily'] = fontFamily;
+    List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
+        state.selectedChild.id, sheets, state.activeShopPage.stylesheetIds);
+    widget.screenBloc.add(UpdateSectionEvent(
+        sectionId: state.selectedSectionId, effects: effects));
   }
 
   void _updateTextProperty(ShopEditScreenState state) {

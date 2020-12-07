@@ -5,7 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
-import 'package:payever/shop/views/edit/style_vew/font_view.dart';
+import 'package:payever/shop/views/edit/style_vew/font_family_view.dart';
 import 'package:payever/shop/views/edit/style_vew/paragraph_view.dart';
 import 'package:payever/shop/views/edit/style_vew/text_options_view.dart';
 import '../../../../theme.dart';
@@ -192,7 +192,7 @@ class _TextStyleViewState extends State<TextStyleView> {
           InkWell(
             onTap: () {
               String fontFamily = styles.decodeHtmlTextFontFamily(widget.screenBloc.htmlText()) ?? 'Roboto';
-              navigateSubView(FontsView(
+              navigateSubView(FontFamilyView(
                 screenBloc: widget.screenBloc,
                 stylesheets: widget.stylesheets,
                 fontFamily: fontFamily,

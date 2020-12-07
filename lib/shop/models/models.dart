@@ -476,7 +476,7 @@ class BaseStyles with BackgroundAssist, StyleAssist, SizeAssist, DecorationAssis
   dynamic fontWeight0;
   @JsonKey(
       name: "fontFamily",
-      defaultValue: "Helvetica Neue,Helvetica,Arial,sans-serif")
+      defaultValue: "Roboto")
   String fontFamily;
   // textAlign is only For Text, Shop Product, Shop Product Category
   @JsonKey(name: 'textAlign')
@@ -720,6 +720,16 @@ class TableStyles extends BaseStyles {
 
   @JsonKey(name: 'headerRowColor', defaultValue: '#FFFFFF')
   String headerRowColor;
+
+  @JsonKey(name: 'headerRows', defaultValue: 1)
+  int headerRows;
+
+  @JsonKey(name: 'headerColumns', defaultValue: 1)
+  int headerColumns;
+
+  @JsonKey(name: 'footerRows', defaultValue: 0)
+  int footerRows;
+
 
   double buttonBorderRadius() {
     return getBorderRadius(borderRadius);

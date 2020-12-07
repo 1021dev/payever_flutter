@@ -7,23 +7,23 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
 
-class FontsView extends StatefulWidget {
+class FontFamilyView extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
   final Map<String, dynamic> stylesheets;
   final Function onUpdateFontFamily;
   final String fontFamily;
   final Function onClose;
 
-  const FontsView(
+  const FontFamilyView(
       {this.screenBloc, this.stylesheets, @required this.onUpdateFontFamily, @required this.fontFamily, @required this.onClose});
 
   @override
-  _FontsViewState createState() => _FontsViewState();
+  _FontFamilyViewState createState() => _FontFamilyViewState();
 }
 
-class _FontsViewState extends State<FontsView> {
+class _FontFamilyViewState extends State<FontFamilyView> {
 
-  _FontsViewState();
+  _FontFamilyViewState();
 
   bool isPortrait;
   bool isTablet;
@@ -150,7 +150,9 @@ class _FontsViewState extends State<FontsView> {
     return InkWell(
       key: Key('$index'),
       onTap: () {
-        _fontFamily = fontFamily;
+        setState(() {
+          _fontFamily = fontFamily;
+        });
         widget.onUpdateFontFamily(fontFamily);
       },
       child: Container(

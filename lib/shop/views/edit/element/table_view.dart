@@ -23,7 +23,8 @@ class _TableViewState extends State<TableView> {
   int rowCount = 5;
   Color headerColumnColor;
   Color headerRowColor;
-
+  double fontSize;
+  String fontFamily;
   final _editableKey = GlobalKey<EditableState>();
 
   _TableViewState();
@@ -40,6 +41,8 @@ class _TableViewState extends State<TableView> {
     rowCount = styles.rowCount;
     headerColumnColor = colorConvert(styles.headerColumnColor);
     headerRowColor = colorConvert(styles.headerRowColor);
+    fontSize = styles.fontSize;
+    fontFamily = styles.fontFamily;
     return body;
   }
 
@@ -55,7 +58,7 @@ class _TableViewState extends State<TableView> {
 
     cellWidth = (tableWidth - 40) / columnCount;
     cellHeight = (tableHeight - 40) / rowCount;
-
+    print('fontFamily: $fontFamily');
     return Editable(
       columns: alphabet.sublist(0, columnCount),
       key: _editableKey,
@@ -75,6 +78,8 @@ class _TableViewState extends State<TableView> {
       },
       tdStyle: TextStyle(
         color: Colors.black,
+        fontSize: fontSize,
+        fontFamily: fontFamily,
       ),
       borderColor: Colors.blueGrey,
     );
