@@ -114,6 +114,7 @@ List<String>ligatures = [
 ];
 
 const minTextFontSize = 8;
+const double ptFontFactor = 30 / 112;
 
 Widget borderStyleWidget(String style) {
   switch (style) {

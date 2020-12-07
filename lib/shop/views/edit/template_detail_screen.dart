@@ -116,6 +116,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
                                       .stylesheetIds
                                       .mobile][state.selectedChild.id],
                                   onClose: () {
+                                    print('onClose');
                                     FocusScope.of(context).unfocus();
                                     setState(() {
                                       showStyleControlView = false;

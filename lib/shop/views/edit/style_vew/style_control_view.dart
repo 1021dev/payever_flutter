@@ -216,7 +216,7 @@ class _StyleControlViewState extends State<StyleControlView> {
             return TableStyleView(screenBloc: widget.screenBloc, stylesheets: widget.stylesheets,);
           return _styleBody(state);
         case StyleType.text:
-          return TextStyleView(screenBloc: widget.screenBloc, stylesheets: widget.stylesheets)/*_textBody(state)*/;
+          return TextStyleView(screenBloc: widget.screenBloc, stylesheets: widget.stylesheets, onClose: widget.onClose,)/*_textBody(state)*/;
         case StyleType.image:
           Map<String, dynamic>map = getData(state);
           ImageData data = (map == null) ? null : ImageData.fromJson(map);

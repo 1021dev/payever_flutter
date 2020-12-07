@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
-import 'package:payever/shop/views/edit/style_vew/sub_view/text_font_view.dart';
+
+import '../font_view.dart';
 
 class TableStyleView extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
@@ -18,6 +20,7 @@ class TableStyleView extends StatefulWidget {
 class _TableStyleViewState extends State<TableStyleView> {
   bool isPortrait;
   bool isTablet;
+
   TextEditingController rowController;
   TextEditingController columnController;
   TableStyles styles;
@@ -27,12 +30,15 @@ class _TableStyleViewState extends State<TableStyleView> {
   bool tableOutlineEnabled = false;
   bool alternatingRowsEnabled = false;
 
+  String fontType;
+  double fontSize;
+
   @override
   void initState() {
     styles = TableStyles.fromJson(widget.stylesheets);
     rowController = TextEditingController(text: '${styles.rowCount}');
     columnController = TextEditingController(text: '${styles.columnCount}');
-
+    fontSize = styles.fontSize;
     super.initState();
   }
 
@@ -57,7 +63,8 @@ class _TableStyleViewState extends State<TableStyleView> {
           alternatingRows,
           gridOptions,
           divider,
-          TextFontView(screenBloc: widget.screenBloc, stylesheets: widget.stylesheets),
+          _fontType,
+          _fontSize,
           SizedBox(height: 32,)
         ],
       ),
@@ -320,11 +327,157 @@ class _TableStyleViewState extends State<TableStyleView> {
     );
   }
 
+  Widget get _fontType {
+    return Padding(
+      padding: const EdgeInsets.only(top: 20.0),
+      child: InkWell(
+        onTap: () => navigateSubView(FontsView(
+          screenBloc: widget.screenBloc,
+          stylesheets: widget.stylesheets,
+          onUpdateFontFamily: (fontFamily) {
+            fontType = fontFamily;
+            _updateTextSize();
+          }, onClose: null,
+        )),
+        child: Row(
+          children: [
+            Text(
+              'Font',
+              style: TextStyle(color: Colors.white, fontSize: 15),
+            ),
+            Spacer(),
+            Text(
+              fontType ?? 'Roboto',
+              style: TextStyle(color: Colors.blue, fontSize: 15),
+            ),
+            SizedBox(
+              width: 20,
+            ),
+            Icon(
+              Icons.arrow_forward_ios,
+              size: 16,
+              color: Colors.grey[600],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget get _fontSize {
+    return Container(
+      margin: EdgeInsets.only(top: 16),
+      height: 40,
+      child: Row(
+        children: [
+          Text(
+            'Size',
+            style: TextStyle(color: Colors.white, fontSize: 15),
+          ),
+          Spacer(),
+          Text(
+            '${fontSize ~/ ptFontFactor} pt',
+            style: TextStyle(color: Colors.blue, fontSize: 15),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Container(
+            width: 150,
+            child: Row(
+              children: [
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      if (fontSize > minTextFontSize) {
+                        fontSize --;
+                        _updateTextSize();
+                      }
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: Color.fromRGBO(51, 48, 53, 1),
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(8),
+                            bottomLeft: Radius.circular(8)),
+                      ),
+                      child: Text(
+                        '-',
+                        style: TextStyle(fontSize: 24),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 1,
+                ),
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      fontSize ++;
+                      _updateTextSize();
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: Color.fromRGBO(51, 48, 53, 1),
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(8),
+                            bottomRight: Radius.circular(8)),
+                      ),
+                      child: Text(
+                        '+',
+                        style: TextStyle(fontSize: 24),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   Widget get divider {
     return Divider(
       height: 0,
       thickness: 0.5,
     );
+  }
+
+  void navigateSubView(Widget subview) {
+    showModalBottomSheet(
+        context: context,
+        barrierColor: Colors.transparent,
+        // isScrollControlled: true,
+        builder: (builder) {
+          return subview;
+        });
+  }
+
+  void _updateTextSize() {
+    setState(() {
+    });
+  }
+
+  void _updateTextProperty(ShopEditScreenState state) {
+    Map<String, dynamic> sheets = widget.stylesheets;
+
+    // List<Map<String, dynamic>> effects = styles.getUpdateDataPayload(
+    //     state.selectedSectionId,
+    //     selectedChildId,
+    //     sheets,
+    //     data,
+    //     'text',
+    //     state.activeShopPage.templateId);
+    // print('payload: $effects');
+    // setState(() {
+    // });
+    // widget.screenBloc.add(UpdateSectionEvent(
+    //     sectionId: state.selectedSectionId, effects: effects));
   }
 
   _updateStyles(Map<String, dynamic> sheets) {

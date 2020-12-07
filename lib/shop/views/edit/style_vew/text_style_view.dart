@@ -7,7 +7,6 @@ import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/style_vew/font_view.dart';
 import 'package:payever/shop/views/edit/style_vew/paragraph_view.dart';
-import 'package:payever/shop/views/edit/style_vew/sub_view/text_font_view.dart';
 import 'package:payever/shop/views/edit/style_vew/text_options_view.dart';
 import '../../../../theme.dart';
 import 'fill_color_view.dart';
@@ -15,8 +14,9 @@ import 'fill_color_view.dart';
 class TextStyleView extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
   final Map<String, dynamic> stylesheets;
+  final Function onClose;
 
-  const TextStyleView({@required this.screenBloc, @required this.stylesheets});
+  const TextStyleView({@required this.screenBloc, @required this.stylesheets, @required this.onClose});
 
   @override
   _TextStyleViewState createState() => _TextStyleViewState();
@@ -37,7 +37,6 @@ class _TextStyleViewState extends State<TextStyleView> {
   BulletList bulletList;
 
   String selectedChildId;
-  final double ptFontFactor = 30 / 112;
 
   @override
   void initState() {
@@ -190,7 +189,43 @@ class _TextStyleViewState extends State<TextStyleView> {
       padding: const EdgeInsets.only(top: 20.0),
       child: Column(
         children: [
-          TextFontView(screenBloc: widget.screenBloc, stylesheets: widget.stylesheets),
+          InkWell(
+            onTap: () {
+              String fontFamily = styles.decodeHtmlTextFontFamily(widget.screenBloc.htmlText()) ?? 'Roboto';
+              navigateSubView(FontsView(
+                screenBloc: widget.screenBloc,
+                stylesheets: widget.stylesheets,
+                fontFamily: fontFamily,
+                onUpdateFontFamily: (fontFamily) {
+                  String htmlStr =
+                  styles.encodeHtmlString(htmlText, fontFamily: fontFamily);
+                  _updateTextProperty(state, htmlStr);
+                },
+                onClose: widget.onClose,
+              ));
+              } ,
+            child: Row(
+              children: [
+                Text(
+                  'Font',
+                  style: TextStyle(color: Colors.white, fontSize: 15),
+                ),
+                Spacer(),
+                Text(
+                  styles.decodeHtmlTextFontFamily(widget.screenBloc.htmlText()) ?? 'Roboto',
+                  style: TextStyle(color: Colors.blue, fontSize: 15),
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  size: 16,
+                  color: Colors.grey[600],
+                ),
+              ],
+            ),
+          ),
           SizedBox(
             height: 15,
           ),

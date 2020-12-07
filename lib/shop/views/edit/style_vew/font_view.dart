@@ -11,7 +11,11 @@ class FontsView extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
   final Map<String, dynamic> stylesheets;
   final Function onUpdateFontFamily;
-  const FontsView({this.screenBloc, this.stylesheets, @required this.onUpdateFontFamily});
+  final String fontFamily;
+  final Function onClose;
+
+  const FontsView(
+      {this.screenBloc, this.stylesheets, @required this.onUpdateFontFamily, @required this.fontFamily, @required this.onClose});
 
   @override
   _FontsViewState createState() => _FontsViewState();
@@ -24,6 +28,12 @@ class _FontsViewState extends State<FontsView> {
   bool isPortrait;
   bool isTablet;
   String _fontFamily;
+
+  @override
+  void initState() {
+    _fontFamily = widget.fontFamily ?? 'Roboto';
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +49,6 @@ class _FontsViewState extends State<FontsView> {
 
   Widget body(ShopEditScreenState state) {
     if (state.selectedChild == null) return Container();
-    TextStyles styles = TextStyles.fromJson(widget.stylesheets);
-    _fontFamily = styles.decodeHtmlTextFontFamily(widget.screenBloc.htmlText()) ?? 'Roboto';
-
     return Container(
       height: 400,
       child: Scaffold(
@@ -72,7 +79,9 @@ class _FontsViewState extends State<FontsView> {
       child: Row(
         children: [
           InkWell(
-            onTap: () => Navigator.pop(context),
+            onTap: () {
+              Navigator.pop(context);
+            },
             child: Row(
               children: [
                 Icon(
@@ -96,7 +105,7 @@ class _FontsViewState extends State<FontsView> {
             padding: EdgeInsets.only(left: 20),
             child: InkWell(
               onTap: () {
-                Navigator.pop(context);
+                widget.onClose();
                 Navigator.pop(context);
               },
               child: Container(
@@ -140,7 +149,10 @@ class _FontsViewState extends State<FontsView> {
     String fontFamily = fonts[index];
     return InkWell(
       key: Key('$index'),
-      onTap: ()=> widget.onUpdateFontFamily(fontFamily),
+      onTap: () {
+        _fontFamily = fontFamily;
+        widget.onUpdateFontFamily(fontFamily);
+      },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20),
         height: 50,
