@@ -97,6 +97,7 @@ class _RowBuilderState extends State<RowBuilder> {
           // enabled: false,
           decoration: InputDecoration(
               filled: widget.zebraStripe,
+              fillColor: bgColor,
               // fillColor: widget.index % 2 == 1.0
               //     ? widget.stripeColor2
               //     : widget.stripeColor1,

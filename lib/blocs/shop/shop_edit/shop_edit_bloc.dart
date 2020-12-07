@@ -54,7 +54,7 @@ class ShopEditScreenBloc
           selectedBlock: null,
           selectedChild: null);
     } else if (event is UpdateSectionEvent) {
-      yield* updateSection(event);
+      yield* addAction(event);
     } else if (event is ActiveShopPageEvent) {
       yield state.copyWith(activeShopPage: event.activeShopPage);
     } else if(event is FetchPageEvent) {
@@ -159,7 +159,7 @@ class ShopEditScreenBloc
         isLoading: false);
   }
 
-  Stream<ShopEditScreenState> updateSection(UpdateSectionEvent event) async* {
+  Stream<ShopEditScreenState> addAction(UpdateSectionEvent event) async* {
     if (state.activeShopPage == null) {
       yield state.copyWith(selectedSectionId: event.sectionId);
       Fluttertoast.showToast(msg: 'Shop page does not selected');

@@ -284,8 +284,6 @@ class _StyleControlViewState extends State<StyleControlView> {
             styles: productsStyles,
             onChangeGaps: (value, updateApi) => _updateProductsGaps(state, value, updateApi: updateApi),
           );
-        case StyleType.table:
-          return TableStyleView();
         case StyleType.cell:
           return CellStyleView();
         case StyleType.format:
@@ -293,7 +291,7 @@ class _StyleControlViewState extends State<StyleControlView> {
         default:
           return _styleBody(state);
       }
-    }catch(e) {
+    } catch(e) {
       styleType = StyleType.style;
       return _styleBody(state);
     }

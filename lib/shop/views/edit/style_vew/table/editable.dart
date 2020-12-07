@@ -259,22 +259,18 @@ class Editable extends StatefulWidget {
   @override
   EditableState createState() => EditableState(
       rows: this.rows,
-      columns: this.columns,
-      rowCount: this.rowCount,
-      columnCount: this.columnCount);
+      columns: this.columns);
 }
 
 class EditableState extends State<Editable> {
   List rows, columns;
-  int columnCount;
-  int rowCount;
 
   ///Get all edited rows
   List get editedRows => _editedRows;
 
   ///Create a row after the last row
   createRow() => addOneRow(columns, rows);
-  EditableState({this.rows, this.columns, this.columnCount, this.rowCount});
+  EditableState({this.rows, this.columns,});
 
   /// Temporarily holds all edited rows
   List _editedRows = [];
@@ -282,17 +278,15 @@ class EditableState extends State<Editable> {
   @override
   Widget build(BuildContext context) {
     /// initial Setup of columns and row, sets count of column and row
-    rowCount = rows == null || rows.isEmpty ? widget.rowCount : rows.length;
-    columnCount =
-        columns == null || columns.isEmpty ? columnCount : columns.length;
-    columns = columns ?? columnBlueprint(columnCount, columns);
-    rows = rows ?? rowBlueprint(rowCount, columns, rows);
+
+    columns = columns ?? columnBlueprint(widget.columnCount, columns);
+    rows = rows ?? rowBlueprint(widget.rowCount, columns, rows);
 
 
     /// Generates table columns
     List<Widget> _tableHeaders() {
-      return List<Widget>.generate(columnCount + 1, (index) {
-        return columnCount + 1 == (index + 1)
+      return List<Widget>.generate(widget.columnCount + 1, (index) {
+        return widget.columnCount + 1 == (index + 1)
             ? iconColumn(widget.showSaveIcon, widget.thPaddingTop,
                 widget.thPaddingBottom)
             : THeader(
@@ -313,11 +307,11 @@ class EditableState extends State<Editable> {
 
     /// Generates table rows
     List<Widget> _tableRows() {
-      return List<Widget>.generate(rowCount, (index) {
+      return List<Widget>.generate(widget.rowCount, (index) {
         return Row(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: List.generate(columnCount + 1, (rowIndex) {
+          children: List.generate(widget.columnCount + 1, (rowIndex) {
             var ckeys = [];
             var cwidths = [];
             columns.forEach((e) {
@@ -422,7 +416,7 @@ class EditableState extends State<Editable> {
         child: InkWell(
           onTap: () {
             rows = addOneRow(columns, rows);
-            rowCount++;
+            // rowCount++;
             setState(() {});
           },
           child: Container(

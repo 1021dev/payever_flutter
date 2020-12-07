@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
@@ -20,6 +21,12 @@ class _TableStyleViewState extends State<TableStyleView> {
   TextEditingController columnController;
   TableStyles styles;
 
+  bool titleEnabled = false;
+  bool captionEnabled = false;
+  bool tableOutlineEnabled = false;
+  bool alternatingRowsEnabled = false;
+
+
   @override
   void initState() {
     styles = TableStyles.fromJson(widget.stylesheets);
@@ -39,12 +46,13 @@ class _TableStyleViewState extends State<TableStyleView> {
         children: [
           gridView,
           headerFooter,
-          Divider(
-            height: 0,
-            thickness: 0.5,
-          ),
+          divider,
           rowCount,
           columnCount,
+          rowColumnSize,
+          divider,
+          titleCaption,
+          divider,
           SizedBox(height: 32,)
         ],
       ),
@@ -191,6 +199,126 @@ class _TableStyleViewState extends State<TableStyleView> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget get rowColumnSize {
+    return Container(
+      height: 50,
+      child: Row(
+        children: [
+          Expanded(child: Text('Row & Column Size', style: TextStyle(fontSize: 15, color: Colors.white),)),
+          Icon(Icons.arrow_forward_ios, color: Colors.grey,),
+        ],
+      ),
+    );
+  }
+
+  Widget get titleCaption {
+    return Column(
+      children: [
+        Container(
+          height: 50,
+          child: Row(
+            children: [
+              Expanded(child: Text('Title', style: TextStyle(fontSize: 15, color: Colors.white),)),
+              Transform.scale(
+                scale: 0.8,
+                child: CupertinoSwitch(
+                  value: titleEnabled,
+                  onChanged: (value) {
+                    setState(() {
+                      titleEnabled = !titleEnabled;
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+        Container(
+          height: 50,
+          child: Row(
+            children: [
+              Expanded(child: Text('Caption', style: TextStyle(fontSize: 15, color: Colors.white),)),
+              Transform.scale(
+                scale: 0.8,
+                child: CupertinoSwitch(
+                  value: captionEnabled,
+                  onChanged: (value) {
+                    setState(() {
+                      captionEnabled = !captionEnabled;
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget get tableOutline {
+    return Container(
+      height: 50,
+      child: Row(
+        children: [
+          Expanded(child: Text('Table Outline', style: TextStyle(fontSize: 15, color: Colors.white),)),
+          Transform.scale(
+            scale: 0.8,
+            child: CupertinoSwitch(
+              value: tableOutlineEnabled,
+              onChanged: (value) {
+                setState(() {
+                  tableOutlineEnabled = !tableOutlineEnabled;
+                });
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget get alternatingRows {
+    return Container(
+      height: 50,
+      child: Row(
+        children: [
+          Expanded(child: Text('Alternating Rows', style: TextStyle(fontSize: 15, color: Colors.white),)),
+          Transform.scale(
+            scale: 0.8,
+            child: CupertinoSwitch(
+              value: alternatingRowsEnabled,
+              onChanged: (value) {
+                setState(() {
+                  alternatingRowsEnabled = !alternatingRowsEnabled;
+                });
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget get gridOptions {
+    return Container(
+      height: 50,
+      child: Row(
+        children: [
+          Expanded(child: Text('Grid Options', style: TextStyle(fontSize: 15, color: Colors.white),)),
+          Icon(Icons.arrow_forward_ios, color: Colors.grey,),
+        ],
+      ),
+    );
+  }
+
+  Widget get divider {
+    return Divider(
+      height: 0,
+      thickness: 0.5,
     );
   }
 
