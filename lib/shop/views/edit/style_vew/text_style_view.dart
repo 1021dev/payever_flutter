@@ -7,6 +7,7 @@ import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/style_vew/font_view.dart';
 import 'package:payever/shop/views/edit/style_vew/paragraph_view.dart';
+import 'package:payever/shop/views/edit/style_vew/sub_view/text_font_view.dart';
 import 'package:payever/shop/views/edit/style_vew/text_options_view.dart';
 import '../../../../theme.dart';
 import 'fill_color_view.dart';
@@ -189,38 +190,7 @@ class _TextStyleViewState extends State<TextStyleView> {
       padding: const EdgeInsets.only(top: 20.0),
       child: Column(
         children: [
-          InkWell(
-            onTap: () => navigateSubView(FontsView(
-              screenBloc: widget.screenBloc,
-              stylesheets: widget.stylesheets,
-              onUpdateFontFamily: (fontFamily) {
-                String htmlStr =
-                styles.encodeHtmlString(htmlText, fontFamily: fontFamily);
-                _updateTextProperty(state, htmlStr);
-              },
-            )),
-            child: Row(
-              children: [
-                Text(
-                  'Font',
-                  style: TextStyle(color: Colors.white, fontSize: 15),
-                ),
-                Spacer(),
-                Text(
-                  styles.decodeHtmlTextFontFamily(widget.screenBloc.htmlText()) ?? 'Roboto',
-                  style: TextStyle(color: Colors.blue, fontSize: 15),
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  size: 16,
-                  color: Colors.grey[600],
-                ),
-              ],
-            ),
-          ),
+          TextFontView(screenBloc: widget.screenBloc, stylesheets: widget.stylesheets),
           SizedBox(
             height: 15,
           ),

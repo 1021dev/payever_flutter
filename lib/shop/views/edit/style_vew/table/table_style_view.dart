@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/style_vew/sub_view/text_font_view.dart';
 
 class TableStyleView extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
@@ -25,7 +26,6 @@ class _TableStyleViewState extends State<TableStyleView> {
   bool captionEnabled = false;
   bool tableOutlineEnabled = false;
   bool alternatingRowsEnabled = false;
-
 
   @override
   void initState() {
@@ -53,6 +53,11 @@ class _TableStyleViewState extends State<TableStyleView> {
           divider,
           titleCaption,
           divider,
+          tableOutline,
+          alternatingRows,
+          gridOptions,
+          divider,
+          TextFontView(screenBloc: widget.screenBloc, stylesheets: widget.stylesheets),
           SizedBox(height: 32,)
         ],
       ),
