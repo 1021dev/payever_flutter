@@ -24,11 +24,9 @@ import 'sub_view/opacity_view.dart';
 
 class StyleControlView extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
-  final Map<String, dynamic> stylesheets;
   final Function onClose;
-  final String templateId;
 
-  const StyleControlView({this.screenBloc, this.stylesheets, this.onClose, this.templateId});
+  const StyleControlView({this.screenBloc, this.onClose});
 
   @override
   _StyleControlViewState createState() => _StyleControlViewState();
@@ -136,7 +134,7 @@ class _StyleControlViewState extends State<StyleControlView> {
 
   void _initTextProperties (ShopEditScreenState state) {
     selectedChildId = state.selectedChild.id;
-    styles = TextStyles.fromJson(widget.stylesheets);
+    styles = TextStyles.fromJson(state.pageDetail.stylesheets);
     fillColor = colorConvert(styles.backgroundColor, emptyColor: true);
     borderColor = colorConvert(styles.borderColor, emptyColor: true);
 
@@ -213,10 +211,10 @@ class _StyleControlViewState extends State<StyleControlView> {
       switch (styleType) {
         case StyleType.style:
           if (state.selectedChild.type == 'table')
-            return TableStyleView(screenBloc: widget.screenBloc, stylesheets: widget.stylesheets,);
+            return TableStyleView(screenBloc: widget.screenBloc, onClose: widget.onClose,);
           return _styleBody(state);
         case StyleType.text:
-          return TextStyleView(screenBloc: widget.screenBloc, stylesheets: widget.stylesheets, onClose: widget.onClose,)/*_textBody(state)*/;
+          return TextStyleView(screenBloc: widget.screenBloc, onClose: widget.onClose,)/*_textBody(state)*/;
         case StyleType.image:
           Map<String, dynamic>map = getData(state);
           ImageData data = (map == null) ? null : ImageData.fromJson(map);
@@ -238,7 +236,7 @@ class _StyleControlViewState extends State<StyleControlView> {
         case StyleType.arrange:
           return ArrangeStyleView();
         case StyleType.products:
-          ShopProductsStyles productsStyles = ShopProductsStyles.fromJson(widget.stylesheets);
+          ShopProductsStyles productsStyles = ShopProductsStyles.fromJson(widget.screenBloc.state.pageDetail.stylesheets);
           return ProductsStyleView(
             screenBloc: widget.screenBloc,
             styles: productsStyles,
@@ -276,7 +274,6 @@ class _StyleControlViewState extends State<StyleControlView> {
           onTapFillView: () {
             navigateSubView(FillView(
               widget.screenBloc,
-              stylesheets: widget.stylesheets,
               hasComplexFill: hasComplexFill,
               onUpdateColor: (Color color) => _updateFillColor(state, color),
               onUpdateGradientFill: (GradientModel model, bool updateApi) =>
@@ -298,7 +295,6 @@ class _StyleControlViewState extends State<StyleControlView> {
         ),
       if (hasShadow)
         ShadowView(
-          stylesheets: widget.stylesheets,
           styles: styles,
           type: state.selectedChild.type,
           onUpdateShadow: (ShadowModel model, updateApi) => _updateShadow(state, model, updateApi: updateApi ?? true),
@@ -351,11 +347,11 @@ class _StyleControlViewState extends State<StyleControlView> {
     } else {
       newBgColor = encodeColor(color);
     }
-    Map<String, dynamic> sheets = widget.stylesheets;
+    Map<String, dynamic> sheets = state.pageDetail.stylesheets;
     sheets['backgroundColor'] = newBgColor;
     sheets['backgroundImage'] = '';
     List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
-        selectedChildId, sheets, state.activeShopPage.stylesheetIds);
+        selectedChildId, sheets, state.pageDetail.stylesheetIds);
 
     widget.screenBloc.add(UpdateSectionEvent(
         sectionId: state.selectedSectionId, effects: effects));
@@ -365,18 +361,18 @@ class _StyleControlViewState extends State<StyleControlView> {
     // backgroundImage: "linear-gradient(90deg, #ff0000ff, #fffef8ff)"
     String color1 = encodeColor(model.startColor);
     String color2 = encodeColor(model.endColor);
-    Map<String, dynamic> sheets = widget.stylesheets;
+    Map<String, dynamic> sheets = state.pageDetail.stylesheets;
     sheets['backgroundColor'] = '';
     sheets['backgroundImage'] = 'linear-gradient(${model.angle.toInt()}deg, $color1, $color2)';
     List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
-        selectedChildId, sheets, state.activeShopPage.stylesheetIds);
+        selectedChildId, sheets, state.pageDetail.stylesheetIds);
 
     widget.screenBloc.add(UpdateSectionEvent(
         sectionId: state.selectedSectionId, effects: effects, updateApi: updateApi));
   }
 
   void _updateImageFill(ShopEditScreenState state, BackGroundModel backgroundModel) {
-    Map<String, dynamic> sheets = widget.stylesheets;
+    Map<String, dynamic> sheets = state.pageDetail.stylesheets;
     sheets['backgroundColor'] = backgroundModel.backgroundColor;
     sheets['backgroundImage'] = backgroundModel.backgroundImage;
     sheets['backgroundPosition'] =  backgroundModel.backgroundPosition;
@@ -384,24 +380,24 @@ class _StyleControlViewState extends State<StyleControlView> {
     sheets['backgroundSize'] =  backgroundModel.backgroundSize;
 
     List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
-        selectedChildId, sheets, state.activeShopPage.stylesheetIds);
+        selectedChildId, sheets, state.pageDetail.stylesheetIds);
 
     widget.screenBloc.add(UpdateSectionEvent(
         sectionId: state.selectedSectionId, effects: effects));
   }
 
   void _updateImage(ShopEditScreenState state, String url) {
-    Map<String, dynamic> sheets = widget.stylesheets;
+    Map<String, dynamic> sheets = state.pageDetail.stylesheets;
     sheets['background'] = url;
     List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
-        selectedChildId, sheets, state.activeShopPage.stylesheetIds);
+        selectedChildId, sheets, state.pageDetail.stylesheetIds);
 
     widget.screenBloc.add(UpdateSectionEvent(
         sectionId: state.selectedSectionId, effects: effects));
   }
 
   void _updateImageDescription(ShopEditScreenState state, String description) {
-    Map<String, dynamic> sheets = widget.stylesheets;
+    Map<String, dynamic> sheets = state.pageDetail.stylesheets;
     Map<String, dynamic> data = {
       'description': description,
       'text': '',
@@ -413,7 +409,7 @@ class _StyleControlViewState extends State<StyleControlView> {
         sheets,
         data,
         'image',
-        state.activeShopPage.templateId);
+        state.pageDetail.templateId);
 
     widget.screenBloc.add(UpdateSectionEvent(
         sectionId: state.selectedSectionId, effects: effects));
@@ -421,7 +417,7 @@ class _StyleControlViewState extends State<StyleControlView> {
 
   // region Video
   void _updateVideo(ShopEditScreenState state, String url) {
-    Map<String, dynamic> sheets = widget.stylesheets;
+    Map<String, dynamic> sheets = state.pageDetail.stylesheets;
     Map<String, dynamic> map = getData(state);
     VideoData data = VideoData.fromJson(map);
     data.source = url;
@@ -431,7 +427,7 @@ class _StyleControlViewState extends State<StyleControlView> {
         sheets,
         data.toJson(),
         'video',
-        state.activeShopPage.templateId);
+        state.pageDetail.templateId);
 
     widget.screenBloc.add(UpdateSectionEvent(
         sectionId: state.selectedSectionId, effects: effects));
@@ -439,14 +435,14 @@ class _StyleControlViewState extends State<StyleControlView> {
 
   void _updateVideoData(ShopEditScreenState state, VideoData data) {
     print('updateVideoData: ${data.toJson()}');
-    Map<String, dynamic> sheets = widget.stylesheets;
+    Map<String, dynamic> sheets = state.pageDetail.stylesheets;
     List<Map<String, dynamic>> effects = styles.getUpdateDataPayload(
         state.selectedSectionId,
         selectedChildId,
         sheets,
         data.toJson(),
         'video',
-        state.activeShopPage.templateId);
+        state.pageDetail.templateId);
 
     widget.screenBloc.add(UpdateSectionEvent(
         sectionId: state.selectedSectionId, effects: effects));
@@ -454,29 +450,29 @@ class _StyleControlViewState extends State<StyleControlView> {
   // endregion
 
   void _updateProductsGaps(ShopEditScreenState state, Map<String, dynamic> value, {bool updateApi = true}) {
-    Map<String, dynamic> sheets = widget.stylesheets;
+    Map<String, dynamic> sheets = state.pageDetail.stylesheets;
     sheets['columnGap'] = value['columnGap'];
     sheets['rowGap'] = value['rowGap'];
     List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
-        selectedChildId, sheets, state.activeShopPage.stylesheetIds);
+        selectedChildId, sheets, state.pageDetail.stylesheetIds);
 
     widget.screenBloc.add(UpdateSectionEvent(
         sectionId: state.selectedSectionId, effects: effects, updateApi: updateApi));
   }
 
   void _updateOpacity(ShopEditScreenState state, double value, {bool updateApi = true}) {
-    Map<String, dynamic> sheets = widget.stylesheets;
+    Map<String, dynamic> sheets = state.pageDetail.stylesheets;
     sheets['opacity'] = num.parse(value.toStringAsFixed(1));
 
     List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
-        selectedChildId, sheets, state.activeShopPage.stylesheetIds);
+        selectedChildId, sheets, state.pageDetail.stylesheetIds);
 
     widget.screenBloc.add(UpdateSectionEvent(
         sectionId: state.selectedSectionId, effects: effects, updateApi: updateApi));
   }
 
   void _updateShadow(ShopEditScreenState state, ShadowModel model, {bool updateApi = true}) {
-    Map<String, dynamic> sheets = widget.stylesheets;
+    Map<String, dynamic> sheets = state.pageDetail.stylesheets;
     String field = state.selectedChild.type == 'shape' ? 'shadow' : 'boxShadow';
     if (state.selectedChild.type == 'social-icon') {
       field = 'filter';
@@ -499,25 +495,25 @@ class _StyleControlViewState extends State<StyleControlView> {
       sheets[field] = model?.shadowString ?? false;
     }
     List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
-        selectedChildId, sheets, state.activeShopPage.stylesheetIds);
+        selectedChildId, sheets, state.pageDetail.stylesheetIds);
 
     widget.screenBloc.add(UpdateSectionEvent(
         sectionId: state.selectedSectionId, effects: effects, updateApi: updateApi));
   }
 
   void _updateBorderRadius(ShopEditScreenState state, double radius, {bool updateApi = true}) {
-    Map<String, dynamic> sheets = widget.stylesheets;
+    Map<String, dynamic> sheets = state.pageDetail.stylesheets;
     sheets['borderRadius'] = radius.toInt();
 
     List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
-        selectedChildId, sheets, state.activeShopPage.stylesheetIds);
+        selectedChildId, sheets, state.pageDetail.stylesheetIds);
 
     widget.screenBloc.add(UpdateSectionEvent(
         sectionId: state.selectedSectionId, effects: effects, updateApi: updateApi));
   }
 
   void _updateImageBorderModel(ShopEditScreenState state, BorderModel model, {bool updateApi = true}) {
-    Map<String, dynamic> sheets = widget.stylesheets;
+    Map<String, dynamic> sheets = state.pageDetail.stylesheets;
     sheets['borderColor'] =  model.borderColor;
     if (state.selectedChild.type == 'image') {
       sheets['border'] = model.border;
@@ -529,7 +525,7 @@ class _StyleControlViewState extends State<StyleControlView> {
     }
 
     List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
-        selectedChildId, sheets, state.activeShopPage.stylesheetIds);
+        selectedChildId, sheets, state.pageDetail.stylesheetIds);
 
     widget.screenBloc.add(UpdateSectionEvent(
         sectionId: state.selectedSectionId, effects: effects, updateApi: updateApi));
@@ -538,8 +534,7 @@ class _StyleControlViewState extends State<StyleControlView> {
   // endregion
 
   Map<String, dynamic> getData(ShopEditScreenState state) {
-    Template template =  Template.fromJson(state.templates[widget.templateId]);
-    Child section = template.children.firstWhere((element) => element.id == state.selectedSectionId);
+    Child section = state.pageDetail.template.children.firstWhere((element) => element.id == state.selectedSectionId);
     Child child = section.children.firstWhere((element) => element.id == state.selectedChild.id);
     return child.data;
   }

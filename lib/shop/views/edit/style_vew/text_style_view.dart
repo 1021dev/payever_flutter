@@ -13,10 +13,9 @@ import 'fill_color_view.dart';
 
 class TextStyleView extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
-  final Map<String, dynamic> stylesheets;
   final Function onClose;
 
-  const TextStyleView({@required this.screenBloc, @required this.stylesheets, @required this.onClose});
+  const TextStyleView({@required this.screenBloc, @required this.onClose});
 
   @override
   _TextStyleViewState createState() => _TextStyleViewState();
@@ -40,7 +39,7 @@ class _TextStyleViewState extends State<TextStyleView> {
 
   @override
   void initState() {
-    styles = TextStyles.fromJson(widget.stylesheets);
+    styles = TextStyles.fromJson(widget.screenBloc.state.pageDetail.stylesheets);
     ShopEditScreenState state = widget.screenBloc.state;
     selectedChildId = state.selectedChild.id;
 
@@ -194,7 +193,6 @@ class _TextStyleViewState extends State<TextStyleView> {
               String fontFamily = styles.decodeHtmlTextFontFamily(widget.screenBloc.htmlText()) ?? 'Roboto';
               navigateSubView(FontFamilyView(
                 screenBloc: widget.screenBloc,
-                stylesheets: widget.stylesheets,
                 fontFamily: fontFamily,
                 onUpdateFontFamily: (fontFamily) {
                   String htmlStr =
@@ -308,7 +306,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                 ),
                 Expanded(
                     child: InkWell(
-                        onTap: () => navigateSubView(TextOptionsView(screenBloc: widget.screenBloc, stylesheets: widget.stylesheets,)),
+                        onTap: () => navigateSubView(TextOptionsView(screenBloc: widget.screenBloc)),
                         child: Container(
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
@@ -837,7 +835,7 @@ class _TextStyleViewState extends State<TextStyleView> {
   }
 
   void _updateTextProperty(ShopEditScreenState state, String newHtmlText) {
-    Map<String, dynamic> sheets = widget.stylesheets;
+    Map<String, dynamic> sheets = state.pageDetail.stylesheets;
     Map<String, dynamic> data = {'text': newHtmlText, 'sync': false};
     List<Map<String, dynamic>> effects = styles.getUpdateDataPayload(
         state.selectedSectionId,
@@ -845,7 +843,7 @@ class _TextStyleViewState extends State<TextStyleView> {
         sheets,
         data,
         'text',
-        state.activeShopPage.templateId);
+        state.pageDetail.templateId);
     print('payload: $effects');
     setState(() {
     });

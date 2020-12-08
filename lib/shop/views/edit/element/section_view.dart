@@ -29,7 +29,6 @@ import 'image_view.dart';
 
 class SectionView extends StatefulWidget {
   final String deviceTypeId;
-  final String templateId;
   final String sectionId;
   final bool isSelected;
   final Function onTapChild;
@@ -38,7 +37,6 @@ class SectionView extends StatefulWidget {
 
   const SectionView(
       {this.deviceTypeId,
-        this.templateId,
         this.sectionId,
         this.screenBloc,
         this.isSelected = false,
@@ -122,9 +120,9 @@ class _SectionViewState extends State<SectionView> {
   }
 
   Widget body(ShopEditScreenState state) {
-    template =  Template.fromJson(state.templates[widget.templateId]);
+    template =  Template.fromJson(state.pageDetail.stylesheets);
     section = template.children.firstWhere((element) => element.id == sectionId);
-    sectionStyles = SectionStyles.fromJson(state.stylesheets[deviceTypeId][sectionId]);
+    sectionStyles = SectionStyles.fromJson(state.pageDetail.stylesheets[deviceTypeId][sectionId]);
 
     if (sectionStyles == null) {
       return Container();
@@ -843,7 +841,7 @@ class _SectionViewState extends State<SectionView> {
   }
 
   _addNewObject(ShopObject shopObject) {
-    List<Map<String, dynamic>>effects = sectionStyles.getAddNewObjectPayload(shopObject, section.id, widget.screenBloc.state.activeShopPage.stylesheetIds, widget.screenBloc.state.activeShopPage.templateId);
+    List<Map<String, dynamic>>effects = sectionStyles.getAddNewObjectPayload(shopObject, section.id, widget.screenBloc.state.pageDetail.stylesheetIds, widget.screenBloc.state.activeShopPage.templateId);
     print('payload: $effects');
     widget.screenBloc.add(UpdateSectionEvent(sectionId: section.id, effects: effects));
   }

@@ -33,6 +33,8 @@ class ShopEditScreenBloc
           activeShop: shopScreenBloc.state.activeShop,
           activeTheme: shopScreenBloc.state.activeTheme);
       yield* fetchSnapShot();
+    } else if (event is GetPageEvent) {
+      yield* getPage(event.pageId);
     } else if (event is SelectSectionEvent) {
       if (event.selectedChild == null && event.selectedBlock == null) {
         yield state.initSelectedChild(
@@ -55,8 +57,6 @@ class ShopEditScreenBloc
           selectedChild: null);
     } else if (event is UpdateSectionEvent) {
       yield* addAction(event);
-    } else if (event is ActiveShopPageEvent) {
-      yield state.copyWith(activeShopPage: event.activeShopPage);
     } else if(event is FetchPageEvent) {
       yield* updatePage(event.response);
     } else if(event is UploadPhotoEvent) {
@@ -108,10 +108,6 @@ class ShopEditScreenBloc
     if (response1 is DioError) {
       yield state.copyWith(isLoading: false);
     } else {
-      // Context
-      // contextSchemas Map /{method: "getByIds",
-      // params: [["cd4117e3-e6da-45b2-a5eb-932d019a8fff"]],
-      // service: "products"}
       if (response1['contextSchemas'] != null && response1['contextSchemas'] is Map) {
         contextSchemas = response1['contextSchemas'];
       }
@@ -127,15 +123,7 @@ class ShopEditScreenBloc
 
       ShopPage homepage = pages?.firstWhere((element) => element.name == 'HOMEPAGE');
       if (homepage != null) {
-        dynamic response2 = await api.getPage(token, themeId, homepage.id);
-        // Stylesheets Map /{deviceKey : {templateId : Background}}
-        if (response2['stylesheets'] != null && response2['stylesheets'] is Map) {
-          stylesheets = response1['stylesheets'];
-        }
-        // Templates
-        if (response2['template'] != null && response2['template'] is Map) {
-          templates = response2['template'];
-        }
+        add(GetPageEvent(pageId: homepage.id));
       }
     }
 
@@ -156,11 +144,7 @@ class ShopEditScreenBloc
     }
 
     yield state.copyWith(
-        contextSchemas: contextSchemas,
-        previews: previews,
         pages: pages,
-        stylesheets: stylesheets,
-        templates: templates,
         actions: actions,
         isLoading: false);
   }
@@ -170,94 +154,95 @@ class ShopEditScreenBloc
     String token = GlobalUtils.activeToken.accessToken;
     String themeId = state.activeTheme.themeId;
     PageDetail pageDetail;
+    yield state.copyWith(isLoading: true);
     dynamic response = await api.getPage(token, themeId, pageId);
     // Stylesheets Map /{deviceKey : {templateId : Background}}
     if (!(response is DioError)) {
       pageDetail = PageDetail.fromJson(response);
     }
-    yield state.copyWith(pageDetail: pageDetail);
+    yield state.copyWith(pageDetail: pageDetail, isLoading: false);
   }
 
   Stream<ShopEditScreenState> addAction(UpdateSectionEvent event) async* {
-    if (state.activeShopPage == null) {
-      yield state.copyWith(selectedSectionId: event.sectionId);
-      Fluttertoast.showToast(msg: 'Shop page does not selected');
-      return;
-    }
-
-    Map<String, dynamic> body = {
-      'affectedPageIds': [state.activeShopPage.id],
-      'createdAt': DateFormat("yyyy-MM-dd'T'hh:mm:ss").format(DateTime.now()),
-      'effects': event.effects,
-      'id': Uuid().v4(),
-      'targetPageId': state.activeShopPage.id
-    };
-    print('update Body: $body');
-
-    Map<String, dynamic>stylesheets = state.stylesheets;
-    Map<String, dynamic> templates = state.templates;
-    String actionType = event.effects.first['type'];
-    // Add Text
-    print('actionType: $actionType');
-    if (actionType == 'template:append-element') {
-      Map<String, dynamic>newTextMap = event.effects.first['payload']['element'];
-      String id = newTextMap['id'];
-      Map<String, dynamic>styles = event.effects[3]['payload'][id];
-      stylesheets[state.activeShopPage.stylesheetIds.mobile][id] = styles;
-      List children = templates[state.activeShopPage.templateId]['children'] as List;
-      (children.firstWhere((element) => element['id'] == event.sectionId)['children'] as List).add(newTextMap);
-    } else if (actionType == 'template:delete-element') {
-      String id = event.effects.first['payload'];
-      List sections = templates[state.activeShopPage.templateId]['children'] as List;
-      Map<String, dynamic> child = (sections.firstWhere((element) => element['id'] == event.sectionId)['children'] as List).firstWhere((element) => element['id'] == id);
-      if (child != null)
-        (sections.firstWhere((element) => element['id'] == event.sectionId)['children'] as List).remove(child);
-    }
-
-    if (actionType != 'template:delete-element') {
-      if ((event.effects.first['payload'] as Map).containsKey('id')) {
-        String id = event.effects.first['payload']['id'];
-        List sections = templates[state.activeShopPage.templateId]['children'] as List;
-        List children = sections.firstWhere((element) => element['id'] == event.sectionId)['children'] as List;
-
-        List newChildren = children.map((element) {
-          if (element['id'] == id) {
-            element = event.effects.first['payload'];
-          }
-          return element;
-        }).toList();
-        sections.firstWhere((element) => element['id'] == event.sectionId)['children'] = newChildren;
-      }
-
-      Map<String, dynamic>payload = event.effects.first['payload'];
-      try{
-        payload.keys.forEach((key) {
-          Map<String, dynamic>updatejson =  payload[key];
-          Map<String, dynamic>json = stylesheets[state.activeShopPage.stylesheetIds.mobile][key];
-          updatejson.keys.forEach((element) {
-            json[element] = updatejson[element];
-          });
-          stylesheets[state.activeShopPage.stylesheetIds.mobile][key] = json;
-        });
-      } catch(e) {}
-    }
-
-    String token = GlobalUtils.activeToken.accessToken;
-    String themeId = state.activeTheme.themeId;
-
-    // Update Template if Relocated Child
-    yield state.copyWith(
-        selectedSectionId: event.sectionId, stylesheets: stylesheets, templates: templates);
-
-    if (!event.updateApi) return;
-    if (state.selectedChild?.type == 'table') return;
-    api.shopEditAction(token, themeId, body).then((response) {
-      if (response is DioError) {
-        Fluttertoast.showToast(msg: response.error);
-      } else {
-        // _fetchPage();
-      }
-    });
+    // if (state.pageDetail == null) {
+    //   yield state.copyWith(selectedSectionId: event.sectionId);
+    //   Fluttertoast.showToast(msg: 'Shop page does not selected');
+    //   return;
+    // }
+    //
+    // Map<String, dynamic> body = {
+    //   'affectedPageIds': [state.pageDetail.id],
+    //   'createdAt': DateFormat("yyyy-MM-dd'T'hh:mm:ss").format(DateTime.now()),
+    //   'effects': event.effects,
+    //   'id': Uuid().v4(),
+    //   'targetPageId': state.pageDetail.id
+    // };
+    // print('update Body: $body');
+    //
+    // Map<String, dynamic>stylesheets = state.stylesheets;
+    // Map<String, dynamic> templates = state.templates;
+    // String actionType = event.effects.first['type'];
+    // // Add Text
+    // print('actionType: $actionType');
+    // if (actionType == 'template:append-element') {
+    //   Map<String, dynamic>newTextMap = event.effects.first['payload']['element'];
+    //   String id = newTextMap['id'];
+    //   Map<String, dynamic>styles = event.effects[3]['payload'][id];
+    //   stylesheets[state.pageDetail.stylesheetIds.mobile][id] = styles;
+    //   List children = templates[state.activeShopPage.templateId]['children'] as List;
+    //   (children.firstWhere((element) => element['id'] == event.sectionId)['children'] as List).add(newTextMap);
+    // } else if (actionType == 'template:delete-element') {
+    //   String id = event.effects.first['payload'];
+    //   List sections = templates[state.activeShopPage.templateId]['children'] as List;
+    //   Map<String, dynamic> child = (sections.firstWhere((element) => element['id'] == event.sectionId)['children'] as List).firstWhere((element) => element['id'] == id);
+    //   if (child != null)
+    //     (sections.firstWhere((element) => element['id'] == event.sectionId)['children'] as List).remove(child);
+    // }
+    //
+    // if (actionType != 'template:delete-element') {
+    //   if ((event.effects.first['payload'] as Map).containsKey('id')) {
+    //     String id = event.effects.first['payload']['id'];
+    //     List sections = templates[state.activeShopPage.templateId]['children'] as List;
+    //     List children = sections.firstWhere((element) => element['id'] == event.sectionId)['children'] as List;
+    //
+    //     List newChildren = children.map((element) {
+    //       if (element['id'] == id) {
+    //         element = event.effects.first['payload'];
+    //       }
+    //       return element;
+    //     }).toList();
+    //     sections.firstWhere((element) => element['id'] == event.sectionId)['children'] = newChildren;
+    //   }
+    //
+    //   Map<String, dynamic>payload = event.effects.first['payload'];
+    //   try{
+    //     payload.keys.forEach((key) {
+    //       Map<String, dynamic>updatejson =  payload[key];
+    //       Map<String, dynamic>json = stylesheets[state.pageDetail.stylesheetIds.mobile][key];
+    //       updatejson.keys.forEach((element) {
+    //         json[element] = updatejson[element];
+    //       });
+    //       stylesheets[state.pageDetail.stylesheetIds.mobile][key] = json;
+    //     });
+    //   } catch(e) {}
+    // }
+    //
+    // String token = GlobalUtils.activeToken.accessToken;
+    // String themeId = state.activeTheme.themeId;
+    //
+    // // Update Template if Relocated Child
+    // yield state.copyWith(
+    //     selectedSectionId: event.sectionId, stylesheets: stylesheets, templates: templates);
+    //
+    // if (!event.updateApi) return;
+    // if (state.selectedChild?.type == 'table') return;
+    // api.shopEditAction(token, themeId, body).then((response) {
+    //   if (response is DioError) {
+    //     Fluttertoast.showToast(msg: response.error);
+    //   } else {
+    //     // _fetchPage();
+    //   }
+    // });
   }
 
   _fetchPage() {
@@ -273,26 +258,26 @@ class ShopEditScreenBloc
   }
 
   Stream<ShopEditScreenState> updatePage(dynamic response) async* {
-    List<ShopPage> pages = [];
-    Map<String, dynamic> templates = {};
-    Map<String, dynamic> stylesheets = {};
-    if (response['pages'] != null && response['pages'] is Map) {
-      Map<String, dynamic> obj = response['pages'];
-      obj.keys.forEach((element) {
-        pages.add(ShopPage.fromJson(obj[element]));
-      });
-      print('Pages Length: ${pages.length}');
-    }
-    // Stylesheets Map /{deviceKey : {templateId : Background}}
-    if (response['stylesheets'] != null && response['stylesheets'] is Map) {
-      stylesheets = response['stylesheets'];
-    }
-    // Templates
-    if (response['templates'] != null && response['templates'] is Map) {
-      templates = response['templates'];
-    }
-    yield state.copyWith(
-        pages: pages, stylesheets: stylesheets, templates: templates);
+    // List<ShopPage> pages = [];
+    // Map<String, dynamic> templates = {};
+    // Map<String, dynamic> stylesheets = {};
+    // if (response['pages'] != null && response['pages'] is Map) {
+    //   Map<String, dynamic> obj = response['pages'];
+    //   obj.keys.forEach((element) {
+    //     pages.add(ShopPage.fromJson(obj[element]));
+    //   });
+    //   print('Pages Length: ${pages.length}');
+    // }
+    // // Stylesheets Map /{deviceKey : {templateId : Background}}
+    // if (response['stylesheets'] != null && response['stylesheets'] is Map) {
+    //   stylesheets = response['stylesheets'];
+    // }
+    // // Templates
+    // if (response['templates'] != null && response['templates'] is Map) {
+    //   templates = response['templates'];
+    // }
+    // yield state.copyWith(
+    //     pages: pages, stylesheets: stylesheets, templates: templates);
   }
 
   Stream<ShopEditScreenState> uploadPhoto(File file, bool isBackground, bool isVideo) async* {
@@ -337,17 +322,17 @@ class ShopEditScreenBloc
   }
 
   String htmlText() {
-    if (state.selectedChild == null || state.selectedChild.type != 'text')
-      return null;
-
-    List sections = state.templates[state.activeShopPage.templateId]['children'] as List;
-    List children = sections.firstWhere((element) => element['id'] == state.selectedSectionId)['children'] as List;
-    Child child = Child.fromJson(children.firstWhere((element) => element['id'] == state.selectedChild.id));
-    Data data = Data.fromJson(child.data);
-    if (data != null)
-      return data.text;
-    else
-      return '';
+    // if (state.selectedChild == null || state.selectedChild.type != 'text')
+    //   return null;
+    //
+    // List sections = state.templates[state.activeShopPage.templateId]['children'] as List;
+    // List children = sections.firstWhere((element) => element['id'] == state.selectedSectionId)['children'] as List;
+    // Child child = Child.fromJson(children.firstWhere((element) => element['id'] == state.selectedChild.id));
+    // Data data = Data.fromJson(child.data);
+    // if (data != null)
+    //   return data.text;
+    // else
+    //   return '';
   }
 
   bool isTextSelected() {

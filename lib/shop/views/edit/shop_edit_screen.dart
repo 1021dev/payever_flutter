@@ -126,7 +126,7 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
         .where((page) => page.type == 'replica')
         .toList();
     bool activeMode = true;
-    int length = activeMode ? pages.length : state.previews.length;
+    int length = pages.length ;
     double aspectRatio = activeMode ? 1 : 2/1;
     return Container(
       padding: EdgeInsets.all(4),
@@ -182,10 +182,7 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
   }
 
   Widget _templateItem(ShopEditScreenState state, ShopPage page, {bool showName = true}) {
-    String preview;
-    if (state.previews != null && state.previews[page.id] != null) {
-      preview = state.previews[page.id]['previewUrl'];
-    }
+
     String pageName = page == null ? 'Empty' : page.name;
     print('Page Name: $pageName PageID:${page.id} Template Id: ${page.templateId}');
 
@@ -196,7 +193,7 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
         children: [
           Expanded(
               child: (page != null)
-                  ? getPreview(page, showName, preview)
+                  ? getPreview(page, showName, 'preview')
                   : Container(
                 color: Colors.white,
               )),
@@ -279,7 +276,6 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
               child: TemplateDetailScreen(
                 screenBloc: screenBloc,
                 shopPage: page,
-                templateId: page.templateId,
               ),
               type: PageTransitionType.fade));
   }

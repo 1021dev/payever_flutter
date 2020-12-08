@@ -44,17 +44,6 @@ class SelectSectionEvent extends ShopEditScreenEvent {
       ];
 }
 
-class ActiveShopPageEvent extends ShopEditScreenEvent {
-  final ShopPage activeShopPage;
-
-  ActiveShopPageEvent({this.activeShopPage});
-
-  @override
-  List<Object> get props => [
-    this.activeShopPage,
-  ];
-}
-
 class UpdateSectionEvent extends ShopEditScreenEvent {
   final String sectionId;
   final List<Map> effects;

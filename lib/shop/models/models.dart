@@ -176,10 +176,23 @@ class ShopPage {
   Map<String, dynamic> toJson() => _$ShopPageToJson(this);
 }
 
+// context: {_id: "b76a3801-6269-43cb-9675-d5d2238ae89f",…}
+// contextId: "b76a3801-6269-43cb-9675-d5d2238ae89f"
+// data: {productPages: "/products/:productId", categoryPages: "/category/:categoryId"}
+// routing: [{routeId: "67f8bc8a-d434-484c-9031-6112f66221ec", pageId: "1bc4b846-16f2-4269-b7cf-e84aebf49ec2",…},…]
 
-// data: {,…}
+@JsonSerializable()
+class ApplicationModel {
+  ApplicationModel();
 
-// stylesheets: {desktop: {,…}, tablet: {,…}, mobile: {,…}}
+  @JsonKey(name: 'context')         Map<String, dynamic> context;
+  @JsonKey(name: 'contextId')       String contextId;
+  @JsonKey(name: 'data')            dynamic data;
+  @JsonKey(name: 'routing')         List routing;
+
+  factory ApplicationModel.fromJson(Map<String, dynamic> json) => _$ApplicationModelFromJson(json);
+  Map<String, dynamic> toJson() => _$ApplicationModelToJson(this);
+}
 
 @JsonSerializable()
 class PageDetail {

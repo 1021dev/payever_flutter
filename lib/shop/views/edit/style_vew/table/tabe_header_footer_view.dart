@@ -9,13 +9,12 @@ import 'package:payever/shop/models/models.dart';
 
 class TableHeaderFooterView extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
-  final Map<String, dynamic> stylesheets;
   final Function onUpdateFontFamily;
   final String fontFamily;
   final Function onClose;
 
   const TableHeaderFooterView(
-      {this.screenBloc, this.stylesheets, @required this.onUpdateFontFamily, @required this.fontFamily, @required this.onClose});
+      {this.screenBloc, @required this.onUpdateFontFamily, @required this.fontFamily, @required this.onClose});
 
   @override
   _TableHeaderFooterViewState createState() => _TableHeaderFooterViewState();
@@ -36,7 +35,7 @@ class _TableHeaderFooterViewState extends State<TableHeaderFooterView> {
 
   @override
   void initState() {
-    styles = TableStyles.fromJson(widget.stylesheets);
+    styles = TableStyles.fromJson(widget.screenBloc.state.pageDetail.stylesheets);
     headerRows = styles.headerRows;
     headerColumns = styles.headerColumns;
     footerRows = styles.footerRows;

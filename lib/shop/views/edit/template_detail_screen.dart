@@ -17,16 +17,14 @@ import 'appbar/shop_edit_appbar.dart';
 
 class TemplateDetailScreen extends StatefulWidget {
   final ShopPage shopPage;
-  final String templateId;
   final ShopEditScreenBloc screenBloc;
 
   const TemplateDetailScreen(
-      {this.shopPage, this.templateId, this.screenBloc});
+      {this.shopPage, this.screenBloc});
 
   @override
   _TemplateDetailScreenState createState() => _TemplateDetailScreenState(
       shopPage: shopPage,
-      templateId: templateId,
       screenBloc: screenBloc);
 }
 
@@ -44,7 +42,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
   @override
   void initState() {
     print('Active page: ${widget.shopPage.id}');
-    screenBloc.add(ActiveShopPageEvent(activeShopPage: widget.shopPage));
+    screenBloc.add(GetPageEvent(pageId: widget.shopPage.id));
     super.initState();
   }
 
@@ -89,48 +87,49 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
               backgroundColor: Colors.grey[800],
               body: SafeArea(
                 bottom: false,
-                child: Stack(
-                  children: [
-                    TemplateView(
-                      screenBloc: screenBloc,
-                      shopPage: shopPage,
-                      templateId: templateId,
-                      enableTapSection: true,
-                    ),
-                    AnimatedPositioned(
-                      left: 0,
-                      right: 0,
-                      duration: Duration(milliseconds: 400),
-                      bottom: showStyleControlView
-                          ? -MediaQuery.of(context).padding.bottom
-                          : -500,
-                      child: state.selectedChild == null
-                          ? Container()
-                          : state.selectedChild == null
-                              ? Container()
-                              : StyleControlView(
-                                  screenBloc: screenBloc,
-                                  templateId: widget.templateId,
-                                  stylesheets: state.stylesheets[state
-                                      .activeShopPage
-                                      .stylesheetIds
-                                      .mobile][state.selectedChild.id],
-                                  onClose: () {
-                                    print('onClose');
-                                    FocusScope.of(context).unfocus();
-                                    setState(() {
-                                      showStyleControlView = false;
-                                    });
-                                  },
-                                ),
-                    )
-                  ],
-                ),
+                child: body(state),
               ),
             );
           },
         ),
       ),
+    );
+  }
+
+  Widget body(ShopEditScreenState state) {
+    if (state.isLoading)
+      return Container();
+
+    return Stack(
+      children: [
+        TemplateView(
+          screenBloc: screenBloc,
+          pageDetail: state.pageDetail,
+          enableTapSection: true,
+        ),
+        AnimatedPositioned(
+          left: 0,
+          right: 0,
+          duration: Duration(milliseconds: 400),
+          bottom: showStyleControlView
+              ? -MediaQuery.of(context).padding.bottom
+              : -500,
+          child: state.selectedChild == null
+              ? Container()
+              : state.selectedChild == null
+              ? Container()
+              : StyleControlView(
+            screenBloc: screenBloc,
+            onClose: () {
+              print('onClose');
+              FocusScope.of(context).unfocus();
+              setState(() {
+                showStyleControlView = false;
+              });
+            },
+          ),
+        )
+      ],
     );
   }
 
@@ -149,22 +148,5 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
     print('result: $result');
     if (result == null) return;
     templateSizeStateModel.setShopObject(result as ShopObject);
-  }
-
-  void _showStyleDialogView(ShopEditScreenState state) {
-    if (state.selectedChild == null) {
-      Fluttertoast.showToast(msg: 'Please select an element!');
-      return;
-    }
-    showModalBottomSheet(
-        context: context,
-        barrierColor: Colors.transparent,
-        // isScrollControlled: true,
-        builder: (builder) {
-          return StyleControlView(
-            screenBloc: screenBloc,
-            stylesheets: state.stylesheets[state.activeShopPage.stylesheetIds.mobile][state.selectedChild.id],
-          );
-        });
   }
 }

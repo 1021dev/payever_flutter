@@ -6,33 +6,23 @@ class ShopEditScreenState {
   final bool isUpdating;
   final ShopDetailModel activeShop;
   final ThemeModel activeTheme;
-  final Map<String, dynamic>contextSchemas;
-  final Map<String, dynamic> previews;
   final List<ShopPage> pages;
-  final Map<String, dynamic> stylesheets;
-  final Map<String, dynamic> templates;
   final List<Action>actions;
   final String selectedSectionId;
   final String selectedBlockId;
   final Child selectedBlock;
   final Child selectedChild;
-  final ShopPage activeShopPage;
   final PageDetail pageDetail;
   final String blobName;
   final List<ProductsModel> products;
 
   ShopEditScreenState({
-    this.activeShopPage,
     this.pageDetail,
     this.isLoading = false,
     this.isUpdating = false,
     this.activeShop,
     this.activeTheme,
-    this.contextSchemas = const {},
-    this.previews = const {},
     this.pages = const [],
-    this.stylesheets = const {},
-    this.templates = const {},
     this.actions = const [],
     this.selectedSectionId = '',
     this.selectedBlockId,
@@ -43,17 +33,12 @@ class ShopEditScreenState {
   });
 
   List<Object> get props => [
-    this.activeShopPage,
     this.pageDetail,
     this.isLoading,
     this.isUpdating,
     this.activeShop,
     this.activeTheme,
-    this.contextSchemas,
-    this.previews,
     this.pages,
-    this.stylesheets,
-    this.templates,
     this.actions,
     this.selectedSectionId,
     this.selectedBlock,
@@ -69,16 +54,11 @@ class ShopEditScreenState {
     ShopDetailModel activeShop,
     PageDetail pageDetail,
     ThemeModel activeTheme,
-    Map<String, dynamic>contextSchemas,
-    Map<String, dynamic>previews,
     List<ShopPage> pages,
-    Map<String, dynamic> stylesheets,
-    Map<String, dynamic> templates,
     List<Action>actions,
     String selectedSectionId,
     Child selectedBlock,
     Child selectedChild,
-    ShopPage activeShopPage,
     String selectedBlockId,
     String blobName,
     List<ProductsModel> products,
@@ -89,13 +69,8 @@ class ShopEditScreenState {
       activeShop: activeShop ?? this.activeShop,
       pageDetail: pageDetail ?? this.pageDetail,
       activeTheme: activeTheme ?? this.activeTheme,
-      contextSchemas: contextSchemas ?? this.contextSchemas,
-      previews: previews ?? this.previews,
       pages: pages ?? this.pages,
-      stylesheets: stylesheets ?? this.stylesheets,
-      templates: templates ?? this.templates,
       actions: actions ?? this.actions,
-      activeShopPage: activeShopPage ?? this.activeShopPage,
       selectedSectionId: selectedSectionId ?? this.selectedSectionId,
       selectedBlockId: selectedBlockId ?? this.selectedBlockId,
       selectedBlock: selectedBlock ?? this.selectedBlock,
@@ -116,14 +91,9 @@ class ShopEditScreenState {
       isUpdating: this.isUpdating,
       activeShop: this.activeShop,
       activeTheme: this.activeTheme,
-      contextSchemas: this.contextSchemas,
-      previews: this.previews,
       pages: this.pages,
       pageDetail: this.pageDetail,
-      stylesheets: this.stylesheets,
-      templates: this.templates,
       actions: this.actions,
-      activeShopPage: this.activeShopPage,
       blobName: this.blobName,
       products: this.products,
       selectedSectionId: selectedSectionId ?? this.selectedSectionId,

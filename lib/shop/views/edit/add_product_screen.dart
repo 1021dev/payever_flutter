@@ -187,7 +187,7 @@ class _AddProductsScreenState extends State<AddProductsScreen> {
                     child: Container(
                       child: InkWell(
                         onTap: () {
-                          String contextId = state.activeShopPage.contextId;
+                          String contextId = state.pageDetail.contextId;
                           print('businessUuid: ${productsModel.toDictionary()} contextId:$contextId');
                           Map<String, dynamic> payloadData = {'method': 'getByIds',
                             'params': [[productsModel.id]],

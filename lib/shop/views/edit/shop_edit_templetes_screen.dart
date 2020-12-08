@@ -85,8 +85,6 @@ class _ShopEditTemplatesScreenState extends State<ShopEditTemplatesScreen> {
             child: (page != null)
                 ? TemplateView(
                     screenBloc: screenBloc,
-                    shopPage: page,
-                    templateId: page.templateId,
                     onTap: () {
                       Navigator.push(
                           context,
@@ -94,7 +92,6 @@ class _ShopEditTemplatesScreenState extends State<ShopEditTemplatesScreen> {
                               child: TemplateDetailScreen(
                                 screenBloc: screenBloc,
                                 shopPage: page,
-                                templateId: page.templateId,
                               ),
                               type: PageTransitionType.fade));
                     },

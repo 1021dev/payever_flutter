@@ -7,35 +7,25 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:provider/provider.dart';
 
 class TemplateView extends StatefulWidget {
-  final ShopPage shopPage;
-  final String templateId;
+  final PageDetail pageDetail;
   final Function onTap;
   final bool scrollable;
   final bool enableTapSection;
   final ShopEditScreenBloc screenBloc;
 
   const TemplateView(
-      {this.shopPage,
-      this.templateId,
+      {this.pageDetail,
       this.onTap,
       this.enableTapSection = false,
       this.scrollable = true,
       this.screenBloc});
 
   @override
-  _TemplateViewState createState() => _TemplateViewState(
-      shopPage: shopPage,
-      templateId: templateId);
+  _TemplateViewState createState() => _TemplateViewState();
 }
 
 class _TemplateViewState extends State<TemplateView> {
-  final ShopPage shopPage;
-  final String templateId;
   String selectSectionId = '';
-
-  _TemplateViewState(
-      {this.shopPage, this.templateId});
-
   TemplateSizeStateModel templateSizeStateModel/* = TemplateSizeStateModel()*/;
 
   @override
@@ -50,7 +40,7 @@ class _TemplateViewState extends State<TemplateView> {
   }
 
   Widget body(ShopEditScreenState state) {
-    Template template =  Template.fromJson(state.templates[templateId]);
+    Template template =  widget.pageDetail.template;
     // templateSizeStateModel.setStylesheets(state.stylesheets);
     List sections = [];
     template.children.forEach((child) {
@@ -63,9 +53,9 @@ class _TemplateViewState extends State<TemplateView> {
           styleSheet.active) {
         SectionView sectionView = SectionView(
           screenBloc: widget.screenBloc,
-          deviceTypeId: shopPage.stylesheetIds.mobile,
+          deviceTypeId: widget.pageDetail.stylesheetIds.mobile,
           enableTapChild: widget.enableTapSection,
-          templateId: templateId,
+          templateId: widget.pageDetail.templateId,
           sectionId: child.id,
           isSelected: selectSectionId == child.id,
           onTapChild: () {
@@ -119,7 +109,7 @@ class _TemplateViewState extends State<TemplateView> {
 
   SectionStyles getSectionStyles(String childId) {
     try {
-      Map<String, dynamic> json = widget.screenBloc.state.stylesheets[shopPage.stylesheetIds.mobile][childId];
+      Map<String, dynamic> json = widget.pageDetail.stylesheets[widget.pageDetail.stylesheetIds.mobile][childId];
       return SectionStyles.fromJson(json);
     } catch (e) {
       return null;
