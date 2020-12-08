@@ -39,10 +39,8 @@ class _MenuViewState extends State<MenuView> {
 
   ShapeStyles styleSheet() {
     try {
-      Map json = widget.stylesheets[widget.child.id];
-//      if (json['display'] != 'none')
+      Map json = widget.stylesheets;
 //        print('Menu Styles: $json');
-
       return ShapeStyles.fromJson(json);
     } catch (e) {
       return null;

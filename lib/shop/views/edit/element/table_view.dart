@@ -104,7 +104,7 @@ class _TableViewState extends State<TableView> {
 
   TableStyles styleSheet() {
     try {
-      Map<String, dynamic> json = widget.stylesheets[widget.child.id];
+      Map<String, dynamic> json = widget.stylesheets;
       // print('Button ID: ${widget.child.id}');
       // print('Button Styles Sheets: $json');
       return TableStyles.fromJson(json);

@@ -156,7 +156,7 @@ class _ShopProductsViewState extends State<ShopProductsView> {
 
   ShopProductsStyles styleSheet() {
     try {
-      Map<String, dynamic> json = widget.stylesheets[widget.child.id];
+      Map<String, dynamic> json = widget.stylesheets;
       if (json['display'] != 'none') {
         print('Shop Products Styles: $json');
       }

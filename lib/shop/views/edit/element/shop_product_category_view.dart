@@ -177,7 +177,7 @@ class _ShopProductCategoryViewState extends State<ShopProductCategoryView> {
 
   ShopProductCategoryStyles styleSheet() {
     try {
-      Map<String, dynamic>json = widget.stylesheets[widget.child.id];
+      Map<String, dynamic>json = widget.stylesheets;
 //      if (json['display'] != 'none')
 //        print('ShopProductCategoryStyles: $json');
       return ShopProductCategoryStyles.fromJson(json);

@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:intl/intl.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
@@ -118,12 +117,12 @@ class ShopEditScreenBloc
         print('Pages Length: ${pages.length}');
       }
       if (response1['actions'] != null && response1['actions'] is List) {
-        print('Actions Length: ${pages.length}');
-        List<dynamic> obj = response1['pages'];
-        obj.forEach((element) {
-          pages.add(ShopPage.fromJson(element));
-        });
-        print('Pages Length: ${pages.length}');
+        // print('Actions Length: ${pages.length}');
+        // List<dynamic> obj = response1['pages'];
+        // obj.forEach((element) {
+        //   pages.add(ShopPage.fromJson(element));
+        // });
+        // print('Pages Length: ${pages.length}');
       }
       ShopPage homepage = pages?.firstWhere((element) => element.name == 'HOMEPAGE');
       if (homepage != null) {
@@ -162,7 +161,7 @@ class ShopEditScreenBloc
     yield state.copyWith(isLoading: true);
     dynamic response = await api.getPage(token, themeId, pageId);
     // Stylesheets Map /{deviceKey : {templateId : Background}}
-    if (!(response is DioError)) {
+    if (response is Map) {
       pageDetail = PageDetail.fromJson(response);
     }
     yield state.copyWith(pageDetail: pageDetail, isLoading: false);

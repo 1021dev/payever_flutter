@@ -41,8 +41,7 @@ class _BlockViewState extends State<BlockView> {
   SectionStyles getSectionStyleSheet() {
     try {
       Map<String, dynamic> json =
-          widget.stylesheets[widget.child.id];
-      if (json == null || json['display'] == 'none') return null;
+          widget.stylesheets;
       // print('$TAG Block ID ${block.id}');
       // print('$TAG Bloc style: $json');
       return SectionStyles.fromJson(json);

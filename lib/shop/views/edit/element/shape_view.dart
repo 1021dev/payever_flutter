@@ -91,8 +91,7 @@ class _ShapeViewState extends State<ShapeView> {
 
   ShapeStyles styleSheet() {
     try {
-      Map<String, dynamic> json = widget.stylesheets[widget.child.id];
-//      if (json['display'] != 'none')
+      Map<String, dynamic> json = widget.stylesheets;
 //        print('Shape Styles: $json');
       return ShapeStyles.fromJson(json);
     } catch (e) {

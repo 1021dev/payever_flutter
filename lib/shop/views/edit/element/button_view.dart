@@ -45,7 +45,7 @@ class _ButtonViewState extends State<ButtonView> {
 
   ButtonStyles styleSheet() {
     try {
-      Map<String, dynamic> json = widget.stylesheets[widget.child.id];
+      Map<String, dynamic> json = widget.stylesheets;
       // print('Button ID: ${widget.child.id}');
       // print('Button Styles Sheets: $json');
       return ButtonStyles.fromJson(json);

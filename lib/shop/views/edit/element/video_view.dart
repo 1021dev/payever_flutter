@@ -168,7 +168,7 @@ class _VideoViewState extends State<VideoView> {
 
   ImageStyles styleSheet() {
     try {
-      Map<String, dynamic> json = widget.stylesheets[widget.child.id];
+      Map<String, dynamic> json = widget.stylesheets;
      // if (json['display'] != 'none')
      //   print('Video Styles: $json');
       return ImageStyles.fromJson(json);

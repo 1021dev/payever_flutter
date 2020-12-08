@@ -41,10 +41,12 @@ class _TemplateViewState extends State<TemplateView> {
 
   Widget body(ShopEditScreenState state) {
     Template template =  widget.pageDetail.template;
+
     // templateSizeStateModel.setStylesheets(state.stylesheets);
     List sections = [];
     template.children.forEach((child) {
       SectionStyles styleSheet = getSectionStyles(child.id);
+      print('Template styleSheet: ${styleSheet.toJson()}');
       if (styleSheet == null) {
         return Container();
       }
@@ -108,7 +110,8 @@ class _TemplateViewState extends State<TemplateView> {
 
   SectionStyles getSectionStyles(String childId) {
     try {
-      Map<String, dynamic> json = widget.pageDetail.stylesheets[widget.pageDetail.stylesheetIds.mobile][childId];
+      print('getSectionStyles: ${widget.pageDetail.stylesheets['mobile']}');
+      Map<String, dynamic> json = widget.pageDetail.stylesheets['mobile'][childId];
       return SectionStyles.fromJson(json);
     } catch (e) {
       return null;
