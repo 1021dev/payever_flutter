@@ -216,10 +216,10 @@ ShopPage _$ShopPageFromJson(Map<String, dynamic> json) {
         ? null
         : PageData.fromJson(json['data'] as Map<String, dynamic>)
     ..id = json['id'] as String
+    ..hash = json['hash'] as String
+    ..master = json['master']
     ..name = json['name'] as String
-    ..stylesheetIds = json['stylesheetIds'] == null
-        ? null
-        : StyleSheetIds.fromJson(json['stylesheetIds'] as Map<String, dynamic>)
+    ..stylesheetIds = json['stylesheetIds'] as String
     ..templateId = json['templateId'] as String
     ..type = json['type'] as String
     ..variant = json['variant'] as String;
@@ -229,6 +229,8 @@ Map<String, dynamic> _$ShopPageToJson(ShopPage instance) => <String, dynamic>{
       'contextId': instance.contextId,
       'data': instance.data,
       'id': instance.id,
+      'hash': instance.hash,
+      'master': instance.master,
       'name': instance.name,
       'stylesheetIds': instance.stylesheetIds,
       'templateId': instance.templateId,
@@ -236,12 +238,75 @@ Map<String, dynamic> _$ShopPageToJson(ShopPage instance) => <String, dynamic>{
       'variant': instance.variant,
     };
 
+PageDetail _$PageDetailFromJson(Map<String, dynamic> json) {
+  return PageDetail()
+    ..context = json['context'] as Map<String, dynamic>
+    ..contextId = json['contextId'] as String
+    ..data = json['data'] == null
+        ? null
+        : PageDetailData.fromJson(json['data'] as Map<String, dynamic>)
+    ..id = json['id'] as String
+    ..master = json['master']
+    ..name = json['name'] as String
+    ..stylesheets = json['stylesheets'] as Map<String, dynamic>
+    ..stylesheetIds = json['stylesheetIds'] == null
+        ? null
+        : StyleSheetIds.fromJson(json['stylesheetIds'] as Map<String, dynamic>)
+    ..template = json['template'] == null
+        ? null
+        : Template.fromJson(json['template'] as Map<String, dynamic>)
+    ..templateId = json['templateId'] as String
+    ..type = json['type'] as String
+    ..variant = json['variant'] as String;
+}
+
+Map<String, dynamic> _$PageDetailToJson(PageDetail instance) =>
+    <String, dynamic>{
+      'context': instance.context,
+      'contextId': instance.contextId,
+      'data': instance.data,
+      'id': instance.id,
+      'master': instance.master,
+      'name': instance.name,
+      'stylesheets': instance.stylesheets,
+      'stylesheetIds': instance.stylesheetIds,
+      'template': instance.template,
+      'templateId': instance.templateId,
+      'type': instance.type,
+      'variant': instance.variant,
+    };
+
+PageDetailData _$PageDetailDataFromJson(Map<String, dynamic> json) {
+  return PageDetailData()
+    ..preview = json['preview'] == null
+        ? null
+        : Preview.fromJson(json['preview'] as Map<String, dynamic>);
+}
+
+Map<String, dynamic> _$PageDetailDataToJson(PageDetailData instance) =>
+    <String, dynamic>{
+      'preview': instance.preview,
+    };
+
+Preview _$PreviewFromJson(Map<String, dynamic> json) {
+  return Preview()
+    ..desktop = json['desktop'] as String
+    ..mobile = json['mobile'] as String
+    ..tablet = json['tablet'] as String;
+}
+
+Map<String, dynamic> _$PreviewToJson(Preview instance) => <String, dynamic>{
+      'desktop': instance.desktop,
+      'mobile': instance.mobile,
+      'tablet': instance.tablet,
+    };
+
 PageData _$PageDataFromJson(Map<String, dynamic> json) {
-  return PageData()..preview = json['preview'] as String;
+  return PageData()..mark = json['mark'];
 }
 
 Map<String, dynamic> _$PageDataToJson(PageData instance) => <String, dynamic>{
-      'preview': instance.preview,
+      'mark': instance.mark,
     };
 
 StyleSheetIds _$StyleSheetIdsFromJson(Map<String, dynamic> json) {

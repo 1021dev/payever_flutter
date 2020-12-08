@@ -961,6 +961,7 @@ class ApiService {
       return Future.error(e);
     }
   }
+
   //  https://builder-shops.payever.org/api/theme/898ab6ec-c085-460c-9cdd-d43f90cbedcb
   Future<dynamic> getShopEditPreViews(String token, String themeId) async {
     try {
@@ -980,6 +981,19 @@ class ApiService {
       print('$TAG - getShopSnapShot()');
       dynamic response = await _client.getTypeless(
         '${Env.builderShop}/api/theme/$themeId/snapshot',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getPage(String token, String themeId, String pageId) async {
+    try {
+      print('$TAG - getPage()');
+      dynamic response = await _client.getTypeless(
+        '${Env.builderShop}/api/theme/$themeId/page/$pageId',
         headers: _getHeaders(token),
       );
       return response;

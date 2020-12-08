@@ -164,8 +164,10 @@ class ShopPage {
   @JsonKey(name: 'contextId')       String contextId;
   @JsonKey(name: 'data')            PageData  data;
   @JsonKey(name: 'id')              String id;
-  @JsonKey(name: 'name')            String  name;
-  @JsonKey(name: 'stylesheetIds')   StyleSheetIds stylesheetIds;
+  @JsonKey(name: 'hash')            String hash;
+  @JsonKey(name: 'master')          dynamic master;
+  @JsonKey(name: 'name')            String name;
+  @JsonKey(name: 'stylesheetIds')   String stylesheetIds;
   @JsonKey(name: 'templateId')      String templateId;
   @JsonKey(name: 'type')            String type;
   @JsonKey(name: 'variant')         String variant;
@@ -174,11 +176,59 @@ class ShopPage {
   Map<String, dynamic> toJson() => _$ShopPageToJson(this);
 }
 
+
+// data: {,…}
+
+// stylesheets: {desktop: {,…}, tablet: {,…}, mobile: {,…}}
+
+@JsonSerializable()
+class PageDetail {
+  PageDetail();
+
+  @JsonKey(name: 'context')         Map<String, dynamic> context;
+  @JsonKey(name: 'contextId')       String contextId;
+  @JsonKey(name: 'data')            PageDetailData data;
+  @JsonKey(name: 'id')              String id;
+  @JsonKey(name: 'master')          dynamic master;
+  @JsonKey(name: 'name')            String name;
+  @JsonKey(name: 'stylesheets')     Map<String, dynamic> stylesheets;
+  @JsonKey(name: 'stylesheetIds')   StyleSheetIds stylesheetIds;
+  @JsonKey(name: 'template')        Template template;
+  @JsonKey(name: 'templateId')      String templateId;
+  @JsonKey(name: 'type')            String type;
+  @JsonKey(name: 'variant')         String variant;
+
+  factory PageDetail.fromJson(Map<String, dynamic> json) => _$PageDetailFromJson(json);
+  Map<String, dynamic> toJson() => _$PageDetailToJson(this);
+}
+
+@JsonSerializable()
+class PageDetailData {
+  PageDetailData();
+
+  @JsonKey(name: 'preview')       Preview preview;
+
+  factory PageDetailData.fromJson(Map<String, dynamic> json) => _$PageDetailDataFromJson(json);
+  Map<String, dynamic> toJson() => _$PageDetailDataToJson(this);
+}
+
+@JsonSerializable()
+class Preview {
+  Preview();
+
+  @JsonKey(name: 'desktop')   String desktop;
+  @JsonKey(name: 'mobile')    String mobile;
+  @JsonKey(name: 'tablet')    String tablet;
+
+  factory Preview.fromJson(Map<String, dynamic> json) => _$PreviewFromJson(json);
+  Map<String, dynamic> toJson() => _$PreviewToJson(this);
+}
+
 @JsonSerializable()
 class PageData {
   PageData();
 
-  @JsonKey(name: 'preview')       String preview;
+  @JsonKey(name: 'mark')       dynamic mark;
 
   factory PageData.fromJson(Map<String, dynamic> json) => _$PageDataFromJson(json);
   Map<String, dynamic> toJson() => _$PageDataToJson(this);

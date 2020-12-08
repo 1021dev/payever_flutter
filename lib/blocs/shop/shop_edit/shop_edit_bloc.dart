@@ -116,20 +116,26 @@ class ShopEditScreenBloc
         contextSchemas = response1['contextSchemas'];
       }
       // Pages
-      if (response1['pages'] != null && response1['pages'] is Map) {
-        Map<String, dynamic> obj = response1['pages'];
-        obj.keys.forEach((element) {
-            pages.add(ShopPage.fromJson(obj[element]));
+      if (response1['pages'] != null && response1['pages'] is List) {
+        print('Pages Length: ${pages.length}');
+        List<dynamic> obj = response1['pages'];
+        obj.forEach((element) {
+            pages.add(ShopPage.fromJson(element));
         });
         print('Pages Length: ${pages.length}');
       }
-      // Stylesheets Map /{deviceKey : {templateId : Background}}
-      if (response1['stylesheets'] != null && response1['stylesheets'] is Map) {
-        stylesheets = response1['stylesheets'];
-      }
-      // Templates
-      if (response1['templates'] != null && response1['templates'] is Map) {
-        templates = response1['templates'];
+
+      ShopPage homepage = pages?.firstWhere((element) => element.name == 'HOMEPAGE');
+      if (homepage != null) {
+        dynamic response2 = await api.getPage(token, themeId, homepage.id);
+        // Stylesheets Map /{deviceKey : {templateId : Background}}
+        if (response2['stylesheets'] != null && response2['stylesheets'] is Map) {
+          stylesheets = response1['stylesheets'];
+        }
+        // Templates
+        if (response2['template'] != null && response2['template'] is Map) {
+          templates = response2['template'];
+        }
       }
     }
 
@@ -157,6 +163,19 @@ class ShopEditScreenBloc
         templates: templates,
         actions: actions,
         isLoading: false);
+  }
+
+  Stream<ShopEditScreenState> getPage(String pageId) async* {
+    if (pageId == null && pageId.isEmpty) return;
+    String token = GlobalUtils.activeToken.accessToken;
+    String themeId = state.activeTheme.themeId;
+    PageDetail pageDetail;
+    dynamic response = await api.getPage(token, themeId, pageId);
+    // Stylesheets Map /{deviceKey : {templateId : Background}}
+    if (!(response is DioError)) {
+      pageDetail = PageDetail.fromJson(response);
+    }
+    yield state.copyWith(pageDetail: pageDetail);
   }
 
   Stream<ShopEditScreenState> addAction(UpdateSectionEvent event) async* {

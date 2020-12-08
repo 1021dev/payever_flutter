@@ -13,6 +13,16 @@ abstract class ShopEditScreenEvent extends Equatable {
 
 class ShopEditScreenInitEvent extends ShopEditScreenEvent {}
 
+class GetPageEvent extends ShopEditScreenEvent {
+  final String pageId;
+  GetPageEvent({this.pageId});
+
+  @override
+  List<Object> get props => [
+    this.pageId,
+  ];
+}
+
 class SelectSectionEvent extends ShopEditScreenEvent {
   final String sectionId;
   final Child selectedChild;

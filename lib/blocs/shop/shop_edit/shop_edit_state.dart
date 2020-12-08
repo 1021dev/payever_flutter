@@ -17,11 +17,13 @@ class ShopEditScreenState {
   final Child selectedBlock;
   final Child selectedChild;
   final ShopPage activeShopPage;
+  final PageDetail pageDetail;
   final String blobName;
   final List<ProductsModel> products;
 
   ShopEditScreenState({
     this.activeShopPage,
+    this.pageDetail,
     this.isLoading = false,
     this.isUpdating = false,
     this.activeShop,
@@ -42,6 +44,7 @@ class ShopEditScreenState {
 
   List<Object> get props => [
     this.activeShopPage,
+    this.pageDetail,
     this.isLoading,
     this.isUpdating,
     this.activeShop,
@@ -64,6 +67,7 @@ class ShopEditScreenState {
     bool isLoading,
     bool isUpdating,
     ShopDetailModel activeShop,
+    PageDetail pageDetail,
     ThemeModel activeTheme,
     Map<String, dynamic>contextSchemas,
     Map<String, dynamic>previews,
@@ -83,6 +87,7 @@ class ShopEditScreenState {
       isLoading: isLoading ?? this.isLoading,
       isUpdating: isUpdating ?? this.isUpdating,
       activeShop: activeShop ?? this.activeShop,
+      pageDetail: pageDetail ?? this.pageDetail,
       activeTheme: activeTheme ?? this.activeTheme,
       contextSchemas: contextSchemas ?? this.contextSchemas,
       previews: previews ?? this.previews,
@@ -114,6 +119,7 @@ class ShopEditScreenState {
       contextSchemas: this.contextSchemas,
       previews: this.previews,
       pages: this.pages,
+      pageDetail: this.pageDetail,
       stylesheets: this.stylesheets,
       templates: this.templates,
       actions: this.actions,
