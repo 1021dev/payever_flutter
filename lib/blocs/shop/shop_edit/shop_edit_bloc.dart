@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
@@ -168,78 +169,80 @@ class ShopEditScreenBloc
   }
 
   Stream<ShopEditScreenState> addAction(UpdateSectionEvent event) async* {
-    // if (state.pageDetail == null) {
-    //   yield state.copyWith(selectedSectionId: event.sectionId);
-    //   Fluttertoast.showToast(msg: 'Shop page does not selected');
-    //   return;
-    // }
-    //
-    // Map<String, dynamic> body = {
-    //   'affectedPageIds': [state.pageDetail.id],
-    //   'createdAt': DateFormat("yyyy-MM-dd'T'hh:mm:ss").format(DateTime.now()),
-    //   'effects': event.effects,
-    //   'id': Uuid().v4(),
-    //   'targetPageId': state.pageDetail.id
-    // };
-    // print('update Body: $body');
-    //
-    // Map<String, dynamic>stylesheets = state.stylesheets;
-    // Map<String, dynamic> templates = state.templates;
-    // String actionType = event.effects.first['type'];
-    // // Add Text
-    // print('actionType: $actionType');
-    // if (actionType == 'template:append-element') {
-    //   Map<String, dynamic>newTextMap = event.effects.first['payload']['element'];
-    //   String id = newTextMap['id'];
-    //   Map<String, dynamic>styles = event.effects[3]['payload'][id];
-    //   stylesheets[state.pageDetail.stylesheetIds.mobile][id] = styles;
-    //   List children = templates[state.activeShopPage.templateId]['children'] as List;
-    //   (children.firstWhere((element) => element['id'] == event.sectionId)['children'] as List).add(newTextMap);
-    // } else if (actionType == 'template:delete-element') {
-    //   String id = event.effects.first['payload'];
-    //   List sections = templates[state.activeShopPage.templateId]['children'] as List;
-    //   Map<String, dynamic> child = (sections.firstWhere((element) => element['id'] == event.sectionId)['children'] as List).firstWhere((element) => element['id'] == id);
-    //   if (child != null)
-    //     (sections.firstWhere((element) => element['id'] == event.sectionId)['children'] as List).remove(child);
-    // }
-    //
-    // if (actionType != 'template:delete-element') {
-    //   if ((event.effects.first['payload'] as Map).containsKey('id')) {
-    //     String id = event.effects.first['payload']['id'];
-    //     List sections = templates[state.activeShopPage.templateId]['children'] as List;
-    //     List children = sections.firstWhere((element) => element['id'] == event.sectionId)['children'] as List;
-    //
-    //     List newChildren = children.map((element) {
-    //       if (element['id'] == id) {
-    //         element = event.effects.first['payload'];
-    //       }
-    //       return element;
-    //     }).toList();
-    //     sections.firstWhere((element) => element['id'] == event.sectionId)['children'] = newChildren;
-    //   }
-    //
-    //   Map<String, dynamic>payload = event.effects.first['payload'];
-    //   try{
-    //     payload.keys.forEach((key) {
-    //       Map<String, dynamic>updatejson =  payload[key];
-    //       Map<String, dynamic>json = stylesheets[state.pageDetail.stylesheetIds.mobile][key];
-    //       updatejson.keys.forEach((element) {
-    //         json[element] = updatejson[element];
-    //       });
-    //       stylesheets[state.pageDetail.stylesheetIds.mobile][key] = json;
-    //     });
-    //   } catch(e) {}
-    // }
-    //
-    // String token = GlobalUtils.activeToken.accessToken;
-    // String themeId = state.activeTheme.themeId;
-    //
-    // // Update Template if Relocated Child
-    // yield state.copyWith(
-    //     selectedSectionId: event.sectionId, stylesheets: stylesheets, templates: templates);
-    //
-    // if (!event.updateApi) return;
-    // if (state.selectedChild?.type == 'table') return;
+    if (state.pageDetail == null) {
+      yield state.copyWith(selectedSectionId: event.sectionId);
+      Fluttertoast.showToast(msg: 'Shop page does not selected');
+      return;
+    }
+
+    Map<String, dynamic> body = {
+      'affectedPageIds': [state.pageDetail.id],
+      'createdAt': DateFormat("yyyy-MM-dd'T'hh:mm:ss").format(DateTime.now()),
+      'effects': event.effects,
+      'id': Uuid().v4(),
+      'targetPageId': state.pageDetail.id
+    };
+    print('update Body: $body');
+
+    PageDetail pageDetail = state.pageDetail;
+    Template template = pageDetail.template;
+    List<Child> sections = template.children;
+    Map<String, dynamic>stylesheets = state.pageDetail.stylesheets;
+
+    String actionType = event.effects.first['type'];
+    // Add Text
+    print('actionType: $actionType');
+    if (actionType == 'template:append-element') {
+      Map<String, dynamic>newTextMap = event.effects.first['payload']['element'];
+      String id = newTextMap['id'];
+      Map<String, dynamic>styles = event.effects[3]['payload'][id];
+      stylesheets[id] = styles;
+      (sections.firstWhere((element) => element.id == event.sectionId).children).add(Child.fromJson(newTextMap));
+    } else if (actionType == 'template:delete-element') {
+      String id = event.effects.first['payload'];
+      List<Child> sections = template.children;
+      Child child = (sections.firstWhere((element) => element.id == event.sectionId).children)?.firstWhere((element) => element.id == id);
+      if (child != null)
+        (sections.firstWhere((element) => element.id == event.sectionId).children).remove(child);
+    }
+
+    if (actionType != 'template:delete-element') {
+      if ((event.effects.first['payload'] as Map).containsKey('id')) {
+        String id = event.effects.first['payload']['id'];
+        List<Child> children = sections.firstWhere((element) => element.id == event.sectionId).children;
+        List newChildren = children.map((element) {
+          if (element.id == id) {
+            element = event.effects.first['payload'];
+          }
+          return element;
+        }).toList();
+        sections.firstWhere((element) => element.id == event.sectionId).children = newChildren;
+      }
+
+      Map<String, dynamic>payload = event.effects.first['payload'];
+      try{
+        payload.keys.forEach((key) {
+          Map<String, dynamic>updatejson =  payload[key];
+          Map<String, dynamic>json = stylesheets[key];
+          updatejson.keys.forEach((element) {
+            json[element] = updatejson[element];
+          });
+          stylesheets[key] = json;
+        });
+      } catch(e) {}
+    }
+
+    String token = GlobalUtils.activeToken.accessToken;
+    String themeId = state.activeTheme.themeId;
+    template.children = sections;
+    pageDetail.template = template;
+    pageDetail.stylesheets0[GlobalUtils.deviceType] = stylesheets;
+    // Update Template if Relocated Child
+    yield state.copyWith(
+        selectedSectionId: event.sectionId, pageDetail: pageDetail);
+
+    if (!event.updateApi) return;
+    if (state.selectedChild?.type == 'table') return;
     // api.shopEditAction(token, themeId, body).then((response) {
     //   if (response is DioError) {
     //     Fluttertoast.showToast(msg: response.error);

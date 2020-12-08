@@ -26,7 +26,7 @@ class _BackgroundViewState extends State<BackgroundView> {
       return Container(
         width: double.infinity,
         height: double.infinity,
-        color: colorConvert(widget.styles.backgroundColor),
+        color: colorConvert(widget.styles.backgroundColor, emptyColor: true),
       );
     // Gradient
     if (widget.styles.isGradientBackGround) {

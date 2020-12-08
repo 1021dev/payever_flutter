@@ -46,7 +46,6 @@ class _TemplateViewState extends State<TemplateView> {
     List sections = [];
     template.children.forEach((child) {
       SectionStyles styleSheet = getSectionStyles(child.id);
-      print('Template styleSheet: ${styleSheet.toJson()}');
       if (styleSheet == null) {
         return Container();
       }
@@ -110,8 +109,7 @@ class _TemplateViewState extends State<TemplateView> {
 
   SectionStyles getSectionStyles(String childId) {
     try {
-      print('getSectionStyles: ${widget.pageDetail.stylesheets['mobile']}');
-      Map<String, dynamic> json = widget.pageDetail.stylesheets['mobile'][childId];
+      Map<String, dynamic> json = widget.pageDetail.stylesheets[childId];
       return SectionStyles.fromJson(json);
     } catch (e) {
       return null;

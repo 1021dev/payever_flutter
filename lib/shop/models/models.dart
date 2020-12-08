@@ -270,12 +270,16 @@ class PageDetail {
   @JsonKey(name: 'id')              String id;
   @JsonKey(name: 'master')          dynamic master;
   @JsonKey(name: 'name')            String name;
-  @JsonKey(name: 'stylesheets')     Map<String, dynamic> stylesheets;
+  @JsonKey(name: 'stylesheets')     Map<String, dynamic> stylesheets0;
   @JsonKey(name: 'stylesheetIds')   StyleSheetIds stylesheetIds;
   @JsonKey(name: 'template')        Template template;
   @JsonKey(name: 'templateId')      String templateId;
   @JsonKey(name: 'type')            String type;
   @JsonKey(name: 'variant')         String variant;
+
+  Map<String, dynamic> get stylesheets {
+    return stylesheets0[GlobalUtils.deviceType];
+  }
 
   factory PageDetail.fromJson(Map<String, dynamic> json) => _$PageDetailFromJson(json);
   Map<String, dynamic> toJson() => _$PageDetailToJson(this);

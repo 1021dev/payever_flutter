@@ -121,7 +121,6 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
               : StyleControlView(
             screenBloc: screenBloc,
             onClose: () {
-              print('onClose');
               FocusScope.of(context).unfocus();
               setState(() {
                 showStyleControlView = false;

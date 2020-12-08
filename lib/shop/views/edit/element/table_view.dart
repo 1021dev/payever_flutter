@@ -58,7 +58,6 @@ class _TableViewState extends State<TableView> {
 
     cellWidth = (tableWidth - 40) / columnCount;
     cellHeight = (tableHeight - 40) / rowCount;
-    print('fontFamily: $fontFamily');
     return Editable(
       columns: alphabet.sublist(0, columnCount),
       key: _editableKey,

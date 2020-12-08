@@ -341,7 +341,7 @@ PageDetail _$PageDetailFromJson(Map<String, dynamic> json) {
     ..id = json['id'] as String
     ..master = json['master']
     ..name = json['name'] as String
-    ..stylesheets = json['stylesheets'] as Map<String, dynamic>
+    ..stylesheets0 = json['stylesheets'] as Map<String, dynamic>
     ..stylesheetIds = json['stylesheetIds'] == null
         ? null
         : StyleSheetIds.fromJson(json['stylesheetIds'] as Map<String, dynamic>)
@@ -361,7 +361,7 @@ Map<String, dynamic> _$PageDetailToJson(PageDetail instance) =>
       'id': instance.id,
       'master': instance.master,
       'name': instance.name,
-      'stylesheets': instance.stylesheets,
+      'stylesheets': instance.stylesheets0,
       'stylesheetIds': instance.stylesheetIds,
       'template': instance.template,
       'templateId': instance.templateId,
@@ -393,65 +393,6 @@ Map<String, dynamic> _$StyleSheetIdsToJson(StyleSheetIds instance) =>
       'desktop': instance.desktop,
       'mobile': instance.mobile,
       'tablet': instance.tablet,
-    };
-
-Preview _$PreviewFromJson(Map<String, dynamic> json) {
-  return Preview()
-    ..desktop = json['desktop'] as String
-    ..mobile = json['mobile'] as String
-    ..tablet = json['tablet'] as String;
-}
-
-Map<String, dynamic> _$PreviewToJson(Preview instance) => <String, dynamic>{
-      'desktop': instance.desktop,
-      'mobile': instance.mobile,
-      'tablet': instance.tablet,
-    };
-
-Effect _$EffectFromJson(Map<String, dynamic> json) {
-  return Effect()
-    ..payload = json['payload'] == null
-        ? null
-        : Payload.fromJson(json['payload'] as Map<String, dynamic>)
-    ..target = json['target'] as String
-    ..type = json['type'] as String;
-}
-
-Map<String, dynamic> _$EffectToJson(Effect instance) => <String, dynamic>{
-      'payload': instance.payload,
-      'target': instance.target,
-      'type': instance.type,
-    };
-
-Payload _$PayloadFromJson(Map<String, dynamic> json) {
-  return Payload()
-    ..children = json['children'] as List
-    ..data = json['data'] == null
-        ? null
-        : PayloadData.fromJson(json['data'] as Map<String, dynamic>)
-    ..id = json['id'] as String
-    ..meta = json['meta']
-    ..type = json['type'] as String;
-}
-
-Map<String, dynamic> _$PayloadToJson(Payload instance) => <String, dynamic>{
-      'children': instance.children,
-      'data': instance.data,
-      'id': instance.id,
-      'meta': instance.meta,
-      'type': instance.type,
-    };
-
-PayloadData _$PayloadDataFromJson(Map<String, dynamic> json) {
-  return PayloadData()
-    ..sync = json['sync'] as bool
-    ..text = json['text'] as String;
-}
-
-Map<String, dynamic> _$PayloadDataToJson(PayloadData instance) =>
-    <String, dynamic>{
-      'sync': instance.sync,
-      'text': instance.text,
     };
 
 Template _$TemplateFromJson(Map<String, dynamic> json) {
@@ -506,18 +447,15 @@ Map<String, dynamic> _$ChildToJson(Child instance) => <String, dynamic>{
       'params': instance.params,
     };
 
-ContextSchema _$ContextSchemaFromJson(Map<String, dynamic> json) {
-  return ContextSchema()
-    ..method = json['method'] as String
-    ..params = json['params'] ?? []
-    ..service = json['service'] as String;
+Parent _$ParentFromJson(Map<String, dynamic> json) {
+  return Parent()
+    ..id = json['id'] as String
+    ..slot = json['slot'] as String;
 }
 
-Map<String, dynamic> _$ContextSchemaToJson(ContextSchema instance) =>
-    <String, dynamic>{
-      'method': instance.method,
-      'params': instance.params,
-      'service': instance.service,
+Map<String, dynamic> _$ParentToJson(Parent instance) => <String, dynamic>{
+      'id': instance.id,
+      'slot': instance.slot,
     };
 
 Context _$ContextFromJson(Map<String, dynamic> json) {
@@ -539,15 +477,132 @@ Map<String, dynamic> _$MetaToJson(Meta instance) => <String, dynamic>{
       'deletable': instance.deletable,
     };
 
-Parent _$ParentFromJson(Map<String, dynamic> json) {
-  return Parent()
-    ..id = json['id'] as String
-    ..slot = json['slot'] as String;
+Preview _$PreviewFromJson(Map<String, dynamic> json) {
+  return Preview()
+    ..desktop = json['desktop'] as String
+    ..mobile = json['mobile'] as String
+    ..tablet = json['tablet'] as String;
 }
 
-Map<String, dynamic> _$ParentToJson(Parent instance) => <String, dynamic>{
-      'id': instance.id,
-      'slot': instance.slot,
+Map<String, dynamic> _$PreviewToJson(Preview instance) => <String, dynamic>{
+      'desktop': instance.desktop,
+      'mobile': instance.mobile,
+      'tablet': instance.tablet,
+    };
+
+ContextSchema _$ContextSchemaFromJson(Map<String, dynamic> json) {
+  return ContextSchema()
+    ..method = json['method'] as String
+    ..params = json['params'] ?? []
+    ..service = json['service'] as String;
+}
+
+Map<String, dynamic> _$ContextSchemaToJson(ContextSchema instance) =>
+    <String, dynamic>{
+      'method': instance.method,
+      'params': instance.params,
+      'service': instance.service,
+    };
+
+Data _$DataFromJson(Map<String, dynamic> json) {
+  return Data()
+    ..text = json['text'] as String
+    ..name = json['name'] as String;
+}
+
+Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
+      'text': instance.text,
+      'name': instance.name,
+    };
+
+ButtonData _$ButtonDataFromJson(Map<String, dynamic> json) {
+  return ButtonData()
+    ..text = json['text'] as String
+    ..name = json['name'] as String
+    ..action = json['action'] == null
+        ? null
+        : ButtonAction.fromJson(json['action'] as Map<String, dynamic>);
+}
+
+Map<String, dynamic> _$ButtonDataToJson(ButtonData instance) =>
+    <String, dynamic>{
+      'text': instance.text,
+      'name': instance.name,
+      'action': instance.action,
+    };
+
+ButtonAction _$ButtonActionFromJson(Map<String, dynamic> json) {
+  return ButtonAction()
+    ..type = json['type'] as String
+    ..payload = json['payload'];
+}
+
+Map<String, dynamic> _$ButtonActionToJson(ButtonAction instance) =>
+    <String, dynamic>{
+      'type': instance.type,
+      'payload': instance.payload,
+    };
+
+ImageData _$ImageDataFromJson(Map<String, dynamic> json) {
+  return ImageData()
+    ..text = json['text'] as String
+    ..name = json['name'] as String
+    ..src = json['src'] as String
+    ..description = json['description'] as String;
+}
+
+Map<String, dynamic> _$ImageDataToJson(ImageData instance) => <String, dynamic>{
+      'text': instance.text,
+      'name': instance.name,
+      'src': instance.src,
+      'description': instance.description,
+    };
+
+VideoData _$VideoDataFromJson(Map<String, dynamic> json) {
+  return VideoData()
+    ..text = json['text'] as String
+    ..name = json['name'] as String
+    ..autoplay = json['autoplay'] as bool ?? false
+    ..controls = json['controls'] as bool ?? false
+    ..file = json['file']
+    ..loop = json['loop'] as bool ?? false
+    ..preview = json['preview'] as String
+    ..sound = json['sound'] as bool ?? false
+    ..source = json['source'] as String
+    ..sourceType = json['sourceType'] as Map<String, dynamic>;
+}
+
+Map<String, dynamic> _$VideoDataToJson(VideoData instance) => <String, dynamic>{
+      'text': instance.text,
+      'name': instance.name,
+      'autoplay': instance.autoplay,
+      'controls': instance.controls,
+      'file': instance.file,
+      'loop': instance.loop,
+      'preview': instance.preview,
+      'sound': instance.sound,
+      'source': instance.source,
+      'sourceType': instance.sourceType,
+    };
+
+CategoryData _$CategoryDataFromJson(Map<String, dynamic> json) {
+  return CategoryData()
+    ..text = json['text'] as String
+    ..name = json['name'] as String
+    ..categoryIds = json['categoryIds'] as List ?? []
+    ..hideProductName = json['hideProductName'] as bool ?? false
+    ..hideProductPrice = json['hideProductPrice'] as bool ?? false
+    ..categoryType = json['categoryType'] as Map<String, dynamic>;
+}
+
+Map<String, dynamic> _$CategoryDataToJson(CategoryData instance) =>
+    <String, dynamic>{
+      'text': instance.text,
+      'name': instance.name,
+      'categoryIds': instance.categoryIds,
+      'hideProductName': instance.hideProductName,
+      'hideProductPrice': instance.hideProductPrice,
+      'categoryType': instance.categoryType,
     };
 
 BaseStyles _$BaseStylesFromJson(Map<String, dynamic> json) {
@@ -2068,107 +2123,6 @@ Map<String, dynamic> _$ShopProductCategoryStylesToJson(
       'filterTextDecoration': instance.filterTextDecoration,
     };
 
-Data _$DataFromJson(Map<String, dynamic> json) {
-  return Data()
-    ..text = json['text'] as String
-    ..name = json['name'] as String;
-}
-
-Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
-      'text': instance.text,
-      'name': instance.name,
-    };
-
-ButtonData _$ButtonDataFromJson(Map<String, dynamic> json) {
-  return ButtonData()
-    ..text = json['text'] as String
-    ..name = json['name'] as String
-    ..action = json['action'] == null
-        ? null
-        : ButtonAction.fromJson(json['action'] as Map<String, dynamic>);
-}
-
-Map<String, dynamic> _$ButtonDataToJson(ButtonData instance) =>
-    <String, dynamic>{
-      'text': instance.text,
-      'name': instance.name,
-      'action': instance.action,
-    };
-
-ImageData _$ImageDataFromJson(Map<String, dynamic> json) {
-  return ImageData()
-    ..text = json['text'] as String
-    ..name = json['name'] as String
-    ..src = json['src'] as String
-    ..description = json['description'] as String;
-}
-
-Map<String, dynamic> _$ImageDataToJson(ImageData instance) => <String, dynamic>{
-      'text': instance.text,
-      'name': instance.name,
-      'src': instance.src,
-      'description': instance.description,
-    };
-
-VideoData _$VideoDataFromJson(Map<String, dynamic> json) {
-  return VideoData()
-    ..text = json['text'] as String
-    ..name = json['name'] as String
-    ..autoplay = json['autoplay'] as bool ?? false
-    ..controls = json['controls'] as bool ?? false
-    ..file = json['file']
-    ..loop = json['loop'] as bool ?? false
-    ..preview = json['preview'] as String
-    ..sound = json['sound'] as bool ?? false
-    ..source = json['source'] as String
-    ..sourceType = json['sourceType'] as Map<String, dynamic>;
-}
-
-Map<String, dynamic> _$VideoDataToJson(VideoData instance) => <String, dynamic>{
-      'text': instance.text,
-      'name': instance.name,
-      'autoplay': instance.autoplay,
-      'controls': instance.controls,
-      'file': instance.file,
-      'loop': instance.loop,
-      'preview': instance.preview,
-      'sound': instance.sound,
-      'source': instance.source,
-      'sourceType': instance.sourceType,
-    };
-
-CategoryData _$CategoryDataFromJson(Map<String, dynamic> json) {
-  return CategoryData()
-    ..text = json['text'] as String
-    ..name = json['name'] as String
-    ..categoryIds = json['categoryIds'] as List ?? []
-    ..hideProductName = json['hideProductName'] as bool ?? false
-    ..hideProductPrice = json['hideProductPrice'] as bool ?? false
-    ..categoryType = json['categoryType'] as Map<String, dynamic>;
-}
-
-Map<String, dynamic> _$CategoryDataToJson(CategoryData instance) =>
-    <String, dynamic>{
-      'text': instance.text,
-      'name': instance.name,
-      'categoryIds': instance.categoryIds,
-      'hideProductName': instance.hideProductName,
-      'hideProductPrice': instance.hideProductPrice,
-      'categoryType': instance.categoryType,
-    };
-
-ButtonAction _$ButtonActionFromJson(Map<String, dynamic> json) {
-  return ButtonAction()
-    ..type = json['type'] as String
-    ..payload = json['payload'];
-}
-
-Map<String, dynamic> _$ButtonActionToJson(ButtonAction instance) =>
-    <String, dynamic>{
-      'type': instance.type,
-      'payload': instance.payload,
-    };
-
 ButtonPayload _$ButtonPayloadFromJson(Map<String, dynamic> json) {
   return ButtonPayload()
     ..title = json['title'] as String
@@ -2197,6 +2151,52 @@ Map<String, dynamic> _$ChildSizeToJson(ChildSize instance) => <String, dynamic>{
       'height': instance.height,
       'top': instance.top,
       'left': instance.left,
+    };
+
+Effect _$EffectFromJson(Map<String, dynamic> json) {
+  return Effect()
+    ..payload = json['payload'] == null
+        ? null
+        : Payload.fromJson(json['payload'] as Map<String, dynamic>)
+    ..target = json['target'] as String
+    ..type = json['type'] as String;
+}
+
+Map<String, dynamic> _$EffectToJson(Effect instance) => <String, dynamic>{
+      'payload': instance.payload,
+      'target': instance.target,
+      'type': instance.type,
+    };
+
+Payload _$PayloadFromJson(Map<String, dynamic> json) {
+  return Payload()
+    ..children = json['children'] as List
+    ..data = json['data'] == null
+        ? null
+        : PayloadData.fromJson(json['data'] as Map<String, dynamic>)
+    ..id = json['id'] as String
+    ..meta = json['meta']
+    ..type = json['type'] as String;
+}
+
+Map<String, dynamic> _$PayloadToJson(Payload instance) => <String, dynamic>{
+      'children': instance.children,
+      'data': instance.data,
+      'id': instance.id,
+      'meta': instance.meta,
+      'type': instance.type,
+    };
+
+PayloadData _$PayloadDataFromJson(Map<String, dynamic> json) {
+  return PayloadData()
+    ..sync = json['sync'] as bool
+    ..text = json['text'] as String;
+}
+
+Map<String, dynamic> _$PayloadDataToJson(PayloadData instance) =>
+    <String, dynamic>{
+      'sync': instance.sync,
+      'text': instance.text,
     };
 
 Paragraph _$ParagraphFromJson(Map<String, dynamic> json) {

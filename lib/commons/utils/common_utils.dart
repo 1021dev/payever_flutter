@@ -750,10 +750,15 @@ class GlobalUtils {
     if (shopBuilderWidthFactor == 0) {
       shopBuilderWidthFactor = Measurements.width / webMobileWidth;
     }
+    if (deviceType == null || deviceType.isEmpty) {
+      deviceType = !isTablet ? 'mobile' : 'tablet';
+    }
     return isTablet;
   }
+
   static double mainWidth = 0;
   static double shopBuilderWidthFactor = 0;
+  static String deviceType; // 'mobile', 'tablet', 'desktop'
 
   static Future<dynamic> cropImage(File imageFile) async {
     File croppedFile = await ImageCropper.cropImage(

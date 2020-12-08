@@ -184,7 +184,7 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
   Widget _templateItem(ShopEditScreenState state, ShopPage page, {bool showName = true}) {
 
     String pageName = page == null ? 'Empty' : page.name;
-    print('Page Name: $pageName PageID:${page.id} Template Id: ${page.templateId}');
+    // print('Page Name: $pageName PageID:${page.id} Template Id: ${page.templateId}');
 
     return Container(
       color: (showName && page.variant == 'front') ? Colors.blue : Colors.transparent,
