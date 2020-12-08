@@ -9,6 +9,7 @@ import 'constant.dart';
 import 'style_assist.dart';
 part 'models.g.dart';
 
+// region Shop Section
 @JsonSerializable()
 class ShopModel {
   ShopModel();
@@ -156,6 +157,25 @@ class ThemeResponse {
   Map<String, dynamic> toJson() => _$ThemeResponseToJson(this);
 
 }
+// endregion
+
+// region Shop Edit
+
+// region Snapshot
+@JsonSerializable()
+class Action {
+  Action();
+
+  @JsonKey(name: 'affectedPageIds')   List<String> affectedPageIds;
+  @JsonKey(name: 'createdAt')         String createdAt;
+  @JsonKey(name: 'effects')           List<Effect> effects;
+  @JsonKey(name: 'id')                String id;
+  @JsonKey(name: 'targetPageId')      String targetPageId;
+
+  factory Action.fromJson(Map<String, dynamic> json) => _$ActionFromJson(json);
+  Map<String, dynamic> toJson() => _$ActionToJson(this);
+}
+
 
 @JsonSerializable()
 class ShopPage {
@@ -176,23 +196,69 @@ class ShopPage {
   Map<String, dynamic> toJson() => _$ShopPageToJson(this);
 }
 
-// context: {_id: "b76a3801-6269-43cb-9675-d5d2238ae89f",…}
-// contextId: "b76a3801-6269-43cb-9675-d5d2238ae89f"
-// data: {productPages: "/products/:productId", categoryPages: "/category/:categoryId"}
-// routing: [{routeId: "67f8bc8a-d434-484c-9031-6112f66221ec", pageId: "1bc4b846-16f2-4269-b7cf-e84aebf49ec2",…},…]
-
 @JsonSerializable()
 class ApplicationModel {
   ApplicationModel();
 
-  @JsonKey(name: 'context')         Map<String, dynamic> context;
+  @JsonKey(name: 'context')         ApplicationContext context;
   @JsonKey(name: 'contextId')       String contextId;
-  @JsonKey(name: 'data')            dynamic data;
-  @JsonKey(name: 'routing')         List routing;
+  @JsonKey(name: 'data')            Map<String, dynamic> data;
+  @JsonKey(name: 'routing')         List<Routing> routings;
 
   factory ApplicationModel.fromJson(Map<String, dynamic> json) => _$ApplicationModelFromJson(json);
   Map<String, dynamic> toJson() => _$ApplicationModelToJson(this);
 }
+
+@JsonSerializable()
+class PageData {
+  PageData();
+
+  @JsonKey(name: 'mark')       dynamic mark;
+
+  factory PageData.fromJson(Map<String, dynamic> json) => _$PageDataFromJson(json);
+  Map<String, dynamic> toJson() => _$PageDataToJson(this);
+}
+
+@JsonSerializable()
+class ApplicationContext {
+  ApplicationContext();
+
+  @JsonKey(name: '#logo') ApplicationLogo logo;
+  @JsonKey(name: '_id')   String id;
+
+  factory ApplicationContext.fromJson(Map<String, dynamic> json) => _$ApplicationContextFromJson(json);
+  Map<String, dynamic> toJson() => _$ApplicationContextToJson(this);
+}
+
+@JsonSerializable()
+class ApplicationLogo {
+  ApplicationLogo();
+
+  @JsonKey(name: 'method')  String method;
+  @JsonKey(name: 'params')  List<dynamic> params;
+  @JsonKey(name: 'service') String service;
+  @JsonKey(name: 'usedBy')  List<dynamic> usedBys;
+
+  factory ApplicationLogo.fromJson(Map<String, dynamic> json) => _$ApplicationLogoFromJson(json);
+  Map<String, dynamic> toJson() => _$ApplicationLogoToJson(this);
+}
+
+@JsonSerializable()
+class Routing {
+  Routing();
+
+  @JsonKey(name: 'pageId')    String pageId;
+  @JsonKey(name: 'routeId')   String routeId;
+  @JsonKey(name: 'url')       String url;
+
+  factory Routing.fromJson(Map<String, dynamic> json) => _$RoutingFromJson(json);
+  Map<String, dynamic> toJson() => _$RoutingToJson(this);
+}
+
+
+// endregion
+
+// region PageDetail
 
 @JsonSerializable()
 class PageDetail {
@@ -226,28 +292,6 @@ class PageDetailData {
 }
 
 @JsonSerializable()
-class Preview {
-  Preview();
-
-  @JsonKey(name: 'desktop')   String desktop;
-  @JsonKey(name: 'mobile')    String mobile;
-  @JsonKey(name: 'tablet')    String tablet;
-
-  factory Preview.fromJson(Map<String, dynamic> json) => _$PreviewFromJson(json);
-  Map<String, dynamic> toJson() => _$PreviewToJson(this);
-}
-
-@JsonSerializable()
-class PageData {
-  PageData();
-
-  @JsonKey(name: 'mark')       dynamic mark;
-
-  factory PageData.fromJson(Map<String, dynamic> json) => _$PageDataFromJson(json);
-  Map<String, dynamic> toJson() => _$PageDataToJson(this);
-}
-
-@JsonSerializable()
 class StyleSheetIds {
   StyleSheetIds();
 
@@ -257,57 +301,6 @@ class StyleSheetIds {
 
   factory StyleSheetIds.fromJson(Map<String, dynamic> json) => _$StyleSheetIdsFromJson(json);
   Map<String, dynamic> toJson() => _$StyleSheetIdsToJson(this);
-}
-
-@JsonSerializable()
-class Action {
-  Action();
-
-  @JsonKey(name: 'affectedPageIds')   List<String> affectedPageIds;
-  @JsonKey(name: 'createdAt')         String createdAt;
-  @JsonKey(name: 'effects')           List<Effect> effects;
-  @JsonKey(name: 'id')                String id;
-  @JsonKey(name: 'targetPageId')      String targetPageId;
-
-  factory Action.fromJson(Map<String, dynamic> json) => _$ActionFromJson(json);
-  Map<String, dynamic> toJson() => _$ActionToJson(this);
-}
-
-@JsonSerializable()
-class Effect {
-  Effect();
-
-  @JsonKey(name: 'payload')   Payload payload;
-  @JsonKey(name: 'target')    String target;
-  @JsonKey(name: 'type')      String type;
-
-  factory Effect.fromJson(Map<String, dynamic> json) => _$EffectFromJson(json);
-  Map<String, dynamic> toJson() => _$EffectToJson(this);
-}
-
-@JsonSerializable()
-class Payload {
-  Payload();
-
-  @JsonKey(name: 'children')    List<dynamic> children;
-  @JsonKey(name: 'data')        PayloadData data;
-  @JsonKey(name: 'id')          String id;
-  @JsonKey(name: 'meta')        dynamic meta;
-  @JsonKey(name: 'type')        String type;
-
-  factory Payload.fromJson(Map<String, dynamic> json) => _$PayloadFromJson(json);
-  Map<String, dynamic> toJson() => _$PayloadToJson(this);
-}
-
-@JsonSerializable()
-class PayloadData {
-  PayloadData();
-
-  @JsonKey(name: 'sync')   bool sync;
-  @JsonKey(name: 'text')   String text;
-
-  factory PayloadData.fromJson(Map<String, dynamic> json) => _$PayloadDataFromJson(json);
-  Map<String, dynamic> toJson() => _$PayloadDataToJson(this);
 }
 
 @JsonSerializable()
@@ -348,19 +341,14 @@ class Child {
 }
 
 @JsonSerializable()
-class ContextSchema {
-  ContextSchema();
+class Parent {
+  Parent();
 
-  @JsonKey(name: 'method')
-  String method;
-  @JsonKey(name: 'params', defaultValue: [])
-  dynamic params;
-  @JsonKey(name: 'service')
-  String service;
+  @JsonKey(name: 'id')    String id;
+  @JsonKey(name: 'slot')  String slot;
 
-  factory ContextSchema.fromJson(Map<String, dynamic> json) =>
-      _$ContextSchemaFromJson(json);
-  Map<String, dynamic> toJson() => _$ContextSchemaToJson(this);
+  factory Parent.fromJson(Map<String, dynamic> json) => _$ParentFromJson(json);
+  Map<String, dynamic> toJson() => _$ParentToJson(this);
 }
 
 @JsonSerializable()
@@ -385,16 +373,123 @@ class Meta {
 }
 
 @JsonSerializable()
-class Parent {
-  Parent();
+class Preview {
+  Preview();
 
-  @JsonKey(name: 'id')    String id;
-  @JsonKey(name: 'slot')  String slot;
+  @JsonKey(name: 'desktop')   String desktop;
+  @JsonKey(name: 'mobile')    String mobile;
+  @JsonKey(name: 'tablet')    String tablet;
 
-  factory Parent.fromJson(Map<String, dynamic> json) => _$ParentFromJson(json);
-  Map<String, dynamic> toJson() => _$ParentToJson(this);
+  factory Preview.fromJson(Map<String, dynamic> json) => _$PreviewFromJson(json);
+  Map<String, dynamic> toJson() => _$PreviewToJson(this);
+}
+// endregion
+
+@JsonSerializable()
+class ContextSchema {
+  ContextSchema();
+
+  @JsonKey(name: 'method')
+  String method;
+  @JsonKey(name: 'params', defaultValue: [])
+  dynamic params;
+  @JsonKey(name: 'service')
+  String service;
+
+  factory ContextSchema.fromJson(Map<String, dynamic> json) =>
+      _$ContextSchemaFromJson(json);
+  Map<String, dynamic> toJson() => _$ContextSchemaToJson(this);
 }
 
+// region Child Data
+
+@JsonSerializable()
+class Data {
+  Data();
+
+  @JsonKey(name: 'text')      String text;
+  @JsonKey(name: 'name')      String name;
+
+  factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
+  Map<String, dynamic> toJson() => _$DataToJson(this);
+}
+
+@JsonSerializable()
+class ButtonData extends Data {
+  ButtonData();
+
+  @JsonKey(name: 'action')    ButtonAction action;
+
+  factory ButtonData.fromJson(Map<String, dynamic> json) => _$ButtonDataFromJson(json);
+  Map<String, dynamic> toJson() => _$ButtonDataToJson(this);
+}
+
+@JsonSerializable()
+class ButtonAction {
+  ButtonAction();
+
+  @JsonKey(name: 'type')      String type;
+  @JsonKey(name: 'payload')   dynamic payload; // ButtonPayload or String
+
+  factory ButtonAction.fromJson(Map<String, dynamic> json) => _$ButtonActionFromJson(json);
+  Map<String, dynamic> toJson() => _$ButtonActionToJson(this);
+}
+
+@JsonSerializable()
+class ImageData extends Data {
+  ImageData();
+  @JsonKey(name: 'src')           String src;
+  @JsonKey(name: 'description')   String description;
+
+  factory ImageData.fromJson(Map<String, dynamic> json) => _$ImageDataFromJson(json);
+  Map<String, dynamic> toJson() => _$ImageDataToJson(this);
+}
+
+@JsonSerializable()
+class VideoData extends Data {
+  VideoData();
+
+  @JsonKey(name: 'autoplay', defaultValue: false)
+  bool autoplay;
+  @JsonKey(name: 'controls', defaultValue: false)
+  bool controls;
+  @JsonKey(name: 'file')
+  dynamic file;
+  @JsonKey(name: 'loop', defaultValue: false)
+  bool loop;
+  @JsonKey(name: 'preview')
+  String preview;
+  @JsonKey(name: 'sound', defaultValue: false)
+  bool sound;
+  @JsonKey(name: 'source')
+  String source;
+  @JsonKey(name: 'sourceType')
+  Map<String, dynamic> sourceType; // {name: "My video", value: "my-video"}
+
+  factory VideoData.fromJson(Map<String, dynamic> json) => _$VideoDataFromJson(json);
+  Map<String, dynamic> toJson() => _$VideoDataToJson(this);
+}
+
+@JsonSerializable()
+class CategoryData extends Data {
+  CategoryData();
+
+  @JsonKey(name: 'categoryIds', defaultValue: [])
+  List<dynamic> categoryIds;
+  @JsonKey(name: 'hideProductName', defaultValue: false)
+  bool hideProductName;
+  @JsonKey(name: 'hideProductPrice', defaultValue: false)
+  bool hideProductPrice;
+  @JsonKey(name: 'categoryType')
+  Map<String, dynamic> categoryType; // {name: "Custom", value: "custom"}
+
+  factory CategoryData.fromJson(Map<String, dynamic> json) => _$CategoryDataFromJson(json);
+  Map<String, dynamic> toJson() => _$CategoryDataToJson(this);
+}
+
+// endregion
+
+// region Styles
 @JsonSerializable()
 class BaseStyles with BackgroundAssist, StyleAssist, SizeAssist, DecorationAssist {
   BaseStyles();
@@ -982,90 +1077,7 @@ class ShopProductCategoryStyles extends BaseStyles {
   Map<String, dynamic> toJson() => _$ShopProductCategoryStylesToJson(this);
 }
 
-@JsonSerializable()
-class Data {
-  Data();
-
-  @JsonKey(name: 'text')      String text;
-  @JsonKey(name: 'name')      String name;
-
-  factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
-  Map<String, dynamic> toJson() => _$DataToJson(this);
-}
-
-@JsonSerializable()
-class ButtonData extends Data {
-  ButtonData();
-
-  @JsonKey(name: 'action')    ButtonAction action;
-
-  factory ButtonData.fromJson(Map<String, dynamic> json) => _$ButtonDataFromJson(json);
-  Map<String, dynamic> toJson() => _$ButtonDataToJson(this);
-}
-
-@JsonSerializable()
-class ImageData extends Data {
-  ImageData();
-  @JsonKey(name: 'src')           String src;
-  @JsonKey(name: 'description')   String description;
-
-  factory ImageData.fromJson(Map<String, dynamic> json) => _$ImageDataFromJson(json);
-  Map<String, dynamic> toJson() => _$ImageDataToJson(this);
-}
-
-
-@JsonSerializable()
-class VideoData extends Data {
-  VideoData();
-
-  @JsonKey(name: 'autoplay', defaultValue: false)
-  bool autoplay;
-  @JsonKey(name: 'controls', defaultValue: false)
-  bool controls;
-  @JsonKey(name: 'file')
-  dynamic file;
-  @JsonKey(name: 'loop', defaultValue: false)
-  bool loop;
-  @JsonKey(name: 'preview')
-  String preview;
-  @JsonKey(name: 'sound', defaultValue: false)
-  bool sound;
-  @JsonKey(name: 'source')
-  String source;
-  @JsonKey(name: 'sourceType')
-  Map<String, dynamic> sourceType; // {name: "My video", value: "my-video"}
-
-  factory VideoData.fromJson(Map<String, dynamic> json) => _$VideoDataFromJson(json);
-  Map<String, dynamic> toJson() => _$VideoDataToJson(this);
-}
-
-@JsonSerializable()
-class CategoryData extends Data {
-  CategoryData();
-
-  @JsonKey(name: 'categoryIds', defaultValue: [])
-  List<dynamic> categoryIds;
-  @JsonKey(name: 'hideProductName', defaultValue: false)
-  bool hideProductName;
-  @JsonKey(name: 'hideProductPrice', defaultValue: false)
-  bool hideProductPrice;
-  @JsonKey(name: 'categoryType')
-  Map<String, dynamic> categoryType; // {name: "Custom", value: "custom"}
-
-  factory CategoryData.fromJson(Map<String, dynamic> json) => _$CategoryDataFromJson(json);
-  Map<String, dynamic> toJson() => _$CategoryDataToJson(this);
-}
-
-@JsonSerializable()
-class ButtonAction {
-  ButtonAction();
-
-  @JsonKey(name: 'type')      String type;
-  @JsonKey(name: 'payload')   dynamic payload; // ButtonPayload or String
-
-  factory ButtonAction.fromJson(Map<String, dynamic> json) => _$ButtonActionFromJson(json);
-  Map<String, dynamic> toJson() => _$ButtonActionToJson(this);
-}
+// endregion
 
 @JsonSerializable()
 class ButtonPayload {
@@ -1094,6 +1106,44 @@ class ChildSize {
 
   factory ChildSize.fromJson(Map<String, dynamic> json) => _$ChildSizeFromJson(json);
   Map<String, dynamic> toJson() => _$ChildSizeToJson(this);
+}
+
+// region Edit Style
+@JsonSerializable()
+class Effect {
+  Effect();
+
+  @JsonKey(name: 'payload')   Payload payload;
+  @JsonKey(name: 'target')    String target;
+  @JsonKey(name: 'type')      String type;
+
+  factory Effect.fromJson(Map<String, dynamic> json) => _$EffectFromJson(json);
+  Map<String, dynamic> toJson() => _$EffectToJson(this);
+}
+
+@JsonSerializable()
+class Payload {
+  Payload();
+
+  @JsonKey(name: 'children')    List<dynamic> children;
+  @JsonKey(name: 'data')        PayloadData data;
+  @JsonKey(name: 'id')          String id;
+  @JsonKey(name: 'meta')        dynamic meta;
+  @JsonKey(name: 'type')        String type;
+
+  factory Payload.fromJson(Map<String, dynamic> json) => _$PayloadFromJson(json);
+  Map<String, dynamic> toJson() => _$PayloadToJson(this);
+}
+
+@JsonSerializable()
+class PayloadData {
+  PayloadData();
+
+  @JsonKey(name: 'sync')   bool sync;
+  @JsonKey(name: 'text')   String text;
+
+  factory PayloadData.fromJson(Map<String, dynamic> json) => _$PayloadDataFromJson(json);
+  Map<String, dynamic> toJson() => _$PayloadDataToJson(this);
 }
 
 class ShopObject {
@@ -1529,7 +1579,6 @@ class SocialIconShadowModel extends ShadowModel {
       color: Colors.black);
 }
 
-
 class NoBackGroundFillClipPath extends CustomClipper<Path> {
   final double radius = 0.5;
 
@@ -1546,4 +1595,8 @@ class NoBackGroundFillClipPath extends CustomClipper<Path> {
 
   @override
   bool shouldReclip(NoBackGroundFillClipPath oldClipper) => false;
+
+  // endregion
 }
+// endregion
+// endregion

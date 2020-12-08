@@ -55,7 +55,6 @@ class _TemplateViewState extends State<TemplateView> {
           screenBloc: widget.screenBloc,
           deviceTypeId: widget.pageDetail.stylesheetIds.mobile,
           enableTapChild: widget.enableTapSection,
-          templateId: widget.pageDetail.templateId,
           sectionId: child.id,
           isSelected: selectSectionId == child.id,
           onTapChild: () {

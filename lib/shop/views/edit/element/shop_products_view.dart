@@ -11,9 +11,9 @@ import '../../../../theme.dart';
 class ShopProductsView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
-  final Map<String, dynamic> contextSchemas;
+  final ApplicationContext applicationContext;
 
-  const ShopProductsView({this.child, this.stylesheets, this.contextSchemas});
+  const ShopProductsView({this.child, this.stylesheets, this.applicationContext});
 
   @override
   _ShopProductsViewState createState() => _ShopProductsViewState();
@@ -28,44 +28,44 @@ class _ShopProductsViewState extends State<ShopProductsView> {
 
   @override
   void initState() {
-    if (widget.contextSchemas != null && widget.contextSchemas.isNotEmpty) {
-      schema = ContextSchema.fromJson(widget.contextSchemas[widget.child.id]);
-      try {
-        List<dynamic> productIds = schema.params as List;
-        String productId = productIds[0].first as String;
-        Map<String, dynamic> body = {
-          "query":
-              "{getProducts(\n        businessUuid: \"d0de55b4-5a2a-41a9-a0de-f38256f541ee\",\n        includeIds: [\"$productId\"]\n        pageNumber: 1,\n        paginationLimit: 100,\n      ) {\n        products {\n          images\n          _id\n          title\n          description\n          price\n          salePrice\n          currency\n          active\n          categories { id title }\n        }\n      }}"
-        };
-        ApiService api = ApiService();
-        api
-            .getProducts(GlobalUtils.activeToken.accessToken, body)
-            .then((response) {
-          List<ProductsModel> products = [];
-          if (response is Map) {
-            dynamic data = response['data'];
-            if (data != null) {
-              dynamic getProducts = data['getProducts'];
-              if (getProducts != null) {
-                List productsObj = getProducts['products'];
-                if (productsObj != null) {
-                  productsObj.forEach((element) {
-                    products.add(ProductsModel.toMap(element));
-                  });
-                }
-              }
-            }
-            if (products.isNotEmpty) {
-              setState(() {
-                productModel = products.first;
-              });
-            }
-          }
-        });
-      } catch (e) {
-        print('Parse ContextSchema Error: ${e.toString()}');
-      }
-    }
+    // if (widget.applicationContext != null) {
+    //   schema = ContextSchema.fromJson(widget.contextSchemas[widget.child.id]);
+    //   try {
+    //     List<dynamic> productIds = schema.params as List;
+    //     String productId = productIds[0].first as String;
+    //     Map<String, dynamic> body = {
+    //       "query":
+    //           "{getProducts(\n        businessUuid: \"d0de55b4-5a2a-41a9-a0de-f38256f541ee\",\n        includeIds: [\"$productId\"]\n        pageNumber: 1,\n        paginationLimit: 100,\n      ) {\n        products {\n          images\n          _id\n          title\n          description\n          price\n          salePrice\n          currency\n          active\n          categories { id title }\n        }\n      }}"
+    //     };
+    //     ApiService api = ApiService();
+    //     api
+    //         .getProducts(GlobalUtils.activeToken.accessToken, body)
+    //         .then((response) {
+    //       List<ProductsModel> products = [];
+    //       if (response is Map) {
+    //         dynamic data = response['data'];
+    //         if (data != null) {
+    //           dynamic getProducts = data['getProducts'];
+    //           if (getProducts != null) {
+    //             List productsObj = getProducts['products'];
+    //             if (productsObj != null) {
+    //               productsObj.forEach((element) {
+    //                 products.add(ProductsModel.toMap(element));
+    //               });
+    //             }
+    //           }
+    //         }
+    //         if (products.isNotEmpty) {
+    //           setState(() {
+    //             productModel = products.first;
+    //           });
+    //         }
+    //       }
+    //     });
+    //   } catch (e) {
+    //     print('Parse ContextSchema Error: ${e.toString()}');
+    //   }
+    // }
     super.initState();
   }
 

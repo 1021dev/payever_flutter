@@ -192,7 +192,7 @@ class _SectionViewState extends State<SectionView> {
     if (selectChildId == block.id && add == false || isDraggingBlock) return;
 
     Widget lastElement;
-    Map<String, dynamic> json = state.stylesheets[deviceTypeId][block.id];
+    Map<String, dynamic> json = state.pageDetail.stylesheets['mobile'][deviceTypeId][block.id];
     SectionStyles blockStyles = SectionStyles.fromJson(json);
     List<SectionStyles> newSectionStyles = [blockStyles];
     newSectionStyles.addAll(sectionStyles);
@@ -229,7 +229,7 @@ class _SectionViewState extends State<SectionView> {
     Widget childElement = getChild(state, child, sectionStyles.first);
     if (childElement == null) return null;
     if (child.type == 'text') {
-      styles = TextStyles.fromJson(state.stylesheets[deviceTypeId][child.id]);
+      styles = TextStyles.fromJson(state.pageDetail.stylesheets['mobile'][deviceTypeId][child.id]);
     }
     double width = styles.width + styles.paddingH * 2;
     double height = styles.height + styles.paddingV * 2;
@@ -354,7 +354,7 @@ class _SectionViewState extends State<SectionView> {
   Widget getChild(
       ShopEditScreenState state, Child child, SectionStyles sectionStyles) {
     Widget childView;
-    Map<String, dynamic>stylesheets = state.stylesheets[deviceTypeId];
+    Map<String, dynamic>stylesheets = state.pageDetail.stylesheets['mobile'][deviceTypeId];
     switch (child.type) {
       case 'text':
         childView = TextView(
@@ -400,7 +400,7 @@ class _SectionViewState extends State<SectionView> {
           for (Child blockChild in child.children) {
             BaseStyles styles = getBaseStyles(blockChild.id);
             if (styles == null || !styles.active) continue;
-            SectionStyles blockStyle = SectionStyles.fromJson(state.stylesheets[deviceTypeId][child.id]);
+            SectionStyles blockStyle = SectionStyles.fromJson(state.pageDetail.stylesheets['mobile'][deviceTypeId][child.id]);
             Widget resizeableWidget =
             getResizeableChildWidget(state, blockChild, [blockStyle]);
             if (resizeableWidget == null) continue;
@@ -433,9 +433,9 @@ class _SectionViewState extends State<SectionView> {
         childView = ShopProductsView(
           child: child,
           stylesheets: stylesheets,
-          contextSchemas: state.activeShopPage?.contextId == null
-              ? null
-              : state.contextSchemas[state.activeShopPage.contextId],
+          // contextSchemas: state.pageDetail?.contextId == null
+          //     ? null
+          //     : state.applicationModel.context,
         );
         break;
       case 'shop-product-details':
@@ -709,13 +709,13 @@ class _SectionViewState extends State<SectionView> {
   }
 
   bool isDragging (ChildSize newSize, Child child) {
-    BaseStyles styles = BaseStyles.fromJson(widget.screenBloc.state.stylesheets[deviceTypeId][child.id]);
+    BaseStyles styles = BaseStyles.fromJson(widget.screenBloc.state.pageDetail.stylesheets['mobile'][deviceTypeId][child.id]);
     return styles.width == newSize.width && styles.height == newSize.height;
   }
 
   void progressWrongPosition(TemplateSizeStateModel templateSizeState) {
     bool isWrongPosition = sectionStyles.wrongPosition(
-        widget.screenBloc.state.stylesheets[deviceTypeId],
+        widget.screenBloc.state.pageDetail.stylesheets['mobile'][deviceTypeId],
         section,
         widgetHeight,
         templateSizeState.newChildSize,
@@ -735,13 +735,13 @@ class _SectionViewState extends State<SectionView> {
   void progressRelativeLines(ChildSize newChildSize) {
     setState(() {
       relativeMarginTop = sectionStyles.relativeMarginTop(
-          widget.screenBloc.state.stylesheets[deviceTypeId],
+          widget.screenBloc.state.pageDetail.stylesheets['mobile'][deviceTypeId],
           section,
           newChildSize,
           widgetHeight,
           selectChildId);
       relativeMarginLeft = sectionStyles.relativeMarginLeft(
-          widget.screenBloc.state.stylesheets[deviceTypeId],
+          widget.screenBloc.state.pageDetail.stylesheets['mobile'][deviceTypeId],
           section,
           newChildSize,
           selectChildId);
@@ -758,7 +758,7 @@ class _SectionViewState extends State<SectionView> {
   SectionStyles getSectionStyles(String childId) {
     try {
       Map<String, dynamic> json =
-      widget.screenBloc.state.stylesheets[widget.deviceTypeId][childId];
+      widget.screenBloc.state.pageDetail.stylesheets['mobile'][widget.deviceTypeId][childId];
       if (json['display'] != 'none') {
         // print('==============================================');
         // print('SectionID: $childId');
@@ -799,7 +799,7 @@ class _SectionViewState extends State<SectionView> {
   }
 
   _updateTextAction(ShopEditScreenState state, String text) {
-    Map<String, dynamic> sheets = state.stylesheets[deviceTypeId][selectChildId];
+    Map<String, dynamic> sheets = state.pageDetail.stylesheets['mobile'][deviceTypeId][selectChildId];
     TextStyles styles = TextStyles.fromJson(sheets);
     String htmlStr = styles.encodeHtmlString(widget.screenBloc.htmlText(), newText: text);
     Map<String, dynamic> data = {'text': htmlStr, 'sync': false};
@@ -809,7 +809,7 @@ class _SectionViewState extends State<SectionView> {
         sheets,
         data,
         'text',
-        state.activeShopPage.templateId);
+        state.pageDetail.templateId);
     print('payload: $effects');
     widget.screenBloc.add(UpdateSectionEvent(
         sectionId: state.selectedSectionId, effects: effects));
@@ -841,7 +841,7 @@ class _SectionViewState extends State<SectionView> {
   }
 
   _addNewObject(ShopObject shopObject) {
-    List<Map<String, dynamic>>effects = sectionStyles.getAddNewObjectPayload(shopObject, section.id, widget.screenBloc.state.pageDetail.stylesheetIds, widget.screenBloc.state.activeShopPage.templateId);
+    List<Map<String, dynamic>>effects = sectionStyles.getAddNewObjectPayload(shopObject, section.id, widget.screenBloc.state.pageDetail.stylesheetIds, widget.screenBloc.state.pageDetail.templateId);
     print('payload: $effects');
     widget.screenBloc.add(UpdateSectionEvent(sectionId: section.id, effects: effects));
   }
@@ -850,9 +850,9 @@ class _SectionViewState extends State<SectionView> {
     List<Map<String, dynamic>> effects = [];
     BaseStyles baseStyles = getBaseStyles(selectChildId);
     Child selectedChild = widget.screenBloc.state.selectedChild;
-    Map<String, dynamic>stylesheets = widget.screenBloc.state.stylesheets[deviceTypeId];
+    Map<String, dynamic>stylesheets = widget.screenBloc.state.pageDetail.stylesheets['mobile'][deviceTypeId];
 
-    String templateId = widget.screenBloc.state.activeShopPage.templateId;
+    String templateId = widget.screenBloc.state.pageDetail.templateId;
     effects = baseStyles.getPayload(stylesheets,
         section, selectedChild, newSize, deviceTypeId, templateId);
     return effects;
@@ -872,7 +872,7 @@ class _SectionViewState extends State<SectionView> {
         // TODO: Handle this case.
         break;
       case ClipboardType.delete:
-        effects = sectionStyles.getDeleteObject(state.selectedChild.id, state.activeShopPage.templateId);
+        effects = sectionStyles.getDeleteObject(state.selectedChild.id, state.pageDetail.templateId);
         break;
     }
     print('payload: $effects');
@@ -882,6 +882,6 @@ class _SectionViewState extends State<SectionView> {
 
   BaseStyles getBaseStyles(String childId) {
     return BaseStyles.fromJson(
-        widget.screenBloc.state.stylesheets[deviceTypeId][childId]);
+        widget.screenBloc.state.pageDetail.stylesheets['mobile'][deviceTypeId][childId]);
   }
 }

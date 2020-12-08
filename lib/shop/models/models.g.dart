@@ -209,6 +209,27 @@ Map<String, dynamic> _$ThemeResponseToJson(ThemeResponse instance) =>
       'versions': instance.versions,
     };
 
+Action _$ActionFromJson(Map<String, dynamic> json) {
+  return Action()
+    ..affectedPageIds =
+        (json['affectedPageIds'] as List)?.map((e) => e as String)?.toList()
+    ..createdAt = json['createdAt'] as String
+    ..effects = (json['effects'] as List)
+        ?.map((e) =>
+            e == null ? null : Effect.fromJson(e as Map<String, dynamic>))
+        ?.toList()
+    ..id = json['id'] as String
+    ..targetPageId = json['targetPageId'] as String;
+}
+
+Map<String, dynamic> _$ActionToJson(Action instance) => <String, dynamic>{
+      'affectedPageIds': instance.affectedPageIds,
+      'createdAt': instance.createdAt,
+      'effects': instance.effects,
+      'id': instance.id,
+      'targetPageId': instance.targetPageId,
+    };
+
 ShopPage _$ShopPageFromJson(Map<String, dynamic> json) {
   return ShopPage()
     ..contextId = json['contextId'] as String
@@ -236,6 +257,78 @@ Map<String, dynamic> _$ShopPageToJson(ShopPage instance) => <String, dynamic>{
       'templateId': instance.templateId,
       'type': instance.type,
       'variant': instance.variant,
+    };
+
+ApplicationModel _$ApplicationModelFromJson(Map<String, dynamic> json) {
+  return ApplicationModel()
+    ..context = json['context'] == null
+        ? null
+        : ApplicationContext.fromJson(json['context'] as Map<String, dynamic>)
+    ..contextId = json['contextId'] as String
+    ..data = json['data'] as Map<String, dynamic>
+    ..routings = (json['routing'] as List)
+        ?.map((e) =>
+            e == null ? null : Routing.fromJson(e as Map<String, dynamic>))
+        ?.toList();
+}
+
+Map<String, dynamic> _$ApplicationModelToJson(ApplicationModel instance) =>
+    <String, dynamic>{
+      'context': instance.context,
+      'contextId': instance.contextId,
+      'data': instance.data,
+      'routing': instance.routings,
+    };
+
+PageData _$PageDataFromJson(Map<String, dynamic> json) {
+  return PageData()..mark = json['mark'];
+}
+
+Map<String, dynamic> _$PageDataToJson(PageData instance) => <String, dynamic>{
+      'mark': instance.mark,
+    };
+
+ApplicationContext _$ApplicationContextFromJson(Map<String, dynamic> json) {
+  return ApplicationContext()
+    ..logo = json['#logo'] == null
+        ? null
+        : ApplicationLogo.fromJson(json['#logo'] as Map<String, dynamic>)
+    ..id = json['_id'] as String;
+}
+
+Map<String, dynamic> _$ApplicationContextToJson(ApplicationContext instance) =>
+    <String, dynamic>{
+      '#logo': instance.logo,
+      '_id': instance.id,
+    };
+
+ApplicationLogo _$ApplicationLogoFromJson(Map<String, dynamic> json) {
+  return ApplicationLogo()
+    ..method = json['method'] as String
+    ..params = json['params'] as List
+    ..service = json['service'] as String
+    ..usedBys = json['usedBy'] as List;
+}
+
+Map<String, dynamic> _$ApplicationLogoToJson(ApplicationLogo instance) =>
+    <String, dynamic>{
+      'method': instance.method,
+      'params': instance.params,
+      'service': instance.service,
+      'usedBy': instance.usedBys,
+    };
+
+Routing _$RoutingFromJson(Map<String, dynamic> json) {
+  return Routing()
+    ..pageId = json['pageId'] as String
+    ..routeId = json['routeId'] as String
+    ..url = json['url'] as String;
+}
+
+Map<String, dynamic> _$RoutingToJson(Routing instance) => <String, dynamic>{
+      'pageId': instance.pageId,
+      'routeId': instance.routeId,
+      'url': instance.url,
     };
 
 PageDetail _$PageDetailFromJson(Map<String, dynamic> json) {
@@ -288,27 +381,6 @@ Map<String, dynamic> _$PageDetailDataToJson(PageDetailData instance) =>
       'preview': instance.preview,
     };
 
-Preview _$PreviewFromJson(Map<String, dynamic> json) {
-  return Preview()
-    ..desktop = json['desktop'] as String
-    ..mobile = json['mobile'] as String
-    ..tablet = json['tablet'] as String;
-}
-
-Map<String, dynamic> _$PreviewToJson(Preview instance) => <String, dynamic>{
-      'desktop': instance.desktop,
-      'mobile': instance.mobile,
-      'tablet': instance.tablet,
-    };
-
-PageData _$PageDataFromJson(Map<String, dynamic> json) {
-  return PageData()..mark = json['mark'];
-}
-
-Map<String, dynamic> _$PageDataToJson(PageData instance) => <String, dynamic>{
-      'mark': instance.mark,
-    };
-
 StyleSheetIds _$StyleSheetIdsFromJson(Map<String, dynamic> json) {
   return StyleSheetIds()
     ..desktop = json['desktop'] as String
@@ -323,25 +395,17 @@ Map<String, dynamic> _$StyleSheetIdsToJson(StyleSheetIds instance) =>
       'tablet': instance.tablet,
     };
 
-Action _$ActionFromJson(Map<String, dynamic> json) {
-  return Action()
-    ..affectedPageIds =
-        (json['affectedPageIds'] as List)?.map((e) => e as String)?.toList()
-    ..createdAt = json['createdAt'] as String
-    ..effects = (json['effects'] as List)
-        ?.map((e) =>
-            e == null ? null : Effect.fromJson(e as Map<String, dynamic>))
-        ?.toList()
-    ..id = json['id'] as String
-    ..targetPageId = json['targetPageId'] as String;
+Preview _$PreviewFromJson(Map<String, dynamic> json) {
+  return Preview()
+    ..desktop = json['desktop'] as String
+    ..mobile = json['mobile'] as String
+    ..tablet = json['tablet'] as String;
 }
 
-Map<String, dynamic> _$ActionToJson(Action instance) => <String, dynamic>{
-      'affectedPageIds': instance.affectedPageIds,
-      'createdAt': instance.createdAt,
-      'effects': instance.effects,
-      'id': instance.id,
-      'targetPageId': instance.targetPageId,
+Map<String, dynamic> _$PreviewToJson(Preview instance) => <String, dynamic>{
+      'desktop': instance.desktop,
+      'mobile': instance.mobile,
+      'tablet': instance.tablet,
     };
 
 Effect _$EffectFromJson(Map<String, dynamic> json) {

@@ -84,32 +84,29 @@ class ShopEditScreenBloc
     String themeId = state.activeTheme.themeId;
     yield state.copyWith(isLoading: true);
 
-    Map<String, dynamic> previews = {};
     List<ShopPage> pages = [];
-    Map<String, dynamic> templates = {};
-    Map<String, dynamic> contextSchemas = {};
     List<Action>actions = [];
-    Map<String, dynamic> stylesheets = {};
-    dynamic response =
-        await api.getShopEditPreViews(token, themeId);
-    if (response is DioError) {
-      Fluttertoast.showToast(msg: response.error);
-    } else {
-      if (response['source'] != null) {
-        dynamic obj = response['source'];
-
-        if (obj['previews'] != null) {
-          previews = obj['previews'];
-        }
-      }
-    }
+    ApplicationModel applicationModel;
+    // dynamic response =
+    //     await api.getShopEditPreViews(token, themeId);
+    // if (response is DioError) {
+    //   Fluttertoast.showToast(msg: response.error);
+    // } else {
+    //   if (response['source'] != null) {
+    //     dynamic obj = response['source'];
+    //
+    //     if (obj['previews'] != null) {
+    //       previews = obj['previews'];
+    //     }
+    //   }
+    // }
 
     dynamic response1 = await api.getShopSnapShot(token, themeId);
     if (response1 is DioError) {
       yield state.copyWith(isLoading: false);
     } else {
-      if (response1['contextSchemas'] != null && response1['contextSchemas'] is Map) {
-        contextSchemas = response1['contextSchemas'];
+      if (response1['application'] != null && response1['application'] is Map) {
+        applicationModel = ApplicationModel.fromJson(response1['application']);
       }
       // Pages
       if (response1['pages'] != null && response1['pages'] is List) {
@@ -120,30 +117,38 @@ class ShopEditScreenBloc
         });
         print('Pages Length: ${pages.length}');
       }
-
+      if (response1['actions'] != null && response1['actions'] is List) {
+        print('Actions Length: ${pages.length}');
+        List<dynamic> obj = response1['pages'];
+        obj.forEach((element) {
+          pages.add(ShopPage.fromJson(element));
+        });
+        print('Pages Length: ${pages.length}');
+      }
       ShopPage homepage = pages?.firstWhere((element) => element.name == 'HOMEPAGE');
       if (homepage != null) {
         add(GetPageEvent(pageId: homepage.id));
       }
     }
 
-    Map<String, dynamic>query = {'limit': 20, 'offset': 0};
-    dynamic response2 = await api.getShopEditActions(token, themeId, query);
-    if (response2 is DioError) {
-      yield state.copyWith(isLoading: false);
-    } else {
-      response2.forEach((element) {
-        try {
-          actions.add(Action.fromJson(element));
-        } catch (e) {
-          print('Action Parse Error:' + e.toString());
-          print('Action Parse Element:' + element['id']);
-        }
-      });
-      print('Action Count: ${actions.length}');
-    }
+    // Map<String, dynamic>query = {'limit': 20, 'offset': 0};
+    // dynamic response2 = await api.getShopEditActions(token, themeId, query);
+    // if (response2 is DioError) {
+    //   yield state.copyWith(isLoading: false);
+    // } else {
+    //   response2.forEach((element) {
+    //     try {
+    //       actions.add(Action.fromJson(element));
+    //     } catch (e) {
+    //       print('Action Parse Error:' + e.toString());
+    //       print('Action Parse Element:' + element['id']);
+    //     }
+    //   });
+    //   print('Action Count: ${actions.length}');
+    // }
 
     yield state.copyWith(
+        applicationModel: applicationModel,
         pages: pages,
         actions: actions,
         isLoading: false);
