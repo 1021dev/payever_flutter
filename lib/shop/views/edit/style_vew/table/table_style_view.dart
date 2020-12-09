@@ -45,8 +45,8 @@ class _TableStyleViewState extends State<TableStyleView> {
     fontSize = styles.fontSize;
     fontFamily = styles.fontFamily ?? 'Roboto';
 
-    titleEnabled = styles.title;
-    captionEnabled = styles.caption;
+    titleEnabled = styles.titleEnabled;
+    captionEnabled = styles.captionEnabled;
     tableOutlineEnabled = styles.outline;
     alternatingRowsEnabled = styles.alternatingRows;
     super.initState();

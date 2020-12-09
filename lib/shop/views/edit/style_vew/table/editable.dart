@@ -46,15 +46,13 @@ class Editable extends StatefulWidget {
   /// ```
   Editable(
       {Key key,
-      this.columns,
-      this.rows,
+      this.columns, this.rows,
       this.columnRatio = 0.20,
       this.onSubmitted,
       this.onRowSaved,
       this.columnCount = 0,
       this.rowCount = 0,
-      this.headerColumnColor = Colors.white,
-      this.headerRowColor = Colors.white,
+      this.headerColumnColor = Colors.white,  this.headerRowColor = Colors.white,
       this.borderColor = Colors.grey,
       this.tdPaddingLeft = 8.0,
       this.tdPaddingTop = 0.0,
@@ -64,8 +62,7 @@ class Editable extends StatefulWidget {
       this.thPaddingTop = 0.0,
       this.thPaddingRight = 0.0,
       this.thPaddingBottom = 0.0,
-      this.trWidth = 50.0,
-      this.trHeight = 50.0,
+      this.trWidth = 50.0, this.trHeight = 50.0,
       this.borderWidth = 0.5,
       this.thWeight = FontWeight.w600,
       this.thSize = 18,
@@ -83,7 +80,12 @@ class Editable extends StatefulWidget {
       this.createButtonLabel,
       this.stripeColor1 = Colors.white,
       this.stripeColor2 = Colors.black12,
-      this.zebraStripe = false})
+      this.zebraStripe = false,
+      this.headerRows, this.headerColumns, this.footerRows,
+      this.horizontalLines, this.headerColumnLines, this.verticalLines, this.headerRowLines,
+      this.title, this.caption, this.titleEnabled, this.captionEnabled,
+      this.sheets, this.onUpdateStyles,
+      })
       : super(key: key);
 
   /// A data set to create headers
@@ -256,6 +258,25 @@ class Editable extends StatefulWidget {
   /// returns only values if row is edited, otherwise returns a string ['no edit']
   final ValueChanged<dynamic> onRowSaved;
 
+  /// Header & Footer
+  final int headerRows;
+  final int headerColumns;
+  final int footerRows;
+
+  /// Grid Options
+  final bool horizontalLines;
+  final bool headerColumnLines;
+  final bool verticalLines;
+  final bool headerRowLines;
+
+  /// title Caption
+  final String title;
+  final String caption;
+  final bool titleEnabled;
+  final bool captionEnabled;
+  final Map<String, dynamic>sheets;
+  final Function onUpdateStyles;
+
   @override
   EditableState createState() => EditableState(
       rows: this.rows,
@@ -275,13 +296,41 @@ class EditableState extends State<Editable> {
   /// Temporarily holds all edited rows
   List _editedRows = [];
 
+  /// Title and Caption TextEditController
+  TextEditingController titleController, captionController;
+  final FocusNode _focusNodeTitle = FocusNode();
+  final FocusNode _focusNodeCaption = FocusNode();
+
+  @override
+  void initState() {
+    titleController = TextEditingController(text: widget.title);
+    captionController = TextEditingController(text: widget.caption);
+
+    _focusNodeTitle.addListener(() {
+      if (!_focusNodeTitle.hasFocus && widget.title != titleController.text) {
+        Map<String, dynamic> sheets = widget.sheets;
+        sheets['title'] = titleController.text;
+      }
+    });
+    _focusNodeTitle.addListener(() {
+      if (!_focusNodeTitle.hasFocus && widget.caption != captionController.text) {
+        Map<String, dynamic> sheets = widget.sheets;
+        sheets['caption'] = captionController.text;
+      }
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     /// initial Setup of columns and row, sets count of column and row
-
     columns = columns ?? columnBlueprint(widget.columnCount, columns);
     rows = rows ?? rowBlueprint(widget.rowCount, columns, rows);
 
+    if (columns.length < widget.columnCount)
+      columns = widget.columns;
+    if (rows.length < widget.rowCount)
+      rows = rowBlueprint(widget.rowCount, columns, rows);
 
     /// Generates table columns
     List<Widget> _tableHeaders() {
@@ -351,6 +400,13 @@ class EditableState extends State<Editable> {
                     zebraStripe: widget.zebraStripe,
                     stripeColor1: widget.stripeColor1,
                     stripeColor2: widget.stripeColor2,
+                    headerRows : widget.headerRows,
+                    headerColumns: widget.headerRows,
+                    footerRows: widget.headerRows,
+                    horizontalLines: widget.horizontalLines,
+                    headerColumnLines: widget.headerColumnLines,
+                    verticalLines: widget.verticalLines,
+                    headerRowLines: widget.headerRowLines,
                     onChanged: (value) {
                       ///checks if row has been edited previously
                       var result = editedRows.indexWhere((element) {
@@ -394,19 +450,48 @@ class EditableState extends State<Editable> {
               child: Row(
                   mainAxisSize: MainAxisSize.min, children: _tableHeaders()),
             ),
+            if (widget.titleEnabled)
+              titleWidget,
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
                   children: _tableRows(),
                 ),
               ),
-            )
+            ),
+            if (widget.captionEnabled)
+              titleWidget,
           ]),
         ),
       ),
     );
   }
 
+  Widget get titleWidget {
+    return Container(
+      height: 40,
+      width: double.infinity,
+      child: TextField(
+        controller: titleController,
+        focusNode: _focusNodeTitle,
+        // enabled: widget.isEditState,
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.zero,
+          isDense: true,
+          border: InputBorder.none,
+          focusedBorder: InputBorder.none,
+          enabledBorder: InputBorder.none,
+          errorBorder: InputBorder.none,
+          disabledBorder: InputBorder.none,
+        ),
+        style: widget.tdStyle,
+        textAlign: TextAlign.center,
+        onChanged: (text) {
+          // widget.onChangeText(text);
+        },
+      ),
+    );
+  }
   /// Button for creating a new empty row
   Widget createButton() {
     return Visibility(

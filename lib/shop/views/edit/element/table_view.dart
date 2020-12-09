@@ -6,10 +6,11 @@ import 'package:payever/theme.dart';
 class TableView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
-
+  final Function onUpdateStyles;
   const TableView(
       {this.child,
-      this.stylesheets});
+      this.stylesheets,
+      this.onUpdateStyles});
 
   @override
   _TableViewState createState() => _TableViewState();
@@ -26,10 +27,12 @@ class _TableViewState extends State<TableView> {
   double fontSize;
   String fontFamily;
   /// title Caption
-  bool titleEnabled = false;
-  bool captionEnabled = false;
-  bool tableOutlineEnabled = false;
-  bool alternatingRowsEnabled = false;
+  String title;
+  String caption;
+  bool titleEnabled;
+  bool captionEnabled;
+  bool tableOutlineEnabled;
+  bool alternatingRowsEnabled;
   /// Header & Footer
   int headerRows;
   int headerColumns;
@@ -42,14 +45,12 @@ class _TableViewState extends State<TableView> {
 
   final _editableKey = GlobalKey<EditableState>();
 
-
   @override
   Widget build(BuildContext context) {
     styles = styleSheet();
     /// Column & Row Counts
     columnCount = styles.columnCount;
     rowCount = styles.rowCount;
-    print('columnCount $columnCount, rowCount $rowCount');
     /// Header Colors
     headerColumnColor = colorConvert(styles.headerColumnColor);
     headerRowColor = colorConvert(styles.headerRowColor);
@@ -57,8 +58,10 @@ class _TableViewState extends State<TableView> {
     fontSize = styles.fontSize;
     fontFamily = styles.fontFamily;
     /// title Caption
-    titleEnabled = styles.title;
-    captionEnabled = styles.caption;
+    title = styles.title;
+    caption = styles.caption;
+    titleEnabled = styles.titleEnabled;
+    captionEnabled = styles.captionEnabled;
     tableOutlineEnabled = styles.outline;
     alternatingRowsEnabled = styles.alternatingRows;
     /// Header & Footer
@@ -87,32 +90,32 @@ class _TableViewState extends State<TableView> {
     cellWidth = (tableWidth - 40) / columnCount;
     cellHeight = (tableHeight - 40) / rowCount;
     return Editable(
-      columns: alphabet.sublist(0, columnCount),
       key: _editableKey,
-      columnCount: columnCount,
-      headerColumnColor: headerColumnColor,
-      headerRowColor: headerRowColor,
-      trWidth: cellWidth,
-      trHeight: cellHeight,
-      rowCount: rowCount,
-      zebraStripe: alternatingRowsEnabled,
-      stripeColor2: Colors.grey[200],
-      // onRowSaved: (value) {
-      //   print(value);
-      // },
+      columns: alphabet.sublist(0, columnCount),
+      columnCount: columnCount, rowCount: rowCount,
+      headerColumnColor: headerColumnColor, headerRowColor: headerRowColor,
+      trWidth: cellWidth, trHeight: cellHeight,
+      zebraStripe: alternatingRowsEnabled, stripeColor2: Colors.grey[200],
+      tdStyle: textStyle,
+      borderColor: tableOutlineEnabled ? Colors.blueGrey : Colors.transparent,
+      title: title, caption: caption, titleEnabled: titleEnabled, captionEnabled: captionEnabled,
+      headerRows: headerRows, headerColumns: headerColumns, footerRows: footerRows,
+      horizontalLines: horizontalLines, headerColumnLines: headerColumnLines, verticalLines: verticalLines, headerRowLines: headerRowLines,
+      sheets: widget.stylesheets,
+      onUpdateStyles: (sheets)=> {widget.onUpdateStyles(sheets)},
       onSubmitted: (value) {
         print(value);
       },
-      tdStyle: TextStyle(
-        color: Colors.black,
-        fontSize: fontSize,
-        fontFamily: fontFamily,
-      ),
-      borderColor: Colors.blueGrey,
     );
   }
 
-
+  TextStyle get textStyle {
+    return TextStyle(
+      color: Colors.black,
+      fontSize: fontSize,
+      fontFamily: fontFamily,
+    );
+  }
 
   /// Function to add a new row
   /// Using the global key assigined to Editable widget
@@ -139,4 +142,5 @@ class _TableViewState extends State<TableView> {
       return null;
     }
   }
+
 }

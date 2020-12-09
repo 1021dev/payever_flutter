@@ -466,6 +466,7 @@ class _SectionViewState extends State<SectionView> {
         childView = TableView(
           child: child,
           stylesheets: stylesheets,
+          onUpdateStyles: (sheets)=> _updateTableStyles(sheets),
         );
         break;
       default:
@@ -886,6 +887,16 @@ class _SectionViewState extends State<SectionView> {
       widget.screenBloc.add(UpdateSectionEvent(sectionId: section.id, effects: effects));
   }
 
+  _updateTableStyles(Map<String, dynamic> sheets) {
+    ShopEditScreenState state = widget.screenBloc.state;
+    TableStyles styles = TableStyles.fromJson(sheets);
+    List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
+        selectChildId, sheets, state.pageDetail.stylesheetIds);
+
+    widget.screenBloc.add(UpdateSectionEvent(
+        sectionId: state.selectedSectionId, effects: effects));
+  }
+  
   BaseStyles getBaseStyles(String childId) {
     return BaseStyles.fromJson(
         widget.screenBloc.state.pageDetail.stylesheets[childId]);

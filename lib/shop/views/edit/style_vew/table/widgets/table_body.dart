@@ -27,6 +27,13 @@ class RowBuilder extends StatefulWidget {
     @required this.stripeColor1,
     @required this.stripeColor2,
     @required this.zebraStripe,
+    @required this.headerRows,
+    @required this.headerColumns,
+    @required this.footerRows,
+    @required this.horizontalLines,
+    @required this.headerColumnLines,
+    @required this.verticalLines,
+    @required this.headerRowLines,
   })  : _borderColor = borderColor,
         _borderWidth = borderWidth,
         super(key: key);
@@ -54,6 +61,15 @@ class RowBuilder extends StatefulWidget {
   final bool zebraStripe;
   final ValueChanged<String> onSubmitted;
   final ValueChanged<String> onChanged;
+  /// Header & Footer
+  final int headerRows;
+  final int headerColumns;
+  final int footerRows;
+  /// Grid Options
+  final bool horizontalLines;
+  final bool headerColumnLines;
+  final bool verticalLines;
+  final bool headerRowLines;
 
   @override
   _RowBuilderState createState() => _RowBuilderState();
@@ -62,26 +78,6 @@ class RowBuilder extends StatefulWidget {
 class _RowBuilderState extends State<RowBuilder> {
   @override
   Widget build(BuildContext context) {
-    Color bgColor;
-    if (widget.index == 0) {
-      bgColor = widget.headerColumnColor;
-    } else if (widget.column == 0) {
-      bgColor = widget.headerRowColor;
-    } else {
-      if (widget.zebraStripe) {
-        bgColor = widget.index % 2 == 1.0
-            ? widget.stripeColor2
-            : widget.stripeColor1;
-      } else {
-        bgColor = widget.stripeColor1;
-      }
-
-    }
-    if (widget.headerColumnColor == Colors.white && widget.headerRowColor == Colors.white)
-      bgColor = widget.index % 2 == 1.0
-          ? widget.stripeColor2
-          : widget.stripeColor1;
-
     return Flexible(
       fit: FlexFit.loose,
       flex: 6,
@@ -89,7 +85,7 @@ class _RowBuilderState extends State<RowBuilder> {
         height: widget.trHeight,
         width: widget.trWidth,
         decoration: BoxDecoration(
-            color: bgColor,
+            color: backgroundColor,
             border: Border.all(
                 color: widget._borderColor, width: widget._borderWidth)),
         child: TextFormField(
@@ -102,7 +98,7 @@ class _RowBuilderState extends State<RowBuilder> {
           // enabled: false,
           decoration: InputDecoration(
               filled: widget.zebraStripe,
-              fillColor: bgColor,
+              fillColor: backgroundColor,
               // fillColor: widget.index % 2 == 1.0
               //     ? widget.stripeColor2
               //     : widget.stripeColor1,
@@ -115,5 +111,28 @@ class _RowBuilderState extends State<RowBuilder> {
         ),
       ),
     );
+  }
+
+  Color get backgroundColor {
+    Color bgColor;
+    if (widget.index < widget.headerColumns) {
+      bgColor = widget.headerColumnColor;
+    } else if (widget.column < widget.headerRows) {
+      bgColor = widget.headerRowColor;
+    } else {
+      if (widget.zebraStripe) {
+        bgColor = widget.index % 2 == 1.0
+            ? widget.stripeColor2
+            : widget.stripeColor1;
+      } else {
+        bgColor = widget.stripeColor1;
+      }
+    }
+    if (widget.headerColumnColor == Colors.white && widget.headerRowColor == Colors.white)
+      bgColor = widget.index % 2 == 1.0
+          ? widget.stripeColor2
+          : widget.stripeColor1;
+
+    return bgColor;
   }
 }

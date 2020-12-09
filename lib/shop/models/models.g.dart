@@ -1131,8 +1131,10 @@ TableStyles _$TableStylesFromJson(Map<String, dynamic> json) {
     ..headerRows = json['headerRows'] as int ?? 1
     ..headerColumns = json['headerColumns'] as int ?? 1
     ..footerRows = json['footerRows'] as int ?? 0
-    ..title = json['title'] as bool ?? false
-    ..caption = json['caption'] as bool ?? false
+    ..title = json['title'] as String ?? 'Table 1'
+    ..titleEnabled = json['titleEnabled'] as bool ?? false
+    ..caption = json['caption'] as String ?? 'Caption'
+    ..captionEnabled = json['captionEnabled'] as bool ?? false
     ..outline = json['outline'] as bool ?? true
     ..alternatingRows = json['alternatingRows'] as bool ?? false
     ..horizontalLines = json['horizontalLines'] as bool ?? true
@@ -1206,7 +1208,9 @@ Map<String, dynamic> _$TableStylesToJson(TableStyles instance) =>
       'headerColumns': instance.headerColumns,
       'footerRows': instance.footerRows,
       'title': instance.title,
+      'titleEnabled': instance.titleEnabled,
       'caption': instance.caption,
+      'captionEnabled': instance.captionEnabled,
       'outline': instance.outline,
       'alternatingRows': instance.alternatingRows,
       'horizontalLines': instance.horizontalLines,

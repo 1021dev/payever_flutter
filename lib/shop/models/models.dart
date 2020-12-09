@@ -881,10 +881,14 @@ class TableStyles extends BaseStyles {
   @JsonKey(name: 'footerRows', defaultValue: 0)
   int footerRows;
 
-  @JsonKey(name: 'title', defaultValue: false)
-  bool title;
-  @JsonKey(name: 'caption', defaultValue: false)
-  bool caption;
+  @JsonKey(name: 'title', defaultValue: 'Table 1')
+  String title;
+  @JsonKey(name: 'titleEnabled', defaultValue: false)
+  bool titleEnabled;
+  @JsonKey(name: 'caption', defaultValue: 'Caption')
+  String caption;
+  @JsonKey(name: 'captionEnabled', defaultValue: false)
+  bool captionEnabled;
 
   @JsonKey(name: 'outline', defaultValue: true)
   bool outline;
