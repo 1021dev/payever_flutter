@@ -216,7 +216,7 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
   Widget getPreview(ShopEditScreenState state,
       ShopPage page, bool showName) {
     Widget templateItem;
-    if (state.pageDetail?.templateId == page.templateId) {
+    if (state.pageDetail?.templateId == page.templateId && state.pageDetail.data.preview != null) {
       String preview = state.pageDetail.data.preview[GlobalUtils.deviceType];
       templateItem = CachedNetworkImage(
         imageUrl: preview,

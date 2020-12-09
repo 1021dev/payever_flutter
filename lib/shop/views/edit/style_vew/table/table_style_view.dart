@@ -4,6 +4,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/style_vew/table/tabe_grid_options_view.dart';
 import 'package:payever/shop/views/edit/style_vew/table/tabe_header_footer_view.dart';
 
 import '../font_family_view.dart';
@@ -43,6 +44,11 @@ class _TableStyleViewState extends State<TableStyleView> {
     columnController = TextEditingController(text: '${styles.columnCount}');
     fontSize = styles.fontSize;
     fontFamily = styles.fontFamily ?? 'Roboto';
+
+    titleEnabled = styles.title;
+    captionEnabled = styles.caption;
+    tableOutlineEnabled = styles.outline;
+    alternatingRowsEnabled = styles.alternatingRows;
     super.initState();
   }
 
@@ -136,12 +142,8 @@ class _TableStyleViewState extends State<TableStyleView> {
       onTap: () {
         Widget subview = TableHeaderFooterView(
           screenBloc: widget.screenBloc,
-          onUpdateFontFamily: (_fontFamily) {
-            fontFamily = _fontFamily;
-            _updateTextSize();
-          },
+          onUpdateStyles: (sheets) => _updateStyles(sheets),
           onClose: widget.onClose,
-          fontFamily: fontFamily,
         );
         navigateSubView(subview);
       },
@@ -259,6 +261,9 @@ class _TableStyleViewState extends State<TableStyleView> {
                   onChanged: (value) {
                     setState(() {
                       titleEnabled = !titleEnabled;
+                      Map<String, dynamic> sheets = widget.screenBloc.state.pageDetail.stylesheets[selectedChildId];
+                      sheets['title'] = titleEnabled;
+                      _updateStyles(sheets);
                     });
                   },
                 ),
@@ -278,6 +283,9 @@ class _TableStyleViewState extends State<TableStyleView> {
                   onChanged: (value) {
                     setState(() {
                       captionEnabled = !captionEnabled;
+                      Map<String, dynamic> sheets = widget.screenBloc.state.pageDetail.stylesheets[selectedChildId];
+                      sheets['caption'] = captionEnabled;
+                      _updateStyles(sheets);
                     });
                   },
                 ),
@@ -302,6 +310,9 @@ class _TableStyleViewState extends State<TableStyleView> {
               onChanged: (value) {
                 setState(() {
                   tableOutlineEnabled = !tableOutlineEnabled;
+                  Map<String, dynamic> sheets = widget.screenBloc.state.pageDetail.stylesheets[selectedChildId];
+                  sheets['outline'] = tableOutlineEnabled;
+                  _updateStyles(sheets);
                 });
               },
             ),
@@ -324,6 +335,9 @@ class _TableStyleViewState extends State<TableStyleView> {
               onChanged: (value) {
                 setState(() {
                   alternatingRowsEnabled = !alternatingRowsEnabled;
+                  Map<String, dynamic> sheets = widget.screenBloc.state.pageDetail.stylesheets[selectedChildId];
+                  sheets['alternatingRows'] = alternatingRowsEnabled;
+                  _updateStyles(sheets);
                 });
               },
             ),
@@ -334,13 +348,23 @@ class _TableStyleViewState extends State<TableStyleView> {
   }
 
   Widget get gridOptions {
-    return Container(
-      height: 50,
-      child: Row(
-        children: [
-          Expanded(child: Text('Grid Options', style: TextStyle(fontSize: 15, color: Colors.white),)),
-          Icon(Icons.arrow_forward_ios, color: Colors.grey,),
-        ],
+    return InkWell(
+      onTap: () {
+        Widget subview = TableGridOptionsView(
+          screenBloc: widget.screenBloc,
+          onUpdateStyles: (style) => _updateStyles(style),
+          onClose: widget.onClose,
+        );
+        navigateSubView(subview);
+      },
+      child: Container(
+        height: 50,
+        child: Row(
+          children: [
+            Expanded(child: Text('Grid Options', style: TextStyle(fontSize: 15, color: Colors.white),)),
+            Icon(Icons.arrow_forward_ios, color: Colors.grey,),
+          ],
+        ),
       ),
     );
   }

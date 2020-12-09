@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/shop/shop_edit/shop_edit_bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
-import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
 
 class TableHeaderFooterView extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
-  final Function onUpdateFontFamily;
-  final String fontFamily;
+  final Function onUpdateStyles;
   final Function onClose;
 
   const TableHeaderFooterView(
-      {this.screenBloc, @required this.onUpdateFontFamily, @required this.fontFamily, @required this.onClose});
+      {this.screenBloc, @required this.onUpdateStyles, @required this.onClose});
 
   @override
   _TableHeaderFooterViewState createState() => _TableHeaderFooterViewState();
@@ -28,15 +25,16 @@ class _TableHeaderFooterViewState extends State<TableHeaderFooterView> {
   bool isTablet;
   TableStyles styles;
   String selectedChildId;
+
   int headerRows;
   int headerColumns;
   int footerRows;
-
 
   @override
   void initState() {
     selectedChildId = widget.screenBloc.state.selectedChild.id;
     styles = TableStyles.fromJson(widget.screenBloc.state.pageDetail.stylesheets[selectedChildId]);
+    
     headerRows = styles.headerRows;
     headerColumns = styles.headerColumns;
     footerRows = styles.footerRows;
@@ -136,20 +134,19 @@ class _TableHeaderFooterViewState extends State<TableHeaderFooterView> {
 
   // Style Body
   Widget get _styleBody {
-    List<String>titles = ['Header Rows', 'Header Columns', 'Footer Rows'];
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
-          _itemWidget('Header Rows', headerRows),
-          _itemWidget('Header Columns', headerColumns),
-          _itemWidget('Footer Rows', footerRows),
+          _itemWidget('Header Rows', headerRows, (value) => headerRows = value),
+          _itemWidget('Header Columns', headerColumns, (value) => headerColumns = value),
+          _itemWidget('Footer Rows', footerRows, (value) => footerRows = value),
         ],
       ),
     );
   }
 
-  Widget _itemWidget(String name, int count) {
+  Widget _itemWidget(String name, int count, Function onUpdate) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 5),
       height: 40,
@@ -174,10 +171,11 @@ class _TableHeaderFooterViewState extends State<TableHeaderFooterView> {
                 Expanded(
                   child: InkWell(
                     onTap: () {
-                      // if (fontSize > minTextFontSize) {
-                      //   fontSize --;
-                      //   _updateTextSize();
-                      // }
+                      if (count > 0) {
+                        count --;
+                        onUpdate(count);
+                        _updateStyles();
+                      }
                     },
                     child: Container(
                       alignment: Alignment.center,
@@ -200,8 +198,9 @@ class _TableHeaderFooterViewState extends State<TableHeaderFooterView> {
                 Expanded(
                   child: InkWell(
                     onTap: () {
-                      // fontSize ++;
-                      // _updateTextSize();
+                      count ++;
+                      onUpdate(count);
+                      _updateStyles();
                     },
                     child: Container(
                       alignment: Alignment.center,
@@ -224,5 +223,15 @@ class _TableHeaderFooterViewState extends State<TableHeaderFooterView> {
         ],
       ),
     );
+  }
+
+  _updateStyles() {
+    setState(() {});
+    Map<String, dynamic> sheets = widget.screenBloc.state.pageDetail.stylesheets[selectedChildId];
+    sheets['headerRows'] = headerRows;
+    sheets['headerColumns'] = headerColumns;
+    sheets['footerRows'] = footerRows;
+    print('Sheets: $sheets');
+    // widget.onUpdateStyles(sheets);
   }
 }

@@ -1130,7 +1130,15 @@ TableStyles _$TableStylesFromJson(Map<String, dynamic> json) {
     ..headerRowColor = json['headerRowColor'] as String ?? '#FFFFFF'
     ..headerRows = json['headerRows'] as int ?? 1
     ..headerColumns = json['headerColumns'] as int ?? 1
-    ..footerRows = json['footerRows'] as int ?? 0;
+    ..footerRows = json['footerRows'] as int ?? 0
+    ..title = json['title'] as bool ?? false
+    ..caption = json['caption'] as bool ?? false
+    ..outline = json['outline'] as bool ?? true
+    ..alternatingRows = json['alternatingRows'] as bool ?? false
+    ..horizontalLines = json['horizontalLines'] as bool ?? true
+    ..headerColumnLines = json['headerColumnLines'] as bool ?? true
+    ..verticalLines = json['verticalLines'] as bool ?? true
+    ..headerRowLines = json['headerRowLines'] as bool ?? true;
 }
 
 Map<String, dynamic> _$TableStylesToJson(TableStyles instance) =>
@@ -1197,6 +1205,14 @@ Map<String, dynamic> _$TableStylesToJson(TableStyles instance) =>
       'headerRows': instance.headerRows,
       'headerColumns': instance.headerColumns,
       'footerRows': instance.footerRows,
+      'title': instance.title,
+      'caption': instance.caption,
+      'outline': instance.outline,
+      'alternatingRows': instance.alternatingRows,
+      'horizontalLines': instance.horizontalLines,
+      'headerColumnLines': instance.headerColumnLines,
+      'verticalLines': instance.verticalLines,
+      'headerRowLines': instance.headerRowLines,
     };
 
 ShopCartStyles _$ShopCartStylesFromJson(Map<String, dynamic> json) {

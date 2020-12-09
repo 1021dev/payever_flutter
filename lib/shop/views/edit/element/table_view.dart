@@ -25,24 +25,52 @@ class _TableViewState extends State<TableView> {
   Color headerRowColor;
   double fontSize;
   String fontFamily;
+  /// title Caption
+  bool titleEnabled = false;
+  bool captionEnabled = false;
+  bool tableOutlineEnabled = false;
+  bool alternatingRowsEnabled = false;
+  /// Header & Footer
+  int headerRows;
+  int headerColumns;
+  int footerRows;
+  /// Grid Options
+  bool horizontalLines;
+  bool headerColumnLines;
+  bool verticalLines;
+  bool headerRowLines;
+
   final _editableKey = GlobalKey<EditableState>();
 
-  _TableViewState();
 
-  @override
-  void initState() {
-
-    super.initState();
-  }
   @override
   Widget build(BuildContext context) {
     styles = styleSheet();
+    /// Column & Row Counts
     columnCount = styles.columnCount;
     rowCount = styles.rowCount;
+    print('columnCount $columnCount, rowCount $rowCount');
+    /// Header Colors
     headerColumnColor = colorConvert(styles.headerColumnColor);
     headerRowColor = colorConvert(styles.headerRowColor);
+    /// Fonts
     fontSize = styles.fontSize;
     fontFamily = styles.fontFamily;
+    /// title Caption
+    titleEnabled = styles.title;
+    captionEnabled = styles.caption;
+    tableOutlineEnabled = styles.outline;
+    alternatingRowsEnabled = styles.alternatingRows;
+    /// Header & Footer
+    headerRows = styles.headerRows;
+    headerColumns = styles.headerColumns;
+    footerRows = styles.footerRows;
+    /// Grid Options
+    horizontalLines = styles.horizontalLines;
+    headerColumnLines = styles.headerColumnLines;
+    verticalLines = styles.verticalLines;
+    headerRowLines = styles.headerRowLines;
+
     return body;
   }
 
@@ -67,7 +95,7 @@ class _TableViewState extends State<TableView> {
       trWidth: cellWidth,
       trHeight: cellHeight,
       rowCount: rowCount,
-      zebraStripe: true,
+      zebraStripe: alternatingRowsEnabled,
       stripeColor2: Colors.grey[200],
       // onRowSaved: (value) {
       //   print(value);

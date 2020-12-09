@@ -68,9 +68,14 @@ class _RowBuilderState extends State<RowBuilder> {
     } else if (widget.column == 0) {
       bgColor = widget.headerRowColor;
     } else {
-      bgColor = widget.index % 2 == 1.0
-          ? widget.stripeColor2
-          : widget.stripeColor1;
+      if (widget.zebraStripe) {
+        bgColor = widget.index % 2 == 1.0
+            ? widget.stripeColor2
+            : widget.stripeColor1;
+      } else {
+        bgColor = widget.stripeColor1;
+      }
+
     }
     if (widget.headerColumnColor == Colors.white && widget.headerRowColor == Colors.white)
       bgColor = widget.index % 2 == 1.0
