@@ -289,7 +289,7 @@ class PageDetail {
 class PageDetailData {
   PageDetailData();
 
-  @JsonKey(name: 'preview')       Preview preview;
+  @JsonKey(name: 'preview')       Map<String, dynamic> preview;
 
   factory PageDetailData.fromJson(Map<String, dynamic> json) => _$PageDetailDataFromJson(json);
   Map<String, dynamic> toJson() => _$PageDetailDataToJson(this);
@@ -376,17 +376,6 @@ class Meta {
   Map<String, dynamic> toJson() => _$MetaToJson(this);
 }
 
-@JsonSerializable()
-class Preview {
-  Preview();
-
-  @JsonKey(name: 'desktop')   String desktop;
-  @JsonKey(name: 'mobile')    String mobile;
-  @JsonKey(name: 'tablet')    String tablet;
-
-  factory Preview.fromJson(Map<String, dynamic> json) => _$PreviewFromJson(json);
-  Map<String, dynamic> toJson() => _$PreviewToJson(this);
-}
 // endregion
 
 @JsonSerializable()

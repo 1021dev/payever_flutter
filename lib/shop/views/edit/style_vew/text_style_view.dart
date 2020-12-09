@@ -39,9 +39,9 @@ class _TextStyleViewState extends State<TextStyleView> {
 
   @override
   void initState() {
-    styles = TextStyles.fromJson(widget.screenBloc.state.pageDetail.stylesheets);
     ShopEditScreenState state = widget.screenBloc.state;
     selectedChildId = state.selectedChild.id;
+    styles = TextStyles.fromJson(state.pageDetail.stylesheets[selectedChildId]);
 
     htmlText = widget.screenBloc.htmlText();
     fontSize = styles.htmlFontSize(htmlText);
@@ -835,7 +835,7 @@ class _TextStyleViewState extends State<TextStyleView> {
   }
 
   void _updateTextProperty(ShopEditScreenState state, String newHtmlText) {
-    Map<String, dynamic> sheets = state.pageDetail.stylesheets;
+    Map<String, dynamic> sheets = state.pageDetail.stylesheets[selectedChildId];
     Map<String, dynamic> data = {'text': newHtmlText, 'sync': false};
     List<Map<String, dynamic>> effects = styles.getUpdateDataPayload(
         state.selectedSectionId,

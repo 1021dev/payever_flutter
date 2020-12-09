@@ -41,14 +41,12 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
 
   @override
   void initState() {
-    print('Active page: ${widget.shopPage.id}');
     screenBloc.add(GetPageEvent(pageId: widget.shopPage.id));
     super.initState();
   }
 
   @override
   void dispose() {
-    // screenBloc.add(ActiveShopPageEvent(activeShopPage: null));
     screenBloc.add(InitSelectedSectionEvent());
     super.dispose();
   }
@@ -98,7 +96,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
 
   Widget body(ShopEditScreenState state) {
     if (state.isLoading)
-      return Container();
+      return Container(color: Colors.white,);
 
     return Stack(
       children: [

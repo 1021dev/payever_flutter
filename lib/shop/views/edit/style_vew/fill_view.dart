@@ -13,15 +13,13 @@ import '../../../../theme.dart';
 class FillView extends StatefulWidget {
 
   final ShopEditScreenBloc screenBloc;
-  final Map<String, dynamic> stylesheets;
   final Function onUpdateColor;
   final Function onUpdateGradientFill;
   final Function onUpdateImageFill;
   final bool hasComplexFill;
   const FillView(
       this.screenBloc,
-      {this.stylesheets,
-      this.onUpdateColor,
+      {this.onUpdateColor,
       this.onUpdateGradientFill,
       this.onUpdateImageFill,
       this.hasComplexFill = false});
@@ -38,6 +36,7 @@ class _FillViewState extends State<FillView> {
   bool isTablet;
 
   TextStyles styles;
+  String selectedChildId;
   Color fillColor;
   Color startColor, endColor;
   double angle;
@@ -59,7 +58,9 @@ class _FillViewState extends State<FillView> {
 
   @override
   void initState() {
-    styles = TextStyles.fromJson(widget.stylesheets);
+    ShopEditScreenState state = widget.screenBloc.state;
+    selectedChildId = state.selectedChild.id;
+    styles = TextStyles.fromJson(state.pageDetail.stylesheets[selectedChildId]);
     fillColor = colorConvert(styles.backgroundColor, emptyColor: true);
     GradientModel gradientModel;
     if (styles.isGradientBackGround)
@@ -105,7 +106,7 @@ class _FillViewState extends State<FillView> {
   }
 
   Widget body(ShopEditScreenState state) {
-    styles = TextStyles.fromJson(widget.stylesheets);
+    styles = TextStyles.fromJson(state.pageDetail.stylesheets[selectedChildId]);
     return Container(
       height: 400,
       child: Scaffold(

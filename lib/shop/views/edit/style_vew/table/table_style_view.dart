@@ -25,7 +25,7 @@ class _TableStyleViewState extends State<TableStyleView> {
   TextEditingController rowController;
   TextEditingController columnController;
   TableStyles styles;
-
+  String selectedChildId;
   bool titleEnabled = false;
   bool captionEnabled = false;
   bool tableOutlineEnabled = false;
@@ -36,7 +36,9 @@ class _TableStyleViewState extends State<TableStyleView> {
 
   @override
   void initState() {
-    styles = TableStyles.fromJson(widget.screenBloc.state.pageDetail.stylesheets);
+    ShopEditScreenState state = widget.screenBloc.state;
+    selectedChildId = state.selectedChild.id;
+    styles = TableStyles.fromJson(state.pageDetail.stylesheets[selectedChildId]);
     rowController = TextEditingController(text: '${styles.rowCount}');
     columnController = TextEditingController(text: '${styles.columnCount}');
     fontSize = styles.fontSize;
@@ -115,7 +117,7 @@ class _TableStyleViewState extends State<TableStyleView> {
                     headerColumnColor = '#ffffff';
                     headerRowColor = '#ffffff';
                 }
-                Map<String, dynamic> sheets = widget.screenBloc.state.pageDetail.stylesheets;
+                Map<String, dynamic> sheets = widget.screenBloc.state.pageDetail.stylesheets[selectedChildId];
                 sheets['headerColumnColor'] = headerColumnColor;
                 sheets['headerRowColor'] = headerRowColor;
                 _updateStyles(sheets);
@@ -182,7 +184,7 @@ class _TableStyleViewState extends State<TableStyleView> {
               textAlign: TextAlign.center,
               onChanged: (value) {
                 if (value.isNotEmpty) {
-                  Map<String, dynamic> sheets = widget.screenBloc.state.pageDetail.stylesheets;
+                  Map<String, dynamic> sheets = widget.screenBloc.state.pageDetail.stylesheets[selectedChildId];
                   sheets['rowCount'] = int.parse(value);
                   _updateStyles(sheets);
                 }
@@ -219,7 +221,7 @@ class _TableStyleViewState extends State<TableStyleView> {
             textAlign: TextAlign.center,
             onChanged: (value) {
               if (value.isNotEmpty) {
-                Map<String, dynamic> sheets = widget.screenBloc.state.pageDetail.stylesheets;
+                Map<String, dynamic> sheets = widget.screenBloc.state.pageDetail.stylesheets[selectedChildId];
                 sheets['columnCount'] = int.parse(value);
                 _updateStyles(sheets);
               }
@@ -349,7 +351,7 @@ class _TableStyleViewState extends State<TableStyleView> {
       child: InkWell(
         onTap: () => navigateSubView(FontFamilyView(
           screenBloc: widget.screenBloc,
-          stylesheets: widget.screenBloc.state.pageDetail.stylesheets,
+          stylesheets: widget.screenBloc.state.pageDetail.stylesheets[selectedChildId],
           onUpdateFontFamily: (_fontFamily) {
             fontFamily = _fontFamily;
             _updateTextSize();
@@ -480,11 +482,11 @@ class _TableStyleViewState extends State<TableStyleView> {
     setState(() {
     });
     ShopEditScreenState state = widget.screenBloc.state;
-    Map<String, dynamic> sheets = state.pageDetail.stylesheets;
+    Map<String, dynamic> sheets = state.pageDetail.stylesheets[selectedChildId];
     sheets['fontSize'] = fontSize;
     sheets['fontFamily'] = fontFamily;
     List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
-        state.selectedChild.id, sheets, state.pageDetail.stylesheetIds);
+        selectedChildId, sheets, state.pageDetail.stylesheetIds);
     widget.screenBloc.add(UpdateSectionEvent(
         sectionId: state.selectedSectionId, effects: effects));
   }
@@ -492,7 +494,7 @@ class _TableStyleViewState extends State<TableStyleView> {
   _updateStyles(Map<String, dynamic> sheets) {
     ShopEditScreenState state = widget.screenBloc.state;
     List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
-        state.selectedChild.id, sheets, state.pageDetail.stylesheetIds);
+        selectedChildId, sheets, state.pageDetail.stylesheetIds);
 
     widget.screenBloc.add(UpdateSectionEvent(
         sectionId: state.selectedSectionId, effects: effects));

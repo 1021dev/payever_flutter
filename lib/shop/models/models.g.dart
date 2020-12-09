@@ -370,10 +370,7 @@ Map<String, dynamic> _$PageDetailToJson(PageDetail instance) =>
     };
 
 PageDetailData _$PageDetailDataFromJson(Map<String, dynamic> json) {
-  return PageDetailData()
-    ..preview = json['preview'] == null
-        ? null
-        : Preview.fromJson(json['preview'] as Map<String, dynamic>);
+  return PageDetailData()..preview = json['preview'] as Map<String, dynamic>;
 }
 
 Map<String, dynamic> _$PageDetailDataToJson(PageDetailData instance) =>
@@ -475,19 +472,6 @@ Meta _$MetaFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$MetaToJson(Meta instance) => <String, dynamic>{
       'deletable': instance.deletable,
-    };
-
-Preview _$PreviewFromJson(Map<String, dynamic> json) {
-  return Preview()
-    ..desktop = json['desktop'] as String
-    ..mobile = json['mobile'] as String
-    ..tablet = json['tablet'] as String;
-}
-
-Map<String, dynamic> _$PreviewToJson(Preview instance) => <String, dynamic>{
-      'desktop': instance.desktop,
-      'mobile': instance.mobile,
-      'tablet': instance.tablet,
     };
 
 ContextSchema _$ContextSchemaFromJson(Map<String, dynamic> json) {

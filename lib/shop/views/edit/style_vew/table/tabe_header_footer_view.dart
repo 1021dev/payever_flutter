@@ -27,7 +27,7 @@ class _TableHeaderFooterViewState extends State<TableHeaderFooterView> {
   bool isPortrait;
   bool isTablet;
   TableStyles styles;
-
+  String selectedChildId;
   int headerRows;
   int headerColumns;
   int footerRows;
@@ -35,7 +35,8 @@ class _TableHeaderFooterViewState extends State<TableHeaderFooterView> {
 
   @override
   void initState() {
-    styles = TableStyles.fromJson(widget.screenBloc.state.pageDetail.stylesheets);
+    selectedChildId = widget.screenBloc.state.selectedChild.id;
+    styles = TableStyles.fromJson(widget.screenBloc.state.pageDetail.stylesheets[selectedChildId]);
     headerRows = styles.headerRows;
     headerColumns = styles.headerColumns;
     footerRows = styles.footerRows;

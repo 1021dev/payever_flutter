@@ -210,9 +210,9 @@ class ShopEditScreenBloc
       if ((event.effects.first['payload'] as Map).containsKey('id')) {
         String id = event.effects.first['payload']['id'];
         List<Child> children = sections.firstWhere((element) => element.id == event.sectionId).children;
-        List newChildren = children.map((element) {
+        List<Child> newChildren = children.map((element) {
           if (element.id == id) {
-            element = event.effects.first['payload'];
+            element = Child.fromJson(event.effects.first['payload']);
           }
           return element;
         }).toList();
@@ -243,13 +243,13 @@ class ShopEditScreenBloc
 
     if (!event.updateApi) return;
     if (state.selectedChild?.type == 'table') return;
-    // api.shopEditAction(token, themeId, body).then((response) {
-    //   if (response is DioError) {
-    //     Fluttertoast.showToast(msg: response.error);
-    //   } else {
-    //     // _fetchPage();
-    //   }
-    // });
+    api.shopEditAction(token, themeId, body).then((response) {
+      if (response is DioError) {
+        Fluttertoast.showToast(msg: response.error);
+      } else {
+        // _fetchPage();
+      }
+    });
   }
 
   _fetchPage() {
@@ -329,17 +329,17 @@ class ShopEditScreenBloc
   }
 
   String htmlText() {
-    // if (state.selectedChild == null || state.selectedChild.type != 'text')
-    //   return null;
-    //
-    // List sections = state.templates[state.activeShopPage.templateId]['children'] as List;
-    // List children = sections.firstWhere((element) => element['id'] == state.selectedSectionId)['children'] as List;
-    // Child child = Child.fromJson(children.firstWhere((element) => element['id'] == state.selectedChild.id));
-    // Data data = Data.fromJson(child.data);
-    // if (data != null)
-    //   return data.text;
-    // else
-    //   return '';
+    if (state.selectedChild == null || state.selectedChild.type != 'text')
+      return null;
+
+    List<Child> sections = state.pageDetail.template.children;
+    List<Child> children = sections.firstWhere((element) => element.id == state.selectedSectionId).children;
+    Child child = children.firstWhere((element) => element.id == state.selectedChild.id);
+    Data data = Data.fromJson(child.data);
+    if (data != null)
+      return data.text;
+    else
+      return '';
   }
 
   bool isTextSelected() {

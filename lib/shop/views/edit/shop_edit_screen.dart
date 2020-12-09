@@ -193,7 +193,7 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
         children: [
           Expanded(
               child: (page != null)
-                  ? getPreview(page, showName, 'preview')
+                  ? getPreview(state, page, showName)
                   : Container(
                 color: Colors.white,
               )),
@@ -213,59 +213,57 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
     );
   }
 
-  Widget getPreview(
-      ShopPage page, bool showName, String preview) {
-    // if (!showName)
-    //   return TemplateView(
-    //       screenBloc: screenBloc,
-    //       shopPage: page,
-    //       template: template,
-    //       scrollable: !showName,
-    //       onTap:()=> _navigateTemplateDetailScreen(page, template));
-
-    return GestureDetector(
-      onTap: () => _navigateTemplateDetailScreen(page),
-      child: (preview == null || preview.isEmpty)
-          ? Container(
-              color: Colors.white,
-            )
-          : CachedNetworkImage(
-              imageUrl: preview,
-              imageBuilder: (context, imageProvider) => Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  image: DecorationImage(
-                    image: imageProvider,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
-              color: Colors.white,
-              placeholder: (context, url) => Container(
-                color: Colors.white,
-                child: Center(
-                  child: Container(
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                    ),
-                  ),
-                ),
-              ),
-              errorWidget: (context, url, error) => Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                ),
-                child: Center(
-                  child: AspectRatio(
-                    aspectRatio: 0.8,
-                    child: SvgPicture.asset(
-                      'assets/images/no_image.svg',
-                      color: Colors.black54,
-                    ),
-                  ),
-                ),
+  Widget getPreview(ShopEditScreenState state,
+      ShopPage page, bool showName) {
+    Widget templateItem;
+    if (state.pageDetail?.templateId == page.templateId) {
+      String preview = state.pageDetail.data.preview[GlobalUtils.deviceType];
+      templateItem = CachedNetworkImage(
+        imageUrl: preview,
+        imageBuilder: (context, imageProvider) => Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            image: DecorationImage(
+              image: imageProvider,
+              fit: BoxFit.contain,
+            ),
+          ),
+        ),
+        color: Colors.white,
+        placeholder: (context, url) => Container(
+          color: Colors.white,
+          child: Center(
+            child: Container(
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
               ),
             ),
+          ),
+        ),
+        errorWidget: (context, url, error) => Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+          ),
+          child: Center(
+            child: AspectRatio(
+              aspectRatio: 0.8,
+              child: SvgPicture.asset(
+                'assets/images/no_image.svg',
+                color: Colors.black54,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+    else {
+      templateItem = Container(
+        color: Colors.white,
+      );
+    }
+    return GestureDetector(
+      onTap: () => _navigateTemplateDetailScreen(page),
+      child: templateItem,
     );
   }
 
