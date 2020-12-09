@@ -47,12 +47,11 @@ class Editable extends StatefulWidget {
   Editable(
       {Key key,
       this.columns, this.rows,
+      this.columnCount = 0, this.rowCount = 0,
       this.columnRatio = 0.20,
       this.onSubmitted,
       this.onRowSaved,
-      this.columnCount = 0,
-      this.rowCount = 0,
-      this.headerColumnColor = Colors.white,  this.headerRowColor = Colors.white,
+      this.headerColumnColor, this.headerRowColor, this.footerRowColor,
       this.borderColor = Colors.grey,
       this.tdPaddingLeft = 8.0,
       this.tdPaddingTop = 0.0,
@@ -150,6 +149,7 @@ class Editable extends StatefulWidget {
   /// Colors of Header
   final Color headerColumnColor;
   final Color headerRowColor;
+  final Color footerRowColor;
   /// Color of table border
   final Color borderColor;
 
@@ -379,6 +379,7 @@ class EditableState extends State<Editable> {
                     ),
                   )
                 : RowBuilder(
+                    rowCount: widget.rowCount,
                     index: index,
                     column: rowIndex - 1,
                     col: ckeys[rowIndex - 1],
@@ -386,6 +387,7 @@ class EditableState extends State<Editable> {
                     trHeight: widget.trHeight,
                     headerColumnColor: widget.headerColumnColor,
                     headerRowColor: widget.headerRowColor,
+                    footerRowColor: widget.footerRowColor,
                     borderColor: widget.borderColor,
                     borderWidth: widget.borderWidth,
                     cellData: list[ckeys[rowIndex - 1]],
@@ -401,8 +403,8 @@ class EditableState extends State<Editable> {
                     stripeColor1: widget.stripeColor1,
                     stripeColor2: widget.stripeColor2,
                     headerRows : widget.headerRows,
-                    headerColumns: widget.headerRows,
-                    footerRows: widget.headerRows,
+                    headerColumns: widget.headerColumns,
+                    footerRows: widget.footerRows,
                     horizontalLines: widget.horizontalLines,
                     headerColumnLines: widget.headerColumnLines,
                     verticalLines: widget.verticalLines,

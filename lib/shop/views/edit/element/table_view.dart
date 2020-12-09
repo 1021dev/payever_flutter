@@ -24,6 +24,8 @@ class _TableViewState extends State<TableView> {
   int rowCount = 5;
   Color headerColumnColor;
   Color headerRowColor;
+  Color footerRowColor;
+
   double fontSize;
   String fontFamily;
   /// title Caption
@@ -54,6 +56,7 @@ class _TableViewState extends State<TableView> {
     /// Header Colors
     headerColumnColor = colorConvert(styles.headerColumnColor);
     headerRowColor = colorConvert(styles.headerRowColor);
+    footerRowColor = colorConvert(styles.footerRowColor);
     /// Fonts
     fontSize = styles.fontSize;
     fontFamily = styles.fontFamily;
@@ -68,12 +71,13 @@ class _TableViewState extends State<TableView> {
     headerRows = styles.headerRows;
     headerColumns = styles.headerColumns;
     footerRows = styles.footerRows;
+    // print('Table headerRows: $headerRows headerColumn:$headerColumns');
     /// Grid Options
     horizontalLines = styles.horizontalLines;
     headerColumnLines = styles.headerColumnLines;
     verticalLines = styles.verticalLines;
     headerRowLines = styles.headerRowLines;
-
+    print('footerRowColor: ${styles.footerRowColor}');
     return body;
   }
 
@@ -93,7 +97,7 @@ class _TableViewState extends State<TableView> {
       key: _editableKey,
       columns: alphabet.sublist(0, columnCount),
       columnCount: columnCount, rowCount: rowCount,
-      headerColumnColor: headerColumnColor, headerRowColor: headerRowColor,
+      headerColumnColor: headerColumnColor, headerRowColor: headerRowColor, footerRowColor: footerRowColor,
       trWidth: cellWidth, trHeight: cellHeight,
       zebraStripe: alternatingRowsEnabled, stripeColor2: Colors.grey[200],
       tdStyle: textStyle,

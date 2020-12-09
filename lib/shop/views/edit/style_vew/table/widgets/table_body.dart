@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:payever/theme.dart';
 
 class RowBuilder extends StatefulWidget {
   ///Builds row elements for the table
@@ -9,8 +10,10 @@ class RowBuilder extends StatefulWidget {
     @required this.tdStyle,
     @required this.trWidth,
     @required this.trHeight,
+    @required this.rowCount,
     @required this.headerColumnColor,
     @required this.headerRowColor,
+    @required this.footerRowColor,
     @required Color borderColor,
     @required double borderWidth,
     @required this.cellData,
@@ -43,13 +46,16 @@ class RowBuilder extends StatefulWidget {
   final double trHeight;
   final Color headerColumnColor;
   final Color headerRowColor;
+  final Color footerRowColor;
   final Color _borderColor;
   final double _borderWidth;
   final cellData;
   final double widthRatio;
   final TextAlign tdAlignment;
   final TextStyle tdStyle;
-  final int index;
+  /// Table RowCount
+  final int rowCount;
+  final int index; /// row Index
   final int column;
   final col;
   final double tdPaddingLeft;
@@ -78,6 +84,8 @@ class RowBuilder extends StatefulWidget {
 class _RowBuilderState extends State<RowBuilder> {
   @override
   Widget build(BuildContext context) {
+    // print('row index: ${widget.index} column:${widget.column}');
+    // print('headerRows: ${widget.headerRows} headerColumn:${widget.headerColumns}');
     return Flexible(
       fit: FlexFit.loose,
       flex: 6,
@@ -115,10 +123,12 @@ class _RowBuilderState extends State<RowBuilder> {
 
   Color get backgroundColor {
     Color bgColor;
-    if (widget.index < widget.headerColumns) {
-      bgColor = widget.headerColumnColor;
-    } else if (widget.column < widget.headerRows) {
+    if (widget.index < widget.headerRows) {
       bgColor = widget.headerRowColor;
+    } else if (widget.index >= widget.rowCount - widget.footerRows) {
+      bgColor = widget.footerRowColor;
+    } else if (widget.column < widget.headerColumns) {
+      bgColor = widget.headerColumnColor;
     } else {
       if (widget.zebraStripe) {
         bgColor = widget.index % 2 == 1.0

@@ -34,7 +34,7 @@ class _TableHeaderFooterViewState extends State<TableHeaderFooterView> {
   void initState() {
     selectedChildId = widget.screenBloc.state.selectedChild.id;
     styles = TableStyles.fromJson(widget.screenBloc.state.pageDetail.stylesheets[selectedChildId]);
-    
+
     headerRows = styles.headerRows;
     headerColumns = styles.headerColumns;
     footerRows = styles.footerRows;
@@ -139,14 +139,14 @@ class _TableHeaderFooterViewState extends State<TableHeaderFooterView> {
       child: Column(
         children: [
           _itemWidget('Header Rows', headerRows, (value) => headerRows = value),
-          _itemWidget('Header Columns', headerColumns, (value) => headerColumns = value),
+          _itemWidget('Header Columns', headerColumns, (value) => headerColumns = value, isRow: false,),
           _itemWidget('Footer Rows', footerRows, (value) => footerRows = value),
         ],
       ),
     );
   }
 
-  Widget _itemWidget(String name, int count, Function onUpdate) {
+  Widget _itemWidget(String name, int count, Function onUpdate, {bool isRow = true}) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 5),
       height: 40,
@@ -198,9 +198,11 @@ class _TableHeaderFooterViewState extends State<TableHeaderFooterView> {
                 Expanded(
                   child: InkWell(
                     onTap: () {
-                      count ++;
-                      onUpdate(count);
-                      _updateStyles();
+                      if (availableIncreaseCount(isRow)) {
+                        count ++;
+                        onUpdate(count);
+                        _updateStyles();
+                      } 
                     },
                     child: Container(
                       alignment: Alignment.center,
@@ -224,6 +226,13 @@ class _TableHeaderFooterViewState extends State<TableHeaderFooterView> {
       ),
     );
   }
+  
+  bool availableIncreaseCount(bool isRow) {
+    if (isRow)
+      return headerRows + footerRows < styles.rowCount - 1;
+
+    return headerColumns < styles.columnCount - 1;
+  }
 
   _updateStyles() {
     setState(() {});
@@ -232,6 +241,6 @@ class _TableHeaderFooterViewState extends State<TableHeaderFooterView> {
     sheets['headerColumns'] = headerColumns;
     sheets['footerRows'] = footerRows;
     print('Sheets: $sheets');
-    // widget.onUpdateStyles(sheets);
+    widget.onUpdateStyles(sheets);
   }
 }

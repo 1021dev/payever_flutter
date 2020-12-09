@@ -1128,6 +1128,7 @@ TableStyles _$TableStylesFromJson(Map<String, dynamic> json) {
     ..rowCount = json['rowCount'] as int ?? 5
     ..headerColumnColor = json['headerColumnColor'] as String ?? '#FFFFFF'
     ..headerRowColor = json['headerRowColor'] as String ?? '#FFFFFF'
+    ..footerRowColor = json['footerRowColor'] as String ?? '#FFFFFF'
     ..headerRows = json['headerRows'] as int ?? 1
     ..headerColumns = json['headerColumns'] as int ?? 1
     ..footerRows = json['footerRows'] as int ?? 0
@@ -1204,6 +1205,7 @@ Map<String, dynamic> _$TableStylesToJson(TableStyles instance) =>
       'rowCount': instance.rowCount,
       'headerColumnColor': instance.headerColumnColor,
       'headerRowColor': instance.headerRowColor,
+      'footerRowColor': instance.footerRowColor,
       'headerRows': instance.headerRows,
       'headerColumns': instance.headerColumns,
       'footerRows': instance.footerRows,

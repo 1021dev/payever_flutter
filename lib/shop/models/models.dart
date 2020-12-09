@@ -871,6 +871,10 @@ class TableStyles extends BaseStyles {
 
   @JsonKey(name: 'headerRowColor', defaultValue: '#FFFFFF')
   String headerRowColor;
+
+  @JsonKey(name: 'footerRowColor', defaultValue: '#FFFFFF')
+  String footerRowColor;
+
   // Header and Footer
   @JsonKey(name: 'headerRows', defaultValue: 1)
   int headerRows;
@@ -1268,78 +1272,108 @@ class ShopObject {
           'width': null,
         };
       case 'table':
-        String headerColumnColor, headerRowColor;
+        String headerColumnColor = '#ffffff';
+        String headerRowColor = '#ffffff';
+        String footerRowColor = '#ffffff';
+        int headerRows = 0;
+        int headerColumns = 0;
+        int footerRows = 0;
+        if (name.contains('-0')) {
+          headerRows = 1;
+          headerColumns = 1;
+        } else if (name.contains('-1')) {
+          headerRows = 1;
+        } else if (name.contains('-3')) {
+          headerRows = 1;
+          headerColumns = 1;
+          footerRows = 1;
+        }
+
         switch(name) {
           case '0-0':
-            headerColumnColor = '#38719F';
-            headerRowColor = '#428CC8';
+            headerRowColor = '#38719F';
+            headerColumnColor = '#428CC8';
+            footerRowColor = '#38719F';
             break;
           case '0-1':
-            headerColumnColor = '#38719F';
-            headerRowColor = '#ffffff';
+            headerRowColor = '#38719F';
+            footerRowColor = '#38719F';
             break;
           case '0-3':
-            headerColumnColor = '#38719F';
-            headerRowColor = '#428CC8';
+            headerRowColor = '#38719F';
+            headerColumnColor = '#428CC8';
             break;
           case '1-0':
-            headerColumnColor = '#459138';
-            headerRowColor = '#61C348';
+            headerRowColor = '#459138';
+            headerColumnColor = '#61C348';
+            footerRowColor = '#459138';
             break;
           case '1-1':
-            headerColumnColor = '#459138';
-            headerRowColor = '#ffffff';
+            headerRowColor = '#459138';
+            footerRowColor = '#459138';
             break;
           case '1-3':
-            headerColumnColor = '#459138';
-            headerRowColor = '#61C348';
+            headerRowColor = '#459138';
+            headerColumnColor = '#61C348';
             break;
           case '2-0':
-            headerColumnColor = '#F7B950';
-            headerRowColor = '#F9CD54';
+            headerRowColor = '#F7B950';
+            headerColumnColor = '#F9CD54';
+            footerRowColor = '#F7B950';
             break;
           case '2-1':
-            headerColumnColor = '#F7B950';
-            headerRowColor = '#ffffff';
+            headerRowColor = '#F7B950';
+            footerRowColor = '#F7B950';
             break;
           case '2-3':
-            headerColumnColor = '#F7B950';
-            headerRowColor = '#F9CD54';
+            headerRowColor = '#F7B950';
+            headerColumnColor = '#F9CD54';
             break;
           case '3-0':
-            headerColumnColor = '#D576A8';
-            headerRowColor = '#AA3E7A';
+            headerRowColor = '#D576A8';
+            headerColumnColor = '#AA3E7A';
+            footerRowColor = '#D576A8';
             break;
           case '3-1':
-            headerColumnColor = '#D576A8';
-            headerRowColor = '#ffffff';
+            headerRowColor = '#D576A8';
+            footerRowColor = '#D576A8';
             break;
           case '3-3':
-            headerColumnColor = '#D576A8';
-            headerRowColor = '#AA3E7A';
+            headerRowColor = '#D576A8';
+            headerColumnColor = '#AA3E7A';
             break;
           case '4-0':
-            headerColumnColor = '#9EA2AC';
-            headerRowColor = '#73767E';
+            headerRowColor = '#9EA2AC';
+            headerColumnColor = '#73767E';
+            footerRowColor = '#9EA2AC';
             break;
           case '4-1':
-            headerColumnColor = '#9EA2AC';
-            headerRowColor = '#ffffff';
+            headerRowColor = '#9EA2AC';
+            footerRowColor = '#9EA2AC';
             break;
           case '4-3':
-            headerColumnColor = '#9EA2AC';
-            headerRowColor = '#73767E';
+            headerRowColor = '#9EA2AC';
+            headerColumnColor = '#73767E';
             break;
           default:
-            headerColumnColor = '#ffffff';
             headerRowColor = '#ffffff';
+            headerColumnColor = '#ffffff';
+            footerRowColor = '#ffffff';
+            headerRows = 0;
+            headerColumns = 0;
+            footerRows = 0;
         }
+
         return {
           'backgroundColor': '#ffffff',
           'height': 300,
           'width': null,
           'headerColumnColor': headerColumnColor,
           'headerRowColor': headerRowColor,
+          'footerRowColor': footerRowColor,
+          'headerRows': headerRows,
+          'headerColumns': headerColumns,
+          'footerRows': footerRows,
         };
     }
   }
