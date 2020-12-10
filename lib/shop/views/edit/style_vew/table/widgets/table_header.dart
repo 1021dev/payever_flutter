@@ -37,6 +37,11 @@ class THeader extends StatelessWidget {
     return Flexible(
       fit: FlexFit.loose,
       child: Container(
+        decoration: BoxDecoration(
+            border: Border(
+                left: BorderSide(
+                    color: Colors.grey,
+                    width: 0.5))),
         height: 20,
         width: trWidth,
         child: Text(

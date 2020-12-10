@@ -31,8 +31,7 @@ class _TableViewState extends State<TableView> {
   /// title Caption
   String title;
   String caption;
-  bool titleEnabled;
-  bool captionEnabled;
+
   bool tableOutlineEnabled;
   bool alternatingRowsEnabled;
   /// Header & Footer
@@ -63,8 +62,6 @@ class _TableViewState extends State<TableView> {
     /// title Caption
     title = styles.title;
     caption = styles.caption;
-    titleEnabled = styles.titleEnabled;
-    captionEnabled = styles.captionEnabled;
     tableOutlineEnabled = styles.outline;
     alternatingRowsEnabled = styles.alternatingRows;
     /// Header & Footer
@@ -91,6 +88,11 @@ class _TableViewState extends State<TableView> {
       tableWidth = styles.width;
     tableHeight = styles.height;
 
+    if (title.isNotEmpty)
+      tableHeight -= 30;
+    if (caption.isNotEmpty)
+      tableHeight -= 30;
+
     cellWidth = (tableWidth - 40) / columnCount;
     cellHeight = (tableHeight - 40) / rowCount;
     return Editable(
@@ -98,11 +100,12 @@ class _TableViewState extends State<TableView> {
       columns: alphabet.sublist(0, columnCount),
       columnCount: columnCount, rowCount: rowCount,
       headerColumnColor: headerColumnColor, headerRowColor: headerRowColor, footerRowColor: footerRowColor,
+      tableWidth: tableWidth, tableHeight: tableHeight,
       trWidth: cellWidth, trHeight: cellHeight,
       zebraStripe: alternatingRowsEnabled, stripeColor2: Colors.grey[200],
       tdStyle: textStyle,
       borderColor: tableOutlineEnabled ? Colors.blueGrey : Colors.transparent,
-      title: title, caption: caption, titleEnabled: titleEnabled, captionEnabled: captionEnabled,
+      title: title, caption: caption,
       headerRows: headerRows, headerColumns: headerColumns, footerRows: footerRows,
       horizontalLines: horizontalLines, headerColumnLines: headerColumnLines, verticalLines: verticalLines, headerRowLines: headerRowLines,
       sheets: widget.stylesheets,
@@ -139,8 +142,8 @@ class _TableViewState extends State<TableView> {
   TableStyles styleSheet() {
     try {
       Map<String, dynamic> json = widget.stylesheets;
-      // print('Button ID: ${widget.child.id}');
-      // print('Button Styles Sheets: $json');
+      print('Table ID: ${widget.child.id}');
+      print('Table Styles Sheets: $json');
       return TableStyles.fromJson(json);
     } catch (e) {
       return null;

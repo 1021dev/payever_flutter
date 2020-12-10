@@ -45,8 +45,8 @@ class _TableStyleViewState extends State<TableStyleView> {
     fontSize = styles.fontSize;
     fontFamily = styles.fontFamily ?? 'Roboto';
 
-    titleEnabled = styles.titleEnabled;
-    captionEnabled = styles.captionEnabled;
+    titleEnabled = styles.title.isNotEmpty;
+    captionEnabled = styles.caption.isNotEmpty;
     tableOutlineEnabled = styles.outline;
     alternatingRowsEnabled = styles.alternatingRows;
     super.initState();
@@ -262,7 +262,7 @@ class _TableStyleViewState extends State<TableStyleView> {
                     setState(() {
                       titleEnabled = !titleEnabled;
                       Map<String, dynamic> sheets = widget.screenBloc.state.pageDetail.stylesheets[selectedChildId];
-                      sheets['title'] = titleEnabled;
+                      sheets['title'] = titleEnabled ? 'Table 1' : '';
                       _updateStyles(sheets);
                     });
                   },
@@ -284,7 +284,7 @@ class _TableStyleViewState extends State<TableStyleView> {
                     setState(() {
                       captionEnabled = !captionEnabled;
                       Map<String, dynamic> sheets = widget.screenBloc.state.pageDetail.stylesheets[selectedChildId];
-                      sheets['caption'] = captionEnabled;
+                      sheets['caption'] = captionEnabled ? 'Caption' : '';
                       _updateStyles(sheets);
                     });
                   },

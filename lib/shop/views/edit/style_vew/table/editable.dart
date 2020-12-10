@@ -48,6 +48,7 @@ class Editable extends StatefulWidget {
       {Key key,
       this.columns, this.rows,
       this.columnCount = 0, this.rowCount = 0,
+      this.tableWidth, this.tableHeight,
       this.columnRatio = 0.20,
       this.onSubmitted,
       this.onRowSaved,
@@ -60,11 +61,11 @@ class Editable extends StatefulWidget {
       this.thPaddingLeft = 10.0,
       this.thPaddingTop = 0.0,
       this.thPaddingRight = 0.0,
-      this.thPaddingBottom = 0.0,
+      this.thPaddingBottom = 3.0,
       this.trWidth = 50.0, this.trHeight = 50.0,
       this.borderWidth = 0.5,
       this.thWeight = FontWeight.w600,
-      this.thSize = 18,
+      this.thSize = 15,
       this.showSaveIcon = false,
       this.saveIcon = Icons.save,
       this.saveIconColor = Colors.black12,
@@ -82,7 +83,7 @@ class Editable extends StatefulWidget {
       this.zebraStripe = false,
       this.headerRows, this.headerColumns, this.footerRows,
       this.horizontalLines, this.headerColumnLines, this.verticalLines, this.headerRowLines,
-      this.title, this.caption, this.titleEnabled, this.captionEnabled,
+      this.title, this.caption,
       this.sheets, this.onUpdateStyles,
       })
       : super(key: key);
@@ -262,7 +263,9 @@ class Editable extends StatefulWidget {
   final int headerRows;
   final int headerColumns;
   final int footerRows;
-
+  /// Table Size
+  final double tableWidth;
+  final double tableHeight;
   /// Grid Options
   final bool horizontalLines;
   final bool headerColumnLines;
@@ -272,8 +275,6 @@ class Editable extends StatefulWidget {
   /// title Caption
   final String title;
   final String caption;
-  final bool titleEnabled;
-  final bool captionEnabled;
   final Map<String, dynamic>sheets;
   final Function onUpdateStyles;
 
@@ -303,9 +304,6 @@ class EditableState extends State<Editable> {
 
   @override
   void initState() {
-    titleController = TextEditingController(text: widget.title);
-    captionController = TextEditingController(text: widget.caption);
-
     _focusNodeTitle.addListener(() {
       if (!_focusNodeTitle.hasFocus && widget.title != titleController.text) {
         Map<String, dynamic> sheets = widget.sheets;
@@ -323,6 +321,8 @@ class EditableState extends State<Editable> {
 
   @override
   Widget build(BuildContext context) {
+    titleController = TextEditingController(text: widget.title);
+    captionController = TextEditingController(text: widget.caption);
     /// initial Setup of columns and row, sets count of column and row
     columns = columns ?? columnBlueprint(widget.columnCount, columns);
     rows = rows ?? rowBlueprint(widget.rowCount, columns, rows);
@@ -332,105 +332,6 @@ class EditableState extends State<Editable> {
     if (rows.length < widget.rowCount)
       rows = rowBlueprint(widget.rowCount, columns, rows);
 
-    /// Generates table columns
-    List<Widget> _tableHeaders() {
-      return List<Widget>.generate(widget.columnCount + 1, (index) {
-        return widget.columnCount + 1 == (index + 1)
-            ? iconColumn(widget.showSaveIcon, widget.thPaddingTop,
-                widget.thPaddingBottom)
-            : THeader(
-                widthRatio: columns[index]['widthFactor'] != null
-                    ? columns[index]['widthFactor'].toDouble()
-                    : widget.columnRatio,
-                trWidth: widget.trWidth,
-                thPaddingLeft: widget.thPaddingLeft,
-                thPaddingTop: widget.thPaddingTop,
-                thPaddingBottom: widget.thPaddingBottom,
-                thPaddingRight: widget.thPaddingRight,
-                headers: columns,
-                thWeight: widget.thWeight,
-                thSize: widget.thSize,
-                index: index);
-      });
-    }
-
-    /// Generates table rows
-    List<Widget> _tableRows() {
-      return List<Widget>.generate(widget.rowCount, (index) {
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: List.generate(widget.columnCount + 1, (rowIndex) {
-            var ckeys = [];
-            var cwidths = [];
-            columns.forEach((e) {
-              ckeys.add(e['key']);
-              cwidths.add(e['widthFactor'] ?? widget.columnRatio);
-            });
-            var list = rows[index];
-            return rowIndex == 0
-                ? Container(
-                    alignment: Alignment.center,
-                    width: 20,
-                    height: widget.trHeight,
-                    child: Text(
-                      '${index + 1}',
-                      style: TextStyle(fontWeight: widget.thWeight, fontSize: widget.thSize, color: Colors.grey[600]),
-                    ),
-                  )
-                : RowBuilder(
-                    rowCount: widget.rowCount,
-                    index: index,
-                    column: rowIndex - 1,
-                    col: ckeys[rowIndex - 1],
-                    trWidth: widget.trWidth,
-                    trHeight: widget.trHeight,
-                    headerColumnColor: widget.headerColumnColor,
-                    headerRowColor: widget.headerRowColor,
-                    footerRowColor: widget.footerRowColor,
-                    borderColor: widget.borderColor,
-                    borderWidth: widget.borderWidth,
-                    cellData: list[ckeys[rowIndex - 1]],
-                    tdPaddingLeft: widget.tdPaddingLeft,
-                    tdPaddingTop: widget.tdPaddingTop,
-                    tdPaddingBottom: widget.tdPaddingBottom,
-                    tdPaddingRight: widget.tdPaddingRight,
-                    tdAlignment: widget.tdAlignment,
-                    tdStyle: widget.tdStyle,
-                    onSubmitted: widget.onSubmitted,
-                    widthRatio: cwidths[rowIndex - 1].toDouble(),
-                    zebraStripe: widget.zebraStripe,
-                    stripeColor1: widget.stripeColor1,
-                    stripeColor2: widget.stripeColor2,
-                    headerRows : widget.headerRows,
-                    headerColumns: widget.headerColumns,
-                    footerRows: widget.footerRows,
-                    horizontalLines: widget.horizontalLines,
-                    headerColumnLines: widget.headerColumnLines,
-                    verticalLines: widget.verticalLines,
-                    headerRowLines: widget.headerRowLines,
-                    onChanged: (value) {
-                      ///checks if row has been edited previously
-                      var result = editedRows.indexWhere((element) {
-                        return element['row'] != index ? false : true;
-                      });
-
-                      ///adds a new edited data to a temporary holder
-                      if (result != -1) {
-                        editedRows[result][ckeys[rowIndex]] = value;
-                      } else {
-                        var temp = {};
-                        temp['row'] = index;
-                        temp[ckeys[rowIndex]] = value;
-                        editedRows.add(temp);
-                      }
-                    },
-                  );
-          }),
-        );
-      });
-    }
-
     return Material(
       color: Colors.transparent,
       child: Padding(
@@ -438,44 +339,38 @@ class EditableState extends State<Editable> {
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child:
-              Column(crossAxisAlignment: widget.createButtonAlign, children: [
-            //Table Header
-            createButton(),
-            Container(
-              margin: EdgeInsets.only(left: 20),
-              padding: EdgeInsets.only(bottom: widget.thPaddingBottom),
-              decoration: BoxDecoration(
-                  border: Border(
-                      bottom: BorderSide(
-                          color: widget.borderColor,
-                          width: widget.borderWidth))),
-              child: Row(
-                  mainAxisSize: MainAxisSize.min, children: _tableHeaders()),
-            ),
-            if (widget.titleEnabled)
-              titleWidget,
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: _tableRows(),
-                ),
-              ),
-            ),
-            if (widget.captionEnabled)
-              titleWidget,
+            Column(crossAxisAlignment: widget.createButtonAlign, children: [
+            abcHeader(),
+            if (widget.title.isNotEmpty) titleCaptionWidget(true),
+            tableBody(),
+            if (widget.caption.isNotEmpty) titleCaptionWidget(false),
           ]),
         ),
       ),
     );
   }
 
-  Widget get titleWidget {
+  Widget abcHeader() {
     return Container(
-      height: 40,
-      width: double.infinity,
+      margin: EdgeInsets.only(left: 20, bottom: widget.thPaddingBottom),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey, width: 0.5),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Row(
+          mainAxisSize: MainAxisSize.min, children: _tableHeaders()),
+    );
+  }
+
+  Widget titleCaptionWidget(bool isTitle) {
+    return Container(
+      margin: EdgeInsets.only(top: 5),
+      alignment: Alignment.center,
+      height: 20,
+      width: widget.tableWidth,
       child: TextField(
-        controller: titleController,
-        focusNode: _focusNodeTitle,
+        controller: isTitle ? titleController : captionController,
+        focusNode: isTitle ? _focusNodeTitle : _focusNodeCaption,
         // enabled: widget.isEditState,
         decoration: InputDecoration(
           contentPadding: EdgeInsets.zero,
@@ -486,7 +381,8 @@ class EditableState extends State<Editable> {
           errorBorder: InputBorder.none,
           disabledBorder: InputBorder.none,
         ),
-        style: widget.tdStyle,
+        // style: widget.tdStyle,
+        style: TextStyle(color: Colors.black, fontSize: 13),
         textAlign: TextAlign.center,
         onChanged: (text) {
           // widget.onChangeText(text);
@@ -494,32 +390,118 @@ class EditableState extends State<Editable> {
       ),
     );
   }
-  /// Button for creating a new empty row
-  Widget createButton() {
-    return Visibility(
-      visible: widget.showCreateButton,
-      child: Padding(
-        padding: EdgeInsets.only(left: 4.0, bottom: 4),
-        child: InkWell(
-          onTap: () {
-            rows = addOneRow(columns, rows);
-            // rowCount++;
-            setState(() {});
-          },
-          child: Container(
-            padding: EdgeInsets.all(2),
-            decoration: BoxDecoration(
-              color: widget.createButtonColor ?? Colors.white,
-              boxShadow: [
-                BoxShadow(blurRadius: 2, color: Colors.grey.shade400)
-              ],
-              borderRadius: BorderRadius.circular(10),
-              shape: BoxShape.rectangle,
-            ),
-            child: widget.createButtonIcon ?? Icon(Icons.add, color: Colors.black,),
-          ),
+
+  Widget tableBody() {
+    return Expanded(
+      child: SingleChildScrollView(
+        child: Column(
+          children: _tableRows(),
         ),
       ),
     );
+  }
+
+  /// Generates table columns
+  List<Widget> _tableHeaders() {
+    return List<Widget>.generate(widget.columnCount + 1, (index) {
+      return widget.columnCount + 1 == (index + 1)
+          ? iconColumn(widget.showSaveIcon, widget.thPaddingTop,
+          widget.thPaddingBottom)
+          : THeader(
+          widthRatio: columns[index]['widthFactor'] != null
+              ? columns[index]['widthFactor'].toDouble()
+              : widget.columnRatio,
+          trWidth: widget.trWidth,
+          thPaddingLeft: widget.thPaddingLeft,
+          thPaddingTop: widget.thPaddingTop,
+          thPaddingBottom: widget.thPaddingBottom,
+          thPaddingRight: widget.thPaddingRight,
+          headers: columns,
+          thWeight: widget.thWeight,
+          thSize: widget.thSize,
+          index: index);
+    });
+  }
+
+  /// Generates table rows
+  List<Widget> _tableRows() {
+    return List<Widget>.generate(widget.rowCount, (index) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: List.generate(widget.columnCount + 1, (rowIndex) {
+          var ckeys = [];
+          var cwidths = [];
+          columns.forEach((e) {
+            ckeys.add(e['key']);
+            cwidths.add(e['widthFactor'] ?? widget.columnRatio);
+          });
+          var list = rows[index];
+          return rowIndex == 0
+              ? Container(
+            decoration: BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(
+                        color: Colors.grey,
+                        width: 0.5))),
+            alignment: Alignment.center,
+            width: 20,
+            height: widget.trHeight,
+            child: Text(
+              '${index + 1}',
+              style: TextStyle(fontWeight: widget.thWeight, fontSize: widget.thSize, color: Colors.grey[600]),
+            ),
+          )
+              : RowBuilder(
+            rowCount: widget.rowCount,
+            index: index,
+            column: rowIndex - 1,
+            col: ckeys[rowIndex - 1],
+            trWidth: widget.trWidth,
+            trHeight: widget.trHeight,
+            headerColumnColor: widget.headerColumnColor,
+            headerRowColor: widget.headerRowColor,
+            footerRowColor: widget.footerRowColor,
+            borderColor: widget.borderColor,
+            borderWidth: widget.borderWidth,
+            cellData: list[ckeys[rowIndex - 1]],
+            tdPaddingLeft: widget.tdPaddingLeft,
+            tdPaddingTop: widget.tdPaddingTop,
+            tdPaddingBottom: widget.tdPaddingBottom,
+            tdPaddingRight: widget.tdPaddingRight,
+            tdAlignment: widget.tdAlignment,
+            tdStyle: widget.tdStyle,
+            onSubmitted: widget.onSubmitted,
+            widthRatio: cwidths[rowIndex - 1].toDouble(),
+            zebraStripe: widget.zebraStripe,
+            stripeColor1: widget.stripeColor1,
+            stripeColor2: widget.stripeColor2,
+            headerRows : widget.headerRows,
+            headerColumns: widget.headerColumns,
+            footerRows: widget.footerRows,
+            horizontalLines: widget.horizontalLines,
+            headerColumnLines: widget.headerColumnLines,
+            verticalLines: widget.verticalLines,
+            headerRowLines: widget.headerRowLines,
+            onChanged: (value) {
+              ///checks if row has been edited previously
+              var result = editedRows.indexWhere((element) {
+                return element['row'] != index ? false : true;
+              });
+
+              ///adds a new edited data to a temporary holder
+              if (result != -1) {
+                editedRows[result][ckeys[rowIndex]] = value;
+              } else {
+                var temp = {};
+                temp['row'] = index;
+                temp[ckeys[rowIndex]] = value;
+                editedRows.add(temp);
+              }
+            },
+          );
+        }),
+      );
+    });
   }
 }
