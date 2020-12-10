@@ -242,7 +242,7 @@ class ShopEditScreenBloc
         selectedSectionId: event.sectionId, pageDetail: pageDetail);
 
     if (!event.updateApi) return;
-    if (state.selectedChild?.type == 'table') return;
+    // if (state.selectedChild?.type == 'table') return;
     api.shopEditAction(token, themeId, body).then((response) {
       if (response is DioError) {
         Fluttertoast.showToast(msg: response.error);

@@ -20,61 +20,14 @@ class _TableViewState extends State<TableView> {
   List alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
       .map((e) => {'title' : e}).toList();
   TableStyles styles;
-  int columnCount = 4;
-  int rowCount = 5;
-  Color headerColumnColor;
-  Color headerRowColor;
-  Color footerRowColor;
 
-  double fontSize;
-  String fontFamily;
-  /// title Caption
-  String title;
-  String caption;
-
-  bool tableOutlineEnabled;
-  bool alternatingRowsEnabled;
-  /// Header & Footer
-  int headerRows;
-  int headerColumns;
-  int footerRows;
-  /// Grid Options
-  bool horizontalLines;
-  bool headerColumnLines;
-  bool verticalLines;
-  bool headerRowLines;
 
   final _editableKey = GlobalKey<EditableState>();
 
   @override
   Widget build(BuildContext context) {
     styles = styleSheet();
-    /// Column & Row Counts
-    columnCount = styles.columnCount;
-    rowCount = styles.rowCount;
-    /// Header Colors
-    headerColumnColor = colorConvert(styles.headerColumnColor);
-    headerRowColor = colorConvert(styles.headerRowColor);
-    footerRowColor = colorConvert(styles.footerRowColor);
-    /// Fonts
-    fontSize = styles.fontSize;
-    fontFamily = styles.fontFamily;
-    /// title Caption
-    title = styles.title;
-    caption = styles.caption;
-    tableOutlineEnabled = styles.outline;
-    alternatingRowsEnabled = styles.alternatingRows;
-    /// Header & Footer
-    headerRows = styles.headerRows;
-    headerColumns = styles.headerColumns;
-    footerRows = styles.footerRows;
-    // print('Table headerRows: $headerRows headerColumn:$headerColumns');
-    /// Grid Options
-    horizontalLines = styles.horizontalLines;
-    headerColumnLines = styles.headerColumnLines;
-    verticalLines = styles.verticalLines;
-    headerRowLines = styles.headerRowLines;
-    print('footerRowColor: ${styles.footerRowColor}');
+
     return body;
   }
 
@@ -88,28 +41,44 @@ class _TableViewState extends State<TableView> {
       tableWidth = styles.width;
     tableHeight = styles.height;
 
-    if (title.isNotEmpty)
-      tableHeight -= 30;
-    if (caption.isNotEmpty)
-      tableHeight -= 30;
+    cellWidth = (tableWidth - 45) / styles.columnCount;
+    cellHeight = (tableHeight - 40) / styles.rowCount;
 
-    cellWidth = (tableWidth - 40) / columnCount;
-    cellHeight = (tableHeight - 40) / rowCount;
     return Editable(
       key: _editableKey,
-      columns: alphabet.sublist(0, columnCount),
-      columnCount: columnCount, rowCount: rowCount,
-      headerColumnColor: headerColumnColor, headerRowColor: headerRowColor, footerRowColor: footerRowColor,
+      /// Table Row, Column Counts
+      columns: alphabet.sublist(0, styles.columnCount),
+      columnCount: styles.columnCount, rowCount: styles.rowCount,
+      /// Header Footer Colors
+      headerColumnColor: colorConvert(styles.headerColumnColor),
+      headerRowColor: colorConvert(styles.headerRowColor),
+      footerRowColor: colorConvert(styles.footerRowColor),
+      /// Header Footer Counts
+      headerRows: styles.headerRows,
+      headerColumns: styles.headerColumns,
+      footerRows: styles.footerRows,
+      /// Size
       tableWidth: tableWidth, tableHeight: tableHeight,
       trWidth: cellWidth, trHeight: cellHeight,
-      zebraStripe: alternatingRowsEnabled, stripeColor2: Colors.grey[200],
+      /// Stripe
+      zebraStripe: styles.alternatingRows,
+      stripeColor2: Colors.grey[200],
+      /// Border
+      outline: styles.outline,
+      borderColor: Colors.blueGrey,
+      /// Title & Caption
+      title: styles.title, caption: styles.caption,
+      /// Text Style
       tdStyle: textStyle,
-      borderColor: tableOutlineEnabled ? Colors.blueGrey : Colors.transparent,
-      title: title, caption: caption,
-      headerRows: headerRows, headerColumns: headerColumns, footerRows: footerRows,
-      horizontalLines: horizontalLines, headerColumnLines: headerColumnLines, verticalLines: verticalLines, headerRowLines: headerRowLines,
+      /// Grid Options
+      horizontalLines: styles.horizontalLines,
+      headerColumnLines: styles.headerColumnLines,
+      verticalLines: styles.verticalLines,
+      headerRowLines: styles.headerRowLines,
+      footerRowLines: styles.footerRowLines,
+
       sheets: widget.stylesheets,
-      onUpdateStyles: (sheets)=> {widget.onUpdateStyles(sheets)},
+      onUpdateStyles: (sheets)=> widget.onUpdateStyles(sheets),
       onSubmitted: (value) {
         print(value);
       },
@@ -119,8 +88,8 @@ class _TableViewState extends State<TableView> {
   TextStyle get textStyle {
     return TextStyle(
       color: Colors.black,
-      fontSize: fontSize,
-      fontFamily: fontFamily,
+      fontSize: styles.fontSize,
+      fontFamily: styles.fontFamily,
     );
   }
 

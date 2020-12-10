@@ -6,6 +6,7 @@
 library editable;
 
 import 'package:flutter/material.dart';
+import 'package:payever/shop/views/edit/style_vew/table/widgets/table_left_index.dart';
 import 'commons/helpers.dart';
 import 'widgets/table_body.dart';
 import 'widgets/table_header.dart';
@@ -82,7 +83,8 @@ class Editable extends StatefulWidget {
       this.stripeColor2 = Colors.black12,
       this.zebraStripe = false,
       this.headerRows, this.headerColumns, this.footerRows,
-      this.horizontalLines, this.headerColumnLines, this.verticalLines, this.headerRowLines,
+      this.horizontalLines, this.headerColumnLines, this.verticalLines, this.headerRowLines, this.footerRowLines,
+      this.outline,
       this.title, this.caption,
       this.sheets, this.onUpdateStyles,
       })
@@ -271,6 +273,9 @@ class Editable extends StatefulWidget {
   final bool headerColumnLines;
   final bool verticalLines;
   final bool headerRowLines;
+  final bool footerRowLines;
+  /// Out Lines
+  final bool outline;
 
   /// title Caption
   final String title;
@@ -308,12 +313,15 @@ class EditableState extends State<Editable> {
       if (!_focusNodeTitle.hasFocus && widget.title != titleController.text) {
         Map<String, dynamic> sheets = widget.sheets;
         sheets['title'] = titleController.text;
+
+        widget.onUpdateStyles(sheets);
       }
     });
-    _focusNodeTitle.addListener(() {
-      if (!_focusNodeTitle.hasFocus && widget.caption != captionController.text) {
+    _focusNodeCaption.addListener(() {
+      if (!_focusNodeCaption.hasFocus && widget.caption != captionController.text) {
         Map<String, dynamic> sheets = widget.sheets;
         sheets['caption'] = captionController.text;
+        widget.onUpdateStyles(sheets);
       }
     });
     super.initState();
@@ -352,7 +360,7 @@ class EditableState extends State<Editable> {
 
   Widget abcHeader() {
     return Container(
-      margin: EdgeInsets.only(left: 20, bottom: widget.thPaddingBottom),
+      margin: EdgeInsets.only(left: 25, bottom: widget.thPaddingBottom),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey, width: 0.5),
         borderRadius: BorderRadius.circular(4),
@@ -403,11 +411,8 @@ class EditableState extends State<Editable> {
 
   /// Generates table columns
   List<Widget> _tableHeaders() {
-    return List<Widget>.generate(widget.columnCount + 1, (index) {
-      return widget.columnCount + 1 == (index + 1)
-          ? iconColumn(widget.showSaveIcon, widget.thPaddingTop,
-          widget.thPaddingBottom)
-          : THeader(
+    return List<Widget>.generate(widget.columnCount, (index) {
+      return THeader(
           widthRatio: columns[index]['widthFactor'] != null
               ? columns[index]['widthFactor'].toDouble()
               : widget.columnRatio,
@@ -438,23 +443,11 @@ class EditableState extends State<Editable> {
           });
           var list = rows[index];
           return rowIndex == 0
-              ? Container(
-            decoration: BoxDecoration(
-                border: Border(
-                    bottom: BorderSide(
-                        color: Colors.grey,
-                        width: 0.5))),
-            alignment: Alignment.center,
-            width: 20,
-            height: widget.trHeight,
-            child: Text(
-              '${index + 1}',
-              style: TextStyle(fontWeight: widget.thWeight, fontSize: widget.thSize, color: Colors.grey[600]),
-            ),
-          )
+              ? leftIndexWidget(index)
               : RowBuilder(
+            columnCount: widget.columnCount,
             rowCount: widget.rowCount,
-            index: index,
+            rowIndex: index,
             column: rowIndex - 1,
             col: ckeys[rowIndex - 1],
             trWidth: widget.trWidth,
@@ -483,6 +476,8 @@ class EditableState extends State<Editable> {
             headerColumnLines: widget.headerColumnLines,
             verticalLines: widget.verticalLines,
             headerRowLines: widget.headerRowLines,
+            footerRowLines: widget.footerRowLines,
+            outline: widget.outline,
             onChanged: (value) {
               ///checks if row has been edited previously
               var result = editedRows.indexWhere((element) {
@@ -503,5 +498,27 @@ class EditableState extends State<Editable> {
         }),
       );
     });
+  }
+
+  Widget leftIndexWidget(int index) {
+    return Container(
+      margin: EdgeInsets.only(right: 5),
+      decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey, width: 0.5),
+          borderRadius: BorderRadius.only(
+            topLeft: index == 0 ? Radius.circular(4) : Radius.zero,
+            topRight: index == 0 ? Radius.circular(4): Radius.zero,
+            bottomLeft: index == widget.rowCount -1 ? Radius.circular(4) : Radius.zero,
+            bottomRight: index == widget.rowCount -1 ? Radius.circular(4) : Radius.zero,
+          )
+      ),
+      alignment: Alignment.center,
+      width: 20,
+      height: widget.trHeight,
+      child: Text(
+        '${index + 1}',
+        style: TextStyle(fontWeight: widget.thWeight, fontSize: widget.thSize, color: Colors.grey[600]),
+      ),
+    );
   }
 }

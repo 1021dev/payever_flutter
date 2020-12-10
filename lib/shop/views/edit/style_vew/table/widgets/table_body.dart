@@ -18,7 +18,8 @@ class RowBuilder extends StatefulWidget {
     @required double borderWidth,
     @required this.cellData,
     @required this.column,
-    @required this.index,
+    @required this.columnCount,
+    @required this.rowIndex,
     @required this.col,
     @required this.tdPaddingLeft,
     @required this.tdPaddingTop,
@@ -37,6 +38,8 @@ class RowBuilder extends StatefulWidget {
     @required this.headerColumnLines,
     @required this.verticalLines,
     @required this.headerRowLines,
+    @required this.footerRowLines,
+    @required this.outline,
   })  : _borderColor = borderColor,
         _borderWidth = borderWidth,
         super(key: key);
@@ -55,7 +58,8 @@ class RowBuilder extends StatefulWidget {
   final TextStyle tdStyle;
   /// Table RowCount
   final int rowCount;
-  final int index; /// row Index
+  final int columnCount;
+  final int rowIndex; /// row Index
   final int column;
   final col;
   final double tdPaddingLeft;
@@ -76,6 +80,9 @@ class RowBuilder extends StatefulWidget {
   final bool headerColumnLines;
   final bool verticalLines;
   final bool headerRowLines;
+  final bool footerRowLines;
+  /// Out Lines
+  final bool outline;
 
   @override
   _RowBuilderState createState() => _RowBuilderState();
@@ -94,8 +101,7 @@ class _RowBuilderState extends State<RowBuilder> {
         width: widget.trWidth,
         decoration: BoxDecoration(
             color: backgroundColor,
-            border: Border.all(
-                color: widget._borderColor, width: widget._borderWidth)),
+            border: border),
         child: TextFormField(
           textAlign: widget.tdAlignment,
           style: widget.tdStyle,
@@ -107,9 +113,6 @@ class _RowBuilderState extends State<RowBuilder> {
           decoration: InputDecoration(
               filled: widget.zebraStripe,
               fillColor: backgroundColor,
-              // fillColor: widget.index % 2 == 1.0
-              //     ? widget.stripeColor2
-              //     : widget.stripeColor1,
               contentPadding: EdgeInsets.only(
                   left: widget.tdPaddingLeft,
                   right: widget.tdPaddingRight,
@@ -123,15 +126,15 @@ class _RowBuilderState extends State<RowBuilder> {
 
   Color get backgroundColor {
     Color bgColor;
-    if (widget.index < widget.headerRows) {
+    if (isHeader) {
       bgColor = widget.headerRowColor;
-    } else if (widget.index >= widget.rowCount - widget.footerRows) {
+    } else if (isFooter) {
       bgColor = widget.footerRowColor;
-    } else if (widget.column < widget.headerColumns) {
+    } else if (isHeaderLeft) {
       bgColor = widget.headerColumnColor;
     } else {
       if (widget.zebraStripe) {
-        bgColor = widget.index % 2 == 1.0
+        bgColor = widget.rowIndex % 2 == 1.0
             ? widget.stripeColor2
             : widget.stripeColor1;
       } else {
@@ -139,10 +142,54 @@ class _RowBuilderState extends State<RowBuilder> {
       }
     }
     if (widget.headerColumnColor == Colors.white && widget.headerRowColor == Colors.white)
-      bgColor = widget.index % 2 == 1.0
+      bgColor = widget.rowIndex % 2 == 1.0
           ? widget.stripeColor2
           : widget.stripeColor1;
 
     return bgColor;
+  }
+
+  Border get border {
+    BorderSide borderSide = BorderSide(
+        color: widget._borderColor, width: widget._borderWidth);
+    if (isHeader) {
+      if (widget.headerRowLines)
+        return Border(right: borderSide);
+    } else if (isFooter) {
+      if (widget.footerRowLines)
+        return Border(right: borderSide);
+    } else if (isHeaderLeft) {
+      if (widget.headerColumnLines)
+        return Border(bottom:borderSide);
+    } else {
+      BorderSide bottom = widget.verticalLines ? borderSide : BorderSide.none;
+      BorderSide right = widget.horizontalLines ? borderSide : BorderSide.none;
+      if (isBottom)
+        bottom = widget.outline ? borderSide : BorderSide.none;
+      if (isRight)
+        right = widget.outline ? borderSide : BorderSide.none;
+      return Border(bottom: bottom, right: right);
+    }
+    return null;
+  }
+  
+  bool get isHeader {
+    return widget.rowIndex < widget.headerRows;
+  }
+
+  bool get isHeaderLeft {
+    return widget.column < widget.headerColumns;
+  }
+
+  bool get isFooter {
+    return widget.rowIndex >= widget.rowCount - widget.footerRows;
+  }
+
+  bool get isBottom {
+    return widget.rowIndex == widget.rowCount - 1;
+  }
+
+  bool get isRight {
+    return widget.column == widget.columnCount -1;
   }
 }

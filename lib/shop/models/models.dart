@@ -905,6 +905,8 @@ class TableStyles extends BaseStyles {
   bool verticalLines;
   @JsonKey(name: 'headerRowLines', defaultValue: true)
   bool headerRowLines;
+  @JsonKey(name: 'footerRowLines', defaultValue: true)
+  bool footerRowLines;
 
   factory TableStyles.fromJson(Map<String, dynamic> json) => _$TableStylesFromJson(json);
   Map<String, dynamic> toJson() => _$TableStylesToJson(this);

@@ -275,26 +275,13 @@ class _SectionViewState extends State<SectionView> {
       key: ObjectKey(child.id),
       onTap: (widget.enableTapChild && selectChildId != child.id)
           ? () {
-        widget.onTapChild();
-        Child block; String blockId;
-        if (child.type == 'block') {
-          block = child;
-          blockId = child.id;
-        } else {
-          blockId = child.blocks.isEmpty ? '' : child.blocks.last.id;
-        }
-        widget.screenBloc.add(SelectSectionEvent(
-            sectionId: section.id,
-            selectedBlockId: blockId,
-            selectedBlock: block,
-            selectedChild: child));
-        setState(() {
-          selectChildId = child.id;
-          print('Selected Child ID: $selectChildId');
-        });
+        _onTapChild(child);
       }
           : null,
       onLongPress: () {
+        if ((widget.enableTapChild && selectChildId != child.id)) {
+          _onTapChild(child);
+        }
         RenderBox box = key.currentContext.findRenderObject();
         Offset position1 = box.localToGlobal(Offset.zero);
         final RenderBox overlay = Overlay.of(context).context.findRenderObject();
@@ -349,12 +336,32 @@ class _SectionViewState extends State<SectionView> {
           ],
           color: Colors.black
         ).then((value) {
-          _actionClipboard(state, value);
+          _actionClipboard(value);
         });
       },
       child: childWidget,
     );
     return element;
+  }
+
+  _onTapChild(Child child) {
+    widget.onTapChild();
+    Child block; String blockId;
+    if (child.type == 'block') {
+      block = child;
+      blockId = child.id;
+    } else {
+      blockId = child.blocks.isEmpty ? '' : child.blocks.last.id;
+    }
+    widget.screenBloc.add(SelectSectionEvent(
+        sectionId: section.id,
+        selectedBlockId: blockId,
+        selectedBlock: block,
+        selectedChild: child));
+    setState(() {
+      selectChildId = child.id;
+      print('Selected Child ID: $selectChildId');
+    });
   }
 
   Widget getChild(
@@ -865,7 +872,8 @@ class _SectionViewState extends State<SectionView> {
     return effects;
   }
 
-  _actionClipboard(ShopEditScreenState state, ClipboardType type) {
+  _actionClipboard(ClipboardType type) {
+    ShopEditScreenState state = widget.screenBloc.state;
     print('value $type');
     List<Map<String, dynamic>>effects = [];
     switch(type) {
@@ -879,6 +887,7 @@ class _SectionViewState extends State<SectionView> {
         // TODO: Handle this case.
         break;
       case ClipboardType.delete:
+        print('selectedChild: ${state.selectedChild.id} sectionId: ${state.selectedSectionId}');
         effects = sectionStyles.getDeleteObject(state.selectedChild.id, state.pageDetail.templateId);
         break;
     }
@@ -889,9 +898,8 @@ class _SectionViewState extends State<SectionView> {
 
   _updateTableStyles(Map<String, dynamic> sheets) {
     ShopEditScreenState state = widget.screenBloc.state;
-    TableStyles styles = TableStyles.fromJson(sheets);
-    List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
-        selectChildId, sheets, state.pageDetail.stylesheetIds);
+    List<Map<String, dynamic>> effects = sectionStyles.getUpdateTextStylePayload(
+        state.selectedChild.id, sheets, state.pageDetail.stylesheetIds);
 
     widget.screenBloc.add(UpdateSectionEvent(
         sectionId: state.selectedSectionId, effects: effects));

@@ -1139,7 +1139,8 @@ TableStyles _$TableStylesFromJson(Map<String, dynamic> json) {
     ..horizontalLines = json['horizontalLines'] as bool ?? true
     ..headerColumnLines = json['headerColumnLines'] as bool ?? true
     ..verticalLines = json['verticalLines'] as bool ?? true
-    ..headerRowLines = json['headerRowLines'] as bool ?? true;
+    ..headerRowLines = json['headerRowLines'] as bool ?? true
+    ..footerRowLines = json['footerRowLines'] as bool ?? true;
 }
 
 Map<String, dynamic> _$TableStylesToJson(TableStyles instance) =>
@@ -1215,6 +1216,7 @@ Map<String, dynamic> _$TableStylesToJson(TableStyles instance) =>
       'headerColumnLines': instance.headerColumnLines,
       'verticalLines': instance.verticalLines,
       'headerRowLines': instance.headerRowLines,
+      'footerRowLines': instance.footerRowLines,
     };
 
 ShopCartStyles _$ShopCartStylesFromJson(Map<String, dynamic> json) {
