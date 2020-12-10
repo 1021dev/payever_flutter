@@ -908,7 +908,7 @@ class TableStyles extends BaseStyles {
   @JsonKey(name: 'footerRowLines', defaultValue: true)
   bool footerRowLines;
   /// Text Style
-  @JsonKey(name: 'textColor', defaultValue: '#FF0000')
+  @JsonKey(name: 'textColor', defaultValue: '#000000')
   String textColor;
   @JsonKey(name: 'textFonts', defaultValue: ['bold'])
   List<String> textFonts;

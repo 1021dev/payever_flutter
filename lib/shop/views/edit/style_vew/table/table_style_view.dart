@@ -4,16 +4,17 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/style_vew/table/font_size.dart';
 import 'package:payever/shop/views/edit/style_vew/table/tabe_grid_options_view.dart';
 import 'package:payever/shop/views/edit/style_vew/table/tabe_header_footer_view.dart';
-
-import '../font_family_view.dart';
+import 'font_type.dart';
 
 class TableStyleView extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
   final Function onClose;
+  final Function onUpdateStyles;
 
-  const TableStyleView({@required this.screenBloc, @required this.onClose});
+  const TableStyleView({@required this.screenBloc, @required this.onClose, @required this.onUpdateStyles});
 
   @override
   _TableStyleViewState createState() => _TableStyleViewState();
@@ -370,118 +371,31 @@ class _TableStyleViewState extends State<TableStyleView> {
   }
 
   Widget get _fontType {
-    return Padding(
-      padding: const EdgeInsets.only(top: 20.0),
-      child: InkWell(
-        onTap: () => navigateSubView(FontFamilyView(
-          screenBloc: widget.screenBloc,
-          stylesheets: widget.screenBloc.state.pageDetail.stylesheets[selectedChildId],
-          onUpdateFontFamily: (_fontFamily) {
-            fontFamily = _fontFamily;
-            _updateTextSize();
-          },
-          onClose: widget.onClose,
-          fontFamily: fontFamily,
-        )),
-        child: Row(
-          children: [
-            Text(
-              'Font',
-              style: TextStyle(color: Colors.white, fontSize: 15),
-            ),
-            Spacer(),
-            Text(
-              fontFamily ?? 'Roboto',
-              style: TextStyle(color: Colors.blue, fontSize: 15),
-            ),
-            SizedBox(
-              width: 20,
-            ),
-            Icon(
-              Icons.arrow_forward_ios,
-              size: 16,
-              color: Colors.grey[600],
-            ),
-          ],
-        ),
-      ),
+    return FontType(
+      screenBloc: widget.screenBloc,
+      fontFamily: fontFamily,
+      onClose: widget.onClose,
+      onUpdateFontFamily: (_fontFamily) {
+        fontFamily = _fontFamily;
+        Map<String, dynamic> sheets =
+        widget.screenBloc.state.pageDetail.stylesheets[selectedChildId];
+        sheets['fontFamily'] = _fontFamily;
+        widget.onUpdateStyles(sheets);
+      },
     );
   }
 
   Widget get _fontSize {
-    return Container(
-      margin: EdgeInsets.only(top: 16),
-      height: 40,
-      child: Row(
-        children: [
-          Text(
-            'Size',
-            style: TextStyle(color: Colors.white, fontSize: 15),
-          ),
-          Spacer(),
-          Text(
-            '${fontSize ~/ ptFontFactor} pt',
-            style: TextStyle(color: Colors.blue, fontSize: 15),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          Container(
-            width: 150,
-            child: Row(
-              children: [
-                Expanded(
-                  child: InkWell(
-                    onTap: () {
-                      if (fontSize > minTextFontSize) {
-                        fontSize --;
-                        _updateTextSize();
-                      }
-                    },
-                    child: Container(
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Color.fromRGBO(51, 48, 53, 1),
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(8),
-                            bottomLeft: Radius.circular(8)),
-                      ),
-                      child: Text(
-                        '-',
-                        style: TextStyle(fontSize: 24),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 1,
-                ),
-                Expanded(
-                  child: InkWell(
-                    onTap: () {
-                      fontSize ++;
-                      _updateTextSize();
-                    },
-                    child: Container(
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Color.fromRGBO(51, 48, 53, 1),
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(8),
-                            bottomRight: Radius.circular(8)),
-                      ),
-                      child: Text(
-                        '+',
-                        style: TextStyle(fontSize: 24),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
+    return FontSize(
+      screenBloc: widget.screenBloc,
+      fontSize: fontSize,
+      onUpdateFontSize: (_fontSize) {
+        fontSize = _fontSize;
+        Map<String, dynamic> sheets =
+            widget.screenBloc.state.pageDetail.stylesheets[selectedChildId];
+        sheets['fontSize'] = _fontSize;
+        widget.onUpdateStyles(sheets);
+      },
     );
   }
 

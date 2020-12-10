@@ -3,20 +3,27 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/style_vew/font_family_view.dart';
 import 'package:payever/shop/views/edit/style_vew/paragraph_view.dart';
+import 'package:payever/shop/views/edit/style_vew/table/font_type.dart';
 import 'package:payever/shop/views/edit/style_vew/text/text_options_view.dart';
 import '../../../../../theme.dart';
 import '../fill_color_view.dart';
 import '../fill_view.dart';
+import 'font_size.dart';
 
 class TableCellStyleView extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
   final Function onClose;
+  final Function onUpdateStyles;
 
-  const TableCellStyleView({@required this.screenBloc, @required this.onClose});
+  const TableCellStyleView(
+      {@required this.screenBloc,
+      @required this.onClose,
+      @required this.onUpdateStyles});
 
   @override
   _TableCellStyleViewState createState() => _TableCellStyleViewState();
@@ -26,6 +33,7 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
   TableStyles styles;
 
   Color textColor, fillColor;
+  String fontFamily;
   double fontSize;
 
   List<TextFontType> fontTypes = [];
@@ -44,6 +52,8 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
     styles = TableStyles.fromJson(state.pageDetail.stylesheets[selectedChildId]);
 
     fontSize = styles.fontSize;
+    fontFamily = styles.fontFamily;
+    print('styles.textColor: ${styles.textColor}');
     textColor = colorConvert(styles.textColor);
     fillColor =  colorConvert(styles.backgroundColor);
     // font types
@@ -55,11 +65,8 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
     super.initState();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-
     return _body(widget.screenBloc.state);
   }
 
@@ -71,12 +78,7 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
             children: [
               _fontType(state),
               _fontSize(state),
-              FillColorView(
-                pickColor: textColor,
-                styles: styles,
-                colorType: ColorType.text,
-                onUpdateColor: (color) => _updateTextColor(state, color),
-              ),
+              _textColor(state),
               _textHorizontalAlign(state),
               _textVerticalAlign,
               _wrapText,
@@ -95,7 +97,7 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
                     //     _updateGradientFillColor(state, model, updateApi: updateApi),
                     // onUpdateImageFill: (BackGroundModel model) =>
                     //     _updateImageFill(state, model),
-                  ));
+                  ), context);
                 },
               ),
               _verticalText,
@@ -105,220 +107,46 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
   }
 
   Widget _fontType(ShopEditScreenState state) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 20.0),
-      child: Column(
-        children: [
-          InkWell(
-            onTap: () {
-              String fontFamily = styles.decodeHtmlTextFontFamily(widget.screenBloc.htmlText()) ?? 'Roboto';
-              navigateSubView(FontFamilyView(
-                screenBloc: widget.screenBloc,
-                fontFamily: fontFamily,
-                onUpdateFontFamily: (fontFamily) {
-                  // String htmlStr =
-                  // styles.encodeHtmlString(htmlText, fontFamily: fontFamily);
-                  // _updateTextProperty(state, htmlStr);
-                },
-                onClose: widget.onClose,
-              ));
-              } ,
-            child: Row(
-              children: [
-                Text(
-                  'Font',
-                  style: TextStyle(color: Colors.white, fontSize: 15),
-                ),
-                Spacer(),
-                // Text(
-                //   styles.decodeHtmlTextFontFamily(widget.screenBloc.htmlText()) ?? 'Roboto',
-                //   style: TextStyle(color: Colors.blue, fontSize: 15),
-                // ),
-                SizedBox(
-                  width: 20,
-                ),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  size: 16,
-                  color: Colors.grey[600],
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 15,
-          ),
-          Container(
-            height: 50,
-            child: Row(
-              children: [
-                Expanded(
-                    child: InkWell(
-                        onTap: () => _updateFontType(state, TextFontType.bold),
-                        child: Container(
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: fontTypes.contains(TextFontType.bold)
-                                  ? Color.fromRGBO(0, 135, 255, 1)
-                                  : Color.fromRGBO(51, 48, 53, 1),
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(8),
-                                  bottomLeft: Radius.circular(8)),
-                            ),
-                            child: Text(
-                              'B',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            )))),
-                SizedBox(
-                  width: 1,
-                ),
-                Expanded(
-                    child: InkWell(
-                        onTap: () => _updateFontType(state, TextFontType.italic),
-                        child: Container(
-                            alignment: Alignment.center,
-                            color: fontTypes.contains(TextFontType.italic)
-                                ? Color.fromRGBO(0, 135, 255, 1)
-                                : Color.fromRGBO(51, 48, 53, 1),
-                            child: Text(
-                              'I',
-                              style: TextStyle(
-                                  fontSize: 18, fontStyle: FontStyle.italic),
-                            )))),
-                SizedBox(
-                  width: 1,
-                ),
-                Expanded(
-                    child: InkWell(
-                        onTap: () => _updateFontType(state, TextFontType.underline),
-                        child: Container(
-                            alignment: Alignment.center,
-                            color: fontTypes.contains(TextFontType.underline)
-                                ? Color.fromRGBO(0, 135, 255, 1)
-                                : Color.fromRGBO(51, 48, 53, 1),
-                            child: Text(
-                              'U',
-                              style: TextStyle(
-                                fontSize: 18,
-                                decoration: TextDecoration.underline,
-                              ),
-                            )))),
-                SizedBox(
-                  width: 1,
-                ),
-                Expanded(
-                    child: InkWell(
-                        onTap: () => _updateFontType(state, TextFontType.lineThrough),
-                        child: Container(
-                            alignment: Alignment.center,
-                            color: fontTypes.contains(TextFontType.lineThrough)
-                                ? Color.fromRGBO(0, 135, 255, 1)
-                                : Color.fromRGBO(51, 48, 53, 1),
-                            child: Text(
-                              'S',
-                              style: TextStyle(
-                                fontSize: 18,
-                                decoration: TextDecoration.lineThrough,
-                              ),
-                            )))),
-                SizedBox(
-                  width: 1,
-                ),
-                Expanded(
-                    child: InkWell(
-                        onTap: () => navigateSubView(TextOptionsView(screenBloc: widget.screenBloc)),
-                        child: Container(
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Color.fromRGBO(51, 48, 53, 1),
-                              borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(8),
-                                  bottomRight: Radius.circular(8)),
-                            ),
-                            child: Icon(Icons.more_horiz))))
-              ],
-            ),
-          ),
-        ],
-      ),
+    return FontType(
+      screenBloc: widget.screenBloc,
+      fontFamily: fontFamily,
+      onClose: widget.onClose,
+      onUpdateFontFamily: (_fontFamily) {
+        fontFamily = _fontFamily;
+        Map<String, dynamic> sheets =
+        state.pageDetail.stylesheets[selectedChildId];
+        sheets['fontFamily'] = _fontFamily;
+        widget.onUpdateStyles(sheets);
+      },
     );
   }
 
   Widget _fontSize(ShopEditScreenState state) {
-    return Container(
-      margin: EdgeInsets.only(top: 16),
-      height: 40,
-      child: Row(
-        children: [
-          Text(
-            'Size',
-            style: TextStyle(color: Colors.white, fontSize: 15),
-          ),
-          Spacer(),
-          Text(
-            '${fontSize ~/ ptFontFactor} pt',
-            style: TextStyle(color: Colors.blue, fontSize: 15),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          Container(
-            width: 150,
-            child: Row(
-              children: [
-                Expanded(
-                  child: InkWell(
-                    onTap: () {
-                      if (fontSize > minTextFontSize) {
-                        fontSize --;
-                        _updateTextSize(state);
-                      }
-                    },
-                    child: Container(
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Color.fromRGBO(51, 48, 53, 1),
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(8),
-                            bottomLeft: Radius.circular(8)),
-                      ),
-                      child: Text(
-                        '-',
-                        style: TextStyle(fontSize: 24),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 1,
-                ),
-                Expanded(
-                  child: InkWell(
-                    onTap: () {
-                      fontSize ++;
-                      _updateTextSize(state);
-                    },
-                    child: Container(
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Color.fromRGBO(51, 48, 53, 1),
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(8),
-                            bottomRight: Radius.circular(8)),
-                      ),
-                      child: Text(
-                        '+',
-                        style: TextStyle(fontSize: 24),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
+    return FontSize(
+      screenBloc: widget.screenBloc,
+      fontSize: fontSize,
+      onUpdateFontSize: (_fontSize) {
+        fontSize = _fontSize;
+        Map<String, dynamic> sheets =
+            widget.screenBloc.state.pageDetail.stylesheets[selectedChildId];
+        sheets['fontSize'] = _fontSize;
+        widget.onUpdateStyles(sheets);
+      },
+    );
+  }
+
+  Widget _textColor(ShopEditScreenState state) {
+    return FillColorView(
+      pickColor: textColor,
+      styles: styles,
+      colorType: ColorType.text,
+      onUpdateColor: (color) {
+        textColor = color;
+        Map<String, dynamic> sheets =
+        state.pageDetail.stylesheets[selectedChildId];
+        sheets['textColor'] = encodeColor(color);
+        widget.onUpdateStyles(sheets);
+      },
     );
   }
 
@@ -495,230 +323,6 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
     );
   }
 
-  get _bullets {
-    return Padding(
-      padding: const EdgeInsets.only(top: 20.0),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Icon(Icons.list),
-              SizedBox(
-                width: 10,
-              ),
-              Text(
-                'Bullets & Lists',
-                style: TextStyle(color: Colors.white, fontSize: 15),
-              ),
-              Spacer(),
-              Text(
-                'None',
-                style: TextStyle(color: Colors.blue, fontSize: 15),
-              ),
-              SizedBox(
-                width: 20,
-              ),
-              Icon(
-                Icons.arrow_forward_ios,
-                size: 16,
-                color: Colors.grey[600],
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 15,
-          ),
-          Container(
-            height: 50,
-            child: Row(
-              children: [
-                Expanded(
-                    child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            bulletList = BulletList.bullet;
-                          });
-                        },
-                        child: Container(
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: bulletList != BulletList.bullet
-                                  ? Color.fromRGBO(51, 48, 53, 1)
-                                  : Color.fromRGBO(0, 135, 255, 1),
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(8),
-                                  bottomLeft: Radius.circular(8)),
-                            ),
-                            child: SvgPicture.asset('assets/images/bullet-left.svg')))),
-                SizedBox(
-                  width: 1,
-                ),
-                Expanded(
-                    child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            bulletList = BulletList.list;
-                          });
-                        },
-                        child: Container(
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: bulletList != BulletList.list
-                                  ? Color.fromRGBO(51, 48, 53, 1)
-                                  : Color.fromRGBO(0, 135, 255, 1),
-                              borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(8),
-                                  bottomRight: Radius.circular(8)),
-                            ),
-                            child: SvgPicture.asset('assets/images/bullet-right.svg'))))
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  get _lineSpacing {
-    return Container(
-      margin: EdgeInsets.only(top: 20),
-      padding: EdgeInsets.symmetric(vertical: 10),
-      child: Row(
-        children: [
-          SvgPicture.asset('assets/images/line-spacing.svg'),
-          SizedBox(
-            width: 10,
-          ),
-          Text(
-            'Line Spacing',
-            style: TextStyle(color: Colors.white, fontSize: 15),
-          ),
-          Spacer(),
-          Text(
-            '1',
-            style: TextStyle(color: Colors.blue, fontSize: 15),
-          ),
-          SizedBox(
-            width: 20,
-          ),
-          Icon(
-            Icons.arrow_forward_ios,
-            size: 16,
-            color: Colors.grey[600],
-          ),
-        ],
-      ),
-    );
-  }
-
-  get _columns {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 10),
-      child: Row(
-        children: [
-          SvgPicture.asset('assets/images/columns.svg'),
-          SizedBox(
-            width: 10,
-          ),
-          Text(
-            'Columns',
-            style: TextStyle(color: Colors.white, fontSize: 15),
-          ),
-          Spacer(),
-          Text(
-            '1',
-            style: TextStyle(color: Colors.blue, fontSize: 15),
-          ),
-          SizedBox(
-            width: 20,
-          ),
-          Icon(
-            Icons.arrow_forward_ios,
-            size: 16,
-            color: Colors.grey[600],
-          ),
-        ],
-      ),
-    );
-  }
-
-  get _margin {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 10),
-      child: Row(
-        children: [
-          SvgPicture.asset('assets/images/margin.svg'),
-          SizedBox(
-            width: 10,
-          ),
-          Text(
-            'Margin',
-            style: TextStyle(color: Colors.white, fontSize: 15),
-          ),
-          Spacer(),
-          Text(
-            '16 pt',
-            style: TextStyle(color: Colors.blue, fontSize: 15),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          Container(
-            width: 150,
-            child: Row(
-              children: [
-                Expanded(
-                  child: InkWell(
-                    child: Container(
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Color.fromRGBO(51, 48, 53, 1),
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(8),
-                            bottomLeft: Radius.circular(8)),
-                      ),
-                      child: Text(
-                        '-',
-                        style: TextStyle(fontSize: 24),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 1,
-                ),
-                Expanded(
-                  child: InkWell(
-                    child: Container(
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Color.fromRGBO(51, 48, 53, 1),
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(8),
-                            bottomRight: Radius.circular(8)),
-                      ),
-                      child: Text(
-                        '+',
-                        style: TextStyle(fontSize: 24),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  void _updateTextColor(ShopEditScreenState state, Color color) {
-    textColor = color;
-    // String hex = '${textColor.value.toRadixString(16)}';
-    // String newTextColor = '#${hex.substring(2)}';
-    // String htmlStr = styles.encodeHtmlString(htmlText, textColor: newTextColor);
-    // _updateTextProperty(state, htmlStr);
-  }
 
   void _updateFontType(ShopEditScreenState state, TextFontType fontType) {
     if (fontTypes.contains(fontType)) {
@@ -766,13 +370,4 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
   }
   // endregion
 
-  void navigateSubView(Widget subview) {
-    showModalBottomSheet(
-        context: context,
-        barrierColor: Colors.transparent,
-        // isScrollControlled: true,
-        builder: (builder) {
-          return subview;
-        });
-  }
 }

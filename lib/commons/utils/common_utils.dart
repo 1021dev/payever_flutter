@@ -945,3 +945,13 @@ String getDisplayName(String name) {
   }
   return displayName;
 }
+
+void navigateSubView(Widget subview, BuildContext context) {
+  showModalBottomSheet(
+      context: context,
+      barrierColor: Colors.transparent,
+      // isScrollControlled: true,
+      builder: (builder) {
+        return subview;
+      });
+}

@@ -87,7 +87,7 @@ class _TableViewState extends State<TableView> {
 
   TextStyle get textStyle {
     return TextStyle(
-      color: Colors.black,
+      color: colorConvert(styles.textColor),
       fontSize: styles.fontSize,
       fontFamily: styles.fontFamily,
     );

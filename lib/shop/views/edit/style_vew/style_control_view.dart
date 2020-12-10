@@ -210,7 +210,11 @@ class _StyleControlViewState extends State<StyleControlView> {
       switch (styleType) {
         case StyleType.style:
           if (state.selectedChild.type == 'table')
-            return TableStyleView(screenBloc: widget.screenBloc, onClose: widget.onClose,);
+            return TableStyleView(
+              screenBloc: widget.screenBloc,
+              onClose: widget.onClose,
+              onUpdateStyles: (sheets) => _updateStyles(sheets),
+            );
           return _styleBody(state);
         case StyleType.text:
           return TextStyleView(screenBloc: widget.screenBloc, onClose: widget.onClose,)/*_textBody(state)*/;
@@ -242,7 +246,11 @@ class _StyleControlViewState extends State<StyleControlView> {
             onChangeGaps: (value, updateApi) => _updateProductsGaps(state, value, updateApi: updateApi),
           );
         case StyleType.cell:
-          return TableCellStyleView(screenBloc: widget.screenBloc, onClose: widget.onClose,);
+          return TableCellStyleView(
+            screenBloc: widget.screenBloc,
+            onClose: widget.onClose,
+            onUpdateStyles: (sheets) => _updateStyles(sheets),
+          );
         case StyleType.format:
           return FormatStyleView();
         default:
@@ -350,11 +358,7 @@ class _StyleControlViewState extends State<StyleControlView> {
     Map<String, dynamic> sheets = state.pageDetail.stylesheets[selectedChildId];
     sheets['backgroundColor'] = newBgColor;
     sheets['backgroundImage'] = '';
-    List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
-        selectedChildId, sheets, state.pageDetail.stylesheetIds);
-
-    widget.screenBloc.add(UpdateSectionEvent(
-        sectionId: state.selectedSectionId, effects: effects));
+    _updateStyles(sheets);
   }
 
   void _updateGradientFillColor(ShopEditScreenState state, GradientModel model, {bool updateApi = true}) {
@@ -364,11 +368,7 @@ class _StyleControlViewState extends State<StyleControlView> {
     Map<String, dynamic> sheets = state.pageDetail.stylesheets[selectedChildId];
     sheets['backgroundColor'] = '';
     sheets['backgroundImage'] = 'linear-gradient(${model.angle.toInt()}deg, $color1, $color2)';
-    List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
-        selectedChildId, sheets, state.pageDetail.stylesheetIds);
-
-    widget.screenBloc.add(UpdateSectionEvent(
-        sectionId: state.selectedSectionId, effects: effects, updateApi: updateApi));
+    _updateStyles(sheets, updateApi: updateApi);
   }
 
   void _updateImageFill(ShopEditScreenState state, BackGroundModel backgroundModel) {
@@ -378,22 +378,13 @@ class _StyleControlViewState extends State<StyleControlView> {
     sheets['backgroundPosition'] =  backgroundModel.backgroundPosition;
     sheets['backgroundRepeat'] =  backgroundModel.backgroundRepeat;
     sheets['backgroundSize'] =  backgroundModel.backgroundSize;
-
-    List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
-        selectedChildId, sheets, state.pageDetail.stylesheetIds);
-
-    widget.screenBloc.add(UpdateSectionEvent(
-        sectionId: state.selectedSectionId, effects: effects));
+    _updateStyles(sheets);
   }
 
   void _updateImage(ShopEditScreenState state, String url) {
     Map<String, dynamic> sheets = state.pageDetail.stylesheets[selectedChildId];
     sheets['background'] = url;
-    List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
-        selectedChildId, sheets, state.pageDetail.stylesheetIds);
-
-    widget.screenBloc.add(UpdateSectionEvent(
-        sectionId: state.selectedSectionId, effects: effects));
+    _updateStyles(sheets);
   }
 
   void _updateImageDescription(ShopEditScreenState state, String description) {
@@ -453,22 +444,13 @@ class _StyleControlViewState extends State<StyleControlView> {
     Map<String, dynamic> sheets = state.pageDetail.stylesheets[selectedChildId];
     sheets['columnGap'] = value['columnGap'];
     sheets['rowGap'] = value['rowGap'];
-    List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
-        selectedChildId, sheets, state.pageDetail.stylesheetIds);
-
-    widget.screenBloc.add(UpdateSectionEvent(
-        sectionId: state.selectedSectionId, effects: effects, updateApi: updateApi));
+    _updateStyles(sheets, updateApi: updateApi);
   }
 
   void _updateOpacity(ShopEditScreenState state, double value, {bool updateApi = true}) {
     Map<String, dynamic> sheets = state.pageDetail.stylesheets[selectedChildId];
     sheets['opacity'] = num.parse(value.toStringAsFixed(1));
-
-    List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
-        selectedChildId, sheets, state.pageDetail.stylesheetIds);
-
-    widget.screenBloc.add(UpdateSectionEvent(
-        sectionId: state.selectedSectionId, effects: effects, updateApi: updateApi));
+    _updateStyles(sheets, updateApi: updateApi);
   }
 
   void _updateShadow(ShopEditScreenState state, ShadowModel model, {bool updateApi = true}) {
@@ -494,22 +476,13 @@ class _StyleControlViewState extends State<StyleControlView> {
       sheets['shadowOpacity'] =  model?.shadowOpacity?.toInt();
       sheets[field] = model?.shadowString ?? false;
     }
-    List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
-        selectedChildId, sheets, state.pageDetail.stylesheetIds);
-
-    widget.screenBloc.add(UpdateSectionEvent(
-        sectionId: state.selectedSectionId, effects: effects, updateApi: updateApi));
+    _updateStyles(sheets, updateApi: updateApi);
   }
 
   void _updateBorderRadius(ShopEditScreenState state, double radius, {bool updateApi = true}) {
     Map<String, dynamic> sheets = state.pageDetail.stylesheets[selectedChildId];
     sheets['borderRadius'] = radius.toInt();
-
-    List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
-        selectedChildId, sheets, state.pageDetail.stylesheetIds);
-
-    widget.screenBloc.add(UpdateSectionEvent(
-        sectionId: state.selectedSectionId, effects: effects, updateApi: updateApi));
+    _updateStyles(sheets, updateApi: updateApi);
   }
 
   void _updateImageBorderModel(ShopEditScreenState state, BorderModel model, {bool updateApi = true}) {
@@ -523,7 +496,11 @@ class _StyleControlViewState extends State<StyleControlView> {
       sheets['borderWidth'] =  model.borderWidth;
       sheets['borderStyle'] =  model.borderStyle;
     }
+    _updateStyles(sheets, updateApi: updateApi);
+  }
 
+  _updateStyles(Map<String, dynamic> sheets, {bool updateApi = true}) {
+    ShopEditScreenState state = widget.screenBloc.state;
     List<Map<String, dynamic>> effects = styles.getUpdateTextStylePayload(
         selectedChildId, sheets, state.pageDetail.stylesheetIds);
 

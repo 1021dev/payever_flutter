@@ -1141,7 +1141,7 @@ TableStyles _$TableStylesFromJson(Map<String, dynamic> json) {
     ..verticalLines = json['verticalLines'] as bool ?? true
     ..headerRowLines = json['headerRowLines'] as bool ?? true
     ..footerRowLines = json['footerRowLines'] as bool ?? true
-    ..textColor = json['textColor'] as String ?? '#FF0000'
+    ..textColor = json['textColor'] as String ?? '#000000'
     ..textFonts =
         (json['textFonts'] as List)?.map((e) => e as String)?.toList() ??
             ['bold']
