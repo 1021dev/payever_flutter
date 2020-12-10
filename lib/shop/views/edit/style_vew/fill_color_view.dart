@@ -8,7 +8,7 @@ import '../element/widget/background_view.dart';
 import 'fill_view.dart';
 
 class FillColorView extends StatefulWidget {
-  final TextStyles styles;
+  final BaseStyles styles;
   final ColorType colorType;
   final Color pickColor;
   final Function onUpdateColor;

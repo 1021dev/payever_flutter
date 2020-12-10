@@ -11,10 +11,10 @@ import 'package:payever/shop/views/edit/style_vew/fill_view.dart';
 import 'package:payever/shop/views/edit/style_vew/image_style_view.dart';
 import 'package:payever/shop/views/edit/style_vew/products_style_view.dart';
 import 'package:payever/shop/views/edit/style_vew/shadow_view.dart';
-import 'package:payever/shop/views/edit/style_vew/table/cell_style_view.dart';
 import 'package:payever/shop/views/edit/style_vew/table/format_style_view.dart';
+import 'package:payever/shop/views/edit/style_vew/table/table_cell_style_view.dart';
 import 'package:payever/shop/views/edit/style_vew/table/table_style_view.dart';
-import 'package:payever/shop/views/edit/style_vew/text_style_view.dart';
+import 'package:payever/shop/views/edit/style_vew/text/text_style_view.dart';
 import 'package:payever/shop/views/edit/style_vew/video_style_view.dart';
 import 'package:payever/theme.dart';
 import 'sub_view/border_view.dart';
@@ -242,7 +242,7 @@ class _StyleControlViewState extends State<StyleControlView> {
             onChangeGaps: (value, updateApi) => _updateProductsGaps(state, value, updateApi: updateApi),
           );
         case StyleType.cell:
-          return CellStyleView();
+          return TableCellStyleView(screenBloc: widget.screenBloc, onClose: widget.onClose,);
         case StyleType.format:
           return FormatStyleView();
         default:

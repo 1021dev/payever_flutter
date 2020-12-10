@@ -875,7 +875,7 @@ class TableStyles extends BaseStyles {
   @JsonKey(name: 'footerRowColor', defaultValue: '#FFFFFF')
   String footerRowColor;
 
-  // Header and Footer
+  /// Header and Footer
   @JsonKey(name: 'headerRows', defaultValue: 1)
   int headerRows;
 
@@ -896,7 +896,7 @@ class TableStyles extends BaseStyles {
   @JsonKey(name: 'alternatingRows', defaultValue: false)
   bool alternatingRows;
 
-  // Grid options
+  /// Grid options
   @JsonKey(name: 'horizontalLines', defaultValue: true)
   bool horizontalLines;
   @JsonKey(name: 'headerColumnLines', defaultValue: true)
@@ -907,6 +907,15 @@ class TableStyles extends BaseStyles {
   bool headerRowLines;
   @JsonKey(name: 'footerRowLines', defaultValue: true)
   bool footerRowLines;
+  /// Text Style
+  @JsonKey(name: 'textColor', defaultValue: '#FF0000')
+  String textColor;
+  @JsonKey(name: 'textFonts', defaultValue: ['bold'])
+  List<String> textFonts;
+  @JsonKey(name: 'textHorizontalAlign', defaultValue: 'center')
+  String textHorizontalAlign;
+  @JsonKey(name: 'textVerticalAlign', defaultValue: 'center')
+  String textVerticalAlign;
 
   factory TableStyles.fromJson(Map<String, dynamic> json) => _$TableStylesFromJson(json);
   Map<String, dynamic> toJson() => _$TableStylesToJson(this);

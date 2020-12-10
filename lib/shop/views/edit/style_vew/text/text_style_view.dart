@@ -7,9 +7,9 @@ import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/style_vew/font_family_view.dart';
 import 'package:payever/shop/views/edit/style_vew/paragraph_view.dart';
-import 'package:payever/shop/views/edit/style_vew/text_options_view.dart';
-import '../../../../theme.dart';
-import 'fill_color_view.dart';
+import 'package:payever/shop/views/edit/style_vew/text/text_options_view.dart';
+import '../../../../../theme.dart';
+import '../fill_color_view.dart';
 
 class TextStyleView extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;

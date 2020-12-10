@@ -17,12 +17,15 @@ class FillView extends StatefulWidget {
   final Function onUpdateGradientFill;
   final Function onUpdateImageFill;
   final bool hasComplexFill;
+  final Function onClose;
+
   const FillView(
       this.screenBloc,
       {this.onUpdateColor,
       this.onUpdateGradientFill,
       this.onUpdateImageFill,
-      this.hasComplexFill = false});
+      this.hasComplexFill = false,
+      this.onClose});
 
   @override
   _FillViewState createState() => _FillViewState();
@@ -163,7 +166,7 @@ class _FillViewState extends State<FillView> {
               SizedBox(width: 16,),
               InkWell(
                 onTap: () {
-                  Navigator.pop(context);
+                  widget.onClose();
                   Navigator.pop(context);
                 },
                 child: Container(

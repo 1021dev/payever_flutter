@@ -1140,7 +1140,13 @@ TableStyles _$TableStylesFromJson(Map<String, dynamic> json) {
     ..headerColumnLines = json['headerColumnLines'] as bool ?? true
     ..verticalLines = json['verticalLines'] as bool ?? true
     ..headerRowLines = json['headerRowLines'] as bool ?? true
-    ..footerRowLines = json['footerRowLines'] as bool ?? true;
+    ..footerRowLines = json['footerRowLines'] as bool ?? true
+    ..textColor = json['textColor'] as String ?? '#FF0000'
+    ..textFonts =
+        (json['textFonts'] as List)?.map((e) => e as String)?.toList() ??
+            ['bold']
+    ..textHorizontalAlign = json['textHorizontalAlign'] as String ?? 'center'
+    ..textVerticalAlign = json['textVerticalAlign'] as String ?? 'center';
 }
 
 Map<String, dynamic> _$TableStylesToJson(TableStyles instance) =>
@@ -1217,6 +1223,10 @@ Map<String, dynamic> _$TableStylesToJson(TableStyles instance) =>
       'verticalLines': instance.verticalLines,
       'headerRowLines': instance.headerRowLines,
       'footerRowLines': instance.footerRowLines,
+      'textColor': instance.textColor,
+      'textFonts': instance.textFonts,
+      'textHorizontalAlign': instance.textHorizontalAlign,
+      'textVerticalAlign': instance.textVerticalAlign,
     };
 
 ShopCartStyles _$ShopCartStylesFromJson(Map<String, dynamic> json) {

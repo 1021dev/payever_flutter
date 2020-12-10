@@ -9,7 +9,7 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
 
-import '../../../../theme.dart';
+import '../../../../../theme.dart';
 
 class TextOptionsView extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
