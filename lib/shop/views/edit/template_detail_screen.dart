@@ -67,6 +67,12 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
             showStyleControlView = false;
           }
         },
+        condition: (ShopEditScreenState previousState, ShopEditScreenState state) {
+          if (previousState.selectedChild?.id != state.selectedChild?.id) {
+            showStyleControlView = false;
+          }
+          return true;
+        },
         bloc: screenBloc,
         child: BlocBuilder(
           bloc: screenBloc,

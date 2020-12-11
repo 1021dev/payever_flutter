@@ -1071,7 +1071,6 @@ TableStyles _$TableStylesFromJson(Map<String, dynamic> json) {
   return TableStyles()
     ..display = json['display'] as String ?? 'flex'
     ..background = json['background'] as String ?? '#ffffff'
-    ..backgroundColor = json['backgroundColor'] as String ?? '#ffffff'
     ..backgroundImage = json['backgroundImage'] as String ?? ''
     ..backgroundSize = json['backgroundSize'] as String
     ..backgroundPosition = json['backgroundPosition'] as String ?? 'center'
@@ -1145,14 +1144,15 @@ TableStyles _$TableStylesFromJson(Map<String, dynamic> json) {
     ..textFontTypes =
         (json['textFontTypes'] as List)?.map((e) => e as String)?.toList() ?? []
     ..textHorizontalAlign = json['textHorizontalAlign'] as String ?? 'center'
-    ..textVerticalAlign = json['textVerticalAlign'] as String ?? 'center';
+    ..textVerticalAlign = json['textVerticalAlign'] as String ?? 'center'
+    ..textWrap = json['textWrap'] as bool ?? true
+    ..backgroundColor = json['backgroundColor'] as String;
 }
 
 Map<String, dynamic> _$TableStylesToJson(TableStyles instance) =>
     <String, dynamic>{
       'display': instance.display,
       'background': instance.background,
-      'backgroundColor': instance.backgroundColor,
       'backgroundImage': instance.backgroundImage,
       'backgroundSize': instance.backgroundSize,
       'backgroundPosition': instance.backgroundPosition,
@@ -1226,6 +1226,8 @@ Map<String, dynamic> _$TableStylesToJson(TableStyles instance) =>
       'textFontTypes': instance.textFontTypes,
       'textHorizontalAlign': instance.textHorizontalAlign,
       'textVerticalAlign': instance.textVerticalAlign,
+      'textWrap': instance.textWrap,
+      'backgroundColor': instance.backgroundColor,
     };
 
 ShopCartStyles _$ShopCartStylesFromJson(Map<String, dynamic> json) {

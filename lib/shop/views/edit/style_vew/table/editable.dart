@@ -15,14 +15,16 @@ class Editable extends StatefulWidget {
       this.onSubmitted,
       this.onRowSaved,
       this.headerColumnColor, this.headerRowColor, this.footerRowColor,
-      this.borderColor = Colors.grey,
+      this.fillColor, this.borderColor = Colors.grey,
       this.trWidth = 50.0, this.trHeight = 50.0,
       this.borderWidth = 0.5,
-      this.thWeight = FontWeight.w600,
       this.thSize = 15,
+
+      this.enableEdit,
       this.tdAlignment = TextAlign.start,
       this.tdVerticalAlignment,
-      this.tdStyle,
+      this.tdStyle, this.textWrap,
+
       this.stripeColor1 = Colors.white,
       this.stripeColor2 = Colors.black12,
       this.zebraStripe = false,
@@ -47,28 +49,27 @@ class Editable extends StatefulWidget {
   final double columnRatio;
 
   /// Colors of Header
+
   final Color headerColumnColor;
   final Color headerRowColor;
   final Color footerRowColor;
   /// Color of table border
+  final String fillColor;
   final Color borderColor;
 
   /// width of table borders
   final double borderWidth;
 
-  /// Aligns the table data
+  /// Text Styles
+  final bool enableEdit;
   final TextAlign tdAlignment;
   final Alignment tdVerticalAlignment;
-  /// Style the table data
+  final bool textWrap;
   final TextStyle tdStyle;
 
   final double trWidth;
-  /// Table Row Height
-  /// cannot be less than 40.0
   final double trHeight;
 
-  /// Table headers fontweight
-  final FontWeight thWeight;
 
   /// Table headers fontSize
   final double thSize;
@@ -246,7 +247,6 @@ class EditableState extends State<Editable> {
               : widget.columnRatio,
           trWidth: widget.trWidth,
           headers: columns,
-          thWeight: widget.thWeight,
           thSize: widget.thSize,
           index: index);
     });
@@ -276,29 +276,40 @@ class EditableState extends State<Editable> {
             col: ckeys[rowIndex - 1],
             trWidth: widget.trWidth,
             trHeight: widget.trHeight,
+
             headerColumnColor: widget.headerColumnColor,
             headerRowColor: widget.headerRowColor,
             footerRowColor: widget.footerRowColor,
             borderColor: widget.borderColor,
+            fillColor: widget.fillColor,
+
             borderWidth: widget.borderWidth,
             cellData: list[ckeys[rowIndex - 1]],
+
+            enableEdit: widget.enableEdit,
             tdAlignment: widget.tdAlignment,
+            textWrap: widget.textWrap,
             tdVerticalAlignment: widget.tdVerticalAlignment,
             tdStyle: widget.tdStyle,
+
             onSubmitted: widget.onSubmitted,
-            widthRatio: cwidths[rowIndex - 1].toDouble(),
+
             zebraStripe: widget.zebraStripe,
             stripeColor1: widget.stripeColor1,
             stripeColor2: widget.stripeColor2,
+
             headerRows : widget.headerRows,
             headerColumns: widget.headerColumns,
             footerRows: widget.footerRows,
+
             horizontalLines: widget.horizontalLines,
             headerColumnLines: widget.headerColumnLines,
             verticalLines: widget.verticalLines,
             headerRowLines: widget.headerRowLines,
             footerRowLines: widget.footerRowLines,
+
             outline: widget.outline,
+
             onChanged: (value) {
               ///checks if row has been edited previously
               var result = editedRows.indexWhere((element) {
@@ -338,7 +349,7 @@ class EditableState extends State<Editable> {
       height: widget.trHeight,
       child: Text(
         '${index + 1}',
-        style: TextStyle(fontWeight: widget.thWeight, fontSize: widget.thSize, color: Colors.grey[600]),
+        style: TextStyle(fontWeight: FontWeight.w600, fontSize: widget.thSize, color: Colors.grey[600]),
       ),
     );
   }

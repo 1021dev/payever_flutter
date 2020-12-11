@@ -916,6 +916,10 @@ class TableStyles extends BaseStyles {
   String textHorizontalAlign;
   @JsonKey(name: 'textVerticalAlign', defaultValue: 'center')
   String textVerticalAlign;
+  @JsonKey(name: 'textWrap', defaultValue: true)
+  bool textWrap;
+  /// Background
+  @JsonKey(name: 'backgroundColor')  String backgroundColor;
 
   factory TableStyles.fromJson(Map<String, dynamic> json) => _$TableStylesFromJson(json);
   Map<String, dynamic> toJson() => _$TableStylesToJson(this);

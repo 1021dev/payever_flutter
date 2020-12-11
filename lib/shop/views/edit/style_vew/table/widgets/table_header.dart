@@ -11,13 +11,11 @@ class THeader extends StatelessWidget {
       @required double widthRatio,
       @required int index})
       : _headers = headers,
-        _thWeight = thWeight,
         _thSize = thSize,
         _index = index,
         super(key: key);
 
   final List _headers;
-  final FontWeight _thWeight;
   final double trWidth;
   final double _thSize;
   final int _index;
@@ -38,7 +36,7 @@ class THeader extends StatelessWidget {
           _headers != null || _headers.isNotEmpty
               ? _headers[_index]['title']
               : '',
-          style: TextStyle(fontWeight: _thWeight, fontSize: _thSize, color: Colors.grey[600]),
+          style: TextStyle(fontWeight: FontWeight.w600, fontSize: _thSize, color: Colors.grey[600]),
           textAlign: TextAlign.center,
         ),
       ),

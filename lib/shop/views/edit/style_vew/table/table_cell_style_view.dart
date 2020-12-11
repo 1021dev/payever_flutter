@@ -38,7 +38,7 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
 
   TextAlign textHAlign;
   TextVAlign textVAlign;
-  BulletList bulletList;
+  bool textWrap;
 
   String selectedChildId;
 
@@ -51,7 +51,7 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
     fontSize = styles.fontSize;
     fontFamily = styles.fontFamily;
     textColor = colorConvert(styles.textColor);
-    fillColor =  colorConvert(styles.backgroundColor);
+    fillColor =  colorConvert(styles.backgroundColor, emptyColor: true);
     // font types
     textFontTypes = convertTextFontTypes(styles.textFontTypes);
     if (!textFontTypes.contains('bold') && styles.fontWeight == FontWeight.bold)
@@ -61,8 +61,9 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
 
     // Align
     textHAlign = styles.getTextAlign(styles.textHorizontalAlign);
-    textVAlign = convertTextVAlign(styles.textVerticalAlign);   
-    
+    textVAlign = convertTextVAlign(styles.textVerticalAlign);
+
+    textWrap = styles.textWrap;
     super.initState();
   }
 
@@ -83,26 +84,9 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
               _textColor(state),
               _textHorizontalAlign(state),
               _textVerticalAlign(state),
-              _wrapText,
-              FillColorView(
-                pickColor: fillColor,
-                styles: styles,
-                colorType: ColorType.backGround,
-                // onUpdateColor: (color) => _updateFillColor(state, color),
-                onTapFillView: () {
-                  navigateSubView(FillView(
-                    widget.screenBloc,
-                    hasComplexFill: true,
-                    onClose: widget.onClose,
-                    // onUpdateColor: (Color color) => _updateFillColor(state, color),
-                    // onUpdateGradientFill: (GradientModel model, bool updateApi) =>
-                    //     _updateGradientFillColor(state, model, updateApi: updateApi),
-                    // onUpdateImageFill: (BackGroundModel model) =>
-                    //     _updateImageFill(state, model),
-                  ), context);
-                },
-              ),
-              _verticalText,
+              _wrapText(state),
+              _cellFill(state),
+              _cellBorder(state),
             ],
           ),
         ));
@@ -295,7 +279,7 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
     );
   }
 
-  get _wrapText {
+  Widget _wrapText(ShopEditScreenState state) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10),
       child: Row(
@@ -308,9 +292,13 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
           Transform.scale(
             scale: 0.8,
             child: CupertinoSwitch(
-              value: false,
+              value: textWrap,
               onChanged: (value) {
-                setState(() {});
+                textWrap = value;
+                Map<String, dynamic> sheets =
+                state.pageDetail.stylesheets[selectedChildId];
+                sheets['textWrap'] = value;
+                widget.onUpdateStyles(sheets);
               },
             ),
           ),
@@ -319,7 +307,29 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
     );
   }
 
-  get _verticalText {
+  Widget _cellFill(ShopEditScreenState state) {
+    return FillColorView(
+      styles: styles,
+      pickColor: fillColor,
+      title: 'Cell Fill',
+      colorType: ColorType.backGround,
+      onUpdateColor: (color) => _updateFillColor(state, color),
+      onTapFillView: () {
+        navigateSubView(FillView(
+          widget.screenBloc,
+          hasComplexFill: true,
+          onClose: widget.onClose,
+          onUpdateColor: (Color color) => _updateFillColor(state, color),
+          onUpdateGradientFill: (GradientModel model, bool updateApi) =>
+              _updateGradientFillColor(state, model, updateApi: updateApi),
+          onUpdateImageFill: (BackGroundModel model) =>
+              _updateImageFill(state, model),
+        ), context);
+      },
+    );
+  }
+  
+  Widget _cellBorder(ShopEditScreenState state) {
     return Container(
       height: 60,
       child: Row(
@@ -350,6 +360,40 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
     state.pageDetail.stylesheets[selectedChildId];
     sheets['textVerticalAlign'] = align;
     widget.onUpdateStyles(sheets);
+  }
+
+  void _updateFillColor(ShopEditScreenState state, Color color) {
+    fillColor = color;
+    String newBgColor;
+    if (color == Colors.transparent) {
+      newBgColor = '';
+    } else {
+      newBgColor = encodeColor(color);
+    }
+    Map<String, dynamic> sheets = state.pageDetail.stylesheets[selectedChildId];
+    sheets['backgroundColor'] = newBgColor;
+    sheets['backgroundImage'] = '';
+    widget.onUpdateStyles(sheets, true);
+  }
+
+  void _updateGradientFillColor(ShopEditScreenState state, GradientModel model, {bool updateApi = true}) {
+    // backgroundImage: "linear-gradient(90deg, #ff0000ff, #fffef8ff)"
+    String color1 = encodeColor(model.startColor);
+    String color2 = encodeColor(model.endColor);
+    Map<String, dynamic> sheets = state.pageDetail.stylesheets[selectedChildId];
+    sheets['backgroundColor'] = '';
+    sheets['backgroundImage'] = 'linear-gradient(${model.angle.toInt()}deg, $color1, $color2)';
+    widget.onUpdateStyles(sheets, updateApi);
+  }
+
+  void _updateImageFill(ShopEditScreenState state, BackGroundModel backgroundModel) {
+    Map<String, dynamic> sheets = state.pageDetail.stylesheets[selectedChildId];
+    sheets['backgroundColor'] = backgroundModel.backgroundColor;
+    sheets['backgroundImage'] = backgroundModel.backgroundImage;
+    sheets['backgroundPosition'] =  backgroundModel.backgroundPosition;
+    sheets['backgroundRepeat'] =  backgroundModel.backgroundRepeat;
+    sheets['backgroundSize'] =  backgroundModel.backgroundSize;
+    widget.onUpdateStyles(sheets, true);
   }
   // endregion
 

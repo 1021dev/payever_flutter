@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:payever/theme.dart';
 
 class RowBuilder extends StatefulWidget {
   ///Builds row elements for the table
   /// its properties are not nullable
   const RowBuilder({
     Key key,
+    @required this.enableEdit,
     @required this.tdAlignment,
     @required this.tdVerticalAlignment,
+    @required this.textWrap,
     @required this.tdStyle,
+
     @required this.trWidth,
     @required this.trHeight,
+
+    @required this.columnCount,
     @required this.rowCount,
+
+    @required this.fillColor,
     @required this.headerColumnColor,
     @required this.headerRowColor,
     @required this.footerRowColor,
@@ -18,23 +26,26 @@ class RowBuilder extends StatefulWidget {
     @required double borderWidth,
     @required this.cellData,
     @required this.column,
-    @required this.columnCount,
+
     @required this.rowIndex,
     @required this.col,
     @required this.onSubmitted,
     @required this.onChanged,
-    @required this.widthRatio,
+
     @required this.stripeColor1,
     @required this.stripeColor2,
     @required this.zebraStripe,
+
     @required this.headerRows,
     @required this.headerColumns,
     @required this.footerRows,
+
     @required this.horizontalLines,
     @required this.headerColumnLines,
     @required this.verticalLines,
     @required this.headerRowLines,
     @required this.footerRowLines,
+
     @required this.outline,
   })  : _borderColor = borderColor,
         _borderWidth = borderWidth,
@@ -43,17 +54,19 @@ class RowBuilder extends StatefulWidget {
   /// Table row height
   final double trWidth;
   final double trHeight;
+  final String fillColor;
   final Color headerColumnColor;
   final Color headerRowColor;
   final Color footerRowColor;
   final Color _borderColor;
   final double _borderWidth;
   final cellData;
-  final double widthRatio;
   /// Text Style
+  final bool enableEdit;
   final TextAlign tdAlignment;
   final Alignment tdVerticalAlignment;
   final TextStyle tdStyle;
+  final bool textWrap;
   /// Table RowCount
   final int rowCount;
   final int columnCount;
@@ -63,6 +76,7 @@ class RowBuilder extends StatefulWidget {
   final Color stripeColor1;
   final Color stripeColor2;
   final bool zebraStripe;
+
   final ValueChanged<String> onSubmitted;
   final ValueChanged<String> onChanged;
   /// Header & Footer
@@ -104,7 +118,9 @@ class _RowBuilderState extends State<RowBuilder> {
           onFieldSubmitted: widget.onSubmitted,
           onChanged: widget.onChanged,
           textAlignVertical: TextAlignVertical.center,
-          // enabled: false,
+          keyboardType: widget.textWrap ? TextInputType.multiline : null,
+          maxLines: widget.textWrap ? null : 1,
+          enabled: widget.enableEdit,
           decoration: InputDecoration(
               isDense: true,
               filled: widget.zebraStripe,
@@ -117,6 +133,7 @@ class _RowBuilderState extends State<RowBuilder> {
   }
 
   Color get backgroundColor {
+    if (widget.fillColor != null) return colorConvert(widget.fillColor);
     Color bgColor;
     if (isHeader) {
       bgColor = widget.headerRowColor;

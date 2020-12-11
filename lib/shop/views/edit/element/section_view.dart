@@ -472,6 +472,7 @@ class _SectionViewState extends State<SectionView> {
       case 'table':
         childView = TableView(
           child: child,
+          isEditState: selectChildId == child.id,
           stylesheets: stylesheets,
           onUpdateStyles: (sheets)=> _updateTableStyles(sheets),
         );

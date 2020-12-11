@@ -7,6 +7,7 @@ import '../element/widget/background_view.dart';
 
 class FillColorView extends StatefulWidget {
   final BaseStyles styles;
+  final String title;
   final ColorType colorType;
   final Color pickColor;
   final Function onUpdateColor;
@@ -14,6 +15,7 @@ class FillColorView extends StatefulWidget {
 
   const FillColorView(
       {@required this.styles,
+      this.title,
       @required this.colorType,
       @required this.pickColor,
       @required this.onUpdateColor,
@@ -28,22 +30,22 @@ class _FillColorViewState extends State<FillColorView> {
 
   @override
   Widget build(BuildContext context) {
-    String title;
-
-    switch(widget.colorType) {
-      case ColorType.backGround:
-        title = 'Fill';
-        break;
-      case ColorType.text:
-        title = 'Text Color';
-        break;
-      case ColorType.border:
-      case ColorType.shadow:
-        title = 'Color';
-        break;
-      default:
-        title = 'Color';
-    }
+    String title = widget.title;
+    if (title == null || title.isEmpty)
+      switch(widget.colorType) {
+        case ColorType.backGround:
+          title = 'Fill';
+          break;
+        case ColorType.text:
+          title = 'Text Color';
+          break;
+        case ColorType.border:
+        case ColorType.shadow:
+          title = 'Color';
+          break;
+        default:
+          title = 'Color';
+      }
 
     return Container(
       height: 60,
