@@ -249,7 +249,7 @@ class _StyleControlViewState extends State<StyleControlView> {
           return TableCellStyleView(
             screenBloc: widget.screenBloc,
             onClose: widget.onClose,
-            onUpdateStyles: (sheets) => _updateStyles(sheets),
+            onUpdateStyles: _updateStyles,
           );
         case StyleType.format:
           return FormatStyleView();

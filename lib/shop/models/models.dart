@@ -910,8 +910,8 @@ class TableStyles extends BaseStyles {
   /// Text Style
   @JsonKey(name: 'textColor', defaultValue: '#000000')
   String textColor;
-  @JsonKey(name: 'textFonts', defaultValue: ['bold'])
-  List<String> textFonts;
+  @JsonKey(name: 'textFontTypes', defaultValue: [])
+  List<String> textFontTypes;
   @JsonKey(name: 'textHorizontalAlign', defaultValue: 'center')
   String textHorizontalAlign;
   @JsonKey(name: 'textVerticalAlign', defaultValue: 'center')

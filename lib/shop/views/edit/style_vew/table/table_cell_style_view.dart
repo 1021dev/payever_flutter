@@ -5,7 +5,8 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
-import 'package:payever/shop/views/edit/style_vew/table/font_type.dart';
+import 'package:payever/shop/views/edit/style_vew/sub_view/font_type.dart';
+import 'package:payever/shop/views/edit/style_vew/table/font_family.dart';
 import '../../../../../theme.dart';
 import '../fill_color_view.dart';
 import '../fill_view.dart';
@@ -32,7 +33,7 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
   String fontFamily;
   double fontSize;
 
-  List<TextFontType> fontTypes = [];
+  List<TextFontType> textFontTypes = [];
   List<Paragraph> paragraphs = [];
 
   TextAlign textHAlign;
@@ -49,15 +50,19 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
 
     fontSize = styles.fontSize;
     fontFamily = styles.fontFamily;
-    print('styles.textColor: ${styles.textColor}');
     textColor = colorConvert(styles.textColor);
     fillColor =  colorConvert(styles.backgroundColor);
     // font types
-    fontTypes = styles.getTextFonts(styles.textFonts);
-    // HAlign
+    textFontTypes = convertTextFontTypes(styles.textFontTypes);
+    if (!textFontTypes.contains('bold') && styles.fontWeight == FontWeight.bold)
+      textFontTypes.add(TextFontType.bold);
+    if (!textFontTypes.contains('italic') && styles.fontStyle == FontStyle.italic)
+      textFontTypes.add(TextFontType.italic);
+
+    // Align
     textHAlign = styles.getTextAlign(styles.textHorizontalAlign);
-    // vAlign = styles.getAlign(styles.textVerticalAlign);
-    textVAlign = TextVAlign.center;
+    textVAlign = convertTextVAlign(styles.textVerticalAlign);   
+    
     super.initState();
   }
 
@@ -73,6 +78,7 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
           child: Column(
             children: [
               _fontType(state),
+              _fontStyle(state),
               _fontSize(state),
               _textColor(state),
               _textHorizontalAlign(state),
@@ -103,7 +109,7 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
   }
 
   Widget _fontType(ShopEditScreenState state) {
-    return FontType(
+    return FontFamily(
       screenBloc: widget.screenBloc,
       fontFamily: fontFamily,
       onClose: widget.onClose,
@@ -112,6 +118,29 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
         Map<String, dynamic> sheets =
         state.pageDetail.stylesheets[selectedChildId];
         sheets['fontFamily'] = _fontFamily;
+        widget.onUpdateStyles(sheets);
+      },
+    );
+  }
+
+  Widget _fontStyle(ShopEditScreenState state) {
+    return FontTypes(
+      screenBloc: widget.screenBloc,
+      fontTypes: textFontTypes,
+      onClose: widget.onClose,
+      onUpdateTextFontTypes: (List<TextFontType> _textFonts) {
+        textFontTypes = _textFonts;
+        Map<String, dynamic> sheets =
+            state.pageDetail.stylesheets[selectedChildId];
+        List<String> fontTypes = [];
+        if (_textFonts.contains(TextFontType.underline))
+          fontTypes.add('underline');
+        if (_textFonts.contains(TextFontType.lineThrough))
+          fontTypes.add('strike');
+        sheets['textFonts'] = fontTypes;
+        sheets['fontWeight'] = _textFonts.contains(TextFontType.bold) ? 'bold' : 'normal';
+        sheets['fontStyle'] =
+            _textFonts.contains(TextFontType.italic) ? 'italic' : 'normal';
         widget.onUpdateStyles(sheets);
       },
     );
@@ -305,23 +334,6 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
         ],
       ),
     );
-  }
-
-  void _updateFontType(ShopEditScreenState state, TextFontType fontType) {
-    if (fontTypes.contains(fontType)) {
-      fontTypes.remove(fontType);
-    } else {
-      if (fontType == TextFontType.underline) {
-        if (fontTypes.contains(TextFontType.lineThrough))
-          fontTypes.remove(TextFontType.lineThrough);
-      } else if (fontType == TextFontType.lineThrough) {
-        if (fontTypes.contains(TextFontType.underline))
-          fontTypes.remove(TextFontType.underline);
-      }
-      fontTypes.add(fontType);
-    }
-    // String htmlStr = styles.encodeHtmlString(htmlText, fontTypes: fontTypes);
-    // _updateTextProperty(state, htmlStr);
   }
 
   void _updateTextHorizontalAlign(ShopEditScreenState state, TextAlign _textHorizontalAlign, String align) {

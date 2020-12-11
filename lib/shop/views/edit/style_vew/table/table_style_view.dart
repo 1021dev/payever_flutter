@@ -7,7 +7,7 @@ import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/style_vew/table/font_size.dart';
 import 'package:payever/shop/views/edit/style_vew/table/tabe_grid_options_view.dart';
 import 'package:payever/shop/views/edit/style_vew/table/tabe_header_footer_view.dart';
-import 'font_type.dart';
+import 'font_family.dart';
 
 class TableStyleView extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
@@ -371,7 +371,7 @@ class _TableStyleViewState extends State<TableStyleView> {
   }
 
   Widget get _fontType {
-    return FontType(
+    return FontFamily(
       screenBloc: widget.screenBloc,
       fontFamily: fontFamily,
       onClose: widget.onClose,

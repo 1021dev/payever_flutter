@@ -7,7 +7,7 @@ import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/style_vew/font_family_view.dart';
 import 'package:payever/shop/views/edit/style_vew/paragraph_view.dart';
-import 'package:payever/shop/views/edit/style_vew/text/text_options_view.dart';
+import 'package:payever/shop/views/edit/style_vew/sub_view/font_type.dart';
 import '../../../../../theme.dart';
 import '../fill_color_view.dart';
 
@@ -224,101 +224,12 @@ class _TextStyleViewState extends State<TextStyleView> {
               ],
             ),
           ),
-          SizedBox(
-            height: 15,
-          ),
-          Container(
-            height: 50,
-            child: Row(
-              children: [
-                Expanded(
-                    child: InkWell(
-                        onTap: () => _updateFontType(state, TextFontType.bold),
-                        child: Container(
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: fontTypes.contains(TextFontType.bold)
-                                  ? Color.fromRGBO(0, 135, 255, 1)
-                                  : Color.fromRGBO(51, 48, 53, 1),
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(8),
-                                  bottomLeft: Radius.circular(8)),
-                            ),
-                            child: Text(
-                              'B',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            )))),
-                SizedBox(
-                  width: 1,
-                ),
-                Expanded(
-                    child: InkWell(
-                        onTap: () => _updateFontType(state, TextFontType.italic),
-                        child: Container(
-                            alignment: Alignment.center,
-                            color: fontTypes.contains(TextFontType.italic)
-                                ? Color.fromRGBO(0, 135, 255, 1)
-                                : Color.fromRGBO(51, 48, 53, 1),
-                            child: Text(
-                              'I',
-                              style: TextStyle(
-                                  fontSize: 18, fontStyle: FontStyle.italic),
-                            )))),
-                SizedBox(
-                  width: 1,
-                ),
-                Expanded(
-                    child: InkWell(
-                        onTap: () => _updateFontType(state, TextFontType.underline),
-                        child: Container(
-                            alignment: Alignment.center,
-                            color: fontTypes.contains(TextFontType.underline)
-                                ? Color.fromRGBO(0, 135, 255, 1)
-                                : Color.fromRGBO(51, 48, 53, 1),
-                            child: Text(
-                              'U',
-                              style: TextStyle(
-                                fontSize: 18,
-                                decoration: TextDecoration.underline,
-                              ),
-                            )))),
-                SizedBox(
-                  width: 1,
-                ),
-                Expanded(
-                    child: InkWell(
-                        onTap: () => _updateFontType(state, TextFontType.lineThrough),
-                        child: Container(
-                            alignment: Alignment.center,
-                            color: fontTypes.contains(TextFontType.lineThrough)
-                                ? Color.fromRGBO(0, 135, 255, 1)
-                                : Color.fromRGBO(51, 48, 53, 1),
-                            child: Text(
-                              'S',
-                              style: TextStyle(
-                                fontSize: 18,
-                                decoration: TextDecoration.lineThrough,
-                              ),
-                            )))),
-                SizedBox(
-                  width: 1,
-                ),
-                Expanded(
-                    child: InkWell(
-                        onTap: () => navigateSubView(TextOptionsView(screenBloc: widget.screenBloc)),
-                        child: Container(
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Color.fromRGBO(51, 48, 53, 1),
-                              borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(8),
-                                  bottomRight: Radius.circular(8)),
-                            ),
-                            child: Icon(Icons.more_horiz))))
-              ],
-            ),
-          ),
+          FontTypes(
+            screenBloc: widget.screenBloc,
+            fontTypes: fontTypes,
+            onClose: widget.onClose,
+            onUpdateTextFontTypes:_updateFontType,
+          )
         ],
       ),
     );
@@ -806,21 +717,10 @@ class _TextStyleViewState extends State<TextStyleView> {
     _updateTextProperty(state, htmlStr);
   }
 
-  void _updateFontType(ShopEditScreenState state, TextFontType fontType) {
-    if (fontTypes.contains(fontType)) {
-      fontTypes.remove(fontType);
-    } else {
-      if (fontType == TextFontType.underline) {
-        if (fontTypes.contains(TextFontType.lineThrough))
-          fontTypes.remove(TextFontType.lineThrough);
-      } else if (fontType == TextFontType.lineThrough) {
-        if (fontTypes.contains(TextFontType.underline))
-          fontTypes.remove(TextFontType.underline);
-      }
-      fontTypes.add(fontType);
-    }
+  void _updateFontType(_textFonts) {
+    fontTypes = _textFonts;
     String htmlStr = styles.encodeHtmlString(htmlText, fontTypes: fontTypes);
-    _updateTextProperty(state, htmlStr);
+    _updateTextProperty(widget.screenBloc.state, htmlStr);
   }
 
   void _updateTextAlign(ShopEditScreenState state, TextAlign tAlign, String align) {

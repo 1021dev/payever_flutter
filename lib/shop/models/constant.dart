@@ -29,10 +29,36 @@ enum TextFontType {
   lineThrough
 }
 
+List<TextFontType> convertTextFontTypes(List<String>_fontTypes) {
+  List<TextFontType>fontTypes = [];
+  if (_fontTypes.contains('bold'))
+    fontTypes.add(TextFontType.bold);
+  if (_fontTypes.contains('italic'))
+    fontTypes.add(TextFontType.italic);
+  if (_fontTypes.contains('underline'))
+    fontTypes.add(TextFontType.underline);
+  if (_fontTypes.contains('strike'))
+    fontTypes.add(TextFontType.lineThrough);
+
+  return fontTypes;
+}
 enum TextVAlign {
   top,
   center,
   bottom,
+}
+
+TextVAlign convertTextVAlign(String align) {
+  switch(align) {
+    case 'top':
+      return TextVAlign.top;
+    case 'center':
+      return TextVAlign.center;
+    case 'bottom':
+      return TextVAlign.bottom;
+    default:
+      return TextVAlign.center;
+  }
 }
 
 enum BulletList {

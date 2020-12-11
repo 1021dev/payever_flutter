@@ -4,19 +4,19 @@ import 'package:payever/commons/utils/common_utils.dart';
 
 import '../font_family_view.dart';
 
-class FontType extends StatefulWidget {
+class FontFamily extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
   final Function onClose;
   final String fontFamily;
   final Function onUpdateFontFamily;
 
-  const FontType({this.screenBloc, this.onClose, this.fontFamily, this.onUpdateFontFamily});
+  const FontFamily({this.screenBloc, this.onClose, this.fontFamily, this.onUpdateFontFamily});
 
   @override
-  _FontTypeState createState() => _FontTypeState();
+  _FontFamilyState createState() => _FontFamilyState();
 }
 
-class _FontTypeState extends State<FontType> {
+class _FontFamilyState extends State<FontFamily> {
   @override
   Widget build(BuildContext context) {
     return Padding(

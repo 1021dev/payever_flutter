@@ -13,19 +13,17 @@ import '../../../../../theme.dart';
 
 class TextOptionsView extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
-  final Map<String, dynamic> stylesheets;
-
-  const TextOptionsView({this.screenBloc, this.stylesheets});
+  final Function onClose;
+  const TextOptionsView({this.screenBloc, this.onClose});
 
   @override
-  _TextOptionsViewState createState() => _TextOptionsViewState(screenBloc);
+  _TextOptionsViewState createState() => _TextOptionsViewState();
 }
 
 class _TextOptionsViewState extends State<TextOptionsView> {
-  final ShopEditScreenBloc screenBloc;
-
-  _TextOptionsViewState(this.screenBloc);
-
+  _TextOptionsViewState();
+  BaseStyles styles;
+  String selectedChildId;
   bool isPortrait;
   bool isTablet;
   int selectedCapitalizationIndex = -1;
@@ -34,13 +32,21 @@ class _TextOptionsViewState extends State<TextOptionsView> {
   Color bgColor;
 
   @override
+  void initState() {
+    ShopEditScreenState state = widget.screenBloc.state;
+    selectedChildId = state.selectedChild.id;
+    styles = TextStyles.fromJson(state.pageDetail.stylesheets[selectedChildId]);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     isPortrait = GlobalUtils.isPortrait(context);
     isTablet = GlobalUtils.isTablet(context);
-    TextStyles styles = TextStyles.fromJson(widget.stylesheets);
+
     bgColor = colorConvert(styles.backgroundColor, emptyColor: true);
     return BlocBuilder(
-      bloc: screenBloc,
+      bloc: widget.screenBloc,
       builder: (BuildContext context, state) {
         return body(state);
       },
@@ -104,7 +110,7 @@ class _TextOptionsViewState extends State<TextOptionsView> {
             child: InkWell(
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pop(context);
+                widget.onClose();
               },
               child: Container(
                 width: 30,

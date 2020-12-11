@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/style_vew/table/editable.dart';
 import 'package:payever/theme.dart';
@@ -93,9 +94,22 @@ class _TableViewState extends State<TableView> {
       color: colorConvert(styles.textColor),
       fontSize: styles.fontSize,
       fontFamily: styles.fontFamily,
+      fontWeight: styles.fontWeight,
+      fontStyle: styles.fontStyle,
+      decoration: textDecoration,
     );
   }
 
+  TextDecoration get textDecoration {
+    List<String> fontTypes = styles.textFontTypes;
+    if (fontTypes.contains('underline'))
+      return TextDecoration.underline;
+
+    if (fontTypes.contains('strike'))
+      return TextDecoration.lineThrough;
+
+    return null;
+  }
   /// Function to add a new row
   /// Using the global key assigined to Editable widget
   /// Access the current state of Editable
