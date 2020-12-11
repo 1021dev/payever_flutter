@@ -52,6 +52,7 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
     fontFamily = styles.fontFamily;
     textColor = colorConvert(styles.textColor);
     fillColor =  colorConvert(styles.backgroundColor, emptyColor: true);
+    print('styles.backgroundColor: ${styles.backgroundColor}');
     // font types
     textFontTypes = convertTextFontTypes(styles.textFontTypes);
     if (!textFontTypes.contains('bold') && styles.fontWeight == FontWeight.bold)
@@ -373,7 +374,7 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
     Map<String, dynamic> sheets = state.pageDetail.stylesheets[selectedChildId];
     sheets['backgroundColor'] = newBgColor;
     sheets['backgroundImage'] = '';
-    widget.onUpdateStyles(sheets, true);
+    widget.onUpdateStyles(sheets);
   }
 
   void _updateGradientFillColor(ShopEditScreenState state, GradientModel model, {bool updateApi = true}) {
@@ -383,7 +384,7 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
     Map<String, dynamic> sheets = state.pageDetail.stylesheets[selectedChildId];
     sheets['backgroundColor'] = '';
     sheets['backgroundImage'] = 'linear-gradient(${model.angle.toInt()}deg, $color1, $color2)';
-    widget.onUpdateStyles(sheets, updateApi);
+    widget.onUpdateStyles(sheets);
   }
 
   void _updateImageFill(ShopEditScreenState state, BackGroundModel backgroundModel) {
@@ -393,7 +394,7 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
     sheets['backgroundPosition'] =  backgroundModel.backgroundPosition;
     sheets['backgroundRepeat'] =  backgroundModel.backgroundRepeat;
     sheets['backgroundSize'] =  backgroundModel.backgroundSize;
-    widget.onUpdateStyles(sheets, true);
+    widget.onUpdateStyles(sheets);
   }
   // endregion
 

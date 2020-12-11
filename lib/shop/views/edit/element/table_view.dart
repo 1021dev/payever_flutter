@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/style_vew/table/editable.dart';
 import 'package:payever/theme.dart';
@@ -7,10 +6,13 @@ import 'package:payever/theme.dart';
 class TableView extends StatefulWidget {
   final Child child;
   final Map<String, dynamic> stylesheets;
+  final bool isEditState;
   final Function onUpdateStyles;
+
   const TableView(
       {this.child,
       this.stylesheets,
+      this.isEditState,
       this.onUpdateStyles});
 
   @override
@@ -21,7 +23,6 @@ class _TableViewState extends State<TableView> {
   List alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
       .map((e) => {'title' : e}).toList();
   TableStyles styles;
-
 
   final _editableKey = GlobalKey<EditableState>();
 
@@ -44,7 +45,6 @@ class _TableViewState extends State<TableView> {
 
     cellWidth = (tableWidth - 45) / styles.columnCount;
     cellHeight = (tableHeight - 40) / styles.rowCount;
-    String textVerticalAlign = styles.textVerticalAlign;
 
     return Editable(
       key: _editableKey,
@@ -65,15 +65,18 @@ class _TableViewState extends State<TableView> {
       /// Stripe
       zebraStripe: styles.alternatingRows,
       stripeColor2: Colors.grey[200],
-      /// Border
+      /// Background & Border
+      fillColor: styles.backgroundColor,
       outline: styles.outline,
       borderColor: Colors.blueGrey,
       /// Title & Caption
       title: styles.title, caption: styles.caption,
       /// Text Style
+      enableEdit: widget.isEditState,
       tdStyle: textStyle,
       tdAlignment: styles.getTextAlign(styles.textHorizontalAlign),
       tdVerticalAlignment: styles.getAlign(styles.textVerticalAlign),
+      textWrap: styles.textWrap,
       /// Grid Options
       horizontalLines: styles.horizontalLines,
       headerColumnLines: styles.headerColumnLines,

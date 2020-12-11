@@ -17,7 +17,7 @@ class Editable extends StatefulWidget {
       this.headerColumnColor, this.headerRowColor, this.footerRowColor,
       this.fillColor, this.borderColor = Colors.grey,
       this.trWidth = 50.0, this.trHeight = 50.0,
-      this.borderWidth = 0.5,
+      this.borderWidth = 1.0,
       this.thSize = 15,
 
       this.enableEdit,

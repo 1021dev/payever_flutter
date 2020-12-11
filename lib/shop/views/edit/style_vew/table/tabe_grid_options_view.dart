@@ -30,6 +30,7 @@ class _TableGridOptionsViewState extends State<TableGridOptionsView> {
   bool headerColumnLines;
   bool verticalLines;
   bool headerRowLines;
+  bool footerRowLines;
 
   @override
   void initState() {
@@ -41,7 +42,8 @@ class _TableGridOptionsViewState extends State<TableGridOptionsView> {
     headerColumnLines = styles.headerColumnLines;
     verticalLines = styles.verticalLines;
     headerRowLines = styles.headerRowLines;
-    
+    footerRowLines = styles.footerRowLines;
+
     super.initState();
   }
 
@@ -146,6 +148,7 @@ class _TableGridOptionsViewState extends State<TableGridOptionsView> {
           SizedBox(height: 10,),
           _itemWidget('Vertical Lines', verticalLines, (value) => verticalLines = value),
           _itemWidget('Header Row Lines', headerRowLines, (value) => headerRowLines = value),
+          _itemWidget('Footer Row Lines', footerRowLines, (value) => footerRowLines = value),
         ],
       ),
     );
@@ -180,6 +183,7 @@ class _TableGridOptionsViewState extends State<TableGridOptionsView> {
     sheets['headerColumnLines'] = headerColumnLines;
     sheets['verticalLines'] = verticalLines;
     sheets['headerRowLines'] = headerRowLines;
+    sheets['footerRowLines'] = footerRowLines;
     widget.onUpdateStyles(sheets);
   }
 }

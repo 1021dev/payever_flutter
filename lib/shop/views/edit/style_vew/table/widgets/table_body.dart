@@ -133,7 +133,9 @@ class _RowBuilderState extends State<RowBuilder> {
   }
 
   Color get backgroundColor {
-    if (widget.fillColor != null) return colorConvert(widget.fillColor);
+    if (widget.fillColor != null && widget.fillColor.isNotEmpty)
+      return colorConvert(widget.fillColor);
+
     Color bgColor;
     if (isHeader) {
       bgColor = widget.headerRowColor;
@@ -161,27 +163,35 @@ class _RowBuilderState extends State<RowBuilder> {
   Border get border {
     BorderSide borderSide = BorderSide(
         color: widget._borderColor, width: widget._borderWidth);
+    BorderSide top = BorderSide.none;
+    BorderSide bottom = BorderSide.none;
+    BorderSide right = BorderSide.none;
+    BorderSide left = BorderSide.none;
+
+    if (isTop && widget.outline)   top = borderSide;
+    if (isLeft && widget.outline)  left = borderSide;
+    if (isRight && widget.outline)   right = borderSide;
+    if (isBottom && widget.outline)  bottom = borderSide;
+
     if (isHeader) {
-      if (widget.headerRowLines)
-        return Border(right: borderSide);
+      if (widget.headerRowLines) right = borderSide;
+      if (widget.headerRowLines && widget.rowIndex == widget.headerRows -1 )
+        bottom = borderSide;
     } else if (isFooter) {
-      if (widget.footerRowLines)
-        return Border(right: borderSide);
+      if (widget.footerRowLines) right = borderSide;
     } else if (isHeaderLeft) {
-      if (widget.headerColumnLines)
-        return Border(bottom:borderSide);
+      if (widget.headerColumnLines) bottom = borderSide;
+      if (widget.headerColumnLines && widget.column == widget.headerColumns -1)
+        right = borderSide;
     } else {
-      BorderSide bottom = widget.verticalLines ? borderSide : BorderSide.none;
-      BorderSide right = widget.horizontalLines ? borderSide : BorderSide.none;
-      if (isBottom)
-        bottom = widget.outline ? borderSide : BorderSide.none;
-      if (isRight)
-        right = widget.outline ? borderSide : BorderSide.none;
-      return Border(bottom: bottom, right: right);
+      if (widget.verticalLines) right = borderSide;
+      if (widget.horizontalLines) bottom = borderSide;
+      if (widget.footerRowLines && widget.rowIndex == widget.rowCount - widget.footerRows -1)
+        bottom = borderSide;
     }
-    return null;
+    return Border(bottom: bottom, right: right, top: top, left: left);
   }
-  
+
   bool get isHeader {
     return widget.rowIndex < widget.headerRows;
   }
@@ -194,6 +204,14 @@ class _RowBuilderState extends State<RowBuilder> {
     return widget.rowIndex >= widget.rowCount - widget.footerRows;
   }
 
+  bool get isTop {
+    return widget.rowIndex == 0;
+  }
+
+  bool get isLeft {
+    return widget.column == 0;
+  }
+
   bool get isBottom {
     return widget.rowIndex == widget.rowCount - 1;
   }
@@ -201,4 +219,5 @@ class _RowBuilderState extends State<RowBuilder> {
   bool get isRight {
     return widget.column == widget.columnCount -1;
   }
+
 }

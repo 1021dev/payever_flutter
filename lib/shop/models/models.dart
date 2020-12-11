@@ -1377,7 +1377,6 @@ class ShopObject {
         }
 
         return {
-          'backgroundColor': '#ffffff',
           'height': 300,
           'width': null,
           'headerColumnColor': headerColumnColor,
