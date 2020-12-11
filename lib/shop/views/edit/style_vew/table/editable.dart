@@ -1,50 +1,11 @@
-// Copyright 2020 Godwin Asuquo. All rights reserved.
-//
-// Use of this source code is governed by a MIT license that can be
-// found in the LICENSE file.
-
 library editable;
 
 import 'package:flutter/material.dart';
-import 'package:payever/shop/views/edit/style_vew/table/widgets/table_left_index.dart';
 import 'commons/helpers.dart';
 import 'widgets/table_body.dart';
 import 'widgets/table_header.dart';
 
 class Editable extends StatefulWidget {
-  /// Builds an editable table using predefined row and column counts
-  /// Or using a row and header data set provided
-  ///
-  /// if no data is provided for [row] and [column],
-  /// [rowCount] and [columnCount] properties must be set
-  /// this will generate an empty table
-  ///
-  /// it is useful for rendering data from an API or to create a spreadsheet-like
-  /// data table
-  ///
-  /// example:
-  ///
-  /// ```dart
-  ///  Widget build(BuildContext context) {
-  ///   return Scaffold(
-  ///     body: Column(
-  ///       children: <Widget>[
-  ///           Expanded(
-  ///           flex: 1,
-  ///           child: EdiTable(
-  ///               showCreateButton: true,
-  ///               tdStyle: TextStyle(fontSize: 20),
-  ///               showSaveIcon: false,
-  ///               borderColor: Colors.lightBlue,
-  ///               columnCount: 4,
-  ///               rowCount: 8
-  ///              ),
-  ///           ).
-  ///         ]
-  ///       ),
-  ///   );
-  /// }
-  /// ```
   Editable(
       {Key key,
       this.columns, this.rows,
@@ -55,30 +16,13 @@ class Editable extends StatefulWidget {
       this.onRowSaved,
       this.headerColumnColor, this.headerRowColor, this.footerRowColor,
       this.borderColor = Colors.grey,
-      this.tdPaddingLeft = 8.0,
-      this.tdPaddingTop = 0.0,
-      this.tdPaddingRight = 0.0,
-      this.tdPaddingBottom = 10.0,
-      this.thPaddingLeft = 10.0,
-      this.thPaddingTop = 0.0,
-      this.thPaddingRight = 0.0,
-      this.thPaddingBottom = 3.0,
       this.trWidth = 50.0, this.trHeight = 50.0,
       this.borderWidth = 0.5,
       this.thWeight = FontWeight.w600,
       this.thSize = 15,
-      this.showSaveIcon = false,
-      this.saveIcon = Icons.save,
-      this.saveIconColor = Colors.black12,
-      this.saveIconSize = 18,
       this.tdAlignment = TextAlign.start,
+      this.tdVerticalAlignment,
       this.tdStyle,
-      this.showCreateButton = false,
-      this.createButtonAlign = CrossAxisAlignment.start,
-      this.createButtonIcon,
-      this.createButtonColor,
-      this.createButtonShape,
-      this.createButtonLabel,
       this.stripeColor1 = Colors.white,
       this.stripeColor2 = Colors.black12,
       this.zebraStripe = false,
@@ -90,57 +34,10 @@ class Editable extends StatefulWidget {
       })
       : super(key: key);
 
-  /// A data set to create headers
-  ///
-  /// Can be null if blank columns are needed, else:
-  /// Must be array of objects
-  /// with the following keys: [title], [widthFactor] and [key]
-  ///
-  /// example:
-  /// ```dart
-  /// List cols = [
-  ///   {"title":'Name', 'widthFactor': 0.1, 'key':'name'},
-  ///   {"title":'Date', 'widthFactor': 0.2, 'key':'date'},
-  ///   {"title":'Month', 'widthFactor': 0.1, 'key':'month'},
-  ///   {"title":'Status', 'widthFactor': 0.1, 'key':'status'},
-  /// ];
-  /// ```
-  /// [title] is the column heading
-  ///
-  /// [widthFactor] a custom size ratio of each column width, if not provided, defaults to  [columnRatio = 0.20]
-  /// ```dart
-  /// 'widthFactor': 0.1 //gives 10% of screen size to the column
-  /// 'widthFactor': 0.2 //gives 20% of screen size to the column
-  /// ```
-  ///
-  /// [key] an identifyer preferably a short string
   final List columns;
-
-  /// A data set to create rows
-  ///
-  /// Can be null if empty rows are needed. else,
-  /// Must be array of objects
-  /// with keys matching [key] provided in the column array
-  ///
-  /// example:
-  /// ```dart
-  ///List rows = [
-  ///          {"name": 'James Joe', "date":'23/09/2020',"month":'June',"status":'completed'},
-  ///          {"name": 'Daniel Paul', "date":'12/4/2020',"month":'March',"status":'new'},
-  ///        ];
-  /// ```
-  /// each objects DO NOT have to be positioned in same order as its column
-
   final List rows;
 
-  /// Interger value of number of rows to be generated:
-  ///
-  /// Optional if row data is provided
   final int rowCount;
-
-  /// Interger value of number of columns to be generated:
-  ///
-  /// Optional if column data is provided
   final int columnCount;
 
   /// aspect ration of each column,
@@ -159,35 +56,11 @@ class Editable extends StatefulWidget {
   /// width of table borders
   final double borderWidth;
 
-  /// Table data cell padding left
-  final double tdPaddingLeft;
-
-  /// Table data cell padding top
-  final double tdPaddingTop;
-
-  /// Table data cell padding right
-  final double tdPaddingRight;
-
-  /// Table data cell padding bottom
-  final double tdPaddingBottom;
-
   /// Aligns the table data
   final TextAlign tdAlignment;
-
+  final Alignment tdVerticalAlignment;
   /// Style the table data
   final TextStyle tdStyle;
-
-  /// Table header cell padding left
-  final double thPaddingLeft;
-
-  /// Table header cell padding top
-  final double thPaddingTop;
-
-  /// Table header cell padding right
-  final double thPaddingRight;
-
-  /// Table header cell padding bottom
-  final double thPaddingBottom;
 
   final double trWidth;
   /// Table Row Height
@@ -200,52 +73,7 @@ class Editable extends StatefulWidget {
   /// Table headers fontSize
   final double thSize;
 
-  /// Toogles the save button,
-  /// if [true] displays an icon to save rows,
-  /// adds an addition column to the right
-  final bool showSaveIcon;
-
-  /// Icon for to save row data
-  /// example:
-  ///
-  /// ```dart
-  /// saveIcon : Icons.add
-  /// ````
-  final IconData saveIcon;
-
-  /// Color for the save Icon
-  final Color saveIconColor;
-
-  /// Size for the saveIcon
-  final double saveIconSize;
-
-  /// displays a button that adds a new row onPressed
-  final bool showCreateButton;
-
-  /// Aligns the button for adding new rows
-  final CrossAxisAlignment createButtonAlign;
-
-  /// Icon displayed in the create new row button
-  final Icon createButtonIcon;
-
-  /// Color for the create new row button
-  final Color createButtonColor;
-
-  /// border shape of the create new row button
-  ///
-  /// ```dart
-  /// createButtonShape: RoundedRectangleBorder(
-  ///   borderRadius: BorderRadius.circular(8)
-  /// )
-  /// ```
-  final BoxShape createButtonShape;
-
-  /// Label for the create new row button
-  final Widget createButtonLabel;
-
-  /// The first row alternate color, if stripe is set to true
   final Color stripeColor1;
-
   /// The Second row alternate color, if stripe is set to true
   final Color stripeColor2;
 
@@ -347,7 +175,7 @@ class EditableState extends State<Editable> {
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child:
-            Column(crossAxisAlignment: widget.createButtonAlign, children: [
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             abcHeader(),
             if (widget.title.isNotEmpty) titleCaptionWidget(true),
             tableBody(),
@@ -360,7 +188,7 @@ class EditableState extends State<Editable> {
 
   Widget abcHeader() {
     return Container(
-      margin: EdgeInsets.only(left: 25, bottom: widget.thPaddingBottom),
+      margin: EdgeInsets.only(left: 25, bottom: 3),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey, width: 0.5),
         borderRadius: BorderRadius.circular(4),
@@ -417,10 +245,6 @@ class EditableState extends State<Editable> {
               ? columns[index]['widthFactor'].toDouble()
               : widget.columnRatio,
           trWidth: widget.trWidth,
-          thPaddingLeft: widget.thPaddingLeft,
-          thPaddingTop: widget.thPaddingTop,
-          thPaddingBottom: widget.thPaddingBottom,
-          thPaddingRight: widget.thPaddingRight,
           headers: columns,
           thWeight: widget.thWeight,
           thSize: widget.thSize,
@@ -458,11 +282,8 @@ class EditableState extends State<Editable> {
             borderColor: widget.borderColor,
             borderWidth: widget.borderWidth,
             cellData: list[ckeys[rowIndex - 1]],
-            tdPaddingLeft: widget.tdPaddingLeft,
-            tdPaddingTop: widget.tdPaddingTop,
-            tdPaddingBottom: widget.tdPaddingBottom,
-            tdPaddingRight: widget.tdPaddingRight,
             tdAlignment: widget.tdAlignment,
+            tdVerticalAlignment: widget.tdVerticalAlignment,
             tdStyle: widget.tdStyle,
             onSubmitted: widget.onSubmitted,
             widthRatio: cwidths[rowIndex - 1].toDouble(),

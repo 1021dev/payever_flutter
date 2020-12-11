@@ -43,6 +43,7 @@ class _TableViewState extends State<TableView> {
 
     cellWidth = (tableWidth - 45) / styles.columnCount;
     cellHeight = (tableHeight - 40) / styles.rowCount;
+    String textVerticalAlign = styles.textVerticalAlign;
 
     return Editable(
       key: _editableKey,
@@ -70,6 +71,8 @@ class _TableViewState extends State<TableView> {
       title: styles.title, caption: styles.caption,
       /// Text Style
       tdStyle: textStyle,
+      tdAlignment: styles.getTextAlign(styles.textHorizontalAlign),
+      tdVerticalAlignment: styles.getAlign(styles.textVerticalAlign),
       /// Grid Options
       horizontalLines: styles.horizontalLines,
       headerColumnLines: styles.headerColumnLines,

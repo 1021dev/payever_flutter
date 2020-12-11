@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:payever/theme.dart';
 
 class RowBuilder extends StatefulWidget {
   ///Builds row elements for the table
@@ -7,6 +6,7 @@ class RowBuilder extends StatefulWidget {
   const RowBuilder({
     Key key,
     @required this.tdAlignment,
+    @required this.tdVerticalAlignment,
     @required this.tdStyle,
     @required this.trWidth,
     @required this.trHeight,
@@ -21,10 +21,6 @@ class RowBuilder extends StatefulWidget {
     @required this.columnCount,
     @required this.rowIndex,
     @required this.col,
-    @required this.tdPaddingLeft,
-    @required this.tdPaddingTop,
-    @required this.tdPaddingBottom,
-    @required this.tdPaddingRight,
     @required this.onSubmitted,
     @required this.onChanged,
     @required this.widthRatio,
@@ -54,7 +50,9 @@ class RowBuilder extends StatefulWidget {
   final double _borderWidth;
   final cellData;
   final double widthRatio;
+  /// Text Style
   final TextAlign tdAlignment;
+  final Alignment tdVerticalAlignment;
   final TextStyle tdStyle;
   /// Table RowCount
   final int rowCount;
@@ -62,10 +60,6 @@ class RowBuilder extends StatefulWidget {
   final int rowIndex; /// row Index
   final int column;
   final col;
-  final double tdPaddingLeft;
-  final double tdPaddingTop;
-  final double tdPaddingBottom;
-  final double tdPaddingRight;
   final Color stripeColor1;
   final Color stripeColor2;
   final bool zebraStripe;
@@ -99,6 +93,7 @@ class _RowBuilderState extends State<RowBuilder> {
       child: Container(
         height: widget.trHeight,
         width: widget.trWidth,
+        alignment: widget.tdVerticalAlignment,
         decoration: BoxDecoration(
             color: backgroundColor,
             border: border),
@@ -111,13 +106,10 @@ class _RowBuilderState extends State<RowBuilder> {
           textAlignVertical: TextAlignVertical.center,
           // enabled: false,
           decoration: InputDecoration(
+              isDense: true,
               filled: widget.zebraStripe,
               fillColor: backgroundColor,
-              contentPadding: EdgeInsets.only(
-                  left: widget.tdPaddingLeft,
-                  right: widget.tdPaddingRight,
-                  top: widget.tdPaddingTop,
-                  bottom: widget.tdPaddingBottom),
+              contentPadding: EdgeInsets.zero,
               border: InputBorder.none),
         ),
       ),

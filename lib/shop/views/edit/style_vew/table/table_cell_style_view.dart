@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -6,10 +5,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
-import 'package:payever/shop/views/edit/style_vew/font_family_view.dart';
-import 'package:payever/shop/views/edit/style_vew/paragraph_view.dart';
 import 'package:payever/shop/views/edit/style_vew/table/font_type.dart';
-import 'package:payever/shop/views/edit/style_vew/text/text_options_view.dart';
 import '../../../../../theme.dart';
 import '../fill_color_view.dart';
 import '../fill_view.dart';
@@ -39,8 +35,8 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
   List<TextFontType> fontTypes = [];
   List<Paragraph> paragraphs = [];
 
-  TextAlign textAlign;
-  TextVAlign vAlign;
+  TextAlign textHAlign;
+  TextVAlign textVAlign;
   BulletList bulletList;
 
   String selectedChildId;
@@ -59,9 +55,9 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
     // font types
     fontTypes = styles.getTextFonts(styles.textFonts);
     // HAlign
-    textAlign = styles.getTextAlign(styles.textHorizontalAlign);
+    textHAlign = styles.getTextAlign(styles.textHorizontalAlign);
     // vAlign = styles.getAlign(styles.textVerticalAlign);
-    vAlign = TextVAlign.center;
+    textVAlign = TextVAlign.center;
     super.initState();
   }
 
@@ -80,7 +76,7 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
               _fontSize(state),
               _textColor(state),
               _textHorizontalAlign(state),
-              _textVerticalAlign,
+              _textVerticalAlign(state),
               _wrapText,
               FillColorView(
                 pickColor: fillColor,
@@ -158,11 +154,11 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
         children: [
           Expanded(
               child: InkWell(
-                  onTap: () => _updateTextAlign(state, TextAlign.left, 'left'),
+                  onTap: () => _updateTextHorizontalAlign(state, TextAlign.left, 'left'),
                   child: Container(
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: textAlign != TextAlign.left
+                        color: textHAlign != TextAlign.left
                             ? Color.fromRGBO(51, 48, 53, 1)
                             : Color.fromRGBO(0, 135, 255, 1),
                         borderRadius: BorderRadius.only(
@@ -175,10 +171,10 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
           ),
           Expanded(
               child: InkWell(
-                  onTap: () => _updateTextAlign(state, TextAlign.center, 'center'),
+                  onTap: () => _updateTextHorizontalAlign(state, TextAlign.center, 'center'),
                   child: Container(
                       alignment: Alignment.center,
-                      color: textAlign != TextAlign.center
+                      color: textHAlign != TextAlign.center
                           ? Color.fromRGBO(51, 48, 53, 1)
                           : Color.fromRGBO(0, 135, 255, 1),
                       child: SvgPicture.asset('assets/images/align-center.svg')))),
@@ -187,10 +183,10 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
           ),
           Expanded(
               child: InkWell(
-                  onTap: () => _updateTextAlign(state, TextAlign.right, 'right'),
+                  onTap: () => _updateTextHorizontalAlign(state, TextAlign.right, 'right'),
                   child: Container(
                       alignment: Alignment.center,
-                      color: textAlign != TextAlign.right
+                      color: textHAlign != TextAlign.right
                           ? Color.fromRGBO(51, 48, 53, 1)
                           : Color.fromRGBO(0, 135, 255, 1),
                       child: SvgPicture.asset('assets/images/align-right.svg')))),
@@ -199,11 +195,11 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
           ),
           Expanded(
               child: InkWell(
-                  onTap: () => _updateTextAlign(state, TextAlign.justify, 'justify'),
+                  onTap: () => _updateTextHorizontalAlign(state, TextAlign.justify, 'justify'),
                   child: Container(
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: textAlign != TextAlign.justify
+                        color: textHAlign != TextAlign.justify
                             ? Color.fromRGBO(51, 48, 53, 1)
                             : Color.fromRGBO(0, 135, 255, 1),
                         borderRadius: BorderRadius.only(
@@ -216,7 +212,7 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
     );
   }
 
-  get _textVerticalAlign {
+  Widget _textVerticalAlign(ShopEditScreenState state) {
     return Container(
       margin: const EdgeInsets.only(top: 3.0),
       height: 50,
@@ -224,15 +220,11 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
         children: [
           Expanded(
               child: InkWell(
-                  onTap: () {
-                    setState(() {
-                      vAlign = TextVAlign.top;
-                    });
-                  },
+                  onTap: () => _updateTextVerticalAlign(state, TextVAlign.top, 'top'),
                   child: Container(
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: vAlign != TextVAlign.top
+                        color: textVAlign != TextVAlign.top
                             ? Color.fromRGBO(51, 48, 53, 1)
                             : Color.fromRGBO(0, 135, 255, 1),
                         borderRadius: BorderRadius.only(
@@ -245,14 +237,10 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
           ),
           Expanded(
               child: InkWell(
-                  onTap: () {
-                    setState(() {
-                      vAlign = TextVAlign.center;
-                    });
-                  },
+                  onTap: () => _updateTextVerticalAlign(state, TextVAlign.center, 'center'),
                   child: Container(
                       alignment: Alignment.center,
-                      color: vAlign != TextVAlign.center
+                      color: textVAlign != TextVAlign.center
                           ? Color.fromRGBO(51, 48, 53, 1)
                           : Color.fromRGBO(0, 135, 255, 1),
                       child: SvgPicture.asset('assets/images/align-v-center.svg')))),
@@ -261,15 +249,11 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
           ),
           Expanded(
               child: InkWell(
-                  onTap: () {
-                    setState(() {
-                      vAlign = TextVAlign.bottom;
-                    });
-                  },
+                  onTap: () => _updateTextVerticalAlign(state, TextVAlign.bottom, 'bottom'),
                   child: Container(
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: vAlign != TextVAlign.bottom
+                        color: textVAlign != TextVAlign.bottom
                             ? Color.fromRGBO(51, 48, 53, 1)
                             : Color.fromRGBO(0, 135, 255, 1),
                         borderRadius: BorderRadius.only(
@@ -323,7 +307,6 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
     );
   }
 
-
   void _updateFontType(ShopEditScreenState state, TextFontType fontType) {
     if (fontTypes.contains(fontType)) {
       fontTypes.remove(fontType);
@@ -341,32 +324,20 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
     // _updateTextProperty(state, htmlStr);
   }
 
-  void _updateTextAlign(ShopEditScreenState state, TextAlign tAlign, String align) {
-    textAlign = tAlign;
-    // String htmlStr = styles.encodeHtmlString(htmlText, textAlign: align);
-    // _updateTextProperty(state, htmlStr);
+  void _updateTextHorizontalAlign(ShopEditScreenState state, TextAlign _textHorizontalAlign, String align) {
+    textHAlign = _textHorizontalAlign;
+    Map<String, dynamic> sheets =
+    state.pageDetail.stylesheets[selectedChildId];
+    sheets['textHorizontalAlign'] = align;
+    widget.onUpdateStyles(sheets);
   }
-
-  void _updateTextSize(ShopEditScreenState state) {
-    // String htmlStr = styles.encodeHtmlString(htmlText, fontSize: fontSize);
-    // _updateTextProperty(state, htmlStr);
-  }
-
-  void _updateTextProperty(ShopEditScreenState state, String newHtmlText) {
-    Map<String, dynamic> sheets = state.pageDetail.stylesheets[selectedChildId];
-    Map<String, dynamic> data = {'text': newHtmlText, 'sync': false};
-    List<Map<String, dynamic>> effects = styles.getUpdateDataPayload(
-        state.selectedSectionId,
-        selectedChildId,
-        sheets,
-        data,
-        'text',
-        state.pageDetail.templateId);
-    print('payload: $effects');
-    setState(() {
-    });
-    widget.screenBloc.add(UpdateSectionEvent(
-        sectionId: state.selectedSectionId, effects: effects));
+  
+  void _updateTextVerticalAlign(ShopEditScreenState state, TextVAlign _textVerticalAlign, String align) {
+    textVAlign = _textVerticalAlign;
+    Map<String, dynamic> sheets =
+    state.pageDetail.stylesheets[selectedChildId];
+    sheets['textVerticalAlign'] = align;
+    widget.onUpdateStyles(sheets);
   }
   // endregion
 
