@@ -6,6 +6,7 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/style_vew/sub_view/font_type.dart';
+import 'package:payever/shop/views/edit/style_vew/table/cell_border.dart';
 import 'package:payever/shop/views/edit/style_vew/table/font_family.dart';
 import '../../../../../theme.dart';
 import '../fill_color_view.dart';
@@ -46,13 +47,15 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
   void initState() {
     ShopEditScreenState state = widget.screenBloc.state;
     selectedChildId = state.selectedChild.id;
-    styles = TableStyles.fromJson(state.pageDetail.stylesheets[selectedChildId]);
+    super.initState();
+  }
 
+  _initialize () {
+    styles = TableStyles.fromJson(widget.screenBloc.state.pageDetail.stylesheets[selectedChildId]);
     fontSize = styles.fontSize;
     fontFamily = styles.fontFamily;
     textColor = colorConvert(styles.textColor);
     fillColor =  colorConvert(styles.backgroundColor, emptyColor: true);
-    print('styles.backgroundColor: ${styles.backgroundColor}');
     // font types
     textFontTypes = convertTextFontTypes(styles.textFontTypes);
     if (!textFontTypes.contains('bold') && styles.fontWeight == FontWeight.bold)
@@ -65,11 +68,11 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
     textVAlign = convertTextVAlign(styles.textVerticalAlign);
 
     textWrap = styles.textWrap;
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    _initialize();
     return _body(widget.screenBloc.state);
   }
 
@@ -331,18 +334,25 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
   }
   
   Widget _cellBorder(ShopEditScreenState state) {
-    return Container(
-      height: 60,
-      child: Row(
-        children: [
-          Text(
-            'Cell Border',
-            style: TextStyle(color: Colors.white, fontSize: 15),
-          ),
-          Spacer(),
-          Icon(Icons.grid_view, color: Colors.blue,),
-          Icon(Icons.arrow_forward_ios, color: Colors.grey,),
-        ],
+    return InkWell(
+      onTap: () {
+        Widget subview = CellBorder(widget.screenBloc, onClose: widget.onClose,);
+        navigateSubView(subview, context);
+      },
+      child: Container(
+        height: 60,
+        child: Row(
+          children: [
+            Text(
+              'Cell Border',
+              style: TextStyle(color: Colors.white, fontSize: 15),
+            ),
+            Spacer(),
+            SvgPicture.asset('assets/images/border-all.svg', color: Colors.blue,),
+            SizedBox(width: 10,),
+            Icon(Icons.arrow_forward_ios, color: Colors.grey,),
+          ],
+        ),
       ),
     );
   }

@@ -113,11 +113,12 @@ class _RowBuilderState extends State<RowBuilder> {
         width: widget.trWidth,
         alignment: widget.tdVerticalAlignment,
         decoration: BoxDecoration(
-            // color: backgroundColor,
+            color: backgroundColor,
             border: border),
         child: Stack(
           children: [
-            BackgroundView(styles: widget.baseStyles,),
+            if (hasBackground)
+              BackgroundView(styles: widget.baseStyles,),
             TextFormField(
               textAlign: widget.tdAlignment,
               style: widget.tdStyle,
@@ -139,6 +140,11 @@ class _RowBuilderState extends State<RowBuilder> {
         ),
       ),
     );
+  }
+
+  bool get hasBackground {
+    BaseStyles styles = widget.baseStyles;
+    return (styles.backgroundColor != null && styles.backgroundColor.isNotEmpty) || (styles.backgroundImage != null && styles.backgroundImage.isNotEmpty);
   }
 
   Color get backgroundColor {

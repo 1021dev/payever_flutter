@@ -96,7 +96,9 @@ class _FillColorViewState extends State<FillColorView> {
   }
 
   Widget getFillContainer() {
-    if (widget.colorType == ColorType.backGround)
+
+    if (widget.colorType == ColorType.backGround) {
+      print('widget.styles.backgroundImage: ${widget.styles.backgroundImage}');
       return Container(
         width: 100,
         height: 40,
@@ -115,6 +117,7 @@ class _FillColorViewState extends State<FillColorView> {
         )
             : Container(),
       );
+    }
 
     return Container(
       width: 100,
