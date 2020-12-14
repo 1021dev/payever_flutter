@@ -49,8 +49,13 @@ class _TextViewState extends State<TextView> {
     styles = getStyles();
     if (widget.child.data is Map) {
       Data data = Data.fromJson(widget.child.data);
-      if (data.text != null) htmlText = data.text;
-      // if (widget.child.data != null) print('Text Data:' + data.text);
+      if (data.text != null) {
+        if(data.text is String)
+          htmlText = data.text;
+        else if (data.text is Map) {
+          htmlText = data.text['english'];
+        }
+      }
     } else {
       return Container();
     }

@@ -304,7 +304,7 @@ class ShopEditScreenBloc
     yield state.copyWith(isLoading: true);
     Map<String, dynamic> body = {
       "query":
-          "{getProducts(\n        businessUuid: \"d0de55b4-5a2a-41a9-a0de-f38256f541ee\",\n        \n        pageNumber: 1,\n        paginationLimit: 100,\n      ) {\n        products {\n          images\n          _id\n          title\n          description\n          price\n          salePrice\n          currency\n          active\n          categories { id title }\n        }\n      }}"
+          "{getProducts(\n        businessUuid: \"${globalStateModel.currentBusiness.id}\",\n        \n        pageNumber: 1,\n        paginationLimit: 100,\n      ) {\n        products {\n          images\n          _id\n          title\n          description\n          price\n          salePrice\n          currency\n          active\n          categories { id title }\n        }\n      }}"
     };
 
     dynamic response =

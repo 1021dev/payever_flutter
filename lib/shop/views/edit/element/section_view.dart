@@ -54,6 +54,7 @@ class _SectionViewState extends State<SectionView> {
   final double limitSectionHeightChange = 20;
   Template template;
   Child section;
+  String currentBusinessId;
   ApiService api = ApiService();
   SectionStyles sectionStyles;
 
@@ -90,6 +91,7 @@ class _SectionViewState extends State<SectionView> {
   Widget build(BuildContext context) {
     sectionStyles = getSectionStyles(sectionId);
     widgetHeight = sectionStyles.height;
+    currentBusinessId = Provider.of<GlobalStateModel>(context, listen: false).currentBusiness.id;
     activeThemeId = Provider.of<GlobalStateModel>(context, listen: false)
         .activeTheme
         .themeId;
@@ -446,9 +448,10 @@ class _SectionViewState extends State<SectionView> {
         childView = ShopProductsView(
           child: child,
           stylesheets: stylesheets,
-          // contextSchemas: state.pageDetail?.contextId == null
-          //     ? null
-          //     : state.applicationModel.context,
+          currentBusinessId: currentBusinessId,
+          applicationContext: state.pageDetail?.contextId == null
+              ? null
+              : state.pageDetail.context,
         );
         break;
       case 'shop-product-details':

@@ -77,7 +77,9 @@ class _BackgroundViewState extends State<BackgroundView> {
     if (backgroundSize == '100% 100%') return BoxFit.fill;
     if (backgroundSize == 'cover') return BoxFit.cover;
     if (backgroundSize == 'contain') return BoxFit.contain;
-
+    try{
+      if (int.parse(backgroundSize.replaceAll('%', '')) > 100) return BoxFit.cover;
+    } catch(e) {}
     return BoxFit.contain;
   }
 

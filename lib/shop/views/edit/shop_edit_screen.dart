@@ -216,8 +216,17 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
   Widget getPreview(ShopEditScreenState state,
       ShopPage page, bool showName) {
     Widget templateItem;
-    if (state.pageDetail?.templateId == page.templateId && state.pageDetail.data.preview != null) {
-      String preview = state.pageDetail.data.preview[GlobalUtils.deviceType];
+    if (state.pageDetail?.templateId == page.templateId && state.pageDetail.data != null) {
+      String preview = '';
+      try{
+        if (state.pageDetail.data is String) {
+          preview = state.pageDetail.data;
+        } else if (state.pageDetail.data is Map) {
+          preview = state.pageDetail.data['preview'][GlobalUtils.deviceType];
+        }
+      }catch(e){}
+
+
       templateItem = CachedNetworkImage(
         imageUrl: preview,
         imageBuilder: (context, imageProvider) => Container(

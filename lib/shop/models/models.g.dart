@@ -335,9 +335,7 @@ PageDetail _$PageDetailFromJson(Map<String, dynamic> json) {
   return PageDetail()
     ..context = json['context'] as Map<String, dynamic>
     ..contextId = json['contextId'] as String
-    ..data = json['data'] == null
-        ? null
-        : PageDetailData.fromJson(json['data'] as Map<String, dynamic>)
+    ..data = json['data']
     ..id = json['id'] as String
     ..master = json['master']
     ..name = json['name'] as String
@@ -490,7 +488,7 @@ Map<String, dynamic> _$ContextSchemaToJson(ContextSchema instance) =>
 
 Data _$DataFromJson(Map<String, dynamic> json) {
   return Data()
-    ..text = json['text'] as String
+    ..text = json['text']
     ..name = json['name'] as String;
 }
 
@@ -501,7 +499,7 @@ Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
 
 ButtonData _$ButtonDataFromJson(Map<String, dynamic> json) {
   return ButtonData()
-    ..text = json['text'] as String
+    ..text = json['text']
     ..name = json['name'] as String
     ..action = json['action'] == null
         ? null
@@ -529,7 +527,7 @@ Map<String, dynamic> _$ButtonActionToJson(ButtonAction instance) =>
 
 ImageData _$ImageDataFromJson(Map<String, dynamic> json) {
   return ImageData()
-    ..text = json['text'] as String
+    ..text = json['text']
     ..name = json['name'] as String
     ..src = json['src'] as String
     ..description = json['description'] as String;
@@ -544,7 +542,7 @@ Map<String, dynamic> _$ImageDataToJson(ImageData instance) => <String, dynamic>{
 
 VideoData _$VideoDataFromJson(Map<String, dynamic> json) {
   return VideoData()
-    ..text = json['text'] as String
+    ..text = json['text']
     ..name = json['name'] as String
     ..autoplay = json['autoplay'] as bool ?? false
     ..controls = json['controls'] as bool ?? false
@@ -571,7 +569,7 @@ Map<String, dynamic> _$VideoDataToJson(VideoData instance) => <String, dynamic>{
 
 CategoryData _$CategoryDataFromJson(Map<String, dynamic> json) {
   return CategoryData()
-    ..text = json['text'] as String
+    ..text = json['text']
     ..name = json['name'] as String
     ..categoryIds = json['categoryIds'] as List ?? []
     ..hideProductName = json['hideProductName'] as bool ?? false

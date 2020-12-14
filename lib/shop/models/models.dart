@@ -266,7 +266,7 @@ class PageDetail {
 
   @JsonKey(name: 'context')         Map<String, dynamic> context;
   @JsonKey(name: 'contextId')       String contextId;
-  @JsonKey(name: 'data')            PageDetailData data;
+  @JsonKey(name: 'data')            dynamic data; // PageDetailData or String
   @JsonKey(name: 'id')              String id;
   @JsonKey(name: 'master')          dynamic master;
   @JsonKey(name: 'name')            String name;
@@ -400,7 +400,7 @@ class ContextSchema {
 class Data {
   Data();
 
-  @JsonKey(name: 'text')      String text;
+  @JsonKey(name: 'text')      dynamic text;
   @JsonKey(name: 'name')      String name;
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);

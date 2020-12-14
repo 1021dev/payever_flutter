@@ -1228,7 +1228,7 @@ class SizeAssist {
     List<Map<String, dynamic>> effects = [];
     Map<String, dynamic>payload = {selectedChildId: payloadData};
     Map<String, dynamic> effect = {'payload': payload};
-    effect['target'] = 'contextSchemas::$contextId';
+    effect['target'] = 'contextSchemas:$contextId';
     effect['type'] = 'context-schema:update';
     effects.add(effect);
     return effects;
