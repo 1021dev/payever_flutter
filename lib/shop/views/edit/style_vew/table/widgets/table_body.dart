@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/element/widget/background_view.dart';
 import 'package:payever/theme.dart';
 
 class RowBuilder extends StatefulWidget {
@@ -6,6 +8,7 @@ class RowBuilder extends StatefulWidget {
   /// its properties are not nullable
   const RowBuilder({
     Key key,
+    @required this.baseStyles,
     @required this.enableEdit,
     @required this.tdAlignment,
     @required this.tdVerticalAlignment,
@@ -51,6 +54,7 @@ class RowBuilder extends StatefulWidget {
         _borderWidth = borderWidth,
         super(key: key);
 
+  final BaseStyles baseStyles;
   /// Table row height
   final double trWidth;
   final double trHeight;
@@ -109,24 +113,29 @@ class _RowBuilderState extends State<RowBuilder> {
         width: widget.trWidth,
         alignment: widget.tdVerticalAlignment,
         decoration: BoxDecoration(
-            color: backgroundColor,
+            // color: backgroundColor,
             border: border),
-        child: TextFormField(
-          textAlign: widget.tdAlignment,
-          style: widget.tdStyle,
-          initialValue: widget.cellData.toString(),
-          onFieldSubmitted: widget.onSubmitted,
-          onChanged: widget.onChanged,
-          textAlignVertical: TextAlignVertical.center,
-          keyboardType: widget.textWrap ? TextInputType.multiline : null,
-          maxLines: widget.textWrap ? null : 1,
-          enabled: widget.enableEdit,
-          decoration: InputDecoration(
-              isDense: true,
-              filled: widget.zebraStripe,
-              fillColor: backgroundColor,
-              contentPadding: EdgeInsets.zero,
-              border: InputBorder.none),
+        child: Stack(
+          children: [
+            BackgroundView(styles: widget.baseStyles,),
+            TextFormField(
+              textAlign: widget.tdAlignment,
+              style: widget.tdStyle,
+              initialValue: widget.cellData.toString(),
+              onFieldSubmitted: widget.onSubmitted,
+              onChanged: widget.onChanged,
+              textAlignVertical: TextAlignVertical.center,
+              keyboardType: widget.textWrap ? TextInputType.multiline : null,
+              maxLines: widget.textWrap ? null : 1,
+              enabled: widget.enableEdit,
+              decoration: InputDecoration(
+                  isDense: true,
+                  filled: widget.zebraStripe,
+                  // fillColor: backgroundColor,
+                  contentPadding: EdgeInsets.zero,
+                  border: InputBorder.none),
+            ),
+          ],
         ),
       ),
     );

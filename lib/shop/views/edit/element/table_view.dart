@@ -48,6 +48,7 @@ class _TableViewState extends State<TableView> {
 
     return Editable(
       key: _editableKey,
+      baseStyles: styles,
       /// Table Row, Column Counts
       columns: alphabet.sublist(0, styles.columnCount),
       columnCount: styles.columnCount, rowCount: styles.rowCount,

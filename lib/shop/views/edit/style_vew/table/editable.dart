@@ -1,6 +1,7 @@
 library editable;
 
 import 'package:flutter/material.dart';
+import 'package:payever/shop/models/models.dart';
 import 'commons/helpers.dart';
 import 'widgets/table_body.dart';
 import 'widgets/table_header.dart';
@@ -8,6 +9,7 @@ import 'widgets/table_header.dart';
 class Editable extends StatefulWidget {
   Editable(
       {Key key,
+      this.baseStyles,
       this.columns, this.rows,
       this.columnCount = 0, this.rowCount = 0,
       this.tableWidth, this.tableHeight,
@@ -35,6 +37,8 @@ class Editable extends StatefulWidget {
       this.sheets, this.onUpdateStyles,
       })
       : super(key: key);
+
+  final BaseStyles baseStyles;
 
   final List columns;
   final List rows;
@@ -269,6 +273,7 @@ class EditableState extends State<Editable> {
           return rowIndex == 0
               ? leftIndexWidget(index)
               : RowBuilder(
+            baseStyles: widget.baseStyles,
             columnCount: widget.columnCount,
             rowCount: widget.rowCount,
             rowIndex: index,
