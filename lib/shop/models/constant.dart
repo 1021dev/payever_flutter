@@ -22,6 +22,18 @@ enum StyleType {
   format,
 }
 
+enum TableBorder {
+  outside,
+  inside,
+  all,
+  left,
+  vertical,
+  right,
+  top,
+  horizontal,
+  bottom
+}
+
 enum TextFontType {
   bold,
   italic,
@@ -146,18 +158,18 @@ Widget borderStyleWidget(String style) {
   switch (style) {
     case 'solid':
       return Container(
-        height: 4,
+        height: 3,
         color: Colors.white,
       );
     case 'dashed':
       return DottedLine(
-        lineThickness: 4,
+        lineThickness: 3,
         dashLength: 8,
-        dashGapLength: 4,
+        dashGapLength: 3,
         dashColor: Colors.white,
       );
     case 'dotted':
-      return DottedLine(dashColor: Colors.white, lineThickness: 4);
+      return DottedLine(dashColor: Colors.white, lineThickness: 3);
   }
   throw('Error: wrong border style');
 }

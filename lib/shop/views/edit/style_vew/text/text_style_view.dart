@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/style_vew/font_family_view.dart';
@@ -155,7 +156,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                   String newHtmlText = styles.encodeHtmlString(htmlText, fontSize: fontSize, fontTypes: fontTypes, textColor: textColor);
                   _updateTextProperty(state, newHtmlText);
                 },
-              ));
+              ), context);
             },
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
@@ -200,7 +201,7 @@ class _TextStyleViewState extends State<TextStyleView> {
                   _updateTextProperty(state, htmlStr);
                 },
                 onClose: widget.onClose,
-              ));
+              ), context);
               } ,
             child: Row(
               children: [
@@ -751,14 +752,4 @@ class _TextStyleViewState extends State<TextStyleView> {
         sectionId: state.selectedSectionId, effects: effects));
   }
   // endregion
-
-  void navigateSubView(Widget subview) {
-    showModalBottomSheet(
-        context: context,
-        barrierColor: Colors.transparent,
-        // isScrollControlled: true,
-        builder: (builder) {
-          return subview;
-        });
-  }
 }

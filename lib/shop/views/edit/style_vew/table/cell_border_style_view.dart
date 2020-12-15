@@ -2,29 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/views/edit/style_vew/sub_view/toolbar.dart';
 
-class BorderStyleView extends StatefulWidget {
+class CellBorderStyleView extends StatefulWidget {
   final String borderStyle;
-  final String title;
-  final String backTitle;
   final Function onChangeBorderStyle;
   final Function onClose;
   final bool hasNone;
-
-  const BorderStyleView(
-      {Key key,
-      @required this.borderStyle,
-      @required this.onChangeBorderStyle,
-      @required this.onClose,
-      @required this.title,
-      @required this.backTitle,
-      this.hasNone = false,})
+  const CellBorderStyleView(
+      {Key key, @required this.borderStyle, @required this.onChangeBorderStyle, this.hasNone = false, @required this.onClose})
       : super(key: key);
 
   @override
-  _BorderStyleViewState createState() => _BorderStyleViewState();
+  _CellBorderStyleViewState createState() => _CellBorderStyleViewState();
 }
 
-class _BorderStyleViewState extends State<BorderStyleView> {
+class _CellBorderStyleViewState extends State<CellBorderStyleView> {
   String borderStyle;
 
   @override
@@ -50,11 +41,7 @@ class _BorderStyleViewState extends State<BorderStyleView> {
             padding: EdgeInsets.only(top: 18),
             child: Column(
               children: [
-                Toolbar(
-                  backTitle: widget.backTitle,
-                  title: widget.title,
-                  onClose: widget.onClose,
-                ),
+                Toolbar(backTitle: 'Cell Border', title: 'Border Styles', onClose: widget.onClose,),
                 SizedBox(
                   height: 10,
                 ),

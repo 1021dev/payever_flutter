@@ -1144,7 +1144,8 @@ TableStyles _$TableStylesFromJson(Map<String, dynamic> json) {
     ..textHorizontalAlign = json['textHorizontalAlign'] as String ?? 'center'
     ..textVerticalAlign = json['textVerticalAlign'] as String ?? 'center'
     ..textWrap = json['textWrap'] as bool ?? true
-    ..backgroundColor = json['backgroundColor'] as String;
+    ..backgroundColor = json['backgroundColor'] as String
+    ..cellBorder = json['cellBorder'] as String ?? 'outside';
 }
 
 Map<String, dynamic> _$TableStylesToJson(TableStyles instance) =>
@@ -1226,6 +1227,7 @@ Map<String, dynamic> _$TableStylesToJson(TableStyles instance) =>
       'textVerticalAlign': instance.textVerticalAlign,
       'textWrap': instance.textWrap,
       'backgroundColor': instance.backgroundColor,
+      'cellBorder': instance.cellBorder,
     };
 
 ShopCartStyles _$ShopCartStylesFromJson(Map<String, dynamic> json) {

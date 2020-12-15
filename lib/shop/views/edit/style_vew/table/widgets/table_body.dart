@@ -50,6 +50,8 @@ class RowBuilder extends StatefulWidget {
     @required this.footerRowLines,
 
     @required this.outline,
+    this.tableBorder,
+    this.borderModel
   })  : _borderColor = borderColor,
         _borderWidth = borderWidth,
         super(key: key);
@@ -95,6 +97,9 @@ class RowBuilder extends StatefulWidget {
   final bool footerRowLines;
   /// Out Lines
   final bool outline;
+  /// Borders
+  final TableBorder tableBorder;
+  final BorderModel borderModel;
 
   @override
   _RowBuilderState createState() => _RowBuilderState();

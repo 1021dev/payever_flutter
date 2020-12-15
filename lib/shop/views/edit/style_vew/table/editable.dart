@@ -35,6 +35,7 @@ class Editable extends StatefulWidget {
       this.outline,
       this.title, this.caption,
       this.sheets, this.onUpdateStyles,
+      this.tableBorder, this.borderModel
       })
       : super(key: key);
 
@@ -115,6 +116,9 @@ class Editable extends StatefulWidget {
   final String caption;
   final Map<String, dynamic>sheets;
   final Function onUpdateStyles;
+  /// Borders
+  final TableBorder tableBorder;
+  final BorderModel borderModel;
 
   @override
   EditableState createState() => EditableState(
@@ -314,7 +318,8 @@ class EditableState extends State<Editable> {
             footerRowLines: widget.footerRowLines,
 
             outline: widget.outline,
-
+            tableBorder: widget.tableBorder,
+            borderModel: widget.borderModel,
             onChanged: (value) {
               ///checks if row has been edited previously
               var result = editedRows.indexWhere((element) {

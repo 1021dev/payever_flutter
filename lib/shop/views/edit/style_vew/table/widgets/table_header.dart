@@ -6,7 +6,6 @@ class THeader extends StatelessWidget {
       {Key key,
       @required this.trWidth,
       @required List headers,
-      @required FontWeight thWeight,
       @required double thSize,
       @required double widthRatio,
       @required int index})

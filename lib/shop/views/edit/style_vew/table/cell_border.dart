@@ -3,21 +3,26 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/style_vew/sub_view/border_style_view.dart';
 import 'package:payever/shop/views/edit/style_vew/sub_view/toolbar.dart';
+import 'package:payever/theme.dart';
+import '../fill_color_view.dart';
+import 'cell_border_style_view.dart';
 
 class CellBorder extends StatefulWidget {
 
   final ShopEditScreenBloc screenBloc;
-  final Function onUpdateColor;
+  final Function onUpdateStyles;
   final Function onClose;
   final Map<String, dynamic> stylesheets;
 
   const CellBorder(
-      this.screenBloc,
-      {this.onUpdateColor,
-        this.onClose,
-        this.stylesheets});
+      {@required this.screenBloc,
+      @required this.onUpdateStyles,
+      @required this.onClose,
+      @required this.stylesheets});
 
   @override
   _CellBorderState createState() => _CellBorderState();
@@ -30,13 +35,18 @@ class _CellBorderState extends State<CellBorder> {
   TableStyles styles;
   String selectedChildId;
   List<String>borderAssets = ['outside', 'inside', 'all', 'left', 'vertical', 'right', 'top', 'horizontal', 'bottom'];
+  String borderStyle;
+  double borderWidth;
+  Color borderColor;
 
   @override
   void initState() {
     ShopEditScreenState state = widget.screenBloc.state;
     selectedChildId = state.selectedChild.id;
     styles = TableStyles.fromJson(state.pageDetail.stylesheets[selectedChildId]);
-
+    borderWidth = styles.borderWidth;
+    borderColor = colorConvert(styles.borderColor);
+    borderStyle = borderWidth == 0 ? null : styles.borderStyle;
     super.initState();
   }
 
@@ -79,18 +89,18 @@ class _CellBorderState extends State<CellBorder> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            gridView,
+            _gridView,
             SizedBox(height: 5,),
-            annotationText,
-            borderStyle,
-            lineType,
+            _annotationText,
+            _borderStyle,
+            _lineType,
           ],
         ),
       ),
     );
   }
 
-  Widget get gridView {
+  Widget get _gridView {
     return GridView.count(
       padding: EdgeInsets.zero,
       shrinkWrap: true,
@@ -111,7 +121,7 @@ class _CellBorderState extends State<CellBorder> {
             child: Container(
               decoration: BoxDecoration(
                 color: Color.fromRGBO(46, 45, 50, 1),
-                borderRadius: borderRadius(index),
+                borderRadius: _borderRadius(index),
               ),
               padding: EdgeInsets.all(8),
               child: SvgPicture.asset(
@@ -123,7 +133,7 @@ class _CellBorderState extends State<CellBorder> {
     );
   }
 
-  BorderRadius borderRadius(int index) {
+  BorderRadius _borderRadius(int index) {
     switch(index) {
       case 0:
         return BorderRadius.only(topLeft: Radius.circular(8));
@@ -138,14 +148,22 @@ class _CellBorderState extends State<CellBorder> {
     }
   }
 
-  Widget get annotationText {
+  Widget get _annotationText {
     return Text('Tap a border to edit it. Touch and hod to select an additional border.', style: TextStyle(fontSize: 13, color: Colors.grey),);
   }
 
-  Widget get borderStyle {
+  Widget get _borderStyle {
     return InkWell(
       onTap: () {
-
+        navigateSubView(CellBorderStyleView(
+          borderStyle: borderStyle,
+          onClose: widget.onClose,
+          hasNone: true,
+          onChangeBorderStyle: (style) {
+            // borderModel.borderStyle = style;
+            // _updateBorderModel(true);
+          },
+        ), context);
       },
       child: Container(
         height: 60,
@@ -155,38 +173,138 @@ class _CellBorderState extends State<CellBorder> {
               'Border',
               style: TextStyle(color: Colors.white, fontSize: 15),
             ),
-            Spacer(),
-            Text(
-              'No Border',
-              style: TextStyle(color: Colors.blue, fontSize: 15),
+            SizedBox(
+              width: 16,
             ),
+            Expanded(
+                child: borderStyle != null
+                    ? borderStyleWidget(borderStyle)
+                    : Text(
+                        'No Border',
+                        style: TextStyle(color: Colors.blue, fontSize: 15),
+                        textAlign: TextAlign.end,
+                      )),
+            SizedBox(
+              width: 16,
+            ),
+            Icon(Icons.arrow_forward_ios),
           ],
         ),
       ),
     );
   }
 
-  Widget get lineType {
-    return InkWell(
-      onTap: () {
-
-      },
-      child: Container(
-        height: 60,
-        child: Row(
-          children: [
-            Text(
-              'Line Type',
-              style: TextStyle(color: Colors.white, fontSize: 15),
+  Widget get _lineType {
+    return Column(
+      children: [
+        InkWell(
+          onTap: () {
+            navigateSubView(BorderStyleView(
+              borderStyle: borderStyle,
+              title: 'Cell Border',
+              backTitle: 'Line Type',
+              onClose: widget.onClose,
+              hasNone: true,
+              onChangeBorderStyle: (style) {
+                Map<String, dynamic>sheets = widget.stylesheets;
+                sheets['borderStyle'] = style;
+                if (style == null) {
+                  sheets['borderWidth'] = 0;
+                } else {
+                  if (borderWidth == 0) {
+                    sheets['borderWidth'] = 1;
+                    sheets['borderColor'] = encodeColor(Colors.grey);
+                  }
+                }
+                _updateSheets(sheets);
+              },
+            ), context);
+          },
+          child: Container(
+            height: 50,
+            child:  Row(
+              children: [
+                Text(
+                  'Line',
+                  style: TextStyle(color: Colors.white, fontSize: 15),
+                ),
+                SizedBox(
+                  width: 16,
+                ),
+                Expanded(
+                    child: borderStyle != null
+                        ? borderStyleWidget(borderStyle)
+                        : Text(
+                      'None',
+                      style: TextStyle(color: Colors.blue, fontSize: 15),
+                      textAlign: TextAlign.end,
+                    )),
+                SizedBox(
+                  width: 16,
+                ),
+                Icon(Icons.arrow_forward_ios),
+              ],
             ),
-            Spacer(),
-            Text(
-              'None',
-              style: TextStyle(color: Colors.blue, fontSize: 15),
+          ),
+        ),
+        if (borderStyle != null)
+        Column(
+          children: [
+            Container(
+              height: 50,
+              child: Row(
+                children: [
+                  Container(
+                    width: 50,
+                    child: Text(
+                      'Width',
+                      style: TextStyle(color: Colors.white, fontSize: 15),
+                    ),
+                  ),
+                  Expanded(
+                    child: Slider(
+                      value: borderWidth > 10 ? 10 : borderWidth,
+                      min: 0,
+                      max: 10,
+                      onChanged: (double value) {
+                        borderWidth = value;
+                        _updateBorderModel();
+                      },
+                      onChangeEnd: (double value) {
+                        borderWidth = value;
+                        _updateBorderModel();
+                      },
+                    ),
+                  ),
+                  Text(
+                    '${borderWidth.round()} px',
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ],
+              ),
+            ),
+            FillColorView(
+              pickColor: borderColor,
+              styles: styles,
+              colorType: ColorType.border,
+              onUpdateColor: (Color color) {
+                String hexColor = encodeColor(color);
+                Map<String, dynamic>sheets = widget.stylesheets;
+                sheets['borderColor'] = hexColor;
+                _updateSheets(sheets);
+              },
             ),
           ],
         ),
-      ),
+      ],
     );
+  }
+
+  _updateBorderModel() {
+    // widget.onUpdateBorderModel(borderModel,);
+  }
+
+  _updateSheets(Map<String, dynamic>sheets) {
+    widget.onUpdateStyles(sheets);
   }
 }

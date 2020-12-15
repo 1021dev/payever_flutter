@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/style_vew/sub_view/border_style_view.dart';
@@ -137,12 +138,14 @@ class _BorderViewState extends State<BorderView> {
             onTap: () {
               navigateSubView(BorderStyleView(
                 borderStyle: borderModel.borderStyle,
+                title: 'Border Styles',
+                backTitle: 'Style',
                 onClose: widget.onClose,
                 onChangeBorderStyle: (style) {
                   borderModel.borderStyle = style;
                   _updateBorderModel(true);
                 },
-              ));
+              ), context);
             },
             child: Container(
               height: 60,
@@ -215,13 +218,4 @@ class _BorderViewState extends State<BorderView> {
     widget.onUpdateBorderModel(borderModel, updateApi);
   }
 
-  void navigateSubView(Widget subview) {
-    showModalBottomSheet(
-        context: context,
-        barrierColor: Colors.transparent,
-        // isScrollControlled: true,
-        builder: (builder) {
-          return subview;
-        });
-  }
 }

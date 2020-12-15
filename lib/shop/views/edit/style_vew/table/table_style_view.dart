@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
-import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/style_vew/table/font_size.dart';
 import 'package:payever/shop/views/edit/style_vew/table/tabe_grid_options_view.dart';
@@ -146,7 +145,7 @@ class _TableStyleViewState extends State<TableStyleView> {
           onUpdateStyles: (sheets) => _updateStyles(sheets),
           onClose: widget.onClose,
         );
-        navigateSubView(subview);
+        navigateSubView(subview, context);
       },
       child: Container(
         height: 50,
@@ -356,7 +355,7 @@ class _TableStyleViewState extends State<TableStyleView> {
           onUpdateStyles: (style) => _updateStyles(style),
           onClose: widget.onClose,
         );
-        navigateSubView(subview);
+        navigateSubView(subview, context);
       },
       child: Container(
         height: 50,
@@ -404,16 +403,6 @@ class _TableStyleViewState extends State<TableStyleView> {
       height: 0,
       thickness: 0.5,
     );
-  }
-
-  void navigateSubView(Widget subview) {
-    showModalBottomSheet(
-        context: context,
-        barrierColor: Colors.transparent,
-        // isScrollControlled: true,
-        builder: (builder) {
-          return subview;
-        });
   }
 
   void _updateTextSize() {

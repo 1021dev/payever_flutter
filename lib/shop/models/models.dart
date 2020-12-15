@@ -920,6 +920,10 @@ class TableStyles extends BaseStyles {
   bool textWrap;
   /// Background
   @JsonKey(name: 'backgroundColor')  String backgroundColor;
+  /// Border
+  /// outside, inside, all, left, vertical, right, top, horizontal, bottom
+  @JsonKey(name: 'cellBorder', defaultValue: 'outside')
+  String cellBorder;
 
   factory TableStyles.fromJson(Map<String, dynamic> json) => _$TableStylesFromJson(json);
   Map<String, dynamic> toJson() => _$TableStylesToJson(this);

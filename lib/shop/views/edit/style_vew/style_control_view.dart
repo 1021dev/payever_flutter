@@ -288,7 +288,7 @@ class _StyleControlViewState extends State<StyleControlView> {
                   _updateGradientFillColor(state, model, updateApi: updateApi),
               onUpdateImageFill: (BackGroundModel model) =>
                   _updateImageFill(state, model),
-            ));
+            ), context);
           },
         ),
       if (hasBorder)
@@ -517,13 +517,4 @@ class _StyleControlViewState extends State<StyleControlView> {
     return child.data;
   }
 
-  void navigateSubView(Widget subview) {
-    showModalBottomSheet(
-        context: context,
-        barrierColor: Colors.transparent,
-        // isScrollControlled: true,
-        builder: (builder) {
-          return subview;
-        });
-  }
 }

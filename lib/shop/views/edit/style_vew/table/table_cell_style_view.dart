@@ -336,7 +336,12 @@ class _TableCellStyleViewState extends State<TableCellStyleView> {
   Widget _cellBorder(ShopEditScreenState state) {
     return InkWell(
       onTap: () {
-        Widget subview = CellBorder(widget.screenBloc, onClose: widget.onClose,);
+        Widget subview = CellBorder(
+          screenBloc: widget.screenBloc,
+          onClose: widget.onClose,
+          stylesheets: state.pageDetail.stylesheets[selectedChildId],
+          onUpdateStyles: widget.onUpdateStyles,
+        );
         navigateSubView(subview, context);
       },
       child: Container(
