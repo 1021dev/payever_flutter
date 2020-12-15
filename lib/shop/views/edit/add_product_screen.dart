@@ -197,7 +197,7 @@ class _AddProductsScreenState extends State<AddProductsScreen> {
                           widget.screenBloc.add(UpdateSectionEvent(
                               sectionId: state.selectedSectionId, effects: effects));
                           Navigator.pop(context);
-                          Navigator.pop(context);
+                          // Navigator.pop(context);
                         },
                         child: Center(
                             child: Text(

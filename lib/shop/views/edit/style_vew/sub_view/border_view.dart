@@ -8,7 +8,7 @@ import 'package:payever/theme.dart';
 import '../fill_color_view.dart';
 
 class BorderView extends StatefulWidget {
-  final TextStyles styles;
+  final BaseStyles styles;
   final Function onUpdateBorderRadius;
   final Function onUpdateBorderModel;
   final String type;

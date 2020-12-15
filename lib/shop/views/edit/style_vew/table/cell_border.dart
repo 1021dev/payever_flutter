@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/style_vew/sub_view/border_view.dart';
 
 class CellBorder extends StatefulWidget {
 
@@ -30,6 +31,7 @@ class _CellBorderState extends State<CellBorder> {
   TableStyles styles;
   String selectedChildId;
   List<String>borderAssets = ['outside', 'inside', 'all', 'left', 'vertical', 'right', 'top', 'horizontal', 'bottom'];
+
   @override
   void initState() {
     ShopEditScreenState state = widget.screenBloc.state;
@@ -62,7 +64,7 @@ class _CellBorderState extends State<CellBorder> {
           bottom: false,
           child: Container(
             color: Color.fromRGBO(23, 23, 25, 1),
-            padding: EdgeInsets.only(top: 18),
+            padding: EdgeInsets.only(top: 18, bottom: 32),
             child: Column(
               children: [
                 _toolBar,
@@ -131,73 +133,78 @@ class _CellBorderState extends State<CellBorder> {
   }
 
   Widget mainBody() {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          gridView,
-        ],
-      ),
-    );
-  }
-
-  Widget get gridView {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 32, vertical: 18),
-      decoration: BoxDecoration(
-        color: Color.fromRGBO(46, 45, 50, 1),
-      ),
-      child: GridView.count(
-        padding: EdgeInsets.zero,
-        shrinkWrap: true,
-        crossAxisCount: isTablet ? 5 : (isPortrait ? 3 : 5),
-        crossAxisSpacing: isTablet ? 40 : (isPortrait ? 40 : 40),
-        mainAxisSpacing: isTablet ? 20 : (isPortrait ? 20 : 20),
-        childAspectRatio: 1 / 0.3,
-        physics: NeverScrollableScrollPhysics(),
-        children: List.generate(
-          9,
-              (index) {
-
-            return InkWell(
-              onTap: (){
-                String headerColumnColor, headerRowColor;
-                switch(index) {
-                  case 0:
-                    headerColumnColor = '#38719F';
-                    headerRowColor = '#428CC8';
-                    break;
-                  case 1:
-                    headerColumnColor = '#459138';
-                    headerRowColor = '#61C348';
-                    break;
-                  case 2:
-                    headerColumnColor = '#F7B950';
-                    headerRowColor = '#F9CD54';
-                    break;
-                  case 3:
-                    headerColumnColor = '#D576A8';
-                    headerRowColor = '#AA3E7A';
-                    break;
-                  case 4:
-                    headerColumnColor = '#9EA2AC';
-                    headerRowColor = '#73767E';
-                    break;
-                  default:
-                    headerColumnColor = '#ffffff';
-                    headerRowColor = '#ffffff';
-                }
-                Map<String, dynamic> sheets = widget.screenBloc.state.pageDetail.stylesheets[selectedChildId];
-                sheets['headerColumnColor'] = headerColumnColor;
-                sheets['headerRowColor'] = headerRowColor;
-                // _updateStyles(sheets);
-              },
-              child: SvgPicture.asset(
-                  'assets/images/border-${borderAssets[index]}.svg',),
-            );
-          },
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            gridView,
+            SizedBox(height: 5,),
+            annotationText,
+            BorderView(
+              styles: styles,
+              type: widget.screenBloc.state.selectedChild.type,
+              // onUpdateBorderRadius: (radius, updateApi) =>
+              //     _updateBorderRadius(state, radius, updateApi: updateApi),
+              // onUpdateBorderModel: (model, updateApi) {
+              //   _updateImageBorderModel(state, model, updateApi: updateApi);
+              // },
+            ),
+          ],
         ),
       ),
     );
   }
 
+  Widget get gridView {
+    return GridView.count(
+      padding: EdgeInsets.zero,
+      shrinkWrap: true,
+      crossAxisCount: isTablet ? 5 : (isPortrait ? 3 : 5),
+      crossAxisSpacing: 1,
+      mainAxisSpacing: 1,
+      childAspectRatio: 1 / 0.3,
+      physics: NeverScrollableScrollPhysics(),
+      children: List.generate(9,
+            (index) {
+          return InkWell(
+            onTap: () {
+              Map<String, dynamic> sheets = widget.screenBloc.state.pageDetail.stylesheets[selectedChildId];
+              // sheets['headerColumnColor'] = headerColumnColor;
+              // sheets['headerRowColor'] = headerRowColor;
+              // _updateStyles(sheets);
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: Color.fromRGBO(46, 45, 50, 1),
+                borderRadius: borderRadius(index),
+              ),
+              padding: EdgeInsets.all(8),
+              child: SvgPicture.asset(
+                  'assets/images/border-${borderAssets[index]}.svg',),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  BorderRadius borderRadius(int index) {
+    switch(index) {
+      case 0:
+        return BorderRadius.only(topLeft: Radius.circular(8));
+      case 2:
+        return BorderRadius.only(topRight: Radius.circular(8));
+      case 6:
+        return BorderRadius.only(bottomLeft: Radius.circular(8));
+      case 8:
+        return BorderRadius.only(bottomRight: Radius.circular(8));
+      default:
+        return BorderRadius.zero;
+    }
+  }
+
+  Widget get annotationText {
+    return Text('Tap a border to edit it. Touch and hod to select an additional border.', style: TextStyle(fontSize: 13, color: Colors.grey),);
+  }
 }

@@ -35,13 +35,13 @@ class _ShopProductsViewState extends State<ShopProductsView> {
 
   @override
   void initState() {
-    _getContext();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     styles = styleSheet();
+    _getContext();
     return body;
   }
 
@@ -130,6 +130,7 @@ class _ShopProductsViewState extends State<ShopProductsView> {
     try {
       List<dynamic> productIds = schema.params as List;
       String productId = productIds[0].first as String;
+      if (productModel != null && productModel.id == productId) return;
       Map<String, dynamic> body = {
         "query":
             "{getProducts(\n        businessUuid: \"${widget.currentBusinessId}\",\n        includeIds: [\"$productId\"]\n        pageNumber: 1,\n        paginationLimit: 100,\n      ) {\n        products {\n          images\n          _id\n          title\n          description\n          price\n          salePrice\n          currency\n          active\n          categories { id title }\n        }\n      }}"

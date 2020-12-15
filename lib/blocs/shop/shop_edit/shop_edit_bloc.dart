@@ -187,6 +187,7 @@ class ShopEditScreenBloc
     PageDetail pageDetail = state.pageDetail;
     Template template = pageDetail.template;
     List<Child> sections = template.children;
+    Map<String, dynamic>context = pageDetail.context;
     Map<String, dynamic>stylesheets = state.pageDetail.stylesheets;
 
     String actionType = event.effects.first['type'];
@@ -204,9 +205,14 @@ class ShopEditScreenBloc
       Child child = (sections.firstWhere((element) => element.id == event.sectionId).children)?.firstWhere((element) => element.id == id);
       if (child != null)
         (sections.firstWhere((element) => element.id == event.sectionId).children).remove(child);
-    }
-
-    if (actionType != 'template:delete-element') {
+    } else if (actionType == 'context-schema:update') {
+      String updateContextId = event.effects.first['payload'][state.selectedChild.id]['params'][0].first as String;
+      ContextSchema schema = ContextSchema.fromJson(context[state.selectedChild.id]);
+      List<dynamic> productIds = schema.params as List;
+      productIds.clear();
+      productIds.add(updateContextId);
+      context[state.selectedChild.id]['params'] = List()..add(productIds);
+    } else if (actionType == 'stylesheet:update') {
       if ((event.effects.first['payload'] as Map).containsKey('id')) {
         String id = event.effects.first['payload']['id'];
         List<Child> children = sections.firstWhere((element) => element.id == event.sectionId).children;
@@ -236,6 +242,7 @@ class ShopEditScreenBloc
     String themeId = state.activeTheme.themeId;
     template.children = sections;
     pageDetail.template = template;
+    pageDetail.context = context;
     pageDetail.stylesheets0[GlobalUtils.deviceType] = stylesheets;
     // Update Template if Relocated Child
     yield state.copyWith(
