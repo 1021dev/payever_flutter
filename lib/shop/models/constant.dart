@@ -2,6 +2,9 @@ import 'dart:ui';
 
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+import 'package:payever/theme.dart';
+
+import 'models.dart';
 
 List<Color>textBgColors = [Color.fromRGBO(0, 168, 255, 1),
   Color.fromRGBO(96, 234, 50, 1),
@@ -154,22 +157,23 @@ List<String>ligatures = [
 const minTextFontSize = 8;
 const double ptFontFactor = 30 / 112;
 
-Widget borderStyleWidget(String style) {
-  switch (style) {
+Widget borderStyleWidget(BorderModel model) {
+  Color color = colorConvert(model.borderColor);
+  switch (model.borderStyle) {
     case 'solid':
       return Container(
-        height: 3,
-        color: Colors.white,
+        height: model.borderWidth,
+        color: color,
       );
     case 'dashed':
       return DottedLine(
-        lineThickness: 3,
-        dashLength: 8,
-        dashGapLength: 3,
-        dashColor: Colors.white,
+        lineThickness: model.borderWidth,
+        dashLength: model.borderWidth * 2,
+        dashGapLength: model.borderWidth,
+        dashColor: color,
       );
     case 'dotted':
-      return DottedLine(dashColor: Colors.white, lineThickness: 3);
+      return DottedLine(dashColor: color, lineThickness: model.borderWidth);
   }
-  throw('Error: wrong border style');
+  throw('Error: wrong border style: ${model.borderStyle}');
 }

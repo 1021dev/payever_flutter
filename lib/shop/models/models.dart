@@ -531,6 +531,7 @@ class BaseStyles with BackgroundAssist, StyleAssist, SizeAssist, DecorationAssis
   @JsonKey(name: 'borderType', defaultValue: 'solid')
   String borderType;
   // For Logo
+  /// solid, dashed, dotted
   @JsonKey(name: 'borderStyle', defaultValue: 'solid')
   String borderStyle;
   // String '0', '50%' or double

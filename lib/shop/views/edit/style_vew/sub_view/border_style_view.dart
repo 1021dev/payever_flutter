@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/constant.dart';
+import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/style_vew/sub_view/toolbar.dart';
+import 'package:payever/theme.dart';
 
 class BorderStyleView extends StatefulWidget {
   final String borderStyle;
@@ -100,7 +102,7 @@ class _BorderStyleViewState extends State<BorderStyleView> {
                         'None',
                         style: TextStyle(color: Colors.white, fontSize: 15),
                       )
-                    : borderStyleWidget(style)),
+                    : borderStyleWidget(BorderModel(borderStyle: style, borderWidth: 3, borderColor: encodeColor(Colors.white)))),
             SizedBox(
               width: 10,
             ),

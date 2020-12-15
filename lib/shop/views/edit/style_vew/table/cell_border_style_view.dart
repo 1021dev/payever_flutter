@@ -1,26 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/constant.dart';
+import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/style_vew/sub_view/toolbar.dart';
 
 class CellBorderStyleView extends StatefulWidget {
-  final String borderStyle;
+
   final Function onChangeBorderStyle;
   final Function onClose;
-  final bool hasNone;
+  final BorderModel borderModel;
+  final BorderModel recentBorderModel;
+
   const CellBorderStyleView(
-      {Key key, @required this.borderStyle, @required this.onChangeBorderStyle, this.hasNone = false, @required this.onClose})
-      : super(key: key);
+      {@required this.onChangeBorderStyle,
+      @required this.borderModel,
+      this.recentBorderModel,
+      @required this.onClose});
 
   @override
   _CellBorderStyleViewState createState() => _CellBorderStyleViewState();
 }
 
 class _CellBorderStyleViewState extends State<CellBorderStyleView> {
-  String borderStyle;
 
   @override
   void initState() {
-    borderStyle = widget.borderStyle;
     super.initState();
   }
 
@@ -42,9 +45,6 @@ class _CellBorderStyleViewState extends State<CellBorderStyleView> {
             child: Column(
               children: [
                 Toolbar(backTitle: 'Cell Border', title: 'Border Styles', onClose: widget.onClose,),
-                SizedBox(
-                  height: 10,
-                ),
                 Expanded(child: _styleBody),
               ],
             ),
@@ -56,52 +56,116 @@ class _CellBorderStyleViewState extends State<CellBorderStyleView> {
 
   Widget get _styleBody {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        children: [
-          if (widget.hasNone)
-            listItem(null),
-          listItem('solid'),
-          listItem('dashed'),
-          listItem('dotted'),
-        ],
-      ),
-    );
-  }
-
-  Widget listItem(String style) {
-    return InkWell(
-      onTap: () {
-        setState(() {
-          borderStyle = style;
-        });
-        widget.onChangeBorderStyle(style);
-      },
-      child: Container(
-        height: 60,
-        child: Row(
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 32),
+      child: SingleChildScrollView(
+        child: Column(
           children: [
-            Expanded(
-                child: style == null
-                    ? Text(
-                        'None',
-                        style: TextStyle(color: Colors.white, fontSize: 15),
-                      )
-                    : borderStyleWidget(style)),
-            SizedBox(
-              width: 10,
-            ),
-            Opacity(
-              opacity: (borderStyle == style) ? 1 : 0,
-              child: Icon(
-                Icons.check,
-                color: Colors.blue,
+            if (widget.recentBorderModel != null)
+              styleItem('RECENT', widget.recentBorderModel),
+            if (widget.borderModel != null)
+              styleItem('SELECTED STYLES', widget.borderModel),
+            styleItem('TABLE STYLES', BorderModel(borderWidth: 3, borderStyle: 'solid', borderColor: '#1E4975')),
+            styleItem(null, BorderModel(borderWidth: 3, borderStyle: 'solid', borderColor: '#1E4975')),
+            styleItem(null, BorderModel(borderWidth: 1, borderStyle: 'solid', borderColor: '#1E4975')),
+            styleItem(null, BorderModel(borderWidth: 1, borderStyle: 'dotted', borderColor: '#1E4975')),
+            styleItem(null, BorderModel(borderWidth: 3, borderStyle: 'solid', borderColor: '#000000')),
+            styleItem(null, BorderModel(borderWidth: 3, borderStyle: 'solid', borderColor: '#C2C2C2')),
+            styleItem(null, BorderModel(borderWidth: 3, borderStyle: 'solid', borderColor: '#DA0C0C')),
+            styleItem(null, BorderModel(borderWidth: 3, borderStyle: 'solid', borderColor: '#137B13')),
+            styleItem(null, BorderModel(borderWidth: 3, borderStyle: 'solid', borderColor: '#FFFFFF')),
+            Container(
+              height: 50,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      onTap: () {
+
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: Color.fromRGBO(46, 45, 50, 1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          'No Border',
+                          style: TextStyle(color: Colors.white, fontSize: 15),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 8,),
+                  Expanded(
+                    child: InkWell(
+                      onTap: (){
+
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: Color.fromRGBO(46, 45, 50, 1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          'Default Style',
+                          style: TextStyle(color: Colors.white, fontSize: 15),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
+            )
           ],
         ),
       ),
     );
   }
 
+  Widget styleItem(String title, BorderModel model) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (title != null)
+        Text(
+          title,
+          style: TextStyle(color: Colors.grey, fontSize: 15),
+        ),
+        if (title != null)
+        SizedBox(
+          height: 10,
+        ),
+        Row(
+          children: [
+            Opacity(
+              opacity: (title == null && selectedStyle(model)) ? 1 : 0,
+              child: Icon(
+                Icons.check,
+                color: Colors.blue,
+              ),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Expanded(child: borderStyleWidget(model)),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              '${model.borderWidth.floor()} pt',
+              style: TextStyle(color: Colors.white, fontSize: 15),
+            ),
+          ],
+        ),
+        SizedBox(height: 24,)
+      ],
+    );
+  }
+
+  bool selectedStyle(BorderModel model) {
+    return widget.borderModel?.borderStyle == model.borderStyle &&
+        widget.borderModel?.borderWidth == model.borderWidth &&
+        widget.borderModel?.borderColor == model.borderColor;
+  }
 }

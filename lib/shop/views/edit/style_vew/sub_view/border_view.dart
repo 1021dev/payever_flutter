@@ -159,7 +159,7 @@ class _BorderViewState extends State<BorderView> {
                     ),
                   ),
                   SizedBox(width: 16,),
-                  Expanded(child: borderStyleWidget(borderModel.borderStyle)),
+                  Expanded(child: borderStyleWidget(borderModel)),
                   SizedBox(width: 16,),
                   Icon(Icons.arrow_forward_ios),
                 ],

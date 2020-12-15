@@ -21,47 +21,55 @@ class _ToolbarState extends State<Toolbar> {
       padding: EdgeInsets.symmetric(horizontal: 10),
       child: Row(
         children: [
-          InkWell(
-            onTap: () => Navigator.pop(context),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.blue,
-                ),
-                Text(
-                  widget.backTitle,
-                  style: TextStyle(color: Colors.blue, fontSize: 16),
-                )
-              ],
+          Expanded(
+            flex: 1,
+            child: InkWell(
+              onTap: () => Navigator.pop(context),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.blue,
+                  ),
+                  Text(
+                    widget.backTitle,
+                    style: TextStyle(color: Colors.blue, fontSize: 16),
+                  )
+                ],
+              ),
             ),
           ),
           Expanded(
+            flex: 2,
               child: Text(
                 widget.title,
                 style: TextStyle(color: Colors.white, fontSize: 18),
                 textAlign: TextAlign.center,
               )),
-          Row(
-            children: [
-              SizedBox(width: 16,),
-              InkWell(
-                onTap: () {
-                  widget.onClose();
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  width: 30,
-                  height: 30,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Color.fromRGBO(46, 45, 50, 1),
+          Expanded(
+            flex: 1,
+            child: Row(
+              children: [
+                SizedBox(width: 16,),
+                Spacer(),
+                InkWell(
+                  onTap: () {
+                    widget.onClose();
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    width: 30,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color.fromRGBO(46, 45, 50, 1),
+                    ),
+                    alignment: Alignment.center,
+                    child: Icon(Icons.close, color: Colors.grey),
                   ),
-                  alignment: Alignment.center,
-                  child: Icon(Icons.close, color: Colors.grey),
                 ),
-              ),
-            ],
+              ],
+            ),
           )
         ],
       ),
