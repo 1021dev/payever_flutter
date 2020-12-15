@@ -7,6 +7,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/block_picker.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/style_vew/sub_view/toolbar.dart';
 import 'package:payever/shop/views/edit/style_vew/sub_view/upload_image_view.dart';
 import '../../../../theme.dart';
 
@@ -121,7 +122,7 @@ class _FillViewState extends State<FillView> {
             padding: EdgeInsets.only(top: 18),
             child: Column(
               children: [
-                _toolBar,
+                Toolbar(backTitle: 'Style', title: 'Fill', onClose: widget.onClose),
                 _secondAppbar,
                 SizedBox(
                   height: 10,
@@ -131,58 +132,6 @@ class _FillViewState extends State<FillView> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget get _toolBar {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      child: Row(
-        children: [
-          InkWell(
-            onTap: () => Navigator.pop(context),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.blue,
-                ),
-                Text(
-                  'Style',
-                  style: TextStyle(color: Colors.blue, fontSize: 16),
-                )
-              ],
-            ),
-          ),
-          Expanded(
-              child: Text(
-            'Fill',
-            style: TextStyle(color: Colors.white, fontSize: 18),
-            textAlign: TextAlign.center,
-          )),
-          Row(
-            children: [
-              SizedBox(width: 16,),
-              InkWell(
-                onTap: () {
-                  widget.onClose();
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  width: 30,
-                  height: 30,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Color.fromRGBO(46, 45, 50, 1),
-                  ),
-                  alignment: Alignment.center,
-                  child: Icon(Icons.close, color: Colors.grey),
-                ),
-              ),
-            ],
-          )
-        ],
       ),
     );
   }

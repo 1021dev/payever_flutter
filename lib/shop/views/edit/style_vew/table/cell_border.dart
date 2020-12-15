@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
-import 'package:payever/shop/views/edit/style_vew/sub_view/border_view.dart';
+import 'package:payever/shop/views/edit/style_vew/sub_view/toolbar.dart';
 
 class CellBorder extends StatefulWidget {
 
@@ -45,17 +44,11 @@ class _CellBorderState extends State<CellBorder> {
   Widget build(BuildContext context) {
     isPortrait = GlobalUtils.isPortrait(context);
     isTablet = GlobalUtils.isTablet(context);
-
-    return BlocBuilder(
-      bloc: widget.screenBloc,
-      builder: (BuildContext context, state) {
-        return body(state);
-      },
-    );
+    return body();
   }
 
-  Widget body(ShopEditScreenState state) {
-    styles = TableStyles.fromJson(state.pageDetail.stylesheets[selectedChildId]);
+  Widget body() {
+    styles = TableStyles.fromJson(widget.screenBloc.state.pageDetail.stylesheets[selectedChildId]);
     return Container(
       height: 400,
       child: Scaffold(
@@ -67,7 +60,7 @@ class _CellBorderState extends State<CellBorder> {
             padding: EdgeInsets.only(top: 18, bottom: 32),
             child: Column(
               children: [
-                _toolBar,
+                Toolbar(backTitle: 'Cell', title: 'Cell Border', onClose: widget.onClose),
                 SizedBox(
                   height: 10,
                 ),
@@ -76,58 +69,6 @@ class _CellBorderState extends State<CellBorder> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget get _toolBar {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      child: Row(
-        children: [
-          InkWell(
-            onTap: () => Navigator.pop(context),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.blue,
-                ),
-                Text(
-                  'Cell',
-                  style: TextStyle(color: Colors.blue, fontSize: 16),
-                )
-              ],
-            ),
-          ),
-          Expanded(
-              child: Text(
-                'Cell Border',
-                style: TextStyle(color: Colors.white, fontSize: 18),
-                textAlign: TextAlign.center,
-              )),
-          Row(
-            children: [
-              SizedBox(width: 16,),
-              InkWell(
-                onTap: () {
-                  widget.onClose();
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  width: 30,
-                  height: 30,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Color.fromRGBO(46, 45, 50, 1),
-                  ),
-                  alignment: Alignment.center,
-                  child: Icon(Icons.close, color: Colors.grey),
-                ),
-              ),
-            ],
-          )
-        ],
       ),
     );
   }
@@ -141,15 +82,8 @@ class _CellBorderState extends State<CellBorder> {
             gridView,
             SizedBox(height: 5,),
             annotationText,
-            BorderView(
-              styles: styles,
-              type: widget.screenBloc.state.selectedChild.type,
-              // onUpdateBorderRadius: (radius, updateApi) =>
-              //     _updateBorderRadius(state, radius, updateApi: updateApi),
-              // onUpdateBorderModel: (model, updateApi) {
-              //   _updateImageBorderModel(state, model, updateApi: updateApi);
-              // },
-            ),
+            borderStyle,
+            lineType,
           ],
         ),
       ),
@@ -206,5 +140,53 @@ class _CellBorderState extends State<CellBorder> {
 
   Widget get annotationText {
     return Text('Tap a border to edit it. Touch and hod to select an additional border.', style: TextStyle(fontSize: 13, color: Colors.grey),);
+  }
+
+  Widget get borderStyle {
+    return InkWell(
+      onTap: () {
+
+      },
+      child: Container(
+        height: 60,
+        child: Row(
+          children: [
+            Text(
+              'Border',
+              style: TextStyle(color: Colors.white, fontSize: 15),
+            ),
+            Spacer(),
+            Text(
+              'No Border',
+              style: TextStyle(color: Colors.blue, fontSize: 15),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget get lineType {
+    return InkWell(
+      onTap: () {
+
+      },
+      child: Container(
+        height: 60,
+        child: Row(
+          children: [
+            Text(
+              'Line Type',
+              style: TextStyle(color: Colors.white, fontSize: 15),
+            ),
+            Spacer(),
+            Text(
+              'None',
+              style: TextStyle(color: Colors.blue, fontSize: 15),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

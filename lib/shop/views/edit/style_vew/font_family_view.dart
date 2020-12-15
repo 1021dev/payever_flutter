@@ -5,7 +5,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/shop/shop_edit/shop_edit_bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/constant.dart';
-import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/style_vew/sub_view/toolbar.dart';
 
 class FontFamilyView extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
@@ -60,7 +60,7 @@ class _FontFamilyViewState extends State<FontFamilyView> {
             padding: EdgeInsets.only(top: 18),
             child: Column(
               children: [
-                _toolBar,
+                Toolbar(backTitle: 'Text', title: 'Fonts', onClose: widget.onClose),
                 SizedBox(
                   height: 10,
                 ),
@@ -69,58 +69,6 @@ class _FontFamilyViewState extends State<FontFamilyView> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget get _toolBar {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      child: Row(
-        children: [
-          InkWell(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Row(
-              children: [
-                Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.blue,
-                ),
-                Text(
-                  'Text',
-                  style: TextStyle(color: Colors.blue, fontSize: 16),
-                )
-              ],
-            ),
-          ),
-          Expanded(
-              child: Text(
-            'Fonts',
-            style: TextStyle(color: Colors.white, fontSize: 18),
-            textAlign: TextAlign.center,
-          )),
-          Padding(
-            padding: EdgeInsets.only(left: 20),
-            child: InkWell(
-              onTap: () {
-                widget.onClose();
-                Navigator.pop(context);
-              },
-              child: Container(
-                width: 30,
-                height: 30,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color.fromRGBO(46, 45, 50, 1),
-                ),
-                child: Icon(Icons.close, color: Colors.grey),
-              ),
-            ),
-          )
-        ],
       ),
     );
   }

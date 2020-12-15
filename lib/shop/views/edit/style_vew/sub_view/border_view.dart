@@ -12,9 +12,10 @@ class BorderView extends StatefulWidget {
   final Function onUpdateBorderRadius;
   final Function onUpdateBorderModel;
   final String type;
-
+  final Function onClose;
   const BorderView(
       {this.styles,
+      this.onClose,
       this.onUpdateBorderRadius,
       this.onUpdateBorderModel,
       this.type});
@@ -136,6 +137,7 @@ class _BorderViewState extends State<BorderView> {
             onTap: () {
               navigateSubView(BorderStyleView(
                 borderStyle: borderModel.borderStyle,
+                onClose: widget.onClose,
                 onChangeBorderStyle: (style) {
                   borderModel.borderStyle = style;
                   _updateBorderModel(true);

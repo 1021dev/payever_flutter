@@ -281,6 +281,7 @@ class _StyleControlViewState extends State<StyleControlView> {
           onTapFillView: () {
             navigateSubView(FillView(
               widget.screenBloc,
+              onClose: widget.onClose,
               hasComplexFill: hasComplexFill,
               onUpdateColor: (Color color) => _updateFillColor(state, color),
               onUpdateGradientFill: (GradientModel model, bool updateApi) =>
@@ -293,6 +294,7 @@ class _StyleControlViewState extends State<StyleControlView> {
       if (hasBorder)
         BorderView(
           styles: styles,
+          onClose: widget.onClose,
           type: state.selectedChild.type,
           onUpdateBorderRadius: (radius, updateApi) =>
               _updateBorderRadius(state, radius, updateApi: updateApi),

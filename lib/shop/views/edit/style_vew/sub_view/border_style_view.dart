@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/constant.dart';
+import 'package:payever/shop/views/edit/style_vew/sub_view/toolbar.dart';
 
 class BorderStyleView extends StatefulWidget {
   final String borderStyle;
   final Function onChangeBorderStyle;
+  final Function onClose;
 
   const BorderStyleView(
-      {Key key, @required this.borderStyle, @required this.onChangeBorderStyle})
+      {Key key, @required this.borderStyle, @required this.onChangeBorderStyle, @required this.onClose})
       : super(key: key);
 
   @override
@@ -36,7 +38,7 @@ class _BorderStyleViewState extends State<BorderStyleView> {
             padding: EdgeInsets.only(top: 18),
             child: Column(
               children: [
-                _toolBar,
+                Toolbar(backTitle: 'Style', title: 'Border Styles', onClose: widget.onClose,),
                 SizedBox(
                   height: 10,
                 ),
@@ -45,58 +47,6 @@ class _BorderStyleViewState extends State<BorderStyleView> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget get _toolBar {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      child: Row(
-        children: [
-          InkWell(
-            onTap: () => Navigator.pop(context),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.blue,
-                ),
-                Text(
-                  'Style',
-                  style: TextStyle(color: Colors.blue, fontSize: 16),
-                )
-              ],
-            ),
-          ),
-          Expanded(
-              child: Text(
-                'Border Styles',
-                style: TextStyle(color: Colors.white, fontSize: 18),
-                textAlign: TextAlign.center,
-              )),
-          Row(
-            children: [
-              SizedBox(width: 16,),
-              InkWell(
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  width: 30,
-                  height: 30,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Color.fromRGBO(46, 45, 50, 1),
-                  ),
-                  alignment: Alignment.center,
-                  child: Icon(Icons.close, color: Colors.grey),
-                ),
-              ),
-            ],
-          )
-        ],
       ),
     );
   }

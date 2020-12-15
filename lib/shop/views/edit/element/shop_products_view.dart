@@ -4,10 +4,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/env.dart';
-import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/products/models/models.dart';
 import 'package:payever/shop/models/models.dart';
-import 'package:provider/provider.dart';
 import '../../../../theme.dart';
 
 class ShopProductsView extends StatefulWidget {
