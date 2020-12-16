@@ -45,6 +45,12 @@ class _TableViewState extends State<TableView> {
 
     cellWidth = (tableWidth - 45) / styles.columnCount;
     cellHeight = (tableHeight - 40) / styles.rowCount;
+    BorderModel borderModel = styles.borderWidth == 0
+        ? null
+        : BorderModel(
+            borderColor: styles.borderColor,
+            borderStyle: styles.borderStyle,
+            borderWidth: styles.borderWidth);
 
     return Editable(
       key: _editableKey,
@@ -69,8 +75,7 @@ class _TableViewState extends State<TableView> {
       /// Background & Border
       fillColor: styles.backgroundColor,
       outline: styles.outline,
-      borderColor: colorConvert(styles.borderColor),
-      borderWidth: styles.borderWidth,
+      borderModel: borderModel,
       /// Title & Caption
       title: styles.title, caption: styles.caption,
       /// Text Style

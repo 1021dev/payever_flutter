@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/element/widget/background_view.dart';
+import 'package:payever/shop/views/edit/element/widget/dashed_decoration_view.dart';
 import 'package:payever/theme.dart';
 
 class RowBuilder extends StatefulWidget {
@@ -25,8 +26,7 @@ class RowBuilder extends StatefulWidget {
     @required this.headerColumnColor,
     @required this.headerRowColor,
     @required this.footerRowColor,
-    @required Color borderColor,
-    @required double borderWidth,
+
     @required this.cellData,
     @required this.column,
 
@@ -52,9 +52,7 @@ class RowBuilder extends StatefulWidget {
     @required this.outline,
     this.tableBorder,
     this.borderModel
-  })  : _borderColor = borderColor,
-        _borderWidth = borderWidth,
-        super(key: key);
+  })  : super(key: key);
 
   final BaseStyles baseStyles;
   /// Table row height
@@ -64,8 +62,6 @@ class RowBuilder extends StatefulWidget {
   final Color headerColumnColor;
   final Color headerRowColor;
   final Color footerRowColor;
-  final Color _borderColor;
-  final double _borderWidth;
   final cellData;
   /// Text Style
   final bool enableEdit;
@@ -113,35 +109,38 @@ class _RowBuilderState extends State<RowBuilder> {
     return Flexible(
       fit: FlexFit.loose,
       flex: 6,
-      child: Container(
-        height: widget.trHeight,
-        width: widget.trWidth,
-        alignment: widget.tdVerticalAlignment,
-        decoration: BoxDecoration(
-            color: backgroundColor,
-            border: border),
-        child: Stack(
-          children: [
-            if (hasBackground)
-              BackgroundView(styles: widget.baseStyles,),
-            TextFormField(
-              textAlign: widget.tdAlignment,
-              style: widget.tdStyle,
-              initialValue: widget.cellData.toString(),
-              onFieldSubmitted: widget.onSubmitted,
-              onChanged: widget.onChanged,
-              textAlignVertical: TextAlignVertical.center,
-              keyboardType: widget.textWrap ? TextInputType.multiline : null,
-              maxLines: widget.textWrap ? null : 1,
-              enabled: widget.enableEdit,
-              decoration: InputDecoration(
-                  isDense: true,
-                  filled: widget.zebraStripe,
-                  fillColor: backgroundColor,
-                  contentPadding: EdgeInsets.zero,
-                  border: InputBorder.none),
-            ),
-          ],
+      child: DashedDecorationView(
+        borderModel: widget.borderModel,
+        child: Container(
+          height: widget.trHeight,
+          width: widget.trWidth,
+          alignment: widget.tdVerticalAlignment,
+          decoration: BoxDecoration(
+              color: backgroundColor,
+              border: border),
+          child: Stack(
+            children: [
+              if (hasBackground)
+                BackgroundView(styles: widget.baseStyles,),
+              TextFormField(
+                textAlign: widget.tdAlignment,
+                style: widget.tdStyle,
+                initialValue: widget.cellData.toString(),
+                onFieldSubmitted: widget.onSubmitted,
+                onChanged: widget.onChanged,
+                textAlignVertical: TextAlignVertical.center,
+                keyboardType: widget.textWrap ? TextInputType.multiline : null,
+                maxLines: widget.textWrap ? null : 1,
+                enabled: widget.enableEdit,
+                decoration: InputDecoration(
+                    isDense: true,
+                    filled: widget.zebraStripe,
+                    fillColor: backgroundColor,
+                    contentPadding: EdgeInsets.zero,
+                    border: InputBorder.none),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -181,17 +180,18 @@ class _RowBuilderState extends State<RowBuilder> {
   }
 
   Border get border {
+    if (widget.borderModel == null || widget.borderModel.borderStyle != 'solid') return null;
     BorderSide borderSide = BorderSide(
-        color: widget._borderColor, width: widget._borderWidth);
+        color: colorConvert(widget.borderModel.borderColor), width: widget.borderModel.borderWidth);
     BorderSide top = BorderSide.none;
     BorderSide bottom = BorderSide.none;
     BorderSide right = BorderSide.none;
     BorderSide left = BorderSide.none;
 
-    if (isTop && widget.outline)   top = borderSide;
-    if (isLeft && widget.outline)  left = borderSide;
-    if (isRight && widget.outline)   right = borderSide;
-    if (isBottom && widget.outline)  bottom = borderSide;
+    if (isTop && widget.outline) top = borderSide;
+    if (isLeft && widget.outline) left = borderSide;
+    if (isRight && widget.outline) right = borderSide;
+    if (isBottom && widget.outline) bottom = borderSide;
 
     if (isHeader) {
       if (widget.headerRowLines) right = borderSide;

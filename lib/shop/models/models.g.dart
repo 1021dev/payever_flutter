@@ -1077,7 +1077,6 @@ TableStyles _$TableStylesFromJson(Map<String, dynamic> json) {
     ..borderType = json['borderType'] as String ?? 'solid'
     ..borderStyle = json['borderStyle'] as String ?? 'solid'
     ..borderRadius = json['borderRadius'] ?? 0
-    ..borderWidth = (json['borderWidth'] as num)?.toDouble() ?? 0
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
     ..borderSize = (json['borderSize'] as num)?.toDouble() ?? 0
     ..opacity = (json['opacity'] as num)?.toDouble() ?? 1
@@ -1145,7 +1144,8 @@ TableStyles _$TableStylesFromJson(Map<String, dynamic> json) {
     ..textVerticalAlign = json['textVerticalAlign'] as String ?? 'center'
     ..textWrap = json['textWrap'] as bool ?? true
     ..backgroundColor = json['backgroundColor'] as String
-    ..cellBorder = json['cellBorder'] as String ?? 'outside';
+    ..cellBorder = json['cellBorder'] as String ?? 'outside'
+    ..borderWidth = (json['borderWidth'] as num)?.toDouble() ?? 1;
 }
 
 Map<String, dynamic> _$TableStylesToJson(TableStyles instance) =>
@@ -1160,7 +1160,6 @@ Map<String, dynamic> _$TableStylesToJson(TableStyles instance) =>
       'borderType': instance.borderType,
       'borderStyle': instance.borderStyle,
       'borderRadius': instance.borderRadius,
-      'borderWidth': instance.borderWidth,
       'borderColor': instance.borderColor,
       'borderSize': instance.borderSize,
       'opacity': instance.opacity,
@@ -1228,6 +1227,7 @@ Map<String, dynamic> _$TableStylesToJson(TableStyles instance) =>
       'textWrap': instance.textWrap,
       'backgroundColor': instance.backgroundColor,
       'cellBorder': instance.cellBorder,
+      'borderWidth': instance.borderWidth,
     };
 
 ShopCartStyles _$ShopCartStylesFromJson(Map<String, dynamic> json) {

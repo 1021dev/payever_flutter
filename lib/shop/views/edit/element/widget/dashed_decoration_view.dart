@@ -1,13 +1,15 @@
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/theme.dart';
 
+import 'DashedBorder/dotted_border.dart';
+
 class DashedDecorationView extends StatefulWidget {
   final Widget child;
   final BorderModel borderModel;
+  final PathBuilder customPath;
 
-  const DashedDecorationView({Key key, @required this.borderModel, @required this.child})
+  const DashedDecorationView({Key key, @required this.borderModel, @required this.child, this.customPath,})
       : super(key: key);
 
   @override
@@ -21,9 +23,8 @@ class _DashedDecorationViewState extends State<DashedDecorationView> {
       return widget.child;
 
     return DottedBorder(
-      // strokeCap : StrokeCap.square,
+      customPath: widget.customPath,
       dashPattern: dashPattern,
-      // borderType: BorderType.Rect,
       strokeWidth: widget.borderModel.borderWidth,
       color: colorConvert(widget.borderModel.borderColor),
       child: widget.child,
@@ -32,7 +33,7 @@ class _DashedDecorationViewState extends State<DashedDecorationView> {
 
   List<double> get dashPattern {
     double borderWidth = widget.borderModel.borderWidth;
-    if (borderWidth < 2) borderWidth = 2;
+    // if (borderWidth < 2) borderWidth = 2;
     switch(widget.borderModel.borderStyle) {
       case 'solid':
         return [borderWidth, 0];
@@ -41,6 +42,6 @@ class _DashedDecorationViewState extends State<DashedDecorationView> {
       case 'dotted':
         return [borderWidth, borderWidth];
     }
-    throw('Error: wrong border style');
+    throw('Error: wrong border style: ${widget.borderModel.borderStyle}');
   }
 }

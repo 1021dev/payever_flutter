@@ -17,9 +17,8 @@ class Editable extends StatefulWidget {
       this.onSubmitted,
       this.onRowSaved,
       this.headerColumnColor, this.headerRowColor, this.footerRowColor,
-      this.fillColor, this.borderColor = Colors.grey,
+      this.fillColor,
       this.trWidth = 50.0, this.trHeight = 50.0,
-      this.borderWidth = 1.0,
       this.thSize = 15,
 
       this.enableEdit,
@@ -60,10 +59,6 @@ class Editable extends StatefulWidget {
   final Color footerRowColor;
   /// Color of table border
   final String fillColor;
-  final Color borderColor;
-
-  /// width of table borders
-  final double borderWidth;
 
   /// Text Styles
   final bool enableEdit;
@@ -289,10 +284,8 @@ class EditableState extends State<Editable> {
             headerColumnColor: widget.headerColumnColor,
             headerRowColor: widget.headerRowColor,
             footerRowColor: widget.footerRowColor,
-            borderColor: widget.borderColor,
             fillColor: widget.fillColor,
 
-            borderWidth: widget.borderWidth,
             cellData: list[ckeys[rowIndex - 1]],
 
             enableEdit: widget.enableEdit,

@@ -926,6 +926,11 @@ class TableStyles extends BaseStyles {
   @JsonKey(name: 'cellBorder', defaultValue: 'outside')
   String cellBorder;
 
+  @JsonKey(name: 'borderWidth', defaultValue: 1)
+  double borderWidth;
+  @JsonKey(name: 'borderColor', defaultValue: '#808080')
+  String borderColor;
+
   factory TableStyles.fromJson(Map<String, dynamic> json) => _$TableStylesFromJson(json);
   Map<String, dynamic> toJson() => _$TableStylesToJson(this);
 }
