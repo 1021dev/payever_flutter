@@ -949,8 +949,9 @@ String getDisplayName(String name) {
 void navigateSubView(Widget subview, BuildContext context) {
   showModalBottomSheet(
       context: context,
+      isDismissible: false,
       barrierColor: Colors.transparent,
-      // isScrollControlled: true,
+      isScrollControlled: true,
       builder: (builder) {
         return subview;
       });

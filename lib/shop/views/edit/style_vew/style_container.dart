@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:payever/commons/commons.dart';
 
 class StyleContainer extends StatefulWidget {
   final Widget child;
@@ -13,8 +14,10 @@ class StyleContainer extends StatefulWidget {
 class _StyleContainerState extends State<StyleContainer> {
   @override
   Widget build(BuildContext context) {
+    bool isPortrait = GlobalUtils.isPortrait(context);
+
     return Container(
-      height: 350,
+      height: isPortrait? 350: 200,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: SafeArea(

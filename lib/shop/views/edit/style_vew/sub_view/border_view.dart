@@ -183,6 +183,7 @@ class _BorderViewState extends State<BorderView> {
                     value: borderModel.borderWidth > 10 ? 10 : borderModel.borderWidth,
                     min: 0,
                     max: 10,
+                    divisions: 10,
                     onChanged: (double value) {
                       borderModel.borderWidth = value;
                       _updateBorderModel(false);

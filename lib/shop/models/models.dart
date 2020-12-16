@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:payever/libraries/utils/px_dp.dart';
 import 'package:payever/theme.dart';
 
 import 'constant.dart';
@@ -718,7 +719,7 @@ class BaseStyles with BackgroundAssist, StyleAssist, SizeAssist, DecorationAssis
       color2 = colorConvert(backgroundColor);
     } else if (childType == 'logo') {
       border2 = (borderStyle == 'solid' && borderWidth > 0)
-          ? Border.all(color: colorConvert(borderColor), width: borderWidth)
+          ? Border.all(color: colorConvert(borderColor), width: PxDp.d2u(px: borderWidth.floor()))
           : null;
     } else if (childType == 'image') {
       border2 = getBorder;

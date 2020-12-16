@@ -191,14 +191,19 @@ class ShopEditScreenBloc
     Map<String, dynamic>stylesheets = state.pageDetail.stylesheets;
 
     String actionType = event.effects.first['type'];
-    // Add Text
+    /// For Test
+    /// If Element is Table, prevent to update third party
+    bool isTable = false;
+    // Add Object
     print('actionType: $actionType');
     if (actionType == 'template:append-element') {
-      Map<String, dynamic>newTextMap = event.effects.first['payload']['element'];
-      String id = newTextMap['id'];
+      Map<String, dynamic>newElement = event.effects.first['payload']['element'];
+      String id = newElement['id'];
       Map<String, dynamic>styles = event.effects[3]['payload'][id];
       stylesheets[id] = styles;
-      (sections.firstWhere((element) => element.id == event.sectionId).children).add(Child.fromJson(newTextMap));
+      Child newObject = Child.fromJson(newElement);
+      isTable = newObject.type == 'table';
+      (sections.firstWhere((element) => element.id == event.sectionId).children).add(newObject);
     } else if (actionType == 'template:delete-element') {
       String id = event.effects.first['payload'];
       List<Child> sections = template.children;
@@ -249,7 +254,7 @@ class ShopEditScreenBloc
         selectedSectionId: event.sectionId, pageDetail: pageDetail);
 
     if (!event.updateApi) return;
-    // if (state.selectedChild?.type == 'table') return;
+    if (state.selectedChild?.type == 'table' || isTable) return;
     api.shopEditAction(token, themeId, body).then((response) {
       if (response is DioError) {
         Fluttertoast.showToast(msg: response.error);

@@ -223,7 +223,7 @@ class _CellBorderState extends State<CellBorder> {
                 ),
                 Expanded(
                     child: borderModel != null
-                        ? borderStyleWidget(BorderModel(borderWidth: 1, borderStyle: borderModel.borderStyle, borderColor: '#FFFFFF'))
+                        ? borderStyleWidget(BorderModel(borderWidth: 3, borderStyle: borderModel.borderStyle, borderColor: '#FFFFFF'))
                         : Text(
                       'None',
                       style: TextStyle(color: Colors.blue, fontSize: 15),

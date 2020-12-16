@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:payever/libraries/utils/px_dp.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/theme.dart';
 
@@ -25,14 +26,14 @@ class _DashedDecorationViewState extends State<DashedDecorationView> {
     return DottedBorder(
       customPath: widget.customPath,
       dashPattern: dashPattern,
-      strokeWidth: widget.borderModel.borderWidth,
+      strokeWidth: PxDp.d2u(px: widget.borderModel.borderWidth.floor()),
       color: colorConvert(widget.borderModel.borderColor),
       child: widget.child,
     );
   }
 
   List<double> get dashPattern {
-    double borderWidth = widget.borderModel.borderWidth;
+    double borderWidth = PxDp.d2u(px: widget.borderModel.borderWidth.floor());
     // if (borderWidth < 2) borderWidth = 2;
     switch(widget.borderModel.borderStyle) {
       case 'solid':

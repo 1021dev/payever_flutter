@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:payever/libraries/utils/px_dp.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/element/widget/DashedBorder/dotted_border.dart';
 import 'package:payever/shop/views/edit/element/widget/background_view.dart';
 import 'package:payever/shop/views/edit/element/widget/dashed_decoration_view.dart';
 import 'package:payever/theme.dart';
@@ -109,37 +111,42 @@ class _RowBuilderState extends State<RowBuilder> {
     return Flexible(
       fit: FlexFit.loose,
       flex: 6,
-      child: DashedDecorationView(
-        borderModel: widget.borderModel,
-        child: Container(
-          height: widget.trHeight,
-          width: widget.trWidth,
-          alignment: widget.tdVerticalAlignment,
-          decoration: BoxDecoration(
-              color: backgroundColor,
-              border: border),
-          child: Stack(
-            children: [
-              if (hasBackground)
-                BackgroundView(styles: widget.baseStyles,),
-              TextFormField(
-                textAlign: widget.tdAlignment,
-                style: widget.tdStyle,
-                initialValue: widget.cellData.toString(),
-                onFieldSubmitted: widget.onSubmitted,
-                onChanged: widget.onChanged,
-                textAlignVertical: TextAlignVertical.center,
-                keyboardType: widget.textWrap ? TextInputType.multiline : null,
-                maxLines: widget.textWrap ? null : 1,
-                enabled: widget.enableEdit,
-                decoration: InputDecoration(
-                    isDense: true,
-                    filled: widget.zebraStripe,
-                    fillColor: backgroundColor,
-                    contentPadding: EdgeInsets.zero,
-                    border: InputBorder.none),
-              ),
-            ],
+      child: Container(
+        height: widget.trHeight,
+        width: widget.trWidth,
+        child: DashedDecorationView(
+          borderModel: widget.borderModel,
+          customPath:pathBuilder,
+          child: Container(
+            height: widget.trHeight,
+            width: widget.trWidth,
+            alignment: widget.tdVerticalAlignment,
+            decoration: BoxDecoration(
+                color: backgroundColor,
+                border: border),
+            child: Stack(
+              children: [
+                if (hasBackground)
+                  BackgroundView(styles: widget.baseStyles,),
+                TextFormField(
+                  textAlign: widget.tdAlignment,
+                  style: widget.tdStyle,
+                  initialValue: widget.cellData.toString(),
+                  onFieldSubmitted: widget.onSubmitted,
+                  onChanged: widget.onChanged,
+                  textAlignVertical: TextAlignVertical.center,
+                  keyboardType: widget.textWrap ? TextInputType.multiline : null,
+                  maxLines: widget.textWrap ? null : 1,
+                  enabled: widget.enableEdit,
+                  decoration: InputDecoration(
+                      isDense: true,
+                      filled: widget.zebraStripe,
+                      fillColor: backgroundColor,
+                      contentPadding: EdgeInsets.zero,
+                      border: InputBorder.none),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -179,39 +186,76 @@ class _RowBuilderState extends State<RowBuilder> {
     return bgColor;
   }
 
-  Border get border {
-    if (widget.borderModel == null || widget.borderModel.borderStyle != 'solid') return null;
-    BorderSide borderSide = BorderSide(
-        color: colorConvert(widget.borderModel.borderColor), width: widget.borderModel.borderWidth);
-    BorderSide top = BorderSide.none;
-    BorderSide bottom = BorderSide.none;
-    BorderSide right = BorderSide.none;
-    BorderSide left = BorderSide.none;
+  Path pathBuilder(Size size) {
+    Map<String, bool> borderEnables = borderCheck;
+    bool top = borderEnables['top'];
+    bool bottom = borderEnables['bottom'];
+    bool right = borderEnables['right'];
+    bool left = borderEnables['left'];
+    Path path = Path();
+    if (top)
+      path
+        ..moveTo(0, 0)
+        ..lineTo(size.width, 0);
+    if (right)
+      path
+        ..moveTo(size.width, 0)
+        ..lineTo(size.width, size.height);
+    if (bottom)
+      path
+        ..moveTo(0, size.height)
+        ..lineTo(size.width, size.height);
+    if (left)
+      path
+        ..moveTo(0, 0)
+        ..lineTo(0, size.height);
+    return path;
+  }
 
-    if (isTop && widget.outline) top = borderSide;
-    if (isLeft && widget.outline) left = borderSide;
-    if (isRight && widget.outline) right = borderSide;
-    if (isBottom && widget.outline) bottom = borderSide;
+  Map<String, bool> get borderCheck {
+    bool top = false;
+    bool bottom = false;
+    bool right = false;
+    bool left = false;
+
+    if (isTop && widget.outline) top = true;
+    if (isLeft && widget.outline) left = true;
+    if (isRight && widget.outline) right = true;
+    if (isBottom && widget.outline) bottom = true;
 
     if (isHeader) {
-      if (widget.headerRowLines) right = borderSide;
+      if (widget.headerRowLines) right = true;
       // if (widget.headerColumnLines) bottom = borderSide;
       if (widget.headerRowLines && widget.rowIndex == widget.headerRows -1 )
-        bottom = borderSide;
+        bottom = true;
     } else if (isFooter) {
-      if (widget.footerRowLines) right = borderSide;
+      if (widget.footerRowLines) right = true;
       // if (widget.headerColumnLines) bottom = borderSide;
     } else if (isHeaderLeft) {
-      if (widget.headerColumnLines) bottom = borderSide;
+      if (widget.headerColumnLines) bottom = true;
       // if (widget.headerRowLines) right = borderSide;
       if (widget.headerColumnLines && widget.column == widget.headerColumns -1)
-        right = borderSide;
+        right = true;
     } else {
-      if (widget.verticalLines) right = borderSide;
-      if (widget.horizontalLines) bottom = borderSide;
+      if (widget.verticalLines) right = true;
+      if (widget.horizontalLines) bottom = true;
       if (widget.footerRowLines && widget.rowIndex == widget.rowCount - widget.footerRows -1)
-        bottom = borderSide;
+        bottom = true;
     }
+    return {'bottom': bottom, 'right': right, 'top': top, 'left': left};
+  }
+
+
+  Border get border {
+    if (widget.borderModel == null || widget.borderModel.borderStyle != 'solid') return null;
+    double borderWidth = PxDp.d2u(px: widget.borderModel.borderWidth.floor());
+    BorderSide borderSide = BorderSide(
+        color: colorConvert(widget.borderModel.borderColor), width: borderWidth);
+    Map<String, bool> borderEnables = borderCheck;
+    BorderSide top = borderEnables['top'] ? borderSide : BorderSide.none;
+    BorderSide bottom = borderEnables['bottom'] ? borderSide : BorderSide.none;
+    BorderSide right = borderEnables['right'] ? borderSide : BorderSide.none;
+    BorderSide left = borderEnables['left'] ? borderSide : BorderSide.none;
     return Border(bottom: bottom, right: right, top: top, left: left);
   }
 

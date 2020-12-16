@@ -40,12 +40,17 @@ class DottedBorder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(
+
       children: <Widget>[
-        Positioned(
-          top: strokeWidth/2,
-          bottom: strokeWidth/2,
-          left: strokeWidth/2,
-          right: strokeWidth/2,
+        Padding(
+          padding: EdgeInsets.all(0/*strokeWidth/2*/),
+          child: child,
+        ),
+        Positioned.fill(
+          // top: strokeWidth/2,
+          // bottom: strokeWidth/2,
+          // left: strokeWidth/2,
+          // right: strokeWidth/2,
           child: CustomPaint(
             painter: _DashPainter(
               strokeWidth: strokeWidth,
@@ -58,10 +63,7 @@ class DottedBorder extends StatelessWidget {
             ),
           ),
         ),
-        Padding(
-          padding: EdgeInsets.all(strokeWidth),
-          child: child,
-        ),
+
       ],
     );
   }

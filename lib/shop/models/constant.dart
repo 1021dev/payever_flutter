@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+import 'package:payever/libraries/utils/px_dp.dart';
 import 'package:payever/theme.dart';
 
 import 'models.dart';
@@ -158,22 +159,23 @@ const minTextFontSize = 8;
 const double ptFontFactor = 30 / 112;
 
 Widget borderStyleWidget(BorderModel model) {
+  double borderWidth = PxDp.d2u(px: model.borderWidth.floor());
   Color color = colorConvert(model.borderColor);
   switch (model.borderStyle) {
     case 'solid':
       return Container(
-        height: model.borderWidth,
+        height: borderWidth,
         color: color,
       );
     case 'dashed':
       return DottedLine(
-        lineThickness: model.borderWidth,
-        dashLength: model.borderWidth * 2,
-        dashGapLength: model.borderWidth,
+        lineThickness: borderWidth,
+        dashLength: borderWidth * 2,
+        dashGapLength: borderWidth,
         dashColor: color,
       );
     case 'dotted':
-      return DottedLine(dashColor: color, lineThickness: model.borderWidth);
+      return DottedLine(dashColor: color, lineThickness: borderWidth);
   }
   throw('Error: wrong border style: ${model.borderStyle}');
 }
