@@ -137,7 +137,7 @@ class _RowBuilderState extends State<RowBuilder> {
               decoration: InputDecoration(
                   isDense: true,
                   filled: widget.zebraStripe,
-                  // fillColor: backgroundColor,
+                  fillColor: backgroundColor,
                   contentPadding: EdgeInsets.zero,
                   border: InputBorder.none),
             ),

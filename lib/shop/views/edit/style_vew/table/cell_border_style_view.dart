@@ -5,13 +5,13 @@ import 'package:payever/shop/views/edit/style_vew/sub_view/toolbar.dart';
 
 class CellBorderStyleView extends StatefulWidget {
 
-  final Function onChangeBorderStyle;
+  final Function onChangeBorderModel;
   final Function onClose;
   final BorderModel borderModel;
   final BorderModel recentBorderModel;
 
   const CellBorderStyleView(
-      {@required this.onChangeBorderStyle,
+      {@required this.onChangeBorderModel,
       @required this.borderModel,
       this.recentBorderModel,
       @required this.onClose});
@@ -79,9 +79,7 @@ class _CellBorderStyleViewState extends State<CellBorderStyleView> {
                 children: [
                   Expanded(
                     child: InkWell(
-                      onTap: () {
-
-                      },
+                      onTap: ()=> widget.onChangeBorderModel(null),
                       child: Container(
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
@@ -98,9 +96,7 @@ class _CellBorderStyleViewState extends State<CellBorderStyleView> {
                   SizedBox(width: 8,),
                   Expanded(
                     child: InkWell(
-                      onTap: (){
-
-                      },
+                      onTap: ()=> widget.onChangeBorderModel(null),
                       child: Container(
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
@@ -128,35 +124,38 @@ class _CellBorderStyleViewState extends State<CellBorderStyleView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (title != null)
-        Text(
-          title,
-          style: TextStyle(color: Colors.grey, fontSize: 15),
-        ),
+          Text(
+            title,
+            style: TextStyle(color: Colors.grey, fontSize: 15),
+          ),
         if (title != null)
-        SizedBox(
-          height: 10,
-        ),
-        Row(
-          children: [
-            Opacity(
-              opacity: (title == null && selectedStyle(model)) ? 1 : 0,
-              child: Icon(
-                Icons.check,
-                color: Colors.blue,
+          SizedBox(
+            height: 10,
+          ),
+        InkWell(
+          onTap: ()=> widget.onChangeBorderModel(model),
+          child: Row(
+            children: [
+              Opacity(
+                opacity: (title == null && selectedStyle(model)) ? 1 : 0,
+                child: Icon(
+                  Icons.check,
+                  color: Colors.blue,
+                ),
               ),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(child: borderStyleWidget(model)),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              '${model.borderWidth.floor()} pt',
-              style: TextStyle(color: Colors.white, fontSize: 15),
-            ),
-          ],
+              SizedBox(
+                width: 10,
+              ),
+              Expanded(child: borderStyleWidget(model)),
+              SizedBox(
+                width: 10,
+              ),
+              Text(
+                '${model.borderWidth.floor()} pt',
+                style: TextStyle(color: Colors.white, fontSize: 15),
+              ),
+            ],
+          ),
         ),
         SizedBox(height: 24,)
       ],

@@ -9,8 +9,8 @@ class FontSize extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
   final double fontSize;
   final Function onUpdateFontSize;
-
-  const FontSize({this.screenBloc, this.fontSize, this.onUpdateFontSize});
+  final String title;
+  const FontSize({this.screenBloc, this.fontSize, this.onUpdateFontSize, this.title});
 
   @override
   _FontSizeState createState() => _FontSizeState();
@@ -25,7 +25,7 @@ class _FontSizeState extends State<FontSize> {
       child: Row(
         children: [
           Text(
-            'Size',
+            widget.title ?? 'Size',
             style: TextStyle(color: Colors.white, fontSize: 15),
           ),
           Spacer(),

@@ -31,9 +31,12 @@ class _ToolbarState extends State<Toolbar> {
                     Icons.arrow_back_ios,
                     color: Colors.blue,
                   ),
-                  Text(
-                    widget.backTitle,
-                    style: TextStyle(color: Colors.blue, fontSize: 16),
+                  Flexible(
+                    child: Text(
+                      widget.backTitle,
+                      style: TextStyle(color: Colors.blue, fontSize: 16),
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   )
                 ],
               ),
