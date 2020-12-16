@@ -9,6 +9,7 @@ import 'package:payever/shop/views/edit/style_vew/sub_view/border_style_view.dar
 import 'package:payever/shop/views/edit/style_vew/sub_view/toolbar.dart';
 import 'package:payever/theme.dart';
 import '../fill_color_view.dart';
+import '../style_container.dart';
 import 'cell_border_style_view.dart';
 import 'font_size.dart';
 
@@ -60,34 +61,22 @@ class _CellBorderState extends State<CellBorder> {
   }
 
   Widget body() {
-
-    return Container(
-      height: 400,
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: SafeArea(
-          bottom: false,
-          child: Container(
-            color: Color.fromRGBO(23, 23, 25, 1),
-            padding: EdgeInsets.only(top: 18, bottom: 32),
-            child: Column(
-              children: [
-                Toolbar(backTitle: 'Cell', title: 'Cell Border', onClose: widget.onClose),
-                SizedBox(
-                  height: 10,
-                ),
-                Expanded(child: mainBody()),
-              ],
-            ),
+    return StyleContainer(
+      child: Column(
+        children: [
+          Toolbar(backTitle: 'Cell', title: 'Cell Border', onClose: widget.onClose),
+          SizedBox(
+            height: 10,
           ),
-        ),
+          Expanded(child: mainBody()),
+        ],
       ),
     );
   }
 
   Widget mainBody() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.only(left: 16, right: 16, bottom: 32),
       child: SingleChildScrollView(
         child: Column(
           children: [
@@ -234,7 +223,7 @@ class _CellBorderState extends State<CellBorder> {
                 ),
                 Expanded(
                     child: borderModel != null
-                        ? borderStyleWidget(borderModel)
+                        ? borderStyleWidget(BorderModel(borderWidth: 1, borderStyle: borderModel.borderStyle, borderColor: '#FFFFFF'))
                         : Text(
                       'None',
                       style: TextStyle(color: Colors.blue, fontSize: 15),
@@ -256,21 +245,18 @@ class _CellBorderState extends State<CellBorder> {
               styles: styles,
               colorType: ColorType.border,
               onUpdateColor: (Color color) {
-                String hexColor = encodeColor(color);
-                Map<String, dynamic>sheets = widget.stylesheets;
-                sheets['borderColor'] = hexColor;
-                _updateSheets(sheets);
+                borderModel.borderColor = encodeColor(color);
+                _updateBorderModel(borderModel);
               },
             ),
             FontSize(
               screenBloc: widget.screenBloc,
               fontSize: borderModel.borderWidth,
+              hasFontFactor: false,
               title: 'Width',
               onUpdateFontSize: (double value) {
                 borderModel.borderWidth = value;
-                Map<String, dynamic>sheets = widget.stylesheets;
-                sheets['borderWidth'] = value.floor();
-                _updateSheets(sheets);
+                _updateBorderModel(borderModel);
               },
             ),
           ],

@@ -116,7 +116,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
           right: 0,
           duration: Duration(milliseconds: 400),
           bottom: showStyleControlView
-              ? -MediaQuery.of(context).padding.bottom
+              ? 0
               : -500,
           child: state.selectedChild == null
               ? Container()

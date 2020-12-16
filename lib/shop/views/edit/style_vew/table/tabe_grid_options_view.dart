@@ -4,6 +4,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/shop/shop_edit/shop_edit_bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/style_vew/style_container.dart';
 import 'package:payever/shop/views/edit/style_vew/sub_view/toolbar.dart';
 
 class TableGridOptionsView extends StatefulWidget {
@@ -62,26 +63,15 @@ class _TableGridOptionsViewState extends State<TableGridOptionsView> {
       return Container();
     }
 
-    return Container(
-      height: 400,
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: SafeArea(
-          bottom: false,
-          child: Container(
-            color: Color.fromRGBO(23, 23, 25, 1),
-            padding: EdgeInsets.only(top: 18),
-            child: Column(
-              children: [
-                Toolbar(backTitle: 'Table', title: 'Grid Options', onClose: widget.onClose),
-                SizedBox(
-                  height: 10,
-                ),
-                Expanded(child: _styleBody),
-              ],
-            ),
+    return StyleContainer(
+      child: Column(
+        children: [
+          Toolbar(backTitle: 'Table', title: 'Grid Options', onClose: widget.onClose),
+          SizedBox(
+            height: 10,
           ),
-        ),
+          Expanded(child: _styleBody),
+        ],
       ),
     );
   }

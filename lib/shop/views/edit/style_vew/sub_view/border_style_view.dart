@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/style_vew/style_container.dart';
 import 'package:payever/shop/views/edit/style_vew/sub_view/toolbar.dart';
 import 'package:payever/theme.dart';
 
@@ -41,30 +42,19 @@ class _BorderStyleViewState extends State<BorderStyleView> {
   }
 
   Widget body() {
-    return Container(
-      height: 400,
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: SafeArea(
-          bottom: false,
-          child: Container(
-            color: Color.fromRGBO(23, 23, 25, 1),
-            padding: EdgeInsets.only(top: 18),
-            child: Column(
-              children: [
-                Toolbar(
-                  backTitle: widget.backTitle,
-                  title: widget.title,
-                  onClose: widget.onClose,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Expanded(child: _styleBody),
-              ],
-            ),
+    return StyleContainer(
+      child: Column(
+        children: [
+          Toolbar(
+            backTitle: widget.backTitle,
+            title: widget.title,
+            onClose: widget.onClose,
           ),
-        ),
+          SizedBox(
+            height: 10,
+          ),
+          Expanded(child: _styleBody),
+        ],
       ),
     );
   }

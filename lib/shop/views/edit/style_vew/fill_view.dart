@@ -7,6 +7,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/block_picker.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/style_vew/style_container.dart';
 import 'package:payever/shop/views/edit/style_vew/sub_view/toolbar.dart';
 import 'package:payever/shop/views/edit/style_vew/sub_view/upload_image_view.dart';
 import '../../../../theme.dart';
@@ -111,27 +112,16 @@ class _FillViewState extends State<FillView> {
 
   Widget body(ShopEditScreenState state) {
     styles = TextStyles.fromJson(state.pageDetail.stylesheets[selectedChildId]);
-    return Container(
-      height: 400,
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: SafeArea(
-          bottom: false,
-          child: Container(
-            color: Color.fromRGBO(23, 23, 25, 1),
-            padding: EdgeInsets.only(top: 18),
-            child: Column(
-              children: [
-                Toolbar(backTitle: 'Style', title: 'Fill', onClose: widget.onClose),
-                _secondAppbar,
-                SizedBox(
-                  height: 10,
-                ),
-                Expanded(child: mainBody(selectedItemIndex)),
-              ],
-            ),
+    return StyleContainer(
+      child: Column(
+        children: [
+          Toolbar(backTitle: 'Style', title: 'Fill', onClose: widget.onClose),
+          _secondAppbar,
+          SizedBox(
+            height: 10,
           ),
-        ),
+          Expanded(child: mainBody(selectedItemIndex)),
+        ],
       ),
     );
   }
@@ -236,41 +226,43 @@ class _FillViewState extends State<FillView> {
 
   Widget get _gradientView {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        children: [
-          _fill(true),
-          _fill(false),
-          InkWell(
-            onTap: (){
-              setState(() {
-                Color tempStart = endColor;
-                endColor = startColor;
-                startColor = tempStart;
-                _updateGradientFill();
-              });
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              height: 50,
-              decoration: BoxDecoration(
-                  color: Color.fromRGBO(51, 48, 53, 1),
-                  borderRadius: BorderRadius.circular(8)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SvgPicture.asset('assets/images/flip-color.svg'),
-                  SizedBox(width: 10,),
-                  Text(
-                    'Flip Color',
-                    style: TextStyle(color: Colors.white, fontSize: 15),
-                  ),
-                ],
+      padding: EdgeInsets.only(left: 16, right: 16, bottom: 32),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            _fill(true),
+            _fill(false),
+            InkWell(
+              onTap: (){
+                setState(() {
+                  Color tempStart = endColor;
+                  endColor = startColor;
+                  startColor = tempStart;
+                  _updateGradientFill();
+                });
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                height: 50,
+                decoration: BoxDecoration(
+                    color: Color.fromRGBO(51, 48, 53, 1),
+                    borderRadius: BorderRadius.circular(8)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset('assets/images/flip-color.svg'),
+                    SizedBox(width: 10,),
+                    Text(
+                      'Flip Color',
+                      style: TextStyle(color: Colors.white, fontSize: 15),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          _angle,
-        ],
+            _angle,
+          ],
+        ),
       ),
     );
   }

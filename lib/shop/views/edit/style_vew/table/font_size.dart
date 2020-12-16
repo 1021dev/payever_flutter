@@ -5,12 +5,16 @@ import 'package:payever/shop/models/constant.dart';
 
 import '../font_family_view.dart';
 
+/// Text Font Size has ptFontFactor
+/// Table Cell border width has not ptFontFactor
+
 class FontSize extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
   final double fontSize;
   final Function onUpdateFontSize;
   final String title;
-  const FontSize({this.screenBloc, this.fontSize, this.onUpdateFontSize, this.title});
+  final bool hasFontFactor;
+  const FontSize({this.screenBloc, this.fontSize, this.onUpdateFontSize, this.title, this.hasFontFactor = true});
 
   @override
   _FontSizeState createState() => _FontSizeState();
@@ -30,7 +34,7 @@ class _FontSizeState extends State<FontSize> {
           ),
           Spacer(),
           Text(
-            '${widget.fontSize ~/ ptFontFactor} pt',
+            '${widget.fontSize ~/ (widget.hasFontFactor ? ptFontFactor : 1)} pt',
             style: TextStyle(color: Colors.blue, fontSize: 15),
           ),
           SizedBox(
@@ -43,7 +47,7 @@ class _FontSizeState extends State<FontSize> {
                 Expanded(
                   child: InkWell(
                     onTap: () {
-                      if (widget.fontSize > minTextFontSize) {
+                      if (widget.fontSize > (widget.hasFontFactor ? minTextFontSize : 1)) {
                         widget.onUpdateFontSize(widget.fontSize -1);
                       }
                     },
@@ -91,6 +95,5 @@ class _FontSizeState extends State<FontSize> {
         ],
       ),
     );
-
   }
 }

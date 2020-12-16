@@ -5,6 +5,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/shop/shop_edit/shop_edit_bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/constant.dart';
+import 'package:payever/shop/views/edit/style_vew/style_container.dart';
 import 'package:payever/shop/views/edit/style_vew/sub_view/toolbar.dart';
 
 class FontFamilyView extends StatefulWidget {
@@ -49,26 +50,15 @@ class _FontFamilyViewState extends State<FontFamilyView> {
 
   Widget body(ShopEditScreenState state) {
     if (state.selectedChild == null) return Container();
-    return Container(
-      height: 400,
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: SafeArea(
-          bottom: false,
-          child: Container(
-            color: Color.fromRGBO(23, 23, 25, 1),
-            padding: EdgeInsets.only(top: 18),
-            child: Column(
-              children: [
-                Toolbar(backTitle: 'Text', title: 'Fonts', onClose: widget.onClose),
-                SizedBox(
-                  height: 10,
-                ),
-                Expanded(child: _styleBody),
-              ],
-            ),
+    return StyleContainer(
+      child: Column(
+        children: [
+          Toolbar(backTitle: 'Text', title: 'Fonts', onClose: widget.onClose),
+          SizedBox(
+            height: 10,
           ),
-        ),
+          Expanded(child: _styleBody),
+        ],
       ),
     );
   }

@@ -11,6 +11,7 @@ import 'package:payever/shop/views/edit/style_vew/fill_view.dart';
 import 'package:payever/shop/views/edit/style_vew/image_style_view.dart';
 import 'package:payever/shop/views/edit/style_vew/products_style_view.dart';
 import 'package:payever/shop/views/edit/style_vew/shadow_view.dart';
+import 'package:payever/shop/views/edit/style_vew/style_container.dart';
 import 'package:payever/shop/views/edit/style_vew/table/format_style_view.dart';
 import 'package:payever/shop/views/edit/style_vew/table/table_cell_style_view.dart';
 import 'package:payever/shop/views/edit/style_vew/table/table_style_view.dart';
@@ -108,26 +109,18 @@ class _StyleControlViewState extends State<StyleControlView> {
   Widget body(ShopEditScreenState state) {
     if (state.selectedChild == null) return Container();
     _initTextProperties(state);
-    return Container(
-      height: 400,
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: SafeArea(
-          bottom: false,
-          child: Container(
-            color: Color.fromRGBO(23, 23, 25, 1),
-            padding: EdgeInsets.only(left: 16, right: 16, top: 18, bottom: 34),
-            child: Column(
-              children: [
-                _segmentedControl(state),
-                SizedBox(
-                  height: 10,
-                ),
-                Expanded(child: mainBody(state)),
-              ],
-            ),
+    return StyleContainer(
+      child: Column(
+        children: [
+          _segmentedControl(state),
+          SizedBox(
+            height: 10,
           ),
-        ),
+          Expanded(child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: mainBody(state),
+          )),
+        ],
       ),
     );
   }
@@ -317,7 +310,6 @@ class _StyleControlViewState extends State<StyleControlView> {
     ];
     return ListView.separated(
       shrinkWrap: true,
-      padding: EdgeInsets.symmetric(horizontal: 16),
       itemCount: textStyleWidgets.length,
       itemBuilder: (context, index) {
         return textStyleWidgets[index];

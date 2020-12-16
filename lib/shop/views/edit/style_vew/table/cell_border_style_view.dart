@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/style_vew/style_container.dart';
 import 'package:payever/shop/views/edit/style_vew/sub_view/toolbar.dart';
 
 class CellBorderStyleView extends StatefulWidget {
@@ -33,23 +34,16 @@ class _CellBorderStyleViewState extends State<CellBorderStyleView> {
   }
 
   Widget body() {
-    return Container(
-      height: 400,
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: SafeArea(
-          bottom: false,
-          child: Container(
-            color: Color.fromRGBO(23, 23, 25, 1),
-            padding: EdgeInsets.only(top: 18),
-            child: Column(
-              children: [
-                Toolbar(backTitle: 'Cell Border', title: 'Border Styles', onClose: widget.onClose,),
-                Expanded(child: _styleBody),
-              ],
-            ),
+    return StyleContainer(
+      child: Column(
+        children: [
+          Toolbar(
+            backTitle: 'Cell Border',
+            title: 'Border Styles',
+            onClose: widget.onClose,
           ),
-        ),
+          Expanded(child: _styleBody),
+        ],
       ),
     );
   }
@@ -79,7 +73,10 @@ class _CellBorderStyleViewState extends State<CellBorderStyleView> {
                 children: [
                   Expanded(
                     child: InkWell(
-                      onTap: ()=> widget.onChangeBorderModel(null),
+                      onTap: () {
+                        widget.onChangeBorderModel(null);
+                        Navigator.pop(context);
+                      },
                       child: Container(
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
@@ -96,7 +93,10 @@ class _CellBorderStyleViewState extends State<CellBorderStyleView> {
                   SizedBox(width: 8,),
                   Expanded(
                     child: InkWell(
-                      onTap: ()=> widget.onChangeBorderModel(null),
+                      onTap: () {
+                        widget.onChangeBorderModel(null);
+                        Navigator.pop(context);
+                      },
                       child: Container(
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
@@ -133,7 +133,10 @@ class _CellBorderStyleViewState extends State<CellBorderStyleView> {
             height: 10,
           ),
         InkWell(
-          onTap: ()=> widget.onChangeBorderModel(model),
+          onTap: () {
+            widget.onChangeBorderModel(model);
+            Navigator.pop(context);
+          },
           child: Row(
             children: [
               Opacity(

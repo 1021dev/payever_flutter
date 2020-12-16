@@ -195,12 +195,15 @@ class _RowBuilderState extends State<RowBuilder> {
 
     if (isHeader) {
       if (widget.headerRowLines) right = borderSide;
+      // if (widget.headerColumnLines) bottom = borderSide;
       if (widget.headerRowLines && widget.rowIndex == widget.headerRows -1 )
         bottom = borderSide;
     } else if (isFooter) {
       if (widget.footerRowLines) right = borderSide;
+      // if (widget.headerColumnLines) bottom = borderSide;
     } else if (isHeaderLeft) {
       if (widget.headerColumnLines) bottom = borderSide;
+      // if (widget.headerRowLines) right = borderSide;
       if (widget.headerColumnLines && widget.column == widget.headerColumns -1)
         right = borderSide;
     } else {

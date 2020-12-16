@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/style_vew/style_container.dart';
 
 class ParagraphView extends StatefulWidget {
   final List<Paragraph> paragraphs;
@@ -35,26 +36,15 @@ class _ParagraphViewState extends State<ParagraphView> {
   }
 
   Widget body() {
-    return Container(
-      height: 400,
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: SafeArea(
-          bottom: false,
-          child: Container(
-            color: Color.fromRGBO(23, 23, 25, 1),
-            padding: EdgeInsets.only(top: 18),
-            child: Column(
-              children: [
-                _toolBar,
-                SizedBox(
-                  height: 10,
-                ),
-                Expanded(child: _styleBody),
-              ],
-            ),
+    return StyleContainer(
+      child: Column(
+        children: [
+          _toolBar,
+          SizedBox(
+            height: 10,
           ),
-        ),
+          Expanded(child: _styleBody),
+        ],
       ),
     );
   }

@@ -69,7 +69,8 @@ class _TableViewState extends State<TableView> {
       /// Background & Border
       fillColor: styles.backgroundColor,
       outline: styles.outline,
-      borderColor: Colors.blueGrey,
+      borderColor: colorConvert(styles.borderColor),
+      borderWidth: styles.borderWidth,
       /// Title & Caption
       title: styles.title, caption: styles.caption,
       /// Text Style

@@ -6,6 +6,8 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/style_vew/sub_view/toolbar.dart';
 
+import '../style_container.dart';
+
 class TableHeaderFooterView extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
   final Function onUpdateStyles;
@@ -56,27 +58,15 @@ class _TableHeaderFooterViewState extends State<TableHeaderFooterView> {
       Navigator.pop(context);
       return Container();
     }
-
-    return Container(
-      height: 400,
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: SafeArea(
-          bottom: false,
-          child: Container(
-            color: Color.fromRGBO(23, 23, 25, 1),
-            padding: EdgeInsets.only(top: 18),
-            child: Column(
-              children: [
-                Toolbar(backTitle: 'Table', title: 'Header & Footer', onClose: widget.onClose),
-                SizedBox(
-                  height: 10,
-                ),
-                Expanded(child: _styleBody),
-              ],
-            ),
+    return StyleContainer(
+      child: Column(
+        children: [
+          Toolbar(backTitle: 'Table', title: 'Header & Footer', onClose: widget.onClose),
+          SizedBox(
+            height: 10,
           ),
-        ),
+          Expanded(child: _styleBody),
+        ],
       ),
     );
   }

@@ -11,6 +11,7 @@ import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/style_vew/sub_view/toolbar.dart';
 
 import '../../../../../theme.dart';
+import '../style_container.dart';
 
 class TextOptionsView extends StatefulWidget {
   final ShopEditScreenBloc screenBloc;
@@ -56,26 +57,15 @@ class _TextOptionsViewState extends State<TextOptionsView> {
 
   Widget body(ShopEditScreenState state) {
     if (state.selectedChild == null) return Container();
-    return Container(
-      height: 400,
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: SafeArea(
-          bottom: false,
-          child: Container(
-            color: Color.fromRGBO(23, 23, 25, 1),
-            padding: EdgeInsets.only(top: 18),
-            child: Column(
-              children: [
-                Toolbar(backTitle: 'Text', title: 'Text Options', onClose: widget.onClose),
-                SizedBox(
-                  height: 10,
-                ),
-                Expanded(child: _textBody),
-              ],
-            ),
+    return StyleContainer(
+      child: Column(
+        children: [
+          Toolbar(backTitle: 'Text', title: 'Text Options', onClose: widget.onClose),
+          SizedBox(
+            height: 10,
           ),
-        ),
+          Expanded(child: _textBody),
+        ],
       ),
     );
   }
