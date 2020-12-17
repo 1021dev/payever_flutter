@@ -155,7 +155,9 @@ class _RowBuilderState extends State<RowBuilder> {
 
   bool get hasBackground {
     BaseStyles styles = widget.baseStyles;
-    return (styles.backgroundColor != null && styles.backgroundColor.isNotEmpty) || (styles.backgroundImage != null && styles.backgroundImage.isNotEmpty);
+    return (styles.backgroundColor != null &&
+            styles.backgroundColor.isNotEmpty) ||
+        (styles.backgroundImage != null && styles.backgroundImage.isNotEmpty);
   }
 
   Color get backgroundColor {

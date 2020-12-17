@@ -45,7 +45,6 @@ class FakeDashboardScreen extends StatefulWidget {
 class _FakeDashboardScreenState extends State<FakeDashboardScreen> {
   DashboardScreenBloc screenBloc = DashboardScreenBloc();
   String uiKit = '${Env.commerceOs}/assets/ui-kit/icons-png/';
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   bool isLoaded = false;
   String searchString = '';
   TextEditingController searchController = TextEditingController();

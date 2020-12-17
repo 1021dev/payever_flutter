@@ -280,8 +280,6 @@ class _CellBorderState extends State<CellBorder> {
               child: ConditionalHighlightScreen(screenBloc: widget.screenBloc),
               type: PageTransitionType.fade,
             ));
-            // Widget subview = ConditionalHighlightScreen();
-            // navigateSubView(subview, context);
           },
           child: Container(
             height: 40,

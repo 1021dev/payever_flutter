@@ -93,6 +93,7 @@ flutter:
   assets:
     - assets/images/
     - assets/json/currency.json
+    - assets/json/highlight_rule.json
     - assets/json/paragraphs.json
     - assets/json/businesses_template.json
     - assets/json/wallpapers_template.json

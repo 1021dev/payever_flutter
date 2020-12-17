@@ -1145,7 +1145,15 @@ TableStyles _$TableStylesFromJson(Map<String, dynamic> json) {
     ..backgroundColor = json['backgroundColor'] as String
     ..cellBorder = json['cellBorder'] as String ?? 'outside'
     ..borderWidth = (json['borderWidth'] as num)?.toDouble() ?? 1
-    ..borderColor = json['borderColor'] as String ?? '#808080';
+    ..borderColor = json['borderColor'] as String ?? '#808080'
+    ..tableHighlightTextFontTypes =
+        (json['tableHighlightTextFontTypes'] as List)
+                ?.map((e) => e as String)
+                ?.toList() ??
+            []
+    ..tableHighlightBackgroundColor =
+        json['tableHighlightBackgroundColor'] as String
+    ..tableHighlightTextColor = json['tableHighlightTextColor'] as String;
 }
 
 Map<String, dynamic> _$TableStylesToJson(TableStyles instance) =>
@@ -1228,6 +1236,9 @@ Map<String, dynamic> _$TableStylesToJson(TableStyles instance) =>
       'cellBorder': instance.cellBorder,
       'borderWidth': instance.borderWidth,
       'borderColor': instance.borderColor,
+      'tableHighlightTextFontTypes': instance.tableHighlightTextFontTypes,
+      'tableHighlightBackgroundColor': instance.tableHighlightBackgroundColor,
+      'tableHighlightTextColor': instance.tableHighlightTextColor,
     };
 
 ShopCartStyles _$ShopCartStylesFromJson(Map<String, dynamic> json) {

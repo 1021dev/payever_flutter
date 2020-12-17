@@ -932,6 +932,13 @@ class TableStyles extends BaseStyles {
   @JsonKey(name: 'borderColor', defaultValue: '#808080')
   String borderColor;
 
+  /// Table Cell Conditional Highlight Style
+  @JsonKey(name: 'tableHighlightTextFontTypes', defaultValue: [])
+  List<String> tableHighlightTextFontTypes;
+  @JsonKey(name: 'tableHighlightBackgroundColor')
+  String tableHighlightBackgroundColor;
+  @JsonKey(name: 'tableHighlightTextColor')
+  String tableHighlightTextColor;
   factory TableStyles.fromJson(Map<String, dynamic> json) => _$TableStylesFromJson(json);
   Map<String, dynamic> toJson() => _$TableStylesToJson(this);
 }
