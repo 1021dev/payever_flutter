@@ -1185,6 +1185,17 @@ class PayloadData {
   Map<String, dynamic> toJson() => _$PayloadDataToJson(this);
 }
 
+@JsonSerializable()
+class TableHighLightRule {
+  TableHighLightRule();
+
+  @JsonKey(name: 'rule')          String rule;
+  @JsonKey(name: 'description')   String description;
+
+  factory TableHighLightRule.fromJson(Map<String, dynamic> json) => _$TableHighLightRuleFromJson(json);
+  Map<String, dynamic> toJson() => _$TableHighLightRuleToJson(this);
+}
+
 class ShopObject {
   String name;
   String type;

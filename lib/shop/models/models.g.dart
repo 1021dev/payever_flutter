@@ -1077,7 +1077,6 @@ TableStyles _$TableStylesFromJson(Map<String, dynamic> json) {
     ..borderType = json['borderType'] as String ?? 'solid'
     ..borderStyle = json['borderStyle'] as String ?? 'solid'
     ..borderRadius = json['borderRadius'] ?? 0
-    ..borderColor = json['borderColor'] as String ?? '#ffffff'
     ..borderSize = (json['borderSize'] as num)?.toDouble() ?? 0
     ..opacity = (json['opacity'] as num)?.toDouble() ?? 1
     ..stroke = json['stroke'] as String ?? '#000000'
@@ -1145,7 +1144,8 @@ TableStyles _$TableStylesFromJson(Map<String, dynamic> json) {
     ..textWrap = json['textWrap'] as bool ?? true
     ..backgroundColor = json['backgroundColor'] as String
     ..cellBorder = json['cellBorder'] as String ?? 'outside'
-    ..borderWidth = (json['borderWidth'] as num)?.toDouble() ?? 1;
+    ..borderWidth = (json['borderWidth'] as num)?.toDouble() ?? 1
+    ..borderColor = json['borderColor'] as String ?? '#808080';
 }
 
 Map<String, dynamic> _$TableStylesToJson(TableStyles instance) =>
@@ -1160,7 +1160,6 @@ Map<String, dynamic> _$TableStylesToJson(TableStyles instance) =>
       'borderType': instance.borderType,
       'borderStyle': instance.borderStyle,
       'borderRadius': instance.borderRadius,
-      'borderColor': instance.borderColor,
       'borderSize': instance.borderSize,
       'opacity': instance.opacity,
       'stroke': instance.stroke,
@@ -1228,6 +1227,7 @@ Map<String, dynamic> _$TableStylesToJson(TableStyles instance) =>
       'backgroundColor': instance.backgroundColor,
       'cellBorder': instance.cellBorder,
       'borderWidth': instance.borderWidth,
+      'borderColor': instance.borderColor,
     };
 
 ShopCartStyles _$ShopCartStylesFromJson(Map<String, dynamic> json) {
@@ -2212,6 +2212,18 @@ Map<String, dynamic> _$PayloadDataToJson(PayloadData instance) =>
     <String, dynamic>{
       'sync': instance.sync,
       'text': instance.text,
+    };
+
+TableHighLightRule _$TableHighLightRuleFromJson(Map<String, dynamic> json) {
+  return TableHighLightRule()
+    ..rule = json['rule'] as String
+    ..description = json['description'] as String;
+}
+
+Map<String, dynamic> _$TableHighLightRuleToJson(TableHighLightRule instance) =>
+    <String, dynamic>{
+      'rule': instance.rule,
+      'description': instance.description,
     };
 
 Paragraph _$ParagraphFromJson(Map<String, dynamic> json) {

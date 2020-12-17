@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/edit/style_vew/sub_view/border_style_view.dart';
 import 'package:payever/shop/views/edit/style_vew/sub_view/toolbar.dart';
+import 'package:payever/shop/views/edit/style_vew/table/conditional_highlight_screen.dart';
 import 'package:payever/theme.dart';
 import '../fill_color_view.dart';
 import '../style_container.dart';
@@ -274,8 +276,12 @@ class _CellBorderState extends State<CellBorder> {
         ),
         InkWell(
           onTap: () {
-            Widget subview;
-            navigateSubView(subview, context);
+            Navigator.push(context, PageTransition(
+              child: ConditionalHighlightScreen(screenBloc: widget.screenBloc),
+              type: PageTransitionType.fade,
+            ));
+            // Widget subview = ConditionalHighlightScreen();
+            // navigateSubView(subview, context);
           },
           child: Container(
             height: 40,
