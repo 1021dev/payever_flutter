@@ -142,10 +142,6 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
     }
   }
 
-  Widget _tableView() {
-    return Container();
-  }
-
   Widget _objectView() {
     return Column(
       children: [

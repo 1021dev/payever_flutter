@@ -25,7 +25,6 @@ class _ParagraphViewState extends State<ParagraphView> {
   bool isPortrait;
   bool isTablet;
   Paragraph selectedParagraph;
-  // int selectedIndex = -1;
   bool isEdit = false;
 
   @override

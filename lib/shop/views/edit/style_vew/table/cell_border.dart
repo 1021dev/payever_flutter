@@ -85,6 +85,7 @@ class _CellBorderState extends State<CellBorder> {
             _annotationText,
             _borderStyle,
             _lineType,
+            _addConditionalHighlight,
           ],
         ),
       ),
@@ -260,6 +261,41 @@ class _CellBorderState extends State<CellBorder> {
               },
             ),
           ],
+        ),
+      ],
+    );
+  }
+
+  Widget get _addConditionalHighlight {
+    return Column(
+      children: [
+        SizedBox(
+          height: 20,
+        ),
+        InkWell(
+          onTap: () {
+            Widget subview;
+            navigateSubView(subview, context);
+          },
+          child: Container(
+            height: 40,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Color.fromRGBO(51, 48, 53, 1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              'Add Conditional Highlighting',
+              style: TextStyle(fontSize: 15, color: Colors.white),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Text(
+          'Automatically highlight cells that match rules you specify.',
+          style: TextStyle(fontSize: 13, color: Colors.grey),
         ),
       ],
     );

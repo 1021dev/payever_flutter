@@ -125,7 +125,7 @@ class ShopEditScreenBloc
         // });
         // print('Pages Length: ${pages.length}');
       }
-      ShopPage homepage = pages?.firstWhere((element) => element.name == 'HOMEPAGE');
+      ShopPage homepage = pages?.firstWhere((page) => page.type == 'replica' && page.variant == 'front');
       if (homepage != null) {
         add(GetPageEvent(pageId: homepage.id));
       }

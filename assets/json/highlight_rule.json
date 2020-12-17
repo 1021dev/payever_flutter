@@ -1,0 +1,179 @@
+[
+  {
+    "name": "Numbers",
+    "rules": [
+      {
+        "rule": "Equal to...",
+        "description": ""
+      },
+      {
+        "rule": "Not equal to...",
+        "description": ""
+      },
+      {
+        "rule": "Greater than...",
+        "description": ""
+      },
+      {
+        "rule": "Greater than or equal to...",
+        "description": ""
+      },
+      {
+        "rule": "Less than...",
+        "description": ""
+      },
+      {
+        "rule": "Less than or equal to...",
+        "description": ""
+      },
+      {
+        "rule": "Between",
+        "description": "two numbers"
+      },
+      {
+        "rule": "No between",
+        "description": "two numbers"
+      }
+    ]
+  },
+  {
+    "name": "Text",
+    "rules": [
+      {
+        "rule": "Is...",
+        "description": ""
+      },
+      {
+        "rule": "Is not...",
+        "description": ""
+      },
+      {
+        "rule": "Starts with...",
+        "description": ""
+      },
+      {
+        "rule": "Ends with...",
+        "description": ""
+      },
+      {
+        "rule": "Contains...",
+        "description": ""
+      },
+      {
+        "rule": "Does not contain...",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "name": "Dates",
+    "rules": [
+      {
+        "rule": "Yesterday",
+        "description": ""
+      },
+      {
+        "rule": "Today",
+        "description": ""
+      },
+      {
+        "rule": "Tomorrow",
+        "description": ""
+      },
+      {
+        "rule": "In this",
+        "description": "week, month, quarter, or year"
+      },
+      {
+        "rule": "In the next",
+        "description": "number of days, weeks, months, quarters, or years"
+      },
+      {
+        "rule": "In the last",
+        "description": "number of days, weeks, months, quarters, or years"
+      },
+      {
+        "rule": "Exactly",
+        "description": "a number of days, weeks, months, quarters, or years ago or from now"
+      },
+      {
+        "rule": "Before",
+        "description": "a number of days, weeks, months, quarters, or years ago or from now"
+      },
+      {
+        "rule": "After",
+        "description": "a number of days, weeks, months, quarters, or years ago or from now"
+      },
+      {
+        "rule": "Between",
+        "description": "a period of days, weeks, months, quarters, or years ago or from now"
+      },
+      {
+        "rule": "The date...",
+        "description": ""
+      },
+      {
+        "rule": "Before the date...",
+        "description": ""
+      },
+      {
+        "rule": "After the date...",
+        "description": ""
+      },
+      {
+        "rule": "In the range...",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "name": "Durations",
+    "rules": [
+      {
+        "rule": "Equal to...",
+        "description": ""
+      },
+      {
+        "rule": "Not equal to...",
+        "description": ""
+      },
+      {
+        "rule": "Greater than...",
+        "description": ""
+      },
+      {
+        "rule": "Greater than or equal to...",
+        "description": ""
+      },
+      {
+        "rule": "Less than...",
+        "description": ""
+      },
+      {
+        "rule": "Less than or equal to...",
+        "description": ""
+      },
+      {
+        "rule": "Between",
+        "description": "two numbers"
+      },
+      {
+        "rule": "No between",
+        "description": "two numbers"
+      }
+    ]
+  },
+  {
+    "name": "Blank",
+    "rules": [
+      {
+        "rule": "Is blank",
+        "description": ""
+      },
+      {
+        "rule": "Is not blank",
+        "description": ""
+      }
+    ]
+  }
+]
