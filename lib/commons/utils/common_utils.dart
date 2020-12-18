@@ -365,8 +365,8 @@ class GlobalUtils {
   //static String  mail= 'service@payever.de';//staging 2
 
   //static const String COMMERCE_OS_URL = 'https://commerceos.test.devpayever.com';//test
-  static const String COMMERCE_OS_URL = 'https://commerceos.staging.devpayever.com';//staging
-  // static const String COMMERCE_OS_URL = 'https://commerceos.payever.org'; //live
+  // static const String COMMERCE_OS_URL = 'https://commerceos.staging.devpayever.com';//staging
+  static const String COMMERCE_OS_URL = 'https://commerceos.payever.org'; //live
 
   static const String POS_URL = 'https://getpayever.com/pos';
 
@@ -733,6 +733,11 @@ class GlobalUtils {
     Measurements.width = (_isPortrait
         ? MediaQuery.of(context).size.width
         : MediaQuery.of(context).size.height);
+    double padding = _isPortrait ? 0 : MediaQuery.of(context).padding.left + MediaQuery.of(context).padding.right;
+    // if (shopBuilderWidthFactor == 0) {
+    shopBuilderWidthFactor = (MediaQuery.of(context).size.width - padding)  / webMobileWidth;
+    // print('Width:${MediaQuery.of(context).size.width} Factor: $shopBuilderWidthFactor : padding.left: ${ MediaQuery.of(context).padding.left} right: ${MediaQuery.of(context).padding.right}');
+    // }
     return _isPortrait;
   }
 
@@ -747,9 +752,7 @@ class GlobalUtils {
     if (mainWidth == 0) {
       mainWidth = isTablet ? Measurements.width * 0.7 : Measurements.width;
     }
-    // if (shopBuilderWidthFactor == 0) {
-      shopBuilderWidthFactor = Measurements.width / webMobileWidth;
-    // }
+
     if (deviceType == null || deviceType.isEmpty) {
       deviceType = !isTablet ? 'mobile' : 'tablet';
     }

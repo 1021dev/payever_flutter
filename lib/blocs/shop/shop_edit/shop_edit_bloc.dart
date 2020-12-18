@@ -177,16 +177,20 @@ class ShopEditScreenBloc
       Fluttertoast.showToast(msg: 'Shop page does not selected');
       return;
     }
+    String token = GlobalUtils.activeToken.accessToken;
+    String themeId = state.activeTheme.themeId;
 
+    String pageId = event.pageId ?? state.pageDetail.id;
     Map<String, dynamic> body = {
-      'affectedPageIds': [state.pageDetail.id],
+      'affectedPageIds': [pageId],
       'createdAt': DateFormat("yyyy-MM-dd'T'hh:mm:ss").format(DateTime.now()),
       'effects': event.effects,
       'id': Uuid().v4(),
-      'targetPageId': state.pageDetail.id
+      'targetPageId': pageId
     };
     print('update Body: $body');
 
+    List<ShopPage>pages = state.pages;
     PageDetail pageDetail = state.pageDetail;
     Template template = pageDetail.template;
     List<Child> sections = template.children;
@@ -194,6 +198,7 @@ class ShopEditScreenBloc
     Map<String, dynamic>stylesheets = state.pageDetail.stylesheets;
 
     String actionType = event.effects.first['type'];
+    bool updatePageDetail = true;
     /// For Test
     /// If Element is Table, prevent to update third party
     bool isTable = false;
@@ -244,17 +249,37 @@ class ShopEditScreenBloc
           stylesheets[key] = json;
         });
       } catch(e) {}
-    }
+    } else if (actionType == 'stylesheet:destroy') {
+      updatePageDetail = false;
+      if (state.pageDetail.id == pageId) {
+        print('remove Current Active ShopPage');
+        yield state.copyWith(isLoadingPage: true);
+        ShopPage _page = state.pages
+            .where((page) => page.id != pageId && page.type == 'replica')
+            .toList()?.first;
+        dynamic response = await api.getPage(token, themeId, _page.id);
+        // Stylesheets Map /{deviceKey : {templateId : Background}}
+        if (response is Map) {
+          pageDetail = PageDetail.fromJson(response);
+        } else {
+          print('remove Current error: ${response.toString()} pageId: $pageId');
+        }
+      }
+      print('page count: ${pages.length}');
+      pages.remove(pages.firstWhere((element) => element.id == pageId));
 
-    String token = GlobalUtils.activeToken.accessToken;
-    String themeId = state.activeTheme.themeId;
-    template.children = sections;
-    pageDetail.template = template;
-    pageDetail.context = context;
-    pageDetail.stylesheets0[GlobalUtils.deviceType] = stylesheets;
+    }
+    print('updatePageDetail: $updatePageDetail');
+    if (updatePageDetail) {
+      template.children = sections;
+      pageDetail.template = template;
+      pageDetail.context = context;
+      pageDetail.stylesheets0[GlobalUtils.deviceType] = stylesheets;
+    }
+    print('page count1: ${pages.length}');
     // Update Template if Relocated Child
-    yield state.copyWith(
-        selectedSectionId: event.sectionId, pageDetail: pageDetail);
+    yield state.copyWith(pages: pages,
+        selectedSectionId: event.sectionId, pageDetail: pageDetail, isLoadingPage: false);
 
     if (!event.updateApi) return;
     if (state.selectedChild?.type == 'table' || isTable) return;

@@ -133,7 +133,7 @@ class _ShopProductCategoryViewState extends State<ShopProductCategoryView> {
               Column(
                 children: [
                   Visibility(
-                    visible: !data.hideProductName,
+                    visible: !(data?.hideProductName ?? false),
                     child: Container(
                       margin: EdgeInsets.only(top: 5),
                       width: double.infinity,
@@ -150,7 +150,7 @@ class _ShopProductCategoryViewState extends State<ShopProductCategoryView> {
                     ),
                   ),
                   Visibility(
-                    visible: !data.hideProductPrice,
+                    visible: !(data?.hideProductPrice ?? false),
                     child: Container(
                       width: double.infinity,
                       margin: EdgeInsets.symmetric(vertical: 5),

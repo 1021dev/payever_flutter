@@ -12,9 +12,10 @@ class StyleContainer extends StatefulWidget {
 }
 
 class _StyleContainerState extends State<StyleContainer> {
+  bool isPortrait;
   @override
   Widget build(BuildContext context) {
-    bool isPortrait = GlobalUtils.isPortrait(context);
+    isPortrait = GlobalUtils.isPortrait(context);
 
     return Container(
       height: isPortrait? 350: 200,
@@ -22,13 +23,18 @@ class _StyleContainerState extends State<StyleContainer> {
         backgroundColor: Colors.transparent,
         body: SafeArea(
           bottom: false,
+          right: false,
+          left: false,
           child: Container(
             color: Color.fromRGBO(23, 23, 25, 1),
-            padding: EdgeInsets.only(top: 18),
+            padding: padding,
             child: widget.child,
             ),
           ),
         ),
       );
+  }
+  EdgeInsets get padding {
+    return isPortrait ? EdgeInsets.only(top: 18) : EdgeInsets.only(top: 18, left: 60, right: 60);
   }
 }

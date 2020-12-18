@@ -45,15 +45,18 @@ class SelectSectionEvent extends ShopEditScreenEvent {
 }
 
 class UpdateSectionEvent extends ShopEditScreenEvent {
+  final String pageId;
   final String sectionId;
   final List<Map> effects;
   final bool updateApi;
-  UpdateSectionEvent({this.sectionId, this.effects, this.updateApi = true});
+  UpdateSectionEvent({this.pageId, this.sectionId, this.effects, this.updateApi = true});
 
   @override
   List<Object> get props => [
+    this.pageId,
     this.sectionId,
     this.effects,
+    this.updateApi
   ];
 }
 
