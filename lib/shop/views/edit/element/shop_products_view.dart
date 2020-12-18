@@ -123,7 +123,7 @@ class _ShopProductsViewState extends State<ShopProductsView> {
   }
 
   _getContext() {
-    if (widget.applicationContext == null) return;
+    if (widget.applicationContext == null || widget.applicationContext[widget.child.id] == null) return;
     schema = ContextSchema.fromJson(widget.applicationContext[widget.child.id]);
     try {
       List<dynamic> productIds = schema.params as List;

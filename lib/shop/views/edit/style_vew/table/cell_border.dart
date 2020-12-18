@@ -41,6 +41,7 @@ class _CellBorderState extends State<CellBorder> {
   List<String>borderAssets = ['outside', 'inside', 'all', 'left', 'vertical', 'right', 'top', 'horizontal', 'bottom'];
   BorderModel borderModel;
 
+  int selectCellGridTypeIndex = 0;
   @override
   void initState() {
     ShopEditScreenState state = widget.screenBloc.state;
@@ -107,13 +108,16 @@ class _CellBorderState extends State<CellBorder> {
             (index) {
           return InkWell(
             onTap: () {
-              Map<String, dynamic> sheets = widget.stylesheets[selectedChildId];
-              sheets['cellBorder'] = borderAssets[index];
-              _updateSheets(sheets);
+              setState(() {
+                selectCellGridTypeIndex = index;
+              });
+              // Map<String, dynamic> sheets = widget.stylesheets[selectedChildId];
+              // sheets['cellBorder'] = borderAssets[index];
+              // _updateSheets(sheets);
             },
             child: Container(
               decoration: BoxDecoration(
-                color: Color.fromRGBO(46, 45, 50, 1),
+                color: selectCellGridTypeIndex == index ? Colors.blue : Color.fromRGBO(46, 45, 50, 1),
                 borderRadius: _borderRadius(index),
               ),
               padding: EdgeInsets.all(8),

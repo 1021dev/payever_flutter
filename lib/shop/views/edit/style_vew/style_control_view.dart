@@ -12,7 +12,7 @@ import 'package:payever/shop/views/edit/style_vew/image_style_view.dart';
 import 'package:payever/shop/views/edit/style_vew/products_style_view.dart';
 import 'package:payever/shop/views/edit/style_vew/shadow_view.dart';
 import 'package:payever/shop/views/edit/style_vew/style_container.dart';
-import 'package:payever/shop/views/edit/style_vew/table/format_style_view.dart';
+import 'package:payever/shop/views/edit/style_vew/table/table_format_style_view.dart';
 import 'package:payever/shop/views/edit/style_vew/table/table_cell_style_view.dart';
 import 'package:payever/shop/views/edit/style_vew/table/table_style_view.dart';
 import 'package:payever/shop/views/edit/style_vew/text/text_style_view.dart';
@@ -245,7 +245,7 @@ class _StyleControlViewState extends State<StyleControlView> {
             onUpdateStyles:(sheets) => _updateStyles(sheets),
           );
         case StyleType.format:
-          return FormatStyleView();
+          return TableFormatStyleView();
         default:
           return _styleBody(state);
       }
