@@ -639,7 +639,7 @@ class SizeAssist {
   double getWidth(dynamic width0) {
     if (width0 == '100%') return Measurements.width /*double.infinity*/;
     if (width0 is num) {
-      return (width0 as num).toDouble() * GlobalUtils.shopBuilderWidthFactor;
+      return width0 * GlobalUtils.shopBuilderWidthFactor;
     }
     return 0;
   }
@@ -659,7 +659,11 @@ class SizeAssist {
         margin += double.parse(rows[i]);
       }
     }
-    return margin;
+    if (isReverse) {
+      return margin / GlobalUtils.shopBuilderWidthFactor;
+    } else {
+      return margin * GlobalUtils.shopBuilderWidthFactor;
+    }
   }
 
   double getMarginLeftAssist(
@@ -815,11 +819,11 @@ class SizeAssist {
       double marginLeft = styles.getMarginLeft(sectionStyles);
 
       if (child.id == selectedChild.id) {
-        payloadChild['height'] = newSize.height;
+        payloadChild['height'] = newSize.height / GlobalUtils.shopBuilderWidthFactor;
         payloadChild['width'] =
             newSize.width / GlobalUtils.shopBuilderWidthFactor;
         if (child.type == 'button') {
-          payloadChild['height'] = newSize.height - styles.paddingV * 2;
+          payloadChild['height'] = newSize.height / GlobalUtils.shopBuilderWidthFactor - styles.paddingV * 2;
           payloadChild['width'] =
               newSize.width / GlobalUtils.shopBuilderWidthFactor - styles.paddingH * 2;
         }
@@ -875,6 +879,7 @@ class SizeAssist {
           }
         }
       }
+      marginTop /= GlobalUtils.shopBuilderWidthFactor;
       marginLeft /= GlobalUtils.shopBuilderWidthFactor;
       payloadChild['marginTop'] = marginTop;
       payloadChild['marginLeft'] = marginLeft;
@@ -1051,7 +1056,7 @@ class SizeAssist {
       rows++;
       List<String> temp = [child.id];
       temp.addAll(overlayChildren);
-      gridTemplateRows['$y0'] = temp;
+      gridTemplateRows['${y0 / GlobalUtils.shopBuilderWidthFactor}'] = temp;
     }
     print('GetGridTemplateRows: $rows, $gridTemplateRows');
     // if (rows == 1)

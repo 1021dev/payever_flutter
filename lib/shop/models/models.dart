@@ -587,7 +587,11 @@ class BaseStyles with BackgroundAssist, StyleAssist, SizeAssist, DecorationAssis
     return width1;
   }
   @JsonKey(name: 'height', defaultValue: 0)
-  double height;
+  double height0;
+  double get height {
+    return height0 * GlobalUtils.shopBuilderWidthFactor;
+  }
+
   @JsonKey(name: 'minWidth', defaultValue: 0)
   double minWidth;
   @JsonKey(name: 'minHeight', defaultValue: 0)
@@ -787,7 +791,7 @@ class TextStyles extends BaseStyles {
   TextStyles();
 
   @JsonKey(name: 'height', defaultValue: 18)
-  double height;
+  double height0;
 
   double get textHeight {
     return (minHeight > height) ? minHeight : height;
@@ -845,7 +849,7 @@ class ButtonStyles extends BaseStyles{
   ButtonStyles();
 
   @JsonKey(name: 'height', defaultValue: 20)
-  double height;
+  double height0;
 
   @JsonKey(name: 'color', defaultValue: '#FFFFFF')
   String color;

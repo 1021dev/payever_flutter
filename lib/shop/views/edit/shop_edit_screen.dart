@@ -12,10 +12,10 @@ import 'package:payever/libraries/utils/px_dp_design.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/models/template_size_state_model.dart';
 import 'package:payever/shop/views/edit/shop_edit_templetes_screen.dart';
+import 'package:payever/shop/views/edit/style_vew/style_control_view.dart';
 import 'package:payever/shop/views/edit/template_detail_screen.dart';
 import 'package:payever/shop/views/edit/template_view.dart';
 import 'package:provider/provider.dart';
-
 import 'add_object_screen.dart';
 import 'appbar/shop_edit_appbar.dart';
 
@@ -77,12 +77,13 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
         bloc: screenBloc,
         child: BlocBuilder(
           bloc: screenBloc,
-          builder: (BuildContext context, state) {
+          builder: (BuildContext context, ShopEditScreenState state) {
             return Scaffold(
               key: scaffoldKey,
               appBar: ShopEditAppbar(
                 onTapAdd: ()=> _navigateAddObjectScreen(state),
                 onTapStyle: () {
+                  if (state.selectedChild == null) return;
                   setState(() {
                     showStyleControlView = true;
                   });
@@ -96,22 +97,6 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
             );
           },
         ),
-      ),
-    );
-
-    return BlocListener(
-      listener: (BuildContext context, ShopEditScreenState state) async {
-
-      },
-      bloc: screenBloc,
-      child: BlocBuilder(
-        bloc: screenBloc,
-        builder: (BuildContext context, state) {
-          return Scaffold(
-              appBar: ShopEditAppbar(onTapAdd: ()=> _navigateAddObjectScreen(state)),
-              backgroundColor: Colors.grey[800],
-              body: SafeArea(bottom: false, child: _body(state)));
-        },
       ),
     );
   }
@@ -132,56 +117,37 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
                 });
               }
             },
-            child: _templateView(state)),
+            child: TemplateView(
+              screenBloc: screenBloc,
+              pageDetail: state.pageDetail,
+              enableTapSection: true,
+            )),
         AnimatedPositioned(
             left: slideOpened ? 0 : -(Measurements.width / 3.5),
             top: 0,
             bottom: 0,
             duration: Duration(milliseconds: 400),
             child: _slidBar(state)),
-
+        AnimatedPositioned(
+          left: 0,
+          right: 0,
+          duration: Duration(milliseconds: 400),
+          bottom: showStyleControlView
+              ? 0
+              : -500,
+          child: state.selectedChild == null
+              ? Container()
+              : StyleControlView(
+            screenBloc: screenBloc,
+            onClose: () {
+              FocusScope.of(context).unfocus();
+              setState(() {
+                showStyleControlView = false;
+              });
+            },
+          ),
+        )
       ]),
-    );
-  }
-
-  Widget _mainBody(ShopEditScreenState state) {
-    List<ShopPage> pages = state.pages
-        .where((page) => page.type == 'replica')
-        .toList();
-    ShopPage homePage;
-    if (pages != null && pages.isNotEmpty) {
-      homePage = pages.firstWhere((page) => page.variant == 'front');
-    }
-    return Stack(
-      children: [
-        Center(
-          child: AspectRatio(
-            aspectRatio: 1.8/1,
-            child: Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(6),
-              color: Colors.white,
-              child: homePage != null
-                  ? _templateItem(state, homePage, showName: false)
-                  : Container(),
-            ),
-          ),
-        ),
-        Container(
-          alignment: Alignment.centerLeft,
-          child: Visibility(
-            visible: !slideOpened,
-            child: IconButton(
-              icon: Icon(Icons.navigate_next, color: Colors.black45,),
-              onPressed: () {
-                setState(() {
-                  slideOpened = !slideOpened;
-                });
-              },
-            ),
-          ),
-        ),
-      ],
     );
   }
 
@@ -333,39 +299,6 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
     return GestureDetector(
       onTap: () => _navigateTemplateDetailScreen(page),
       child: templateItem,
-    );
-  }
-
-  Widget _templateView(ShopEditScreenState state) {
-    return Stack(
-      children: [
-        TemplateView(
-          screenBloc: screenBloc,
-          pageDetail: state.pageDetail,
-          enableTapSection: true,
-        ),
-        // AnimatedPositioned(
-        //   left: 0,
-        //   right: 0,
-        //   duration: Duration(milliseconds: 400),
-        //   bottom: showStyleControlView
-        //       ? 0
-        //       : -500,
-        //   child: state.selectedChild == null
-        //       ? Container()
-        //       : state.selectedChild == null
-        //       ? Container()
-        //       : StyleControlView(
-        //     screenBloc: screenBloc,
-        //     onClose: () {
-        //       FocusScope.of(context).unfocus();
-        //       setState(() {
-        //         showStyleControlView = false;
-        //       });
-        //     },
-        //   ),
-        // )
-      ],
     );
   }
 

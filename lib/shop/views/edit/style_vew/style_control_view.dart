@@ -107,7 +107,8 @@ class _StyleControlViewState extends State<StyleControlView> {
   }
 
   Widget body(ShopEditScreenState state) {
-    if (state.selectedChild == null) return Container();
+    if (state.selectedChild == null || state.pageDetail.stylesheets[state.selectedChild.id] == null)
+      return Container();
     _initTextProperties(state);
     return StyleContainer(
       child: Column(

@@ -747,9 +747,9 @@ class GlobalUtils {
     if (mainWidth == 0) {
       mainWidth = isTablet ? Measurements.width * 0.7 : Measurements.width;
     }
-    if (shopBuilderWidthFactor == 0) {
+    // if (shopBuilderWidthFactor == 0) {
       shopBuilderWidthFactor = Measurements.width / webMobileWidth;
-    }
+    // }
     if (deviceType == null || deviceType.isEmpty) {
       deviceType = !isTablet ? 'mobile' : 'tablet';
     }

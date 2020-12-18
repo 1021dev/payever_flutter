@@ -614,7 +614,7 @@ BaseStyles _$BaseStylesFromJson(Map<String, dynamic> json) {
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea'] as String
     ..width0 = json['width'] ?? 0
-    ..height = (json['height'] as num)?.toDouble() ?? 0
+    ..height0 = (json['height'] as num)?.toDouble() ?? 0
     ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
     ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
     ..margin = json['margin'] ?? '0 0 0 0'
@@ -673,7 +673,7 @@ Map<String, dynamic> _$BaseStylesToJson(BaseStyles instance) =>
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
       'width': instance.width0,
-      'height': instance.height,
+      'height': instance.height0,
       'minWidth': instance.minWidth,
       'minHeight': instance.minHeight,
       'margin': instance.margin,
@@ -732,7 +732,7 @@ SectionStyles _$SectionStylesFromJson(Map<String, dynamic> json) {
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea'] as String
     ..width0 = json['width'] ?? 0
-    ..height = (json['height'] as num)?.toDouble() ?? 0
+    ..height0 = (json['height'] as num)?.toDouble() ?? 0
     ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
     ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
     ..margin = json['margin'] ?? '0 0 0 0'
@@ -794,7 +794,7 @@ Map<String, dynamic> _$SectionStylesToJson(SectionStyles instance) =>
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
       'width': instance.width0,
-      'height': instance.height,
+      'height': instance.height0,
       'minWidth': instance.minWidth,
       'minHeight': instance.minHeight,
       'margin': instance.margin,
@@ -884,7 +884,7 @@ TextStyles _$TextStylesFromJson(Map<String, dynamic> json) {
     ..priceFontWeight0 = json['priceFontWeight'] as String ?? 'normal'
     ..priceFontStyle0 = json['priceFontStyle'] as String ?? 'normal'
     ..priceTextDecoration = json['priceTextDecoration']
-    ..height = (json['height'] as num)?.toDouble() ?? 18
+    ..height0 = (json['height'] as num)?.toDouble() ?? 18
     ..backgroundColor = json['backgroundColor'] as String;
 }
 
@@ -943,7 +943,7 @@ Map<String, dynamic> _$TextStylesToJson(TextStyles instance) =>
       'priceFontWeight': instance.priceFontWeight0,
       'priceFontStyle': instance.priceFontStyle0,
       'priceTextDecoration': instance.priceTextDecoration,
-      'height': instance.height,
+      'height': instance.height0,
       'backgroundColor': instance.backgroundColor,
     };
 
@@ -1002,7 +1002,7 @@ ButtonStyles _$ButtonStylesFromJson(Map<String, dynamic> json) {
     ..priceFontWeight0 = json['priceFontWeight'] as String ?? 'normal'
     ..priceFontStyle0 = json['priceFontStyle'] as String ?? 'normal'
     ..priceTextDecoration = json['priceTextDecoration']
-    ..height = (json['height'] as num)?.toDouble() ?? 20
+    ..height0 = (json['height'] as num)?.toDouble() ?? 20
     ..color = json['color'] as String ?? '#FFFFFF';
 }
 
@@ -1061,7 +1061,7 @@ Map<String, dynamic> _$ButtonStylesToJson(ButtonStyles instance) =>
       'priceFontWeight': instance.priceFontWeight0,
       'priceFontStyle': instance.priceFontStyle0,
       'priceTextDecoration': instance.priceTextDecoration,
-      'height': instance.height,
+      'height': instance.height0,
       'color': instance.color,
     };
 
@@ -1089,7 +1089,7 @@ TableStyles _$TableStylesFromJson(Map<String, dynamic> json) {
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea'] as String
     ..width0 = json['width'] ?? 0
-    ..height = (json['height'] as num)?.toDouble() ?? 0
+    ..height0 = (json['height'] as num)?.toDouble() ?? 0
     ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
     ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
     ..margin = json['margin'] ?? '0 0 0 0'
@@ -1180,7 +1180,7 @@ Map<String, dynamic> _$TableStylesToJson(TableStyles instance) =>
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
       'width': instance.width0,
-      'height': instance.height,
+      'height': instance.height0,
       'minWidth': instance.minWidth,
       'minHeight': instance.minHeight,
       'margin': instance.margin,
@@ -1268,7 +1268,7 @@ ShopCartStyles _$ShopCartStylesFromJson(Map<String, dynamic> json) {
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea'] as String
     ..width0 = json['width'] ?? 0
-    ..height = (json['height'] as num)?.toDouble() ?? 0
+    ..height0 = (json['height'] as num)?.toDouble() ?? 0
     ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
     ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
     ..margin = json['margin'] ?? '0 0 0 0'
@@ -1332,7 +1332,7 @@ Map<String, dynamic> _$ShopCartStylesToJson(ShopCartStyles instance) =>
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
       'width': instance.width0,
-      'height': instance.height,
+      'height': instance.height0,
       'minWidth': instance.minWidth,
       'minHeight': instance.minHeight,
       'margin': instance.margin,
@@ -1396,7 +1396,7 @@ ShapeStyles _$ShapeStylesFromJson(Map<String, dynamic> json) {
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea'] as String
     ..width0 = json['width'] ?? 0
-    ..height = (json['height'] as num)?.toDouble() ?? 0
+    ..height0 = (json['height'] as num)?.toDouble() ?? 0
     ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
     ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
     ..margin = json['margin'] ?? '0 0 0 0'
@@ -1455,7 +1455,7 @@ Map<String, dynamic> _$ShapeStylesToJson(ShapeStyles instance) =>
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
       'width': instance.width0,
-      'height': instance.height,
+      'height': instance.height0,
       'minWidth': instance.minWidth,
       'minHeight': instance.minHeight,
       'margin': instance.margin,
@@ -1514,7 +1514,7 @@ ImageStyles _$ImageStylesFromJson(Map<String, dynamic> json) {
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea'] as String
     ..width0 = json['width'] ?? 0
-    ..height = (json['height'] as num)?.toDouble() ?? 0
+    ..height0 = (json['height'] as num)?.toDouble() ?? 0
     ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
     ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
     ..margin = json['margin'] ?? '0 0 0 0'
@@ -1580,7 +1580,7 @@ Map<String, dynamic> _$ImageStylesToJson(ImageStyles instance) =>
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
       'width': instance.width0,
-      'height': instance.height,
+      'height': instance.height0,
       'minWidth': instance.minWidth,
       'minHeight': instance.minHeight,
       'margin': instance.margin,
@@ -1646,7 +1646,7 @@ SocialIconStyles _$SocialIconStylesFromJson(Map<String, dynamic> json) {
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea'] as String
     ..width0 = json['width'] ?? 0
-    ..height = (json['height'] as num)?.toDouble() ?? 0
+    ..height0 = (json['height'] as num)?.toDouble() ?? 0
     ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
     ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
     ..margin = json['margin'] ?? '0 0 0 0'
@@ -1705,7 +1705,7 @@ Map<String, dynamic> _$SocialIconStylesToJson(SocialIconStyles instance) =>
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
       'width': instance.width0,
-      'height': instance.height,
+      'height': instance.height0,
       'minWidth': instance.minWidth,
       'minHeight': instance.minHeight,
       'margin': instance.margin,
@@ -1764,7 +1764,7 @@ ShopProductsStyles _$ShopProductsStylesFromJson(Map<String, dynamic> json) {
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea'] as String
     ..width0 = json['width'] ?? 0
-    ..height = (json['height'] as num)?.toDouble() ?? 0
+    ..height0 = (json['height'] as num)?.toDouble() ?? 0
     ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
     ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
     ..margin = json['margin'] ?? '0 0 0 0'
@@ -1829,7 +1829,7 @@ Map<String, dynamic> _$ShopProductsStylesToJson(ShopProductsStyles instance) =>
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
       'width': instance.width0,
-      'height': instance.height,
+      'height': instance.height0,
       'minWidth': instance.minWidth,
       'minHeight': instance.minHeight,
       'margin': instance.margin,
@@ -1895,7 +1895,7 @@ ShopProductDetailStyles _$ShopProductDetailStylesFromJson(
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea'] as String
     ..width0 = json['width'] ?? 0
-    ..height = (json['height'] as num)?.toDouble() ?? 0
+    ..height0 = (json['height'] as num)?.toDouble() ?? 0
     ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
     ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
     ..margin = json['margin'] ?? '0 0 0 0'
@@ -1960,7 +1960,7 @@ Map<String, dynamic> _$ShopProductDetailStylesToJson(
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
       'width': instance.width0,
-      'height': instance.height,
+      'height': instance.height0,
       'minWidth': instance.minWidth,
       'minHeight': instance.minHeight,
       'margin': instance.margin,
@@ -2025,7 +2025,7 @@ ShopProductCategoryStyles _$ShopProductCategoryStylesFromJson(
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea'] as String
     ..width0 = json['width'] ?? 0
-    ..height = (json['height'] as num)?.toDouble() ?? 0
+    ..height0 = (json['height'] as num)?.toDouble() ?? 0
     ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
     ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
     ..margin = json['margin'] ?? '0 0 0 0'
@@ -2103,7 +2103,7 @@ Map<String, dynamic> _$ShopProductCategoryStylesToJson(
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
       'width': instance.width0,
-      'height': instance.height,
+      'height': instance.height0,
       'minWidth': instance.minWidth,
       'minHeight': instance.minHeight,
       'margin': instance.margin,

@@ -161,12 +161,14 @@ class ShopEditScreenBloc
     String themeId = state.activeTheme.themeId;
     PageDetail pageDetail;
     yield state.copyWith(isLoadingPage: true);
+
     dynamic response = await api.getPage(token, themeId, pageId);
     // Stylesheets Map /{deviceKey : {templateId : Background}}
     if (response is Map) {
       pageDetail = PageDetail.fromJson(response);
     }
-    yield state.copyWith(pageDetail: pageDetail, isLoadingPage: false);
+
+    yield state.copyWith(pageDetail: pageDetail, isLoadingPage: false, selectedSectionId: '', selectedBlockId: '');
   }
 
   Stream<ShopEditScreenState> addAction(UpdateSectionEvent event) async* {
@@ -256,13 +258,13 @@ class ShopEditScreenBloc
 
     if (!event.updateApi) return;
     if (state.selectedChild?.type == 'table' || isTable) return;
-    api.shopEditAction(token, themeId, body).then((response) {
-      if (response is DioError) {
-        Fluttertoast.showToast(msg: response.error);
-      } else {
-        // _fetchPage();
-      }
-    });
+    // api.shopEditAction(token, themeId, body).then((response) {
+    //   if (response is DioError) {
+    //     Fluttertoast.showToast(msg: response.error);
+    //   } else {
+    //     // _fetchPage();
+    //   }
+    // });
   }
 
   _fetchPage() {
