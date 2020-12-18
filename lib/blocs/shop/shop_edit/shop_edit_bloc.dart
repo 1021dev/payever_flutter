@@ -102,6 +102,7 @@ class ShopEditScreenBloc
     // }
 
     dynamic response1 = await api.getShopSnapShot(token, themeId);
+    ShopPage homepage;
     if (response1 is DioError) {
       yield state.copyWith(isLoading: false);
     } else {
@@ -125,7 +126,7 @@ class ShopEditScreenBloc
         // });
         // print('Pages Length: ${pages.length}');
       }
-      ShopPage homepage = pages?.firstWhere((page) => page.type == 'replica' && page.variant == 'front');
+      homepage = pages?.firstWhere((page) => page.type == 'replica' && page.variant == 'front');
       if (homepage != null) {
         add(GetPageEvent(pageId: homepage.id));
       }
@@ -159,13 +160,13 @@ class ShopEditScreenBloc
     String token = GlobalUtils.activeToken.accessToken;
     String themeId = state.activeTheme.themeId;
     PageDetail pageDetail;
-    yield state.copyWith(isLoading: true);
+    yield state.copyWith(isLoadingPage: true);
     dynamic response = await api.getPage(token, themeId, pageId);
     // Stylesheets Map /{deviceKey : {templateId : Background}}
     if (response is Map) {
       pageDetail = PageDetail.fromJson(response);
     }
-    yield state.copyWith(pageDetail: pageDetail, isLoading: false);
+    yield state.copyWith(pageDetail: pageDetail, isLoadingPage: false);
   }
 
   Stream<ShopEditScreenState> addAction(UpdateSectionEvent event) async* {

@@ -40,6 +40,12 @@ class _TemplateViewState extends State<TemplateView> {
   }
 
   Widget body(ShopEditScreenState state) {
+    if (state.isLoadingPage)
+      return Container(
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
     Template template =  widget.pageDetail.template;
 
     // templateSizeStateModel.setStylesheets(state.stylesheets);

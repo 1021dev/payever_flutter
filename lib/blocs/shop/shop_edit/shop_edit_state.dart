@@ -3,6 +3,7 @@ import 'package:payever/shop/models/models.dart';
 
 class ShopEditScreenState {
   final bool isLoading;
+  final bool isLoadingPage;
   final bool isUpdating;
   final ShopDetailModel activeShop;
   final ThemeModel activeTheme;
@@ -18,7 +19,8 @@ class ShopEditScreenState {
   final List<ProductsModel> products;
 
   ShopEditScreenState({
-    this.isLoading = false,
+    this.isLoading = true,
+    this.isLoadingPage = true,
     this.isUpdating = false,
     this.activeShop,
     this.activeTheme,
@@ -38,6 +40,7 @@ class ShopEditScreenState {
     this.pageDetail,
     this.applicationModel,
     this.isLoading,
+    this.isLoadingPage,
     this.isUpdating,
     this.activeShop,
     this.activeTheme,
@@ -53,6 +56,7 @@ class ShopEditScreenState {
 
   ShopEditScreenState copyWith({
     bool isLoading,
+    bool isLoadingPage,
     bool isUpdating,
     ShopDetailModel activeShop,
     ApplicationModel applicationModel,
@@ -69,6 +73,7 @@ class ShopEditScreenState {
   }) {
     return ShopEditScreenState(
       isLoading: isLoading ?? this.isLoading,
+      isLoadingPage: isLoadingPage ?? this.isLoadingPage,
       isUpdating: isUpdating ?? this.isUpdating,
       activeShop: activeShop ?? this.activeShop,
       applicationModel: applicationModel ?? this.applicationModel,
@@ -93,6 +98,7 @@ class ShopEditScreenState {
   }) {
     return ShopEditScreenState(
       isLoading: this.isLoading,
+      isLoadingPage: this.isLoadingPage,
       isUpdating: this.isUpdating,
       activeShop: this.activeShop,
       activeTheme: this.activeTheme,

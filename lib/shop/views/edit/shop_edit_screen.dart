@@ -2,14 +2,21 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
+import 'package:payever/libraries/utils/px_dp.dart';
+import 'package:payever/libraries/utils/px_dp_design.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/models/template_size_state_model.dart';
 import 'package:payever/shop/views/edit/shop_edit_templetes_screen.dart';
 import 'package:payever/shop/views/edit/template_detail_screen.dart';
+import 'package:payever/shop/views/edit/template_view.dart';
+import 'package:provider/provider.dart';
 
+import 'add_object_screen.dart';
 import 'appbar/shop_edit_appbar.dart';
 
 class ShopEditScreen extends StatefulWidget {
@@ -26,6 +33,9 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
   bool isPortrait;
   bool isTablet;
   ShopEditScreenBloc screenBloc;
+  TemplateSizeStateModel templateSizeStateModel = TemplateSizeStateModel();
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  bool showStyleControlView = false;
 
   @override
   void initState() {
@@ -44,6 +54,50 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
   Widget build(BuildContext context) {
     isPortrait = GlobalUtils.isPortrait(context);
     isTablet = GlobalUtils.isTablet(context);
+    PxDp.init(context);
+    PxDp.load(PxDpDesign.fromCompare(540.0, 1080));
+    return MultiProvider(
+      providers: [
+        Provider.value(value: templateSizeStateModel),
+        ChangeNotifierProvider<TemplateSizeStateModel>(
+            create: (_) => templateSizeStateModel),
+      ],
+      child: BlocListener(
+        listener: (BuildContext context, ShopEditScreenState state) async {
+          if (state.selectedChild == null) {
+            showStyleControlView = false;
+          }
+        },
+        condition: (ShopEditScreenState previousState, ShopEditScreenState state) {
+          if (previousState.selectedChild?.id != state.selectedChild?.id) {
+            showStyleControlView = false;
+          }
+          return true;
+        },
+        bloc: screenBloc,
+        child: BlocBuilder(
+          bloc: screenBloc,
+          builder: (BuildContext context, state) {
+            return Scaffold(
+              key: scaffoldKey,
+              appBar: ShopEditAppbar(
+                onTapAdd: ()=> _navigateAddObjectScreen(state),
+                onTapStyle: () {
+                  setState(() {
+                    showStyleControlView = true;
+                  });
+                },
+              ),
+              backgroundColor: Colors.grey[800],
+              body: SafeArea(
+                bottom: false,
+                child: _body(state),
+              ),
+            );
+          },
+        ),
+      ),
+    );
 
     return BlocListener(
       listener: (BuildContext context, ShopEditScreenState state) async {
@@ -54,7 +108,7 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
         bloc: screenBloc,
         builder: (BuildContext context, state) {
           return Scaffold(
-              appBar: ShopEditAppbar(onTapAdd: ()=> _navigateTemplatesScreen()),
+              appBar: ShopEditAppbar(onTapAdd: ()=> _navigateAddObjectScreen(state)),
               backgroundColor: Colors.grey[800],
               body: SafeArea(bottom: false, child: _body(state)));
         },
@@ -63,20 +117,30 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
   }
 
   Widget _body(ShopEditScreenState state) {
-
+    double dragDx = 5;
+    double dragStartX = isPortrait ? 120 : 120;
     if (state.isLoading) {
       return Center(child: CircularProgressIndicator());
     }
     return Container(
-      padding: EdgeInsets.all(6),
-      child: Row(
-        children: [
-          if (slideOpened) Expanded(flex: (isTablet || !isPortrait) ? 6 : 10, child: _slidBar(state)),
-          if (slideOpened)
-            VerticalDivider(),
-          Expanded(flex: 23, child: _mainBody(state)),
-        ],
-      ),
+      child: Stack(children: [
+        GestureDetector(
+            onHorizontalDragUpdate: (details) {
+              if (details.globalPosition.dx < dragStartX && details.delta.dx > dragDx) {
+                setState(() {
+                  slideOpened = true;
+                });
+              }
+            },
+            child: _templateView(state)),
+        AnimatedPositioned(
+            left: slideOpened ? 0 : -(Measurements.width / 3.5),
+            top: 0,
+            bottom: 0,
+            duration: Duration(milliseconds: 400),
+            child: _slidBar(state)),
+
+      ]),
     );
   }
 
@@ -128,55 +192,45 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
     bool activeMode = true;
     int length = pages.length ;
     double aspectRatio = activeMode ? 1 : 2/1;
-    return Container(
-      padding: EdgeInsets.all(4),
-      child: Column(
-        children: [
-          Expanded(
-            child: ListView.separated(
-                itemBuilder: (context, index) {
-                  return AspectRatio(
-                      aspectRatio: aspectRatio,
-                      child: _templateItem(state, pages[index]));
-                },
-                separatorBuilder: (index, context) => Divider(color: Colors.transparent,),
-                itemCount: length),
-          ),
-          Container(
-            width: double.infinity,
-            child: Stack(
-              children: [
-                Center(
-                    child:
-                    IconButton(
-                        icon: Icon(Icons.add_box),
-                        onPressed: () {
-                          _navigateTemplatesScreen();
-                        })),
-                Positioned(
-                  child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          slideOpened = !slideOpened;
-                        });
-                      },
-                      child: Icon(
-                        (slideOpened
-                            ? Icons.navigate_before
-                            : Icons.navigate_next),
-                        size: 20,
-                      )),
-                  top: 0,
-                  bottom: 0,
-                  right: 0,
-                ),
-              ],
+    return GestureDetector(
+      onHorizontalDragUpdate: (details) {
+        if (details.delta.dx < -5) {
+          setState(() {
+            slideOpened = false;
+          });
+        }
+      },
+      child: Container(
+        padding: EdgeInsets.all(10),
+        color: Colors.grey[800],
+        width: Measurements.width / 3.5,
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.separated(
+                  itemBuilder: (context, index) {
+                    return AspectRatio(
+                        aspectRatio: aspectRatio,
+                        child: _templateItem(state, pages[index]));
+                  },
+                  separatorBuilder: (index, context) => Divider(color: Colors.transparent,),
+                  itemCount: length),
             ),
-          ),
-          SizedBox(
-            height: 20,
-          )
-        ],
+            Container(
+              width: double.infinity,
+              child: Center(
+                  child:
+                  IconButton(
+                      icon: Icon(Icons.add_box),
+                      onPressed: () {
+                        _navigateTemplatesScreen();
+                      })),
+            ),
+            SizedBox(
+              height: 20,
+            )
+          ],
+        ),
       ),
     );
   }
@@ -186,29 +240,34 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
     String pageName = page == null ? 'Empty' : page.name;
     // print('Page Name: $pageName PageID:${page.id} Template Id: ${page.templateId}');
 
-    return Container(
-      color: (showName && page.variant == 'front') ? Colors.blue : Colors.transparent,
-      padding: EdgeInsets.all(4),
-      child: Column(
-        children: [
-          Expanded(
-              child: (page != null)
-                  ? getPreview(state, page, showName)
-                  : Container(
-                color: Colors.white,
-              )),
-          if (showName)
-            SizedBox(
-              height: 5,
-            ),
-          if (showName)
-            Text(
-              pageName,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-            ),
-        ],
+    return InkWell(
+      onTap: () {
+        screenBloc.add(GetPageEvent(pageId: page.id));
+      },
+      child: Container(
+        color: state.pageDetail?.id == page.id ? Colors.blue : Colors.transparent,
+        padding: EdgeInsets.all(4),
+        child: Column(
+          children: [
+            Expanded(
+                child: (page != null)
+                    ? getPreview(state, page, showName)
+                    : Container(
+                  color: Colors.white,
+                )),
+            if (showName)
+              SizedBox(
+                height: 5,
+              ),
+            if (showName)
+              Text(
+                pageName,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -270,9 +329,43 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
         color: Colors.white,
       );
     }
+    return templateItem;
     return GestureDetector(
       onTap: () => _navigateTemplateDetailScreen(page),
       child: templateItem,
+    );
+  }
+
+  Widget _templateView(ShopEditScreenState state) {
+    return Stack(
+      children: [
+        TemplateView(
+          screenBloc: screenBloc,
+          pageDetail: state.pageDetail,
+          enableTapSection: true,
+        ),
+        // AnimatedPositioned(
+        //   left: 0,
+        //   right: 0,
+        //   duration: Duration(milliseconds: 400),
+        //   bottom: showStyleControlView
+        //       ? 0
+        //       : -500,
+        //   child: state.selectedChild == null
+        //       ? Container()
+        //       : state.selectedChild == null
+        //       ? Container()
+        //       : StyleControlView(
+        //     screenBloc: screenBloc,
+        //     onClose: () {
+        //       FocusScope.of(context).unfocus();
+        //       setState(() {
+        //         showStyleControlView = false;
+        //       });
+        //     },
+        //   ),
+        // )
+      ],
     );
   }
 
@@ -287,15 +380,28 @@ class _ShopEditScreenState extends State<ShopEditScreen> {
               type: PageTransitionType.fade));
   }
 
+  void _navigateAddObjectScreen(ShopEditScreenState state) async {
+    if(state.selectedSectionId.isEmpty) {
+      Fluttertoast.showToast(msg: 'Please select Section to add new object.');
+      return;
+    }
+    final result = await Navigator.push(
+        context,
+        PageTransition(
+            child: AddObjectScreen(screenBloc: screenBloc, templateSizeStateModel: templateSizeStateModel,),
+            type: PageTransitionType.fade)
+    );
+
+    print('result: $result');
+    if (result == null) return;
+    templateSizeStateModel.setShopObject(result as ShopObject);
+  }
+
   void _navigateTemplatesScreen() {
-    // Navigator.push(
-    //     context,
-    //     PageTransition(
-    //         child: ShopEditTemplatesScreen(screenBloc),
-    //         type: PageTransitionType.fade));
+    Navigator.push(
+        context,
+        PageTransition(
+            child: ShopEditTemplatesScreen(screenBloc),
+            type: PageTransitionType.fade));
   }
 }
-
-
-
-
