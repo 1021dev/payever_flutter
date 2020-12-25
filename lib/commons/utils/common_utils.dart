@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:intl/intl.dart';
 import 'package:iso_countries/iso_countries.dart';
 import 'package:payever/blocs/bloc.dart';
@@ -731,6 +733,11 @@ class GlobalUtils {
     Measurements.width = (_isPortrait
         ? MediaQuery.of(context).size.width
         : MediaQuery.of(context).size.height);
+    double padding = _isPortrait ? 0 : MediaQuery.of(context).padding.left + MediaQuery.of(context).padding.right;
+    // if (shopBuilderWidthFactor == 0) {
+    shopBuilderWidthFactor = (MediaQuery.of(context).size.width - padding)  / webMobileWidth;
+    // print('Width:${MediaQuery.of(context).size.width} Factor: $shopBuilderWidthFactor : padding.left: ${ MediaQuery.of(context).padding.left} right: ${MediaQuery.of(context).padding.right}');
+    // }
     return _isPortrait;
   }
 
@@ -745,14 +752,50 @@ class GlobalUtils {
     if (mainWidth == 0) {
       mainWidth = isTablet ? Measurements.width * 0.7 : Measurements.width;
     }
-    if (shopBuilderWidthFactor == 0) {
-      shopBuilderWidthFactor = Measurements.width / webMobileWidth;
+
+    if (deviceType == null || deviceType.isEmpty) {
+      deviceType = !isTablet ? 'mobile' : 'tablet';
     }
     return isTablet;
   }
+
   static double mainWidth = 0;
   static double shopBuilderWidthFactor = 0;
+  static String deviceType; // 'mobile', 'tablet', 'desktop'
 
+  static Future<dynamic> cropImage(File imageFile) async {
+    File croppedFile = await ImageCropper.cropImage(
+        sourcePath: imageFile.path,
+        aspectRatioPresets: Platform.isAndroid
+            ? [
+                CropAspectRatioPreset.square,
+                CropAspectRatioPreset.ratio3x2,
+                CropAspectRatioPreset.original,
+                CropAspectRatioPreset.ratio4x3,
+                CropAspectRatioPreset.ratio16x9
+              ]
+            : [
+                CropAspectRatioPreset.original,
+                CropAspectRatioPreset.square,
+                CropAspectRatioPreset.ratio3x2,
+                CropAspectRatioPreset.ratio4x3,
+                CropAspectRatioPreset.ratio5x3,
+                CropAspectRatioPreset.ratio5x4,
+                CropAspectRatioPreset.ratio7x5,
+                CropAspectRatioPreset.ratio16x9
+              ],
+        androidUiSettings: AndroidUiSettings(
+            toolbarTitle: 'Cropper',
+            toolbarColor: Colors.deepOrange,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false),
+        iosUiSettings: IOSUiSettings(
+          title: 'Cropper',
+        ));
+
+    return croppedFile;
+  }
 }
 
 String imageBase = Env.storage + '/images/';
@@ -904,4 +947,15 @@ String getDisplayName(String name) {
     displayName = displayName.toUpperCase();
   }
   return displayName;
+}
+
+void navigateSubView(Widget subview, BuildContext context) {
+  showModalBottomSheet(
+      context: context,
+      isDismissible: false,
+      barrierColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (builder) {
+        return subview;
+      });
 }

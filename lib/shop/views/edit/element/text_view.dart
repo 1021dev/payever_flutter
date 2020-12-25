@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:payever/shop/models/constant.dart';
 import 'package:payever/shop/models/models.dart';
-import '../../../../theme.dart';
+import 'package:payever/shop/views/edit/element/widget/background_view.dart';
 
 class TextView extends StatefulWidget {
   final Child child;
@@ -21,8 +22,8 @@ class TextView extends StatefulWidget {
 class _TextViewState extends State<TextView> {
   TextStyles styles;
   final FocusNode _focusNode = FocusNode();
-  String txt;
-  String htmlParseText;
+  String htmlText;
+  String parseText;
   TextEditingController controller = TextEditingController();
 
   _TextViewState();
@@ -31,8 +32,7 @@ class _TextViewState extends State<TextView> {
   void initState() {
     super.initState();
     _focusNode.addListener(() {
-      print('Has focus: ${_focusNode.hasFocus} ${controller.text}');
-      if (!_focusNode.hasFocus && htmlParseText != controller.text) {
+      if (!_focusNode.hasFocus && parseText != controller.text) {
         widget.onChangeText(controller.text);
       }
     });
@@ -49,8 +49,13 @@ class _TextViewState extends State<TextView> {
     styles = getStyles();
     if (widget.child.data is Map) {
       Data data = Data.fromJson(widget.child.data);
-      if (data.text != null) txt = data.text;
-      if (widget.child.data != null) print('Text Data:' + data.text);
+      if (data.text != null) {
+        if(data.text is String)
+          htmlText = data.text;
+        else if (data.text is Map) {
+          htmlText = data.text['english'];
+        }
+      }
     } else {
       return Container();
     }
@@ -58,75 +63,27 @@ class _TextViewState extends State<TextView> {
   }
 
   Widget get body {
-    // <div style="text-align: center;"><font style="font-size: 41px;">SELECTION</font></div>
-    // <font style="font-size: 20px;">NEW IN: THE B27</font>
-    // <div style="text-align: center;"><font face="Roboto"><span style="font-size: 18px;">05</span></font></div><div style="text-align: center;"><font face="Roboto"><span style="font-size: 18px;">NOVEMBER</span></font></div>
-    htmlParseText = styles.parseHtmlString(txt);
-    print('htmlParseText: $htmlParseText');
-    controller.text = htmlParseText;
-    return textField;
-  }
+    parseText = styles.decodeHtmlString(htmlText);
+    controller.text = parseText;
+    return Opacity(
+      opacity: styles.opacity,
+      child: Stack(
+        children: [
+          BackgroundView(
+            styles: styles,
+          ),
+          textField,
+        ],
+      ),
+    );
 
-  TextAlign htmlAlignment(String text) {
-    if (!styles.isHtmlText(text)) return styles.textAlign;
-    if (text.contains('text-align: center')) {
-      return TextAlign.center;
-    } else if (text.contains('text-align: left')) {
-      return TextAlign.start;
-    } else if (text.contains('text-align: right')) {
-      return TextAlign.end;
-    }
-    return styles.textAlign;
-  }
-
-  Color htmlTextColor(String text) {
-    if (!styles.isHtmlText(text)) return colorConvert(styles.color);
-
-    if (text.contains('color="')) {
-      int index = text.indexOf('color="');
-      String color = text.substring(index + 7, index + 14);
-      return colorConvert(color);
-    }
-    if (text.contains('color: rgb')) {
-      int index = text.indexOf('color: rgb');
-      String color = text.substring(index + 10, index + 25);
-      String newColor =  color.replaceAll(RegExp(r"[^\s\w]"), '');
-      List<String>colors = newColor.split(' ');
-      return Color.fromRGBO(int.parse(colors[0]), int.parse(colors[1]), int.parse(colors[2]), 1);
-    }
-    return colorConvert(styles.color);
-  }
-
-  double htmlFontSize(String text) {
-    if (!styles.isHtmlText(text)) return styles.fontSize;
-
-    if (text.contains('font-size:')) {
-      int index = text.indexOf('font-size:');
-      String font = text.substring(index + 11, index + 13);
-      try {
-        return double.parse(font);
-      } catch (e) {
-        return styles.fontSize;
-      }
-    }
-    return styles.fontSize;
-  }
-
-  FontWeight htmlFontWeight(String text) {
-    if (!styles.isHtmlText(text)) return styles.fontWeight;
-
-    if (text.contains('font-weight: normal')) {
-      return styles.getFontWeight('normal');
-    } else if (text.contains('font-weight: bold')) {
-      return styles.getFontWeight('bold');
-    }
-    return styles.fontWeight;
+    // return textField;
   }
 
   Widget get textField {
     return Container(
       // alignment: styles.textAlign,
-      color: colorConvert(styles.backgroundColor, emptyColor: true),
+      // color: colorConvert(styles.backgroundColor, emptyColor: true),
       child: TextField(
         controller: controller,
         focusNode: _focusNode,
@@ -141,11 +98,14 @@ class _TextViewState extends State<TextView> {
           disabledBorder: InputBorder.none,
         ),
         style: TextStyle(
-            color: htmlTextColor(txt),
-            fontWeight: styles.fontWeight,
-            fontStyle: styles.fontStyle,
-            fontSize: htmlFontSize(txt)),
-        textAlign: htmlAlignment(txt),
+            color: styles.htmlTextColor(htmlText),
+            fontWeight: styles.htmlFontWeight(htmlText),
+            fontStyle: styles.htmlFontStyle(htmlText),
+            fontSize: styles.htmlFontSize(htmlText),
+            decoration: textDecoration,
+            fontFamily: styles.decodeHtmlTextFontFamily(htmlText, realFontFamilyName: true),
+        ),
+        textAlign: styles.htmlAlignment(htmlText),
         maxLines: 100,
         onChanged: (text) {
           // widget.onChangeText(text);
@@ -154,11 +114,22 @@ class _TextViewState extends State<TextView> {
     );
   }
 
+  TextDecoration get textDecoration {
+    List<TextFontType> fontTypes = styles.getTextFontTypes(htmlText);
+    if (fontTypes.contains(TextFontType.underline))
+      return TextDecoration.underline;
+
+    if (fontTypes.contains(TextFontType.lineThrough))
+      return TextDecoration.lineThrough;
+
+    return null;
+  }
+
   TextStyles getStyles() {
     try {
-      Map<String, dynamic> json = widget.stylesheets[widget.child.id];
-      print('Text ID ${widget.child.id}');
-      print('Text Styles: $json');
+      Map<String, dynamic> json = widget.stylesheets;
+      // print('Text ID ${widget.child.id}');
+      // print('Text Styles: $json');
       return TextStyles.fromJson(json);
     } catch (e) {
       return null;

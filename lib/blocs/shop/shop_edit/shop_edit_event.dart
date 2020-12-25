@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:payever/shop/models/models.dart';
 
 abstract class ShopEditScreenEvent extends Equatable {
@@ -9,6 +12,16 @@ abstract class ShopEditScreenEvent extends Equatable {
 }
 
 class ShopEditScreenInitEvent extends ShopEditScreenEvent {}
+
+class GetPageEvent extends ShopEditScreenEvent {
+  final String pageId;
+  GetPageEvent({this.pageId});
+
+  @override
+  List<Object> get props => [
+    this.pageId,
+  ];
+}
 
 class SelectSectionEvent extends ShopEditScreenEvent {
   final String sectionId;
@@ -31,27 +44,19 @@ class SelectSectionEvent extends ShopEditScreenEvent {
       ];
 }
 
-class ActiveShopPageEvent extends ShopEditScreenEvent {
-  final ShopPage activeShopPage;
-
-  ActiveShopPageEvent({this.activeShopPage});
-
-  @override
-  List<Object> get props => [
-    this.activeShopPage,
-  ];
-}
-
 class UpdateSectionEvent extends ShopEditScreenEvent {
+  final String pageId;
   final String sectionId;
   final List<Map> effects;
-
-  UpdateSectionEvent({this.sectionId, this.effects});
+  final bool updateApi;
+  UpdateSectionEvent({this.pageId, this.sectionId, this.effects, this.updateApi = true});
 
   @override
   List<Object> get props => [
+    this.pageId,
     this.sectionId,
     this.effects,
+    this.updateApi
   ];
 }
 
@@ -74,3 +79,18 @@ class AddNewShopObjectEvent extends ShopEditScreenEvent {
     this.shopObject,
   ];
 }
+
+class UploadPhotoEvent extends ShopEditScreenEvent {
+  final File image;
+  final bool isBackground;
+  final bool isVideo;
+  UploadPhotoEvent({@required this.image, @required this.isBackground, this.isVideo = false});
+
+  @override
+  List<Object> get props => [this.image, this.isBackground, this.isVideo];
+}
+
+class InitSelectedSectionEvent extends ShopEditScreenEvent {}
+class InitBlobNameEvent extends ShopEditScreenEvent {}
+
+class FetchProductsEvent extends ShopEditScreenEvent {}

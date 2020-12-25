@@ -4,10 +4,12 @@ import 'package:html/parser.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:uuid/uuid.dart';
 import '../../theme.dart';
+import 'constant.dart';
 import 'models.dart';
 
 class BackgroundAssist {
-  Gradient getGradient(String backgroundImage) {
+
+  GradientModel getGradientModel(String backgroundImage) {
     String txt = backgroundImage
         .replaceAll('linear-gradient', '')
         .replaceAll(RegExp(r"[^\s\w]"), '');
@@ -15,13 +17,25 @@ class BackgroundAssist {
     double degree = double.parse(txts[0].replaceAll('deg', ''));
     String color1 = txts[1];
     String color2 = txts[2];
+    return GradientModel(
+        angle: degree,
+        startColor: colorConvert(color1),
+        endColor: colorConvert(color2));
+  }
+
+  Gradient getGradient(String backgroundImage) {
+    GradientModel gradientModel = getGradientModel(backgroundImage);
+    double degree = gradientModel.angle;
+    Color color1 = gradientModel.startColor;
+    Color color2 = gradientModel.endColor;
+
     double deg = degree * pi / 180;
     return LinearGradient(
         begin: Alignment(-sin(deg), cos(deg)),
         end: Alignment(sin(deg), -cos(deg)),
         colors: <Color>[
-          colorConvert(color1),
-          colorConvert(color2),
+          color1,
+          color2,
         ]);
   }
 }
@@ -39,8 +53,9 @@ class StyleAssist {
 
   TextAlign getTextAlign(String align) {
     if (align == 'center') return TextAlign.center;
-    if (align == 'left') return TextAlign.start;
-    if (align == 'right') return TextAlign.end;
+    if (align == 'left') return TextAlign.left;
+    if (align == 'right') return TextAlign.right;
+    if (align == 'justify') return TextAlign.justify;
     if (align == 'start') return TextAlign.start;
     if (align == 'end') return TextAlign.end;
     return TextAlign.start;
@@ -74,8 +89,7 @@ class StyleAssist {
     return FontStyle.normal;
   }
 
-  // HTML Text
-  String parseHtmlString(String htmlText) {
+  String decodeHtmlString(String htmlText) {
     if (!isHtmlText(htmlText))
       return htmlText;
 
@@ -91,36 +105,244 @@ class StyleAssist {
     }
     try {
       String text = '';
-      (elements as List).forEach((element) { text += '${element.text}\n'; });
+      (elements as List).forEach((element) { text += text.isEmpty ? element.text : '\n${element.text}'; });
       return text;
     } catch (e) {
       return '';
     }
   }
 
-  String encodeHtmlString({String text, double fontSize, String textColor, String textAlign, String fontWeight}) {
-    if (fontSize == null && textColor == null && textAlign == null && fontWeight == null)
-      return text;
-
-    if (textAlign == null || textAlign.isEmpty) {
-      if (fontSize == null)
-        return '<font color=\"$textColor\">$text</font>';
-
-      return '<font color=\"$textColor\" style="font-size: ${fontSize}px;">$text</font>';
-    } else {
-      if (fontSize == null && textColor == null)
-        return '<div style=\"text-align: $textAlign;\">$text</div>';
-
-      if (textColor == null)
-        return '<div style=\"text-align: $textAlign;\"><span style=\"font-size: ${fontSize}px;\">$text</span></div>';
-
-      Color color1 = colorConvert(textColor);
-      String divColor = 'rgb(${color1.red}, ${color1.green}, ${color1.blue})';
-      if (fontSize == null)
-        return '<div style=\"text-align: $textAlign;\"><span style=\"color: $divColor;\">$text</span></div>';
-
-      return '<div style=\"text-align: $textAlign;\"><span style=\"font-size: ${fontSize}px; color: $divColor;\">$text</span></div>';
+  Color decodeHtmlTextColor(String text) {
+    if (text.contains('color="')) {
+      int index = text.indexOf('color="');
+      String color = text.substring(index + 7, index + 14);
+      return colorConvert(color);
     }
+    if (text.contains('color: rgb')) {
+      int index = text.indexOf('color: rgb');
+      String color = text.substring(index + 10, index + 25);
+      String newColor =  color.replaceAll(RegExp(r"[^\s\w]"), '');
+      List<String>colors = newColor.split(' ');
+      return Color.fromRGBO(int.parse(colors[0]), int.parse(colors[1]), int.parse(colors[2]), 1);
+    }
+    return null;
+  }
+
+  double decodeHtmlTextFontSize(String text) {
+    if (text.contains('font-size:')) {
+      int index = text.indexOf('font-size:');
+      String font = text.substring(index + 11, index + 13);
+      try {
+        return double.parse(font);
+      } catch (e) {
+        font = text.substring(index + 11, index + 12);
+        try {
+          return double.parse(font);
+        } catch (e) {
+          return 0;
+        }
+      }
+    }
+    return 0;
+  }
+
+  String decodeHtmlTextFontFamily(String text, {bool realFontFamilyName = false}) {
+    if (text.contains('font-family:') || text.contains('face=')) {
+      String fontFamily;
+      if (text.contains('Montserrat'))
+        fontFamily = 'Montserrat';
+      else if (text.contains('PT Sans'))
+        fontFamily = 'PT Sans';
+      else if (text.contains('Lato'))
+        fontFamily = 'Lato';
+      else if (text.contains('Space Mono'))
+        fontFamily = 'Space Mono';
+      else if (text.contains('Work Sans'))
+        fontFamily = 'Work Sans';
+      else if (text.contains('Rubik'))
+        fontFamily = 'Rubik';
+      else
+        fontFamily = 'Roboto';
+
+      return realFontFamilyName ? fontFamily.replaceAll(' ', '') : fontFamily;
+    }
+    return null;
+  }
+
+  String decodeHtmlTextFontWeight(String text) {
+    if (text.contains('font-weight: normal')) {
+      return 'normal';
+    } else if (text.contains('font-weight: bold')) {
+      return 'bold';
+    }
+    return null;
+  }
+
+  String decodeHtmlTextAlignment(String text) {
+    if (text.contains('text-align: center')) {
+      return 'center';
+    } else if (text.contains('text-align: left')) {
+      return 'left';
+    } else if (text.contains('text-align: right')) {
+      return 'right';
+    } else if (text.contains('text-align: justify')) {
+      return 'justify';
+    }
+    return null;
+  }
+
+  List<TextFontType> getTextFontTypes(String text) {
+    List<TextFontType> fontTypes = [];
+    if (decodeHtmlTextFontWeight(text) == 'bold')
+      fontTypes.add(TextFontType.bold);
+
+    if (text.contains('\</i>'))
+      fontTypes.add(TextFontType.italic);
+
+    if (text.contains('\</u>'))
+      fontTypes.add(TextFontType.underline);
+
+    if (text.contains('\</strike>'))
+      fontTypes.add(TextFontType.lineThrough);
+
+    return fontTypes;
+  }
+
+  List<TextFontType> getTextFonts(List<String> fonts) {
+    List<TextFontType> fontTypes = [];
+    if (fonts.contains('bold'))
+      fontTypes.add(TextFontType.bold);
+
+    if (fonts.contains('italic'))
+      fontTypes.add(TextFontType.italic);
+
+    if (fonts.contains('underline'))
+      fontTypes.add(TextFontType.underline);
+
+    if (fonts.contains('strike'))
+      fontTypes.add(TextFontType.lineThrough);
+
+    return fontTypes;
+  }
+
+  String encodeHtmlString(String htmlText,
+      {String newText,
+      String textColor,
+      double fontSize,
+      String textAlign,
+      String fontFamily,
+      List<TextFontType> fontTypes}) {
+    // if (fontSize == null && textColor == null && textAlign == null && fontWeight == null)
+    //   return htmlText;
+
+    // '<font color="#b51700" style="font-size: 18px;">Text test tomorrow morning and let me know </font>'
+    // '<div style="text-align: center;"><span style="font-size: 18px; color: rgb(181, 23, 0);">Text test tomorrow morning and let me know</span></div>'
+    // <div style="text-align: center;"><span style="font-weight: normal;"><font color="#5e5e5e" style="font-size: 14px;">Men's sneakers</font></span></div>
+    // <div style="text-align: center;"><i style="color: rgb(255, 250, 126); font-family: Montserrat;"><font style="font-size: 17px;"><u><strike>Text test tomorrow and see</strike></u></font></i></div>
+    String parseText = newText ?? decodeHtmlString(htmlText);
+
+    String newHtmlText = '';
+    // LineThrough
+    if (fontTypes == null && getTextFontTypes(htmlText).isNotEmpty)
+      fontTypes = getTextFontTypes(htmlText);
+
+    if (fontTypes != null) {
+      if (fontTypes.contains(TextFontType.lineThrough))
+        parseText = textLineThroughHtml(parseText);
+      else if (fontTypes.contains(TextFontType.underline))
+        parseText = textUnderlineHtml(parseText);
+
+      if (fontTypes.contains(TextFontType.italic))
+        parseText = textItalicHtml(parseText);
+    }
+    // font
+    // Text Color
+    bool hasFont = false;
+    if (textColor == null && decodeHtmlTextColor(htmlText) != null)
+      textColor = encodeColor(decodeHtmlTextColor(htmlText));
+
+    if (textColor != null) {
+      newHtmlText = textColorHtml(textColor);
+      hasFont = true;
+    }
+    // Font Size
+    if (fontSize == null && decodeHtmlTextFontSize(htmlText) != 0)
+      fontSize = decodeHtmlTextFontSize(htmlText);
+
+    if (fontSize != null) {
+      newHtmlText += textFontSizeHtml(fontSize);
+      hasFont = true;
+    }
+    // Font Family
+    if (fontFamily == null && decodeHtmlTextFontFamily(htmlText) != null)
+      fontFamily = decodeHtmlTextFontFamily(htmlText);
+
+    if (fontFamily != null) {
+      newHtmlText += textFontFamilyHtml(fontFamily);
+      hasFont = true;
+    }
+
+    if (hasFont) newHtmlText = '\<font$newHtmlText>$parseText</font>';
+
+    // span
+    // font-weight
+    String fontWeight;
+    if (fontTypes != null)
+      fontWeight = fontTypes.contains(TextFontType.bold) ? 'bold' : 'normal';
+    else if (decodeHtmlTextFontWeight(htmlText) != null)
+      fontWeight = decodeHtmlTextFontWeight(htmlText);
+
+    if (fontWeight != null) {
+      newHtmlText = textFontWeightHtml(fontWeight) + newHtmlText;
+      if (newHtmlText.contains(parseText))
+        newHtmlText = '\<span$newHtmlText</span>';
+      else
+        newHtmlText = '\<span$newHtmlText>$parseText</span>';
+    }
+    // div
+    if (textAlign == null && decodeHtmlTextAlignment(htmlText) != null)
+      textAlign = decodeHtmlTextAlignment(htmlText);
+
+    if (textAlign != null) {
+      newHtmlText = textAlignmentHtml(textAlign) + newHtmlText;
+      if (newHtmlText.contains(parseText))
+        newHtmlText = '\<div$newHtmlText</div>';
+      else
+        newHtmlText = '\<div$newHtmlText>$parseText</div>';
+    }
+    return newHtmlText;
+  }
+
+  String textLineThroughHtml(String text) {
+    return '\<strike>$text</strike>';
+  }
+
+  String textUnderlineHtml(String text) {
+    return '\<u>$text</u>';
+  }
+
+  String textItalicHtml(String text) {
+    return '\<i>$text</i>';
+  }
+
+  String textColorHtml(String textColor) {
+    return ' color=\"$textColor\"';
+  }
+
+  String textFontSizeHtml(double fontSize) {
+    return ' style=\"font-size: ${fontSize.toInt()}px;\"';
+  }
+
+  String textFontFamilyHtml(String fontFamily) {
+    return ' face=\"$fontFamily\"';
+  }
+
+  String textFontWeightHtml(String fontWeight) {
+    return ' style=\"font-weight: $fontWeight;\">';
+  }
+
+  String textAlignmentHtml(String textAlign) {
+    return ' style=\"text-align: $textAlign;\">';
   }
 
   bool isHtmlText(String text) {
@@ -147,18 +369,186 @@ class DecorationAssist {
     return 0;
   }
 
-  Border getBorder1(dynamic border) {
-    if (border == null || border == false) {
-      return Border.all(width: 0);
-    }
+  // For image
+  BorderModel parseBorderFromString(dynamic border) {
+    if (border == null || border == false) return null;
+
     List<String> borderAttrs = border.toString().split(' ');
     double borderWidth = double.parse(borderAttrs.first.replaceAll('px', ''));
+    String borderStyle = borderAttrs[1];
     String borderColor = borderAttrs.last;
-    return Border.all(color: colorConvert(borderColor), width: borderWidth);
+    return BorderModel(
+        borderWidth: borderWidth,
+        borderColor: borderColor,
+        borderStyle: borderStyle);
   }
 
-  List<BoxShadow> getBoxShadow1(String shadow) {
-    if (shadow == null || shadow.isEmpty) {
+  Border getBorder1(dynamic border) {
+    BorderModel model = parseBorderFromString(border);
+    if (model == null)
+      return Border.all(color: Colors.transparent, width: 0);
+
+    return Border.all(color: colorConvert(model.borderColor), width: model.borderWidth /*PxDp.d2u(px: model.borderWidth.toInt())*/);
+  }
+
+  ShadowModel parseShadowFromString(String shadow, String childType) {
+    if (shadow == null || shadow.isEmpty) return null;
+
+    double blurRadius;
+    double offsetX;
+    double offsetY;
+    double spread = 0;
+    Color color;
+
+    if (childType == 'shape') {
+      List<String> attrs0 = shadow.replaceAll('drop-shadow', '').split(' ');
+      List<String> attrs = attrs0.map((element) {
+        if (element.contains('rgb'))
+          return element
+              .replaceAll('rgba', '')
+              .replaceAll(',', ' ')
+              .replaceAll('(', '')
+              .replaceAll(')', '');
+        return element.replaceAll('pt', '').replaceAll('(', '');
+      }).toList();
+      blurRadius = double.parse(attrs[2]);
+      offsetX = double.parse(attrs[0]);
+      offsetY = double.parse(attrs[1]);
+      List<String> colors = attrs[3].split(' ');
+      int colorR = int.parse(colors[0]);
+      int colorG = int.parse(colors[1]);
+      int colorB = int.parse(colors[2]);
+      double opacity = double.parse(colors[3]);
+      color = Color.fromRGBO(colorR, colorG, colorB, opacity);
+    } else if (childType == 'button') {
+      List<String> attrs0 = shadow.split(' ');
+      if (attrs0.length < 2)
+        return null;
+      List<String> attrs = attrs0.map((element) {
+        if (element.contains('rgb'))
+          return element
+              .replaceAll('rgba', '')
+              .replaceAll(',', ' ')
+              .replaceAll('(', '')
+              .replaceAll(')', '');
+        return element.replaceAll('pt', '');
+      }).toList();
+      blurRadius = double.parse(attrs[3]);
+      spread = double.parse(attrs[4]);
+      offsetX = double.parse(attrs[1]);
+      offsetY = double.parse(attrs[2]);
+
+      List<String> colors = attrs[0].split(' ');
+      int colorR = int.parse(colors[0]);
+      int colorG = int.parse(colors[1]);
+      int colorB = int.parse(colors[2]);
+      double opacity = double.parse(colors[3]);
+      color = Color.fromRGBO(colorR, colorG, colorB, opacity);
+    } else if (childType == 'shop-cart' || childType == 'logo') {
+      List<String>attrs0 = shadow.split(' ');
+      List<String>attrs = attrs0.map((element) {
+        if (element.contains('rgb'))
+          return element.replaceAll('rgba', '').replaceAll(',', ' ').replaceAll('(', '').replaceAll(')', '');
+        return element.replaceAll('pt', '');
+      }).toList();
+      blurRadius = double.parse(attrs[2]);
+      offsetX = double.parse(attrs[0]);
+      offsetY = double.parse(attrs[1]);
+      List<String>colors = attrs[4].split(' ');
+      int colorR = int.parse(colors[0]);
+      int colorG = int.parse(colors[1]);
+      int colorB = int.parse(colors[2]);
+      double opacity = double.parse(colors[3]);
+      color = Color.fromRGBO(colorR, colorG, colorB, opacity);
+
+      double shadowAngle = getOffsetAndShadowAngle(offsetX, offsetY).last;
+      double shadowOffset = getOffsetAndShadowAngle(offsetX, offsetY).first;
+
+      return ShadowModel(
+          blurRadius: blurRadius,
+          offsetX: offsetX,
+          offsetY: offsetY,
+          color: color,
+          shadowAngle: shadowAngle,
+          shadowOffset: shadowOffset,
+          shadowOpacity: opacity);
+    } else if (childType == 'social-icon') {
+      // drop-shadow(14.142135623730947pt 14.142135623730955pt 5pt rgba(0,0,0,1))
+      List<String> attrs0 = shadow.replaceAll('drop-shadow', '').split(' ');
+      List<String> attrs = attrs0.map((element) {
+        if (element.contains('rgb'))
+          return element
+              .replaceAll('rgba', '')
+              .replaceAll(',', ' ')
+              .replaceAll('(', '')
+              .replaceAll(')', '');
+        return element.replaceAll('pt', '').replaceAll('(', '');
+      }).toList();
+      blurRadius = double.parse(attrs[2]);
+      offsetX = double.parse(attrs[0]);
+      offsetY = double.parse(attrs[1]);
+      List<String> colors = attrs[3].split(' ');
+      int colorR = int.parse(colors[0]);
+      int colorG = int.parse(colors[1]);
+      int colorB = int.parse(colors[2]);
+      double opacity = double.parse(colors[3]);
+      color = Color.fromRGBO(colorR, colorG, colorB, opacity);
+
+      double shadowAngle = getOffsetAndShadowAngle(offsetX, offsetY).last;
+      double shadowOffset = getOffsetAndShadowAngle(offsetX, offsetY).first;
+
+      return ShadowModel(
+          blurRadius: blurRadius,
+          offsetX: offsetX,
+          offsetY: offsetY,
+          color: color,
+          shadowAngle: shadowAngle,
+          shadowOffset: shadowOffset,
+          shadowOpacity: opacity);
+    } else {
+      return null;
+    }
+
+    return ShadowModel(
+        blurRadius: blurRadius,
+        offsetX: offsetX,
+        offsetY: offsetY,
+        color: color,
+        spread: spread);
+  }
+
+  List<double> getOffsetAndShadowAngle(double offsetX, double offsetY) {
+    if (offsetX == 0 && offsetY == 0) return [0.0, 0.0];
+    double deg = atan(offsetY / offsetX);
+    double shadowAngle;
+    if (offsetX == 0) {
+      if (offsetY >= 0) {
+        shadowAngle = 90 / pi;
+      } else {
+        shadowAngle = 270 / pi;
+      }
+    } else if (offsetX > 0) {
+      if (offsetY >= 0) {
+        shadowAngle = deg * 180 / pi;
+      } else {
+        shadowAngle = deg * 180 / pi + 360;
+      }
+    } else {
+      shadowAngle = deg * 180 / pi + 180;
+    }
+    if (shadowAngle != 0) shadowAngle = 360 - shadowAngle;
+
+    double shadowOffset = offsetX / cos(deg);
+    if (shadowOffset == 0) shadowOffset = offsetY / -sin(deg);
+
+    shadowOffset = shadowOffset.abs();
+    if (shadowOffset > 100) shadowOffset = 100;
+    return [shadowOffset, shadowAngle];
+  }
+
+  List<BoxShadow> getBoxShadow1(String shadow, String childType) {
+    ShadowModel model = parseShadowFromString(shadow, childType);
+    if (model == null) {
       return [
         BoxShadow(
           color: Colors.transparent,
@@ -169,41 +559,87 @@ class DecorationAssist {
       ];
     }
 
-//    drop-shadow(7.071067811865474pt 7.071067811865477pt 5pt rgba(0,0,0,1))
-    List<String> attrs0 = shadow.replaceAll('drop-shadow', '').split(' ');
-    List<String> attrs = attrs0.map((element) {
-      if (element.contains('rgb'))
-        return element
-            .replaceAll('rgba', '')
-            .replaceAll(',', ' ')
-            .replaceAll('(', '')
-            .replaceAll(')', '');
-      return element.replaceAll('pt', '').replaceAll('(', '');
-    }).toList();
-    double blurRadius = double.parse(attrs[2]);
-    double offsetX = double.parse(attrs[0]);
-    double offsetY = double.parse(attrs[1]);
-    List<String> colors = attrs[3].split(' ');
-    int colorR = int.parse(colors[0]);
-    int colorG = int.parse(colors[1]);
-    int colorB = int.parse(colors[2]);
-    double opacity = double.parse(colors[3]);
     return [
       BoxShadow(
-        color: Color.fromRGBO(colorR, colorG, colorB, opacity),
-        blurRadius: blurRadius,
-        offset: Offset(offsetX, offsetY), // changes position of shadow
+        color: model.color,
+        blurRadius: model.blurRadius,
+        spreadRadius: model.spread,
+        offset: Offset(model.offsetX, model.offsetY),
       ),
     ];
+  }
+
+  ShadowModel getShadowModel(ShadowType type, Color color, String childType) {
+    double offsetX = 0;
+    double offsetY = 0;
+    double blurRadius = 5;
+    switch(type) {
+      case ShadowType.bottom:
+        offsetX = 0;
+        offsetY = 5;
+        break;
+      case ShadowType.bottomRight:
+        offsetX = 5;
+        offsetY = 5;
+        break;
+      case ShadowType.bottomLeft:
+        offsetX = -5;
+        offsetY = 5;
+        break;
+      case ShadowType.right:
+        offsetX = -5;
+        offsetY = 0;
+        break;
+      case ShadowType.none:
+        offsetX = 0;
+        offsetY = 0;
+        blurRadius = 0;
+        break;
+      case ShadowType.topRight:
+        offsetX = -5;
+        offsetY = -5;
+        break;
+      case ShadowType.unknown:
+        break;
+    }
+
+    if (childType == 'button' || childType == 'shape')
+      return ShadowModel(
+          blurRadius: blurRadius,
+          offsetX: offsetX,
+          offsetY: offsetY,
+          color: color);
+
+    if (childType == 'image') {
+      if (type == ShadowType.none)
+        return null;
+
+      double deg = - atan(offsetY/offsetX);
+      double shadowAngle = deg * 180 / pi;
+      double shadowOffset = offsetX / cos(deg);
+      if (shadowOffset == 0)
+        shadowOffset = offsetY / -sin(deg);
+      // double shadowAngle = getOffsetAndShadowAngle(offsetX, offsetY).last;
+      // double shadowOffset = getOffsetAndShadowAngle(offsetX, offsetY).first;
+      return ShadowModel(
+          shadowBlur: blurRadius,
+          shadowOffset: shadowOffset,
+          shadowAngle: shadowAngle,
+          shadowOpacity: 100,
+          shadowFormColor: encodeColor(color));
+    }
+
+    throw ('unknown child type error');
   }
 }
 
 class SizeAssist {
   final double relativeError = 2;
+  // region Margin
   double getWidth(dynamic width0) {
     if (width0 == '100%') return Measurements.width /*double.infinity*/;
     if (width0 is num) {
-      return (width0 as num).toDouble() * GlobalUtils.shopBuilderWidthFactor;
+      return width0 * GlobalUtils.shopBuilderWidthFactor;
     }
     return 0;
   }
@@ -223,7 +659,11 @@ class SizeAssist {
         margin += double.parse(rows[i]);
       }
     }
-    return margin;
+    if (isReverse) {
+      return margin / GlobalUtils.shopBuilderWidthFactor;
+    } else {
+      return margin * GlobalUtils.shopBuilderWidthFactor;
+    }
   }
 
   double getMarginLeftAssist(
@@ -249,7 +689,11 @@ class SizeAssist {
       return margin * GlobalUtils.shopBuilderWidthFactor;
     }
   }
+  // endregion
 
+  // region Payload
+
+  // region Resizing Object
   List<Map<String, dynamic>> getPayload(Map<String, dynamic> stylesheets,
       Child section, Child selectedChild, ChildSize newSize, String deviceTypeId, String templateId) {
     List<Map<String, dynamic>>effects = [];
@@ -354,93 +798,6 @@ class SizeAssist {
     return effects;
   }
 
-  List<Map<String, dynamic>> getAddNewObjectPayload(ShopObject shopObject, String sectionId, StyleSheetIds styleSheetIds, String templateId) {
-    List<Map<String, dynamic>> effects = [];
-    Map<String, dynamic>element = {};
-    String elementId = Uuid().v4();
-    element['children'] = [];
-    element['data'] = {'text': 'Text', 'sync': false};
-    element['id'] = elementId;
-    element['type'] = 'text';
-
-    Map<String, dynamic>payload = {'element': element, 'to': sectionId};
-
-    Map<String, dynamic>effect = {'payload':payload};
-    effect['target'] = 'templates:$templateId';
-    effect['type'] = 'template:append-element';
-    effects.add(effect);
-
-    // Display None for Desktop and Tablet
-    Map<String, dynamic>payload1 = {elementId: {'display': 'none'}};
-    Map<String, dynamic>effect1 = {'payload':payload1};
-    effect1['target'] = 'stylesheets:${styleSheetIds.desktop}';
-    effect1['type'] = 'stylesheet:update';
-    effects.add(effect1);
-
-    Map<String, dynamic>effect2 = {'payload':payload1};
-    effect2['target'] = 'stylesheets:${styleSheetIds.tablet}';
-    effect2['type'] = 'stylesheet:update';
-    effects.add(effect2);
-
-    // Add Element Style
-    Map<String, dynamic>styles = {
-      'fontSize': 15,
-      'fontWeight': "bold",
-      'height': 18,
-      'margin': "0 0 0 0",
-      'width': 32,
-    };
-
-    Map<String, dynamic>payload3 = {elementId: styles};
-    Map<String, dynamic>effect3 = {'payload':payload3};
-    effect3['target'] = 'stylesheets:${styleSheetIds.mobile}';
-    effect3['type'] = 'stylesheet:update';
-    effects.add(effect3);
-
-    // payload: null
-    // target: "contextSchemas:d3cfbd81-a677-40a5-84cb-66e980d55e5f"
-    // type: "context-schema:update"
-    return effects;
-  }
-
-  List<Map<String, dynamic>> getUpdateTextStylePayload(String selectedChildId, Map<String, dynamic>styles, StyleSheetIds styleSheetIds) {
-    List<Map<String, dynamic>> effects = [];
-    Map<String, dynamic>payload = {selectedChildId: styles};
-    Map<String, dynamic>effect = {'payload':payload};
-    effect['target'] = 'stylesheets:${styleSheetIds.mobile}';
-    effect['type'] = 'stylesheet:update';
-    effects.add(effect);
-    return effects;
-  }
-
-  List<Map<String, dynamic>> getUpdateTextPayload(String sectionId, String selectedChildId, Map<String, dynamic>styles, String text, String templateId) {
-    List<Map<String, dynamic>> effects = [];
-    Map<String, dynamic> payload = {};
-
-    payload['childrenRefs'] = {};
-    Map<String, dynamic> data = {'text': text, 'sync': false};
-    payload['id'] = selectedChildId;
-    payload['data'] = data;
-    payload['type'] = 'text';
-    Map<String, dynamic> parent = {'id': sectionId, 'slot': 'host'};
-    payload['parent'] = parent;
-    payload['styles'] = styles;
-
-    Map<String, dynamic> effect = {'payload': payload};
-    effect['target'] = 'templates:$templateId';
-    effect['type'] = 'template:update-element';
-    effects.add(effect);
-    return effects;
-  }
-
-  bool isChildOverFromBlockView(Map<String, dynamic> stylesheets, String sectionId, Child selectedChild, ChildSize newSize) {
-    for (Child block in selectedChild.blocks) {
-      ChildSize blockSize = absoluteSize(stylesheets, sectionId, block);
-      if(isIntersectionTwoChild(newSize, blockSize) == false) return true;
-    }
-    return false;
-  }
-
   Map<String, dynamic> getChildPayload(
       Map<String, dynamic> stylesheets,
       Map<String, List<String>> gridTemplateRows,
@@ -462,11 +819,11 @@ class SizeAssist {
       double marginLeft = styles.getMarginLeft(sectionStyles);
 
       if (child.id == selectedChild.id) {
-        payloadChild['height'] = newSize.height;
+        payloadChild['height'] = newSize.height / GlobalUtils.shopBuilderWidthFactor;
         payloadChild['width'] =
             newSize.width / GlobalUtils.shopBuilderWidthFactor;
         if (child.type == 'button') {
-          payloadChild['height'] = newSize.height - styles.paddingV * 2;
+          payloadChild['height'] = newSize.height / GlobalUtils.shopBuilderWidthFactor - styles.paddingV * 2;
           payloadChild['width'] =
               newSize.width / GlobalUtils.shopBuilderWidthFactor - styles.paddingH * 2;
         }
@@ -522,6 +879,7 @@ class SizeAssist {
           }
         }
       }
+      marginTop /= GlobalUtils.shopBuilderWidthFactor;
       marginLeft /= GlobalUtils.shopBuilderWidthFactor;
       payloadChild['marginTop'] = marginTop;
       payloadChild['marginLeft'] = marginLeft;
@@ -550,7 +908,7 @@ class SizeAssist {
       ChildSize newSize,
       String updatedChildId) {
     SectionStyles sectionStyles =
-        SectionStyles.fromJson(stylesheets[section.id]);
+    SectionStyles.fromJson(stylesheets[section.id]);
     Map<String, dynamic> payloadSection = {};
     if (gridTemplateRows.length == 0) {
       payloadSection['gridTemplateRows'] = null;
@@ -585,7 +943,7 @@ class SizeAssist {
       String gridTemplateRowsStr = '';
       gridRows.forEach((element) {
         gridTemplateRowsStr +=
-            gridTemplateRowsStr.isEmpty ? '$element' : ' $element';
+        gridTemplateRowsStr.isEmpty ? '$element' : ' $element';
       });
       payloadSection['gridTemplateRows'] = gridTemplateRowsStr;
     }
@@ -624,13 +982,14 @@ class SizeAssist {
       String gridTemplateColumnsStr = '';
       gridColumns.forEach((element) {
         gridTemplateColumnsStr +=
-            gridTemplateColumnsStr.isEmpty ? '$element' : ' $element';
+        gridTemplateColumnsStr.isEmpty ? '$element' : ' $element';
       });
       payloadSection['gridTemplateColumns'] = gridTemplateColumnsStr;
     }
     print('payloadSection: $payloadSection');
     return payloadSection;
   }
+
 
   Map<String, List<String>> getGridTemplateRows(
       Map<String, dynamic> stylesheets,
@@ -639,7 +998,7 @@ class SizeAssist {
       String updatedChildId) {
     int rows = 0;
     SectionStyles sectionStyles =
-        SectionStyles.fromJson(stylesheets[section.id]);
+    SectionStyles.fromJson(stylesheets[section.id]);
     List<String> overlayChildren = [];
     Map<String, List<String>> gridTemplateRows = {};
     // Sort from Top to bottom
@@ -697,7 +1056,7 @@ class SizeAssist {
       rows++;
       List<String> temp = [child.id];
       temp.addAll(overlayChildren);
-      gridTemplateRows['$y0'] = temp;
+      gridTemplateRows['${y0 / GlobalUtils.shopBuilderWidthFactor}'] = temp;
     }
     print('GetGridTemplateRows: $rows, $gridTemplateRows');
     // if (rows == 1)
@@ -712,7 +1071,7 @@ class SizeAssist {
       String updatedChildId) {
     int rows = 0;
     SectionStyles sectionStyles =
-        SectionStyles.fromJson(stylesheets[section.id]);
+    SectionStyles.fromJson(stylesheets[section.id]);
     List<String> overlayChildren = [];
     Map<String, List<String>> gridTemplateColumns = {};
     // Sort from Left to Right
@@ -779,6 +1138,111 @@ class SizeAssist {
     return gridTemplateColumns;
   }
 
+  // endregion
+
+  // region Change Attributes
+  List<Map<String, dynamic>> getAddNewObjectPayload(ShopObject shopObject, String sectionId, StyleSheetIds styleSheetIds, String templateId) {
+    List<Map<String, dynamic>> effects = [];
+    Map<String, dynamic>element = {};
+    String elementId = Uuid().v4();
+    element['children'] = [];
+    element['data'] = shopObject.data;
+    element['id'] = elementId;
+    element['type'] = shopObject.type;
+
+    Map<String, dynamic>payload = {'element': element, 'to': sectionId};
+
+    Map<String, dynamic>effect = {'payload':payload};
+    effect['target'] = 'templates:$templateId';
+    effect['type'] = 'template:append-element';
+    effects.add(effect);
+
+    // Display None for Desktop and Tablet
+    Map<String, dynamic>payload1 = {elementId: {'display': 'none'}};
+    Map<String, dynamic>effect1 = {'payload':payload1};
+    effect1['target'] = 'stylesheets:${styleSheetIds.desktop}';
+    effect1['type'] = 'stylesheet:update';
+    effects.add(effect1);
+
+    Map<String, dynamic>effect2 = {'payload':payload1};
+    effect2['target'] = 'stylesheets:${styleSheetIds.tablet}';
+    effect2['type'] = 'stylesheet:update';
+    effects.add(effect2);
+
+
+    Map<String, dynamic>payload3 = {elementId: shopObject.styles};
+    Map<String, dynamic>effect3 = {'payload':payload3};
+    effect3['target'] = 'stylesheets:${styleSheetIds.mobile}';
+    effect3['type'] = 'stylesheet:update';
+    effects.add(effect3);
+
+    return effects;
+  }
+
+  List<Map<String, dynamic>> getDeleteObject(String selectedChildId, String templateId) {
+    List<Map<String, dynamic>> effects = [];
+    Map<String, dynamic>effect = {};
+    effect['payload'] = selectedChildId;
+    effect['target'] = 'templates:$templateId';
+    effect['type'] = 'template:delete-element';
+    effects.add(effect);
+    return effects;
+  }
+
+  List<Map<String, dynamic>> getUpdateTextStylePayload(String selectedChildId, Map<String, dynamic>styles, StyleSheetIds styleSheetIds) {
+    List<Map<String, dynamic>> effects = [];
+    Map<String, dynamic>payload = {selectedChildId: styles};
+    Map<String, dynamic>effect = {'payload':payload};
+    effect['target'] = 'stylesheets:${styleSheetIds.mobile}';
+    effect['type'] = 'stylesheet:update';
+    effects.add(effect);
+    return effects;
+  }
+  
+  List<Map<String, dynamic>> getUpdateDataPayload(
+      String sectionId,
+      String selectedChildId,
+      Map<String, dynamic> styles,
+      Map<String, dynamic> data,
+      String type,
+      String templateId) {
+    List<Map<String, dynamic>> effects = [];
+    Map<String, dynamic> payload = {};
+
+    payload['childrenRefs'] = {};
+    payload['children'] = [];
+
+    payload['id'] = selectedChildId;
+    payload['data'] = data;
+    payload['type'] = type;
+    Map<String, dynamic> parent = {'id': sectionId, 'slot': 'host'};
+    payload['parent'] = parent;
+    payload['styles'] = styles;
+
+    Map<String, dynamic> effect = {'payload': payload};
+    effect['target'] = 'templates:$templateId';
+    effect['type'] = 'template:update-element';
+    effects.add(effect);
+    return effects;
+  }
+
+  List<Map<String, dynamic>> getUpdateContextSchemePayload(
+      String selectedChildId,
+      String contextId,
+      Map<String, dynamic> payloadData) {
+    List<Map<String, dynamic>> effects = [];
+    Map<String, dynamic>payload = {selectedChildId: payloadData};
+    Map<String, dynamic> effect = {'payload': payload};
+    effect['target'] = 'contextSchemas:$contextId';
+    effect['type'] = 'context-schema:update';
+    effects.add(effect);
+    return effects;
+  }
+  // endregion
+
+  // endregion
+
+  // region Check Wrong position
   bool wrongPosition(
       Map<String, dynamic> stylesheets,
       Child section,
@@ -873,6 +1337,7 @@ class SizeAssist {
 
   List<Child>getAllSectionChildren(Child section){
     List<Child>allElements = [];
+    if (section.children == null || section.children.isEmpty) return [];
     section.children.forEach((element) {
       allElements.add(element);
       element.children.forEach((element) {
@@ -936,6 +1401,47 @@ class SizeAssist {
     return false;
   }
 
+  bool isIntersectionTwoChild(ChildSize size1, ChildSize size2) {
+    return !(size1.left + size1.width < size2.left ||
+        size2.left + size2.width < size1.left ||
+        size1.top + size1.height < size2.top ||
+        size2.top + size2.height < size1.top);
+  }
+
+  bool isContainChild({ChildSize childSize, ChildSize containerSize}) {
+    return (childSize.left >= containerSize.left &&
+        childSize.left + childSize.width <= containerSize.left + containerSize.width &&
+        childSize.top >= containerSize.top &&
+        childSize.top + childSize.height <= containerSize.top + containerSize.height);
+  }
+
+  ChildSize absoluteSize(Map<String, dynamic> stylesheets, String sectionId, Child child) {
+    SectionStyles sectionStyle = SectionStyles.fromJson(stylesheets[sectionId]);
+    BaseStyles styles = BaseStyles.fromJson(stylesheets[child.id]);
+    double width = styles.width + styles.paddingH * 2;
+    double height = styles.height + styles.paddingV * 2;
+    double marginTop = 0;
+    double marginLeft = 0;
+    List<SectionStyles> sectionStyles = [];
+    if (child.blocks != null && child.blocks.isNotEmpty) {
+      for (Child block in child.blocks) {
+        SectionStyles blockStyle = SectionStyles.fromJson(
+            stylesheets[block.id]);
+        sectionStyles.add(blockStyle);
+      }
+    }
+    sectionStyles.add(sectionStyle);
+    for (int i = 0; i < sectionStyles.length; i++) {
+      SectionStyles sectionStyle = sectionStyles[i];
+      marginLeft += styles.getMarginLeft(sectionStyle);
+      marginTop += styles.getMarginTop(sectionStyle);
+      styles = sectionStyle;
+    }
+    return ChildSize(width: width, height: height, left: marginLeft, top: marginTop);
+  }
+  // endregion
+
+  // region Hint Relative Lines
   double relativeMarginTop(
       Map<String, dynamic> stylesheets,
       Child section,
@@ -1019,42 +1525,5 @@ class SizeAssist {
     return -1;
   }
 
-  bool isIntersectionTwoChild(ChildSize size1, ChildSize size2) {
-    return !(size1.left + size1.width < size2.left ||
-        size2.left + size2.width < size1.left ||
-        size1.top + size1.height < size2.top ||
-        size2.top + size2.height < size1.top);
-  }
-
-  bool isContainChild({ChildSize childSize, ChildSize containerSize}) {
-    return (childSize.left >= containerSize.left &&
-        childSize.left + childSize.width <= containerSize.left + containerSize.width &&
-        childSize.top >= containerSize.top &&
-        childSize.top + childSize.height <= containerSize.top + containerSize.height);
-  }
-
-  ChildSize absoluteSize(Map<String, dynamic> stylesheets, String sectionId, Child child) {
-    SectionStyles sectionStyle = SectionStyles.fromJson(stylesheets[sectionId]);
-    BaseStyles styles = BaseStyles.fromJson(stylesheets[child.id]);
-    double width = styles.width + styles.paddingH * 2;
-    double height = styles.height + styles.paddingV * 2;
-    double marginTop = 0;
-    double marginLeft = 0;
-    List<SectionStyles> sectionStyles = [];
-    if (child.blocks != null && child.blocks.isNotEmpty) {
-      for (Child block in child.blocks) {
-        SectionStyles blockStyle = SectionStyles.fromJson(
-            stylesheets[block.id]);
-        sectionStyles.add(blockStyle);
-      }
-    }
-    sectionStyles.add(sectionStyle);
-    for (int i = 0; i < sectionStyles.length; i++) {
-      SectionStyles sectionStyle = sectionStyles[i];
-      marginLeft += styles.getMarginLeft(sectionStyle);
-      marginTop += styles.getMarginTop(sectionStyle);
-      styles = sectionStyle;
-    }
-    return ChildSize(width: width, height: height, left: marginLeft, top: marginTop);
-  }
+  // endregion
 }

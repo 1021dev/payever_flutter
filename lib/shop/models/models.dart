@@ -3,11 +3,14 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:payever/libraries/utils/px_dp.dart';
 import 'package:payever/theme.dart';
 
+import 'constant.dart';
 import 'style_assist.dart';
 part 'models.g.dart';
 
+// region Shop Section
 @JsonSerializable()
 class ShopModel {
   ShopModel();
@@ -155,46 +158,11 @@ class ThemeResponse {
   Map<String, dynamic> toJson() => _$ThemeResponseToJson(this);
 
 }
+// endregion
 
-@JsonSerializable()
-class ShopPage {
-  ShopPage();
+// region Shop Edit
 
-  @JsonKey(name: 'contextId')       String contextId;
-  @JsonKey(name: 'data')            PageData  data;
-  @JsonKey(name: 'id')              String id;
-  @JsonKey(name: 'name')            String  name;
-  @JsonKey(name: 'stylesheetIds')   StyleSheetIds stylesheetIds;
-  @JsonKey(name: 'templateId')      String templateId;
-  @JsonKey(name: 'type')            String type;
-  @JsonKey(name: 'variant')         String variant;
-
-  factory ShopPage.fromJson(Map<String, dynamic> json) => _$ShopPageFromJson(json);
-  Map<String, dynamic> toJson() => _$ShopPageToJson(this);
-}
-
-@JsonSerializable()
-class PageData {
-  PageData();
-
-  @JsonKey(name: 'preview')       String preview;
-
-  factory PageData.fromJson(Map<String, dynamic> json) => _$PageDataFromJson(json);
-  Map<String, dynamic> toJson() => _$PageDataToJson(this);
-}
-
-@JsonSerializable()
-class StyleSheetIds {
-  StyleSheetIds();
-
-  @JsonKey(name: 'desktop')   String desktop;
-  @JsonKey(name: 'mobile')    String mobile;
-  @JsonKey(name: 'tablet')    String tablet;
-
-  factory StyleSheetIds.fromJson(Map<String, dynamic> json) => _$StyleSheetIdsFromJson(json);
-  Map<String, dynamic> toJson() => _$StyleSheetIdsToJson(this);
-}
-
+// region Snapshot
 @JsonSerializable()
 class Action {
   Action();
@@ -209,41 +177,135 @@ class Action {
   Map<String, dynamic> toJson() => _$ActionToJson(this);
 }
 
+
 @JsonSerializable()
-class Effect {
-  Effect();
+class ShopPage {
+  ShopPage();
 
-  @JsonKey(name: 'payload')   Payload payload;
-  @JsonKey(name: 'target')    String target;
-  @JsonKey(name: 'type')      String type;
+  @JsonKey(name: 'contextId')       String contextId;
+  @JsonKey(name: 'data')            PageData  data;
+  @JsonKey(name: 'id')              String id;
+  @JsonKey(name: 'hash')            String hash;
+  @JsonKey(name: 'master')          dynamic master;
+  @JsonKey(name: 'name')            String name;
+  @JsonKey(name: 'stylesheetIds')   String stylesheetIds;
+  @JsonKey(name: 'templateId')      String templateId;
+  @JsonKey(name: 'type')            String type;
+  @JsonKey(name: 'variant')         String variant;
 
-  factory Effect.fromJson(Map<String, dynamic> json) => _$EffectFromJson(json);
-  Map<String, dynamic> toJson() => _$EffectToJson(this);
+  factory ShopPage.fromJson(Map<String, dynamic> json) => _$ShopPageFromJson(json);
+  Map<String, dynamic> toJson() => _$ShopPageToJson(this);
 }
 
 @JsonSerializable()
-class Payload {
-  Payload();
+class ApplicationModel {
+  ApplicationModel();
 
-  @JsonKey(name: 'children')    List<dynamic> children;
-  @JsonKey(name: 'data')        PayloadData data;
-  @JsonKey(name: 'id')          String id;
-  @JsonKey(name: 'meta')        dynamic meta;
-  @JsonKey(name: 'type')        String type;
+  @JsonKey(name: 'context')         ApplicationContext context;
+  @JsonKey(name: 'contextId')       String contextId;
+  @JsonKey(name: 'data')            Map<String, dynamic> data;
+  @JsonKey(name: 'routing')         List<Routing> routings;
 
-  factory Payload.fromJson(Map<String, dynamic> json) => _$PayloadFromJson(json);
-  Map<String, dynamic> toJson() => _$PayloadToJson(this);
+  factory ApplicationModel.fromJson(Map<String, dynamic> json) => _$ApplicationModelFromJson(json);
+  Map<String, dynamic> toJson() => _$ApplicationModelToJson(this);
 }
 
 @JsonSerializable()
-class PayloadData {
-  PayloadData();
+class PageData {
+  PageData();
 
-  @JsonKey(name: 'sync')   bool sync;
-  @JsonKey(name: 'text')   String text;
+  @JsonKey(name: 'mark')       dynamic mark;
 
-  factory PayloadData.fromJson(Map<String, dynamic> json) => _$PayloadDataFromJson(json);
-  Map<String, dynamic> toJson() => _$PayloadDataToJson(this);
+  factory PageData.fromJson(Map<String, dynamic> json) => _$PageDataFromJson(json);
+  Map<String, dynamic> toJson() => _$PageDataToJson(this);
+}
+
+@JsonSerializable()
+class ApplicationContext {
+  ApplicationContext();
+
+  @JsonKey(name: '#logo') ApplicationLogo logo;
+  @JsonKey(name: '_id')   String id;
+
+  factory ApplicationContext.fromJson(Map<String, dynamic> json) => _$ApplicationContextFromJson(json);
+  Map<String, dynamic> toJson() => _$ApplicationContextToJson(this);
+}
+
+@JsonSerializable()
+class ApplicationLogo {
+  ApplicationLogo();
+
+  @JsonKey(name: 'method')  String method;
+  @JsonKey(name: 'params')  List<dynamic> params;
+  @JsonKey(name: 'service') String service;
+  @JsonKey(name: 'usedBy')  List<dynamic> usedBys;
+
+  factory ApplicationLogo.fromJson(Map<String, dynamic> json) => _$ApplicationLogoFromJson(json);
+  Map<String, dynamic> toJson() => _$ApplicationLogoToJson(this);
+}
+
+@JsonSerializable()
+class Routing {
+  Routing();
+
+  @JsonKey(name: 'pageId')    String pageId;
+  @JsonKey(name: 'routeId')   String routeId;
+  @JsonKey(name: 'url')       String url;
+
+  factory Routing.fromJson(Map<String, dynamic> json) => _$RoutingFromJson(json);
+  Map<String, dynamic> toJson() => _$RoutingToJson(this);
+}
+
+
+// endregion
+
+// region PageDetail
+
+@JsonSerializable()
+class PageDetail {
+  PageDetail();
+
+  @JsonKey(name: 'context')         Map<String, dynamic> context;
+  @JsonKey(name: 'contextId')       String contextId;
+  @JsonKey(name: 'data')            dynamic data; // PageDetailData or String
+  @JsonKey(name: 'id')              String id;
+  @JsonKey(name: 'master')          dynamic master;
+  @JsonKey(name: 'name')            String name;
+  @JsonKey(name: 'stylesheets')     Map<String, dynamic> stylesheets0;
+  @JsonKey(name: 'stylesheetIds')   StyleSheetIds stylesheetIds;
+  @JsonKey(name: 'template')        Template template;
+  @JsonKey(name: 'templateId')      String templateId;
+  @JsonKey(name: 'type')            String type;
+  @JsonKey(name: 'variant')         String variant;
+
+  Map<String, dynamic> get stylesheets {
+    return stylesheets0[GlobalUtils.deviceType];
+  }
+
+  factory PageDetail.fromJson(Map<String, dynamic> json) => _$PageDetailFromJson(json);
+  Map<String, dynamic> toJson() => _$PageDetailToJson(this);
+}
+
+@JsonSerializable()
+class PageDetailData {
+  PageDetailData();
+
+  @JsonKey(name: 'preview')       Map<String, dynamic> preview;
+
+  factory PageDetailData.fromJson(Map<String, dynamic> json) => _$PageDetailDataFromJson(json);
+  Map<String, dynamic> toJson() => _$PageDetailDataToJson(this);
+}
+
+@JsonSerializable()
+class StyleSheetIds {
+  StyleSheetIds();
+
+  @JsonKey(name: 'desktop')   String desktop;
+  @JsonKey(name: 'mobile')    String mobile;
+  @JsonKey(name: 'tablet')    String tablet;
+
+  factory StyleSheetIds.fromJson(Map<String, dynamic> json) => _$StyleSheetIdsFromJson(json);
+  Map<String, dynamic> toJson() => _$StyleSheetIdsToJson(this);
 }
 
 @JsonSerializable()
@@ -271,6 +333,7 @@ class Child {
   @JsonKey(name: 'styles')          Map<String, dynamic> styles;
   @JsonKey(name: 'type')            String type;
   @JsonKey(name: 'data')            dynamic data;
+  @JsonKey(name: 'params')          dynamic params;
 
   @JsonKey(ignore: true)
   List<Child> blocks = [];
@@ -282,6 +345,16 @@ class Child {
   Map<String, dynamic> toJson() => _$ChildToJson(this);
 }
 
+@JsonSerializable()
+class Parent {
+  Parent();
+
+  @JsonKey(name: 'id')    String id;
+  @JsonKey(name: 'slot')  String slot;
+
+  factory Parent.fromJson(Map<String, dynamic> json) => _$ParentFromJson(json);
+  Map<String, dynamic> toJson() => _$ParentToJson(this);
+}
 
 @JsonSerializable()
 class Context {
@@ -304,17 +377,113 @@ class Meta {
   Map<String, dynamic> toJson() => _$MetaToJson(this);
 }
 
+// endregion
+
 @JsonSerializable()
-class Parent {
-  Parent();
+class ContextSchema {
+  ContextSchema();
 
-  @JsonKey(name: 'id')    String id;
-  @JsonKey(name: 'slot')  String slot;
+  @JsonKey(name: 'method')
+  String method;
+  @JsonKey(name: 'params', defaultValue: [])
+  dynamic params;
+  @JsonKey(name: 'service')
+  String service;
 
-  factory Parent.fromJson(Map<String, dynamic> json) => _$ParentFromJson(json);
-  Map<String, dynamic> toJson() => _$ParentToJson(this);
+  factory ContextSchema.fromJson(Map<String, dynamic> json) =>
+      _$ContextSchemaFromJson(json);
+  Map<String, dynamic> toJson() => _$ContextSchemaToJson(this);
 }
 
+// region Child Data
+
+@JsonSerializable()
+class Data {
+  Data();
+
+  @JsonKey(name: 'text')      dynamic text;
+  @JsonKey(name: 'name')      String name;
+
+  factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
+  Map<String, dynamic> toJson() => _$DataToJson(this);
+}
+
+@JsonSerializable()
+class ButtonData extends Data {
+  ButtonData();
+
+  @JsonKey(name: 'action')    ButtonAction action;
+
+  factory ButtonData.fromJson(Map<String, dynamic> json) => _$ButtonDataFromJson(json);
+  Map<String, dynamic> toJson() => _$ButtonDataToJson(this);
+}
+
+@JsonSerializable()
+class ButtonAction {
+  ButtonAction();
+
+  @JsonKey(name: 'type')      String type;
+  @JsonKey(name: 'payload')   dynamic payload; // ButtonPayload or String
+
+  factory ButtonAction.fromJson(Map<String, dynamic> json) => _$ButtonActionFromJson(json);
+  Map<String, dynamic> toJson() => _$ButtonActionToJson(this);
+}
+
+@JsonSerializable()
+class ImageData extends Data {
+  ImageData();
+  @JsonKey(name: 'src')           String src;
+  @JsonKey(name: 'description')   String description;
+
+  factory ImageData.fromJson(Map<String, dynamic> json) => _$ImageDataFromJson(json);
+  Map<String, dynamic> toJson() => _$ImageDataToJson(this);
+}
+
+@JsonSerializable()
+class VideoData extends Data {
+  VideoData();
+
+  @JsonKey(name: 'autoplay', defaultValue: false)
+  bool autoplay;
+  @JsonKey(name: 'controls', defaultValue: false)
+  bool controls;
+  @JsonKey(name: 'file')
+  dynamic file;
+  @JsonKey(name: 'loop', defaultValue: false)
+  bool loop;
+  @JsonKey(name: 'preview')
+  String preview;
+  @JsonKey(name: 'sound', defaultValue: false)
+  bool sound;
+  @JsonKey(name: 'source')
+  String source;
+  @JsonKey(name: 'sourceType')
+  Map<String, dynamic> sourceType; // {name: "My video", value: "my-video"}
+
+  factory VideoData.fromJson(Map<String, dynamic> json) => _$VideoDataFromJson(json);
+  Map<String, dynamic> toJson() => _$VideoDataToJson(this);
+}
+
+@JsonSerializable()
+class CategoryData extends Data {
+  CategoryData();
+
+  @JsonKey(name: 'categoryIds', defaultValue: [])
+  List<dynamic> categoryIds;
+  @JsonKey(name: 'hideProductName', defaultValue: false)
+  bool hideProductName;
+  @JsonKey(name: 'hideProductPrice', defaultValue: false)
+  bool hideProductPrice;
+  @JsonKey(name: 'categoryType')
+  Map<String, dynamic> categoryType; // {name: "Custom", value: "custom"}
+
+  factory CategoryData.fromJson(Map<String, dynamic> json) => _$CategoryDataFromJson(json);
+  Map<String, dynamic> toJson() => _$CategoryDataToJson(this);
+}
+
+// endregion
+
+// region Styles
 @JsonSerializable()
 class BaseStyles with BackgroundAssist, StyleAssist, SizeAssist, DecorationAssist {
   BaseStyles();
@@ -330,6 +499,10 @@ class BaseStyles with BackgroundAssist, StyleAssist, SizeAssist, DecorationAssis
   String backgroundColor;
   @JsonKey(name: 'backgroundImage', defaultValue: '')
   String backgroundImage;
+
+  bool get isGradientBackGround {
+    return backgroundImage.contains('linear-gradient');
+  }
   // ------------------------------------------------------
   // ------------------------------------------------------
   // Only for Section and Shape Background
@@ -355,8 +528,13 @@ class BaseStyles with BackgroundAssist, StyleAssist, SizeAssist, DecorationAssis
   // if String border is active in case default value is '0px solid #000000'
   @JsonKey(name: 'border')
   dynamic border;
+  // For Image
   @JsonKey(name: 'borderType', defaultValue: 'solid')
   String borderType;
+  // For Logo
+  /// solid, dashed, dotted
+  @JsonKey(name: 'borderStyle', defaultValue: 'solid')
+  String borderStyle;
   // String '0', '50%' or double
   @JsonKey(name: 'borderRadius', defaultValue: 0)
   dynamic borderRadius;
@@ -409,7 +587,11 @@ class BaseStyles with BackgroundAssist, StyleAssist, SizeAssist, DecorationAssis
     return width1;
   }
   @JsonKey(name: 'height', defaultValue: 0)
-  double height;
+  double height0;
+  double get height {
+    return height0 * GlobalUtils.shopBuilderWidthFactor;
+  }
+
   @JsonKey(name: 'minWidth', defaultValue: 0)
   double minWidth;
   @JsonKey(name: 'minHeight', defaultValue: 0)
@@ -451,7 +633,7 @@ class BaseStyles with BackgroundAssist, StyleAssist, SizeAssist, DecorationAssis
   dynamic fontWeight0;
   @JsonKey(
       name: "fontFamily",
-      defaultValue: "Helvetica Neue,Helvetica,Arial,sans-serif")
+      defaultValue: "Roboto")
   String fontFamily;
   // textAlign is only For Text, Shop Product, Shop Product Category
   @JsonKey(name: 'textAlign')
@@ -533,11 +715,30 @@ class BaseStyles with BackgroundAssist, StyleAssist, SizeAssist, DecorationAssis
     return getMarginLeftAssist(marginLeft, sectionStyleSheet.gridTemplateColumns, gridColumn);
   }
 
-  Decoration get decoration {
+  Decoration decoration(String childType) {
+    Border border2;
+    Color color2;
+    double borderRadius2 = getBorderRadius(borderRadius);
+    if (childType == 'button') {
+      color2 = colorConvert(backgroundColor);
+    } else if (childType == 'logo') {
+      border2 = (borderStyle == 'solid' && borderWidth > 0)
+          ? Border.all(color: colorConvert(borderColor), width: PxDp.d2u(px: borderWidth.floor()))
+          : null;
+    } else if (childType == 'image') {
+      border2 = getBorder;
+    }
+
+    if (childType == 'shop-cart' || childType == 'social-icon') {
+      borderRadius2 = min(width, height) / 8;
+    }
+
     return BoxDecoration(
-//      border: getBorder,
-      borderRadius: BorderRadius.circular(getBorderRadius(borderRadius)),
-      boxShadow: getBoxShadow,
+      border: border2,
+      color: color2,
+      borderRadius: BorderRadius.circular(borderRadius2),
+      boxShadow: getBoxShadow(childType),
+      gradient: isGradientBackGround? gradient : null
     );
   }
 
@@ -545,8 +746,16 @@ class BaseStyles with BackgroundAssist, StyleAssist, SizeAssist, DecorationAssis
     return getBorder1(border);
   }
 
-  List<BoxShadow> get getBoxShadow {
-    return getBoxShadow1(shadow);
+  List<BoxShadow> getBoxShadow(String childType) {
+    String shadowString;
+    if (childType == 'shape') {
+      shadowString = shadow;
+    } else if (childType == 'social-icon') {
+      shadowString = filter;
+    } else {
+      shadowString = boxShadow;
+    }
+    return getBoxShadow1(shadowString, childType);
   }
 
   factory BaseStyles.fromJson(Map<String, dynamic> json) => _$BaseStylesFromJson(json);
@@ -582,13 +791,53 @@ class TextStyles extends BaseStyles {
   TextStyles();
 
   @JsonKey(name: 'height', defaultValue: 18)
-  double height;
+  double height0;
+
+  double get textHeight {
+    return (minHeight > height) ? minHeight : height;
+  }
 
   @JsonKey(name: 'backgroundColor')
   String backgroundColor;
 
-  get textHeight {
-      return (minHeight > height) ? minHeight : height;
+  Color htmlTextColor(String text) {
+    if (!isHtmlText(text)) return colorConvert(color);
+    Color decodeColor = decodeHtmlTextColor(text);
+    if (decodeColor != null) return decodeColor;
+    return colorConvert(color);
+  }
+
+  double htmlFontSize(String text) {
+    if (!isHtmlText(text)) return fontSize;
+    double decodeFontSize = decodeHtmlTextFontSize(text);
+    if (decodeFontSize != 0)
+      return decodeFontSize;
+    return fontSize;
+  }
+
+  FontWeight htmlFontWeight(String text) {
+    if (!isHtmlText(text)) return fontWeight;
+    String decodeFontWeight = decodeHtmlTextFontWeight(text);
+    if (decodeFontWeight != null)
+      return getFontWeight(decodeFontWeight);
+
+    return fontWeight;
+  }
+
+  FontStyle htmlFontStyle(String text) {
+    if (!isHtmlText(text)) return fontStyle;
+    if (text.contains('\</i>'))
+      return FontStyle.italic;
+
+    return fontStyle;
+  }
+
+  TextAlign htmlAlignment(String text) {
+    if (!isHtmlText(text)) return textAlign;
+    String decodeAlignment = decodeHtmlTextAlignment(text);
+    if (decodeAlignment != null)
+      return getTextAlign(decodeAlignment);
+    return textAlign;
   }
 
   factory TextStyles.fromJson(Map<String, dynamic> json) => _$TextStylesFromJson(json);
@@ -600,7 +849,7 @@ class ButtonStyles extends BaseStyles{
   ButtonStyles();
 
   @JsonKey(name: 'height', defaultValue: 20)
-  double height;
+  double height0;
 
   @JsonKey(name: 'color', defaultValue: '#FFFFFF')
   String color;
@@ -611,6 +860,91 @@ class ButtonStyles extends BaseStyles{
 
   factory ButtonStyles.fromJson(Map<String, dynamic> json) => _$ButtonStylesFromJson(json);
   Map<String, dynamic> toJson() => _$ButtonStylesToJson(this);
+}
+
+@JsonSerializable()
+class TableStyles extends BaseStyles {
+  TableStyles();
+
+  @JsonKey(name: 'columnCount', defaultValue: 4)
+  int columnCount;
+
+  @JsonKey(name: 'rowCount', defaultValue: 5)
+  int rowCount;
+
+  @JsonKey(name: 'headerColumnColor', defaultValue: '#FFFFFF')
+  String headerColumnColor;
+
+  @JsonKey(name: 'headerRowColor', defaultValue: '#FFFFFF')
+  String headerRowColor;
+
+  @JsonKey(name: 'footerRowColor', defaultValue: '#FFFFFF')
+  String footerRowColor;
+
+  /// Header and Footer
+  @JsonKey(name: 'headerRows', defaultValue: 1)
+  int headerRows;
+
+  @JsonKey(name: 'headerColumns', defaultValue: 1)
+  int headerColumns;
+
+  @JsonKey(name: 'footerRows', defaultValue: 0)
+  int footerRows;
+
+  @JsonKey(name: 'title', defaultValue: '')
+  String title;
+
+  @JsonKey(name: 'caption', defaultValue: '')
+  String caption;
+
+  @JsonKey(name: 'outline', defaultValue: true)
+  bool outline;
+  @JsonKey(name: 'alternatingRows', defaultValue: false)
+  bool alternatingRows;
+
+  /// Grid options
+  @JsonKey(name: 'horizontalLines', defaultValue: true)
+  bool horizontalLines;
+  @JsonKey(name: 'headerColumnLines', defaultValue: true)
+  bool headerColumnLines;
+  @JsonKey(name: 'verticalLines', defaultValue: true)
+  bool verticalLines;
+  @JsonKey(name: 'headerRowLines', defaultValue: true)
+  bool headerRowLines;
+  @JsonKey(name: 'footerRowLines', defaultValue: true)
+  bool footerRowLines;
+  /// Text Style
+  @JsonKey(name: 'textColor', defaultValue: '#000000')
+  String textColor;
+  @JsonKey(name: 'textFontTypes', defaultValue: [])
+  List<String> textFontTypes;
+  @JsonKey(name: 'textHorizontalAlign', defaultValue: 'center')
+  String textHorizontalAlign;
+  @JsonKey(name: 'textVerticalAlign', defaultValue: 'center')
+  String textVerticalAlign;
+  @JsonKey(name: 'textWrap', defaultValue: true)
+  bool textWrap;
+  /// Background
+  @JsonKey(name: 'backgroundColor')  String backgroundColor;
+  /// Border
+  /// outside, inside, all, left, vertical, right, top, horizontal, bottom
+  @JsonKey(name: 'cellBorder', defaultValue: 'outside')
+  String cellBorder;
+
+  @JsonKey(name: 'borderWidth', defaultValue: 1)
+  double borderWidth;
+  @JsonKey(name: 'borderColor', defaultValue: '#808080')
+  String borderColor;
+
+  /// Table Cell Conditional Highlight Style
+  @JsonKey(name: 'tableHighlightTextFontTypes', defaultValue: [])
+  List<String> tableHighlightTextFontTypes;
+  @JsonKey(name: 'tableHighlightBackgroundColor')
+  String tableHighlightBackgroundColor;
+  @JsonKey(name: 'tableHighlightTextColor')
+  String tableHighlightTextColor;
+  factory TableStyles.fromJson(Map<String, dynamic> json) => _$TableStylesFromJson(json);
+  Map<String, dynamic> toJson() => _$TableStylesToJson(this);
 }
 
 @JsonSerializable()
@@ -690,6 +1024,12 @@ class ShopProductsStyles extends BaseStyles {
   num productTemplateColumns;
   @JsonKey(name: 'productTemplateRows', defaultValue: 0)
   num productTemplateRows;
+
+  @JsonKey(name: 'columnGap', defaultValue: 15)
+  num columnGap;
+
+  @JsonKey(name: 'rowGap', defaultValue: 15)
+  num rowGap;
 
   factory ShopProductsStyles.fromJson(Map<String, dynamic> json) => _$ShopProductsStylesFromJson(json);
   Map<String, dynamic> toJson() => _$ShopProductsStylesToJson(this);
@@ -787,90 +1127,7 @@ class ShopProductCategoryStyles extends BaseStyles {
   Map<String, dynamic> toJson() => _$ShopProductCategoryStylesToJson(this);
 }
 
-@JsonSerializable()
-class Data {
-  Data();
-
-  @JsonKey(name: 'text')      String text;
-  @JsonKey(name: 'name')      String name;
-
-  factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
-  Map<String, dynamic> toJson() => _$DataToJson(this);
-}
-
-@JsonSerializable()
-class ButtonData extends Data {
-  ButtonData();
-
-  @JsonKey(name: 'action')    ButtonAction action;
-
-  factory ButtonData.fromJson(Map<String, dynamic> json) => _$ButtonDataFromJson(json);
-  Map<String, dynamic> toJson() => _$ButtonDataToJson(this);
-}
-
-@JsonSerializable()
-class ImageData extends Data {
-  ImageData();
-
-  @JsonKey(name: 'src')       String src;
-
-  factory ImageData.fromJson(Map<String, dynamic> json) => _$ImageDataFromJson(json);
-  Map<String, dynamic> toJson() => _$ImageDataToJson(this);
-}
-
-
-@JsonSerializable()
-class VideoData extends Data {
-  VideoData();
-
-  @JsonKey(name: 'autoplay', defaultValue: false)
-  bool autoplay;
-  @JsonKey(name: 'controls', defaultValue: false)
-  bool controls;
-  @JsonKey(name: 'file')
-  dynamic file;
-  @JsonKey(name: 'loop', defaultValue: false)
-  bool loop;
-  @JsonKey(name: 'preview')
-  String preview;
-  @JsonKey(name: 'sound', defaultValue: false)
-  bool sound;
-  @JsonKey(name: 'source')
-  String source;
-  @JsonKey(name: 'sourceType')
-  Map<String, dynamic> sourceType; // {name: "My video", value: "my-video"}
-
-  factory VideoData.fromJson(Map<String, dynamic> json) => _$VideoDataFromJson(json);
-  Map<String, dynamic> toJson() => _$VideoDataToJson(this);
-}
-
-@JsonSerializable()
-class CategoryData extends Data {
-  CategoryData();
-
-  @JsonKey(name: 'categoryIds', defaultValue: [])
-  List<dynamic> categoryIds;
-  @JsonKey(name: 'hideProductName', defaultValue: false)
-  bool hideProductName;
-  @JsonKey(name: 'hideProductPrice', defaultValue: false)
-  bool hideProductPrice;
-  @JsonKey(name: 'categoryType')
-  Map<String, dynamic> categoryType; // {name: "Custom", value: "custom"}
-
-  factory CategoryData.fromJson(Map<String, dynamic> json) => _$CategoryDataFromJson(json);
-  Map<String, dynamic> toJson() => _$CategoryDataToJson(this);
-}
-
-@JsonSerializable()
-class ButtonAction {
-  ButtonAction();
-
-  @JsonKey(name: 'type')      String type;
-  @JsonKey(name: 'payload')   dynamic payload; // ButtonPayload or String
-
-  factory ButtonAction.fromJson(Map<String, dynamic> json) => _$ButtonActionFromJson(json);
-  Map<String, dynamic> toJson() => _$ButtonActionToJson(this);
-}
+// endregion
 
 @JsonSerializable()
 class ButtonPayload {
@@ -901,7 +1158,535 @@ class ChildSize {
   Map<String, dynamic> toJson() => _$ChildSizeToJson(this);
 }
 
+// region Edit Style
+@JsonSerializable()
+class Effect {
+  Effect();
+
+  @JsonKey(name: 'payload')   Payload payload;
+  @JsonKey(name: 'target')    String target;
+  @JsonKey(name: 'type')      String type;
+
+  factory Effect.fromJson(Map<String, dynamic> json) => _$EffectFromJson(json);
+  Map<String, dynamic> toJson() => _$EffectToJson(this);
+}
+
+@JsonSerializable()
+class Payload {
+  Payload();
+
+  @JsonKey(name: 'children')    List<dynamic> children;
+  @JsonKey(name: 'data')        PayloadData data;
+  @JsonKey(name: 'id')          String id;
+  @JsonKey(name: 'meta')        dynamic meta;
+  @JsonKey(name: 'type')        String type;
+
+  factory Payload.fromJson(Map<String, dynamic> json) => _$PayloadFromJson(json);
+  Map<String, dynamic> toJson() => _$PayloadToJson(this);
+}
+
+@JsonSerializable()
+class PayloadData {
+  PayloadData();
+
+  @JsonKey(name: 'sync')   bool sync;
+  @JsonKey(name: 'text')   String text;
+
+  factory PayloadData.fromJson(Map<String, dynamic> json) => _$PayloadDataFromJson(json);
+  Map<String, dynamic> toJson() => _$PayloadDataToJson(this);
+}
+
+@JsonSerializable()
+class TableHighLightRule {
+  TableHighLightRule();
+
+  @JsonKey(name: 'rule')          String rule;
+  @JsonKey(name: 'description')   String description;
+
+  factory TableHighLightRule.fromJson(Map<String, dynamic> json) => _$TableHighLightRuleFromJson(json);
+  Map<String, dynamic> toJson() => _$TableHighLightRuleToJson(this);
+}
+
 class ShopObject {
   String name;
-  ShopObject({this.name,});
+  String type;
+
+  get data {
+    switch (this.type) {
+      case 'text':
+        return {'text': 'Text', 'sync': false};
+      case 'button':
+        return {'variant': this.name, 'text': 'Button text'};
+      case 'menu':
+        return {'variant': this.name, 'text': '', 'routes': [{'title': 'Page'}]};
+      case 'shape':
+      case 'shop-cart':
+      case 'logo':
+        return {'variant': this.name, 'text': ''};
+      case 'social-icon':
+        return {
+          'link': '',
+          'text': '',
+          'type': this.name,
+          'variant': this.name,
+        };
+      case 'shop-products':
+      case 'shop-product-details':
+      case 'shop-category':
+      case 'table':
+        return {'text': ''};
+      case 'image':
+        return {'src': '', 'description': '', 'text': ''};
+      case 'video':
+        return {'source': '', 'preview': '', 'autoplay': false, 'loop': false, 'text': ''};
+    }
+  }
+
+  get styles {
+    switch (this.type) {
+      case 'text':
+        return {
+          'fontSize': 15,
+          'fontWeight': 'bold',
+          'height': 18,
+          'margin': "0 0 0 0",
+          'width': 32,
+        };
+      case 'shape':
+      case 'image':
+      case 'video':
+        return {
+          'backgroundColor': '#d4d4d4',
+          'content': 'Text content',
+          'height': 100,
+          'margin': "0 0 0 0",
+          'width': 100,
+        };
+      case 'button':
+        return {
+          'backgroundColor': '#d4d4d4',
+          'borderRadius': this.name == 'button' ? '0' : '15',
+          'height': 20,
+          'margin': "0 0 0 0",
+          'width': 80,
+        };
+      case 'menu':
+        return {
+          'backgroundColor': 'transparent',
+          'fontFamily': 'Roboto',
+          'fontSize': 16,
+          'height': 40,
+          'width': 40,
+        };
+      case 'shop-cart':
+        return {
+          'backgroundColor': '#d4d4d4',
+          'content': 'Text content',
+          'height': 100,
+          'margin': '0 0 0 0',
+          'width': 125,
+        };
+      case 'logo':
+        return {
+          'backgroundColor': '#d4d4d4',
+          'height': 100,
+          'margin': '0 0 0 0',
+          'width': 100,
+        };
+      case 'social-icon':
+        return {
+          'backgroundColor': '#d4d4d4',
+          'content': 'Text content',
+          'height': 24,
+          'margin': '0 0 0 0',
+          'width': 24,
+        };
+      case 'shop-products':
+        return {
+          'backgroundColor': '#ffffff',
+          'height': 280,
+          'productTemplateColumns': 1,
+          'productTemplateRows': 1,
+          'width': 220,
+        };
+      case 'shop-product-details':
+      case 'shop-category':
+        return {
+          'backgroundColor': '#ffffff',
+          'height': null,
+          'width': null,
+        };
+      case 'table':
+        String headerColumnColor = '#ffffff';
+        String headerRowColor = '#ffffff';
+        String footerRowColor = '#ffffff';
+        int headerRows = 0;
+        int headerColumns = 0;
+        int footerRows = 0;
+        if (name.contains('-0')) {
+          headerRows = 1;
+          headerColumns = 1;
+        } else if (name.contains('-1')) {
+          headerRows = 1;
+        } else if (name.contains('-3')) {
+          headerRows = 1;
+          headerColumns = 1;
+          footerRows = 1;
+        }
+
+        switch(name) {
+          case '0-0':
+            headerRowColor = '#38719F';
+            headerColumnColor = '#428CC8';
+            footerRowColor = '#38719F';
+            break;
+          case '0-1':
+            headerRowColor = '#38719F';
+            footerRowColor = '#38719F';
+            break;
+          case '0-3':
+            headerRowColor = '#38719F';
+            headerColumnColor = '#428CC8';
+            break;
+          case '1-0':
+            headerRowColor = '#459138';
+            headerColumnColor = '#61C348';
+            footerRowColor = '#459138';
+            break;
+          case '1-1':
+            headerRowColor = '#459138';
+            footerRowColor = '#459138';
+            break;
+          case '1-3':
+            headerRowColor = '#459138';
+            headerColumnColor = '#61C348';
+            break;
+          case '2-0':
+            headerRowColor = '#F7B950';
+            headerColumnColor = '#F9CD54';
+            footerRowColor = '#F7B950';
+            break;
+          case '2-1':
+            headerRowColor = '#F7B950';
+            footerRowColor = '#F7B950';
+            break;
+          case '2-3':
+            headerRowColor = '#F7B950';
+            headerColumnColor = '#F9CD54';
+            break;
+          case '3-0':
+            headerRowColor = '#D576A8';
+            headerColumnColor = '#AA3E7A';
+            footerRowColor = '#D576A8';
+            break;
+          case '3-1':
+            headerRowColor = '#D576A8';
+            footerRowColor = '#D576A8';
+            break;
+          case '3-3':
+            headerRowColor = '#D576A8';
+            headerColumnColor = '#AA3E7A';
+            break;
+          case '4-0':
+            headerRowColor = '#9EA2AC';
+            headerColumnColor = '#73767E';
+            footerRowColor = '#9EA2AC';
+            break;
+          case '4-1':
+            headerRowColor = '#9EA2AC';
+            footerRowColor = '#9EA2AC';
+            break;
+          case '4-3':
+            headerRowColor = '#9EA2AC';
+            headerColumnColor = '#73767E';
+            break;
+          default:
+            headerRowColor = '#ffffff';
+            headerColumnColor = '#ffffff';
+            footerRowColor = '#ffffff';
+            headerRows = 0;
+            headerColumns = 0;
+            footerRows = 0;
+        }
+
+        return {
+          'height': 300,
+          'width': null,
+          'headerColumnColor': headerColumnColor,
+          'headerRowColor': headerRowColor,
+          'footerRowColor': footerRowColor,
+          'headerRows': headerRows,
+          'headerColumns': headerColumns,
+          'footerRows': footerRows,
+        };
+    }
+  }
+
+  ShopObject({@required this.name, @required this.type});
 }
+
+@JsonSerializable()
+class Paragraph {
+  Paragraph();
+
+  @JsonKey(name: 'name')        String name;
+  @JsonKey(name: 'size')        num size;
+  @JsonKey(name: 'fontWeight')  String fontWeight;
+  @JsonKey(name: 'fontStyle')   String fontStyle;
+
+  bool get isCaptionRed {
+    return name == 'Caption Red';
+  }
+
+  FontWeight get _getFontWeight {
+    return fontWeight == 'bold' ? FontWeight.bold : FontWeight.normal;
+  }
+
+  FontStyle get _getFontStyle {
+    return fontStyle == 'italic' ? FontStyle.italic : FontStyle.normal;
+  }
+
+  TextStyle get textStyle {
+    return TextStyle(
+        fontStyle: _getFontStyle,
+        fontWeight: _getFontWeight,
+        color: isCaptionRed ? Colors.red : Colors.white,
+        fontSize: 24);
+  }
+
+  factory Paragraph.fromJson(Map<String, dynamic> json) => _$ParagraphFromJson(json);
+  Map<String, dynamic> toJson() => _$ParagraphToJson(this);
+}
+
+class GradientModel {
+  double angle;
+  Color startColor;
+  Color endColor;
+
+  GradientModel(
+      {@required this.angle,
+      @required this.startColor,
+      @required this.endColor});
+}
+
+class BackGroundModel {
+
+  String backgroundColor;
+  String backgroundImage;
+  String backgroundPosition;
+  String backgroundRepeat;
+  String backgroundSize;
+
+  BackGroundModel(
+      {@required this.backgroundColor,
+        @required this.backgroundImage,
+        @required this.backgroundPosition,
+        @required this.backgroundRepeat,
+        @required this.backgroundSize});
+}
+
+class BorderModel {
+  String borderColor;
+  double borderWidth;
+  String borderStyle;
+
+  get border {
+    if (borderWidth == 0)
+      return false;
+    return '${borderWidth.round()}px $borderStyle $borderColor';
+  }
+  // solid, dashed, dotted
+  BorderModel({
+    this.borderColor = '#000000',
+    this.borderWidth = 1,
+    this.borderStyle = 'solid',
+  });
+}
+
+class ShadowModel {
+  String type;
+  double blurRadius;
+  Color color;
+  double offsetX;
+  double offsetY;
+  // Button Attributes
+  double spread;
+  // Image Attributes
+  double shadowAngle;
+  double shadowBlur;
+  String shadowFormColor;
+  double shadowOffset;
+  double shadowOpacity;
+
+  ShadowModel(
+      {this.type,
+      this.blurRadius,
+      this.offsetX,
+      this.offsetY,
+      this.color,
+      /*button attrs*/
+      this.spread = 0,
+      /*image, shop-cart attrs*/
+      this.shadowAngle,
+      this.shadowBlur,
+      this.shadowFormColor,
+      this.shadowOffset,
+      this.shadowOpacity});
+
+  String get shadowString {
+    if (type == 'button') return buttonShadowString;
+    if (type == 'shape') return shapeShadowString;
+    if (type == 'image') return imageShadowString;
+    if (type == 'shop-cart' || type == 'logo') return cartShadowString;
+    if (type == 'social-icon') return socialIconShadowString;
+
+    throw ('unknown child type error');
+  }
+
+  double get getBlur {
+    if (type == 'button' || type == 'shape') return blurRadius;
+    if (type == 'image') return shadowBlur;
+
+    throw ('unknown child type error');
+  }
+
+  double get getOffSetX {
+    if (type == 'shape') return offsetX;
+    if (type == 'image') {
+      double deg = shadowAngle * pi / 180;
+      return cos(deg) * shadowOffset;
+    }
+    throw ('unknown child type error');
+  }
+
+  double get getOffSetY {
+    if (type == 'shape') return offsetY;
+    if (type == 'image') {
+      double deg = shadowAngle * pi / 180;
+      return -shadowOffset * sin(deg);
+    }
+    throw ('unknown child type error');
+  }
+
+  String get shadowColor {
+    if (type == 'image') {
+      Color color = colorConvert(shadowFormColor);
+      return 'rgba(${color.red}, ${color.green}, ${color.blue})';
+    }
+    throw ('no image type error');
+  }
+
+  get buttonShadowString {
+    return 'rgba(${color.red},${color.green},${color.blue},${color.opacity}) $offsetX $offsetY $blurRadius $spread';
+  }
+
+  get shapeShadowString {
+    return 'drop-shadow(${offsetX}pt ${offsetY}pt ${blurRadius}pt rgba(${color.red},${color.green},${color.blue},${color.opacity}))';
+  }
+
+  get cartShadowString {
+    double deg = shadowAngle * pi / 180;
+    double offsetX = cos(deg) * shadowOffset;
+    double offsetY = - sin(deg) * shadowOffset;
+    return '${offsetX}pt ${offsetY}pt ${blurRadius}pt 0 rgba(${color.red},${color.green},${color.blue},${shadowOpacity.toStringAsFixed(1)})';
+  }
+
+  get logoShadowString {
+    double deg = shadowAngle * pi / 180;
+    double offsetX = cos(deg) * shadowOffset;
+    double offsetY = - sin(deg) * shadowOffset;
+    return 'drop-shadow(${offsetX}pt ${offsetY}pt ${blurRadius}pt rgba(${color.red},${color.green},${color.blue},${shadowOpacity.toStringAsFixed(1)}))';
+  }
+
+  get socialIconShadowString {
+    double deg = shadowAngle * pi / 180;
+    double offsetX = cos(deg) * shadowOffset;
+    double offsetY = -sin(deg) * shadowOffset;
+    return 'drop-shadow(${offsetX}pt ${offsetY}pt ${blurRadius}pt rgba(${color.red},${color.green},${color.blue},${shadowOpacity.toStringAsFixed(1)}))';
+  }
+
+  get imageShadowString {
+    double deg = shadowAngle * pi / 180;
+    Color color = colorConvert(shadowFormColor);
+    double offsetX = cos(deg) * shadowOffset;
+    double offsetY = - sin(deg) * shadowOffset;
+    return '${offsetX.toStringAsFixed(1)}px ${offsetY.toStringAsFixed(1)}px ${shadowBlur}px rgba(${color.red}, ${color.green}, ${color.blue}, ${shadowOpacity.toInt() / 100})';
+  }
+}
+
+class ButtonShadowModel extends ShadowModel {
+  ButtonShadowModel()
+      : super(
+            type: 'button',
+            blurRadius: 4,
+            offsetX: 0,
+            offsetY: 2,
+            color: Colors.black,
+            spread: 1);
+}
+
+class ShapeShadowModel extends ShadowModel {
+  ShapeShadowModel()
+      : super(
+            type: 'shape',
+            blurRadius: 5,
+            offsetX: 7.071067811865474,
+            offsetY: 7.071067811865474,
+            color: Colors.black);
+}
+
+class ImageShadowModel extends ShadowModel {
+  ImageShadowModel()
+      : super(
+    type: 'image',
+    shadowAngle: 315,
+    shadowBlur: 5,
+    shadowFormColor: '#000000',
+    shadowOffset: 10,
+    shadowOpacity: 100,
+  );
+}
+
+class CartShadowModel extends ShadowModel {
+  CartShadowModel()
+      : super(
+            type: 'shop-cart',
+            blurRadius: 5,
+            shadowOpacity: 1,
+            shadowAngle: 315,
+            shadowOffset: 20,
+            color: Colors.black);
+}
+
+class SocialIconShadowModel extends ShadowModel {
+  SocialIconShadowModel()
+      : super(
+      type: 'social-icon',
+      blurRadius: 5,
+      shadowOpacity: 1,
+      shadowAngle: 315,
+      shadowOffset: 20,
+      color: Colors.black);
+}
+
+class NoBackGroundFillClipPath extends CustomClipper<Path> {
+  final double radius = 0.5;
+
+  @override
+  Path getClip(Size size) {
+    final path = Path();
+    path.moveTo(size.width, 0.0 - radius);
+    path.lineTo(0.0 - radius, size.height - radius);
+    path.lineTo(radius, size.height + radius);
+    path.lineTo(size.width + radius, radius);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(NoBackGroundFillClipPath oldClipper) => false;
+
+  // endregion
+}
+// endregion
+// endregion

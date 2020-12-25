@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/element/widget/dashed_decoration_view.dart';
 import 'package:provider/provider.dart';
 
 class LogoView extends StatefulWidget {
@@ -14,17 +14,15 @@ class LogoView extends StatefulWidget {
       this.stylesheets});
 
   @override
-  _LogoViewState createState() => _LogoViewState(child);
+  _LogoViewState createState() => _LogoViewState();
 }
 
 class _LogoViewState extends State<LogoView> {
-  final Child child;
 
   ImageStyles styles;
   GlobalStateModel globalStateModel;
   GlobalKey key = GlobalKey();
-  _LogoViewState(this.child);
-
+  _LogoViewState();
 
   @override
   Widget build(BuildContext context) {
@@ -34,31 +32,26 @@ class _LogoViewState extends State<LogoView> {
   }
 
   Widget get body {
+    BorderModel borderModel = BorderModel(
+        borderColor: styles.borderColor,
+        borderStyle: styles.borderStyle,
+        borderWidth: styles.borderWidth);
+
     return Opacity(
       opacity: styles.opacity,
       child: Container(
         key: key,
         width: styles.width,
         height: styles.height,
-        child: CachedNetworkImage(
-          imageUrl: '${globalStateModel.activeShop.picture}',
-          imageBuilder: (context, imageProvider) => Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: imageProvider,
-                fit: BoxFit.contain,
-              ),
+        alignment: Alignment.center,
+        child: DashedDecorationView(
+          borderModel: borderModel,
+          child: Container(
+            decoration: styles.decoration(widget.child.type),
+            child: CachedNetworkImage(
+              imageUrl: '${globalStateModel.activeShop.picture}',
             ),
           ),
-          errorWidget: (context, url, error) {
-            return Container(
-              alignment: Alignment.center,
-              padding: EdgeInsets.all(15),
-              child: SvgPicture.asset(
-                'assets/images/no_image.svg',
-              ),
-            );
-          },
         ),
       ),
     );
@@ -66,9 +59,8 @@ class _LogoViewState extends State<LogoView> {
 
   ImageStyles styleSheet() {
     try {
-      Map<String, dynamic> json = widget.stylesheets[child.id];
-//      if (json['display'] != 'none')
-//        print('Logo Styles: $json');
+      Map<String, dynamic> json = widget.stylesheets;
+     //   print('Logo Styles: $json');
       return ImageStyles.fromJson(json);
     } catch (e) {
       return null;

@@ -6,6 +6,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/payever_bloc_delegate.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/standard_data.dart';
+import 'package:payever/shop/views/edit/style_vew/table/edit_highlight_rule_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'commons/view_models/view_models.dart';
@@ -75,6 +76,17 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    // return MaterialApp(
+    //   title: 'Editable example',
+    //   theme: ThemeData(
+    //     primarySwatch: Colors.blue,
+    //     primaryColor: Colors.blue,
+    //     accentColor: Colors.white,
+    //     visualDensity: VisualDensity.adaptivePlatformDensity,
+    //   ),
+    //   home: EditHighlightRuleScreen(),
+    // );
+
     StandardData(context);
     Language(context);
     return MultiProvider(
@@ -114,7 +126,6 @@ class _MyAppState extends State<MyApp> {
 
   _storedCredentials() async {
     String fingerPrint = '${Platform.operatingSystem}  ${Platform.operatingSystemVersion}';
-
 
     preferences = await SharedPreferences.getInstance();
     wallpaper = preferences.getString(GlobalUtils.WALLPAPER) ?? '';

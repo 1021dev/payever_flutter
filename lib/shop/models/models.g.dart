@@ -209,55 +209,6 @@ Map<String, dynamic> _$ThemeResponseToJson(ThemeResponse instance) =>
       'versions': instance.versions,
     };
 
-ShopPage _$ShopPageFromJson(Map<String, dynamic> json) {
-  return ShopPage()
-    ..contextId = json['contextId'] as String
-    ..data = json['data'] == null
-        ? null
-        : PageData.fromJson(json['data'] as Map<String, dynamic>)
-    ..id = json['id'] as String
-    ..name = json['name'] as String
-    ..stylesheetIds = json['stylesheetIds'] == null
-        ? null
-        : StyleSheetIds.fromJson(json['stylesheetIds'] as Map<String, dynamic>)
-    ..templateId = json['templateId'] as String
-    ..type = json['type'] as String
-    ..variant = json['variant'] as String;
-}
-
-Map<String, dynamic> _$ShopPageToJson(ShopPage instance) => <String, dynamic>{
-      'contextId': instance.contextId,
-      'data': instance.data,
-      'id': instance.id,
-      'name': instance.name,
-      'stylesheetIds': instance.stylesheetIds,
-      'templateId': instance.templateId,
-      'type': instance.type,
-      'variant': instance.variant,
-    };
-
-PageData _$PageDataFromJson(Map<String, dynamic> json) {
-  return PageData()..preview = json['preview'] as String;
-}
-
-Map<String, dynamic> _$PageDataToJson(PageData instance) => <String, dynamic>{
-      'preview': instance.preview,
-    };
-
-StyleSheetIds _$StyleSheetIdsFromJson(Map<String, dynamic> json) {
-  return StyleSheetIds()
-    ..desktop = json['desktop'] as String
-    ..mobile = json['mobile'] as String
-    ..tablet = json['tablet'] as String;
-}
-
-Map<String, dynamic> _$StyleSheetIdsToJson(StyleSheetIds instance) =>
-    <String, dynamic>{
-      'desktop': instance.desktop,
-      'mobile': instance.mobile,
-      'tablet': instance.tablet,
-    };
-
 Action _$ActionFromJson(Map<String, dynamic> json) {
   return Action()
     ..affectedPageIds =
@@ -279,50 +230,164 @@ Map<String, dynamic> _$ActionToJson(Action instance) => <String, dynamic>{
       'targetPageId': instance.targetPageId,
     };
 
-Effect _$EffectFromJson(Map<String, dynamic> json) {
-  return Effect()
-    ..payload = json['payload'] == null
-        ? null
-        : Payload.fromJson(json['payload'] as Map<String, dynamic>)
-    ..target = json['target'] as String
-    ..type = json['type'] as String;
-}
-
-Map<String, dynamic> _$EffectToJson(Effect instance) => <String, dynamic>{
-      'payload': instance.payload,
-      'target': instance.target,
-      'type': instance.type,
-    };
-
-Payload _$PayloadFromJson(Map<String, dynamic> json) {
-  return Payload()
-    ..children = json['children'] as List
+ShopPage _$ShopPageFromJson(Map<String, dynamic> json) {
+  return ShopPage()
+    ..contextId = json['contextId'] as String
     ..data = json['data'] == null
         ? null
-        : PayloadData.fromJson(json['data'] as Map<String, dynamic>)
+        : PageData.fromJson(json['data'] as Map<String, dynamic>)
     ..id = json['id'] as String
-    ..meta = json['meta']
-    ..type = json['type'] as String;
+    ..hash = json['hash'] as String
+    ..master = json['master']
+    ..name = json['name'] as String
+    ..stylesheetIds = json['stylesheetIds'] as String
+    ..templateId = json['templateId'] as String
+    ..type = json['type'] as String
+    ..variant = json['variant'] as String;
 }
 
-Map<String, dynamic> _$PayloadToJson(Payload instance) => <String, dynamic>{
-      'children': instance.children,
+Map<String, dynamic> _$ShopPageToJson(ShopPage instance) => <String, dynamic>{
+      'contextId': instance.contextId,
       'data': instance.data,
       'id': instance.id,
-      'meta': instance.meta,
+      'hash': instance.hash,
+      'master': instance.master,
+      'name': instance.name,
+      'stylesheetIds': instance.stylesheetIds,
+      'templateId': instance.templateId,
       'type': instance.type,
+      'variant': instance.variant,
     };
 
-PayloadData _$PayloadDataFromJson(Map<String, dynamic> json) {
-  return PayloadData()
-    ..sync = json['sync'] as bool
-    ..text = json['text'] as String;
+ApplicationModel _$ApplicationModelFromJson(Map<String, dynamic> json) {
+  return ApplicationModel()
+    ..context = json['context'] == null
+        ? null
+        : ApplicationContext.fromJson(json['context'] as Map<String, dynamic>)
+    ..contextId = json['contextId'] as String
+    ..data = json['data'] as Map<String, dynamic>
+    ..routings = (json['routing'] as List)
+        ?.map((e) =>
+            e == null ? null : Routing.fromJson(e as Map<String, dynamic>))
+        ?.toList();
 }
 
-Map<String, dynamic> _$PayloadDataToJson(PayloadData instance) =>
+Map<String, dynamic> _$ApplicationModelToJson(ApplicationModel instance) =>
     <String, dynamic>{
-      'sync': instance.sync,
-      'text': instance.text,
+      'context': instance.context,
+      'contextId': instance.contextId,
+      'data': instance.data,
+      'routing': instance.routings,
+    };
+
+PageData _$PageDataFromJson(Map<String, dynamic> json) {
+  return PageData()..mark = json['mark'];
+}
+
+Map<String, dynamic> _$PageDataToJson(PageData instance) => <String, dynamic>{
+      'mark': instance.mark,
+    };
+
+ApplicationContext _$ApplicationContextFromJson(Map<String, dynamic> json) {
+  return ApplicationContext()
+    ..logo = json['#logo'] == null
+        ? null
+        : ApplicationLogo.fromJson(json['#logo'] as Map<String, dynamic>)
+    ..id = json['_id'] as String;
+}
+
+Map<String, dynamic> _$ApplicationContextToJson(ApplicationContext instance) =>
+    <String, dynamic>{
+      '#logo': instance.logo,
+      '_id': instance.id,
+    };
+
+ApplicationLogo _$ApplicationLogoFromJson(Map<String, dynamic> json) {
+  return ApplicationLogo()
+    ..method = json['method'] as String
+    ..params = json['params'] as List
+    ..service = json['service'] as String
+    ..usedBys = json['usedBy'] as List;
+}
+
+Map<String, dynamic> _$ApplicationLogoToJson(ApplicationLogo instance) =>
+    <String, dynamic>{
+      'method': instance.method,
+      'params': instance.params,
+      'service': instance.service,
+      'usedBy': instance.usedBys,
+    };
+
+Routing _$RoutingFromJson(Map<String, dynamic> json) {
+  return Routing()
+    ..pageId = json['pageId'] as String
+    ..routeId = json['routeId'] as String
+    ..url = json['url'] as String;
+}
+
+Map<String, dynamic> _$RoutingToJson(Routing instance) => <String, dynamic>{
+      'pageId': instance.pageId,
+      'routeId': instance.routeId,
+      'url': instance.url,
+    };
+
+PageDetail _$PageDetailFromJson(Map<String, dynamic> json) {
+  return PageDetail()
+    ..context = json['context'] as Map<String, dynamic>
+    ..contextId = json['contextId'] as String
+    ..data = json['data']
+    ..id = json['id'] as String
+    ..master = json['master']
+    ..name = json['name'] as String
+    ..stylesheets0 = json['stylesheets'] as Map<String, dynamic>
+    ..stylesheetIds = json['stylesheetIds'] == null
+        ? null
+        : StyleSheetIds.fromJson(json['stylesheetIds'] as Map<String, dynamic>)
+    ..template = json['template'] == null
+        ? null
+        : Template.fromJson(json['template'] as Map<String, dynamic>)
+    ..templateId = json['templateId'] as String
+    ..type = json['type'] as String
+    ..variant = json['variant'] as String;
+}
+
+Map<String, dynamic> _$PageDetailToJson(PageDetail instance) =>
+    <String, dynamic>{
+      'context': instance.context,
+      'contextId': instance.contextId,
+      'data': instance.data,
+      'id': instance.id,
+      'master': instance.master,
+      'name': instance.name,
+      'stylesheets': instance.stylesheets0,
+      'stylesheetIds': instance.stylesheetIds,
+      'template': instance.template,
+      'templateId': instance.templateId,
+      'type': instance.type,
+      'variant': instance.variant,
+    };
+
+PageDetailData _$PageDetailDataFromJson(Map<String, dynamic> json) {
+  return PageDetailData()..preview = json['preview'] as Map<String, dynamic>;
+}
+
+Map<String, dynamic> _$PageDetailDataToJson(PageDetailData instance) =>
+    <String, dynamic>{
+      'preview': instance.preview,
+    };
+
+StyleSheetIds _$StyleSheetIdsFromJson(Map<String, dynamic> json) {
+  return StyleSheetIds()
+    ..desktop = json['desktop'] as String
+    ..mobile = json['mobile'] as String
+    ..tablet = json['tablet'] as String;
+}
+
+Map<String, dynamic> _$StyleSheetIdsToJson(StyleSheetIds instance) =>
+    <String, dynamic>{
+      'desktop': instance.desktop,
+      'mobile': instance.mobile,
+      'tablet': instance.tablet,
     };
 
 Template _$TemplateFromJson(Map<String, dynamic> json) {
@@ -360,7 +425,8 @@ Child _$ChildFromJson(Map<String, dynamic> json) {
         : Parent.fromJson(json['parent'] as Map<String, dynamic>)
     ..styles = json['styles'] as Map<String, dynamic>
     ..type = json['type'] as String
-    ..data = json['data'];
+    ..data = json['data']
+    ..params = json['params'];
 }
 
 Map<String, dynamic> _$ChildToJson(Child instance) => <String, dynamic>{
@@ -373,6 +439,18 @@ Map<String, dynamic> _$ChildToJson(Child instance) => <String, dynamic>{
       'styles': instance.styles,
       'type': instance.type,
       'data': instance.data,
+      'params': instance.params,
+    };
+
+Parent _$ParentFromJson(Map<String, dynamic> json) {
+  return Parent()
+    ..id = json['id'] as String
+    ..slot = json['slot'] as String;
+}
+
+Map<String, dynamic> _$ParentToJson(Parent instance) => <String, dynamic>{
+      'id': instance.id,
+      'slot': instance.slot,
     };
 
 Context _$ContextFromJson(Map<String, dynamic> json) {
@@ -394,15 +472,119 @@ Map<String, dynamic> _$MetaToJson(Meta instance) => <String, dynamic>{
       'deletable': instance.deletable,
     };
 
-Parent _$ParentFromJson(Map<String, dynamic> json) {
-  return Parent()
-    ..id = json['id'] as String
-    ..slot = json['slot'] as String;
+ContextSchema _$ContextSchemaFromJson(Map<String, dynamic> json) {
+  return ContextSchema()
+    ..method = json['method'] as String
+    ..params = json['params'] ?? []
+    ..service = json['service'] as String;
 }
 
-Map<String, dynamic> _$ParentToJson(Parent instance) => <String, dynamic>{
-      'id': instance.id,
-      'slot': instance.slot,
+Map<String, dynamic> _$ContextSchemaToJson(ContextSchema instance) =>
+    <String, dynamic>{
+      'method': instance.method,
+      'params': instance.params,
+      'service': instance.service,
+    };
+
+Data _$DataFromJson(Map<String, dynamic> json) {
+  return Data()
+    ..text = json['text']
+    ..name = json['name'] as String;
+}
+
+Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
+      'text': instance.text,
+      'name': instance.name,
+    };
+
+ButtonData _$ButtonDataFromJson(Map<String, dynamic> json) {
+  return ButtonData()
+    ..text = json['text']
+    ..name = json['name'] as String
+    ..action = json['action'] == null
+        ? null
+        : ButtonAction.fromJson(json['action'] as Map<String, dynamic>);
+}
+
+Map<String, dynamic> _$ButtonDataToJson(ButtonData instance) =>
+    <String, dynamic>{
+      'text': instance.text,
+      'name': instance.name,
+      'action': instance.action,
+    };
+
+ButtonAction _$ButtonActionFromJson(Map<String, dynamic> json) {
+  return ButtonAction()
+    ..type = json['type'] as String
+    ..payload = json['payload'];
+}
+
+Map<String, dynamic> _$ButtonActionToJson(ButtonAction instance) =>
+    <String, dynamic>{
+      'type': instance.type,
+      'payload': instance.payload,
+    };
+
+ImageData _$ImageDataFromJson(Map<String, dynamic> json) {
+  return ImageData()
+    ..text = json['text']
+    ..name = json['name'] as String
+    ..src = json['src'] as String
+    ..description = json['description'] as String;
+}
+
+Map<String, dynamic> _$ImageDataToJson(ImageData instance) => <String, dynamic>{
+      'text': instance.text,
+      'name': instance.name,
+      'src': instance.src,
+      'description': instance.description,
+    };
+
+VideoData _$VideoDataFromJson(Map<String, dynamic> json) {
+  return VideoData()
+    ..text = json['text']
+    ..name = json['name'] as String
+    ..autoplay = json['autoplay'] as bool ?? false
+    ..controls = json['controls'] as bool ?? false
+    ..file = json['file']
+    ..loop = json['loop'] as bool ?? false
+    ..preview = json['preview'] as String
+    ..sound = json['sound'] as bool ?? false
+    ..source = json['source'] as String
+    ..sourceType = json['sourceType'] as Map<String, dynamic>;
+}
+
+Map<String, dynamic> _$VideoDataToJson(VideoData instance) => <String, dynamic>{
+      'text': instance.text,
+      'name': instance.name,
+      'autoplay': instance.autoplay,
+      'controls': instance.controls,
+      'file': instance.file,
+      'loop': instance.loop,
+      'preview': instance.preview,
+      'sound': instance.sound,
+      'source': instance.source,
+      'sourceType': instance.sourceType,
+    };
+
+CategoryData _$CategoryDataFromJson(Map<String, dynamic> json) {
+  return CategoryData()
+    ..text = json['text']
+    ..name = json['name'] as String
+    ..categoryIds = json['categoryIds'] as List ?? []
+    ..hideProductName = json['hideProductName'] as bool ?? false
+    ..hideProductPrice = json['hideProductPrice'] as bool ?? false
+    ..categoryType = json['categoryType'] as Map<String, dynamic>;
+}
+
+Map<String, dynamic> _$CategoryDataToJson(CategoryData instance) =>
+    <String, dynamic>{
+      'text': instance.text,
+      'name': instance.name,
+      'categoryIds': instance.categoryIds,
+      'hideProductName': instance.hideProductName,
+      'hideProductPrice': instance.hideProductPrice,
+      'categoryType': instance.categoryType,
     };
 
 BaseStyles _$BaseStylesFromJson(Map<String, dynamic> json) {
@@ -416,6 +598,7 @@ BaseStyles _$BaseStylesFromJson(Map<String, dynamic> json) {
     ..backgroundRepeat = json['backgroundRepeat'] as String ?? 'no-repeat'
     ..border = json['border']
     ..borderType = json['borderType'] as String ?? 'solid'
+    ..borderStyle = json['borderStyle'] as String ?? 'solid'
     ..borderRadius = json['borderRadius'] ?? 0
     ..borderWidth = (json['borderWidth'] as num)?.toDouble() ?? 0
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
@@ -431,7 +614,7 @@ BaseStyles _$BaseStylesFromJson(Map<String, dynamic> json) {
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea'] as String
     ..width0 = json['width'] ?? 0
-    ..height = (json['height'] as num)?.toDouble() ?? 0
+    ..height0 = (json['height'] as num)?.toDouble() ?? 0
     ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
     ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
     ..margin = json['margin'] ?? '0 0 0 0'
@@ -447,8 +630,7 @@ BaseStyles _$BaseStylesFromJson(Map<String, dynamic> json) {
     ..fontSize0 = json['fontSize'] ?? 15
     ..fontStyle0 = json['fontStyle'] as String ?? 'normal'
     ..fontWeight0 = json['fontWeight'] ?? 400
-    ..fontFamily = json['fontFamily'] as String ??
-        'Helvetica Neue,Helvetica,Arial,sans-serif'
+    ..fontFamily = json['fontFamily'] as String ?? 'Roboto'
     ..textAlign0 = json['textAlign'] as String
     ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
     ..titleColor = json['titleColor'] as String ?? '#000000'
@@ -475,6 +657,7 @@ Map<String, dynamic> _$BaseStylesToJson(BaseStyles instance) =>
       'backgroundRepeat': instance.backgroundRepeat,
       'border': instance.border,
       'borderType': instance.borderType,
+      'borderStyle': instance.borderStyle,
       'borderRadius': instance.borderRadius,
       'borderWidth': instance.borderWidth,
       'borderColor': instance.borderColor,
@@ -490,7 +673,7 @@ Map<String, dynamic> _$BaseStylesToJson(BaseStyles instance) =>
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
       'width': instance.width0,
-      'height': instance.height,
+      'height': instance.height0,
       'minWidth': instance.minWidth,
       'minHeight': instance.minHeight,
       'margin': instance.margin,
@@ -533,6 +716,7 @@ SectionStyles _$SectionStylesFromJson(Map<String, dynamic> json) {
     ..backgroundRepeat = json['backgroundRepeat'] as String ?? 'no-repeat'
     ..border = json['border']
     ..borderType = json['borderType'] as String ?? 'solid'
+    ..borderStyle = json['borderStyle'] as String ?? 'solid'
     ..borderRadius = json['borderRadius'] ?? 0
     ..borderWidth = (json['borderWidth'] as num)?.toDouble() ?? 0
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
@@ -548,7 +732,7 @@ SectionStyles _$SectionStylesFromJson(Map<String, dynamic> json) {
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea'] as String
     ..width0 = json['width'] ?? 0
-    ..height = (json['height'] as num)?.toDouble() ?? 0
+    ..height0 = (json['height'] as num)?.toDouble() ?? 0
     ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
     ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
     ..margin = json['margin'] ?? '0 0 0 0'
@@ -564,8 +748,7 @@ SectionStyles _$SectionStylesFromJson(Map<String, dynamic> json) {
     ..fontSize0 = json['fontSize'] ?? 15
     ..fontStyle0 = json['fontStyle'] as String ?? 'normal'
     ..fontWeight0 = json['fontWeight'] ?? 400
-    ..fontFamily = json['fontFamily'] as String ??
-        'Helvetica Neue,Helvetica,Arial,sans-serif'
+    ..fontFamily = json['fontFamily'] as String ?? 'Roboto'
     ..textAlign0 = json['textAlign'] as String
     ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
     ..titleColor = json['titleColor'] as String ?? '#000000'
@@ -595,6 +778,7 @@ Map<String, dynamic> _$SectionStylesToJson(SectionStyles instance) =>
       'backgroundRepeat': instance.backgroundRepeat,
       'border': instance.border,
       'borderType': instance.borderType,
+      'borderStyle': instance.borderStyle,
       'borderRadius': instance.borderRadius,
       'borderWidth': instance.borderWidth,
       'borderColor': instance.borderColor,
@@ -610,7 +794,7 @@ Map<String, dynamic> _$SectionStylesToJson(SectionStyles instance) =>
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
       'width': instance.width0,
-      'height': instance.height,
+      'height': instance.height0,
       'minWidth': instance.minWidth,
       'minHeight': instance.minHeight,
       'margin': instance.margin,
@@ -655,6 +839,7 @@ TextStyles _$TextStylesFromJson(Map<String, dynamic> json) {
     ..backgroundRepeat = json['backgroundRepeat'] as String ?? 'no-repeat'
     ..border = json['border']
     ..borderType = json['borderType'] as String ?? 'solid'
+    ..borderStyle = json['borderStyle'] as String ?? 'solid'
     ..borderRadius = json['borderRadius'] ?? 0
     ..borderWidth = (json['borderWidth'] as num)?.toDouble() ?? 0
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
@@ -685,8 +870,7 @@ TextStyles _$TextStylesFromJson(Map<String, dynamic> json) {
     ..fontSize0 = json['fontSize'] ?? 15
     ..fontStyle0 = json['fontStyle'] as String ?? 'normal'
     ..fontWeight0 = json['fontWeight'] ?? 400
-    ..fontFamily = json['fontFamily'] as String ??
-        'Helvetica Neue,Helvetica,Arial,sans-serif'
+    ..fontFamily = json['fontFamily'] as String ?? 'Roboto'
     ..textAlign0 = json['textAlign'] as String
     ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
     ..titleColor = json['titleColor'] as String ?? '#000000'
@@ -700,7 +884,7 @@ TextStyles _$TextStylesFromJson(Map<String, dynamic> json) {
     ..priceFontWeight0 = json['priceFontWeight'] as String ?? 'normal'
     ..priceFontStyle0 = json['priceFontStyle'] as String ?? 'normal'
     ..priceTextDecoration = json['priceTextDecoration']
-    ..height = (json['height'] as num)?.toDouble() ?? 18
+    ..height0 = (json['height'] as num)?.toDouble() ?? 18
     ..backgroundColor = json['backgroundColor'] as String;
 }
 
@@ -714,6 +898,7 @@ Map<String, dynamic> _$TextStylesToJson(TextStyles instance) =>
       'backgroundRepeat': instance.backgroundRepeat,
       'border': instance.border,
       'borderType': instance.borderType,
+      'borderStyle': instance.borderStyle,
       'borderRadius': instance.borderRadius,
       'borderWidth': instance.borderWidth,
       'borderColor': instance.borderColor,
@@ -758,7 +943,7 @@ Map<String, dynamic> _$TextStylesToJson(TextStyles instance) =>
       'priceFontWeight': instance.priceFontWeight0,
       'priceFontStyle': instance.priceFontStyle0,
       'priceTextDecoration': instance.priceTextDecoration,
-      'height': instance.height,
+      'height': instance.height0,
       'backgroundColor': instance.backgroundColor,
     };
 
@@ -773,6 +958,7 @@ ButtonStyles _$ButtonStylesFromJson(Map<String, dynamic> json) {
     ..backgroundRepeat = json['backgroundRepeat'] as String ?? 'no-repeat'
     ..border = json['border']
     ..borderType = json['borderType'] as String ?? 'solid'
+    ..borderStyle = json['borderStyle'] as String ?? 'solid'
     ..borderRadius = json['borderRadius'] ?? 0
     ..borderWidth = (json['borderWidth'] as num)?.toDouble() ?? 0
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
@@ -802,8 +988,7 @@ ButtonStyles _$ButtonStylesFromJson(Map<String, dynamic> json) {
     ..fontSize0 = json['fontSize'] ?? 15
     ..fontStyle0 = json['fontStyle'] as String ?? 'normal'
     ..fontWeight0 = json['fontWeight'] ?? 400
-    ..fontFamily = json['fontFamily'] as String ??
-        'Helvetica Neue,Helvetica,Arial,sans-serif'
+    ..fontFamily = json['fontFamily'] as String ?? 'Roboto'
     ..textAlign0 = json['textAlign'] as String
     ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
     ..titleColor = json['titleColor'] as String ?? '#000000'
@@ -817,7 +1002,7 @@ ButtonStyles _$ButtonStylesFromJson(Map<String, dynamic> json) {
     ..priceFontWeight0 = json['priceFontWeight'] as String ?? 'normal'
     ..priceFontStyle0 = json['priceFontStyle'] as String ?? 'normal'
     ..priceTextDecoration = json['priceTextDecoration']
-    ..height = (json['height'] as num)?.toDouble() ?? 20
+    ..height0 = (json['height'] as num)?.toDouble() ?? 20
     ..color = json['color'] as String ?? '#FFFFFF';
 }
 
@@ -832,6 +1017,7 @@ Map<String, dynamic> _$ButtonStylesToJson(ButtonStyles instance) =>
       'backgroundRepeat': instance.backgroundRepeat,
       'border': instance.border,
       'borderType': instance.borderType,
+      'borderStyle': instance.borderStyle,
       'borderRadius': instance.borderRadius,
       'borderWidth': instance.borderWidth,
       'borderColor': instance.borderColor,
@@ -875,24 +1061,22 @@ Map<String, dynamic> _$ButtonStylesToJson(ButtonStyles instance) =>
       'priceFontWeight': instance.priceFontWeight0,
       'priceFontStyle': instance.priceFontStyle0,
       'priceTextDecoration': instance.priceTextDecoration,
-      'height': instance.height,
+      'height': instance.height0,
       'color': instance.color,
     };
 
-ShopCartStyles _$ShopCartStylesFromJson(Map<String, dynamic> json) {
-  return ShopCartStyles()
+TableStyles _$TableStylesFromJson(Map<String, dynamic> json) {
+  return TableStyles()
     ..display = json['display'] as String ?? 'flex'
     ..background = json['background'] as String ?? '#ffffff'
-    ..backgroundColor = json['backgroundColor'] as String ?? '#ffffff'
     ..backgroundImage = json['backgroundImage'] as String ?? ''
     ..backgroundSize = json['backgroundSize'] as String
     ..backgroundPosition = json['backgroundPosition'] as String ?? 'center'
     ..backgroundRepeat = json['backgroundRepeat'] as String ?? 'no-repeat'
     ..border = json['border']
     ..borderType = json['borderType'] as String ?? 'solid'
+    ..borderStyle = json['borderStyle'] as String ?? 'solid'
     ..borderRadius = json['borderRadius'] ?? 0
-    ..borderWidth = (json['borderWidth'] as num)?.toDouble() ?? 0
-    ..borderColor = json['borderColor'] as String ?? '#ffffff'
     ..borderSize = (json['borderSize'] as num)?.toDouble() ?? 0
     ..opacity = (json['opacity'] as num)?.toDouble() ?? 1
     ..stroke = json['stroke'] as String ?? '#000000'
@@ -905,7 +1089,7 @@ ShopCartStyles _$ShopCartStylesFromJson(Map<String, dynamic> json) {
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea'] as String
     ..width0 = json['width'] ?? 0
-    ..height = (json['height'] as num)?.toDouble() ?? 0
+    ..height0 = (json['height'] as num)?.toDouble() ?? 0
     ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
     ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
     ..margin = json['margin'] ?? '0 0 0 0'
@@ -921,8 +1105,186 @@ ShopCartStyles _$ShopCartStylesFromJson(Map<String, dynamic> json) {
     ..fontSize0 = json['fontSize'] ?? 15
     ..fontStyle0 = json['fontStyle'] as String ?? 'normal'
     ..fontWeight0 = json['fontWeight'] ?? 400
-    ..fontFamily = json['fontFamily'] as String ??
-        'Helvetica Neue,Helvetica,Arial,sans-serif'
+    ..fontFamily = json['fontFamily'] as String ?? 'Roboto'
+    ..textAlign0 = json['textAlign'] as String
+    ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
+    ..titleColor = json['titleColor'] as String ?? '#000000'
+    ..titleFontFamily = json['titleFontFamily'] as String ?? 'Roboto'
+    ..titleFontWeight0 = json['titleFontWeight'] as String ?? 'bold'
+    ..titleFontStyle0 = json['titleFontStyle'] as String ?? 'normal'
+    ..titleTextDecoration = json['titleTextDecoration']
+    ..priceFontSize = (json['priceFontSize'] as num)?.toDouble() ?? 12
+    ..priceColor = json['priceColor'] as String ?? '#a5a5a5'
+    ..priceFontFamily = json['priceFontFamily'] as String ?? 'Roboto'
+    ..priceFontWeight0 = json['priceFontWeight'] as String ?? 'normal'
+    ..priceFontStyle0 = json['priceFontStyle'] as String ?? 'normal'
+    ..priceTextDecoration = json['priceTextDecoration']
+    ..columnCount = json['columnCount'] as int ?? 4
+    ..rowCount = json['rowCount'] as int ?? 5
+    ..headerColumnColor = json['headerColumnColor'] as String ?? '#FFFFFF'
+    ..headerRowColor = json['headerRowColor'] as String ?? '#FFFFFF'
+    ..footerRowColor = json['footerRowColor'] as String ?? '#FFFFFF'
+    ..headerRows = json['headerRows'] as int ?? 1
+    ..headerColumns = json['headerColumns'] as int ?? 1
+    ..footerRows = json['footerRows'] as int ?? 0
+    ..title = json['title'] as String ?? ''
+    ..caption = json['caption'] as String ?? ''
+    ..outline = json['outline'] as bool ?? true
+    ..alternatingRows = json['alternatingRows'] as bool ?? false
+    ..horizontalLines = json['horizontalLines'] as bool ?? true
+    ..headerColumnLines = json['headerColumnLines'] as bool ?? true
+    ..verticalLines = json['verticalLines'] as bool ?? true
+    ..headerRowLines = json['headerRowLines'] as bool ?? true
+    ..footerRowLines = json['footerRowLines'] as bool ?? true
+    ..textColor = json['textColor'] as String ?? '#000000'
+    ..textFontTypes =
+        (json['textFontTypes'] as List)?.map((e) => e as String)?.toList() ?? []
+    ..textHorizontalAlign = json['textHorizontalAlign'] as String ?? 'center'
+    ..textVerticalAlign = json['textVerticalAlign'] as String ?? 'center'
+    ..textWrap = json['textWrap'] as bool ?? true
+    ..backgroundColor = json['backgroundColor'] as String
+    ..cellBorder = json['cellBorder'] as String ?? 'outside'
+    ..borderWidth = (json['borderWidth'] as num)?.toDouble() ?? 1
+    ..borderColor = json['borderColor'] as String ?? '#808080'
+    ..tableHighlightTextFontTypes =
+        (json['tableHighlightTextFontTypes'] as List)
+                ?.map((e) => e as String)
+                ?.toList() ??
+            []
+    ..tableHighlightBackgroundColor =
+        json['tableHighlightBackgroundColor'] as String
+    ..tableHighlightTextColor = json['tableHighlightTextColor'] as String;
+}
+
+Map<String, dynamic> _$TableStylesToJson(TableStyles instance) =>
+    <String, dynamic>{
+      'display': instance.display,
+      'background': instance.background,
+      'backgroundImage': instance.backgroundImage,
+      'backgroundSize': instance.backgroundSize,
+      'backgroundPosition': instance.backgroundPosition,
+      'backgroundRepeat': instance.backgroundRepeat,
+      'border': instance.border,
+      'borderType': instance.borderType,
+      'borderStyle': instance.borderStyle,
+      'borderRadius': instance.borderRadius,
+      'borderSize': instance.borderSize,
+      'opacity': instance.opacity,
+      'stroke': instance.stroke,
+      'strokeDasharray': instance.strokeDasharray,
+      'strokeWidth': instance.strokeWidth,
+      'boxShadow': instance.boxShadow,
+      'filter': instance.filter,
+      'shadow': instance.shadow,
+      'gridColumn': instance.gridColumn,
+      'gridRow': instance.gridRow,
+      'gridArea': instance.gridArea,
+      'width': instance.width0,
+      'height': instance.height0,
+      'minWidth': instance.minWidth,
+      'minHeight': instance.minHeight,
+      'margin': instance.margin,
+      'padding': instance.padding,
+      'position': instance.position,
+      'marginBottom': instance.marginBottom,
+      'marginLeft': instance.marginLeft,
+      'marginRight': instance.marginRight,
+      'marginTop': instance.marginTop,
+      'top': instance.top,
+      'left': instance.left,
+      'color': instance.color,
+      'fontSize': instance.fontSize0,
+      'fontStyle': instance.fontStyle0,
+      'fontWeight': instance.fontWeight0,
+      'fontFamily': instance.fontFamily,
+      'textAlign': instance.textAlign0,
+      'titleFontSize': instance.titleFontSize,
+      'titleColor': instance.titleColor,
+      'titleFontFamily': instance.titleFontFamily,
+      'titleFontWeight': instance.titleFontWeight0,
+      'titleFontStyle': instance.titleFontStyle0,
+      'titleTextDecoration': instance.titleTextDecoration,
+      'priceFontSize': instance.priceFontSize,
+      'priceColor': instance.priceColor,
+      'priceFontFamily': instance.priceFontFamily,
+      'priceFontWeight': instance.priceFontWeight0,
+      'priceFontStyle': instance.priceFontStyle0,
+      'priceTextDecoration': instance.priceTextDecoration,
+      'columnCount': instance.columnCount,
+      'rowCount': instance.rowCount,
+      'headerColumnColor': instance.headerColumnColor,
+      'headerRowColor': instance.headerRowColor,
+      'footerRowColor': instance.footerRowColor,
+      'headerRows': instance.headerRows,
+      'headerColumns': instance.headerColumns,
+      'footerRows': instance.footerRows,
+      'title': instance.title,
+      'caption': instance.caption,
+      'outline': instance.outline,
+      'alternatingRows': instance.alternatingRows,
+      'horizontalLines': instance.horizontalLines,
+      'headerColumnLines': instance.headerColumnLines,
+      'verticalLines': instance.verticalLines,
+      'headerRowLines': instance.headerRowLines,
+      'footerRowLines': instance.footerRowLines,
+      'textColor': instance.textColor,
+      'textFontTypes': instance.textFontTypes,
+      'textHorizontalAlign': instance.textHorizontalAlign,
+      'textVerticalAlign': instance.textVerticalAlign,
+      'textWrap': instance.textWrap,
+      'backgroundColor': instance.backgroundColor,
+      'cellBorder': instance.cellBorder,
+      'borderWidth': instance.borderWidth,
+      'borderColor': instance.borderColor,
+      'tableHighlightTextFontTypes': instance.tableHighlightTextFontTypes,
+      'tableHighlightBackgroundColor': instance.tableHighlightBackgroundColor,
+      'tableHighlightTextColor': instance.tableHighlightTextColor,
+    };
+
+ShopCartStyles _$ShopCartStylesFromJson(Map<String, dynamic> json) {
+  return ShopCartStyles()
+    ..display = json['display'] as String ?? 'flex'
+    ..background = json['background'] as String ?? '#ffffff'
+    ..backgroundColor = json['backgroundColor'] as String ?? '#ffffff'
+    ..backgroundImage = json['backgroundImage'] as String ?? ''
+    ..backgroundSize = json['backgroundSize'] as String
+    ..backgroundPosition = json['backgroundPosition'] as String ?? 'center'
+    ..backgroundRepeat = json['backgroundRepeat'] as String ?? 'no-repeat'
+    ..border = json['border']
+    ..borderType = json['borderType'] as String ?? 'solid'
+    ..borderStyle = json['borderStyle'] as String ?? 'solid'
+    ..borderRadius = json['borderRadius'] ?? 0
+    ..borderWidth = (json['borderWidth'] as num)?.toDouble() ?? 0
+    ..borderColor = json['borderColor'] as String ?? '#ffffff'
+    ..borderSize = (json['borderSize'] as num)?.toDouble() ?? 0
+    ..opacity = (json['opacity'] as num)?.toDouble() ?? 1
+    ..stroke = json['stroke'] as String ?? '#000000'
+    ..strokeDasharray = json['strokeDasharray'] as String ?? ''
+    ..strokeWidth = (json['strokeWidth'] as num)?.toDouble() ?? 0
+    ..boxShadow = json['boxShadow']
+    ..filter = json['filter'] as String ?? ''
+    ..shadow = json['shadow'] as String
+    ..gridColumn = json['gridColumn'] as String ?? '1 / span 1'
+    ..gridRow = json['gridRow'] as String ?? '1 / span 1'
+    ..gridArea = json['gridArea'] as String
+    ..width0 = json['width'] ?? 0
+    ..height0 = (json['height'] as num)?.toDouble() ?? 0
+    ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
+    ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
+    ..margin = json['margin'] ?? '0 0 0 0'
+    ..padding = json['padding'] as String ?? '0 0'
+    ..position = json['position'] as String ?? 'absolute'
+    ..marginBottom = (json['marginBottom'] as num)?.toDouble() ?? 0
+    ..marginLeft = (json['marginLeft'] as num)?.toDouble() ?? 0
+    ..marginRight = (json['marginRight'] as num)?.toDouble() ?? 0
+    ..marginTop = (json['marginTop'] as num)?.toDouble() ?? 0
+    ..top = (json['top'] as num)?.toDouble() ?? 0
+    ..left = (json['left'] as num)?.toDouble() ?? 0
+    ..color = json['color'] as String ?? '#000000'
+    ..fontSize0 = json['fontSize'] ?? 15
+    ..fontStyle0 = json['fontStyle'] as String ?? 'normal'
+    ..fontWeight0 = json['fontWeight'] ?? 400
+    ..fontFamily = json['fontFamily'] as String ?? 'Roboto'
     ..textAlign0 = json['textAlign'] as String
     ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
     ..titleColor = json['titleColor'] as String ?? '#000000'
@@ -954,6 +1316,7 @@ Map<String, dynamic> _$ShopCartStylesToJson(ShopCartStyles instance) =>
       'backgroundRepeat': instance.backgroundRepeat,
       'border': instance.border,
       'borderType': instance.borderType,
+      'borderStyle': instance.borderStyle,
       'borderRadius': instance.borderRadius,
       'borderWidth': instance.borderWidth,
       'borderColor': instance.borderColor,
@@ -969,7 +1332,7 @@ Map<String, dynamic> _$ShopCartStylesToJson(ShopCartStyles instance) =>
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
       'width': instance.width0,
-      'height': instance.height,
+      'height': instance.height0,
       'minWidth': instance.minWidth,
       'minHeight': instance.minHeight,
       'margin': instance.margin,
@@ -1017,6 +1380,7 @@ ShapeStyles _$ShapeStylesFromJson(Map<String, dynamic> json) {
     ..backgroundRepeat = json['backgroundRepeat'] as String ?? 'no-repeat'
     ..border = json['border']
     ..borderType = json['borderType'] as String ?? 'solid'
+    ..borderStyle = json['borderStyle'] as String ?? 'solid'
     ..borderRadius = json['borderRadius'] ?? 0
     ..borderWidth = (json['borderWidth'] as num)?.toDouble() ?? 0
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
@@ -1032,7 +1396,7 @@ ShapeStyles _$ShapeStylesFromJson(Map<String, dynamic> json) {
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea'] as String
     ..width0 = json['width'] ?? 0
-    ..height = (json['height'] as num)?.toDouble() ?? 0
+    ..height0 = (json['height'] as num)?.toDouble() ?? 0
     ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
     ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
     ..margin = json['margin'] ?? '0 0 0 0'
@@ -1048,8 +1412,7 @@ ShapeStyles _$ShapeStylesFromJson(Map<String, dynamic> json) {
     ..fontSize0 = json['fontSize'] ?? 15
     ..fontStyle0 = json['fontStyle'] as String ?? 'normal'
     ..fontWeight0 = json['fontWeight'] ?? 400
-    ..fontFamily = json['fontFamily'] as String ??
-        'Helvetica Neue,Helvetica,Arial,sans-serif'
+    ..fontFamily = json['fontFamily'] as String ?? 'Roboto'
     ..textAlign0 = json['textAlign'] as String
     ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
     ..titleColor = json['titleColor'] as String ?? '#000000'
@@ -1076,6 +1439,7 @@ Map<String, dynamic> _$ShapeStylesToJson(ShapeStyles instance) =>
       'backgroundRepeat': instance.backgroundRepeat,
       'border': instance.border,
       'borderType': instance.borderType,
+      'borderStyle': instance.borderStyle,
       'borderRadius': instance.borderRadius,
       'borderWidth': instance.borderWidth,
       'borderColor': instance.borderColor,
@@ -1091,7 +1455,7 @@ Map<String, dynamic> _$ShapeStylesToJson(ShapeStyles instance) =>
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
       'width': instance.width0,
-      'height': instance.height,
+      'height': instance.height0,
       'minWidth': instance.minWidth,
       'minHeight': instance.minHeight,
       'margin': instance.margin,
@@ -1134,6 +1498,7 @@ ImageStyles _$ImageStylesFromJson(Map<String, dynamic> json) {
     ..backgroundRepeat = json['backgroundRepeat'] as String ?? 'no-repeat'
     ..border = json['border']
     ..borderType = json['borderType'] as String ?? 'solid'
+    ..borderStyle = json['borderStyle'] as String ?? 'solid'
     ..borderRadius = json['borderRadius'] ?? 0
     ..borderWidth = (json['borderWidth'] as num)?.toDouble() ?? 0
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
@@ -1149,7 +1514,7 @@ ImageStyles _$ImageStylesFromJson(Map<String, dynamic> json) {
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea'] as String
     ..width0 = json['width'] ?? 0
-    ..height = (json['height'] as num)?.toDouble() ?? 0
+    ..height0 = (json['height'] as num)?.toDouble() ?? 0
     ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
     ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
     ..margin = json['margin'] ?? '0 0 0 0'
@@ -1165,8 +1530,7 @@ ImageStyles _$ImageStylesFromJson(Map<String, dynamic> json) {
     ..fontSize0 = json['fontSize'] ?? 15
     ..fontStyle0 = json['fontStyle'] as String ?? 'normal'
     ..fontWeight0 = json['fontWeight'] ?? 400
-    ..fontFamily = json['fontFamily'] as String ??
-        'Helvetica Neue,Helvetica,Arial,sans-serif'
+    ..fontFamily = json['fontFamily'] as String ?? 'Roboto'
     ..textAlign0 = json['textAlign'] as String
     ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
     ..titleColor = json['titleColor'] as String ?? '#000000'
@@ -1200,6 +1564,7 @@ Map<String, dynamic> _$ImageStylesToJson(ImageStyles instance) =>
       'backgroundRepeat': instance.backgroundRepeat,
       'border': instance.border,
       'borderType': instance.borderType,
+      'borderStyle': instance.borderStyle,
       'borderRadius': instance.borderRadius,
       'borderWidth': instance.borderWidth,
       'borderColor': instance.borderColor,
@@ -1215,7 +1580,7 @@ Map<String, dynamic> _$ImageStylesToJson(ImageStyles instance) =>
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
       'width': instance.width0,
-      'height': instance.height,
+      'height': instance.height0,
       'minWidth': instance.minWidth,
       'minHeight': instance.minHeight,
       'margin': instance.margin,
@@ -1265,6 +1630,7 @@ SocialIconStyles _$SocialIconStylesFromJson(Map<String, dynamic> json) {
     ..backgroundRepeat = json['backgroundRepeat'] as String ?? 'no-repeat'
     ..border = json['border']
     ..borderType = json['borderType'] as String ?? 'solid'
+    ..borderStyle = json['borderStyle'] as String ?? 'solid'
     ..borderRadius = json['borderRadius'] ?? 0
     ..borderWidth = (json['borderWidth'] as num)?.toDouble() ?? 0
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
@@ -1280,7 +1646,7 @@ SocialIconStyles _$SocialIconStylesFromJson(Map<String, dynamic> json) {
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea'] as String
     ..width0 = json['width'] ?? 0
-    ..height = (json['height'] as num)?.toDouble() ?? 0
+    ..height0 = (json['height'] as num)?.toDouble() ?? 0
     ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
     ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
     ..margin = json['margin'] ?? '0 0 0 0'
@@ -1296,8 +1662,7 @@ SocialIconStyles _$SocialIconStylesFromJson(Map<String, dynamic> json) {
     ..fontSize0 = json['fontSize'] ?? 15
     ..fontStyle0 = json['fontStyle'] as String ?? 'normal'
     ..fontWeight0 = json['fontWeight'] ?? 400
-    ..fontFamily = json['fontFamily'] as String ??
-        'Helvetica Neue,Helvetica,Arial,sans-serif'
+    ..fontFamily = json['fontFamily'] as String ?? 'Roboto'
     ..textAlign0 = json['textAlign'] as String
     ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
     ..titleColor = json['titleColor'] as String ?? '#000000'
@@ -1324,6 +1689,7 @@ Map<String, dynamic> _$SocialIconStylesToJson(SocialIconStyles instance) =>
       'backgroundRepeat': instance.backgroundRepeat,
       'border': instance.border,
       'borderType': instance.borderType,
+      'borderStyle': instance.borderStyle,
       'borderRadius': instance.borderRadius,
       'borderWidth': instance.borderWidth,
       'borderColor': instance.borderColor,
@@ -1339,7 +1705,7 @@ Map<String, dynamic> _$SocialIconStylesToJson(SocialIconStyles instance) =>
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
       'width': instance.width0,
-      'height': instance.height,
+      'height': instance.height0,
       'minWidth': instance.minWidth,
       'minHeight': instance.minHeight,
       'margin': instance.margin,
@@ -1382,6 +1748,7 @@ ShopProductsStyles _$ShopProductsStylesFromJson(Map<String, dynamic> json) {
     ..backgroundRepeat = json['backgroundRepeat'] as String ?? 'no-repeat'
     ..border = json['border']
     ..borderType = json['borderType'] as String ?? 'solid'
+    ..borderStyle = json['borderStyle'] as String ?? 'solid'
     ..borderRadius = json['borderRadius'] ?? 0
     ..borderWidth = (json['borderWidth'] as num)?.toDouble() ?? 0
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
@@ -1397,7 +1764,7 @@ ShopProductsStyles _$ShopProductsStylesFromJson(Map<String, dynamic> json) {
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea'] as String
     ..width0 = json['width'] ?? 0
-    ..height = (json['height'] as num)?.toDouble() ?? 0
+    ..height0 = (json['height'] as num)?.toDouble() ?? 0
     ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
     ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
     ..margin = json['margin'] ?? '0 0 0 0'
@@ -1413,8 +1780,7 @@ ShopProductsStyles _$ShopProductsStylesFromJson(Map<String, dynamic> json) {
     ..fontSize0 = json['fontSize'] ?? 15
     ..fontStyle0 = json['fontStyle'] as String ?? 'normal'
     ..fontWeight0 = json['fontWeight'] ?? 400
-    ..fontFamily = json['fontFamily'] as String ??
-        'Helvetica Neue,Helvetica,Arial,sans-serif'
+    ..fontFamily = json['fontFamily'] as String ?? 'Roboto'
     ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
     ..titleColor = json['titleColor'] as String ?? '#000000'
     ..titleFontFamily = json['titleFontFamily'] as String ?? 'Roboto'
@@ -1431,7 +1797,9 @@ ShopProductsStyles _$ShopProductsStylesFromJson(Map<String, dynamic> json) {
     ..itemHeight = (json['itemHeight'] as num)?.toDouble() ?? 0
     ..textAlign0 = json['textAlign'] as String ?? 'center'
     ..productTemplateColumns = json['productTemplateColumns'] as num ?? 0
-    ..productTemplateRows = json['productTemplateRows'] as num ?? 0;
+    ..productTemplateRows = json['productTemplateRows'] as num ?? 0
+    ..columnGap = json['columnGap'] as num ?? 15
+    ..rowGap = json['rowGap'] as num ?? 15;
 }
 
 Map<String, dynamic> _$ShopProductsStylesToJson(ShopProductsStyles instance) =>
@@ -1445,6 +1813,7 @@ Map<String, dynamic> _$ShopProductsStylesToJson(ShopProductsStyles instance) =>
       'backgroundRepeat': instance.backgroundRepeat,
       'border': instance.border,
       'borderType': instance.borderType,
+      'borderStyle': instance.borderStyle,
       'borderRadius': instance.borderRadius,
       'borderWidth': instance.borderWidth,
       'borderColor': instance.borderColor,
@@ -1460,7 +1829,7 @@ Map<String, dynamic> _$ShopProductsStylesToJson(ShopProductsStyles instance) =>
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
       'width': instance.width0,
-      'height': instance.height,
+      'height': instance.height0,
       'minWidth': instance.minWidth,
       'minHeight': instance.minHeight,
       'margin': instance.margin,
@@ -1494,6 +1863,8 @@ Map<String, dynamic> _$ShopProductsStylesToJson(ShopProductsStyles instance) =>
       'textAlign': instance.textAlign0,
       'productTemplateColumns': instance.productTemplateColumns,
       'productTemplateRows': instance.productTemplateRows,
+      'columnGap': instance.columnGap,
+      'rowGap': instance.rowGap,
     };
 
 ShopProductDetailStyles _$ShopProductDetailStylesFromJson(
@@ -1508,6 +1879,7 @@ ShopProductDetailStyles _$ShopProductDetailStylesFromJson(
     ..backgroundRepeat = json['backgroundRepeat'] as String ?? 'no-repeat'
     ..border = json['border']
     ..borderType = json['borderType'] as String ?? 'solid'
+    ..borderStyle = json['borderStyle'] as String ?? 'solid'
     ..borderRadius = json['borderRadius'] ?? 0
     ..borderWidth = (json['borderWidth'] as num)?.toDouble() ?? 0
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
@@ -1523,7 +1895,7 @@ ShopProductDetailStyles _$ShopProductDetailStylesFromJson(
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea'] as String
     ..width0 = json['width'] ?? 0
-    ..height = (json['height'] as num)?.toDouble() ?? 0
+    ..height0 = (json['height'] as num)?.toDouble() ?? 0
     ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
     ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
     ..margin = json['margin'] ?? '0 0 0 0'
@@ -1539,8 +1911,7 @@ ShopProductDetailStyles _$ShopProductDetailStylesFromJson(
     ..fontSize0 = json['fontSize'] ?? 15
     ..fontStyle0 = json['fontStyle'] as String ?? 'normal'
     ..fontWeight0 = json['fontWeight'] ?? 400
-    ..fontFamily = json['fontFamily'] as String ??
-        'Helvetica Neue,Helvetica,Arial,sans-serif'
+    ..fontFamily = json['fontFamily'] as String ?? 'Roboto'
     ..textAlign0 = json['textAlign'] as String
     ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
     ..titleColor = json['titleColor'] as String ?? '#000000'
@@ -1573,6 +1944,7 @@ Map<String, dynamic> _$ShopProductDetailStylesToJson(
       'backgroundRepeat': instance.backgroundRepeat,
       'border': instance.border,
       'borderType': instance.borderType,
+      'borderStyle': instance.borderStyle,
       'borderRadius': instance.borderRadius,
       'borderWidth': instance.borderWidth,
       'borderColor': instance.borderColor,
@@ -1588,7 +1960,7 @@ Map<String, dynamic> _$ShopProductDetailStylesToJson(
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
       'width': instance.width0,
-      'height': instance.height,
+      'height': instance.height0,
       'minWidth': instance.minWidth,
       'minHeight': instance.minHeight,
       'margin': instance.margin,
@@ -1637,6 +2009,7 @@ ShopProductCategoryStyles _$ShopProductCategoryStylesFromJson(
     ..backgroundRepeat = json['backgroundRepeat'] as String ?? 'no-repeat'
     ..border = json['border']
     ..borderType = json['borderType'] as String ?? 'solid'
+    ..borderStyle = json['borderStyle'] as String ?? 'solid'
     ..borderRadius = json['borderRadius'] ?? 0
     ..borderWidth = (json['borderWidth'] as num)?.toDouble() ?? 0
     ..borderColor = json['borderColor'] as String ?? '#ffffff'
@@ -1652,7 +2025,7 @@ ShopProductCategoryStyles _$ShopProductCategoryStylesFromJson(
     ..gridRow = json['gridRow'] as String ?? '1 / span 1'
     ..gridArea = json['gridArea'] as String
     ..width0 = json['width'] ?? 0
-    ..height = (json['height'] as num)?.toDouble() ?? 0
+    ..height0 = (json['height'] as num)?.toDouble() ?? 0
     ..minWidth = (json['minWidth'] as num)?.toDouble() ?? 0
     ..minHeight = (json['minHeight'] as num)?.toDouble() ?? 0
     ..margin = json['margin'] ?? '0 0 0 0'
@@ -1668,8 +2041,7 @@ ShopProductCategoryStyles _$ShopProductCategoryStylesFromJson(
     ..fontSize0 = json['fontSize'] ?? 15
     ..fontStyle0 = json['fontStyle'] as String ?? 'normal'
     ..fontWeight0 = json['fontWeight'] ?? 400
-    ..fontFamily = json['fontFamily'] as String ??
-        'Helvetica Neue,Helvetica,Arial,sans-serif'
+    ..fontFamily = json['fontFamily'] as String ?? 'Roboto'
     ..titleFontSize = (json['titleFontSize'] as num)?.toDouble() ?? 12
     ..titleColor = json['titleColor'] as String ?? '#000000'
     ..titleFontFamily = json['titleFontFamily'] as String ?? 'Roboto'
@@ -1715,6 +2087,7 @@ Map<String, dynamic> _$ShopProductCategoryStylesToJson(
       'backgroundRepeat': instance.backgroundRepeat,
       'border': instance.border,
       'borderType': instance.borderType,
+      'borderStyle': instance.borderStyle,
       'borderRadius': instance.borderRadius,
       'borderWidth': instance.borderWidth,
       'borderColor': instance.borderColor,
@@ -1730,7 +2103,7 @@ Map<String, dynamic> _$ShopProductCategoryStylesToJson(
       'gridRow': instance.gridRow,
       'gridArea': instance.gridArea,
       'width': instance.width0,
-      'height': instance.height,
+      'height': instance.height0,
       'minWidth': instance.minWidth,
       'minHeight': instance.minHeight,
       'margin': instance.margin,
@@ -1776,105 +2149,6 @@ Map<String, dynamic> _$ShopProductCategoryStylesToJson(
       'filterTextDecoration': instance.filterTextDecoration,
     };
 
-Data _$DataFromJson(Map<String, dynamic> json) {
-  return Data()
-    ..text = json['text'] as String
-    ..name = json['name'] as String;
-}
-
-Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
-      'text': instance.text,
-      'name': instance.name,
-    };
-
-ButtonData _$ButtonDataFromJson(Map<String, dynamic> json) {
-  return ButtonData()
-    ..text = json['text'] as String
-    ..name = json['name'] as String
-    ..action = json['action'] == null
-        ? null
-        : ButtonAction.fromJson(json['action'] as Map<String, dynamic>);
-}
-
-Map<String, dynamic> _$ButtonDataToJson(ButtonData instance) =>
-    <String, dynamic>{
-      'text': instance.text,
-      'name': instance.name,
-      'action': instance.action,
-    };
-
-ImageData _$ImageDataFromJson(Map<String, dynamic> json) {
-  return ImageData()
-    ..text = json['text'] as String
-    ..name = json['name'] as String
-    ..src = json['src'] as String;
-}
-
-Map<String, dynamic> _$ImageDataToJson(ImageData instance) => <String, dynamic>{
-      'text': instance.text,
-      'name': instance.name,
-      'src': instance.src,
-    };
-
-VideoData _$VideoDataFromJson(Map<String, dynamic> json) {
-  return VideoData()
-    ..text = json['text'] as String
-    ..name = json['name'] as String
-    ..autoplay = json['autoplay'] as bool ?? false
-    ..controls = json['controls'] as bool ?? false
-    ..file = json['file']
-    ..loop = json['loop'] as bool ?? false
-    ..preview = json['preview'] as String
-    ..sound = json['sound'] as bool ?? false
-    ..source = json['source'] as String
-    ..sourceType = json['sourceType'] as Map<String, dynamic>;
-}
-
-Map<String, dynamic> _$VideoDataToJson(VideoData instance) => <String, dynamic>{
-      'text': instance.text,
-      'name': instance.name,
-      'autoplay': instance.autoplay,
-      'controls': instance.controls,
-      'file': instance.file,
-      'loop': instance.loop,
-      'preview': instance.preview,
-      'sound': instance.sound,
-      'source': instance.source,
-      'sourceType': instance.sourceType,
-    };
-
-CategoryData _$CategoryDataFromJson(Map<String, dynamic> json) {
-  return CategoryData()
-    ..text = json['text'] as String
-    ..name = json['name'] as String
-    ..categoryIds = json['categoryIds'] as List ?? []
-    ..hideProductName = json['hideProductName'] as bool ?? false
-    ..hideProductPrice = json['hideProductPrice'] as bool ?? false
-    ..categoryType = json['categoryType'] as Map<String, dynamic>;
-}
-
-Map<String, dynamic> _$CategoryDataToJson(CategoryData instance) =>
-    <String, dynamic>{
-      'text': instance.text,
-      'name': instance.name,
-      'categoryIds': instance.categoryIds,
-      'hideProductName': instance.hideProductName,
-      'hideProductPrice': instance.hideProductPrice,
-      'categoryType': instance.categoryType,
-    };
-
-ButtonAction _$ButtonActionFromJson(Map<String, dynamic> json) {
-  return ButtonAction()
-    ..type = json['type'] as String
-    ..payload = json['payload'];
-}
-
-Map<String, dynamic> _$ButtonActionToJson(ButtonAction instance) =>
-    <String, dynamic>{
-      'type': instance.type,
-      'payload': instance.payload,
-    };
-
 ButtonPayload _$ButtonPayloadFromJson(Map<String, dynamic> json) {
   return ButtonPayload()
     ..title = json['title'] as String
@@ -1903,4 +2177,77 @@ Map<String, dynamic> _$ChildSizeToJson(ChildSize instance) => <String, dynamic>{
       'height': instance.height,
       'top': instance.top,
       'left': instance.left,
+    };
+
+Effect _$EffectFromJson(Map<String, dynamic> json) {
+  return Effect()
+    ..payload = json['payload'] == null
+        ? null
+        : Payload.fromJson(json['payload'] as Map<String, dynamic>)
+    ..target = json['target'] as String
+    ..type = json['type'] as String;
+}
+
+Map<String, dynamic> _$EffectToJson(Effect instance) => <String, dynamic>{
+      'payload': instance.payload,
+      'target': instance.target,
+      'type': instance.type,
+    };
+
+Payload _$PayloadFromJson(Map<String, dynamic> json) {
+  return Payload()
+    ..children = json['children'] as List
+    ..data = json['data'] == null
+        ? null
+        : PayloadData.fromJson(json['data'] as Map<String, dynamic>)
+    ..id = json['id'] as String
+    ..meta = json['meta']
+    ..type = json['type'] as String;
+}
+
+Map<String, dynamic> _$PayloadToJson(Payload instance) => <String, dynamic>{
+      'children': instance.children,
+      'data': instance.data,
+      'id': instance.id,
+      'meta': instance.meta,
+      'type': instance.type,
+    };
+
+PayloadData _$PayloadDataFromJson(Map<String, dynamic> json) {
+  return PayloadData()
+    ..sync = json['sync'] as bool
+    ..text = json['text'] as String;
+}
+
+Map<String, dynamic> _$PayloadDataToJson(PayloadData instance) =>
+    <String, dynamic>{
+      'sync': instance.sync,
+      'text': instance.text,
+    };
+
+TableHighLightRule _$TableHighLightRuleFromJson(Map<String, dynamic> json) {
+  return TableHighLightRule()
+    ..rule = json['rule'] as String
+    ..description = json['description'] as String;
+}
+
+Map<String, dynamic> _$TableHighLightRuleToJson(TableHighLightRule instance) =>
+    <String, dynamic>{
+      'rule': instance.rule,
+      'description': instance.description,
+    };
+
+Paragraph _$ParagraphFromJson(Map<String, dynamic> json) {
+  return Paragraph()
+    ..name = json['name'] as String
+    ..size = json['size'] as num
+    ..fontWeight = json['fontWeight'] as String
+    ..fontStyle = json['fontStyle'] as String;
+}
+
+Map<String, dynamic> _$ParagraphToJson(Paragraph instance) => <String, dynamic>{
+      'name': instance.name,
+      'size': instance.size,
+      'fontWeight': instance.fontWeight,
+      'fontStyle': instance.fontStyle,
     };

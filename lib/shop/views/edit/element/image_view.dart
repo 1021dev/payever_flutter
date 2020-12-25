@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/edit/element/widget/dashed_decoration_view.dart';
 import '../../../../theme.dart';
 
 class ImageView extends StatefulWidget {
@@ -14,22 +15,20 @@ class ImageView extends StatefulWidget {
       this.stylesheets});
 
   @override
-  _ImageViewState createState() => _ImageViewState(child);
+  _ImageViewState createState() => _ImageViewState();
 }
 
 class _ImageViewState extends State<ImageView> {
-  final Child child;
-
   ImageStyles styles;
   ImageData data;
   String url = '';
-  _ImageViewState(this.child);
+  _ImageViewState();
 
   @override
   Widget build(BuildContext context) {
     styles = styleSheet();
     try {
-      data = ImageData.fromJson(child.data);
+      data = ImageData.fromJson(widget.child.data);
     } catch (e) {}
 
     if (styles.background.isNotEmpty) {
@@ -42,11 +41,15 @@ class _ImageViewState extends State<ImageView> {
   }
 
   Widget get body {
+    BorderModel borderModel = styles.parseBorderFromString(styles.border);
     return Opacity(
       opacity: styles.opacity,
-      child: Container(
-        decoration: decoration,
-        child: getImage(url),
+      child: DashedDecorationView(
+        borderModel: borderModel,
+        child: Container(
+          decoration: decoration,
+          child: getImage(url),
+        ),
       ),
     );
   }
@@ -96,20 +99,10 @@ class _ImageViewState extends State<ImageView> {
 
   get decoration {
     return BoxDecoration(
-      border: getBorder,
+      border: styles.borderType == 'solid' ? styles.getBorder : null,
       borderRadius: BorderRadius.circular(styles.getBorderRadius(styles.borderRadius)),
       boxShadow: getBoxShadow,
     );
-  }
-
-  get getBorder {
-    if (styles.border == null || styles.border == false) {
-      return Border.all(color: Colors.transparent, width: 0);
-    }
-    List<String> borderAttrs = styles.border.toString().split(' ');
-    double borderWidth = double.parse(borderAttrs.first.replaceAll('px', ''));
-    String borderColor = borderAttrs.last;
-    return Border.all(color: colorConvert(borderColor), width: borderWidth);
   }
 
   get getBoxShadow {
@@ -127,7 +120,6 @@ class _ImageViewState extends State<ImageView> {
     return [
       BoxShadow(
         color: colorConvert(styles.shadowFormColor).withOpacity(styles.shadowOpacity / 100),
-//        spreadRadius: 5,
         blurRadius: styles.shadowBlur,
         offset: Offset(cos(deg) * styles.shadowOffset,
             -styles.shadowOffset * sin(deg)), // changes position of shadow
@@ -137,11 +129,9 @@ class _ImageViewState extends State<ImageView> {
 
   ImageStyles styleSheet() {
     try {
-      Map<String, dynamic> json = widget.stylesheets[child.id];
-      // if (json['display'] != 'none') {
-      //   print('Image View ID: ${child.id}');
+      Map<String, dynamic> json = widget.stylesheets;
+      //   print('Image View ID: ${widget.child.id}');
       //   print('Image Styles: $json');
-      // }
       return ImageStyles.fromJson(json);
     } catch (e) {
       return null;

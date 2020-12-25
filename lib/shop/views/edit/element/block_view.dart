@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/models.dart';
-import 'package:payever/shop/views/edit/sub_element/background_view.dart';
+import 'package:payever/shop/views/edit/element/widget/background_view.dart';
 
 class BlockView extends StatefulWidget {
   final Child child;
@@ -9,19 +9,16 @@ class BlockView extends StatefulWidget {
       {this.child, this.stylesheets});
 
   @override
-  _BlockViewState createState() => _BlockViewState(
-      block: child);
+  _BlockViewState createState() => _BlockViewState();
 }
 
 class _BlockViewState extends State<BlockView> {
-  final Child block;
-
 
   SectionStyles blockStyles;
   final String TAG = 'BlockView : ';
   String selectChildId = '';
 
-  _BlockViewState({this.block});
+  _BlockViewState();
 
   @override
   void dispose() {
@@ -44,8 +41,7 @@ class _BlockViewState extends State<BlockView> {
   SectionStyles getSectionStyleSheet() {
     try {
       Map<String, dynamic> json =
-          widget.stylesheets[block.id];
-      if (json == null || json['display'] == 'none') return null;
+          widget.stylesheets;
       // print('$TAG Block ID ${block.id}');
       // print('$TAG Bloc style: $json');
       return SectionStyles.fromJson(json);

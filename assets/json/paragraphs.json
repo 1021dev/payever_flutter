@@ -1,0 +1,11 @@
+[
+  {"name": "Title",       "size": 112, "fontWeight": "normal",  "fontStyle": "normal"},
+  {"name": "Title Small", "size": 84,  "fontWeight": "normal",  "fontStyle": "normal"},
+  {"name": "Subtitle",    "size": 50,  "fontWeight": "normal",  "fontStyle": "normal"},
+  {"name": "Body",        "size": 71,  "fontWeight": "normal",  "fontStyle": "normal"},
+  {"name": "Body Small",  "size": 38,  "fontWeight": "normal",  "fontStyle": "normal"},
+  {"name": "Caption",     "size": 30,  "fontWeight": "bold",    "fontStyle": "normal"},
+  {"name": "Caption Red", "size": 50,  "fontWeight": "bold",    "fontStyle": "normal"},
+  {"name": "Quote",       "size": 48,  "fontWeight": "normal",  "fontStyle": "normal"},
+  {"name": "Attribution", "size": 32,  "fontWeight": "normal",  "fontStyle": "italic"}
+]

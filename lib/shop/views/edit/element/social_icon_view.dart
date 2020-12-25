@@ -13,14 +13,13 @@ class SocialIconView extends StatefulWidget {
 
   @override
   _SocialIconViewState createState() =>
-      _SocialIconViewState(child);
+      _SocialIconViewState();
 }
 
 class _SocialIconViewState extends State<SocialIconView> {
-  final Child child;
-  SocialIconStyles styles;
 
-  _SocialIconViewState(this.child);
+   SocialIconStyles styles;
+  _SocialIconViewState();
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +31,9 @@ class _SocialIconViewState extends State<SocialIconView> {
     return Opacity(
       opacity: styles.opacity,
       child: Container(
-          decoration: styles.decoration,
+          decoration: styles.decoration(widget.child.type),
           child: SvgPicture.asset(
-            'assets/images/social-icon-${child.data['variant']}.svg',
+            'assets/images/social-icon-${widget.child.data['variant']}.svg',
             color: colorConvert(styles.backgroundColor),
           )),
     );
@@ -42,12 +41,11 @@ class _SocialIconViewState extends State<SocialIconView> {
 
   SocialIconStyles styleSheet() {
     try {
-      Map<String, dynamic> json = widget.stylesheets[child.id];
+      Map<String, dynamic> json = widget.stylesheets;
      // if (json['display'] != 'none') {
-     //   print('SocialID: ${child.id}');
+     //   print('SocialID: ${widget.child.id}');
      //   print('Social Icon Styles: $json');
      // }
-
       return SocialIconStyles.fromJson(json);
     } catch (e) {
       return null;

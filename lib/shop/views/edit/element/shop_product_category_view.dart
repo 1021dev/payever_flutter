@@ -13,14 +13,14 @@ class ShopProductCategoryView extends StatefulWidget {
 
   @override
   _ShopProductCategoryViewState createState() =>
-      _ShopProductCategoryViewState(child);
+      _ShopProductCategoryViewState();
 }
 
 class _ShopProductCategoryViewState extends State<ShopProductCategoryView> {
-  final Child child;
+
   ShopProductCategoryStyles styles;
   CategoryData data;
-  _ShopProductCategoryViewState(this.child);
+  _ShopProductCategoryViewState();
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class _ShopProductCategoryViewState extends State<ShopProductCategoryView> {
 
   Widget _body() {
     try {
-      data = CategoryData.fromJson(child.data);
+      data = CategoryData.fromJson(widget.child.data);
     } catch (e) {}
 
     return Container(
@@ -133,7 +133,7 @@ class _ShopProductCategoryViewState extends State<ShopProductCategoryView> {
               Column(
                 children: [
                   Visibility(
-                    visible: !data.hideProductName,
+                    visible: !(data?.hideProductName ?? false),
                     child: Container(
                       margin: EdgeInsets.only(top: 5),
                       width: double.infinity,
@@ -150,7 +150,7 @@ class _ShopProductCategoryViewState extends State<ShopProductCategoryView> {
                     ),
                   ),
                   Visibility(
-                    visible: !data.hideProductPrice,
+                    visible: !(data?.hideProductPrice ?? false),
                     child: Container(
                       width: double.infinity,
                       margin: EdgeInsets.symmetric(vertical: 5),
@@ -177,7 +177,7 @@ class _ShopProductCategoryViewState extends State<ShopProductCategoryView> {
 
   ShopProductCategoryStyles styleSheet() {
     try {
-      Map<String, dynamic>json = widget.stylesheets[child.id];
+      Map<String, dynamic>json = widget.stylesheets;
 //      if (json['display'] != 'none')
 //        print('ShopProductCategoryStyles: $json');
       return ShopProductCategoryStyles.fromJson(json);

@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:payever/shop/models/models.dart';
-import 'package:payever/shop/views/edit/sub_element/background_view.dart';
+import 'package:payever/shop/views/edit/element/widget/background_view.dart';
 import 'package:shape_of_view/shape_of_view.dart';
 import 'package:clip_shadow/clip_shadow.dart';
 
@@ -14,23 +14,22 @@ class ShapeView extends StatefulWidget {
       this.stylesheets});
 
   @override
-  _ShapeViewState createState() => _ShapeViewState(child);
+  _ShapeViewState createState() => _ShapeViewState();
 }
 
 class _ShapeViewState extends State<ShapeView> {
-  final Child child;
   ShapeStyles styles;
 
-  _ShapeViewState(this.child);
+  _ShapeViewState();
 
   @override
   Widget build(BuildContext context) {
     styles = styleSheet();
-    return body;
+    return Opacity(opacity: styles.opacity, child: body);
   }
 
   Widget get body {
-    switch (child.data['variant']) {
+    switch (widget.child.data['variant']) {
       case 'circle':
         return circleShape();
       case 'triangle':
@@ -38,7 +37,7 @@ class _ShapeViewState extends State<ShapeView> {
       case 'square':
         return squareShape();
       default:
-        print('special variant: ${child.data['variant']}');
+        print('special variant: ${widget.child.data['variant']}');
         return Container();
     }
   }
@@ -46,7 +45,7 @@ class _ShapeViewState extends State<ShapeView> {
   Widget circleShape() {
     return ClipShadow(
       clipper: OvalClipper(x: styles.width, y: styles.height, w: 0),
-      boxShadow: styles.getBoxShadow,
+      boxShadow: styles.getBoxShadow(widget.child.type),
       child: ClipRRect(
           borderRadius: BorderRadius.all(
               Radius.elliptical(double.infinity, double.infinity)),
@@ -60,9 +59,9 @@ class _ShapeViewState extends State<ShapeView> {
     return Container(
       child: ClipShadow(
         clipper: TriangleClipper(),
-        boxShadow: styles.getBoxShadow,
+        boxShadow: styles.getBoxShadow(widget.child.type),
         child: Container(
-          decoration: styles.decoration,
+          decoration: styles.decoration(widget.child.type),
           child: Transform.rotate(
             angle: pi,
             child: ShapeOfView(
@@ -81,8 +80,7 @@ class _ShapeViewState extends State<ShapeView> {
 
   Widget squareShape() {
     return Container(
-      decoration: styles.decoration,
-//      color: colorConvert(styles.backgroundColor),
+      decoration: styles.decoration(widget.child.type),
       alignment: Alignment.center,
       child: ClipRRect(
           child: BackgroundView(
@@ -93,8 +91,7 @@ class _ShapeViewState extends State<ShapeView> {
 
   ShapeStyles styleSheet() {
     try {
-      Map<String, dynamic> json = widget.stylesheets[child.id];
-//      if (json['display'] != 'none')
+      Map<String, dynamic> json = widget.stylesheets;
 //        print('Shape Styles: $json');
       return ShapeStyles.fromJson(json);
     } catch (e) {

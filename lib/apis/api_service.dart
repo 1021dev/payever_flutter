@@ -79,6 +79,7 @@ class ApiService {
 
   static String mediaBase = Env.media;
   static String mediaBusiness = '$mediaBase/api/image/business/';
+  static String mediaVideoBusiness = '$mediaBase/api/video/business/';
   static String mediaImageEnd = '/images';
   static String mediaProductsEnd = '/products';
 
@@ -960,6 +961,7 @@ class ApiService {
       return Future.error(e);
     }
   }
+
   //  https://builder-shops.payever.org/api/theme/898ab6ec-c085-460c-9cdd-d43f90cbedcb
   Future<dynamic> getShopEditPreViews(String token, String themeId) async {
     try {
@@ -979,6 +981,19 @@ class ApiService {
       print('$TAG - getShopSnapShot()');
       dynamic response = await _client.getTypeless(
         '${Env.builderShop}/api/theme/$themeId/snapshot',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getPage(String token, String themeId, String pageId) async {
+    try {
+      print('$TAG - getPage()');
+      dynamic response = await _client.getTypeless(
+        '${Env.builderShop}/api/theme/$themeId/page/$pageId',
         headers: _getHeaders(token),
       );
       return response;
@@ -1904,6 +1919,59 @@ class ApiService {
         '$mediaBase/api/image/user/$userId/images',
         body: formData,
         headers: headers
+    );
+    return upload;
+  }
+
+  Future<dynamic> postImageToBuilder(
+      File logo,
+      String business,
+      String blobName,
+      bool isBackground,
+      String token
+      ) async {
+    print('$TAG - postImageToBuilder()');
+
+    String fileName = logo.path.split('/').last;
+    FormData formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile(
+        logo.path,
+        filename: fileName,
+      ),
+    });
+    String url;
+    if (isBackground) {
+      url = '$mediaBusiness$business/builder/$blobName';
+    } else {
+      url = '$mediaBusiness$business/builder';
+    }
+    dynamic upload = await _client.postForm(
+        url,
+        body: formData,
+        headers: _getHeaders(token, imageUpload: true)
+    );
+    return upload;
+  }
+
+  Future<dynamic> postVideoToBuilder(
+      File file,
+      String business,
+      String token
+      ) async {
+    print('$TAG - postImageToBuilder()');
+
+    String fileName = file.path.split('/').last;
+    FormData formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile(
+        file.path,
+        filename: fileName,
+      ),
+    });
+    String url = '$mediaVideoBusiness$business/builder-video';
+    dynamic upload = await _client.postForm(
+        url,
+        body: formData,
+        headers: _getHeaders(token, imageUpload: true)
     );
     return upload;
   }
@@ -3051,14 +3119,13 @@ class ApiService {
   ///****                      UTILS                                       *****
   ///***************************************************************************
 
-  Map<String, String>_getHeaders(String token) {
+  Map<String, String>_getHeaders(String token, {bool imageUpload = false}) {
     return {
       HttpHeaders.authorizationHeader: 'Bearer $token',
-      HttpHeaders.contentTypeHeader: 'application/json',
+      HttpHeaders.contentTypeHeader: imageUpload ? '*/*' : 'application/json',
       HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
     };
   }
-
 
   String randomString(int strlen) {
     const chars = "0123456789";
